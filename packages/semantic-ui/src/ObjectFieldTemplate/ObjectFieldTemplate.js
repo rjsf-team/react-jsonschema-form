@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Grid } from "semantic-ui-react";
-import { canExpand, getUiOptions } from '@rjsf/utils';
-import AddButton from '../AddButton/AddButton';
+import { canExpand, getUiOptions } from "@rjsf/utils";
+import AddButton from "../AddButton/AddButton";
 
 function ObjectFieldTemplate({
   DescriptionField,
@@ -24,7 +24,7 @@ function ObjectFieldTemplate({
   const fieldDescription = uiOptions.description || description;
   return (
     <React.Fragment>
-      {(fieldTitle) && (
+      {fieldTitle && (
         <TitleField
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
@@ -32,7 +32,7 @@ function ObjectFieldTemplate({
           required={required}
         />
       )}
-      {(fieldDescription) && (
+      {fieldDescription && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
@@ -47,8 +47,12 @@ function ObjectFieldTemplate({
                 marginTop: "1rem",
                 position: "relative",
                 textAlign: "right",
-              }}>
-              <AddButton onClick={onAddClick(schema)} disabled={disabled || readOnly} />
+              }}
+            >
+              <AddButton
+                onClick={onAddClick(schema)}
+                disabled={disabled || readOnly}
+              />
             </div>
           </Grid.Row>
         </Grid.Column>

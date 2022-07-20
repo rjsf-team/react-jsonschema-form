@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { processSelectValue } from '@rjsf/utils';
+import { processSelectValue } from "@rjsf/utils";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-
 
 /**
  * * Returns and creates an array format required for semantic drop down
@@ -56,8 +55,8 @@ function SelectWidget(props) {
       fluid: true,
       scrolling: true,
       upward: false,
-    }
- });
+    },
+  });
   const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(

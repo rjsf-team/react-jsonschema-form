@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from "../util";
 
 function UpDownWidget(props) {
   const {
@@ -22,11 +22,7 @@ function UpDownWidget(props) {
     formContext,
     registry,
   } = props;
-  const semanticProps = getSemanticProps(
-    { formContext,
-      options,
-      uiSchema,
-  });
+  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) => onChange && onChange(value);

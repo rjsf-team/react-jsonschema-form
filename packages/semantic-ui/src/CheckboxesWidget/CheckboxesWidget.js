@@ -41,7 +41,7 @@ function CheckboxesWidget(props) {
     defaultSchemaProps: {
       inverted: false,
     },
-   });
+  });
   const _onChange = option => ({ target: { checked } }) => {
     // eslint-disable-next-line no-shadow
     const all = enumOptions.map(({ value }) => value);

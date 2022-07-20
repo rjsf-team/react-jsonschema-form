@@ -20,14 +20,14 @@ function RangeWidget(props) {
     uiSchema,
     formContext,
   } = props;
-  const semanticProps = getSemanticProps(
-    { formContext,
-      options,
-      uiSchema,
-      defaultSchemaProps: {
-        fluid: true,
-      }
-    });
+  const semanticProps = getSemanticProps({
+    formContext,
+    options,
+    uiSchema,
+    defaultSchemaProps: {
+      fluid: true,
+    },
+  });
 
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
