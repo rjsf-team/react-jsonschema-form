@@ -1,6 +1,6 @@
-import { UI_WIDGET_KEY } from '../constants';
-import { RJSFSchema, UiSchema, ValidatorType } from '../types';
-import retrieveSchema from './retrieveSchema';
+import { UI_WIDGET_KEY } from "../constants";
+import { RJSFSchema, UiSchema, ValidatorType } from "../types";
+import retrieveSchema from "./retrieveSchema";
 
 /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
  *
@@ -11,14 +11,21 @@ import retrieveSchema from './retrieveSchema';
  * @returns - True if schema/uiSchema contains an array of files, otherwise false
  */
 export default function isFilesArray<T = any, F = any>(
-  validator: ValidatorType, schema: RJSFSchema, uiSchema: UiSchema<T, F> = {}, rootSchema?: RJSFSchema
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  uiSchema: UiSchema<T, F> = {},
+  rootSchema?: RJSFSchema
 ) {
-  if (uiSchema[UI_WIDGET_KEY] === 'files') {
+  if (uiSchema[UI_WIDGET_KEY] === "files") {
     return true;
   }
   if (schema.items) {
-    const itemsSchema = retrieveSchema<T>(validator, schema.items as RJSFSchema, rootSchema);
-    return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
+    const itemsSchema = retrieveSchema<T>(
+      validator,
+      schema.items as RJSFSchema,
+      rootSchema
+    );
+    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
   }
   return false;
 }
