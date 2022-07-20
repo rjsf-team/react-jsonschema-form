@@ -32,6 +32,7 @@
     "plugins": [
         "@typescript-eslint",
         "jsx-a11y",
-        "react"
+        "react",
+        "import"
     ]
 }

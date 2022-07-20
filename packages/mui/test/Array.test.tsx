@@ -3,7 +3,7 @@ import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
-import { MuiForm5 as Form } from "../../src";
+import Form from "../src";
 
 describe("array fields", () => {
   test("array", () => {

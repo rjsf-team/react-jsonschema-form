@@ -1,2 +1,2 @@
-export { default } from "./MuiForm5";
-export * from "./MuiForm5";
+export { default } from "./MuiForm";
+export * from "./MuiForm";
