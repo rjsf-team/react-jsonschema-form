@@ -5,8 +5,13 @@ import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
+import validator from "@rjsf/validator-ajv6";
 import Playground from "./app";
 import { render } from "react-dom";
+
+const validators = {
+  AJV6: validator,
+};
 
 const themes = {
   default: {
@@ -121,4 +126,7 @@ const themes = {
   },
 };
 
-render(<Playground themes={themes} />, document.getElementById("app"));
+render(
+  <Playground themes={themes} validators={validators} />,
+  document.getElementById("app")
+);
