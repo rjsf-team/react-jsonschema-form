@@ -31,5 +31,5 @@ export default {
   UpDownWidget,
   URLWidget,
   FileWidget,
-  SubmitButton
+  SubmitButton,
 };

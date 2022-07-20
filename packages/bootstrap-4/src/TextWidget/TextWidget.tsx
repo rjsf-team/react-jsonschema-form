@@ -21,7 +21,6 @@ const TextWidget = ({
   schema,
   rawErrors = [],
   uiSchema,
-
 }: WidgetProps) => {
   const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
@@ -33,7 +32,8 @@ const TextWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-  const inputType = (type || schema.type) === 'string' ?  'text' : `${type || schema.type}`
+  const inputType =
+    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
@@ -56,7 +56,6 @@ const TextWidget = ({
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-
       />
       {schema.examples ? (
         <datalist id={`examples_${id}`}>

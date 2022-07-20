@@ -73,7 +73,8 @@ const SelectWidget = ({
         onChange={(event: React.ChangeEvent) => {
           const newValue = getValue(event, multiple);
           onChange(processSelectValue(schema, newValue));
-        }}>
+        }}
+      >
         {!multiple && schema.default === undefined && (
           <option value="">{placeholder}</option>
         )}

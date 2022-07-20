@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
@@ -10,9 +10,9 @@ describe("object fields", () => {
     const schema: RJSFSchema = {
       type: "object",
       properties: {
-        a: {type: "string"},
-        b: {type: "number"}
-      }
+        a: { type: "string" },
+        b: { type: "number" },
+      },
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)

@@ -8,11 +8,18 @@ import Form from "react-bootstrap/Form";
 
 import IconButton from "../IconButton/IconButton";
 
-type WrapIfAdditionalProps = { children: React.ReactElement; } &
-  Pick<
-    FieldTemplateProps,
-    'classNames' | 'disabled' | 'id' | 'label' | 'onDropPropertyClick' | 'onKeyChange' | 'readonly' | 'required' | 'schema'
-  >;
+type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
+  FieldTemplateProps,
+  | "classNames"
+  | "disabled"
+  | "id"
+  | "label"
+  | "onDropPropertyClick"
+  | "onKeyChange"
+  | "readonly"
+  | "required"
+  | "schema"
+>;
 
 const WrapIfAdditional = ({
   children,
@@ -51,9 +58,7 @@ const WrapIfAdditional = ({
           />
         </Form.Group>
       </Col>
-      <Col xs={5}>
-        {children}
-      </Col>
+      <Col xs={5}>{children}</Col>
       <Col xs={2} className="py-4">
         <IconButton
           block={true}

@@ -1,7 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
+import { IdSchema } from "@rjsf/utils";
 
-import Theme from '../src/Theme';
+import Theme from "../src/Theme";
 import ArrayFieldTemplate from "../src/ArrayFieldTemplate";
 import DescriptionField from "../src/DescriptionField";
 import TitleField from "../src/TitleField";
@@ -23,12 +24,16 @@ describe("ArrayFieldTemplate", () => {
           schema={mockSchema}
           uiSchema={{}}
           title=""
+          items={[]}
           formContext={{}}
           formData={{}}
-          registry={{ ...Theme, schemaUtils: mockSchemaUtils, formContext: {}, rootSchema: mockSchema }}
-          // TODO : isSchema should be fixed here
-          // @ts-ignore
-          idSchema={{}}
+          registry={{
+            ...Theme,
+            schemaUtils: mockSchemaUtils,
+            formContext: {},
+            rootSchema: mockSchema,
+          }}
+          idSchema={{ $id: "root" } as IdSchema}
         />
       )
       .toJSON();

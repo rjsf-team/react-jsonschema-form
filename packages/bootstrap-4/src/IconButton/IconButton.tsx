@@ -13,7 +13,7 @@ const mappings: any = {
 
 type IconButtonProps = ButtonProps & {
   icon: string;
-  variant?: ButtonProps['variant'];
+  variant?: ButtonProps["variant"];
   className?: string;
   tabIndex?: number;
   style?: any;
