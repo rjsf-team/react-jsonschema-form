@@ -35,20 +35,20 @@ function DateWidget(props) {
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <Form.Input
-    key={id}
-    id={id}
-    type="date"
-    label={displayLabel ? label || schema.title : false}
-    required={required}
-    autoFocus={autofocus}
-    disabled={disabled || readonly}
-    name={name}
-    {...semanticProps}
-    value={value || value === 0 ? value : ""}
-    onChange={_onChange}
-    onBlur={_onBlur}
-    onFocus={_onFocus}
-  />
+      key={id}
+      id={id}
+      type="date"
+      label={displayLabel ? label || schema.title : false}
+      required={required}
+      autoFocus={autofocus}
+      disabled={disabled || readonly}
+      name={name}
+      {...semanticProps}
+      value={value || value === 0 ? value : ""}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 }
 export default DateWidget;

@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { Button } from "semantic-ui-react";
 
 function IconButton(props) {
   const { icon, className, ...otherProps } = props;
-  return (<Button icon={icon} className={className} {...otherProps} />);
+  return <Button icon={icon} className={className} {...otherProps} />;
 }
 
 IconButton.propTypes = {

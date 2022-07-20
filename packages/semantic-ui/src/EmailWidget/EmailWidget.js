@@ -26,7 +26,7 @@ function EmailWidget(props) {
     uiSchema,
     formContext,
     options,
- });
+  });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>

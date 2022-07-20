@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
 import React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
-import { isFixedItems, getUiOptions } from '@rjsf/utils';
+import { isFixedItems, getUiOptions } from "@rjsf/utils";
 
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps, MaybeWrap } from "../util";
@@ -46,7 +46,8 @@ function DefaultArrayItem(props) {
             !isInitialArrayItem(props)
               ? { ...gridStyle(!props.horizontalButtons), alignItems: "center" }
               : gridStyle(!props.horizontalButtons)
-          }>
+          }
+        >
           <Grid.Column width={16} verticalAlign="middle">
             {props.children}
           </Grid.Column>
@@ -140,7 +141,8 @@ function DefaultFixedArrayFieldTemplate({
       {fieldDescription && (
         <div
           className="field-description"
-          key={`field-description-${idSchema.$id}`}>
+          key={`field-description-${idSchema.$id}`}
+        >
           {fieldDescription}
         </div>
       )}
@@ -156,7 +158,8 @@ function DefaultFixedArrayFieldTemplate({
               marginTop: "1rem",
               position: "relative",
               textAlign: "right",
-            }}>
+            }}
+          >
             <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
           </div>
         )}
@@ -191,7 +194,8 @@ function DefaultNormalArrayFieldTemplate({
         className,
         classNames,
         "sortable-form-fields",
-      ])}>
+      ])}
+    >
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
         TitleField={TitleField}
@@ -221,7 +225,8 @@ function DefaultNormalArrayFieldTemplate({
               marginTop: "1rem",
               position: "relative",
               textAlign: "right",
-            }}>
+            }}
+          >
             <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
           </div>
         )}
@@ -231,17 +236,14 @@ function DefaultNormalArrayFieldTemplate({
 }
 
 function ArrayFieldTemplate(props) {
-  const { options,
-    schema,
-    uiSchema,
-    formContext, } = props;
+  const { options, schema, uiSchema, formContext } = props;
   const semanticProps = getSemanticProps({
-      options,
-      uiSchema,
-      formContext,
-      defaultSchemaProps: { horizontalButtons : false, wrapItem : false }
+    options,
+    uiSchema,
+    formContext,
+    defaultSchemaProps: { horizontalButtons: false, wrapItem: false },
   });
-  const  { horizontalButtons, wrapItem } = semanticProps;
+  const { horizontalButtons, wrapItem } = semanticProps;
   const itemProps = { horizontalButtons, wrapItem };
 
   if (isFixedItems(schema)) {

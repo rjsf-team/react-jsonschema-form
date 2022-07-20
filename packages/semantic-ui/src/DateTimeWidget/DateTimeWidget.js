@@ -6,21 +6,21 @@ import { getSemanticProps } from "../util";
 
 function DateTimeWidget(props) {
   const {
-  id,
-  required,
-  readonly,
-  disabled,
-  name,
-  label,
-  schema,
-  uiSchema,
-  value,
-  onChange,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  formContext,
+    id,
+    required,
+    readonly,
+    disabled,
+    name,
+    label,
+    schema,
+    uiSchema,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    formContext,
   } = props;
   const semanticProps = getSemanticProps({
     uiSchema,
@@ -28,7 +28,8 @@ function DateTimeWidget(props) {
     formContext,
     options,
   });
-  const _onChange = ({ target: { value } }) => onChange && onChange(localToUTC(value));
+  const _onChange = ({ target: { value } }) =>
+    onChange && onChange(localToUTC(value));
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const dateValue = utcToLocal(value);
@@ -39,20 +40,20 @@ function DateTimeWidget(props) {
   );
   return (
     <Form.Input
-    key={id}
-    id={id}
-    type="datetime-local"
-    label={displayLabel ? label || schema.title : false}
-    required={required}
-    autoFocus={autofocus}
-    disabled={disabled || readonly}
-    name={name}
-    {...semanticProps}
-    value={dateValue}
-    onChange={_onChange}
-    onBlur={_onBlur}
-    onFocus={_onFocus}
-  />
+      key={id}
+      id={id}
+      type="datetime-local"
+      label={displayLabel ? label || schema.title : false}
+      required={required}
+      autoFocus={autofocus}
+      disabled={disabled || readonly}
+      name={name}
+      {...semanticProps}
+      value={dateValue}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+    />
   );
 }
 export default DateTimeWidget;

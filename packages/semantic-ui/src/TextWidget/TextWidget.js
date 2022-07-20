@@ -23,11 +23,7 @@ function TextWidget(props) {
     formContext,
     registry,
   } = props;
-  const semanticProps = getSemanticProps(
-    { formContext,
-      options,
-      uiSchema,
-  });
+  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
@@ -41,7 +37,7 @@ function TextWidget(props) {
       key={id}
       id={id}
       placeholder={placeholder}
-      type={schema.type === 'string' ?  'text' : `${schema.type}`}
+      type={schema.type === "string" ? "text" : `${schema.type}`}
       label={displayLabel ? label || schema.title : false}
       required={required}
       autoFocus={autofocus}
