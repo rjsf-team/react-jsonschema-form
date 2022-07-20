@@ -48,6 +48,7 @@
     "@rjsf/core": "^4.2.0",
     "@rjsf/fluent-ui": "^4.2.0",
     "@rjsf/material-ui": "^4.2.0",
+    "@rjsf/mui": "^4.2.0",
     "@rjsf/semantic-ui": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",

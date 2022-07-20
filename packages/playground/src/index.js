@@ -1,5 +1,6 @@
 import React from "react";
-import { Theme4 as MuiV4Theme, Theme5 as MuiV5Theme } from "@rjsf/material-ui";
+import { Theme as MuiV4Theme } from "@rjsf/material-ui";
+import { Theme as MuiV5Theme } from "@rjsf/mui";
 import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
 import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
