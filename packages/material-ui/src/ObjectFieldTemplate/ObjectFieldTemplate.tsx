@@ -1,8 +1,8 @@
-import React from 'react';
-import { ObjectFieldTemplateProps, canExpand, getUiOptions } from '@rjsf/utils';
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import { ObjectFieldTemplateProps, canExpand, getUiOptions } from "@rjsf/utils";
 
-import { useMuiComponent } from '../MuiComponentContext';
-import AddButton from '../AddButton/AddButton';
+import AddButton from "../AddButton/AddButton";
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -19,22 +19,35 @@ const ObjectFieldTemplate = ({
   formData,
   onAddClick,
 }: ObjectFieldTemplateProps) => {
-  const { Grid } = useMuiComponent();
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField id={`${idSchema.$id}-title`} title={title} required={required} />
+        <TitleField
+          id={`${idSchema.$id}-title`}
+          title={title}
+          required={required}
+        />
       )}
-      {description && <DescriptionField id={`${idSchema.$id}-description`} description={description} />}
-      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+      {description && (
+        <DescriptionField
+          id={`${idSchema.$id}-description`}
+          description={description}
+        />
+      )}
+      <Grid container={true} spacing={2} style={{ marginTop: "10px" }}>
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Grid item={true} xs={12} key={index} style={{ marginBottom: '10px' }}>
+            <Grid
+              item={true}
+              xs={12}
+              key={index}
+              style={{ marginBottom: "10px" }}
+            >
               {element.content}
             </Grid>
           )

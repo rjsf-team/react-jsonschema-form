@@ -1,9 +1,14 @@
-import React from 'react';
+import React from "react";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import RemoveIcon from "@material-ui/icons/Remove";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
+import { ArrayFieldTemplateProps, getUiOptions, IdSchema } from "@rjsf/utils";
 
-import { ArrayFieldTemplateProps, getUiOptions, IdSchema } from '@rjsf/utils';
-
-import AddButton from '../AddButton/AddButton';
-import { useMuiComponent } from '../MuiComponentContext';
+import AddButton from "../AddButton/AddButton";
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const { schema, registry } = props;
@@ -23,7 +28,12 @@ type ArrayFieldTitleProps = {
   required?: boolean;
 };
 
-const ArrayFieldTitle = ({ TitleField, idSchema, title, required }: ArrayFieldTitleProps) => {
+const ArrayFieldTitle = ({
+  TitleField,
+  idSchema,
+  title,
+  required,
+}: ArrayFieldTitleProps) => {
   if (!title) {
     return null;
   }
@@ -38,7 +48,11 @@ type ArrayFieldDescriptionProps = {
   description?: string;
 };
 
-const ArrayFieldDescription = ({ DescriptionField, idSchema, description }: ArrayFieldDescriptionProps) => {
+const ArrayFieldDescription = ({
+  DescriptionField,
+  idSchema,
+  description,
+}: ArrayFieldDescriptionProps) => {
   if (!description) {
     return null;
   }
@@ -49,17 +63,16 @@ const ArrayFieldDescription = ({ DescriptionField, idSchema, description }: Arra
 
 // Used in the two templates
 const DefaultArrayItem = (props: any) => {
-  const { ArrowDownwardIcon, ArrowUpwardIcon, Box, Grid, IconButton, Paper, RemoveIcon } = useMuiComponent();
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     minWidth: 0,
   };
   return (
     <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs style={{ overflow: 'auto' }}>
+      <Grid item={true} xs style={{ overflow: "auto" }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{props.children}</Box>
@@ -124,12 +137,18 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       />
 
       {(uiOptions.description || props.schema.description) && (
-        <div className="field-description" key={`field-description-${props.idSchema.$id}`}>
+        <div
+          className="field-description"
+          key={`field-description-${props.idSchema.$id}`}
+        >
           {uiOptions.description || props.schema.description}
         </div>
       )}
 
-      <div className="row array-item-list" key={`array-item-list-${props.idSchema.$id}`}>
+      <div
+        className="row array-item-list"
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
@@ -145,7 +164,6 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 };
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const { Box, Grid, Paper } = useMuiComponent();
   const uiOptions = getUiOptions(props.uiSchema);
   return (
     <Paper elevation={2}>

@@ -1,7 +1,6 @@
-import React from 'react';
-import { WidgetProps } from '@rjsf/utils';
-
-import { useMuiComponent } from '../MuiComponentContext';
+import React from "react";
+import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import { WidgetProps } from "@rjsf/utils";
 
 const TextWidget = ({
   id,
@@ -24,15 +23,20 @@ const TextWidget = ({
   registry,
   ...textFieldProps
 }: WidgetProps) => {
-  const { TextField } = useMuiComponent();
-  const _onChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(value === "" ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, value);
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const { schemaUtils } = registry;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
-  const inputType = (type || schema.type) === 'string' ? 'text' : `${type || schema.type}`;
+  const inputType =
+    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   return (
     <TextField
@@ -43,12 +47,12 @@ const TextWidget = ({
       required={required}
       disabled={disabled || readonly}
       type={inputType as string}
-      value={value || value === 0 ? value : ''}
+      value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      {...textFieldProps}
+      {...(textFieldProps as TextFieldProps)}
     />
   );
 };
