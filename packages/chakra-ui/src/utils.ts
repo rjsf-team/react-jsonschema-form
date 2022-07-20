@@ -15,7 +15,7 @@ export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
   const chakraProps =
     (uiSchema["ui:options"] && uiSchema["ui:options"].chakra) || {};
 
-  Object.keys(chakraProps).forEach(key => {
+  Object.keys(chakraProps).forEach((key) => {
     /**
      * Leveraging `shouldForwardProp` to remove props
      *
@@ -24,7 +24,6 @@ export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
      * In this case we just want to delete the unknown props. So we flip the boolean.
      */
     if (shouldForwardProp(key)) {
-      // @ts-ignore - How to type this?!... 😬
       delete (chakraProps as any)[key];
     }
   });

@@ -3,7 +3,11 @@ import { Box, Button } from "@chakra-ui/react";
 import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
 
 const SubmitButton = ({ uiSchema }: WidgetProps) => {
-  const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(uiSchema);
+  const {
+    submitText,
+    norender,
+    props: submitButtonProps,
+  } = getSubmitButtonOptions(uiSchema);
   if (norender) {
     return null;
   }

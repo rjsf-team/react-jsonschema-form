@@ -15,7 +15,9 @@ describe("object fields", () => {
         b: { type: "number", title: "B" },
       },
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

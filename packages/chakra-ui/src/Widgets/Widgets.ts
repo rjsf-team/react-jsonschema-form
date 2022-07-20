@@ -33,7 +33,7 @@ const widgets = {
   TextWidget,
   UpDownWidget,
   URLWidget,
-  SubmitButton
+  SubmitButton,
 };
 
 export default widgets;
