@@ -69,7 +69,9 @@ const DefaultArrayItem = (props: any) => {
   return (
     <div key={props.key}>
       <Row className="mb-2  d-flex align-items-center">
-        <Col xs="9" lg="9">{props.children}</Col>
+        <Col xs="9" lg="9">
+          {props.children}
+        </Col>
 
         <Col xs="3" lg="3" className="py-4">
           {props.hasToolbar && (
@@ -137,14 +139,16 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       {(uiOptions.description || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
+          key={`field-description-${props.idSchema.$id}`}
+        >
           {uiOptions.description || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 
@@ -178,13 +182,15 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
               key={`array-field-description-${props.idSchema.$id}`}
               DescriptionField={props.DescriptionField}
               idSchema={props.idSchema}
-              description={
-                uiOptions.description || props.schema.description
-              }
+              description={uiOptions.description || props.schema.description}
             />
           )}
 
-          <Container fluid key={`array-item-list-${props.idSchema.$id}`} className="p-0 m-0">
+          <Container
+            fluid
+            key={`array-item-list-${props.idSchema.$id}`}
+            className="p-0 m-0"
+          >
             {props.items && props.items.map(p => DefaultArrayItem(p))}
 
             {props.canAdd && (

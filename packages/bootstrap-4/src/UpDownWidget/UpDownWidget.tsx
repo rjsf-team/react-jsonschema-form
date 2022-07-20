@@ -16,7 +16,7 @@ const UpDownWidget = ({
   onFocus,
   autofocus,
   schema,
-  uiSchema
+  uiSchema,
 }: WidgetProps) => {
   const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
@@ -29,7 +29,7 @@ const UpDownWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <Form.Group  className="mb-0">
+    <Form.Group className="mb-0">
       <Form.Label>
         {uiOptions.title || schema.title || label}
         {(label || uiOptions.title || schema.title) && required ? "*" : null}

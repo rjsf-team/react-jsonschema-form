@@ -18,7 +18,7 @@ const RangeWidget = ({
   id,
   uiSchema,
 }: WidgetProps) => {
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, ...rangeSpec(schema) };
   const uiOptions = getUiOptions(uiSchema);
 
   const _onChange = ({

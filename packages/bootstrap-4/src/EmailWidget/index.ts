@@ -1,2 +1,2 @@
-export { default } from './EmailWidget';
-export * from './EmailWidget';
+export { default } from "./EmailWidget";
+export * from "./EmailWidget";
