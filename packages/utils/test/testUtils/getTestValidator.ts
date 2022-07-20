@@ -1,12 +1,17 @@
-import isEmpty from 'lodash/isEmpty';
+import isEmpty from "lodash/isEmpty";
 
-import { ValidationData } from '../../src';
-import { TestValidatorParams, TestValidatorType } from '../schema/types';
+import { ValidationData } from "../../src";
+import { TestValidatorParams, TestValidatorType } from "../schema/types";
 
-export default function getTestValidator<T = any>(
-  { isValid = [], data = [] }: TestValidatorParams
-): TestValidatorType  {
-  const testValidator: { _data: ValidationData<T>[], _isValid: boolean[], validator: TestValidatorType } = {
+export default function getTestValidator<T = any>({
+  isValid = [],
+  data = [],
+}: TestValidatorParams): TestValidatorType {
+  const testValidator: {
+    _data: ValidationData<T>[];
+    _isValid: boolean[];
+    validator: TestValidatorType;
+  } = {
     _data: data,
     _isValid: isValid,
     validator: {
@@ -32,8 +37,8 @@ export default function getTestValidator<T = any>(
         if (data !== undefined) {
           testValidator._data = data;
         }
-      }
-    }
+      },
+    },
   };
   return testValidator.validator;
 }

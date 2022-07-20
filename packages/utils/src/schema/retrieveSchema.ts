@@ -1,20 +1,27 @@
-import get from 'lodash/get';
-import set from 'lodash/set';
-import mergeAllOf from 'json-schema-merge-allof';
+import get from "lodash/get";
+import set from "lodash/set";
+import mergeAllOf from "json-schema-merge-allof";
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
-  REF_KEY
-} from '../constants';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
-import guessType from '../guessType';
-import isObject from '../isObject';
-import mergeSchemas from '../mergeSchemas';
-import { GenericObjectType, RJSFSchema, RJSFSchemaDefinition, ValidatorType } from '../types';
-import getMatchingOption from './getMatchingOption';
+  REF_KEY,
+} from "../constants";
+import findSchemaDefinition, {
+  splitKeyElementFromObject,
+} from "../findSchemaDefinition";
+import guessType from "../guessType";
+import isObject from "../isObject";
+import mergeSchemas from "../mergeSchemas";
+import {
+  GenericObjectType,
+  RJSFSchema,
+  RJSFSchemaDefinition,
+  ValidatorType,
+} from "../types";
+import getMatchingOption from "./getMatchingOption";
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema
@@ -26,7 +33,10 @@ import getMatchingOption from './getMatchingOption';
  * @returns - A schema with the appropriate condition resolved
  */
 export function resolveCondition<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData: T
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema,
+  formData: T
 ) {
   const {
     if: expression,
@@ -35,11 +45,15 @@ export function resolveCondition<T = any>(
     ...resolvedSchemaLessConditional
   } = schema;
 
-  const conditionalSchema = validator.isValid(expression as RJSFSchema, formData, rootSchema)
+  const conditionalSchema = validator.isValid(
+    expression as RJSFSchema,
+    formData,
+    rootSchema
+  )
     ? then
     : otherwise;
 
-  if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
+  if (conditionalSchema && typeof conditionalSchema !== "boolean") {
     return retrieveSchema<T>(
       validator,
       mergeSchemas(
@@ -50,7 +64,12 @@ export function resolveCondition<T = any>(
       formData
     );
   }
-  return retrieveSchema<T>(validator, resolvedSchemaLessConditional, rootSchema, formData);
+  return retrieveSchema<T>(
+    validator,
+    resolvedSchemaLessConditional,
+    rootSchema,
+    formData
+  );
 }
 
 /** Resolves references and dependencies within a schema and its 'allOf' children.
@@ -63,21 +82,34 @@ export function resolveCondition<T = any>(
  * @returns - The schema having its references and dependencies resolved
  */
 export function resolveSchema<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, formData?: T
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema = {},
+  formData?: T
 ): RJSFSchema {
   if (REF_KEY in schema) {
     return resolveReference<T>(validator, schema, rootSchema, formData);
   }
   if (DEPENDENCIES_KEY in schema) {
-    const resolvedSchema = resolveDependencies<T>(validator, schema, rootSchema, formData);
+    const resolvedSchema = resolveDependencies<T>(
+      validator,
+      schema,
+      rootSchema,
+      formData
+    );
     return retrieveSchema<T>(validator, resolvedSchema, rootSchema, formData);
   }
   if (ALL_OF_KEY in schema) {
     return {
       ...schema,
-      allOf: schema.allOf!.map((allOfSubschema) =>
-        retrieveSchema<T>(validator, allOfSubschema as RJSFSchema, rootSchema, formData)
-      )
+      allOf: schema.allOf!.map(allOfSubschema =>
+        retrieveSchema<T>(
+          validator,
+          allOfSubschema as RJSFSchema,
+          rootSchema,
+          formData
+        )
+      ),
     };
   }
   // No $ref or dependencies attribute found, returning the original schema.
@@ -93,7 +125,10 @@ export function resolveSchema<T = any>(
  * @returns - The schema having its references resolved
  */
 export function resolveReference<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema,
+  formData?: T
 ): RJSFSchema {
   // Retrieve the referenced schema definition.
   const $refSchema = findSchemaDefinition(schema.$ref, rootSchema);
@@ -129,15 +164,16 @@ export function stubExistingAdditionalProperties<T = any>(
   };
 
   // make sure formData is an object
-  const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
-  Object.keys(formData).forEach((key) => {
+  const formData: GenericObjectType =
+    aFormData && isObject(aFormData) ? aFormData : {};
+  Object.keys(formData).forEach(key => {
     if (key in schema.properties) {
       // No need to stub, our schema already has the property
       return;
     }
 
     let additionalProperties: RJSFSchema = {};
-    if (typeof schema.additionalProperties !== 'boolean') {
+    if (typeof schema.additionalProperties !== "boolean") {
       if (REF_KEY in schema.additionalProperties!) {
         additionalProperties = retrieveSchema<T>(
           validator,
@@ -145,7 +181,7 @@ export function stubExistingAdditionalProperties<T = any>(
           rootSchema,
           formData as T
         );
-      } else if ('type' in schema.additionalProperties!) {
+      } else if ("type" in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
       } else {
         additionalProperties = { type: guessType(get(formData, [key])) };
@@ -174,14 +210,22 @@ export function stubExistingAdditionalProperties<T = any>(
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
 export default function retrieveSchema<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema = {}, rawFormData?: T
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema = {},
+  rawFormData?: T
 ): RJSFSchema {
   if (!isObject(schema)) {
     return {};
   }
-  let resolvedSchema = resolveSchema<T>(validator, schema, rootSchema, rawFormData);
+  let resolvedSchema = resolveSchema<T>(
+    validator,
+    schema,
+    rootSchema,
+    rawFormData
+  );
 
-  if ('if' in schema) {
+  if ("if" in schema) {
     return resolveCondition<T>(validator, schema, rootSchema, rawFormData as T);
   }
 
@@ -221,7 +265,7 @@ export default function retrieveSchema<T = any>(
         allOf: resolvedSchema.allOf,
       });
     } catch (e) {
-      console.warn('could not merge subschemas in allOf:\n' + e);
+      console.warn("could not merge subschemas in allOf:\n" + e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
       return resolvedSchemaWithoutAllOf;
     }
@@ -249,21 +293,32 @@ export default function retrieveSchema<T = any>(
  * @returns - The schema with its dependencies resolved
  */
 export function resolveDependencies<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema: RJSFSchema, formData?: T
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema: RJSFSchema,
+  formData?: T
 ): RJSFSchema {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
-  let resolvedSchema =  remainingSchema;
+  let resolvedSchema = remainingSchema;
   if (Array.isArray(resolvedSchema.oneOf)) {
-    resolvedSchema =
-      resolvedSchema.oneOf[
-        getMatchingOption<T>(validator, formData, resolvedSchema.oneOf as RJSFSchema[], rootSchema)
-      ] as RJSFSchema;
+    resolvedSchema = resolvedSchema.oneOf[
+      getMatchingOption<T>(
+        validator,
+        formData,
+        resolvedSchema.oneOf as RJSFSchema[],
+        rootSchema
+      )
+    ] as RJSFSchema;
   } else if (Array.isArray(resolvedSchema.anyOf)) {
-    resolvedSchema =
-      resolvedSchema.anyOf[
-        getMatchingOption<T>(validator, formData, resolvedSchema.anyOf as RJSFSchema[], rootSchema)
-      ] as RJSFSchema;
+    resolvedSchema = resolvedSchema.anyOf[
+      getMatchingOption<T>(
+        validator,
+        formData,
+        resolvedSchema.anyOf as RJSFSchema[],
+        rootSchema
+      )
+    ] as RJSFSchema;
   }
   return processDependencies<T>(
     validator,
@@ -285,7 +340,7 @@ export function resolveDependencies<T = any>(
  */
 export function processDependencies<T = any>(
   validator: ValidatorType,
-  dependencies: RJSFSchema['dependencies'],
+  dependencies: RJSFSchema["dependencies"],
   resolvedSchema: RJSFSchema,
   rootSchema: RJSFSchema,
   formData?: T
@@ -298,14 +353,13 @@ export function processDependencies<T = any>(
       continue;
     }
     // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
-    if (
-      schema.properties &&
-      !(dependencyKey in schema.properties)
-    ) {
+    if (schema.properties && !(dependencyKey in schema.properties)) {
       continue;
     }
-    const [remainingDependencies, dependencyValue] =
-      splitKeyElementFromObject(dependencyKey, dependencies as GenericObjectType);
+    const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
+      dependencyKey,
+      dependencies as GenericObjectType
+    );
     if (Array.isArray(dependencyValue)) {
       schema = withDependentProperties(schema, dependencyValue);
     } else if (isObject(dependencyValue)) {
@@ -335,7 +389,10 @@ export function processDependencies<T = any>(
  * @param [additionallyRequired] - An optional array of additionally required names
  * @returns - The schema with the additional required values merged in
  */
-export function withDependentProperties(schema: RJSFSchema, additionallyRequired?: string[]) {
+export function withDependentProperties(
+  schema: RJSFSchema,
+  additionallyRequired?: string[]
+) {
   if (!additionallyRequired) {
     return schema;
   }
@@ -361,20 +418,30 @@ export function withDependentSchema<T>(
   rootSchema: RJSFSchema,
   dependencyKey: string,
   dependencyValue: RJSFSchema,
-  formData?: T,
+  formData?: T
 ) {
-  const { oneOf, ...dependentSchema } = retrieveSchema<T>(validator, dependencyValue, rootSchema, formData);
+  const { oneOf, ...dependentSchema } = retrieveSchema<T>(
+    validator,
+    dependencyValue,
+    rootSchema,
+    formData
+  );
   schema = mergeSchemas(schema, dependentSchema);
   // Since it does not contain oneOf, we return the original schema.
   if (oneOf === undefined) {
     return schema;
   }
   // Resolve $refs inside oneOf.
-  const resolvedOneOf = oneOf.map((subschema) => {
-    if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
+  const resolvedOneOf = oneOf.map(subschema => {
+    if (typeof subschema === "boolean" || !(REF_KEY in subschema)) {
       return subschema;
     }
-    return resolveReference<T>(validator, subschema as RJSFSchema, rootSchema, formData);
+    return resolveReference<T>(
+      validator,
+      subschema as RJSFSchema,
+      rootSchema,
+      formData
+    );
   });
   return withExactlyOneSubschema<T>(
     validator,
@@ -382,7 +449,7 @@ export function withDependentSchema<T>(
     rootSchema,
     dependencyKey,
     resolvedOneOf,
-    formData,
+    formData
   );
 }
 
@@ -402,16 +469,16 @@ export function withExactlyOneSubschema<T = any>(
   rootSchema: RJSFSchema,
   dependencyKey: string,
   oneOf: RJSFSchemaDefinition[],
-  formData?: T,
+  formData?: T
 ) {
-  const validSubschemas = oneOf.filter((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema.properties) {
+  const validSubschemas = oneOf.filter(subschema => {
+    if (typeof subschema === "boolean" || !subschema.properties) {
       return false;
     }
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
     if (conditionPropertySchema) {
       const conditionSchema: RJSFSchema = {
-        type: 'object',
+        type: "object",
         properties: {
           [dependencyKey]: conditionPropertySchema,
         },
@@ -429,8 +496,10 @@ export function withExactlyOneSubschema<T = any>(
     return schema;
   }
   const subschema: RJSFSchema = validSubschemas[0] as RJSFSchema;
-  const [dependentSubschema] =
-    splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
+  const [dependentSubschema] = splitKeyElementFromObject(
+    dependencyKey,
+    subschema.properties as GenericObjectType
+  );
   const dependentSchema = { ...subschema, properties: dependentSubschema };
   return mergeSchemas(
     schema,

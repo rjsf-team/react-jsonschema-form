@@ -1,8 +1,8 @@
-import union from 'lodash/union';
+import union from "lodash/union";
 
-import getSchemaType from './getSchemaType';
-import isObject from './isObject';
-import { GenericObjectType } from './types';
+import getSchemaType from "./getSchemaType";
+import isObject from "./isObject";
+import { GenericObjectType } from "./types";
 
 /** Recursively merge deeply nested schemas. The difference between mergeSchemas and mergeObjects is that mergeSchemas
  * only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values.
@@ -11,7 +11,10 @@ import { GenericObjectType } from './types';
  * @param obj2 - The second schema object to merge
  * @returns - The merged schema object
  */
-export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
+export default function mergeSchemas(
+  obj1: GenericObjectType,
+  obj2: GenericObjectType
+) {
   const acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
@@ -21,8 +24,8 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
     } else if (
       obj1 &&
       obj2 &&
-      (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') &&
-      key === 'required' &&
+      (getSchemaType(obj1) === "object" || getSchemaType(obj2) === "object") &&
+      key === "required" &&
       Array.isArray(left) &&
       Array.isArray(right)
     ) {

@@ -1,5 +1,5 @@
-import isObject from './isObject';
-import { GenericObjectType } from './types';
+import isObject from "./isObject";
+import { GenericObjectType } from "./types";
 
 /** Recursively merge deeply nested objects.
  *
@@ -8,7 +8,11 @@ import { GenericObjectType } from './types';
  * @param [concatArrays=false] - Optional flag that, when true, will cause arrays to be concatenated
  * @returns - A new object that is the merge of the two given objects
  */
-export default function mergeObjects(obj1: GenericObjectType, obj2: GenericObjectType, concatArrays = false) {
+export default function mergeObjects(
+  obj1: GenericObjectType,
+  obj2: GenericObjectType,
+  concatArrays = false
+) {
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
       right = obj2[key];

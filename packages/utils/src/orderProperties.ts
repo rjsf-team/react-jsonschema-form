@@ -1,4 +1,4 @@
-import { GenericObjectType } from './types';
+import { GenericObjectType } from "./types";
 
 /** Given a list of `properties` and an `order` list, returns a list that contains the `properties` ordered correctly.
  * If `order` is not an array, then the untouched `properties` list is returned. Otherwise `properties` is ordered per
@@ -10,7 +10,10 @@ import { GenericObjectType } from './types';
  * @returns - An object with the `properties` ordered
  * @throws - Error when the properties cannot be ordered correctly
  */
-export default function orderProperties(properties: string[], order?: string[]): string[] {
+export default function orderProperties(
+  properties: string[],
+  order?: string[]
+): string[] {
   if (!Array.isArray(order)) {
     return properties;
   }
@@ -26,12 +29,12 @@ export default function orderProperties(properties: string[], order?: string[]):
       : `property '${arr[0]}'`;
   const propertyHash = arrayToHash(properties);
   const orderFiltered = order.filter(
-    prop => prop === '*' || propertyHash[prop]
+    prop => prop === "*" || propertyHash[prop]
   );
   const orderHash = arrayToHash(orderFiltered);
 
   const rest = properties.filter((prop: string) => !orderHash[prop]);
-  const restIndex = orderFiltered.indexOf('*');
+  const restIndex = orderFiltered.indexOf("*");
   if (restIndex === -1) {
     if (rest.length) {
       throw new Error(
@@ -40,8 +43,8 @@ export default function orderProperties(properties: string[], order?: string[]):
     }
     return orderFiltered;
   }
-  if (restIndex !== orderFiltered.lastIndexOf('*')) {
-    throw new Error('uiSchema order list contains more than one wildcard item');
+  if (restIndex !== orderFiltered.lastIndexOf("*")) {
+    throw new Error("uiSchema order list contains more than one wildcard item");
   }
 
   const complete = [...orderFiltered];

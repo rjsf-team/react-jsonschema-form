@@ -1,68 +1,68 @@
-import { UIOptionsType, UiSchema, getUiOptions } from '../src';
+import { UIOptionsType, UiSchema, getUiOptions } from "../src";
 
 const uiSchema: UiSchema = {
   widgetText: {
-    'ui:widget': 'select',
+    "ui:widget": "select",
   },
   widgetObject: {
-    'ui:widget': {
-      component: 'radio',
+    "ui:widget": {
+      component: "radio",
     },
   },
   optionsObject: {
-    'ui:options': {
-      widget: 'hidden',
+    "ui:options": {
+      widget: "hidden",
       disabled: true,
-    }
+    },
   },
   multiOptions: {
-    'ui:submitButtonProps': {
+    "ui:submitButtonProps": {
       norender: true,
     },
-    'ui:readonly': true,
-    'ui:options': 'text',
-    junk: 'not-shown'
-  }
+    "ui:readonly": true,
+    "ui:options": "text",
+    junk: "not-shown",
+  },
 };
 
 const results: { [key: string]: UIOptionsType } = {
-  widgetText: { widget: 'select' },
+  widgetText: { widget: "select" },
   widgetObject: {},
-  optionsObject: { widget: 'hidden', disabled: true },
+  optionsObject: { widget: "hidden", disabled: true },
   multiOptions: {
     submitButtonProps: { norender: true },
     readonly: true,
-    options: 'text',
-  }
+    options: "text",
+  },
 };
 
-describe('getUiOptions()', () => {
+describe("getUiOptions()", () => {
   let consoleErrorSpy: jest.SpyInstance;
   beforeAll(() => {
     // spy on console.error() and make it do nothing to avoid making noise in the test
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
   });
   afterAll(() => {
     consoleErrorSpy.mockRestore();
   });
-  it('returns empty options with no uiSchema', () => {
+  it("returns empty options with no uiSchema", () => {
     expect(getUiOptions()).toEqual({});
   });
-  it('returns widget text as options', () => {
+  it("returns widget text as options", () => {
     expect(getUiOptions(uiSchema.widgetText)).toEqual(results.widgetText);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
-  it('returns widget object as empty, with error', () => {
+  it("returns widget object as empty, with error", () => {
     expect(getUiOptions(uiSchema.widgetObject)).toEqual(results.widgetObject);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Setting options via ui:widget object is no longer supported, use ui:options instead'
+      "Setting options via ui:widget object is no longer supported, use ui:options instead"
     );
   });
-  it('returns options object as options', () => {
+  it("returns options object as options", () => {
     expect(getUiOptions(uiSchema.optionsObject)).toEqual(results.optionsObject);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
-  it('returns multiple options as options', () => {
+  it("returns multiple options as options", () => {
     expect(getUiOptions(uiSchema.multiOptions)).toEqual(results.multiOptions);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });

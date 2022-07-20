@@ -1,5 +1,5 @@
-import get from 'lodash/get';
-import fill from 'lodash/fill';
+import get from "lodash/get";
+import fill from "lodash/fill";
 
 import {
   ANY_OF_KEY,
@@ -8,17 +8,17 @@ import {
   PROPERTIES_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from '../constants';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getMatchingOption from './getMatchingOption';
-import getSchemaType from '../getSchemaType';
-import isObject from '../isObject';
-import isFixedItems from '../isFixedItems';
-import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
-import mergeObjects from '../mergeObjects';
-import { GenericObjectType, RJSFSchema, ValidatorType } from '../types';
-import isMultiSelect from './isMultiSelect';
-import retrieveSchema, { resolveDependencies } from './retrieveSchema';
+} from "../constants";
+import findSchemaDefinition from "../findSchemaDefinition";
+import getMatchingOption from "./getMatchingOption";
+import getSchemaType from "../getSchemaType";
+import isObject from "../isObject";
+import isFixedItems from "../isFixedItems";
+import mergeDefaultsWithFormData from "../mergeDefaultsWithFormData";
+import mergeObjects from "../mergeObjects";
+import { GenericObjectType, RJSFSchema, ValidatorType } from "../types";
+import isMultiSelect from "./isMultiSelect";
+import retrieveSchema, { resolveDependencies } from "./retrieveSchema";
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -44,19 +44,28 @@ export enum AdditionalItemsHandling {
  * @returns - The best fit schema object from the `schema` given the `additionalItems` and `idx` modifiers
  */
 export function getInnerSchemaForArrayItem(
-  schema: RJSFSchema, additionalItems: AdditionalItemsHandling = AdditionalItemsHandling.Ignore, idx = -1
+  schema: RJSFSchema,
+  additionalItems: AdditionalItemsHandling = AdditionalItemsHandling.Ignore,
+  idx = -1
 ): RJSFSchema {
   if (idx >= 0) {
     if (Array.isArray(schema.items) && idx < schema.items.length) {
       const item = schema.items[idx];
-      if (typeof item !== 'boolean') {
+      if (typeof item !== "boolean") {
         return item;
       }
     }
-  } else if (schema.items && !Array.isArray(schema.items) && typeof schema.items !== 'boolean') {
+  } else if (
+    schema.items &&
+    !Array.isArray(schema.items) &&
+    typeof schema.items !== "boolean"
+  ) {
     return schema.items;
   }
-  if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(schema.additionalItems)) {
+  if (
+    additionalItems !== AdditionalItemsHandling.Ignore &&
+    isObject(schema.additionalItems)
+  ) {
     return schema.additionalItems as RJSFSchema;
   }
   return {};
@@ -87,9 +96,12 @@ export function computeDefaults<T = any>(
   if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
-    defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
+    defaults = mergeObjects(
+      defaults!,
+      schema.default as GenericObjectType
+    ) as T;
   } else if (DEFAULT_KEY in schema) {
-    defaults = schema.default as unknown as T;
+    defaults = (schema.default as unknown) as T;
   } else if (REF_KEY in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema[REF_KEY]!, rootSchema);
@@ -102,7 +114,12 @@ export function computeDefaults<T = any>(
       includeUndefinedValues
     );
   } else if (DEPENDENCIES_KEY in schema) {
-    const resolvedSchema = resolveDependencies(validator, schema, rootSchema, formData);
+    const resolvedSchema = resolveDependencies(
+      validator,
+      schema,
+      rootSchema,
+      formData
+    );
     return computeDefaults<T>(
       validator,
       resolvedSchema,
@@ -112,62 +129,75 @@ export function computeDefaults<T = any>(
       includeUndefinedValues
     );
   } else if (isFixedItems(schema)) {
-    defaults = (schema.items! as RJSFSchema[]).map((itemSchema: RJSFSchema, idx: number) =>
-      computeDefaults<T>(
-        validator,
-        itemSchema,
-        Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
-        rootSchema,
-        formData as T,
-        includeUndefinedValues
-      )
+    defaults = (schema.items! as RJSFSchema[]).map(
+      (itemSchema: RJSFSchema, idx: number) =>
+        computeDefaults<T>(
+          validator,
+          itemSchema,
+          Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
+          rootSchema,
+          formData as T,
+          includeUndefinedValues
+        )
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
     schema = schema.oneOf![
-      getMatchingOption(validator,undefined, schema.oneOf as RJSFSchema[], rootSchema)
+      getMatchingOption(
+        validator,
+        undefined,
+        schema.oneOf as RJSFSchema[],
+        rootSchema
+      )
     ] as RJSFSchema;
   } else if (ANY_OF_KEY in schema) {
     schema = schema.anyOf![
-      getMatchingOption(validator,undefined, schema.anyOf as RJSFSchema[], rootSchema)
+      getMatchingOption(
+        validator,
+        undefined,
+        schema.anyOf as RJSFSchema[],
+        rootSchema
+      )
     ] as RJSFSchema;
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === 'undefined') {
-    defaults = schema.default as unknown as T;
+  if (typeof defaults === "undefined") {
+    defaults = (schema.default as unknown) as T;
   }
 
   switch (getSchemaType(schema)) {
     // We need to recur for object schema inner default values.
-    case 'object':
-      return Object.keys(schema.properties || {}).reduce((acc: GenericObjectType, key: string) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        const computedDefault = computeDefaults<T>(
-          validator,
-          get(schema, [PROPERTIES_KEY, key]),
-          get(defaults, [key]),
-          rootSchema,
-          get(formData, [key]),
-          includeUndefinedValues
-        );
-        if (includeUndefinedValues || computedDefault !== undefined) {
-          acc[key] = computedDefault;
-        }
-        return acc;
-      }, {}) as T;
+    case "object":
+      return Object.keys(schema.properties || {}).reduce(
+        (acc: GenericObjectType, key: string) => {
+          // Compute the defaults for this node, with the parent defaults we might
+          // have from a previous run: defaults[key].
+          const computedDefault = computeDefaults<T>(
+            validator,
+            get(schema, [PROPERTIES_KEY, key]),
+            get(defaults, [key]),
+            rootSchema,
+            get(formData, [key]),
+            includeUndefinedValues
+          );
+          if (includeUndefinedValues || computedDefault !== undefined) {
+            acc[key] = computedDefault;
+          }
+          return acc;
+        },
+        {}
+      ) as T;
 
-    case 'array':
+    case "array":
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
-          const schemaItem: RJSFSchema = getInnerSchemaForArrayItem(schema, AdditionalItemsHandling.Fallback, idx);
-          return computeDefaults<T>(
-            validator,
-            schemaItem,
-            item,
-            rootSchema
+          const schemaItem: RJSFSchema = getInnerSchemaForArrayItem(
+            schema,
+            AdditionalItemsHandling.Fallback,
+            idx
           );
+          return computeDefaults<T>(validator, schemaItem, item, rootSchema);
         }) as T[];
       }
 
@@ -190,11 +220,19 @@ export function computeDefaults<T = any>(
           if (schema.minItems > defaultsLength) {
             const defaultEntries: T[] = (defaults || []) as T[];
             // populate the array with the defaults
-            const fillerSchema: RJSFSchema = getInnerSchemaForArrayItem(schema, AdditionalItemsHandling.Invert);
+            const fillerSchema: RJSFSchema = getInnerSchemaForArrayItem(
+              schema,
+              AdditionalItemsHandling.Invert
+            );
             const fillerDefault = fillerSchema.default;
             const fillerEntries: T[] = fill(
               new Array(schema.minItems - defaultsLength),
-              computeDefaults<any>(validator, fillerSchema, fillerDefault, rootSchema)
+              computeDefaults<any>(
+                validator,
+                fillerSchema,
+                fillerDefault,
+                rootSchema
+              )
             ) as T[];
             // then fill up the rest with either the item default or empty, up to minItems
             return defaultEntries.concat(fillerEntries);
@@ -224,7 +262,7 @@ export default function getDefaultFormState<T = any>(
   includeUndefinedValues = false
 ) {
   if (!isObject(theSchema)) {
-    throw new Error('Invalid schema: ' + theSchema);
+    throw new Error("Invalid schema: " + theSchema);
   }
   const schema = retrieveSchema<T>(validator, theSchema, rootSchema, formData);
   const defaults = computeDefaults<T>(
@@ -235,7 +273,11 @@ export default function getDefaultFormState<T = any>(
     formData,
     includeUndefinedValues
   );
-  if (typeof formData === 'undefined' || formData === null || (typeof formData === 'number' && isNaN(formData))) {
+  if (
+    typeof formData === "undefined" ||
+    formData === null ||
+    (typeof formData === "number" && isNaN(formData))
+  ) {
     // No form data? Use schema defaults.
     return defaults;
   }

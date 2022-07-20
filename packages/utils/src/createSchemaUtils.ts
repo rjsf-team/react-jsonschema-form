@@ -1,5 +1,12 @@
-import deepEquals from './deepEquals';
-import { IdSchema, PathSchema, RJSFSchema, SchemaUtilsType, UiSchema, ValidatorType } from './types';
+import deepEquals from "./deepEquals";
+import {
+  IdSchema,
+  PathSchema,
+  RJSFSchema,
+  SchemaUtilsType,
+  UiSchema,
+  ValidatorType,
+} from "./types";
 import {
   getDefaultFormState,
   getDisplayLabel,
@@ -10,7 +17,7 @@ import {
   retrieveSchema,
   toIdSchema,
   toPathSchema,
-} from './schema';
+} from "./schema";
 
 /** The `SchemaUtils` class provides a wrapper around the publically exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both the `validator`
@@ -47,11 +54,16 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType, rootSchema: RJSFSchema): boolean {
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType,
+    rootSchema: RJSFSchema
+  ): boolean {
     if (!validator || !rootSchema) {
       return false;
     }
-    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
+    return (
+      this.validator !== validator || !deepEquals(this.rootSchema, rootSchema)
+    );
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
@@ -62,8 +74,18 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
    * @returns - The resulting `formData` with all the defaults provided
    */
-  getDefaultFormState(schema: RJSFSchema, formData?: T, includeUndefinedValues = false): T | T[] | undefined {
-    return getDefaultFormState<T>(this.validator, schema, formData, this.rootSchema, includeUndefinedValues);
+  getDefaultFormState(
+    schema: RJSFSchema,
+    formData?: T,
+    includeUndefinedValues = false
+  ): T | T[] | undefined {
+    return getDefaultFormState<T>(
+      this.validator,
+      schema,
+      formData,
+      this.rootSchema,
+      includeUndefinedValues
+    );
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
@@ -74,7 +96,12 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
-    return getDisplayLabel<T, F>(this.validator, schema, uiSchema, this.rootSchema);
+    return getDisplayLabel<T, F>(
+      this.validator,
+      schema,
+      uiSchema,
+      this.rootSchema
+    );
   }
 
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
@@ -84,7 +111,12 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - The index of the matched option or 0 if none is available
    */
   getMatchingOption(formData: T, options: RJSFSchema[]) {
-    return getMatchingOption<T>(this.validator, formData, options, this.rootSchema);
+    return getMatchingOption<T>(
+      this.validator,
+      formData,
+      options,
+      this.rootSchema
+    );
   }
 
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
@@ -94,7 +126,12 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
-    return isFilesArray<T, F>(this.validator, schema, uiSchema, this.rootSchema);
+    return isFilesArray<T, F>(
+      this.validator,
+      schema,
+      uiSchema,
+      this.rootSchema
+    );
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -124,7 +161,12 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: RJSFSchema, rawFormData: T) {
-    return retrieveSchema<T>(this.validator, schema, this.rootSchema, rawFormData);
+    return retrieveSchema<T>(
+      this.validator,
+      schema,
+      this.rootSchema,
+      rawFormData
+    );
   }
 
   /** Generates an `IdSchema` object for the `schema`, recursively
@@ -137,9 +179,21 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - The `IdSchema` object for the `schema`
    */
   toIdSchema(
-    schema: RJSFSchema, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_'
+    schema: RJSFSchema,
+    id?: string | null,
+    formData?: T,
+    idPrefix = "root",
+    idSeparator = "_"
   ): IdSchema<T> {
-    return toIdSchema<T>(this.validator, schema, id, this.rootSchema, formData, idPrefix, idSeparator);
+    return toIdSchema<T>(
+      this.validator,
+      schema,
+      id,
+      this.rootSchema,
+      formData,
+      idPrefix,
+      idSeparator
+    );
   }
 
   /** Generates an `PathSchema` object for the `schema`, recursively
@@ -150,7 +204,13 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T>(this.validator, schema, name, this.rootSchema, formData);
+    return toPathSchema<T>(
+      this.validator,
+      schema,
+      name,
+      this.rootSchema,
+      formData
+    );
   }
 }
 
@@ -161,7 +221,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  */
 export default function createSchemaUtils<T = any>(
-  validator: ValidatorType, rootSchema: RJSFSchema
+  validator: ValidatorType,
+  rootSchema: RJSFSchema
 ): SchemaUtilsType<T> {
   return new SchemaUtils<T>(validator, rootSchema);
 }

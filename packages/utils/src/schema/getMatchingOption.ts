@@ -1,4 +1,4 @@
-import { RJSFSchema, ValidatorType } from '../types';
+import { RJSFSchema, ValidatorType } from "../types";
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
  *
@@ -9,7 +9,10 @@ import { RJSFSchema, ValidatorType } from '../types';
  * @returns - The index of the matched option or 0 if none is available
  */
 export default function getMatchingOption<T = any>(
-  validator: ValidatorType, formData: T | undefined, options: RJSFSchema[], rootSchema: RJSFSchema
+  validator: ValidatorType,
+  formData: T | undefined,
+  options: RJSFSchema[],
+  rootSchema: RJSFSchema
 ): number {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.

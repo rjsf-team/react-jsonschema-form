@@ -1,6 +1,6 @@
-import { RJSFSchema, ValidatorType } from '../types';
+import { RJSFSchema, ValidatorType } from "../types";
 
-import isSelect from './isSelect';
+import isSelect from "./isSelect";
 
 /** Checks to see if the `schema` combination represents a multi-select
  *
@@ -10,9 +10,15 @@ import isSelect from './isSelect';
  * @returns - True if schema contains a multi-select, otherwise false
  */
 export default function isMultiSelect<T = any>(
-  validator: ValidatorType, schema: RJSFSchema, rootSchema?: RJSFSchema
+  validator: ValidatorType,
+  schema: RJSFSchema,
+  rootSchema?: RJSFSchema
 ) {
-  if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
+  if (
+    !schema.uniqueItems ||
+    !schema.items ||
+    typeof schema.items === "boolean"
+  ) {
     return false;
   }
   return isSelect<T>(validator, schema.items as RJSFSchema, rootSchema);

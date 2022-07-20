@@ -1,5 +1,5 @@
-import guessType from './guessType';
-import { RJSFSchema } from './types';
+import guessType from "./guessType";
+import { RJSFSchema } from "./types";
 
 /** Gets the type of a given `schema`. If the type is not explicitly defined, then an attempt is made to infer it from
  * other elements of the schema as follows:
@@ -12,7 +12,9 @@ import { RJSFSchema } from './types';
  * @param schema - The schema for which to get the type
  * @returns - The type of the schema
  */
-export default function getSchemaType(schema: RJSFSchema): string | string[] | undefined {
+export default function getSchemaType(
+  schema: RJSFSchema
+): string | string[] | undefined {
   let { type } = schema;
 
   if (!type && schema.const) {
@@ -20,15 +22,15 @@ export default function getSchemaType(schema: RJSFSchema): string | string[] | u
   }
 
   if (!type && schema.enum) {
-    return 'string';
+    return "string";
   }
 
   if (!type && (schema.properties || schema.additionalProperties)) {
-    return 'object';
+    return "object";
   }
 
-  if (Array.isArray(type) && type.length === 2 && type.includes('null')) {
-    type =  type.find(type => type !== 'null');
+  if (Array.isArray(type) && type.length === 2 && type.includes("null")) {
+    type = type.find(type => type !== "null");
   }
 
   return type;

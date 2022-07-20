@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import get from "lodash/get";
 
 import {
   ALL_OF_KEY,
@@ -6,10 +6,10 @@ import {
   ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
-} from '../constants';
-import isObject from '../isObject';
-import { IdSchema, RJSFSchema, ValidatorType } from '../types';
-import retrieveSchema from './retrieveSchema';
+} from "../constants";
+import isObject from "../isObject";
+import { IdSchema, RJSFSchema, ValidatorType } from "../types";
+import retrieveSchema from "./retrieveSchema";
 
 /** Generates an `IdSchema` object for the `schema`, recursively
  *
@@ -28,12 +28,20 @@ export default function toIdSchema<T>(
   id?: string | null,
   rootSchema?: RJSFSchema,
   formData?: T,
-  idPrefix = 'root',
-  idSeparator = '_'
+  idPrefix = "root",
+  idSeparator = "_"
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
-    return toIdSchema<T>(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
+    return toIdSchema<T>(
+      validator,
+      _schema,
+      id,
+      rootSchema,
+      formData,
+      idPrefix,
+      idSeparator
+    );
   }
   if (ITEMS_KEY in schema && !get(schema, [ITEMS_KEY, REF_KEY])) {
     return toIdSchema<T>(
@@ -48,7 +56,7 @@ export default function toIdSchema<T>(
   }
   const $id = id || idPrefix;
   const idSchema: IdSchema = { $id } as IdSchema<T>;
-  if (schema.type === 'object' && PROPERTIES_KEY in schema) {
+  if (schema.type === "object" && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema.$id + idSeparator + name;
