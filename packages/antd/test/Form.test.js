@@ -1,9 +1,9 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-import validator from '@rjsf/validator-ajv6';
+import React from "react";
+import renderer from "react-test-renderer";
+import validator from "@rjsf/validator-ajv6";
 
-import '../__mocks__/matchMedia.mock';
-import Form from '../src';
+import "../__mocks__/matchMedia.mock";
+import Form from "../src";
 
 const { describe, expect, test } = global;
 
@@ -11,7 +11,7 @@ describe("single fields", () => {
   describe("string field", () => {
     test("regular", () => {
       const schema = {
-        type: "string"
+        type: "string",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -21,7 +21,7 @@ describe("single fields", () => {
     test("format email", () => {
       const schema = {
         type: "string",
-        format: "email"
+        format: "email",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -31,7 +31,7 @@ describe("single fields", () => {
     test("format uri", () => {
       const schema = {
         type: "string",
-        format: "uri"
+        format: "uri",
       };
       const tree = renderer
         .create(<Form schema={schema} validator={validator} />)
@@ -51,7 +51,7 @@ describe("single fields", () => {
   });
   test("number field", () => {
     const schema = {
-      type: "number"
+      type: "number",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -60,7 +60,7 @@ describe("single fields", () => {
   });
   test("null field", () => {
     const schema = {
-      type: "null"
+      type: "null",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -69,7 +69,7 @@ describe("single fields", () => {
   });
   test("unsupported field", () => {
     const schema = {
-      type: undefined
+      type: undefined,
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -91,7 +91,9 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -102,8 +104,8 @@ describe("single fields", () => {
         "my-field": {
           type: "string",
           description: "some description",
-        }
-      }
+        },
+      },
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -117,8 +119,8 @@ describe("single fields", () => {
         "my-field": {
           type: "string",
           description: "some description",
-        }
-      }
+        },
+      },
     };
     const uiSchema = {
       "my-field": {
@@ -126,13 +128,15 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("using custom tagName", () => {
     const schema = {
-      type: "string"
+      type: "string",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} tagName="div" />)
