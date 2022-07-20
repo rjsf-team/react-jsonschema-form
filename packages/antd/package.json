@@ -18,7 +18,8 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },  "files": [
+  },
+  "files": [
     "dist"
   ],
   "engineStrict": false,
