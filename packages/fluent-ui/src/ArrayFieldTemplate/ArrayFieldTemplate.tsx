@@ -6,7 +6,7 @@ import AddButton from "../AddButton/AddButton";
 import IconButton from "../IconButton/IconButton";
 
 const rightJustify = {
-  float: "right"
+  float: "right",
 } as React.CSSProperties;
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
@@ -66,11 +66,12 @@ const DefaultArrayItem = (props: any) => {
     <div key={props.key} className="ms-Grid" dir="ltr">
       <div className="ms-Grid-row">
         <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg9">
-          <div className="ms-Grid-row">
-          {props.children}
-          </div>
+          <div className="ms-Grid-row">{props.children}</div>
         </div>
-        <div className="ms-Grid-col ms-sm6 ms-md4 ms-lg3" style={{textAlign: "right"}}>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={{ textAlign: "right" }}
+        >
           <IconButton
             icon="arrow-up"
             className="array-item-move-up"
@@ -110,14 +111,16 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       {(uiProps.description || props.schema.description) && (
         <div
           className="field-description"
-          key={`field-description-${props.idSchema.$id}`}>
+          key={`field-description-${props.idSchema.$id}`}
+        >
           {uiProps.description || props.schema.description}
         </div>
       )}
 
       <div
         className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}>
+        key={`array-item-list-${props.idSchema.$id}`}
+      >
         {props.items && props.items.map(DefaultArrayItem)}
       </div>
 

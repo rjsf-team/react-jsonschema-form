@@ -24,7 +24,7 @@ export const allowedProps = [
   "onChange",
   "onRenderLabel",
   "styles",
-  "theme"
+  "theme",
 ];
 
 const CheckboxWidget = (props: WidgetProps) => {
@@ -43,7 +43,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     options,
   } = props;
 
-  const _onChange = React.useCallback(({}, checked?: boolean): void => {
+  const _onChange = React.useCallback((_, checked?: boolean): void => {
     onChange(checked);
   }, []);
 
@@ -54,21 +54,21 @@ const CheckboxWidget = (props: WidgetProps) => {
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
-        <Checkbox
-          id={id}
-          label={label || schema.title}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          checked={typeof value === "undefined" ? false : value}
-          onChange={_onChange}
-          {...uiProps}
-        />
+      <Checkbox
+        id={id}
+        label={label || schema.title}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        checked={typeof value === "undefined" ? false : value}
+        onChange={_onChange}
+        {...uiProps}
+      />
     </>
   );
 };

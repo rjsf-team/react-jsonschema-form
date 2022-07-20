@@ -6,7 +6,7 @@ const EmailWidget = (props: WidgetProps) => {
   const { registry } = props;
   const { TextWidget } = registry.widgets;
   const uiProps: any = props.options["props"] || {};
-  let options = {
+  const options = {
     ...props.options,
     props: {
       type: "email",

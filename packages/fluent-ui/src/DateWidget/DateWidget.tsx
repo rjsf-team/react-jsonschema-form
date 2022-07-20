@@ -1,10 +1,6 @@
 import React from "react";
 import { WidgetProps } from "@rjsf/utils";
-import {
-  DatePicker,
-  DayOfWeek,
-  mergeStyleSets,
-} from "@fluentui/react";
+import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";
 import { pad } from "@rjsf/utils";
 
@@ -49,7 +45,7 @@ const allowedProps = [
   "allFocusable",
   "onAfterMenuDismiss",
   "showCloseButton",
-  "tabIndex"
+  "tabIndex",
 ];
 
 const controlClass = mergeStyleSets({
@@ -68,17 +64,17 @@ const formatDate = (date?: Date) => {
   const yyyy = pad(date.getFullYear(), 4);
   const MM = pad(date.getMonth() + 1, 2);
   const dd = pad(date.getDate(), 2);
-  return `${yyyy}-${MM}-${dd}`
-}
+  return `${yyyy}-${MM}-${dd}`;
+};
 
 const parseDate = (dateStr?: string) => {
   if (!dateStr) {
     return undefined;
   }
   const [year, month, day] = dateStr.split("-").map(e => parseInt(e));
-  var dt = new Date(year, month - 1, day);
+  const dt = new Date(year, month - 1, day);
   return dt;
-}
+};
 
 const DateWidget = ({
   id,
@@ -96,7 +92,7 @@ const DateWidget = ({
       const formatted = formatDate(date);
       formatted && onChange(formatted);
     }
-  }
+  };
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
