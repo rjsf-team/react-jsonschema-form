@@ -70,7 +70,10 @@ const CheckboxesWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      <CheckboxGroup onChange={option => onChange(option)} defaultValue={value}>
+      <CheckboxGroup
+        onChange={(option) => onChange(option)}
+        defaultValue={value}
+      >
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map(
             (option: { value: any; label: any }, index: any) => {

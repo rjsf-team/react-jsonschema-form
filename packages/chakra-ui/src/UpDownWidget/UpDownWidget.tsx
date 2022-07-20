@@ -30,7 +30,8 @@ const UpDownWidget = (props: WidgetProps) => {
 
   const { schemaUtils } = registry;
   const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) &&
+    (!!label || !!schema.title);
 
   const chakraProps = getChakra({ uiSchema });
 

@@ -27,10 +27,11 @@ const RangeWidget = ({
   const { schemaUtils } = registry;
   const chakraProps = getChakra({ uiSchema });
 
-  let sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
 
   const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) &&
+    (!!label || !!schema.title);
 
   const _onChange = (value: undefined | number) =>
     onChange(value === undefined ? options.emptyValue : value);
