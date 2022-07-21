@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: npm run build
 
-    - if: matrix.node-version == '14.x'
+    - if: matrix.node-version == '16.x'
       uses: actions/upload-artifact@v2
       with:
         name: dist
