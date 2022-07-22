@@ -13,9 +13,9 @@ const rangeOptions = (start, stop) => {
   return options;
 };
 
-const readyForChange = state => {
+const readyForChange = (state) => {
   return Object.keys(state).every(
-    key => typeof state[key] !== "undefined" && state[key] !== -1
+    (key) => typeof state[key] !== "undefined" && state[key] !== -1
   );
 };
 
@@ -55,7 +55,7 @@ const AltDateWidget = ({
     }
   };
 
-  const handleNow = event => {
+  const handleNow = (event) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -64,7 +64,7 @@ const AltDateWidget = ({
     onChange(toDateString(nextState, showTime));
   };
 
-  const handleClear = event => {
+  const handleClear = (event) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -92,14 +92,14 @@ const AltDateWidget = ({
     return data;
   };
 
-  const renderDateElement = elemProps => (
+  const renderDateElement = (elemProps) => (
     <SelectWidget
       autofocus={elemProps.autofocus}
       className="form-control"
       disabled={elemProps.disabled}
       id={elemProps.id}
       onBlur={elemProps.onBlur}
-      onChange={elemValue => elemProps.select(elemProps.type, elemValue)}
+      onChange={(elemValue) => elemProps.select(elemProps.type, elemValue)}
       onFocus={elemProps.onFocus}
       options={{
         enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),

@@ -11,6 +11,6 @@ export default function isFixedItems(schema: RJSFSchema) {
   return (
     Array.isArray(schema.items) &&
     schema.items.length > 0 &&
-    schema.items.every(item => isObject(item))
+    schema.items.every((item) => isObject(item))
   );
 }

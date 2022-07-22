@@ -158,7 +158,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         />
       )}
 
-      {props.items && props.items.map(p => DefaultArrayItem(p))}
+      {props.items && props.items.map((p) => DefaultArrayItem(p))}
 
       {props.canAdd && (
         <span style={rightJustify}>

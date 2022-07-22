@@ -1,9 +1,8 @@
 import React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, rangeSpec } from "@rjsf/utils";
 import _pick from "lodash/pick";
-import { rangeSpec } from "@rjsf/utils";
 
 // Keys of ISpinButtonProps from @fluentui/react
 const allowedProps = [
@@ -94,7 +93,7 @@ WidgetProps) => {
 
   const requiredSymbol = required ? "*" : "";
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
@@ -114,7 +113,6 @@ WidgetProps) => {
         onChange={_onChange}
         onIncrement={_onIncrement}
         onDecrement={_onDecrement}
-        for=""
         {...uiProps}
       />
     </>

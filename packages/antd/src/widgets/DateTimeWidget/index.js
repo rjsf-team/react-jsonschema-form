@@ -25,14 +25,14 @@ const DateTimeWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = nextValue =>
+  const handleChange = (nextValue) =>
     onChange(nextValue && nextValue.toISOString());
 
   const handleBlur = () => onBlur(id, value);
 
   const handleFocus = () => onFocus(id, value);
 
-  const getPopupContainer = node => node.parentNode;
+  const getPopupContainer = (node) => node.parentNode;
 
   return (
     <DatePicker

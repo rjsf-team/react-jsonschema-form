@@ -29,16 +29,16 @@ const SelectWidget = ({
 
   const { enumOptions, enumDisabled } = options;
 
-  const handleChange = nextValue =>
+  const handleChange = (nextValue) =>
     onChange(processSelectValue(schema, nextValue));
 
   const handleBlur = () => onBlur(id, processSelectValue(schema, value));
 
   const handleFocus = () => onFocus(id, processSelectValue(schema, value));
 
-  const getPopupContainer = node => node.parentNode;
+  const getPopupContainer = (node) => node.parentNode;
 
-  const stringify = currentValue =>
+  const stringify = (currentValue) =>
     Array.isArray(currentValue) ? value.map(String) : String(value);
 
   return (

@@ -34,19 +34,17 @@ export type FieldId = {
   $id: string;
 };
 
-export type IdSchema<T = any> = FieldId &
-  {
-    [key in keyof T]?: IdSchema<T[key]>;
-  };
+export type IdSchema<T = any> = FieldId & {
+  [key in keyof T]?: IdSchema<T[key]>;
+};
 
 export type FieldPath = {
   $name: string;
 };
 
-export type PathSchema<T = any> = FieldPath &
-  {
-    [key in keyof T]?: PathSchema<T[key]>;
-  };
+export type PathSchema<T = any> = FieldPath & {
+  [key in keyof T]?: PathSchema<T[key]>;
+};
 
 export type RJSFValidationError = {
   message?: string;
@@ -63,19 +61,17 @@ export type FieldErrors = {
   __errors?: FieldError[];
 };
 
-export type ErrorSchema<T = any> = FieldErrors &
-  {
-    [key in keyof T]?: ErrorSchema<T[key]>;
-  };
+export type ErrorSchema<T = any> = FieldErrors & {
+  [key in keyof T]?: ErrorSchema<T[key]>;
+};
 
 export type FieldValidation = FieldErrors & {
   addError: (message: string) => void;
 };
 
-export type FormValidation<T = any> = FieldValidation &
-  {
-    [key in keyof T]?: FormValidation<T[key]>;
-  };
+export type FormValidation<T = any> = FieldValidation & {
+  [key in keyof T]?: FormValidation<T[key]>;
+};
 
 export type ErrorListProps<T = any, F = any> = {
   errorSchema: ErrorSchema<T>;

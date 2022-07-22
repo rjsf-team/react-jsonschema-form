@@ -12,7 +12,7 @@ export default function dataURItoBlob(dataURI: string) {
   // Get mime-type from params
   const type: string = params[0].replace("data:", "");
   // Filter the name property from params
-  const properties = params.filter(param => {
+  const properties = params.filter((param) => {
     return param.split("=")[0] === "name";
   });
   // Look for the name and use unknown if no name property.

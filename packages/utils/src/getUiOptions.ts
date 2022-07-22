@@ -12,7 +12,7 @@ export default function getUiOptions<T = any, F = any>(
   uiSchema: UiSchema<T, F> = {}
 ): UIOptionsType {
   return Object.keys(uiSchema)
-    .filter(key => key.indexOf("ui:") === 0)
+    .filter((key) => key.indexOf("ui:") === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
       if (key === UI_WIDGET_KEY && isObject(value)) {

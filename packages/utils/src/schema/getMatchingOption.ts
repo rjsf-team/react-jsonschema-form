@@ -33,7 +33,7 @@ export default function getMatchingOption<T = any>(
       // Create an "anyOf" schema that requires at least one of the keys in the
       // "properties" object
       const requiresAnyOf = {
-        anyOf: Object.keys(option.properties).map(key => ({
+        anyOf: Object.keys(option.properties).map((key) => ({
           required: [key],
         })),
       };

@@ -12,7 +12,7 @@ describe("optionsList()", () => {
       enumNames: ["Option1", "Option2", "Option3"],
     };
     expect(optionsList(enumSchema)).toEqual(
-      enumSchema.enum!.map(opt => ({ label: opt, value: opt }))
+      enumSchema.enum!.map((opt) => ({ label: opt, value: opt }))
     );
     expect(optionsList(enumNameSchema)).toEqual(
       enumNameSchema.enum!.map((opt, index) => {
@@ -48,14 +48,14 @@ describe("optionsList()", () => {
       anyOf: oneOfSchema.oneOf,
     };
     expect(optionsList(oneOfSchema)).toEqual(
-      oneOfSchema.oneOf.map(schema => ({
+      oneOfSchema.oneOf.map((schema) => ({
         schema,
         label: schema.title,
         value: schema.const,
       }))
     );
     expect(optionsList(anyofSchema)).toEqual(
-      anyofSchema.anyOf.map(schema => ({
+      anyofSchema.anyOf.map((schema) => ({
         schema,
         label: schema.title,
         value: schema.const,
@@ -73,7 +73,7 @@ describe("optionsList()", () => {
       ],
     };
     expect(optionsList(oneOfSchema)).toEqual(
-      oneOfSchema.oneOf.map(schema => ({
+      oneOfSchema.oneOf.map((schema) => ({
         schema,
         label: schema.const,
         value: schema.const,
