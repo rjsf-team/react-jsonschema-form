@@ -37,8 +37,9 @@ export default function toPathSchema<T = any>(
     $name: name.replace(/^\./, ""),
   } as PathSchema;
 
-  if (ADDITIONAL_PROPERTIES_KEY in schema) {
-    set(pathSchema, "__rjsf_additionalProperties", true);
+  if (ADDITIONAL_PROPERTIES_KEY in schema && 
+    schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
+    set(pathSchema, '__rjsf_additionalProperties', true);
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {
