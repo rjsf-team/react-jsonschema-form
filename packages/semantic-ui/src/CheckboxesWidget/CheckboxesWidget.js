@@ -13,7 +13,7 @@ function selectValue(value, selected, all) {
 }
 
 function deselectValue(value, selected) {
-  return selected.filter((v) => v !== value);
+  return selected.filter(v => v !== value);
 }
 
 function CheckboxesWidget(props) {
@@ -42,17 +42,15 @@ function CheckboxesWidget(props) {
       inverted: false,
     },
   });
-  const _onChange =
-    (option) =>
-    ({ target: { checked } }) => {
-      // eslint-disable-next-line no-shadow
-      const all = enumOptions.map(({ value }) => value);
-      if (checked) {
-        onChange(selectValue(option.value, value, all));
-      } else {
-        onChange(deselectValue(option.value, value));
-      }
-    };
+  const _onChange = option => ({ target: { checked } }) => {
+    // eslint-disable-next-line no-shadow
+    const all = enumOptions.map(({ value }) => value);
+    if (checked) {
+      onChange(selectValue(option.value, value, all));
+    } else {
+      onChange(deselectValue(option.value, value));
+    }
+  };
 
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);

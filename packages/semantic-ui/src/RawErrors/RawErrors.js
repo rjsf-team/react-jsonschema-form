@@ -23,7 +23,7 @@ function RawErrors({ errors, options }) {
         basic
       >
         <List bulleted>
-          {errors.map((error) => (
+          {errors.map(error => (
             <List.Item key={nanoid()} content={error} />
           ))}
         </List>
