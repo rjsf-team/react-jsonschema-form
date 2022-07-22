@@ -52,7 +52,7 @@
     "@types/react-is": "^17.0.3",
     "@types/react-test-renderer": "^16.9.5",
     "dts-cli": "^1.5.2",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "jest-expect-message": "^1.0.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
