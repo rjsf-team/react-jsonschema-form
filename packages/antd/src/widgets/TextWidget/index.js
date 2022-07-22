@@ -25,7 +25,7 @@ const TextWidget = ({
 }) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleNumberChange = nextValue => onChange(nextValue);
+  const handleNumberChange = (nextValue) => onChange(nextValue);
 
   const handleTextChange = ({ target }) =>
     onChange(target.value === "" ? options.emptyValue : target.value);

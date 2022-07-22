@@ -24,7 +24,7 @@ export default function optionsList(schema: RJSFSchema) {
   const altSchemas = schema.oneOf || schema.anyOf;
   return (
     altSchemas &&
-    altSchemas.map(aSchemaDef => {
+    altSchemas.map((aSchemaDef) => {
       const aSchema = aSchemaDef as RJSFSchema;
       const value = toConstant(aSchema);
       const label = aSchema.title || String(value);

@@ -186,7 +186,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         )}
 
         <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items && props.items.map(p => DefaultArrayItem(p))}
+          {props.items && props.items.map((p) => DefaultArrayItem(p))}
 
           {props.canAdd && (
             <Grid container justifyContent="flex-end">

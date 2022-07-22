@@ -111,7 +111,7 @@ describe("AJV6Validator", () => {
         expect(validator.toErrorList()).toEqual([]);
       });
       it("should convert an errorSchema into a flat list", () => {
-        const errorSchema: ErrorSchema = ({
+        const errorSchema: ErrorSchema = {
           __errors: ["err1", "err2"],
           a: {
             b: {
@@ -121,7 +121,7 @@ describe("AJV6Validator", () => {
           c: {
             __errors: ["err5"],
           } as ErrorSchema,
-        } as unknown) as ErrorSchema;
+        } as unknown as ErrorSchema;
         expect(validator.toErrorList(errorSchema)).toEqual([
           { stack: "root: err1" },
           { stack: "root: err2" },
@@ -365,7 +365,7 @@ describe("AJV6Validator", () => {
             properties: {
               foo: {
                 type: "string",
-                required: ("invalid_type_non_array" as unknown) as string[],
+                required: "invalid_type_non_array" as unknown as string[],
               },
             },
           };

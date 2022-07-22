@@ -39,9 +39,9 @@ describe("mergeDefaultsWithFormData()", () => {
   });
 
   it("should deeply merge arrays with overlapping entries", () => {
-    expect(
-      mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])
-    ).toEqual([{ a: 1, b: 2 }, { c: 3 }]);
+    expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual(
+      [{ a: 1, b: 2 }, { c: 3 }]
+    );
   });
 
   it("should recursively merge deeply nested objects", () => {

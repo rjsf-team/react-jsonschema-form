@@ -88,14 +88,14 @@ const SelectWidget = ({
   const _onFocus = (e: any) => onFocus(id, e.target.value);
 
   const newOptions = (enumOptions as { value: any; label: any }[]).map(
-    option => ({
+    (option) => ({
       key: option.value,
       text: option.label,
       disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
     })
   );
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <>
       <Label>{label || schema.title}</Label>

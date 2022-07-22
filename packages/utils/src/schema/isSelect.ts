@@ -21,7 +21,7 @@ export default function isSelect<T = any>(
   }
   if (Array.isArray(altSchemas)) {
     return altSchemas.every(
-      altSchemas => typeof altSchemas !== "boolean" && isConstant(altSchemas)
+      (altSchemas) => typeof altSchemas !== "boolean" && isConstant(altSchemas)
     );
   }
   return false;

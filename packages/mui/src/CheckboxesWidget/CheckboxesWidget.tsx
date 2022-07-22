@@ -34,17 +34,17 @@ const CheckboxesWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled, inline } = options;
 
-  const _onChange = (option: any) => ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    const all = (enumOptions as any).map(({ value }: any) => value);
+  const _onChange =
+    (option: any) =>
+    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+      const all = (enumOptions as any).map(({ value }: any) => value);
 
-    if (checked) {
-      onChange(selectValue(option.value, value, all));
-    } else {
-      onChange(deselectValue(option.value, value));
-    }
-  };
+      if (checked) {
+        onChange(selectValue(option.value, value, all));
+      } else {
+        onChange(deselectValue(option.value, value));
+      }
+    };
 
   const _onBlur = ({
     target: { value },

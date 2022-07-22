@@ -39,17 +39,17 @@ const ObjectFieldTemplate = ({
     // labelCol.className,
   );
 
-  const findSchema = element => element.content.props.schema;
+  const findSchema = (element) => element.content.props.schema;
 
-  const findSchemaType = element => findSchema(element).type;
+  const findSchemaType = (element) => findSchema(element).type;
 
-  const findUiSchema = element => element.content.props.uiSchema;
+  const findUiSchema = (element) => element.content.props.uiSchema;
 
-  const findUiSchemaField = element => findUiSchema(element)["ui:field"];
+  const findUiSchemaField = (element) => findUiSchema(element)["ui:field"];
 
-  const findUiSchemaWidget = element => findUiSchema(element)["ui:widget"];
+  const findUiSchemaWidget = (element) => findUiSchema(element)["ui:widget"];
 
-  const calculateColSpan = element => {
+  const calculateColSpan = (element) => {
     const type = findSchemaType(element);
     const field = findUiSchemaField(element);
     const widget = findUiSchemaWidget(element);
@@ -95,8 +95,8 @@ const ObjectFieldTemplate = ({
             </Col>
           )}
         {properties
-          .filter(e => !e.hidden)
-          .map(element => (
+          .filter((e) => !e.hidden)
+          .map((element) => (
             <Col key={element.name} span={calculateColSpan(element)}>
               {element.content}
             </Col>

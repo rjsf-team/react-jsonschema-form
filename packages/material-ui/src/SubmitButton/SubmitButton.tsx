@@ -3,7 +3,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { WidgetProps, getSubmitButtonOptions } from "@rjsf/utils";
 
-const SubmitButton: React.ComponentType<WidgetProps> = props => {
+const SubmitButton: React.ComponentType<WidgetProps> = (props) => {
   const {
     submitText,
     norender,

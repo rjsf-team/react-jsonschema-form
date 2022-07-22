@@ -26,7 +26,7 @@ const RangeWidget = ({
 
   const emptyValue = options.emptyValue || "";
 
-  const handleChange = nextValue =>
+  const handleChange = (nextValue) =>
     onChange(nextValue === "" ? emptyValue : nextValue);
 
   const handleBlur = () => onBlur(id, value);

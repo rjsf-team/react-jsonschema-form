@@ -102,7 +102,7 @@ export function resolveSchema<T = any>(
   if (ALL_OF_KEY in schema) {
     return {
       ...schema,
-      allOf: schema.allOf!.map(allOfSubschema =>
+      allOf: schema.allOf!.map((allOfSubschema) =>
         retrieveSchema<T>(
           validator,
           allOfSubschema as RJSFSchema,
@@ -166,7 +166,7 @@ export function stubExistingAdditionalProperties<T = any>(
   // make sure formData is an object
   const formData: GenericObjectType =
     aFormData && isObject(aFormData) ? aFormData : {};
-  Object.keys(formData).forEach(key => {
+  Object.keys(formData).forEach((key) => {
     if (key in schema.properties) {
       // No need to stub, our schema already has the property
       return;
@@ -235,7 +235,7 @@ export default function retrieveSchema<T = any>(
   if (resolvedSchema.properties) {
     const properties: GenericObjectType = {};
 
-    Object.entries(resolvedSchema.properties).forEach(entries => {
+    Object.entries(resolvedSchema.properties).forEach((entries) => {
       const propName = entries[0];
       const propSchema = entries[1] as RJSFSchema;
       const rawPropData = formData[propName];
@@ -432,7 +432,7 @@ export function withDependentSchema<T>(
     return schema;
   }
   // Resolve $refs inside oneOf.
-  const resolvedOneOf = oneOf.map(subschema => {
+  const resolvedOneOf = oneOf.map((subschema) => {
     if (typeof subschema === "boolean" || !(REF_KEY in subschema)) {
       return subschema;
     }
@@ -471,7 +471,7 @@ export function withExactlyOneSubschema<T = any>(
   oneOf: RJSFSchemaDefinition[],
   formData?: T
 ) {
-  const validSubschemas = oneOf.filter(subschema => {
+  const validSubschemas = oneOf.filter((subschema) => {
     if (typeof subschema === "boolean" || !subschema.properties) {
       return false;
     }

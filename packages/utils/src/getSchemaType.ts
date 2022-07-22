@@ -30,7 +30,7 @@ export default function getSchemaType(
   }
 
   if (Array.isArray(type) && type.length === 2 && type.includes("null")) {
-    type = type.find(type => type !== "null");
+    type = type.find((type) => type !== "null");
   }
 
   return type;
