@@ -38,7 +38,7 @@ export default function toPathSchema<T = any>(
   } as PathSchema;
 
   if (ADDITIONAL_PROPERTIES_KEY in schema && 
-    schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
+    schema[ADDITIONAL_PROPERTIES_KEY] === true) {
     set(pathSchema, '__rjsf_additionalProperties', true);
   }
 

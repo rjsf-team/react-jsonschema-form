@@ -15,6 +15,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         $name: "",
         __rjsf_additionalProperties: true,
       });
+    });
     it('should return a pathSchema for root field, without additional properties', () => {
       const schema: RJSFSchema = { type: 'string', additionalProperties: false };
 
