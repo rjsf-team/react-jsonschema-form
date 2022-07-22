@@ -1,13 +1,24 @@
-import React from 'react';
-import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from '@rjsf/utils';
+import React from "react";
+import RemoveIcon from "@material-ui/icons/Remove";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 
-import { useMuiComponent } from '../MuiComponentContext';
-
-type WrapIfAdditionalProps = { children: React.ReactElement; } &
-  Pick<
-    FieldTemplateProps,
-    'classNames' | 'disabled' | 'id' | 'label' | 'onDropPropertyClick' | 'onKeyChange' | 'readonly' | 'required' | 'schema'
-  >;
+type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
+  FieldTemplateProps,
+  | "classNames"
+  | "disabled"
+  | "id"
+  | "label"
+  | "onDropPropertyClick"
+  | "onKeyChange"
+  | "readonly"
+  | "required"
+  | "schema"
+>;
 
 const WrapIfAdditional = ({
   children,
@@ -20,21 +31,21 @@ const WrapIfAdditional = ({
   required,
   schema,
 }: WrapIfAdditionalProps) => {
-  const { Grid, FormControl, IconButton, InputLabel, Input, RemoveIcon } = useMuiComponent();
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   };
 
   if (!additional) {
     return <>{children}</>;
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onKeyChange(target.value);
 
   return (
     <Grid container={true} key={`${id}-key`} alignItems="center" spacing={2}>

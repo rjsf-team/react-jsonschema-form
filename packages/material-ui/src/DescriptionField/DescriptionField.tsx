@@ -1,13 +1,11 @@
-import React from 'react';
-import { FieldProps } from '@rjsf/utils';
-
-import { useMuiComponent } from '../MuiComponentContext';
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import { FieldProps } from "@rjsf/utils";
 
 const DescriptionField = ({ description }: FieldProps) => {
-  const { Typography } = useMuiComponent();
   if (description) {
     return (
-      <Typography variant="subtitle2" style={{ marginTop: '5px' }}>
+      <Typography variant="subtitle2" style={{ marginTop: "5px" }}>
         {description}
       </Typography>
     );

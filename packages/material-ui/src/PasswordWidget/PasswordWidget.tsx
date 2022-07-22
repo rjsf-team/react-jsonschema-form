@@ -1,6 +1,5 @@
-import React from 'react';
-
-import { WidgetProps } from '@rjsf/utils';
+import React from "react";
+import { WidgetProps } from "@rjsf/utils";
 
 const PasswordWidget = (props: WidgetProps) => {
   const { registry } = props;
