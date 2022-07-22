@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
-import Form from "../src/index";
+import Form from "../src";
 
 describe("array fields", () => {
   test("array", () => {
     const schema: RJSFSchema = {
       type: "array",
       items: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -23,12 +23,12 @@ describe("array fields", () => {
       type: "array",
       items: [
         {
-          type: "string"
+          type: "string",
         },
         {
-          type: "number"
-        }
-      ]
+          type: "number",
+        },
+      ],
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -40,9 +40,9 @@ describe("array fields", () => {
       type: "array",
       items: {
         type: "string",
-        enum: ["a", "b", "c"]
+        enum: ["a", "b", "c"],
       },
-      uniqueItems: true
+      uniqueItems: true,
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -53,11 +53,13 @@ describe("array fields", () => {
     const schema: RJSFSchema = {
       type: "array",
       items: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} formData={['a', 'b']} />)
+      .create(
+        <Form schema={schema} validator={validator} formData={["a", "b"]} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

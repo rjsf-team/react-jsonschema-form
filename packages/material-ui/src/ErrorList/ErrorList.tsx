@@ -1,10 +1,15 @@
-import React from 'react';
-import { ErrorListProps } from '@rjsf/utils';
-
-import { useMuiComponent } from '../MuiComponentContext';
+import React from "react";
+import ErrorIcon from "@material-ui/icons/Error";
+import Box from "@material-ui/core/Box";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import { ErrorListProps } from "@rjsf/utils";
 
 const ErrorList = ({ errors }: ErrorListProps) => {
-  const { Box, Typography, List, ListItem, ListItemIcon, ListItemText, Paper, ErrorIcon } = useMuiComponent();
   return (
     <Paper elevation={2}>
       <Box mb={2} p={2}>

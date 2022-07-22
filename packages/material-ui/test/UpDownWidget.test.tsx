@@ -3,8 +3,6 @@ import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
-import MuiComponentContext from '../src/MuiComponentContext/MuiComponentContext';
-import { MaterialUIContext } from '../src/Theme/MaterialUIContext';
 import UpDownWidget from "../src/UpDownWidget/UpDownWidget";
 
 export const mockSchema: RJSFSchema = {
@@ -41,13 +39,9 @@ describe("UpDownWidget", () => {
         formContext: {},
         rootSchema: {},
         schemaUtils: createSchemaUtils(validator, mockSchema),
-      }
+      },
     };
-    const tree = renderer.create((
-      <MuiComponentContext.Provider value={MaterialUIContext}>
-        <UpDownWidget {...props} />
-      </MuiComponentContext.Provider>
-    )).toJSON();
+    const tree = renderer.create(<UpDownWidget {...props} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

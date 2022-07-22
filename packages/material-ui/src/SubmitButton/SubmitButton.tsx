@@ -1,14 +1,25 @@
-import React from 'react';
-import { WidgetProps, getSubmitButtonOptions } from '@rjsf/utils';
-import { useMuiComponent } from '../MuiComponentContext';
+import React from "react";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import { WidgetProps, getSubmitButtonOptions } from "@rjsf/utils";
 
 const SubmitButton: React.ComponentType<WidgetProps> = props => {
-  const { Box, Button } = useMuiComponent();
-  const { submitText, norender, props: submitButtonProps }= getSubmitButtonOptions(props.uiSchema);
-  if(norender) return null;
+  const {
+    submitText,
+    norender,
+    props: submitButtonProps,
+  } = getSubmitButtonOptions(props.uiSchema);
+  if (norender) {
+    return null;
+  }
   return (
     <Box marginTop={3}>
-      <Button type="submit" variant="contained" color="primary" {...submitButtonProps}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        {...submitButtonProps}
+      >
         {submitText}
       </Button>
     </Box>
