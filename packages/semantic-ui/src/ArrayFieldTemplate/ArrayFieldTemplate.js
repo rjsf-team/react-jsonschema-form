@@ -24,7 +24,7 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
   return <DescriptionField id={id} description={description} />;
 }
 
-const gridStyle = vertical => ({
+const gridStyle = (vertical) => ({
   display: "grid",
   gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
 });
@@ -149,7 +149,7 @@ function DefaultFixedArrayFieldTemplate({
 
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className="row array-item-list">
-          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
+          {items && items.map((p) => DefaultArrayItem({ ...p, ...itemProps }))}
         </div>
 
         {canAdd && (
@@ -216,7 +216,7 @@ function DefaultNormalArrayFieldTemplate({
 
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className="row array-item-list">
-          {items && items.map(p => DefaultArrayItem({ ...p, ...itemProps }))}
+          {items && items.map((p) => DefaultArrayItem({ ...p, ...itemProps }))}
         </div>
 
         {canAdd && (

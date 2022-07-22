@@ -15,7 +15,7 @@ export default function getDefaultFormStateTest(
     });
     it("throws error when schema is not an object", () => {
       expect(() =>
-        getDefaultFormState(testValidator, (null as unknown) as RJSFSchema)
+        getDefaultFormState(testValidator, null as unknown as RJSFSchema)
       ).toThrowError("Invalid schema:");
     });
     describe("computeDefaults()", () => {
@@ -78,7 +78,7 @@ export default function getDefaultFormStateTest(
       });
 
       const noneValues = [null, undefined, NaN];
-      noneValues.forEach(noneValue => {
+      noneValues.forEach((noneValue) => {
         it("should overwrite existing form data that is equal to a none value", () => {
           expect(
             getDefaultFormState(

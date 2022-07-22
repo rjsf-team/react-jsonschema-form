@@ -47,7 +47,7 @@ const ColorWidget = ({
     onChange(colorObj.hex);
   };
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>

@@ -21,17 +21,14 @@ describe("createSchemaUtils()", () => {
   describe("doesSchemaUtilsDiffer()", () => {
     it("passing falsy validator returns false", () => {
       expect(
-        schemaUtils.doesSchemaUtilsDiffer(
-          (null as unknown) as ValidatorType,
-          {}
-        )
+        schemaUtils.doesSchemaUtilsDiffer(null as unknown as ValidatorType, {})
       ).toBe(false);
     });
     it("passing falsy rootSchema returns false", () => {
       expect(
         schemaUtils.doesSchemaUtilsDiffer(
           testValidator,
-          (null as unknown) as RJSFSchema
+          null as unknown as RJSFSchema
         )
       ).toBe(false);
     });

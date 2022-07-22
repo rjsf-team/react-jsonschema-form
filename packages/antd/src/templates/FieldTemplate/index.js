@@ -42,7 +42,7 @@ const FieldTemplate = ({
   }
 
   const renderFieldErrors = () =>
-    [...new Set(rawErrors)].map(error => (
+    [...new Set(rawErrors)].map((error) => (
       <div key={`field-${id}-error-${error}`}>{error}</div>
     ));
 

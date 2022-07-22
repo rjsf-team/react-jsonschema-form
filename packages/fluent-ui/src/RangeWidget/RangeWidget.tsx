@@ -1,8 +1,7 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
 
-import { rangeSpec } from "@rjsf/utils";
-import { WidgetProps } from "@rjsf/utils";
+import { rangeSpec, WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const styles_red = {
@@ -55,7 +54,7 @@ const RangeWidget = ({
 
   const _onChange = (value: number) => onChange(value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <>
       <Label>

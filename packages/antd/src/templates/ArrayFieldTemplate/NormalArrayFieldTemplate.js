@@ -67,7 +67,7 @@ const NormalArrayFieldTemplate = ({
 
         <Col className="row array-item-list" span={24}>
           {items &&
-            items.map(itemProps => (
+            items.map((itemProps) => (
               <ArrayFieldTemplateItem
                 {...itemProps}
                 formContext={formContext}

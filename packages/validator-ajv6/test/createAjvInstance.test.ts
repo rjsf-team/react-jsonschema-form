@@ -28,7 +28,7 @@ describe("createAjvInstance()", () => {
       ajv = createAjvInstance();
     });
     afterAll(() => {
-      ((Ajv as unknown) as jest.Mock).mockClear();
+      (Ajv as unknown as jest.Mock).mockClear();
     });
     it("expect a new Ajv to be constructed with the AJV_CONFIG", () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
@@ -64,7 +64,7 @@ describe("createAjvInstance()", () => {
       );
     });
     afterAll(() => {
-      ((Ajv as unknown) as jest.Mock).mockClear();
+      (Ajv as unknown as jest.Mock).mockClear();
     });
     it("expect a new Ajv to be constructed with the AJV_CONFIG", () => {
       expect(Ajv).toHaveBeenCalledWith({

@@ -191,7 +191,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             key={`array-item-list-${props.idSchema.$id}`}
             className="p-0 m-0"
           >
-            {props.items && props.items.map(p => DefaultArrayItem(p))}
+            {props.items && props.items.map((p) => DefaultArrayItem(p))}
 
             {props.canAdd && (
               <Container className="">

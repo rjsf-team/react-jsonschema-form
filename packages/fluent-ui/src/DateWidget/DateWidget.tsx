@@ -1,8 +1,7 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, pad } from "@rjsf/utils";
 import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";
-import { pad } from "@rjsf/utils";
 
 // Keys of IDropdownProps from @fluentui/react
 const allowedProps = [
@@ -71,7 +70,7 @@ const parseDate = (dateStr?: string) => {
   if (!dateStr) {
     return undefined;
   }
-  const [year, month, day] = dateStr.split("-").map(e => parseInt(e));
+  const [year, month, day] = dateStr.split("-").map((e) => parseInt(e));
   const dt = new Date(year, month - 1, day);
   return dt;
 };
@@ -99,7 +98,7 @@ const DateWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <DatePicker
       className={controlClass.control}

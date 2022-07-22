@@ -23,7 +23,7 @@ const CheckboxesWidget = ({
 
   const { enumOptions, enumDisabled, inline } = options;
 
-  const handleChange = nextValue => onChange(nextValue);
+  const handleChange = (nextValue) => onChange(nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 

@@ -101,7 +101,7 @@ export function computeDefaults<T = any>(
       schema.default as GenericObjectType
     ) as T;
   } else if (DEFAULT_KEY in schema) {
-    defaults = (schema.default as unknown) as T;
+    defaults = schema.default as unknown as T;
   } else if (REF_KEY in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema[REF_KEY]!, rootSchema);
@@ -162,7 +162,7 @@ export function computeDefaults<T = any>(
 
   // Not defaults defined for this node, fallback to generic typed ones.
   if (typeof defaults === "undefined") {
-    defaults = (schema.default as unknown) as T;
+    defaults = schema.default as unknown as T;
   }
 
   switch (getSchemaType(schema)) {

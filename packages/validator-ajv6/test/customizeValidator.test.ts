@@ -19,7 +19,7 @@ describe("customizeValidator()", () => {
   describe("passing options to customizeValidator", () => {
     let custom: any;
     beforeAll(() => {
-      ((AJV6Validator as unknown) as jest.Mock).mockClear();
+      (AJV6Validator as unknown as jest.Mock).mockClear();
       custom = customizeValidator<TestType>(CUSTOM_OPTIONS);
     });
     it("custom validator was created", () => {

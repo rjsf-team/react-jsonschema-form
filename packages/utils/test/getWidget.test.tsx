@@ -102,9 +102,9 @@ describe("getWidget()", () => {
   });
   it("should fail if widget has incorrect type", () => {
     const AWidget = new Number(1);
-    expect(() =>
-      getWidget(schema, (AWidget as unknown) as Widget)
-    ).toThrowError("Unsupported widget definition: object");
+    expect(() => getWidget(schema, AWidget as unknown as Widget)).toThrowError(
+      "Unsupported widget definition: object"
+    );
     // The force cast of the number to a Widget causes `React.createElement()` to log an error to the console
     expect(consoleErrorSpy).toHaveBeenCalled();
   });

@@ -29,7 +29,7 @@ export default function mergeDefaultsWithFormData<T = any>(
       }
       return value;
     });
-    return (mapped as unknown) as T;
+    return mapped as unknown as T;
   }
   if (isObject(formData)) {
     // eslint-disable-next-line no-unused-vars

@@ -37,11 +37,8 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
    */
   constructor(options: CustomValidatorOptionsType) {
-    const {
-      additionalMetaSchemas,
-      customFormats,
-      ajvOptionsOverrides,
-    } = options;
+    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides } =
+      options;
     this.ajv = createAjvInstance(
       additionalMetaSchemas,
       customFormats,
@@ -72,38 +69,39 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     if (!errors.length) {
       return {} as ErrorSchema<T>;
     }
-    return errors.reduce((errorSchema: ErrorSchema<T>, error): ErrorSchema<
-      T
-    > => {
-      const { property, message } = error;
-      const path = toPath(property);
-      let parent: GenericObjectType = errorSchema;
+    return errors.reduce(
+      (errorSchema: ErrorSchema<T>, error): ErrorSchema<T> => {
+        const { property, message } = error;
+        const path = toPath(property);
+        let parent: GenericObjectType = errorSchema;
 
-      // If the property is at the root (.level1) then toPath creates
-      // an empty array element at the first index. Remove it.
-      if (path.length > 0 && path[0] === "") {
-        path.splice(0, 1);
-      }
-
-      for (const segment of path.slice(0)) {
-        if (!(segment in parent)) {
-          parent[segment] = {};
+        // If the property is at the root (.level1) then toPath creates
+        // an empty array element at the first index. Remove it.
+        if (path.length > 0 && path[0] === "") {
+          path.splice(0, 1);
         }
-        parent = parent[segment];
-      }
 
-      if (Array.isArray(parent.__errors)) {
-        // We store the list of errors for this node in a property named __errors
-        // to avoid name collision with a possible sub schema field named
-        // 'errors' (see `validate.createErrorHandler`).
-        parent.__errors = parent.__errors.concat(message!);
-      } else {
-        if (message) {
-          parent.__errors = [message];
+        for (const segment of path.slice(0)) {
+          if (!(segment in parent)) {
+            parent[segment] = {};
+          }
+          parent = parent[segment];
         }
-      }
-      return errorSchema;
-    }, {} as ErrorSchema<T>);
+
+        if (Array.isArray(parent.__errors)) {
+          // We store the list of errors for this node in a property named __errors
+          // to avoid name collision with a possible sub schema field named
+          // 'errors' (see `validate.createErrorHandler`).
+          parent.__errors = parent.__errors.concat(message!);
+        } else {
+          if (message) {
+            parent.__errors = [message];
+          }
+        }
+        return errorSchema;
+      },
+      {} as ErrorSchema<T>
+    );
   }
 
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
