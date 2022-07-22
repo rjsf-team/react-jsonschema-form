@@ -3,17 +3,17 @@
   "version": "4.2.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build": "rimraf dist && tsdx build --format cjs,es,umd",
+    "build": "rimraf dist && dts build --format cjs,es,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
-    "start": "tsdx watch",
-    "test": "tsdx test",
-    "test:watch": "tsdx test --watch",
-    "test:update": "tsdx test --u",
-    "test-coverage": "tsdx test --coverage"
+    "start": "dts watch",
+    "test": "dts test",
+    "test:watch": "dts test --watch",
+    "test:update": "dts test --u",
+    "test-coverage": "dts test --coverage"
   },
   "lint-staged": {
     "{src,test}/**/*.[jt]s?(x)": [
@@ -54,12 +54,14 @@
     "@babel/register": "^7.18.9",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
+    "@types/jest": "^27.5.2",
     "@types/lodash": "^4.14.182",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "ajv": "^6.7.0",
     "atob": "^2.1.2",
     "chai": "^3.3.0",
+    "dts-cli": "^1.5.2",
     "eslint": "^8.20.0",
     "html": "^1.0.0",
     "jsdom": "^16.5.3",
@@ -69,8 +71,7 @@
     "react-dom": "^16.14.0",
     "react-portal": "^4.2.2",
     "rimraf": "^3.0.2",
-    "sinon": "^9.0.2",
-    "tsdx": "^0.14.1"
+    "sinon": "^9.0.2"
   },
   "directories": {
     "test": "test"

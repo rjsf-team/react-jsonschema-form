@@ -5,13 +5,13 @@
   "main": "dist/index.js",
   "module": "dist/antd.esm.js",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build --format cjs,es,umd",
+    "start": "dts watch",
+    "build": "rimraf dist && dts build --format cjs,es,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "test": "dts test",
+    "test:update": "dts test --u"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -55,14 +55,14 @@
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "dayjs": "^1.11.4",
+    "dts-cli": "^1.5.2",
     "eslint": "^8.20.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-test-renderer": "^16.14.0",
-    "rimraf": "^3.0.2",
-    "tsdx": "^0.14.1"
+    "rimraf": "^3.0.2"
   },
   "repository": {
     "type": "git",
