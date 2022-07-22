@@ -29,6 +29,15 @@
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "verbose": true,
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "browsers": [
+        "chrome",
+        "firefox",
+        "safari"
+      ]
     }
   },
   "peerDependencies": {
