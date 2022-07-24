@@ -46,7 +46,7 @@
     "@rjsf/utils": "^4.2.0",
     "antd": "^4.0.0",
     "dayjs": "^1.8.0",
-    "react": ">=16"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.0.0",

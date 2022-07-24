@@ -34,7 +34,7 @@
     "@rjsf/core": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "framer-motion": ">=5.5.5",
-    "react": ">=16"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "publishConfig": {
     "access": "public"

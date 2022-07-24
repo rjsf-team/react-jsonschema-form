@@ -33,7 +33,7 @@
     "node": ">=12"
   },
   "peerDependencies": {
-    "react": ">=16 || >=17",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "@rjsf/utils": "^4.2.0"
   },
   "dependencies": {

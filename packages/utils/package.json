@@ -27,7 +27,7 @@
     ]
   },
   "peerDependencies": {
-    "react": ">=16 || >=17"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
     "json-schema-merge-allof": "^0.8.1",
