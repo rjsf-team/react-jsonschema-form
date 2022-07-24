@@ -15,7 +15,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
