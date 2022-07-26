@@ -29,16 +29,20 @@ export default {
     ],
   },
   uiSchema: {
-    "ui:field": ({ schema, idSchema: {$id}, formData, onChange, ...other }) => {
-      console.log("ui:field", { schema, ...other });
+    "ui:field": ({
+      schema,
+      idSchema: { $id },
+      formData,
+      onChange,
+      ...other
+    }) => {
       const changeHandlerFactory = fieldName => event => {
-        console.log("changeHandler", fieldName, {event});
         onChange(
           formData
-            ? {...formData, [fieldName]: event.target.value}
-            : {[fieldName]: event.target.value}
+            ? { ...formData, [fieldName]: event.target.value }
+            : { [fieldName]: event.target.value }
         );
-      }
+      };
       return (
         <>
           <h4>Location</h4>
