@@ -58,6 +58,19 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("date field", () => {
+    const uiSchema = { "ui:widget": "date" };
+    const schema = {
+      type: "string",
+      format: "date",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("null field", () => {
     const schema = {
       type: "null",

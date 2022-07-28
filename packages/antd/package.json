@@ -46,10 +46,10 @@
     "@rjsf/utils": "^4.2.0",
     "antd": "^4.0.0",
     "dayjs": "^1.8.0",
-    "react": ">=16"
+    "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
-    "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons": "^4.7.0",
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
     "@babel/eslint-parser": "^7.18.9",
@@ -61,16 +61,16 @@
     "@rjsf/core": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
-    "antd": "^4.0.0",
+    "antd": "^4.22.1",
     "atob": "^2.0.3",
     "dayjs": "^1.11.4",
     "dts-cli": "^1.5.2",
     "eslint": "^8.20.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-test-renderer": "^16.14.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "rimraf": "^3.0.2"
   },
   "repository": {
