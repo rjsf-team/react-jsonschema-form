@@ -47,7 +47,17 @@ describe("array fields", () => {
       uniqueItems: true,
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
+      .create(<Form schema={schema} validator={validator} />, {
+        createNodeMock: (element) => {
+          if (element.type === "span" && element.props["aria-hidden"]) {
+            // the `rc-select` MultipleSelector code expects a ref for this span to exist, so use the feature of
+            // react-test-renderer to create one
+            // See: https://reactjs.org/docs/test-renderer.html#ideas
+            return { scrollWidth: 100 };
+          }
+          return null;
+        },
+      })
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

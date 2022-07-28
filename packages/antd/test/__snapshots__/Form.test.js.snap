@@ -1,5 +1,81 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`single fields date field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="ant-picker"
+      onMouseUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-picker-input"
+      >
+        <input
+          autoComplete="off"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          placeholder=""
+          readOnly={true}
+          size={12}
+          title=""
+          value=""
+        />
+        <span
+          className="ant-picker-suffix"
+        >
+          <span
+            aria-label="calendar"
+            className="anticon anticon-calendar"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="calendar"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields field with description 1`] = `
 <form
   className="rjsf"
@@ -35,59 +111,72 @@ exports[`single fields field with description 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-row ant-form-item"
-              style={Object {}}
+              className="ant-form-item ant-form-item-with-help"
             >
               <div
-                className="ant-col ant-col-24 ant-form-item-label"
-                style={Object {}}
-              >
-                <label
-                  className=""
-                  htmlFor="root_my-field"
-                  title="my-field"
-                >
-                  my-field
-                </label>
-              </div>
-              <div
-                className="ant-col ant-col-24 ant-form-item-control"
+                className="ant-row ant-form-item-row"
                 style={Object {}}
               >
                 <div
-                  className="ant-form-item-control-input"
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
                 >
-                  <div
-                    className="ant-form-item-control-input-content"
+                  <label
+                    className=""
+                    htmlFor="root_my-field"
+                    title="my-field"
                   >
-                    <input
-                      className="ant-input"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder=""
-                      style={
-                        Object {
-                          "width": "100%",
-                        }
-                      }
-                      type="text"
-                      value=""
-                    />
-                  </div>
+                    my-field
+                  </label>
                 </div>
                 <div
-                  className="ant-form-item-extra"
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
                 >
-                  <span
-                    id="root_my-field__description"
+                  <div
+                    className="ant-form-item-control-input"
                   >
-                    some description
-                  </span>
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_my-field"
+                          name="root_my-field"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-form-item-extra"
+                  >
+                    <span
+                      id="root_my-field__description"
+                    >
+                      some description
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -144,59 +233,72 @@ exports[`single fields field with description in uiSchema 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-row ant-form-item"
-              style={Object {}}
+              className="ant-form-item ant-form-item-with-help"
             >
               <div
-                className="ant-col ant-col-24 ant-form-item-label"
-                style={Object {}}
-              >
-                <label
-                  className=""
-                  htmlFor="root_my-field"
-                  title="my-field"
-                >
-                  my-field
-                </label>
-              </div>
-              <div
-                className="ant-col ant-col-24 ant-form-item-control"
+                className="ant-row ant-form-item-row"
                 style={Object {}}
               >
                 <div
-                  className="ant-form-item-control-input"
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
                 >
-                  <div
-                    className="ant-form-item-control-input-content"
+                  <label
+                    className=""
+                    htmlFor="root_my-field"
+                    title="my-field"
                   >
-                    <input
-                      className="ant-input"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      placeholder=""
-                      style={
-                        Object {
-                          "width": "100%",
-                        }
-                      }
-                      type="text"
-                      value=""
-                    />
-                  </div>
+                    my-field
+                  </label>
                 </div>
                 <div
-                  className="ant-form-item-extra"
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
                 >
-                  <span
-                    id="root_my-field__description"
+                  <div
+                    className="ant-form-item-control-input"
                   >
-                    some other description
-                  </span>
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_my-field"
+                          name="root_my-field"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-form-item-extra"
+                  >
+                    <span
+                      id="root_my-field__description"
+                    >
+                      some other description
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -289,6 +391,12 @@ exports[`single fields number field 1`] = `
   >
     <div
       className="ant-input-number"
+      onBlur={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
       style={
         Object {
           "width": "100%",
@@ -301,16 +409,12 @@ exports[`single fields number field 1`] = `
         <span
           aria-disabled={false}
           aria-label="Increase Value"
-          className="ant-input-number-handler ant-input-number-handler-up "
+          className="ant-input-number-handler ant-input-number-handler-up"
           onMouseDown={[Function]}
           onMouseLeave={[Function]}
           onMouseUp={[Function]}
-          onTouchCancel={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
           role="button"
-          unselectable="unselectable"
+          unselectable="on"
         >
           <span
             aria-label="up"
@@ -319,7 +423,6 @@ exports[`single fields number field 1`] = `
           >
             <svg
               aria-hidden="true"
-              className=""
               data-icon="up"
               fill="currentColor"
               focusable="false"
@@ -336,16 +439,12 @@ exports[`single fields number field 1`] = `
         <span
           aria-disabled={false}
           aria-label="Decrease Value"
-          className="ant-input-number-handler ant-input-number-handler-down "
+          className="ant-input-number-handler ant-input-number-handler-down"
           onMouseDown={[Function]}
           onMouseLeave={[Function]}
           onMouseUp={[Function]}
-          onTouchCancel={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
           role="button"
-          unselectable="unselectable"
+          unselectable="on"
         >
           <span
             aria-label="down"
@@ -354,7 +453,6 @@ exports[`single fields number field 1`] = `
           >
             <svg
               aria-hidden="true"
-              className=""
               data-icon="down"
               fill="currentColor"
               focusable="false"
@@ -373,21 +471,16 @@ exports[`single fields number field 1`] = `
         className="ant-input-number-input-wrap"
       >
         <input
-          aria-valuemin={-9007199254740991}
+          aria-valuenow={null}
           autoComplete="off"
           className="ant-input-number-input"
           disabled={false}
           id="root"
-          min={-9007199254740991}
           name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseUp={[Function]}
           placeholder=""
-          required={false}
           role="spinbutton"
           step={1}
           type="number"
@@ -455,7 +548,6 @@ exports[`single fields string field format email 1`] = `
   >
     <input
       className="ant-input"
-      disabled={false}
       id="root"
       name="root"
       onBlur={[Function]}
@@ -496,7 +588,6 @@ exports[`single fields string field format uri 1`] = `
   >
     <input
       className="ant-input"
-      disabled={false}
       id="root"
       name="root"
       onBlur={[Function]}
@@ -537,7 +628,6 @@ exports[`single fields string field regular 1`] = `
   >
     <input
       className="ant-input"
-      disabled={false}
       id="root"
       name="root"
       onBlur={[Function]}
@@ -623,7 +713,6 @@ exports[`single fields using custom tagName 1`] = `
   >
     <input
       className="ant-input"
-      disabled={false}
       id="root"
       name="root"
       onBlur={[Function]}
