@@ -46,7 +46,7 @@
     "@rjsf/utils": "^4.2.0",
     "antd": "^4.0.0",
     "dayjs": "^1.8.0",
-    "react": ">=16"
+    "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.7.0",
@@ -68,9 +68,9 @@
     "eslint": "^8.20.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-test-renderer": "^16.14.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "rimraf": "^3.0.2"
   },
   "repository": {
