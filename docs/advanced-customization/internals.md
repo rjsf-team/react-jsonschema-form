@@ -14,15 +14,15 @@ This component follows [JSON Schema](http://json-schema.org/documentation.html) 
 
     The `anyOf` and `oneOf` keywords are supported; however, properties declared inside the `anyOf/oneOf` should not overlap with properties "outside" of the `anyOf/oneOf`.
 
-    You can also use `oneOf` with [schema dependencies](../usage/dependencies.md) to dynamically add schema properties based on input data.
+    You can also use `oneOf` with [schema dependencies](https://react-jsonschema-form.readthedocs.io/en/docs/usage/dependencies/#schema-dependencies) to dynamically add schema properties based on input data.
 
     The `allOf` keyword is supported; it uses [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) to merge subschemas to render the final combined schema in the form. When these subschemas are incompatible, though (or if the library has an error merging it), the `allOf` keyword is dropped from the schema.
 
-* `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/rjsf-team/rjsf-team/issues/902) [#992](https://github.com/rjsf-team/rjsf-team/issues/992)
+* `"additionalProperties":false` produces incorrect schemas when used with [schema dependencies](https://react-jsonschema-form.readthedocs.io/en/docs/usage/dependencies/#schema-dependencies). This library does not remove extra properties, which causes validation to fail. It is recommended to avoid setting `"additionalProperties":false` when you use schema dependencies. See [#848](https://github.com/rjsf-team/react-jsonschema-form/issues/848) [#902](https://github.com/rjsf-team/rjsf-team/issues/902) [#992](https://github.com/rjsf-team/rjsf-team/issues/992)
 
 ## Handling of schema defaults
 
-This library automatically fills default values defined in the [JSON Schema](http://json-schema.org/documentation.html) as initial values in your form. This also works for complex structures in the schema. If a field has a default defined, it should always appear as default value in form. This also works when using [schema dependencies](#schema-dependencies).
+This library automatically fills default values defined in the [JSON Schema](http://json-schema.org/documentation.html) as initial values in your form. This also works for complex structures in the schema. If a field has a default defined, it should always appear as default value in form. This also works when using [schema dependencies](https://react-jsonschema-form.readthedocs.io/en/docs/usage/dependencies/#schema-dependencies).
 
 Since there is a complex interaction between any supplied original form data and any injected defaults, this library tries to do the injection in a way which keeps the original intention of the original form data.
 

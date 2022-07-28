@@ -16,6 +16,39 @@ exports[`object fields object 1`] = `
   text-align: start;
 }
 
+.emotion-12 {
+  margin-top: 3px;
+}
+
+.emotion-13 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
 <form
   className="rjsf"
   noValidate={false}
@@ -102,9 +135,11 @@ exports[`object fields object 1`] = `
       </div>
     </div>
   </div>
-  <div>
+  <div
+    className="emotion-12"
+  >
     <button
-      className="btn btn-info"
+      className="chakra-button emotion-13"
       disabled={false}
       type="submit"
     >

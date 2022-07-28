@@ -96,10 +96,10 @@ exports[`single fields field with description 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -204,10 +204,10 @@ exports[`single fields field with description in uiSchema 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -240,10 +240,10 @@ exports[`single fields hidden field 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -262,10 +262,10 @@ exports[`single fields null field 1`] = `
     className="form-group field field-null"
   />
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -393,10 +393,10 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -428,10 +428,10 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -469,10 +469,10 @@ exports[`single fields string field format email 1`] = `
     />
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -510,10 +510,10 @@ exports[`single fields string field format uri 1`] = `
     />
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -551,10 +551,10 @@ exports[`single fields string field regular 1`] = `
     />
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -596,10 +596,10 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -637,10 +637,10 @@ exports[`single fields using custom tagName 1`] = `
     />
   </div>
   <button
-    className="ant-btn ant-btn-submit"
+    className="ant-btn"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit

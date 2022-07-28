@@ -14,6 +14,7 @@ import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import TextWidget from "../TextWidget/TextWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
 import URLWidget from "../URLWidget/URLWidget";
+import SubmitButton from "../SubmitButton/SubmitButton";
 
 const widgets = {
   AltDateTimeWidget,
@@ -32,6 +33,7 @@ const widgets = {
   TextWidget,
   UpDownWidget,
   URLWidget,
+  SubmitButton
 };
 
 export default widgets;
