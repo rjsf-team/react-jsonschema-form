@@ -206,6 +206,10 @@ exports[`array fields checkboxes 1`] = `
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .emotion-8 {
@@ -289,11 +293,12 @@ exports[`array fields checkboxes 1`] = `
   border-radius: 0px;
   border-width: 0;
   cursor: pointer;
+  font-size: 20px;
 }
 
 .emotion-13 {
-  width: 5px;
-  height: 5px;
+  width: 1em;
+  height: 1em;
   display: inline-block;
   line-height: 1em;
   -webkit-flex-shrink: 0;
@@ -383,11 +388,9 @@ exports[`array fields checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="react-select-2-listbox"
                 aria-describedby="react-select-2-placeholder"
                 aria-expanded={false}
                 aria-haspopup={true}
-                aria-owns="react-select-2-listbox"
                 autoCapitalize="none"
                 autoComplete="off"
                 autoCorrect="off"
