@@ -20,7 +20,7 @@ Array [
         <input
           autoFocus={true}
           checked={true}
-          className="custom-control-input position-static"
+          className="custom-control-input"
           disabled={true}
           id="_id_0"
           onBlur={[Function]}
@@ -28,6 +28,11 @@ Array [
           onFocus={[Function]}
           required={true}
           type="checkbox"
+        />
+        <label
+          className="custom-control-label"
+          htmlFor="_id_0"
+          title=""
         />
       </div>
     </form>
@@ -55,7 +60,7 @@ Array [
         <input
           autoFocus={true}
           checked={true}
-          className="custom-control-input position-static"
+          className="custom-control-input"
           disabled={true}
           id="_id_0"
           onBlur={[Function]}
@@ -63,6 +68,11 @@ Array [
           onFocus={[Function]}
           required={true}
           type="checkbox"
+        />
+        <label
+          className="custom-control-label"
+          htmlFor="_id_0"
+          title=""
         />
       </div>
     </form>
