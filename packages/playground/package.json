@@ -35,7 +35,7 @@
     "react": ">=17"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.2.1",
+    "@ant-design/icons": "^4.7.0",
     "@babel/runtime": "^7.18.9",
     "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.7.3",
@@ -52,7 +52,7 @@
     "@rjsf/semantic-ui": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
-    "antd": "^4.3.5",
+    "antd": "^4.22.1",
     "core-js": "^3.23.5",
     "dayjs": "^1.11.4",
     "framer-motion": "^5.5.5",
