@@ -49,7 +49,7 @@
     "react": ">=16"
   },
   "devDependencies": {
-    "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons": "^4.7.0",
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
     "@babel/eslint-parser": "^7.18.9",
@@ -61,7 +61,7 @@
     "@rjsf/core": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
-    "antd": "^4.0.0",
+    "antd": "^4.22.1",
     "atob": "^2.0.3",
     "dayjs": "^1.11.4",
     "dts-cli": "^1.5.2",
