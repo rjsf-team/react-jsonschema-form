@@ -36,7 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
   - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
   - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
 - Fixed (#2831) for `material-ui` by removing the `DefaultChildren` passed into the themes
-  
+
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 

@@ -6,6 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
+  create-tag:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Run find-and-replace to remove v
+          uses: mad9000/actions-find-and-replace-string@2
+          id: tag_without_v
+          with:
+            source: ${{ github.event.release.tag_name }}
+            find: 'v'
+            replace: ''
+        - uses: actions/checkout@v3
+        - uses: rickstaa/action-create-tag@v1
+          with:
+            tag: ${{ steps.tag_without_v.outputs.value }}
+            message: "Tagged documentation release"
   deploy_docs:
     runs-on: ubuntu-latest
     steps:

@@ -16,7 +16,7 @@
   <p align="center">
   Chakra UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
+    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -38,6 +38,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Optional Chakra UI Theme properties](#optional-chakra-ui-theme-properties)
+    - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -102,7 +104,7 @@ const Form = withTheme(ChakraUITheme);
 
 ## Optional Chakra UI Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#object-additional-properties).
+- To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/stable/form-customization/#object-additional-properties).
 
 You can use `ChakraProvider`, to customize the components at a theme level.\
 And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
