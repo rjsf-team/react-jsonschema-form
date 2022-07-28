@@ -18,8 +18,9 @@ module.exports = {
     path: path.join(__dirname, "build"),
   },
   devServer: {
-    contentBase: path.join(__dirname, 'build'),
+    static: { directory: path.join(__dirname, 'build') },
     compress: true,
+    hot: true,
     port: 8080
   },
   resolve: {
@@ -38,10 +39,14 @@ module.exports = {
       features: ['!gotoSymbol'],
       languages: ['json']
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html'
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        SHOW_NETLIFY_BADGE: JSON.stringify(process.env.SHOW_NETLIFY_BADGE)
+      }
     }),
   ],
   module: {
@@ -55,7 +60,8 @@ module.exports = {
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "mode", "javascript"),
-        ]
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.js$/,
@@ -96,7 +102,7 @@ module.exports = {
       },
       {
         test: /\.ttf$/,
-        use: ['file-loader'],
+        type: 'asset/resource',
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
@@ -106,7 +112,10 @@ module.exports = {
       {
         type: 'javascript/auto',
         test: /\.mjs$/,
-        use: []
+        use: [],
+        resolve: {
+          fullySpecified: false
+        }
       }
     ]
   }
