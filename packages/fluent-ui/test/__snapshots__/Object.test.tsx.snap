@@ -39,9 +39,9 @@ exports[`object fields object 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-50"
+                className="ms-Label root-53"
                 htmlFor="root_a"
-                id="TextFieldLabel3"
+                id="TextFieldLabel2"
               >
                 a
               </label>
@@ -50,7 +50,7 @@ exports[`object fields object 1`] = `
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel3"
+                  aria-labelledby="TextFieldLabel2"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -85,9 +85,9 @@ exports[`object fields object 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-50"
+                className="ms-Label root-53"
                 htmlFor="root_b"
-                id="TextFieldLabel6"
+                id="TextFieldLabel5"
               >
                 b
               </label>
@@ -96,7 +96,7 @@ exports[`object fields object 1`] = `
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel6"
+                  aria-labelledby="TextFieldLabel5"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -124,7 +124,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-51"
+        className="ms-Button ms-Button--primary root-54"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -135,15 +135,15 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-52"
+          className="ms-Button-flexContainer flexContainer-55"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-53"
+            className="ms-Button-textContainer textContainer-56"
           >
             <span
-              className="ms-Button-label label-55"
-              id="id__7"
+              className="ms-Button-label label-58"
+              id="id__6"
             >
               Submit
             </span>
