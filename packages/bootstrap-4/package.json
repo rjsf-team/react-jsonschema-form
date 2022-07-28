@@ -30,8 +30,8 @@
   "peerDependencies": {
     "@rjsf/core": "^4.0.0",
     "@rjsf/utils": "^4.2.0",
-    "react": ">=16",
-    "react-bootstrap": "^1.0.1"
+    "react": "^16.14.0 || >=17",
+    "react-bootstrap": "^1.6.5"
   },
   "engineStrict": false,
   "engines": {
@@ -47,15 +47,15 @@
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
     "@types/jest": "^27.5.2",
-    "@types/react": "^16.14.0",
-    "@types/react-dom": "^16.9.16",
-    "@types/react-test-renderer": "^16.9.5",
+    "@types/react": "^17.0.48",
+    "@types/react-dom": "^17.0.17",
+    "@types/react-test-renderer": "^17.0.2",
     "dts-cli": "^1.5.2",
     "eslint": "^8.20.0",
-    "react": "^16.14.0",
-    "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.14.0",
-    "react-test-renderer": "^16.14.0",
+    "react": "^17.0.2",
+    "react-bootstrap": "^1.6.5",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "rimraf": "^3.0.2"
   },
   "publishConfig": {
@@ -78,6 +78,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "react-icons": "^3.10.0"
+    "react-icons": "^4.4.0"
   }
 }

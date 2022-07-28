@@ -57,14 +57,7 @@ exports[`array fields array 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        clipRule="evenodd"
-                        d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
-                        fillRule="evenodd"
-                      />
-                      <path
-                        clipRule="evenodd"
-                        d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
-                        fillRule="evenodd"
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
                       />
                     </svg>
                   </button>
