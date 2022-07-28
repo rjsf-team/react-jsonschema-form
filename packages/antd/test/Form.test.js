@@ -65,7 +65,9 @@ describe("single fields", () => {
       format: "date",
     };
     const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />)
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
