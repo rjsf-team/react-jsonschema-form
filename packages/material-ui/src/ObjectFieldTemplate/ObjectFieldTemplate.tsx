@@ -28,14 +28,14 @@ const ObjectFieldTemplate = ({
         <TitleField id={`${idSchema.$id}-title`} title={title} required={required} />
       )}
       {description && <DescriptionField id={`${idSchema.$id}-description`} description={description} />}
-      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+      <Grid container={true} direction={'row'} spacing={2} style={{ marginTop: '10px' }}>
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Grid item={true} xs={12} key={index} style={{ marginBottom: '10px' }}>
+            <Grid item={true} xs={12} sm={6} key={index} style={{ marginBottom: '10px' }}>
               {element.content}
             </Grid>
           )
