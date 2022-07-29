@@ -12,7 +12,7 @@ Note that this just renders the `action` attribute in the HTML markup. There is 
 
 ## ArrayFieldTemplate
 
-React component used to customize how alls arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
+React component used to customize how all arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## autoComplete
 
@@ -71,7 +71,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-If you just want to disable some of the fields, see the `ui:disabled` parameter in `uiSchema`.
+If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`.
 
 ## readonly
 
@@ -89,7 +89,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-If you just want to make some of the fields read-only, see the `ui:readonly` parameter in `uiSchema`.
+If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`.
 
 ## enctype
 
@@ -185,7 +185,7 @@ The value of this prop will be passed to the `name` [HTML attribute on the form]
 
 ## noHtml5Validate
 
-If set to true, turns off HTML5 validation on the form. Set to `false` on default.
+If set to true, turns off HTML5 validation on the form. Set to `false` by default.
 
 ## noValidate
 
@@ -291,7 +291,7 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## validator
 
-**Required**! An implementation of the `ValidatorType` interface.
+**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work. 
 `@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
 
 ## widgets

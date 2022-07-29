@@ -22,7 +22,7 @@ First install the dependencies from npm:
 $ npm install @rjsf/core @rjsf/utils --save
 ```
 
-As of version 5, you will also need to select and install a validator implementation:
+As of version 5, you will also need to select and install a validator implementation (such as `@rjsf/validator-ajv6`):
 
 ```bash
 $ npm install @rjsf/validator-ajv6 --save

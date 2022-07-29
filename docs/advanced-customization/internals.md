@@ -72,9 +72,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema}
-        validator={validator}
-        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
 ), document.getElementById("app"));
 
 yourForm.submit();

@@ -17,6 +17,8 @@ This allows you to customize your array, and each element in the array. You can 
 
 
 ```jsx
+import validator from '@rjsf/validator-ajv6';
+
 const schema = {
   type: "array",
   items: {
@@ -34,8 +36,7 @@ function ArrayFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />
+  <Form schema={schema} ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -113,9 +114,7 @@ function CustomFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema}
-        validator={validator}
-        FieldTemplate={CustomFieldTemplate} />
+  <Form schema={schema} validator={validator} FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -187,8 +186,7 @@ function ObjectFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema} validator={validator}
-        ObjectFieldTemplate={ObjectFieldTemplate} />
+  <Form schema={schema} validator={validator} ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 

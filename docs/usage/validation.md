@@ -79,9 +79,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema}
-        validator={validator}
-        customValidate={customValidate} />
+  <Form schema={schema} validator={validator} customValidate={customValidate} />
 ), document.getElementById("app"));
 ```
 
@@ -115,9 +113,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema}
-        validator={validator}
-        transformErrors={transformErrors} />
+  <Form schema={schema} validator={validator} transformErrors={transformErrors} />
 ), document.getElementById("app"));
 ```
 

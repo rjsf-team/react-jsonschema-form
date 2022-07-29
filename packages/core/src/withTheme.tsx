@@ -1,16 +1,14 @@
 import React, { ForwardedRef, forwardRef } from "react";
-import { RegistryFieldsType, RegistryWidgetsType } from "@rjsf/utils";
 
 import Form, { FormProps } from "./components/Form";
 
-/**  */
-export type WithThemeProps<T = any, F = any> = {
-  /**  */
-  fields: RegistryFieldsType<T, F>;
-  /**  */
-  widgets: RegistryWidgetsType<T, F>;
-} & Pick<
-  FormProps,
+/** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
+ * overridden while creating a theme
+ */
+export type WithThemeProps<T = any, F = any> = Pick<
+  FormProps<T, F>,
+  | "fields"
+  | "widgets"
   | "ArrayFieldTemplate"
   | "ObjectFieldTemplate"
   | "FieldTemplate"
@@ -18,7 +16,7 @@ export type WithThemeProps<T = any, F = any> = {
   | "_internalFormWrapper"
 >;
 
-/**  */
+/** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
 export default function withTheme<T = any, F = any>(
   themeProps: WithThemeProps<T, F>
 ) {
