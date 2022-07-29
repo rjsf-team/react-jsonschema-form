@@ -33,59 +33,111 @@ import _isEmpty from "lodash/isEmpty";
 import getDefaultRegistry from "../getDefaultRegistry";
 import DefaultErrorList from "./ErrorList";
 
+/**  */
 export interface FormProps<T = any, F = any> {
+  /**  */
   schema: RJSFSchema;
+  /**  */
   validator: ValidatorType<T>;
+  /**  */
   uiSchema?: UiSchema<T, F>;
+  /**  */
   formData?: T;
+  /**  */
   disabled?: boolean;
+  /**  */
   readonly?: boolean;
+  /**  */
   widgets?: RegistryWidgetsType<T, F>;
+  /**  */
   fields?: RegistryFieldsType<T, F>;
+  /**  */
   ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  /**  */
   ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
+  /**  */
   FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
+  /**  */
   ErrorList?: React.ComponentType<ErrorListProps<T, F>>;
+  /**  */
   onChange?: (data: IChangeEvent<T, F>) => void;
-  onError?: (event: any) => void; // TODO fix this
-  onSubmit?: (data: IChangeEvent<T, F>, event: any) => void; // TODO fix this
-  onBlur?: (id: string, event: any) => void; // TODO fix this
-  onFocus?: (id: string, event: any) => void; // TODO fix this
+  /**  */
+  onError?: (event: any) => void; // TODO fix this to replace `any`?
+  /**  */
+  onSubmit?: (data: IChangeEvent<T, F>, event: any) => void; // TODO fix this to replace `any`?
+  /**  */
+  onBlur?: (id: string, event: any) => void; // TODO fix this to replace `any`?
+  /**  */
+  onFocus?: (id: string, event: any) => void; // TODO fix this to replace `any`?
+  /**  */
   showErrorList?: boolean;
+  /**  */
   id?: string;
+  /**  */
   className?: string;
-  tagName?: React.ElementType; // TODO fix this?
-  _internalFormWrapper?: React.ElementType; // TODO fix this
+  /**  */
+  tagName?: React.ElementType;
+  /**  */
+  _internalFormWrapper?: React.ElementType;
+  /**  */
   name?: string;
+  /**  */
   method?: string;
+  /**  */
   target?: string;
+  /**  */
   action?: string;
+  /**  */
   autoComplete?: string;
+  /**  */
   enctype?: string;
+  /**  */
   acceptcharset?: string;
+  /**  */
   noValidate?: boolean;
+  /**  */
   noHtml5Validate?: boolean;
+  /**  */
   liveValidate?: boolean;
+  /**  */
   liveOmit?: boolean;
+  /**  */
   customValidate?: CustomValidator<T>;
+  /**  */
   transformErrors?: ErrorTransformer;
+  /**  */
   formContext?: F;
+  /**  */
   omitExtraData?: boolean;
+  /**  */
   extraErrors?: ErrorSchema<T>;
+  /**  */
   idPrefix?: string;
+  /**  */
   idSeparator?: string;
 }
 
+/**  */
 export interface FormState<T = any, F = any> {
+  /**  */
   schema: RJSFSchema;
+  /**  */
   uiSchema: UiSchema<T, F>;
+  /**  */
   idSchema: IdSchema<T>;
+  /**  */
   schemaUtils: SchemaUtilsType<T>;
+  /**  */
   formData: T;
+  /**  */
   edit: boolean;
+  /**  */
   errors: RJSFValidationError[];
+  /**  */
   errorSchema: ErrorSchema<T>;
+  /**  */
   schemaValidationErrors: RJSFValidationError[];
+  /**  */
   schemaValidationErrorSchema: ErrorSchema<T>;
 }
 
@@ -99,12 +151,15 @@ export interface IChangeEvent<T = any, F = any>
   status?: string;
 }
 
+/**  */
 export default class Form<T = any, F = any> extends Component<
   FormProps<T, F>,
   FormState<T, F>
 > {
+  /**  */
   formElement: React.RefObject<any>;
 
+  /**  */
   constructor(props: FormProps<T, F>) {
     super(props);
 
@@ -118,6 +173,7 @@ export default class Form<T = any, F = any> extends Component<
     this.formElement = React.createRef();
   }
 
+  /**  */
   UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, F>) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
@@ -130,6 +186,7 @@ export default class Form<T = any, F = any> extends Component<
     this.setState(nextState);
   }
 
+  /**  */
   getStateFromProps(
     props: FormProps<T, F>,
     inputFormData?: T
@@ -218,6 +275,7 @@ export default class Form<T = any, F = any> extends Component<
     return nextState;
   }
 
+  /**  */
   shouldComponentUpdate(
     nextProps: FormProps<T, F>,
     nextState: FormState<T, F>
@@ -225,6 +283,7 @@ export default class Form<T = any, F = any> extends Component<
     return shouldRender(this, nextProps, nextState);
   }
 
+  /**  */
   validate(
     schemaUtils: SchemaUtilsType<T>,
     formData: T,
@@ -234,9 +293,15 @@ export default class Form<T = any, F = any> extends Component<
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, customValidate, transformErrors);
+      .validateFormData(
+        formData,
+        resolvedSchema,
+        customValidate,
+        transformErrors
+      );
   }
 
+  /**  */
   renderErrors() {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const {
@@ -259,6 +324,7 @@ export default class Form<T = any, F = any> extends Component<
     return null;
   }
 
+  /**  */
   getUsedFormData = (formData: T, fields: string[]): T => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
@@ -273,6 +339,7 @@ export default class Form<T = any, F = any> extends Component<
     return data as T;
   };
 
+  /**  */
   getFieldNames = (pathSchema: PathSchema<T>, formData: T) => {
     const getAllPaths = (
       _obj: GenericObjectType,
@@ -306,6 +373,7 @@ export default class Form<T = any, F = any> extends Component<
     return getAllPaths(pathSchema);
   };
 
+  /**  */
   onChange = (formData: T, newErrorSchema?: ErrorSchema<T>) => {
     const {
       extraErrors,
@@ -378,6 +446,7 @@ export default class Form<T = any, F = any> extends Component<
     );
   };
 
+  /**  */
   onBlur = (id: string, event: any) => {
     const { onBlur } = this.props;
     if (onBlur) {
@@ -385,6 +454,7 @@ export default class Form<T = any, F = any> extends Component<
     }
   };
 
+  /**  */
   onFocus = (id: string, event: any) => {
     const { onFocus } = this.props;
     if (onFocus) {
@@ -392,6 +462,7 @@ export default class Form<T = any, F = any> extends Component<
     }
   };
 
+  /**  */
   onSubmit = (event: React.FormEvent<any>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
@@ -476,6 +547,7 @@ export default class Form<T = any, F = any> extends Component<
     );
   };
 
+  /**  */
   getRegistry(): Registry<T, F> {
     const { schemaUtils } = this.state;
     // For BC, accept passed SchemaField and TitleField props and pass them to
@@ -493,6 +565,7 @@ export default class Form<T = any, F = any> extends Component<
     };
   }
 
+  /**  */
   submit() {
     if (this.formElement.current) {
       this.formElement.current.dispatchEvent(
@@ -503,6 +576,7 @@ export default class Form<T = any, F = any> extends Component<
     }
   }
 
+  /**  */
   render() {
     const {
       children,

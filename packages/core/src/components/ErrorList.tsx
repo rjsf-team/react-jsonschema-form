@@ -1,6 +1,7 @@
 import React from "react";
 import { ErrorListProps, RJSFValidationError } from "@rjsf/utils";
 
+/**  */
 export default function ErrorList<T = any>({ errors }: ErrorListProps<T>) {
   return (
     <div className="panel panel-danger errors">

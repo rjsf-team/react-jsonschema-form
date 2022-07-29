@@ -478,7 +478,7 @@ export type UISchemaSubmitButtonOptions = {
 
 /** This type remaps the keys of `Type` to prepend `ui:` onto them. As a result it does not need to be exported */
 type MakeUIType<Type> = {
-  [Property in keyof Type as `ui:${string & Property}`]: () => Type[Property];
+  [Property in keyof Type as `ui:${string & Property}`]: Type[Property];
 };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to

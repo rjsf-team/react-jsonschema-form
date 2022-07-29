@@ -3,8 +3,11 @@ import { RegistryFieldsType, RegistryWidgetsType } from "@rjsf/utils";
 
 import Form, { FormProps } from "./components/Form";
 
+/**  */
 export type WithThemeProps<T = any, F = any> = {
+  /**  */
   fields: RegistryFieldsType<T, F>;
+  /**  */
   widgets: RegistryWidgetsType<T, F>;
 } & Pick<
   FormProps,
@@ -15,6 +18,7 @@ export type WithThemeProps<T = any, F = any> = {
   | "_internalFormWrapper"
 >;
 
+/**  */
 export default function withTheme<T = any, F = any>(
   themeProps: WithThemeProps<T, F>
 ) {

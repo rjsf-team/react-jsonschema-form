@@ -2,12 +2,17 @@ import React from "react";
 
 import IconButton from "./IconButton";
 
+/**  */
 export interface AddButtonProps {
+  /**  */
   className?: string;
+  /**  */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  /**  */
   disabled?: boolean;
 }
 
+/**  */
 export default function AddButton({
   className,
   onClick,

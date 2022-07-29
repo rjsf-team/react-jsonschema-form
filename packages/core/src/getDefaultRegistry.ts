@@ -3,6 +3,7 @@ import { Registry, RegistryFieldsType, RegistryWidgetsType } from "@rjsf/utils";
 import fields from "./components/fields";
 import widgets from "./components/widgets";
 
+/**  */
 export default function getDefaultRegistry<T = any, F = any>(): Partial<
   Registry<T, F>
 > {
