@@ -7,10 +7,11 @@ import guessType from "./guessType";
 const nums = new Set<any>(["number", "integer"]);
 
 /** Returns the real value for a select widget due to a silly limitation in the DOM which causes option change event
- * values to always be retrieved as strings.
+ * values to always be retrieved as strings. Uses the `schema` to help determine the value's true type.
  *
  * @param schema - The schema to used to determine the value's true type
  * @param [value] - The value to convert
+ * @returns - The `value` converted to the proper type
  */
 export default function processSelectValue(schema: RJSFSchema, value?: any) {
   const { enum: schemaEnum, type, items } = schema;

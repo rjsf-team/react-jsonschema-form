@@ -27,7 +27,7 @@ export default function withTheme<T = any, F = any>(
       widgets = { ...themeProps.widgets, ...widgets };
 
       return (
-        <Form
+        <Form<T, F>
           {...themeProps}
           {...directProps}
           fields={fields}

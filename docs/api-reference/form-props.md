@@ -10,10 +10,6 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
-## additionalMetaSchemas
-
-This prop allows you to validate the form data against another JSON Schema meta schema, for example, JSON Schema draft-04. See [Validation](../usage/validation.md) for more information.
-
 ## ArrayFieldTemplate
 
 React component used to customize how alls arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
@@ -35,12 +31,14 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 
 render((
-  <Form schema={schema}>
+  <Form schema={schema} validator={validator}>
     <div>
       <button type="submit">Submit</button>
       <button type="button">Cancel</button>
@@ -51,22 +49,25 @@ render((
 
 > **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
 
-## customFormats
+## customValidate
 
-This prop allows you to define custom formats for validation. See [Validation](../usage/validation.md) for more information.
+Formerly the `validate` prop.
+The `customValidate` prop requires a function that specifies custom validation rules for the form.
+See [Validation](../usage/validation.md) for more information.
 
 ## disabled
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 
 render((
-  <Form schema={schema}
-        disabled />
+  <Form schema={schema} validator={validator} disabled />
 ), document.getElementById("app"));
 ```
 
@@ -77,13 +78,14 @@ If you just want to disable some of the fields, see the `ui:disabled` parameter 
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 
 render((
-  <Form schema={schema}
-        readonly />
+  <Form schema={schema} validator={validator} readonly />
 ), document.getElementById("app"));
 ```
 
@@ -127,13 +129,14 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 
 render((
-  <Form schema={schema}
-        idPrefix={"rjsf_prefix"}/>
+  <Form schema={schema} validator={validator} idPrefix={"rjsf_prefix"}/>
 ), document.getElementById("app"));
 ```
 
@@ -144,6 +147,8 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "object",
   properties: {
@@ -154,8 +159,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema}
-        idSeparator={"/"}/>
+  <Form schema={schema} validator={validator} idSeparator={"/"}/>
 ), document.getElementById("app"));
 ```
 
@@ -208,14 +212,15 @@ If you plan on being notified every time the form data are updated, you can pass
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
 
 render((
-  <Form schema={schema}
-        onError={onError} />
+  <Form schema={schema} validator={validator} onError={onError} />
 ), document.getElementById("app"));
 ```
 
@@ -228,14 +233,15 @@ Sometimes you may want to trigger events or modify external state when a field h
 You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
 const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
 
 render((
-  <Form schema={schema}
-        onSubmit={onSubmit} />
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} />
 ), document.getElementById("app"));
 ```
 
@@ -243,7 +249,7 @@ render((
 
 ## schema
 
-Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
+**Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
 
 ## showErrorList
 
@@ -256,17 +262,18 @@ It's possible to change the default `form` tag name to a different HTML tag, whi
 ```jsx
 <Form
   tagName="div"
+  ...
 />
 ```
 
 You can also provide a class/function component.
-
 
 ```jsx
 const CustomForm = props => <form {...props} style={...} className={...} />
 // ...
 <Form
   tagName={CustomForm}
+  ...
 />
 ```
 
@@ -282,9 +289,10 @@ A function can be passed to this prop in order to make modifications to the defa
 
 Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
-## validate
+## validator
 
-The `validate` prop requires a function that specifies custom validation rules for the form. See [Validation](../usage/validation.md) for more information.
+**Required**! An implementation of the `ValidatorType` interface.
+`@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
 
 ## widgets
 

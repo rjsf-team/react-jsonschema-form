@@ -7,7 +7,6 @@ import {
   ErrorTransformer,
   FieldTemplateProps,
   GenericObjectType,
-  IChangeEvent,
   IdSchema,
   ObjectFieldTemplateProps,
   PathSchema,
@@ -47,7 +46,7 @@ export interface FormProps<T = any, F = any> {
   ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
   FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
   ErrorList?: React.ComponentType<ErrorListProps<T, F>>;
-  onChange?: (data: IChangeEvent<T, F>) => void; // TODO fix this
+  onChange?: (data: IChangeEvent<T, F>) => void;
   onError?: (event: any) => void; // TODO fix this
   onSubmit?: (data: IChangeEvent<T, F>, event: any) => void; // TODO fix this
   onBlur?: (id: string, event: any) => void; // TODO fix this
@@ -68,7 +67,7 @@ export interface FormProps<T = any, F = any> {
   noHtml5Validate?: boolean;
   liveValidate?: boolean;
   liveOmit?: boolean;
-  validate?: CustomValidator<T>;
+  customValidate?: CustomValidator<T>;
   transformErrors?: ErrorTransformer;
   formContext?: F;
   omitExtraData?: boolean;
@@ -88,6 +87,16 @@ export interface FormState<T = any, F = any> {
   errorSchema: ErrorSchema<T>;
   schemaValidationErrors: RJSFValidationError[];
   schemaValidationErrorSchema: ErrorSchema<T>;
+}
+
+/**  */
+export interface IChangeEvent<T = any, F = any>
+  extends Omit<
+    FormState<T, F>,
+    "schemaValidationErrors" | "schemaValidationErrorSchema"
+  > {
+  /**  */
+  status?: string;
 }
 
 export default class Form<T = any, F = any> extends Component<
@@ -221,11 +230,11 @@ export default class Form<T = any, F = any> extends Component<
     formData: T,
     schema = this.props.schema
   ): ValidationData<T> {
-    const { validate, transformErrors } = this.props;
+    const { customValidate, transformErrors } = this.props;
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, validate, transformErrors);
+      .validateFormData(formData, resolvedSchema, customValidate, transformErrors);
   }
 
   renderErrors() {

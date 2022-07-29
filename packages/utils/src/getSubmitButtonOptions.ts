@@ -4,7 +4,7 @@ import { UiSchema, UISchemaSubmitButtonOptions } from "./types";
 
 /** The default submit button options, exported for testing purposes
  */
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: UISchemaSubmitButtonOptions = {
   props: {
     disabled: false,
   },
@@ -19,7 +19,7 @@ export const DEFAULT_OPTIONS = {
  */
 export default function getSubmitButtonOptions<T = any, F = any>(
   uiSchema: UiSchema<T, F> = {}
-) {
+): UISchemaSubmitButtonOptions {
   const uiOptions = getUiOptions<T, F>(uiSchema);
   if (uiOptions && uiOptions[SUBMIT_BTN_OPTIONS_KEY]) {
     const options = uiOptions[

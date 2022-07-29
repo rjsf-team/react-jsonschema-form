@@ -73,6 +73,8 @@ horizontalButtons: horizontal buttons instead of the default vertical
 ```
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "array",
   items: {
@@ -90,7 +92,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 

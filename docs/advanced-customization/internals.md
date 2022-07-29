@@ -4,7 +4,7 @@ Miscellaneous internals of react-jsonschema-form are listed here.
 
 ## JSON Schema supporting status
 
-This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. We currently support JSON Schema-07 by default, but we also support other JSON schema versions through the [custom schema validation](https://react-jsonschema-form.readthedocs.io/en/latest/validation/#custom-schema-validation) feature. Due to the limitation of form widgets, there are some exceptions as follows:
+This component follows [JSON Schema](http://json-schema.org/documentation.html) specs. We currently support JSON Schema-07 by default, but we also support other JSON schema versions through the [custom schema validation](https://react-jsonschema-form.readthedocs.io/en/stable/validation/#custom-schema-validation) feature. Due to the limitation of form widgets, there are some exceptions as follows:
 
 * `additionalItems` keyword for arrays
 
@@ -62,6 +62,8 @@ You can use the reference to get your `Form` component and call the `submit` met
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
 let yourForm;
 
@@ -71,6 +73,7 @@ const schema = {
 
 render((
   <Form schema={schema}
+        validator={validator}
         onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
 ), document.getElementById("app"));
 

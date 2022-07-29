@@ -1,8 +1,7 @@
 import { CONST_KEY } from "./constants";
 import { RJSFSchema } from "./types";
 
-/**
- * This function checks if the given `schema` matches a single constant value. This happens when either the schema has
+/** This function checks if the given `schema` matches a single constant value. This happens when either the schema has
  * an `enum` array with a single value or there is a `const` defined.
  *
  * @param schema - The schema for a field
