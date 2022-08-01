@@ -315,7 +315,7 @@ describeRepeated("Form common", (createFormComponent) => {
 
     const formData = { foo: "invalid" };
 
-    function FieldTemplate(props) {
+    function CustomFieldTemplate(props) {
       const {
         id,
         classNames,
@@ -329,6 +329,7 @@ describeRepeated("Form common", (createFormComponent) => {
         rawErrors,
         children,
       } = props;
+      console.log("rendering...");
       return (
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>
@@ -365,7 +366,9 @@ describeRepeated("Form common", (createFormComponent) => {
         schema,
         uiSchema,
         formData,
-        FieldTemplate,
+        templates: {
+          FieldTemplate: CustomFieldTemplate,
+        },
         liveValidate: true,
       }).node;
     });
@@ -2602,7 +2605,7 @@ describeRepeated("Form common", (createFormComponent) => {
           items: { type: "string" },
         },
         formData: ["foo", "bar"],
-        ArrayFieldTemplate: ArrayTemplateWithForm,
+        templates: { ArrayFieldTemplate: ArrayTemplateWithForm },
         onSubmit: outerOnSubmit,
       };
       createFormComponent(outerFormProps);
@@ -3239,6 +3242,7 @@ describe("Form omitExtraData and liveOmit", () => {
       { omitExtraData: true, liveOmit: true }
     );
 
+    console.log(node.innerHTML);
     const textNode = node.querySelector("#root-key");
     Simulate.blur(textNode, {
       target: { value: "key1new" },

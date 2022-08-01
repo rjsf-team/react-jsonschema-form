@@ -5,7 +5,7 @@ import List from "antd/lib/list";
 import Space from "antd/lib/space";
 import ExclamationCircleOutlined from "@ant-design/icons/ExclamationCircleOutlined";
 
-const ErrorList = ({
+const Index = ({
   // errorSchema,
   errors,
   // formContext,
@@ -35,4 +35,4 @@ const ErrorList = ({
   );
 };
 
-export default ErrorList;
+export default Index;

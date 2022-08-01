@@ -222,7 +222,7 @@ describe("BooleanField", () => {
         type: "boolean",
         description: "my description",
       },
-      fields: {
+      templates: {
         DescriptionField: ({ description }) => (
           <div className="field-description">{description} overridden</div>
         ),

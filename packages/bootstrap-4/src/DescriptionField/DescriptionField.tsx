@@ -1,11 +1,7 @@
 import React from "react";
-import { FieldProps } from "@rjsf/utils";
+import { DescriptionFieldProps } from "@rjsf/utils";
 
-export interface DescriptionFieldProps extends Partial<FieldProps> {
-  description?: string;
-}
-
-const DescriptionField = ({ description }: Partial<FieldProps>) => {
+const DescriptionField = ({ description }: DescriptionFieldProps) => {
   if (description) {
     return (
       <div>

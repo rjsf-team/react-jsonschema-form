@@ -8,9 +8,7 @@ import AddButton from "../AddButton";
 
 const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
-    DescriptionField,
     description,
-    TitleField,
     title,
     properties,
     required,
@@ -21,7 +19,9 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     schema,
     formData,
     onAddClick,
+    registry,
   } = props;
+  const { DescriptionField, TitleField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
 
   return (
@@ -31,12 +31,14 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
+          registry={registry}
         />
       )}
       {description && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
           description={description}
+          registry={registry}
         />
       )}
       <Grid gap={description ? 2 : 6} mb={4}>

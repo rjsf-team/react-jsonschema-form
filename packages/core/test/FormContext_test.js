@@ -19,7 +19,9 @@ describe("FormContext", () => {
   const formContext = { foo: "bar" };
 
   const CustomComponent = function (props) {
-    return <div id={props.formContext.foo} />;
+    const { registry } = props;
+    const { formContext } = registry;
+    return <div id={formContext.foo} />;
   };
 
   it("should be passed to Form", () => {
@@ -70,7 +72,7 @@ describe("FormContext", () => {
           },
         },
       },
-      FieldTemplate: CustomTemplateField,
+      templates: { FieldTemplate: CustomTemplateField },
       formContext,
     });
 
@@ -89,7 +91,7 @@ describe("FormContext", () => {
           type: "string",
         },
       },
-      ArrayFieldTemplate: CustomArrayTemplateField,
+      templates: { ArrayFieldTemplate: CustomArrayTemplateField },
       formContext,
     });
 
@@ -97,7 +99,7 @@ describe("FormContext", () => {
   });
 
   it("should be passed to custom TitleField", () => {
-    const fields = { TitleField: CustomComponent };
+    const templates = { TitleField: CustomComponent };
 
     const { node } = createFormComponent({
       schema: {
@@ -109,7 +111,7 @@ describe("FormContext", () => {
           },
         },
       },
-      fields,
+      templates,
       formContext,
     });
 
@@ -117,11 +119,11 @@ describe("FormContext", () => {
   });
 
   it("should be passed to custom DescriptionField", () => {
-    const fields = { DescriptionField: CustomComponent };
+    const templates = { DescriptionField: CustomComponent };
 
     const { node } = createFormComponent({
       schema: { type: "string", description: "A description" },
-      fields,
+      templates,
       formContext,
     });
 

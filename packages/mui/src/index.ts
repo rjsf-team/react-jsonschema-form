@@ -1,6 +1,6 @@
 import MuiForm from "./MuiForm/MuiForm";
 
-export { default as Fields } from "./Fields";
+export { default as Fields } from "./Templates";
 export { default as FieldTemplate } from "./FieldTemplate";
 export { default as MuiForm } from "./MuiForm";
 export { default as ObjectFieldTemplate } from "./ObjectFieldTemplate";

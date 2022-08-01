@@ -9,9 +9,7 @@ import { canExpand, getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
@@ -22,7 +20,9 @@ const ObjectFieldTemplate = ({
   onAddClick,
   disabled,
   readonly,
+  registry,
 }: ObjectFieldTemplateProps) => {
+  const { TitleField, DescriptionField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
@@ -31,12 +31,15 @@ const ObjectFieldTemplate = ({
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
+          registry={registry}
+          uiSchema={uiSchema}
         />
       )}
       {description && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
           description={description}
+          registry={registry}
         />
       )}
       <Container fluid className="p-0">

@@ -1,16 +1,10 @@
-import IconButton from "../IconButton";
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  mergeObjects,
-  deepEquals,
-  getSchemaType,
-} from "@rjsf/utils";
+import { mergeObjects, deepEquals, getSchemaType } from "@rjsf/utils";
 
 import * as types from "../../types";
+import DefaultFieldTemplate from "../templates/FieldTemplate";
 
-const REQUIRED_FIELD_SYMBOL = "*";
 const COMPONENT_TYPES = {
   array: "ArrayField",
   boolean: "BooleanField",
@@ -51,32 +45,6 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
           />
         );
       };
-}
-
-function Label(props) {
-  const { label, required, id } = props;
-  if (!label) {
-    return null;
-  }
-  return (
-    <label className="control-label" htmlFor={id}>
-      {label}
-      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
-    </label>
-  );
-}
-
-function LabelInput(props) {
-  const { id, label, onChange } = props;
-  return (
-    <input
-      className="form-control"
-      type="text"
-      id={id}
-      onBlur={(event) => onChange(event.target.value)}
-      defaultValue={label}
-    />
-  );
 }
 
 function Help(props) {
@@ -120,111 +88,6 @@ function ErrorList(props) {
     </div>
   );
 }
-function DefaultTemplate(props) {
-  const {
-    id,
-    label,
-    children,
-    errors,
-    help,
-    description,
-    hidden,
-    required,
-    displayLabel,
-  } = props;
-  if (hidden) {
-    return <div className="hidden">{children}</div>;
-  }
-
-  return (
-    <WrapIfAdditional {...props}>
-      {displayLabel && <Label label={label} required={required} id={id} />}
-      {displayLabel && description ? description : null}
-      {children}
-      {errors}
-      {help}
-    </WrapIfAdditional>
-  );
-}
-if (process.env.NODE_ENV !== "production") {
-  DefaultTemplate.propTypes = {
-    id: PropTypes.string,
-    classNames: PropTypes.string,
-    label: PropTypes.string,
-    children: PropTypes.node.isRequired,
-    errors: PropTypes.element,
-    rawErrors: PropTypes.arrayOf(PropTypes.string),
-    help: PropTypes.element,
-    rawHelp: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    description: PropTypes.element,
-    rawDescription: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    hidden: PropTypes.bool,
-    required: PropTypes.bool,
-    readonly: PropTypes.bool,
-    displayLabel: PropTypes.bool,
-    fields: PropTypes.object,
-    formContext: PropTypes.object,
-  };
-}
-
-DefaultTemplate.defaultProps = {
-  hidden: false,
-  readonly: false,
-  required: false,
-  displayLabel: true,
-};
-
-function WrapIfAdditional(props) {
-  const {
-    id,
-    classNames,
-    disabled,
-    label,
-    onKeyChange,
-    onDropPropertyClick,
-    readonly,
-    required,
-    schema,
-  } = props;
-  const keyLabel = `${label} Key`; // i18n ?
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-
-  if (!additional) {
-    return <div className={classNames}>{props.children}</div>;
-  }
-
-  return (
-    <div className={classNames}>
-      <div className="row">
-        <div className="col-xs-5 form-additional">
-          <div className="form-group">
-            <Label label={keyLabel} required={required} id={`${id}-key`} />
-            <LabelInput
-              label={label}
-              required={required}
-              id={`${id}-key`}
-              onChange={onKeyChange}
-            />
-          </div>
-        </div>
-        <div className="form-additional form-group col-xs-5">
-          {props.children}
-        </div>
-        <div className="col-xs-2">
-          <IconButton
-            type="danger"
-            icon="remove"
-            className="array-item-remove btn-block"
-            tabIndex="-1"
-            style={{ border: "0" }}
-            disabled={disabled || readonly}
-            onClick={onDropPropertyClick(label)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function SchemaFieldRender(props) {
   const {
@@ -241,9 +104,11 @@ function SchemaFieldRender(props) {
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { fields, formContext, schemaUtils } = registry;
+  const { fields, formContext, schemaUtils, templates } = registry;
   const FieldTemplate =
-    uiSchema["ui:FieldTemplate"] || registry.FieldTemplate || DefaultTemplate;
+    uiSchema["ui:FieldTemplate"] ||
+    templates.FieldTemplate ||
+    DefaultFieldTemplate;
   let idSchema = props.idSchema;
   const schema = schemaUtils.retrieveSchema(props.schema, formData);
   idSchema = mergeObjects(
@@ -251,7 +116,7 @@ function SchemaFieldRender(props) {
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
-  const { DescriptionField } = fields;
+  const { DescriptionField } = templates;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(
     props.readonly ||
@@ -321,7 +186,7 @@ function SchemaFieldRender(props) {
       <DescriptionField
         id={id + "__description"}
         description={description}
-        formContext={formContext}
+        registry={registry}
       />
     ),
     rawDescription: description,

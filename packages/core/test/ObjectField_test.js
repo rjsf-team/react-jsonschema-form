@@ -69,7 +69,7 @@ describe("ObjectField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: {
+        templates: {
           TitleField: CustomTitleField,
         },
       });
@@ -85,7 +85,7 @@ describe("ObjectField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: { DescriptionField: CustomDescriptionField },
+        templates: { DescriptionField: CustomDescriptionField },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my description"
@@ -361,7 +361,7 @@ describe("ObjectField", () => {
   describe("Title", () => {
     const TitleField = (props) => <div id={`title-${props.title}`} />;
 
-    const fields = { TitleField };
+    const templates = { TitleField };
 
     it("should pass field name to TitleField if there is no title", () => {
       const schema = {
@@ -374,7 +374,7 @@ describe("ObjectField", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-object")).to.not.be.null;
     });
 
@@ -385,7 +385,7 @@ describe("ObjectField", () => {
         title: "test",
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-test")).to.not.be.null;
     });
 
@@ -395,7 +395,7 @@ describe("ObjectField", () => {
         properties: {},
         title: "",
       };
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-")).to.be.null;
     });
   });

@@ -1,11 +1,11 @@
 import { withTheme, getDefaultRegistry } from "@rjsf/core";
 
-import DescriptionField from "./fields/DescriptionField";
-import TitleField from "./fields/TitleField";
-
+import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
+import DescriptionField from "./templates/DescriptionField";
+import ErrorList from "./templates/ErrorList";
 import FieldTemplate from "./templates/FieldTemplate";
 import ObjectFieldTemplate from "./templates/ObjectFieldTemplate";
-import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
+import TitleField from "./templates/TitleField";
 
 import AltDateTimeWidget from "./widgets/AltDateTimeWidget";
 import AltDateWidget from "./widgets/AltDateWidget";
@@ -25,16 +25,9 @@ import UpDownWidget from "./widgets/UpDownWidget";
 import URLWidget from "./widgets/URLWidget";
 import SubmitButton from "./widgets/SubmitButton";
 
-import ErrorList from "./ErrorList";
-
 // import './index.less';
 
-const { fields, widgets } = getDefaultRegistry();
-
-export const Fields = {
-  DescriptionField,
-  TitleField,
-};
+const { fields, templates, widgets } = getDefaultRegistry();
 
 export const Widgets = {
   AltDateTimeWidget,
@@ -57,12 +50,17 @@ export const Widgets = {
 };
 
 export const Theme = {
-  ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
-  FieldTemplate,
-  ObjectFieldTemplate,
+  fields,
+  templates: {
+    ...templates,
+    ArrayFieldTemplate,
+    DescriptionField,
+    ErrorListTemplate: ErrorList,
+    FieldTemplate,
+    ObjectFieldTemplate,
+    TitleField,
+  },
   widgets: { ...widgets, ...Widgets },
-  ErrorList,
 };
 
 export const Form = withTheme(Theme);

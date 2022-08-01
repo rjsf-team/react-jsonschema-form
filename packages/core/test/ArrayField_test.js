@@ -235,7 +235,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: { TitleField: CustomTitleField },
+        templates: { TitleField: CustomTitleField },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my list"
@@ -249,7 +249,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: {
+        templates: {
           DescriptionField: CustomDescriptionField,
         },
       });
@@ -296,7 +296,9 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomComponent,
+        templates: {
+          ArrayFieldTemplate: CustomComponent,
+        },
         formData: [1],
         liveValidate: true,
       });
@@ -340,7 +342,7 @@ describe("ArrayField", () => {
     it("should assign new keys/ids when clicking the add button", () => {
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       Simulate.click(node.querySelector(".array-item-add button"));
@@ -352,7 +354,7 @@ describe("ArrayField", () => {
     it("should add a field when clicking add button even if event is not passed to onAddClick", () => {
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomOnAddClickTemplate,
+        templates: { ArrayFieldTemplate: CustomOnAddClickTemplate },
       });
 
       Simulate.click(node.querySelector(".array-item-add button"));
@@ -382,7 +384,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ["foo"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -456,7 +458,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate,
+        templates: { ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate },
       });
 
       const addBeforeButtons = node.querySelectorAll(".array-item-move-before");
@@ -589,7 +591,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
       const startRows = node.querySelectorAll(".array-item");
@@ -617,7 +619,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
       const moveUpBtns = node.querySelectorAll(".array-item-move-up");
       const startRows = node.querySelectorAll(".array-item");
@@ -678,7 +680,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: moveAnywhereArrayFieldTemplate,
+        templates: { ArrayFieldTemplate: moveAnywhereArrayFieldTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -783,7 +785,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -1602,7 +1604,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomTemplate,
+        templates: { ArrayFieldTemplate: CustomTemplate },
         formData: [[]],
         liveValidate: true,
       });
@@ -1845,7 +1847,7 @@ describe("ArrayField", () => {
       const { node, onChange } = createFormComponent({
         schema: schemaAdditional,
         formData: [1, 2, "foo"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -2041,7 +2043,7 @@ describe("ArrayField", () => {
   describe("Title", () => {
     const TitleField = (props) => <div id={`title-${props.title}`} />;
 
-    const fields = { TitleField };
+    const templates = { TitleField };
 
     it("should pass field name to TitleField if there is no title", () => {
       const schema = {
@@ -2054,7 +2056,7 @@ describe("ArrayField", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-array")).to.not.be.null;
     });
 
@@ -2065,7 +2067,7 @@ describe("ArrayField", () => {
         items: {},
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-test")).to.not.be.null;
     });
 
@@ -2075,7 +2077,7 @@ describe("ArrayField", () => {
         title: "",
         items: {},
       };
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-")).to.be.null;
     });
   });

@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorListProps, RJSFValidationError } from "@rjsf/utils";
 
-/** The `ErrorList` component renders the all of the errors associated with the fields in the `Form` */
+/** The `ErrorList` component renders the all the errors associated with the fields in the `Form` */
 export default function ErrorList<T = any>({ errors }: ErrorListProps<T>) {
   return (
     <div className="panel panel-danger errors">

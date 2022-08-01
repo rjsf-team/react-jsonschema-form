@@ -218,7 +218,7 @@ describe("withTheme", () => {
       };
       const uiSchema = {};
       let { node } = createComponent(
-        WrapperClassComponent({ ...themeTemplates }),
+        WrapperClassComponent({ templates: themeTemplates }),
         {
           schema,
           uiSchema,
@@ -246,10 +246,10 @@ describe("withTheme", () => {
         properties: { foo: { type: "string" }, bar: { type: "string" } },
       };
       let { node } = createComponent(
-        WrapperClassComponent({ ...themeTemplates }),
+        WrapperClassComponent({ templates: themeTemplates }),
         {
           schema,
-          ...userTemplates,
+          templates: userTemplates,
         }
       );
       expect(

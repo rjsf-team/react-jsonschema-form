@@ -127,12 +127,13 @@ const DefaultArrayItem = ({
 };
 
 const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+  const { templates } = props.registry;
   const uiOptions = getUiOptions(props.uiSchema);
   return (
     <fieldset className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
+        TitleField={templates.TitleField}
         idSchema={props.idSchema}
         title={uiOptions.title || props.title}
         required={props.required}
@@ -174,12 +175,13 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 };
 
 const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+  const { templates } = props.registry;
   const uiOptions = getUiOptions(props.uiSchema);
   return (
     <Box>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
+        TitleField={templates.TitleField}
         idSchema={props.idSchema}
         title={uiOptions.title || props.title}
         required={props.required}
@@ -188,7 +190,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       {(uiOptions.description || props.schema.description) && (
         <ArrayFieldDescription
           key={`array-field-description-${props.idSchema.$id}`}
-          DescriptionField={props.DescriptionField}
+          DescriptionField={templates.DescriptionField}
           idSchema={props.idSchema}
           description={uiOptions.description || props.schema.description}
         />

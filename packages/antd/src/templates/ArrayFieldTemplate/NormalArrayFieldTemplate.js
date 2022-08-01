@@ -16,7 +16,6 @@ const DESCRIPTION_COL_STYLE = {
 const NormalArrayFieldTemplate = ({
   canAdd,
   className,
-  DescriptionField,
   disabled,
   formContext,
   // formData,
@@ -25,13 +24,13 @@ const NormalArrayFieldTemplate = ({
   onAddClick,
   prefixCls,
   readonly,
-  // registry,
+  registry,
   required,
   schema,
   title,
-  TitleField,
   uiSchema,
 }) => {
+  const { DescriptionField, TitleField } = registry.templates;
   const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;

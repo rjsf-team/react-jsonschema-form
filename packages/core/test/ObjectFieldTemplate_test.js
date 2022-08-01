@@ -18,8 +18,8 @@ describe("ObjectFieldTemplate", () => {
 
   class ObjectFieldTemplate extends PureComponent {
     render() {
-      const { TitleField, DescriptionField, properties, title, description } =
-        this.props;
+      const { properties, title, description, registry } = this.props;
+      const { TitleField, DescriptionField } = registry.templates;
       return (
         <div className="root">
           <TitleField title={title} />
@@ -49,8 +49,8 @@ describe("ObjectFieldTemplate", () => {
       },
       uiSchema: { "ui:description": "foobar" },
       formData,
-      ObjectFieldTemplate,
-      fields: {
+      templates: {
+        ObjectFieldTemplate,
         TitleField,
         DescriptionField,
       },
@@ -68,7 +68,7 @@ describe("ObjectFieldTemplate", () => {
         "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
-      fields: {
+      templates: {
         TitleField,
         DescriptionField,
       },
@@ -86,8 +86,8 @@ describe("ObjectFieldTemplate", () => {
         "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
-      ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
-      fields: {
+      templates: {
+        ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
         TitleField,
         DescriptionField,
       },

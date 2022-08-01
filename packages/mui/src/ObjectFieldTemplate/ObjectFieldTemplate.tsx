@@ -5,9 +5,7 @@ import { ObjectFieldTemplateProps, canExpand, getUiOptions } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
@@ -18,7 +16,9 @@ const ObjectFieldTemplate = ({
   schema,
   formData,
   onAddClick,
+  registry,
 }: ObjectFieldTemplateProps) => {
+  const { DescriptionField, TitleField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
@@ -27,12 +27,14 @@ const ObjectFieldTemplate = ({
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          registry={registry}
         />
       )}
       {description && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
           description={description}
+          registry={registry}
         />
       )}
       <Grid container={true} spacing={2} style={{ marginTop: "10px" }}>

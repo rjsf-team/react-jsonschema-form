@@ -12,7 +12,7 @@ const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
   }
 
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} options={uiSchema["ui:options"]} />;
+  return <TitleField id={id} title={title} uiSchema={uiSchema} />;
 };
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
@@ -120,9 +120,10 @@ function DefaultFixedArrayFieldTemplate({
   required,
   schema,
   title,
-  TitleField,
   itemProps,
+  registry,
 }) {
+  const { TitleField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
@@ -175,16 +176,16 @@ function DefaultNormalArrayFieldTemplate({
   className,
   classNames,
   disabled,
-  DescriptionField,
   items,
   onAddClick,
   readOnly,
   required,
   schema,
   title,
-  TitleField,
   itemProps,
+  registry,
 }) {
+  const { DescriptionField, TitleField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;

@@ -5,9 +5,7 @@ import { canExpand, getUiOptions } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
 
 function ObjectFieldTemplate({
-  DescriptionField,
   description,
-  TitleField,
   onAddClick,
   title,
   properties,
@@ -18,7 +16,9 @@ function ObjectFieldTemplate({
   schema,
   formData,
   idSchema,
+  registry,
 }) {
+  const { DescriptionField, TitleField } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
@@ -28,14 +28,16 @@ function ObjectFieldTemplate({
         <TitleField
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
-          options={uiOptions.options}
+          uiSchema={uiSchema}
           required={required}
+          registry={registry}
         />
       )}
       {fieldDescription && (
         <DescriptionField
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
+          registry={registry}
         />
       )}
       {properties.map(prop => prop.content)}
