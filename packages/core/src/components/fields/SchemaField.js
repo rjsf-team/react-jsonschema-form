@@ -116,7 +116,7 @@ function SchemaFieldRender(props) {
     idSchema
   );
   const FieldComponent = getFieldComponent(schema, uiSchema, idSchema, fields);
-  const { DescriptionField } = templates;
+  const { DescriptionFieldTemplate } = templates;
   const disabled = Boolean(props.disabled || uiSchema["ui:disabled"]);
   const readonly = Boolean(
     props.readonly ||
@@ -183,7 +183,7 @@ function SchemaFieldRender(props) {
 
   const fieldProps = {
     description: (
-      <DescriptionField
+      <DescriptionFieldTemplate
         id={id + "__description"}
         description={description}
         registry={registry}

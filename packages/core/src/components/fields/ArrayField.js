@@ -474,7 +474,8 @@ class ArrayField extends Component {
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { schemaUtils, templates, formContext } = registry;
-    const { ArrayFieldTemplate, TitleField, DescriptionField } = templates;
+    const { ArrayFieldTemplate, DescriptionFieldTemplate, TitleFieldTemplate } =
+      templates;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
     const arrayProps = {
@@ -507,7 +508,7 @@ class ArrayField extends Component {
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
-      DescriptionField,
+      DescriptionField: DescriptionFieldTemplate,
       disabled,
       idSchema,
       uiSchema,
@@ -517,7 +518,7 @@ class ArrayField extends Component {
       required,
       schema,
       title,
-      TitleField,
+      TitleField: TitleFieldTemplate,
       formContext,
       formData,
       rawErrors,
@@ -696,7 +697,7 @@ class ArrayField extends Component {
     const title = schema.title || name;
     let items = this.props.formData;
     const { schemaUtils, formContext, templates } = registry;
-    const { ArrayFieldTemplate, TitleField } = templates;
+    const { ArrayFieldTemplate, TitleFieldTemplate } = templates;
     const itemSchemas = schema.items.map((item, index) =>
       schemaUtils.retrieveSchema(item, formData[index])
     );
@@ -761,7 +762,7 @@ class ArrayField extends Component {
       schema,
       uiSchema,
       title,
-      TitleField,
+      TitleField: TitleFieldTemplate,
       formContext,
       rawErrors,
     };

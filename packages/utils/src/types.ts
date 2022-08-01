@@ -148,16 +148,16 @@ export type RegistryWidgetsType<T = any, F = any> = {
 export interface TemplatesType<T = any, F = any> {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  /** The template to use for rendering the description of a field */
+  DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, F>>;
   /** The template to use while rendering form errors */
   ErrorListTemplate: React.ComponentType<ErrorListProps<T, F>>;
-  /** The template to use while rendering an object */
-  ObjectFieldTemplate: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
   /** The template to use while rendering a field */
   FieldTemplate: React.ComponentType<FieldTemplateProps<T, F>>;
-  /** The template to use for rendering the description of a field */
-  DescriptionField: React.ComponentType<DescriptionFieldProps<T, F>>;
+  /** The template to use while rendering an object */
+  ObjectFieldTemplate: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
   /** The template to use for rendering the title of a field */
-  TitleField: React.ComponentType<TitleFieldProps<T, F>>;
+  TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
 }
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form

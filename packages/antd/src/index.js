@@ -54,11 +54,11 @@ export const Theme = {
   templates: {
     ...templates,
     ArrayFieldTemplate,
-    DescriptionField,
+    DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldTemplate,
     ObjectFieldTemplate,
-    TitleField,
+    TitleFieldTemplate: TitleField,
   },
   widgets: { ...widgets, ...Widgets },
 };

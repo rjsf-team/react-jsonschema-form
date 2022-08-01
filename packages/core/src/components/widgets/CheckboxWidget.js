@@ -17,7 +17,7 @@ function CheckboxWidget(props) {
     registry,
   } = props;
 
-  const { DescriptionField } = registry.templates;
+  const { DescriptionFieldTemplate } = registry.templates;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -26,7 +26,7 @@ function CheckboxWidget(props) {
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           description={schema.description}
           registry={registry}
         />

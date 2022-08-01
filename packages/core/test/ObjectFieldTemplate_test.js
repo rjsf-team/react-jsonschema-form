@@ -19,11 +19,12 @@ describe("ObjectFieldTemplate", () => {
   class ObjectFieldTemplate extends PureComponent {
     render() {
       const { properties, title, description, registry } = this.props;
-      const { TitleField, DescriptionField } = registry.templates;
+      const { DescriptionFieldTemplate, TitleFieldTemplate } =
+        registry.templates;
       return (
         <div className="root">
-          <TitleField title={title} />
-          <DescriptionField description={description} />
+          <TitleFieldTemplate title={title} />
+          <DescriptionFieldTemplate description={description} />
           <div>
             {properties.map(({ content }, index) => (
               <div key={index} className="property">
@@ -36,8 +37,8 @@ describe("ObjectFieldTemplate", () => {
     }
   }
 
-  const TitleField = () => <div className="title-field" />;
-  const DescriptionField = ({ description }) =>
+  const TitleFieldTemplate = () => <div className="title-field" />;
+  const DescriptionFieldTemplate = ({ description }) =>
     description ? <div className="description-field" /> : null;
 
   let node;
@@ -51,8 +52,8 @@ describe("ObjectFieldTemplate", () => {
       formData,
       templates: {
         ObjectFieldTemplate,
-        TitleField,
-        DescriptionField,
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();
@@ -69,8 +70,8 @@ describe("ObjectFieldTemplate", () => {
       },
       formData,
       templates: {
-        TitleField,
-        DescriptionField,
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();
@@ -88,8 +89,8 @@ describe("ObjectFieldTemplate", () => {
       formData,
       templates: {
         ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
-        TitleField,
-        DescriptionField,
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();

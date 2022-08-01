@@ -21,13 +21,13 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     onAddClick,
     registry,
   } = props;
-  const { DescriptionField, TitleField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
 
   return (
     <React.Fragment>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
@@ -35,7 +35,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         />
       )}
       {description && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={description}
           registry={registry}

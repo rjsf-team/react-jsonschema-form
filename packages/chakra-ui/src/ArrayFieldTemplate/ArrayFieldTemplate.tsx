@@ -133,7 +133,7 @@ const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     <fieldset className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={templates.TitleField}
+        TitleField={templates.TitleFieldTemplate}
         idSchema={props.idSchema}
         title={uiOptions.title || props.title}
         required={props.required}
@@ -181,7 +181,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     <Box>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={templates.TitleField}
+        TitleField={templates.TitleFieldTemplate}
         idSchema={props.idSchema}
         title={uiOptions.title || props.title}
         required={props.required}
@@ -190,7 +190,7 @@ const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       {(uiOptions.description || props.schema.description) && (
         <ArrayFieldDescription
           key={`array-field-description-${props.idSchema.$id}`}
-          DescriptionField={templates.DescriptionField}
+          DescriptionField={templates.DescriptionFieldTemplate}
           idSchema={props.idSchema}
           description={uiOptions.description || props.schema.description}
         />

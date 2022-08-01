@@ -165,11 +165,11 @@ describe("SchemaField", () => {
       expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
-      expect(registry.templates.TitleField).eql(
-        defaultRegistry.templates.TitleField
+      expect(registry.templates.TitleFieldTemplate).eql(
+        defaultRegistry.templates.TitleFieldTemplate
       );
-      expect(registry.templates.DescriptionField).eql(
-        defaultRegistry.templates.DescriptionField
+      expect(registry.templates.DescriptionFieldTemplate).eql(
+        defaultRegistry.templates.DescriptionFieldTemplate
       );
     });
 
@@ -328,7 +328,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         templates: {
-          DescriptionField: CustomDescriptionField,
+          DescriptionFieldTemplate: CustomDescriptionField,
         },
       });
 

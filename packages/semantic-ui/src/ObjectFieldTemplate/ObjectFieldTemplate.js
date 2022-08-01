@@ -18,14 +18,14 @@ function ObjectFieldTemplate({
   idSchema,
   registry,
 }) {
-  const { DescriptionField, TitleField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (
     <React.Fragment>
       {fieldTitle && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
           uiSchema={uiSchema}
@@ -34,7 +34,7 @@ function ObjectFieldTemplate({
         />
       )}
       {fieldDescription && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
           registry={registry}

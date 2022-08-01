@@ -7,11 +7,11 @@ import ObjectFieldTemplate from "./ObjectFieldTemplate";
 import TitleField from "./TitleField";
 
 const templates: TemplatesType = {
-  DescriptionField,
+  DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,
   FieldTemplate,
   ObjectFieldTemplate,
-  TitleField,
+  TitleFieldTemplate: TitleField,
 };
 
 export default templates;

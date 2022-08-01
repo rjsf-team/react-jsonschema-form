@@ -2,7 +2,6 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import TitleField from "../TitleField";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -31,7 +30,9 @@ function CheckboxesWidget(props) {
     schema,
     uiSchema,
     rawErrors = [],
+    registry,
   } = props;
+  const { TitleFieldTemplate } = registry.templates;
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
   const semanticProps = getSemanticProps({
@@ -58,7 +59,7 @@ function CheckboxesWidget(props) {
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <React.Fragment>
-      {title && <TitleField title={title} />}
+      {title && <TitleFieldTemplate title={title} />}
       <Form.Group {...inlineOption}>
         {enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;

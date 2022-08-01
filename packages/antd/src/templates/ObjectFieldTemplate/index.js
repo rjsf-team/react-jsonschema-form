@@ -14,8 +14,6 @@ const DESCRIPTION_COL_STYLE = {
 };
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
-  TitleField,
   description,
   disabled,
   formContext,
@@ -26,10 +24,12 @@ const ObjectFieldTemplate = ({
   properties,
   readonly,
   required,
+  registry,
   schema,
   title,
   uiSchema,
 }) => {
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -78,19 +78,21 @@ const ObjectFieldTemplate = ({
       <Row gutter={rowGutter}>
         {uiSchema["ui:title"] !== false && (uiSchema["ui:title"] || title) && (
           <Col className={labelColClassName} span={24}>
-            <TitleField
+            <TitleFieldTemplate
               id={`${idSchema.$id}-title`}
               required={required}
               title={uiSchema["ui:title"] || title}
+              registry={registry}
             />
           </Col>
         )}
         {uiSchema["ui:description"] !== false &&
           (uiSchema["ui:description"] || description) && (
             <Col span={24} style={DESCRIPTION_COL_STYLE}>
-              <DescriptionField
+              <DescriptionFieldTemplate
                 description={uiSchema["ui:description"] || description}
                 id={`${idSchema.$id}-description`}
+                registry={registry}
               />
             </Col>
           )}

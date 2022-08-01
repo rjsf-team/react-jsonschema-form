@@ -12,8 +12,10 @@ const styles = {
   ],
 };
 
-const TitleField = ({ title }: TitleFieldProps) => (
-  <Label styles={styles}>{title}</Label>
+const TitleField = ({ id, title }: TitleFieldProps) => (
+  <Label id={id} styles={styles}>
+    {title}
+  </Label>
 );
 
 export default TitleField;

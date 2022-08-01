@@ -9,12 +9,12 @@ const DEFAULT_OPTIONS = {
   },
 };
 
-function TitleField({ title, uiSchema }) {
+function TitleField({ id, title, uiSchema }) {
   const uiOptions = getUiOptions(uiSchema);
   const { semantic } = uiOptions.options || DEFAULT_OPTIONS;
   if (title) {
     return (
-      <Header {...semantic} as="h5">
+      <Header id={id} {...semantic} as="h5">
         {title}
       </Header>
     );

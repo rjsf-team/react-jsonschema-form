@@ -30,7 +30,7 @@ const NormalArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { DescriptionField, TitleField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -45,21 +45,23 @@ const NormalArrayFieldTemplate = ({
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>
-            <TitleField
+            <TitleFieldTemplate
               id={`${idSchema.$id}__title`}
               key={`array-field-title-${idSchema.$id}`}
               required={required}
               title={uiSchema["ui:title"] || title}
+              registry={registry}
             />
           </Col>
         )}
 
         {(uiSchema["ui:description"] || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
-            <DescriptionField
+            <DescriptionFieldTemplate
               description={uiSchema["ui:description"] || schema.description}
               id={`${idSchema.$id}__description`}
               key={`array-field-description-${idSchema.$id}`}
+              registry={registry}
             />
           </Col>
         )}

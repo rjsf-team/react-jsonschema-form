@@ -2,9 +2,9 @@ import React from "react";
 import { DescriptionFieldProps } from "@rjsf/utils";
 import { Text } from "@fluentui/react";
 
-const DescriptionField = ({ description }: DescriptionFieldProps) => {
+const DescriptionField = ({ description, id }: DescriptionFieldProps) => {
   if (description) {
-    return <Text>{description}</Text>;
+    return <Text id={id}>{description}</Text>;
   }
 
   return null;

@@ -7,9 +7,9 @@ import TitleField from "../TitleField";
 
 export default {
   ArrayFieldTemplate,
-  DescriptionField,
+  DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,
   FieldTemplate,
   ObjectFieldTemplate,
-  TitleField,
+  TitleFieldTemplate: TitleField,
 };

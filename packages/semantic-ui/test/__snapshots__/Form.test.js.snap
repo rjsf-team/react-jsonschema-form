@@ -260,11 +260,13 @@ exports[`single fields uiSchema theme props 1`] = `
   >
     <h5
       className="ui dividing header"
+      id="root-title"
     >
       A registration form
     </h5>
     <p
       className="sui-description"
+      id="root-description"
     >
       A simple test theme form example.
     </p>

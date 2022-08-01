@@ -98,8 +98,8 @@ describe("FormContext", () => {
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom TitleField", () => {
-    const templates = { TitleField: CustomComponent };
+  it("should be passed to custom TitleFieldTemplate", () => {
+    const templates = { TitleFieldTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: {
@@ -118,8 +118,8 @@ describe("FormContext", () => {
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom DescriptionField", () => {
-    const templates = { DescriptionField: CustomComponent };
+  it("should be passed to custom DescriptionFieldTemplate", () => {
+    const templates = { DescriptionFieldTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: { type: "string", description: "A description" },

@@ -23,7 +23,7 @@ function FieldTemplate({
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent } = semanticProps;
   const errorOptions = getSemanticErrorProps(props);
-  const { DescriptionField } = registry.templates;
+  const { DescriptionFieldTemplate } = registry.templates;
 
   if (hidden) {
     return children;
@@ -37,7 +37,7 @@ function FieldTemplate({
           {displayLabel && rawDescription && (
             <MaybeWrap wrap={wrapLabel} className="sui-field-label">
               {rawDescription && (
-                <DescriptionField description={rawDescription} />
+                <DescriptionFieldTemplate description={rawDescription} />
               )}
             </MaybeWrap>
           )}

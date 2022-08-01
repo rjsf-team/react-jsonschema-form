@@ -235,7 +235,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        templates: { TitleField: CustomTitleField },
+        templates: { TitleFieldTemplate: CustomTitleField },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my list"
@@ -250,7 +250,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         templates: {
-          DescriptionField: CustomDescriptionField,
+          DescriptionFieldTemplate: CustomDescriptionField,
         },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
@@ -2041,11 +2041,11 @@ describe("ArrayField", () => {
   });
 
   describe("Title", () => {
-    const TitleField = (props) => <div id={`title-${props.title}`} />;
+    const TitleFieldTemplate = (props) => <div id={`title-${props.title}`} />;
 
-    const templates = { TitleField };
+    const templates = { TitleFieldTemplate };
 
-    it("should pass field name to TitleField if there is no title", () => {
+    it("should pass field name to TitleFieldTemplate if there is no title", () => {
       const schema = {
         type: "object",
         properties: {
@@ -2060,7 +2060,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("#title-array")).to.not.be.null;
     });
 
-    it("should pass schema title to TitleField", () => {
+    it("should pass schema title to TitleFieldTemplate", () => {
       const schema = {
         type: "array",
         title: "test",
@@ -2071,7 +2071,7 @@ describe("ArrayField", () => {
       expect(node.querySelector("#title-test")).to.not.be.null;
     });
 
-    it("should pass empty schema title to TitleField", () => {
+    it("should pass empty schema title to TitleFieldTemplate", () => {
       const schema = {
         type: "array",
         title: "",

@@ -22,12 +22,12 @@ const ObjectFieldTemplate = ({
   readonly,
   registry,
 }: ObjectFieldTemplateProps) => {
-  const { TitleField, DescriptionField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
@@ -36,7 +36,7 @@ const ObjectFieldTemplate = ({
         />
       )}
       {description && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={description}
           registry={registry}

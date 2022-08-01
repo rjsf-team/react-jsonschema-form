@@ -18,12 +18,12 @@ const ObjectFieldTemplate = ({
   onAddClick,
   registry,
 }: ObjectFieldTemplateProps) => {
-  const { DescriptionField, TitleField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
@@ -31,7 +31,7 @@ const ObjectFieldTemplate = ({
         />
       )}
       {description && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={description}
           registry={registry}

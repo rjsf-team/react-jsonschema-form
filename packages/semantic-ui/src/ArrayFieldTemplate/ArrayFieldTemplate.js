@@ -123,7 +123,7 @@ function DefaultFixedArrayFieldTemplate({
   itemProps,
   registry,
 }) {
-  const { TitleField } = registry.templates;
+  const { TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
@@ -132,7 +132,7 @@ function DefaultFixedArrayFieldTemplate({
     <div className={cleanClassNames([className, classNames])}>
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
+        TitleField={TitleFieldTemplate}
         idSchema={idSchema}
         uiSchema={uiSchema}
         title={fieldTitle}
@@ -185,7 +185,7 @@ function DefaultNormalArrayFieldTemplate({
   itemProps,
   registry,
 }) {
-  const { DescriptionField, TitleField } = registry.templates;
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
@@ -199,7 +199,7 @@ function DefaultNormalArrayFieldTemplate({
     >
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
+        TitleField={TitleFieldTemplate}
         idSchema={idSchema}
         uiSchema={uiSchema}
         title={fieldTitle}
@@ -209,7 +209,7 @@ function DefaultNormalArrayFieldTemplate({
       {fieldDescription && (
         <ArrayFieldDescription
           key={`array-field-description-${idSchema.$id}`}
-          DescriptionField={DescriptionField}
+          DescriptionField={DescriptionFieldTemplate}
           idSchema={idSchema}
           description={fieldDescription}
         />
