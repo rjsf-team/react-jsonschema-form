@@ -7,7 +7,7 @@ import { GenericObjectType } from "./types";
  *
  * @param properties - The list of property keys to be ordered
  * @param order - An array of property keys to be ordered first, with an optional '*' property
- * @returns - An object with the `properties` ordered
+ * @returns - A list with the `properties` ordered
  * @throws - Error when the properties cannot be ordered correctly
  */
 export default function orderProperties(

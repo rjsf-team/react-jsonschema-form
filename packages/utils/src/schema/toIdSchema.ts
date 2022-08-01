@@ -3,6 +3,7 @@ import get from "lodash/get";
 import {
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
+  ID_KEY,
   ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
@@ -22,7 +23,7 @@ import retrieveSchema from "./retrieveSchema";
  * @param [idSeparator='_'] - The separator to use for the path segments in the id
  * @returns - The `IdSchema` object for the `schema`
  */
-export default function toIdSchema<T>(
+export default function toIdSchema<T = any>(
   validator: ValidatorType,
   schema: RJSFSchema,
   id?: string | null,
@@ -59,7 +60,7 @@ export default function toIdSchema<T>(
   if (schema.type === "object" && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
-      const fieldId = idSchema.$id + idSeparator + name;
+      const fieldId = idSchema[ID_KEY] + idSeparator + name;
       idSchema[name] = toIdSchema<T>(
         validator,
         isObject(field) ? field : {},

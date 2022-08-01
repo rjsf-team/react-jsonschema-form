@@ -20,7 +20,7 @@ In other words, the following uiSchemas are equivalent:
     },
       "norender": false,
       "submitText": "Submit"
-    },
+    }
 }
 ```
 
@@ -36,7 +36,7 @@ In other words, the following uiSchemas are equivalent:
       },
       "norender": false,
       "submitText": "Submit"
-    },
+    }
   }
 }
 ```
@@ -151,6 +151,8 @@ const uiSchema = {
 Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {type: "string"};
 const uiSchema = {
   "ui:options": {
@@ -159,7 +161,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -172,26 +174,30 @@ This property allows you to reorder the properties that are shown for a particul
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {type: "string", format: "uri"};
 const uiSchema = {
   "ui:placeholder": "http://"
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {type: "string", enum: ["First", "Second"]};
 const uiSchema = {
   "ui:placeholder": "Choose an option"
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -217,7 +223,9 @@ This will make all widgets have an id prefixed with `myform`.
 
 You can set the initial height of a textarea widget by specifying `rows` option.
 
-```js
+```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {type: "string"};
 const uiSchema = {
   "ui:widget": "textarea",
@@ -227,7 +235,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema} uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 

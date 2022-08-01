@@ -118,7 +118,7 @@ describe("Validation", () => {
         const schema = { type: "string" };
         const formData = "a";
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           if (formData !== "hello") {
             errors.addError("Invalid");
           }
@@ -127,7 +127,7 @@ describe("Validation", () => {
 
         const { onError, node } = createFormComponent({
           schema,
-          validate,
+          customValidate,
           formData,
         });
 
@@ -141,7 +141,7 @@ describe("Validation", () => {
         const schema = { type: "string" };
         const formData = "a";
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           if (formData !== "hello") {
             errors.addError("Invalid");
           }
@@ -150,7 +150,7 @@ describe("Validation", () => {
 
         const { onChange, node } = createFormComponent({
           schema,
-          validate,
+          customValidate,
           formData,
           liveValidate: true,
         });
@@ -170,7 +170,7 @@ describe("Validation", () => {
         const formData = "hello";
         const onSubmit = sandbox.spy();
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           if (formData !== "hello") {
             errors.addError("Invalid");
           }
@@ -180,7 +180,7 @@ describe("Validation", () => {
         const { node } = createFormComponent({
           schema,
           formData,
-          validate,
+          customValidate,
           onSubmit,
         });
 
@@ -195,7 +195,7 @@ describe("Validation", () => {
         const onSubmit = sandbox.spy();
         const onError = sandbox.spy();
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           if (formData !== "hello") {
             errors.addError("Invalid");
           }
@@ -205,7 +205,7 @@ describe("Validation", () => {
         const { node } = createFormComponent({
           schema,
           formData,
-          validate,
+          customValidate,
           onSubmit,
           onError,
         });
@@ -227,7 +227,7 @@ describe("Validation", () => {
 
         const formData = { pass1: "aaa", pass2: "b" };
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           const { pass1, pass2 } = formData;
           if (pass1 !== pass2) {
             errors.pass2.addError("Passwords don't match");
@@ -237,7 +237,7 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validate,
+          customValidate,
           formData,
         });
         submitForm(node);
@@ -264,7 +264,7 @@ describe("Validation", () => {
           { pass1: "a", pass2: "a" },
         ];
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           formData.forEach(({ pass1, pass2 }, i) => {
             if (pass1 !== pass2) {
               errors[i].pass2.addError("Passwords don't match");
@@ -275,7 +275,7 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validate,
+          customValidate,
           formData,
         });
 
@@ -295,7 +295,7 @@ describe("Validation", () => {
 
         const formData = ["aaa", "bbb", "ccc"];
 
-        function validate(formData, errors) {
+        function customValidate(formData, errors) {
           if (formData.indexOf("bbb") !== -1) {
             errors.addError("Forbidden value: bbb");
           }
@@ -304,7 +304,7 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validate,
+          customValidate,
           formData,
         });
         submitForm(node);

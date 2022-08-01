@@ -19,7 +19,7 @@ import {
   toPathSchema,
 } from "./schema";
 
-/** The `SchemaUtils` class provides a wrapper around the publically exported APIs in the `utils/schema` directory such
+/** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both the `validator`
  * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
@@ -219,6 +219,7 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<T = any>(
   validator: ValidatorType,

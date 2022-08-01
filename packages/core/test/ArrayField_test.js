@@ -2132,7 +2132,7 @@ describe("ArrayField", () => {
         },
       },
     };
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.foo[0].bar.addError("test");
       errors.foo[1].bar.addError("test");
       return errors;
@@ -2144,7 +2144,7 @@ describe("ArrayField", () => {
         formData: {
           foo: [{ bar: "bar1" }, { bar: "bar2" }],
         },
-        validate,
+        customValidate,
       });
       Simulate.submit(node);
 
@@ -2163,7 +2163,7 @@ describe("ArrayField", () => {
         formData: {
           foo: [{ bar: "bar1" }, { bar: "bar2" }],
         },
-        validate,
+        customValidate,
         showErrorList: false,
       });
       Simulate.submit(node);

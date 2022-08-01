@@ -6,6 +6,7 @@ The `withTheme` component provides an easy way to extend the functionality of re
 
 ```jsx
 import React, { Component } from 'react';
+import validator from '@rjsf/validator-ajv6';
 import { withTheme } from '@rjsf/core';
 
 const theme = { widgets: {test: () => (<div>test</div>) } };
@@ -13,7 +14,7 @@ const theme = { widgets: {test: () => (<div>test</div>) } };
 const ThemedForm = withTheme(theme); 
 
 const Demo = () => (
-  <ThemedForm schema={schema} uiSchema={uiSchema} />
+  <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
 );
 ```
 
