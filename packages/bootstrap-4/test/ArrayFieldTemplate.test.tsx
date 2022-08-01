@@ -1,6 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import { IdSchema } from "@rjsf/utils";
+import { IdSchema, Registry } from "@rjsf/utils";
+import { WithThemeProps } from "@rjsf/core";
 
 import Theme from "../src/Theme";
 import ArrayFieldTemplate from "../src/ArrayFieldTemplate";
@@ -9,6 +10,12 @@ import TitleField from "../src/TitleField";
 import { mockSchema, mockSchemaUtils } from "./helpers/createMocks";
 
 describe("ArrayFieldTemplate", () => {
+  const registry: Registry = {
+    ...(Theme as Required<WithThemeProps>),
+    schemaUtils: mockSchemaUtils,
+    formContext: {},
+    rootSchema: mockSchema,
+  };
   test("simple", () => {
     const tree = renderer
       .create(
@@ -27,12 +34,7 @@ describe("ArrayFieldTemplate", () => {
           items={[]}
           formContext={{}}
           formData={{}}
-          registry={{
-            ...Theme,
-            schemaUtils: mockSchemaUtils,
-            formContext: {},
-            rootSchema: mockSchema,
-          }}
+          registry={registry}
           idSchema={{ $id: "root" } as IdSchema}
         />
       )

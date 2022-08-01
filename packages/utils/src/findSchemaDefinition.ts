@@ -27,6 +27,7 @@ export function splitKeyElementFromObject(
  *
  * @param $ref - The ref string for which the schema definition is desired
  * @param [rootSchema={}] - The root schema in which to search for the definition
+ * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference exists
  */
 export default function findSchemaDefinition(

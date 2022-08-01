@@ -17,6 +17,8 @@ This allows you to customize your array, and each element in the array. You can 
 
 
 ```jsx
+import validator from '@rjsf/validator-ajv6';
+
 const schema = {
   type: "array",
   items: {
@@ -34,8 +36,7 @@ function ArrayFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema}
-        ArrayFieldTemplate={ArrayFieldTemplate} />
+  <Form schema={schema} ArrayFieldTemplate={ArrayFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -51,12 +52,12 @@ Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/b
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it).
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
-- `idSchema`: Object
+- `idSchema`: An object containing the id for this object & ids for its properties
 - `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
 - `onAddClick: (event?) => void`: A function that adds a new item to the array.
 - `readonly`: A boolean value stating if the array is read-only.
@@ -93,6 +94,8 @@ To take control over the inner organization of each field (each form row), you c
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
@@ -111,8 +114,7 @@ function CustomFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema}
-        FieldTemplate={CustomFieldTemplate} />
+  <Form schema={schema} validator={validator} FieldTemplate={CustomFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -148,7 +150,7 @@ The following props are passed to a custom field template component:
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
-- `formContext`: The `formContext` object that you passed to Form.
+- `formContext`: The `formContext` object that you passed to `Form`.
 - `formData`: The formData for this field.
 - `registry`: The `registry` object.
 
@@ -157,6 +159,8 @@ The following props are passed to a custom field template component:
 ## ObjectFieldTemplate
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "object",
   title: "Object title",
@@ -182,8 +186,7 @@ function ObjectFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema}
-        ObjectFieldTemplate={ObjectFieldTemplate} />
+  <Form schema={schema} validator={validator} ObjectFieldTemplate={ObjectFieldTemplate} />
 ), document.getElementById("app"));
 ```
 
@@ -197,20 +200,20 @@ const uiSchema = {
 
 Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customObject.js) for a better example.
 
-The following props are passed to each `ObjectFieldTemplate`:
+The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
-- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it)
+- `DescriptionField`: The `DescriptionField` from the registry (in case you wanted to utilize it).
 - `TitleField`: The `TitleField` from the registry (in case you wanted to utilize it).
 - `title`: A string value containing the title for the object.
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
-- `properties`: An array of object representing the properties in the array. Each of the properties represent a child with properties described below.
-- `onAddClick: (schema: JSONSchema7) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
+- `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
+- `onAddClick: (schema: RJSFSchema) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
-- `idSchema`: An object containing the id for this object & ids for it's properties.
+- `idSchema`: An object containing the id for this object & ids for its properties.
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
 - `registry`: The `registry` object.

@@ -7,7 +7,6 @@ import {
   ErrorTransformer,
   FieldTemplateProps,
   GenericObjectType,
-  IChangeEvent,
   IdSchema,
   ObjectFieldTemplateProps,
   PathSchema,
@@ -26,6 +25,8 @@ import {
   isObject,
   mergeObjects,
   shouldRender,
+  NAME_KEY,
+  RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from "@rjsf/utils";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
@@ -34,68 +35,212 @@ import _isEmpty from "lodash/isEmpty";
 import getDefaultRegistry from "../getDefaultRegistry";
 import DefaultErrorList from "./ErrorList";
 
+/** The properties that are passed to the `Form` */
 export interface FormProps<T = any, F = any> {
+  /** The JSON schema object for the form */
   schema: RJSFSchema;
+  /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
   validator: ValidatorType<T>;
+  /** The uiSchema for the form */
   uiSchema?: UiSchema<T, F>;
+  /** The data for the form, used to prefill a form with existing data */
   formData?: T;
-  disabled?: boolean;
-  readonly?: boolean;
-  widgets?: RegistryWidgetsType<T, F>;
-  fields?: RegistryFieldsType<T, F>;
-  ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
-  ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
-  FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
-  ErrorList?: React.ComponentType<ErrorListProps<T, F>>;
-  onChange?: (data: IChangeEvent<T, F>) => void; // TODO fix this
-  onError?: (event: any) => void; // TODO fix this
-  onSubmit?: (data: IChangeEvent<T, F>, event: any) => void; // TODO fix this
-  onBlur?: (id: string, event: any) => void; // TODO fix this
-  onFocus?: (id: string, event: any) => void; // TODO fix this
-  showErrorList?: boolean;
-  id?: string;
-  className?: string;
-  tagName?: React.ElementType; // TODO fix this?
-  _internalFormWrapper?: React.ElementType; // TODO fix this
-  name?: string;
-  method?: string;
-  target?: string;
-  action?: string;
-  autoComplete?: string;
-  enctype?: string;
-  acceptcharset?: string;
-  noValidate?: boolean;
-  noHtml5Validate?: boolean;
-  liveValidate?: boolean;
-  liveOmit?: boolean;
-  validate?: CustomValidator<T>;
-  transformErrors?: ErrorTransformer;
+  // Form presentation and behavior modifiers
+  /** You can provide a `formContext` object to the form, which is passed down to all fields and widgets. Useful for
+   * implementing context aware fields and widgets.
+   *
+   * NOTE: Setting `{readonlyAsDisabled: false}` on the formContext will make the antd theme treat readOnly fields as
+   * disabled.
+   */
   formContext?: F;
-  omitExtraData?: boolean;
-  extraErrors?: ErrorSchema<T>;
+  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
+   * Default is `root`
+   */
   idPrefix?: string;
+  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
+   * ids (Default is `_`)
+   */
   idSeparator?: string;
+  /** It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down
+   * to each field of the form. If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`
+   */
+  disabled?: boolean;
+  /** It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then
+   * forwarded down to each field of the form. If you just want to make some fields read-only, see the `ui:readonly`
+   * parameter in `uiSchema`
+   */
+  readonly?: boolean;
+  // Form registry
+  /** The dictionary of registered fields in the form */
+  fields?: RegistryFieldsType<T, F>;
+  /** The dictionary of registered widgets in the form */
+  widgets?: RegistryWidgetsType<T, F>;
+  /** React component used to customize how all arrays are rendered on the form */
+  ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  /** React component used to customize how all objects are rendered in the form */
+  ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
+  /** React component used to customize each field of the form. */
+  FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
+  /** You can pass a React component to this prop to customize how form errors are displayed */
+  ErrorList?: React.ComponentType<ErrorListProps<T, F>>;
+  // Callbacks
+  /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
+   * receive the same args as `onSubmit` any time a value is updated in the form
+   */
+  onChange?: (data: IChangeEvent<T, F>) => void;
+  /** To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of
+   * encountered errors
+   */
+  onError?: (errors: RJSFValidationError[]) => void;
+  /** You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted
+   * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
+   * data you're usually after. The original event will also be passed as a second parameter
+   */
+  onSubmit?: (data: IChangeEvent<T, F>, event: React.FormEvent<any>) => void;
+  /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
+   * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
+   */
+  onBlur?: (id: string, data: any) => void;
+  /** Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass
+   * an `onFocus` handler, which will receive the id of the input that is focused and the field value
+   */
+  onFocus?: (id: string, data: any) => void;
+  // <form /> HTML attributes
+  /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
+  acceptcharset?: string;
+  /** The value of this prop will be passed to the `action` HTML attribute on the form
+   *
+   * NOTE: this just renders the `action` attribute in the HTML markup. There is no real network request being sent to
+   * this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()`
+   * and then calls the `onSubmit` function, where you could send a request programmatically with `fetch` or similar.
+   */
+  action?: string;
+  /** The value of this prop will be passed to the `autocomplete` HTML attribute on the form */
+  autoComplete?: string;
+  /** The value of this prop will be passed to the `class` HTML attribute on the form */
+  className?: string;
+  /** The value of this prop will be passed to the `enctype` HTML attribute on the form */
+  enctype?: string;
+  /** The value of this prop will be passed to the `id` HTML attribute on the form */
+  id?: string;
+  /** The value of this prop will be passed to the `name` HTML attribute on the form */
+  name?: string;
+  /** The value of this prop will be passed to the `method` HTML attribute on the form */
+  method?: string;
+  /** It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are
+   * nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no
+   * longer work
+   */
+  tagName?: React.ElementType;
+  /** The value of this prop will be passed to the `target` HTML attribute on the form */
+  target?: string;
+  // Errors and validation
+  /** Formerly the `validate` prop; Takes a function that specifies custom validation rules for the form */
+  customValidate?: CustomValidator<T>;
+  /** This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it
+   * can be used to implement asynchronous validation
+   */
+  extraErrors?: ErrorSchema<T>;
+  /** If set to true, turns off HTML5 validation on the form; Set to `false` by default */
+  noHtml5Validate?: boolean;
+  /** If set to true, turns off all validation. Set to `false` by default
+   *
+   * @deprecated - In a future release, this switch may be replaced by making `validator` prop optional
+   */
+  noValidate?: boolean;
+  /** If set to true, the form will perform validation and show any validation errors whenever the form data is changed,
+   * rather than just on submit
+   */
+  liveValidate?: boolean;
+  /** If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field
+   * will be removed whenever `onChange` is called. Set to `false` by default
+   */
+  liveOmit?: boolean;
+  /** If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is
+   * called. Set to `false` by default.
+   */
+  omitExtraData?: boolean;
+  /** When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also
+   * show. When set to false, only inline input validation errors will be shown. Set to `true` by default
+   */
+  showErrorList?: boolean;
+  /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
+   * Schema validation
+   */
+  transformErrors?: ErrorTransformer;
+  // Private
+  /**
+   * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
+   * that supports the proper rendering of those themes. To use this prop, one must pass a component that takes two
+   * props: `children` and `as`. That component, at minimum, should render the `children` inside of a <form /> tag
+   * unless `as` is provided, in which case, use the `as` prop in place of `<form />`.
+   * i.e.:
+   * ```
+   * export default function InternalForm({ children, as }) {
+   *   const FormTag = as || 'form';
+   *   return <FormTag>{children}</FormTag>;
+   * }
+   * ```
+   *
+   * Use at your own risk as this prop is private and may change at any time without notice.
+   */
+  _internalFormWrapper?: React.ElementType;
 }
 
+/** The data that is contained within the state for the `Form` */
 export interface FormState<T = any, F = any> {
+  /** The JSON schema object for the form */
   schema: RJSFSchema;
+  /** The uiSchema for the form */
   uiSchema: UiSchema<T, F>;
+  /** The `IdSchema` for the form, computed from the `schema`, the `rootFieldId`, the `formData` and the `idPrefix` and
+   * `idSeparator` props.
+   */
   idSchema: IdSchema<T>;
+  /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
   schemaUtils: SchemaUtilsType<T>;
+  /** The current data for the form, computed from the `formData` prop and the changes made by the user */
   formData: T;
+  /** Flag indicating whether the form is in edit mode, true when `formData` is passed to the form, otherwise false */
   edit: boolean;
+  /** The current list of errors for the form, includes `extraErrors` */
   errors: RJSFValidationError[];
+  /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */
   errorSchema: ErrorSchema<T>;
+  /** The current list of errors for the form directly from schema validation, does NOT include `extraErrors` */
   schemaValidationErrors: RJSFValidationError[];
+  /** The current errors, in `ErrorSchema` format, for the form directly from schema validation, does NOT include
+   * `extraErrors`
+   */
   schemaValidationErrorSchema: ErrorSchema<T>;
 }
 
+/** The event data passed when changes have been made to the form, includes everything from the `FormState` except
+ * the schema validation errors. An additional `status` is added when returned from `onSubmit`
+ */
+export interface IChangeEvent<T = any, F = any>
+  extends Omit<
+    FormState<T, F>,
+    "schemaValidationErrors" | "schemaValidationErrorSchema"
+  > {
+  /** The status of the form when submitted */
+  status?: "submitted";
+}
+
+/** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, F = any> extends Component<
   FormProps<T, F>,
   FormState<T, F>
 > {
+  /** The ref used to hold the `form` element */
   formElement: React.RefObject<any>;
 
+  /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
+   * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
+   * state construction.
+   *
+   * @param props - The initial props for the `Form`
+   */
   constructor(props: FormProps<T, F>) {
     super(props);
 
@@ -109,6 +254,12 @@ export default class Form<T = any, F = any> extends Component<
     this.formElement = React.createRef();
   }
 
+  /** React lifecycle method that gets called before new props are provided, updates the state based on new props. It
+   * will also call the`onChange` handler if the `formData` is modified to add missing default values as part of the
+   * state construction.
+   *
+   * @param nextProps - The new set of props about to be applied to the `Form`
+   */
   UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, F>) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
@@ -121,6 +272,14 @@ export default class Form<T = any, F = any> extends Component<
     this.setState(nextState);
   }
 
+  /** Extracts the updated state from the given `props` and `inputFormData`. As part of this process, the
+   * `inputFormData` is first processed to add any missing required defaults. After that, the data is run through the
+   * validation process IF required by the `props`.
+   *
+   * @param props - The props passed to the `Form`
+   * @param inputFormData - The new or current data for the `Form`
+   * @returns - The new state for the `Form`
+   */
   getStateFromProps(
     props: FormProps<T, F>,
     inputFormData?: T
@@ -209,6 +368,12 @@ export default class Form<T = any, F = any> extends Component<
     return nextState;
   }
 
+  /** React lifecycle method that is used to determine whether component should be updated.
+   *
+   * @param nextProps - The next version of the props
+   * @param nextState - The next version of the state
+   * @returns - True if the component should be updated, false otherwise
+   */
   shouldComponentUpdate(
     nextProps: FormProps<T, F>,
     nextState: FormState<T, F>
@@ -216,18 +381,30 @@ export default class Form<T = any, F = any> extends Component<
     return shouldRender(this, nextProps, nextState);
   }
 
+  /** Validates the `formData` against the `schema` using the `schemaUtils`, returning the results.
+   *
+   * @param schemaUtils - The schemaUtils to use for validation
+   * @param formData - The new form data to validate
+   * @param schema - The schema used to validate against
+   */
   validate(
     schemaUtils: SchemaUtilsType<T>,
     formData: T,
     schema = this.props.schema
   ): ValidationData<T> {
-    const { validate, transformErrors } = this.props;
+    const { customValidate, transformErrors } = this.props;
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
-      .validateFormData(formData, resolvedSchema, validate, transformErrors);
+      .validateFormData(
+        formData,
+        resolvedSchema,
+        customValidate,
+        transformErrors
+      );
   }
 
+  /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors() {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const {
@@ -250,6 +427,11 @@ export default class Form<T = any, F = any> extends Component<
     return null;
   }
 
+  /** Returns the `formData` with only the elements specified in the `fields` list
+   *
+   * @param formData - The data for the `Form`
+   * @param fields - The fields to keep while filtering
+   */
   getUsedFormData = (formData: T, fields: string[]): T => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
@@ -264,6 +446,11 @@ export default class Form<T = any, F = any> extends Component<
     return data as T;
   };
 
+  /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
+   *
+   * @param pathSchema - The `PathSchema` object for the form
+   * @param formData - The form data to use while checking for empty objects/arrays
+   */
   getFieldNames = (pathSchema: PathSchema<T>, formData: T) => {
     const getAllPaths = (
       _obj: GenericObjectType,
@@ -274,12 +461,15 @@ export default class Form<T = any, F = any> extends Component<
         if (typeof _obj[key] === "object") {
           const newPaths = paths.map((path) => `${path}.${key}`);
           // If an object is marked with additionalProperties, all its keys are valid
-          if (_obj[key].__rjsf_additionalProperties && _obj[key].$name !== "") {
-            acc.push(_obj[key].$name);
+          if (
+            _obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] &&
+            _obj[key][NAME_KEY] !== ""
+          ) {
+            acc.push(_obj[key][NAME_KEY]);
           } else {
             getAllPaths(_obj[key], acc, newPaths);
           }
-        } else if (key === "$name" && _obj[key] !== "") {
+        } else if (key === NAME_KEY && _obj[key] !== "") {
           paths.forEach((path) => {
             path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
@@ -297,6 +487,16 @@ export default class Form<T = any, F = any> extends Component<
     return getAllPaths(pathSchema);
   };
 
+  /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
+   * `formData` along with a new `ErrorSchema`. It will first update the `formData` with any missing default fields and
+   * then, if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filterer to remove any extra data not
+   * in a form field. Then, the resulting formData will be validated if required. The state will be updated with the new
+   * updated (potentially filtered) `formData`, any errors that resulted from validation. Finally the `onChange`
+   * callback will be called if specified with the updated state.
+   *
+   * @param formData - The new form data from a change to a field
+   * @param newErrorSchema - The new `ErrorSchema` based on the field change
+   */
   onChange = (formData: T, newErrorSchema?: ErrorSchema<T>) => {
     const {
       extraErrors,
@@ -369,20 +569,40 @@ export default class Form<T = any, F = any> extends Component<
     );
   };
 
-  onBlur = (id: string, event: any) => {
+  /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
+   * was provided.
+   *
+   * @param id - The unique `id` of the field that was blurred
+   * @param data - The data associated with the field that was blurred
+   */
+  onBlur = (id: string, data: any) => {
     const { onBlur } = this.props;
     if (onBlur) {
-      onBlur(id, event);
+      onBlur(id, data);
     }
   };
 
-  onFocus = (id: string, event: any) => {
+  /** Callback function to handle when a field on the form is focused. Calls the `onFocus` callback for the `Form` if it
+   * was provided.
+   *
+   * @param id - The unique `id` of the field that was focused
+   * @param data - The data associated with the field that was focused
+   */
+  onFocus = (id: string, data: any) => {
     const { onFocus } = this.props;
     if (onFocus) {
-      onFocus(id, event);
+      onFocus(id, data);
     }
   };
 
+  /** Callback function to handle when the form is submitted. First, it prevents the default event behavior. Nothing
+   * happens if the target and currentTarget of the event are not the same. It will omit any extra data in the
+   * `formData` in the state if `omitExtraData` is true. It will validate the resulting `formData`, reporting errors
+   * via the `onError()` callback unless validation is disabled. Finally it will add in any `extraErrors` and then call
+   * back the `onSubmit` callback if it was provided.
+   *
+   * @param event - The submit HTML form event
+   */
   onSubmit = (event: React.FormEvent<any>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
@@ -467,6 +687,7 @@ export default class Form<T = any, F = any> extends Component<
     );
   };
 
+  /** Returns the registry for the form */
   getRegistry(): Registry<T, F> {
     const { schemaUtils } = this.state;
     // For BC, accept passed SchemaField and TitleField props and pass them to
@@ -484,6 +705,7 @@ export default class Form<T = any, F = any> extends Component<
     };
   }
 
+  /** Provides a function that can be used to programmatically submit the `Form` */
   submit() {
     if (this.formElement.current) {
       this.formElement.current.dispatchEvent(
@@ -494,6 +716,9 @@ export default class Form<T = any, F = any> extends Component<
     }
   }
 
+  /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
+   * needed along with the submit button or any children of the form.
+   */
   render() {
     const {
       children,
@@ -513,19 +738,6 @@ export default class Form<T = any, F = any> extends Component<
       disabled = false,
       readonly = false,
       formContext,
-      /**
-       * _internalFormWrapper is currently used by the material-ui and semantic-ui themes to provide a custom wrapper
-       * around `<Form />` that supports the proper rendering of those themes. To use this prop, one must pass a
-       * component that takes two props: `children` and `as`. That component, at minimum, should render the `children`
-       * inside of a <form /> tag unless `as` is provided, in which case, use the `as` prop in place of `<form />`.
-       * i.e.:
-       * ```
-       * export default function InternalForm({ children, as }) {
-       *   const FormTag = as || 'form';
-       *   return <FormTag>{children}</FormTag>;
-       * }
-       * ```
-       */
       _internalFormWrapper,
     } = this.props;
 

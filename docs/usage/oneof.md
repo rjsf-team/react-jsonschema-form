@@ -9,6 +9,8 @@ react-jsonschema-form supports custom widgets for oneOf, anyOf, and allOf.
 ## oneOf
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
     type: "object",
     oneOf: [
@@ -32,13 +34,15 @@ const schema = {
   };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
 ## anyOf
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
     type: "object",
     anyOf: [
@@ -64,7 +68,7 @@ const schema = {
   };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -73,6 +77,8 @@ render((
 When `allOf` is specified in a schema, react-jsonschema-form uses the [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library to merge the specified subschemas to create a combined subschema that is valid. For example, the below schema evaluates to a combined subschema of `{type: "boolean"}`:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   title: "Field",
   allOf: [
@@ -86,6 +92,6 @@ const schema = {
   };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```

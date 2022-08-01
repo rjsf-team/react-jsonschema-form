@@ -349,7 +349,7 @@ describe("SchemaField", () => {
       },
     };
 
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.addError("container");
       errors.foo.addError("test");
       return errors;
@@ -359,7 +359,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        validate,
+        customValidate,
       });
       Simulate.submit(node);
 
@@ -374,7 +374,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        validate,
+        customValidate,
       });
       Simulate.submit(node);
 
@@ -394,7 +394,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          validate,
+          customValidate,
           widgets: { BaseInput: customStringWidget },
         });
         Simulate.submit(node);
@@ -415,7 +415,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -429,7 +429,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -448,7 +448,7 @@ describe("SchemaField", () => {
           const { node } = createFormComponent({
             schema,
             uiSchema: hideUiSchema,
-            validate,
+            customValidate,
             widgets: { BaseInput: customStringWidget },
           });
           Simulate.submit(node);
@@ -475,7 +475,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -489,7 +489,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 

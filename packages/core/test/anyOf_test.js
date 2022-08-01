@@ -1100,7 +1100,7 @@ describe("anyOf", () => {
         },
       },
     };
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.userId.addError("test");
       return errors;
     }
@@ -1108,7 +1108,7 @@ describe("anyOf", () => {
     it("should show error on options with different types", () => {
       const { node } = createFormComponent({
         schema,
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
@@ -1143,7 +1143,7 @@ describe("anyOf", () => {
         uiSchema: {
           "ui:hideError": true,
         },
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
