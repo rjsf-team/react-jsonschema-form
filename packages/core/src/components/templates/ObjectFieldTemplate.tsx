@@ -7,6 +7,12 @@ import {
 } from "@rjsf/utils";
 import AddButton from "../AddButton";
 
+/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
+ * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
+ * the properties.
+ *
+ * @param props - The `ObjectFieldTemplateProps` for this component
+ */
 export default function ObjectFieldTemplate<T = any, F = any>(
   props: ObjectFieldTemplateProps<T, F>
 ) {

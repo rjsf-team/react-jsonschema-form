@@ -4,6 +4,11 @@ import { FieldTemplateProps } from "@rjsf/utils";
 import Label from "./Label";
 import WrapIfAdditional from "./WrapIfAdditional";
 
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
 export default function FieldTemplate<T = any, F = any>(
   props: FieldTemplateProps<T, F>
 ) {
