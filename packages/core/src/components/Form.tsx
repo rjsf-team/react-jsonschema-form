@@ -232,7 +232,9 @@ export default class Form<T = any, F = any> extends Component<
   FormProps<T, F>,
   FormState<T, F>
 > {
-  /** The ref used to hold the `form` element */
+  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
+   * provide any possible type here
+   */
   formElement: React.RefObject<any>;
 
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
