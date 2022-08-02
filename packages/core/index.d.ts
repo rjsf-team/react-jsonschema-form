@@ -69,6 +69,7 @@ declare module '@rjsf/core' {
         onChange: (formData: T, newErrorSchema: ErrorSchema) => void;
         onBlur: (id: string, value: any) => void;
         submit: () => void;
+        formElement: null | HTMLFormElement;
     }
 
     export type UISchemaSubmitButtonOptions = {
