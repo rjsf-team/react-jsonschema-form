@@ -13,10 +13,10 @@ export default function SubmitButton<T, F>({
   if (norender) {
     return null;
   }
-  const props = { className: 'btn btn-info', ...submitButtonProps };
+  const props = { className: "btn btn-info", ...submitButtonProps };
   return (
     <div>
-      <button type="submit" {...props } >
+      <button type="submit" {...props}>
         {submitText}
       </button>
     </div>
