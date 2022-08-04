@@ -30,6 +30,7 @@ function CheckboxesWidget(props) {
     formContext,
     schema,
     uiSchema,
+    rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
@@ -70,6 +71,7 @@ function CheckboxesWidget(props) {
               label={option.label}
               {...semanticProps}
               checked={checked}
+              error={rawErrors.length > 0}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}
               onChange={_onChange(option)}

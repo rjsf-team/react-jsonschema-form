@@ -21,6 +21,7 @@ function DateTimeWidget(props) {
     autofocus,
     options,
     formContext,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     uiSchema,
@@ -50,6 +51,7 @@ function DateTimeWidget(props) {
       name={name}
       {...semanticProps}
       value={dateValue}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
