@@ -48,4 +48,18 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("array icons", () => {
+    const schema = {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} formData={["a", "b"]} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

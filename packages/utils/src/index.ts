@@ -5,6 +5,7 @@ import createSchemaUtils from "./createSchemaUtils";
 import dataURItoBlob from "./dataURItoBlob";
 import deepEquals from "./deepEquals";
 import findSchemaDefinition from "./findSchemaDefinition";
+import getInputProps from "./getInputProps";
 import getSchemaType from "./getSchemaType";
 import getSubmitButtonOptions from "./getSubmitButtonOptions";
 import getUiOptions from "./getUiOptions";
@@ -44,6 +45,7 @@ export {
   dataURItoBlob,
   deepEquals,
   findSchemaDefinition,
+  getInputProps,
   getSchemaType,
   getSubmitButtonOptions,
   getUiOptions,
