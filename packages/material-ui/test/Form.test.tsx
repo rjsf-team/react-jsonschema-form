@@ -3,6 +3,13 @@ import { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
+// The material-ui Slider is trying to call `findDOMNode()` within a useEffect() hook. Since the hook deals with
+// null nodes, we just mock it to always return null.
+jest.mock("react-dom", () => ({
+  ...jest.requireActual("react-dom"),
+  findDOMNode: jest.fn(() => null),
+}));
+
 import Form from "../src";
 
 describe("single fields", () => {
@@ -233,10 +240,7 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  // There is a bug in the Material UI <Slider /> component that prevents this from working.
-  // Error: `TypeError: Cannot read property 'addEventListener' of null`
-  // From: https://github.com/mui-org/material-ui/blob/v4.5.2/packages/material-ui/src/Slider/Slider.js#L622
-  test.skip("slider field", () => {
+  test("slider field", () => {
     const schema: RJSFSchema = {
       type: "integer",
       minimum: 42,
@@ -247,7 +251,31 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75}/>
+        <Form
+          schema={schema}
+          validator={validator}
+          uiSchema={uiSchema}
+          formData={75}
+        />,
+        {
+          createNodeMock: (element) => {
+            // the `Slider` code expects a ref for a span.root to exist, so use the feature of
+            // react-test-renderer to create one
+            // See: https://reactjs.org/docs/test-renderer.html#ideas
+            if (element.type === "span" && element.props.id === "root") {
+              // Pretend to be an event listening component inside of an event listening document
+              return {
+                addEventListener: jest.fn(),
+                removeEventListener: jest.fn(),
+                ownerDocument: {
+                  addEventListener: jest.fn(),
+                  removeEventListener: jest.fn(),
+                },
+              };
+            }
+            return null;
+          },
+        }
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
