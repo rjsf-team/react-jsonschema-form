@@ -20,6 +20,7 @@ function CheckboxWidget(props) {
     schema,
     uiSchema,
     registry,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     options,
@@ -43,6 +44,7 @@ function CheckboxWidget(props) {
       autoFocus={autofocus}
       {...semanticProps}
       checked={typeof value === "undefined" ? false : checked}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}

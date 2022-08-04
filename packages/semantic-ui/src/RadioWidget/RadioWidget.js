@@ -17,6 +17,7 @@ function RadioWidget(props) {
     options,
     formContext,
     uiSchema,
+    rawErrors = [],
   } = props;
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
@@ -47,6 +48,7 @@ function RadioWidget(props) {
             onBlur={_onBlur}
             label={`${option.label}`}
             value={`${option.value}`}
+            error={rawErrors.length > 0}
             key={`${option.value}-${i}`}
             checked={value == option.value}
             onChange={_onChange}
