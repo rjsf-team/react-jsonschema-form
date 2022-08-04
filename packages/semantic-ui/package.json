@@ -4,12 +4,6 @@
   "main": "dist/cjs/index.js",
   "module": "dist/semantic-ui.esm.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
-  "lint-staged": {
-    "{src,test}/**/*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
   "files": [
     "dist"
   ],
@@ -19,7 +13,6 @@
   },
   "scripts": {
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
-    "lint": "eslint src test",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
