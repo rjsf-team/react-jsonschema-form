@@ -16,7 +16,6 @@ const DESCRIPTION_COL_STYLE = {
 const FixedArrayFieldTemplate = ({
   canAdd,
   className,
-  DescriptionField,
   disabled,
   formContext,
   // formData,
@@ -25,13 +24,13 @@ const FixedArrayFieldTemplate = ({
   onAddClick,
   prefixCls,
   readonly,
-  // registry,
+  registry,
   required,
   schema,
   title,
-  TitleField,
   uiSchema,
 }) => {
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -46,21 +45,24 @@ const FixedArrayFieldTemplate = ({
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>
-            <TitleField
+            <TitleFieldTemplate
               id={`${idSchema.$id}__title`}
               key={`array-field-title-${idSchema.$id}`}
               required={required}
               title={uiSchema["ui:title"] || title}
+              uiSchema={uiSchema}
+              registry={registry}
             />
           </Col>
         )}
 
         {(uiSchema["ui:description"] || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
-            <DescriptionField
+            <DescriptionFieldTemplate
               description={uiSchema["ui:description"] || schema.description}
               id={`${idSchema.$id}-description`}
               key={`array-field-description-${idSchema.$id}`}
+              registry={registry}
             />
           </Col>
         )}

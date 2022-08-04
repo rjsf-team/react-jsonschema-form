@@ -2,7 +2,7 @@ var { JSDOM } = require("jsdom");
 
 // Setup the jsdom environment
 // @see https://github.com/facebook/react/issues/5046
-if (!global.hasOwnProperty("window")) {
+if (!("window" in global)) {
   const { window } = new JSDOM("<!doctype html><html><body></body></html>");
   global.document = window.document;
   global.window = window;

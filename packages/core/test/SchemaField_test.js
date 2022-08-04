@@ -5,8 +5,6 @@ import { createSchemaUtils } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
 import SchemaField from "../src/components/fields/SchemaField";
-import TitleField from "../src/components/fields/TitleField";
-import DescriptionField from "../src/components/fields/DescriptionField";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 import getDefaultRegistry from "../src/getDefaultRegistry";
@@ -44,13 +42,12 @@ describe("SchemaField", () => {
       });
 
       const { registry } = receivedProps;
+      const defaultRegistry = getDefaultRegistry();
       expect(registry).eql({
-        widgets: getDefaultRegistry(schemaUtils).widgets,
-        fields: getDefaultRegistry(schemaUtils).fields,
+        fields: defaultRegistry.fields,
+        templates: defaultRegistry.templates,
+        widgets: defaultRegistry.widgets,
         rootSchema: schema,
-        ArrayFieldTemplate: undefined,
-        FieldTemplate: undefined,
-        ObjectFieldTemplate: undefined,
         formContext: {},
         schemaUtils,
       });
@@ -163,12 +160,17 @@ describe("SchemaField", () => {
       });
 
       const { registry } = receivedProps;
-      expect(registry.widgets).eql(getDefaultRegistry().widgets);
+      const defaultRegistry = getDefaultRegistry();
+      expect(registry.widgets).eql(defaultRegistry.widgets);
       expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
-      expect(registry.fields.TitleField).eql(TitleField);
-      expect(registry.fields.DescriptionField).eql(DescriptionField);
+      expect(registry.templates.TitleFieldTemplate).eql(
+        defaultRegistry.templates.TitleFieldTemplate
+      );
+      expect(registry.templates.DescriptionFieldTemplate).eql(
+        defaultRegistry.templates.DescriptionFieldTemplate
+      );
     });
 
     it("should use registered custom component for object", () => {
@@ -325,8 +327,8 @@ describe("SchemaField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField,
+        templates: {
+          DescriptionFieldTemplate: CustomDescriptionField,
         },
       });
 

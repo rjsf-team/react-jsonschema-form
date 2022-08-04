@@ -17,6 +17,8 @@
       "args": "none",
       "ignoreRestSiblings": true
     }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "no-console": [0],
     "object-curly-spacing": [2, "always"],
     "keyword-spacing": ["error"],

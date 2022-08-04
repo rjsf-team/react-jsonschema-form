@@ -3,7 +3,8 @@ import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
-import UpDownWidget from "../src/UpDownWidget/UpDownWidget";
+import templates from "../src/Templates";
+import UpDownWidget from "../src/UpDownWidget";
 
 export const mockSchema: RJSFSchema = {
   type: "array",
@@ -35,6 +36,7 @@ describe("UpDownWidget", () => {
       value: 0,
       registry: {
         fields: {},
+        templates,
         widgets: {},
         formContext: {},
         rootSchema: {},

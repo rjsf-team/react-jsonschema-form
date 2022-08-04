@@ -1,9 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 
-function DescriptionField({ className, description }) {
+function DescriptionField({ className, description, id }) {
   if (description) {
-    return <p className={className || "sui-description"}>{description}</p>;
+    return (
+      <p id={id} className={className || "sui-description"}>
+        {description}
+      </p>
+    );
   }
 }
 
