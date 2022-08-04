@@ -82,6 +82,7 @@ const ObjectFieldTemplate = ({
               id={`${idSchema.$id}-title`}
               required={required}
               title={uiSchema["ui:title"] || title}
+              uiSchema={uiSchema}
               registry={registry}
             />
           </Col>

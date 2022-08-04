@@ -59,8 +59,15 @@ function CheckboxesWidget(props) {
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <React.Fragment>
-      {title && <TitleFieldTemplate title={title} />}
-      <Form.Group {...inlineOption}>
+      {title && (
+        <TitleFieldTemplate
+          id={`${id}-title`}
+          title={title}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <Form.Group id={id} {...inlineOption}>
         {enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =

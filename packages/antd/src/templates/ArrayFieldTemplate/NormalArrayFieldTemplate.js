@@ -50,6 +50,7 @@ const NormalArrayFieldTemplate = ({
               key={`array-field-title-${idSchema.$id}`}
               required={required}
               title={uiSchema["ui:title"] || title}
+              uiSchema={uiSchema}
               registry={registry}
             />
           </Col>

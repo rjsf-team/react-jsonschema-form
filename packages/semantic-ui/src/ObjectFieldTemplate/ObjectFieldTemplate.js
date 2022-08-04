@@ -28,8 +28,8 @@ function ObjectFieldTemplate({
         <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
-          uiSchema={uiSchema}
           required={required}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

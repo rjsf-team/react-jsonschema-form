@@ -27,6 +27,7 @@ const ObjectFieldTemplate = ({
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

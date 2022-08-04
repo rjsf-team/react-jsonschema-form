@@ -37,11 +37,14 @@ function FieldTemplate({
           {displayLabel && rawDescription && (
             <MaybeWrap wrap={wrapLabel} className="sui-field-label">
               {rawDescription && (
-                <DescriptionFieldTemplate description={rawDescription} />
+                <DescriptionFieldTemplate
+                  id={`${id}-description`}
+                  description={rawDescription}
+                />
               )}
             </MaybeWrap>
           )}
-          <HelpField helpText={rawHelp} id={id + "__help"} />
+          <HelpField helpText={rawHelp} id={`${id}__help`} />
           <RawErrors errors={rawErrors} options={errorOptions} />
         </MaybeWrap>
       </Form.Group>

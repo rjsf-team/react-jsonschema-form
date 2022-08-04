@@ -329,7 +329,6 @@ describeRepeated("Form common", (createFormComponent) => {
         rawErrors,
         children,
       } = props;
-      console.log("rendering...");
       return (
         <div className={"my-template " + classNames}>
           <label htmlFor={id}>
@@ -3242,7 +3241,6 @@ describe("Form omitExtraData and liveOmit", () => {
       { omitExtraData: true, liveOmit: true }
     );
 
-    console.log(node.innerHTML);
     const textNode = node.querySelector("#root-key");
     Simulate.blur(textNode, {
       target: { value: "key1new" },

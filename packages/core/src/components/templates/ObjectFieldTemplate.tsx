@@ -39,6 +39,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
           id={`${idSchema.$id}__title`}
           title={options.title || title}
           required={required}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

@@ -454,7 +454,7 @@ describe("oneOf", () => {
     expect(node.querySelector("select").value).eql("1");
   });
 
-  it.only("should not change the selected option when entering values on a subschema with multiple required options", () => {
+  it("should not change the selected option when entering values on a subschema with multiple required options", () => {
     const schema = {
       type: "object",
       properties: {
