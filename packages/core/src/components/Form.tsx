@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import {
-  ArrayFieldTemplateProps,
   CustomValidator,
-  ErrorListProps,
   ErrorSchema,
   ErrorTransformer,
-  FieldTemplateProps,
   GenericObjectType,
   IdSchema,
-  ObjectFieldTemplateProps,
   PathSchema,
   RJSFSchema,
   RJSFValidationError,
@@ -27,13 +23,13 @@ import {
   shouldRender,
   NAME_KEY,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
+  TemplatesType,
 } from "@rjsf/utils";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 
 import getDefaultRegistry from "../getDefaultRegistry";
-import DefaultErrorList from "./ErrorList";
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, F = any> {
@@ -73,16 +69,10 @@ export interface FormProps<T = any, F = any> {
   // Form registry
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<T, F>;
+  /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
+  templates?: Partial<TemplatesType<T, F>>;
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<T, F>;
-  /** React component used to customize how all arrays are rendered on the form */
-  ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
-  /** React component used to customize how all objects are rendered in the form */
-  ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
-  /** React component used to customize each field of the form. */
-  FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
-  /** You can pass a React component to this prop to customize how form errors are displayed */
-  ErrorList?: React.ComponentType<ErrorListProps<T, F>>;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form
@@ -407,17 +397,14 @@ export default class Form<T = any, F = any> extends Component<
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
-  renderErrors() {
+  renderErrors(registry: Registry<T, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const {
-      ErrorList = DefaultErrorList,
-      showErrorList,
-      formContext,
-    } = this.props;
+    const { showErrorList, formContext } = this.props;
+    const { ErrorListTemplate } = registry.templates;
 
     if (errors && errors.length && showErrorList != false) {
       return (
-        <ErrorList
+        <ErrorListTemplate
           errors={errors}
           errorSchema={errorSchema || {}}
           schema={schema}
@@ -694,13 +681,11 @@ export default class Form<T = any, F = any> extends Component<
     const { schemaUtils } = this.state;
     // For BC, accept passed SchemaField and TitleField props and pass them to
     // the 'fields' registry one.
-    const { fields, widgets } = getDefaultRegistry();
+    const { fields, templates, widgets } = getDefaultRegistry();
     return {
       fields: { ...fields, ...this.props.fields },
+      templates: { ...templates, ...this.props.templates },
       widgets: { ...widgets, ...this.props.widgets },
-      ArrayFieldTemplate: this.props.ArrayFieldTemplate,
-      ObjectFieldTemplate: this.props.ObjectFieldTemplate,
-      FieldTemplate: this.props.FieldTemplate,
       rootSchema: this.props.schema,
       formContext: this.props.formContext || ({} as F),
       schemaUtils,
@@ -771,7 +756,7 @@ export default class Form<T = any, F = any> extends Component<
         as={as}
         ref={this.formElement}
       >
-        {this.renderErrors()}
+        {this.renderErrors(registry)}
         <_SchemaField
           name=""
           schema={schema}

@@ -1,7 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { DescriptionFieldProps } from "@rjsf/utils";
 
-function DescriptionField(props) {
+/** The `DescriptionField` is the template to use to render the description of a field
+ *
+ * @param props - The `DescriptionFieldProps` for this component
+ */
+export default function DescriptionField<T = any, F = any>(
+  props: DescriptionFieldProps<T, F>
+) {
   const { id, description } = props;
   if (!description) {
     return null;
@@ -20,12 +26,3 @@ function DescriptionField(props) {
     );
   }
 }
-
-if (process.env.NODE_ENV !== "production") {
-  DescriptionField.propTypes = {
-    id: PropTypes.string,
-    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  };
-}
-
-export default DescriptionField;

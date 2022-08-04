@@ -1,17 +1,19 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { IdSchema, Registry } from "@rjsf/utils";
-import { WithThemeProps } from "@rjsf/core";
+import { getDefaultRegistry } from "@rjsf/core";
 
-import Theme from "../src/Theme";
+import templates from "../src/Templates";
+import widgets from "../src/Widgets";
 import ArrayFieldTemplate from "../src/ArrayFieldTemplate";
-import DescriptionField from "../src/DescriptionField";
-import TitleField from "../src/TitleField";
 import { mockSchema, mockSchemaUtils } from "./helpers/createMocks";
 
 describe("ArrayFieldTemplate", () => {
+  const { fields } = getDefaultRegistry();
   const registry: Registry = {
-    ...(Theme as Required<WithThemeProps>),
+    fields,
+    templates,
+    widgets,
     schemaUtils: mockSchemaUtils,
     formContext: {},
     rootSchema: mockSchema,
@@ -20,8 +22,6 @@ describe("ArrayFieldTemplate", () => {
     const tree = renderer
       .create(
         <ArrayFieldTemplate
-          DescriptionField={() => <DescriptionField />}
-          TitleField={() => <TitleField />}
           canAdd={true}
           className=""
           disabled={false}

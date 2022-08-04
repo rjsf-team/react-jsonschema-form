@@ -1,11 +1,11 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import { FieldProps } from "@rjsf/utils";
+import { DescriptionFieldProps } from "@rjsf/utils";
 
-const DescriptionField = ({ description }: FieldProps) => {
+const DescriptionField = ({ description, id }: DescriptionFieldProps) => {
   if (description) {
     return (
-      <Typography variant="subtitle2" style={{ marginTop: "5px" }}>
+      <Typography id={id} variant="subtitle2" style={{ marginTop: "5px" }}>
         {description}
       </Typography>
     );

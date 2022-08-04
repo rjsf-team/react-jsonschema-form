@@ -3,24 +3,8 @@ import classNames from "classnames";
 
 import { withConfigConsumer } from "antd/lib/config-provider/context";
 
-const TitleField = ({
-  // autofocus,
-  // disabled,
-  // errorSchema,
-  formContext,
-  // formData,
-  id,
-  // idSchema,
-  // name,
-  // onChange,
-  prefixCls,
-  // readonly,
-  // registry,
-  required,
-  // schema,
-  title,
-  // uiSchema,
-}) => {
+const TitleField = ({ id, prefixCls, required, registry, title }) => {
+  const { formContext } = registry;
   const { colon = true } = formContext;
 
   let labelChildren = title;

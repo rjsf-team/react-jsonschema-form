@@ -1,23 +1,16 @@
 import { getDefaultRegistry, WithThemeProps } from "@rjsf/core";
 
-import ArrayFieldTemplate from "../ArrayFieldTemplate";
-import ErrorList from "../ErrorList";
-import Fields from "../Fields";
-import FieldTemplate from "../FieldTemplate";
-import ObjectFieldTemplate from "../ObjectFieldTemplate";
+import Templates from "../Templates";
 import Widgets from "../Widgets";
 
-const { fields, widgets } = getDefaultRegistry();
+const { fields, templates, widgets } = getDefaultRegistry();
 
 /** The Material UI 4 theme, with the `Mui4FormWrapper`
  */
 const Theme: WithThemeProps = {
-  ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
-  FieldTemplate,
-  ObjectFieldTemplate,
+  fields,
+  templates: { ...templates, ...Templates },
   widgets: { ...widgets, ...Widgets },
-  ErrorList,
 };
 
 export default Theme;
