@@ -20,6 +20,7 @@ function URLWidget(props) {
     uiSchema,
     formContext,
     registry,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({ formContext, options, uiSchema });
   const { schemaUtils } = registry;
@@ -41,6 +42,7 @@ function URLWidget(props) {
       name={name}
       {...semanticProps}
       value={value || value === 0 ? value : ""}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}

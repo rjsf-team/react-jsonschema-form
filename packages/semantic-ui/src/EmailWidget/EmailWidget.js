@@ -20,6 +20,7 @@ function EmailWidget(props) {
     options,
     formContext,
     registry,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     schema,
@@ -46,6 +47,7 @@ function EmailWidget(props) {
       name={name}
       {...semanticProps}
       value={value || value === 0 ? value : ""}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}

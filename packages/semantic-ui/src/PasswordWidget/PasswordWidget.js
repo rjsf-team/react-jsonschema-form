@@ -21,6 +21,7 @@ function PasswordWidget(props) {
     uiSchema,
     formContext,
     registry,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     schema,
@@ -47,6 +48,7 @@ function PasswordWidget(props) {
       {...semanticProps}
       type="password"
       value={value || ""}
+      error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}

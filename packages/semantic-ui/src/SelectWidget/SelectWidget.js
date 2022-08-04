@@ -43,6 +43,7 @@ function SelectWidget(props) {
     onChange,
     onBlur,
     onFocus,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     schema,
@@ -83,6 +84,7 @@ function SelectWidget(props) {
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
+      error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}
       {...semanticProps}

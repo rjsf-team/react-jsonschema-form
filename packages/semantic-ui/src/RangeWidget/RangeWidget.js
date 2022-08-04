@@ -19,6 +19,7 @@ function RangeWidget(props) {
     schema,
     uiSchema,
     formContext,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     formContext,
@@ -47,6 +48,7 @@ function RangeWidget(props) {
         {...rangeSpec(schema)}
         {...semanticProps}
         value={value || ""}
+        error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
