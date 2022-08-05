@@ -36,6 +36,7 @@ exports[`object fields additionalProperties 1`] = `
               >
                 <label
                   className="form-label"
+                  htmlFor="root_foo-key"
                 >
                   foo Key
                 </label>
@@ -62,6 +63,7 @@ exports[`object fields additionalProperties 1`] = `
                 >
                   <label
                     className="form-label"
+                    htmlFor="root_foo"
                   >
                     foo
                   </label>
@@ -200,6 +202,7 @@ exports[`object fields object 1`] = `
             >
               <label
                 className="form-label"
+                htmlFor="root_a"
               >
                 A
               </label>
@@ -241,6 +244,7 @@ exports[`object fields object 1`] = `
             >
               <label
                 className="form-label"
+                htmlFor="root_b"
               >
                 B
               </label>
@@ -255,6 +259,7 @@ exports[`object fields object 1`] = `
                 placeholder=""
                 readOnly={false}
                 required={false}
+                step="any"
                 type="number"
                 value=""
               />
