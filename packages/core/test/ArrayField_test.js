@@ -1902,6 +1902,66 @@ describe("ArrayField", () => {
       });
     });
   });
+  describe("Tabs Group", () => {
+    const schema = {
+      type: "array",
+      title: "Tabs Group",
+      groups: [
+        {
+          type: "array",
+          title: "Tab1",
+          items: [
+            {
+              type: "string",
+              title: "Item 1-1:",
+            },
+            {
+              type: "string",
+              title: "Item 1-2:",
+            },
+          ],
+        },
+        {
+          type: "array",
+          title: "Tab2",
+          items: [
+            {
+              type: "string",
+              title: "Item 2-1:",
+            },
+            {
+              type: "string",
+              title: "Item 2-2:",
+            },
+          ],
+        },
+      ],
+    };
+
+    it("should render a fieldset", () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelectorAll("fieldset")).to.have.length.of(2);
+    });
+
+    it("render with formdata", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [["Item 1-1", "Item 1-2"]],
+      });
+      const tabGroup = node.querySelector("#tab-group-title");
+      const allTabs = tabGroup.querySelectorAll("li");
+      expect(allTabs).to.have.length.of(2);
+    });
+
+    it("should click change tab", () => {
+      const { node } = createFormComponent({ schema });
+      const tabGroup = node.querySelector("#tab-group-title");
+      const allTabs = tabGroup.querySelectorAll("li");
+      expect(allTabs).to.have.length.of(2);
+      Simulate.click(allTabs[1]);
+    });
+  });
 
   describe("Multiple number choices list", () => {
     const schema = {

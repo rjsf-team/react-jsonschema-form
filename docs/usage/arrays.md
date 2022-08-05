@@ -291,3 +291,40 @@ render((
   <Form schema={schema} uiSchema={uiSchema} />
 ), document.getElementById("app"));
 ```
+
+## Array-group
+
+The default behavior for array group is a tab component. It groups an array of items
+
+Example:
+
+```jsx
+const schema = {
+  type: "array",
+  title: "Member Info",
+  group: [
+    {
+      type: "array",
+      title: "Tab One",
+      items: [
+        {
+          type: "string",
+        },
+      ],
+    },
+    {
+      type: "array",
+      title: "Tab Two",
+      items: [
+        {
+          type: "string",
+        },
+      ],
+    },
+  ],
+};
+
+render((
+  <Form schema={schema} />
+), document.getElementById("app"));
+```

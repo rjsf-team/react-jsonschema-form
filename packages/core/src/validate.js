@@ -1,7 +1,12 @@
 import toPath from "lodash/toPath";
 import Ajv from "ajv";
 let ajv = createAjvInstance();
-import { deepEquals, getDefaultFormState } from "./utils";
+import {
+  deepEquals,
+  getDefaultFormState,
+  transformGroupSchema,
+  isSchemaHaveTabsGroup,
+} from "./utils";
 
 let formerCustomFormats = null;
 let formerMetaSchema = null;
@@ -204,6 +209,9 @@ export default function validateFormData(
   }
 
   let validationError = null;
+  if (isSchemaHaveTabsGroup(schema)) {
+    schema = transformGroupSchema(schema);
+  }
   try {
     ajv.validate(schema, formData);
   } catch (err) {

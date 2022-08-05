@@ -380,6 +380,37 @@ describe("Validation", () => {
         );
       });
     });
+    describe("Schema contain group", () => {
+      const schema = {
+        type: "array",
+        title: "TesGroup",
+        groups: [
+          {
+            type: "array",
+            title: "Tab1",
+            items: [
+              {
+                type: "string",
+                title: "Item1",
+                default: "Item1",
+                minLength: 10,
+              },
+            ],
+          },
+        ],
+      };
+
+      let errors;
+
+      beforeEach(() => {
+        const result = validateFormData([["Item1"]], schema);
+        errors = result.errors;
+      });
+
+      it("should validate success", () => {
+        expect(errors.length).eql(1);
+      });
+    });
   });
 
   describe("toErrorList()", () => {

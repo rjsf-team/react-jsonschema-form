@@ -1,6 +1,8 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
-import React, { Component } from "react";
+import TabContent from "../TabContent";
+import TabNavItem from "../TabNavItem";
+import React, { Component, useState } from "react";
 import includes from "core-js-pure/es/array/includes";
 import * as types from "../../types";
 
@@ -11,6 +13,8 @@ import {
   isMultiSelect,
   isFilesArray,
   isFixedItems,
+  isGroupFixedItem,
+  isGroupContainItems,
   allowAdditionalItems,
   isCustomWidget,
   optionsList,
@@ -164,6 +168,64 @@ function DefaultNormalArrayFieldTemplate(props) {
         className="row array-item-list"
         key={`array-item-list-${props.idSchema.$id}`}>
         {props.items && props.items.map(p => DefaultArrayItem(p))}
+      </div>
+
+      {props.canAdd && (
+        <AddButton
+          className="array-item-add"
+          onClick={props.onAddClick}
+          disabled={props.disabled || props.readonly}
+        />
+      )}
+    </fieldset>
+  );
+}
+
+function DefaultFixedGroupFieldTemplate(props) {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = props.groupTitles.map((p, idx) => {
+    return (
+      <TabNavItem
+        title={p}
+        id={idx}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        key={idx}
+      />
+    );
+  });
+  const tabContent = props.items.map((p, idx) => {
+    return (
+      <TabContent id={idx} activeTab={activeTab} key={idx}>
+        {DefaultArrayItem(p)}
+      </TabContent>
+    );
+  });
+  return (
+    <fieldset className={props.className} id={props.idSchema.$id}>
+      <ArrayFieldTitle
+        key={`array-field-title-${props.idSchema.$id}`}
+        TitleField={props.TitleField}
+        idSchema={props.idSchema}
+        title={props.uiSchema["ui:title"] || props.title}
+        required={props.required}
+      />
+
+      {(props.uiSchema["ui:description"] || props.schema.description) && (
+        <div
+          className="field-description"
+          key={`field-description-${props.idSchema.$id}`}>
+          {props.uiSchema["ui:description"] || props.schema.description}
+        </div>
+      )}
+
+      <div className="Tabs">
+        <ul className="nav nav-tabs mb-3" id="tab-group-title" role="tablist">
+          {tabs}
+        </ul>
+        <div className="panel panel-default">
+          <div className="panel-body">{tabContent}</div>
+        </div>
       </div>
 
       {props.canAdd && (
@@ -425,7 +487,10 @@ class ArrayField extends Component {
   render() {
     const { schema, uiSchema, idSchema, registry } = this.props;
     const { rootSchema } = registry;
-    if (!schema.hasOwnProperty("items")) {
+    if (
+      !schema.hasOwnProperty("items") &&
+      !(schema.hasOwnProperty("group") && isGroupContainItems(schema))
+    ) {
       const { fields } = registry;
       const { UnsupportedField } = fields;
 
@@ -449,6 +514,9 @@ class ArrayField extends Component {
     }
     if (isFilesArray(schema, uiSchema, rootSchema)) {
       return this.renderFiles();
+    }
+    if (isGroupFixedItem(schema)) {
+      return this.renderGroupFixedItem();
     }
     return this.renderNormalArray();
   }
@@ -776,6 +844,101 @@ class ArrayField extends Component {
     return <Template {...arrayProps} />;
   }
 
+  renderGroupFixedItem() {
+    const {
+      schema,
+      uiSchema,
+      formData,
+      errorSchema,
+      idPrefix,
+      idSeparator = "_",
+      idSchema,
+      name,
+      required,
+      disabled,
+      readonly,
+      autofocus,
+      registry,
+      onBlur,
+      onFocus,
+      rawErrors,
+    } = this.props;
+    const title = schema.title || name;
+    let items = this.props.formData;
+    const { ArrayFieldTemplate, rootSchema, fields, formContext } = registry;
+    const { TitleField } = fields;
+    const groupTitles = [];
+
+    const itemSchemas = schema.group.map(({ title, ...arrayItems }, index) => {
+      groupTitles.push(title);
+      return retrieveSchema(arrayItems, rootSchema, formData[index]);
+    });
+
+    if (!items || items.length < itemSchemas.length) {
+      // to make sure at least all fixed items are generated
+      items = items || [];
+      items = items.concat(new Array(itemSchemas.length - items.length));
+    }
+    // These are the props passed into the render function
+    const arrayProps = {
+      className: "field field-group field-group-fixed-items",
+      disabled,
+      idSchema,
+      formData,
+      groupTitles: groupTitles,
+      items: this.state.keyedFormData.map((keyedItem, index) => {
+        const { key, item } = keyedItem;
+        const itemSchema = index < itemSchemas.length ? itemSchemas[index] : {};
+        const itemIdPrefix = idSchema.$id + idSeparator + index;
+        const itemIdSchema = toIdSchema(
+          itemSchema,
+          itemIdPrefix,
+          rootSchema,
+          item,
+          idPrefix,
+          idSeparator
+        );
+        const itemUiSchema = Array.isArray(uiSchema.group)
+          ? uiSchema.group[index]
+          : uiSchema.group || {};
+        const itemErrorSchema = errorSchema ? errorSchema[index] : undefined;
+
+        return this.renderArrayFieldItem({
+          key,
+          index,
+          canRemove: false,
+          canMoveUp: false,
+          canMoveDown: false,
+          itemSchema,
+          itemData: item,
+          itemUiSchema,
+          itemIdSchema,
+          itemErrorSchema,
+          autofocus: autofocus && index === 0,
+          onBlur,
+          onFocus,
+        });
+      }),
+      onAddClick: this.onAddClick,
+      readonly,
+      required,
+      registry,
+      schema,
+      uiSchema,
+      title,
+      TitleField,
+      formContext,
+      rawErrors,
+    };
+
+    // Check if a custom template template was passed in
+    const Template =
+      uiSchema["ui:ArrayFieldTemplate"] ||
+      ArrayFieldTemplate ||
+      DefaultFixedGroupFieldTemplate;
+    return <Template {...arrayProps} />;
+  }
+
   renderArrayFieldItem(props) {
     const {
       key,
@@ -804,7 +967,6 @@ class ArrayField extends Component {
       remove: removable && canRemove,
     };
     has.toolbar = Object.keys(has).some(key => has[key]);
-
     return {
       children: (
         <SchemaField

@@ -28,6 +28,7 @@ import errorSchema from "./errorSchema";
 import defaults from "./defaults";
 import options from "./options";
 import ifThenElse from "./ifThenElse";
+import group from "./group";
 
 export const samples = {
   Simple: simple,
@@ -60,4 +61,5 @@ export const samples = {
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,
+  Group: group,
 };

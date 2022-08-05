@@ -2,7 +2,7 @@ import React from "react";
 import * as ReactIs from "react-is";
 import mergeAllOf from "json-schema-merge-allof";
 import fill from "core-js-pure/features/array/fill";
-import union from "lodash/union";
+import { union, cloneDeep } from "lodash";
 import jsonpointer from "jsonpointer";
 import validateFormData, { isValid } from "./validate";
 
@@ -206,6 +206,16 @@ function computeDefaults(
         includeUndefinedValues
       )
     );
+  } else if (isGroupFixedItem(schema)) {
+    defaults = schema.group.map((itemSchema, idx) =>
+      computeDefaults(
+        itemSchema,
+        Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
+        rootSchema,
+        formData,
+        includeUndefinedValues
+      )
+    );
   } else if ("oneOf" in schema) {
     schema =
       schema.oneOf[getMatchingOption(undefined, schema.oneOf, rootSchema)];
@@ -243,7 +253,10 @@ function computeDefaults(
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
           return computeDefaults(
-            schema.items[idx] || schema.additionalItems || {},
+            (schema.group && schema.group[idx]) ||
+              schema.items[idx] ||
+              schema.additionalItems ||
+              {},
             item,
             rootSchema
           );
@@ -254,7 +267,7 @@ function computeDefaults(
       if (Array.isArray(rawFormData)) {
         defaults = rawFormData.map((item, idx) => {
           return computeDefaults(
-            schema.items,
+            schema.group || schema.items,
             (defaults || {})[idx],
             rootSchema,
             item
@@ -568,6 +581,21 @@ export function isCustomWidget(uiSchema) {
     // https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/#hidden-widgets
     "widget" in getUiOptions(uiSchema) &&
     getUiOptions(uiSchema)["widget"] !== "hidden"
+  );
+}
+
+export function isGroupFixedItem(schema) {
+  return (
+    Array.isArray(schema.group) &&
+    schema.group.length > 0 &&
+    schema.group.every(item => isObject(item))
+  );
+}
+
+export function isGroupContainItems(schema) {
+  return (
+    Array.isArray(schema.group) &&
+    schema.group.every(schema => schema.hasOwnProperty("items"))
   );
 }
 
@@ -1098,6 +1126,16 @@ export function toIdSchema(
       idSeparator
     );
   }
+  if ("group" in schema && !schema.group.$ref) {
+    return toIdSchema(
+      schema.group,
+      id,
+      rootSchema,
+      formData,
+      idPrefix,
+      idSeparator
+    );
+  }
   if (schema.type !== "object") {
     return idSchema;
   }
@@ -1135,6 +1173,15 @@ export function toPathSchema(schema, name = "", rootSchema, formData = {}) {
     formData.forEach((element, i) => {
       pathSchema[i] = toPathSchema(
         schema.items,
+        `${name}.${i}`,
+        rootSchema,
+        element
+      );
+    });
+  } else if (schema.hasOwnProperty("group") && Array.isArray(formData)) {
+    formData.forEach((element, i) => {
+      pathSchema[i] = toPathSchema(
+        schema.group,
         `${name}.${i}`,
         rootSchema,
         element
@@ -1363,4 +1410,51 @@ export function schemaRequiresTrueValue(schema) {
   }
 
   return false;
+}
+
+//Check object have key
+export function doesObjectHaveNestedKey(obj, key) {
+  if (obj === null || obj === undefined) {
+    return false;
+  }
+  for (const k of Object.keys(obj)) {
+    if (k === key) {
+      return true;
+    } else {
+      const val = obj[k];
+      if (typeof val === "object") {
+        if (doesObjectHaveNestedKey(val, key) === true) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+//Change object key
+export function renameKeyObject(obj, oldKey, newKey) {
+  if (oldKey === newKey) {
+    return obj;
+  }
+  Object.keys(obj).forEach(key => {
+    if (key === oldKey) {
+      obj[newKey] = obj[key];
+      delete obj[key];
+    } else if (obj[key] !== null && typeof obj[key] === "object") {
+      obj[key] = renameKeyObject(obj[key], oldKey, newKey);
+    }
+  });
+  return obj;
+}
+
+//Check schema contains tabs group
+export function isSchemaHaveTabsGroup(schema) {
+  return doesObjectHaveNestedKey(schema, "group");
+}
+
+//Transform group to use default validate
+export function transformGroupSchema(originSchema) {
+  let schema = cloneDeep(originSchema);
+  return renameKeyObject(schema, "group", "items");
 }

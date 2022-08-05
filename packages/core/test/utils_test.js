@@ -32,6 +32,9 @@ import {
   isCustomWidget,
   getMatchingOption,
   getSubmitButtonOptions,
+  doesObjectHaveNestedKey,
+  renameKeyObject,
+  transformGroupSchema,
 } from "../src/utils";
 import { createSandbox } from "./test_utils";
 
@@ -3811,6 +3814,34 @@ describe("utils", () => {
         },
       });
     });
+    it("should return an pathSchema with have group", () => {
+      const schema = {
+        type: "array",
+        title: "TesGroup",
+        groups: [
+          {
+            type: "array",
+            title: "Tab1",
+            items: [
+              {
+                type: "string",
+                title: "Item1",
+                default: "Item1",
+                minLength: 10,
+              },
+            ],
+          },
+        ],
+      };
+
+      const formData = [["Items"]];
+
+      const result = toPathSchema(schema, "", schema, formData);
+      expect(result).eql({
+        "0": { $name: "0" },
+        $name: "",
+      });
+    });
   });
 
   describe("parseDateString()", () => {
@@ -4496,6 +4527,70 @@ describe("utils", () => {
         },
       };
       expect(getMatchingOption(formData, options, rootSchema)).eql(1);
+    });
+  });
+  describe("doesObjectHaveNestedKey(obj, key)", () => {
+    it("should return false when undefined obj", () => {
+      let result = doesObjectHaveNestedKey(undefined, "groups");
+      expect(result).to.be.false;
+    });
+    it("should return false when null obj", () => {
+      let result = doesObjectHaveNestedKey(null, "groups");
+      expect(result).to.be.false;
+    });
+    it("should return true when found key at level 0", () => {
+      let result = doesObjectHaveNestedKey(
+        {
+          groups: [],
+        },
+        "groups"
+      );
+      expect(result).to.be.true;
+    });
+    it("should return true when found key at level 1", () => {
+      let result = doesObjectHaveNestedKey(
+        {
+          testing: {
+            groups: [],
+          },
+        },
+        "groups"
+      );
+      expect(result).to.be.true;
+    });
+  });
+  describe("renameKeyObject(obj, oldKey, newKey)", () => {
+    it("should return origin object oldKey same as newKey", () => {
+      const originObject = {
+        groups: [],
+      };
+      let result = renameKeyObject(originObject, "groups", "groups");
+      expect(result).to.be.equal(originObject);
+    });
+    it("should change key when found oldKey at level 0", () => {
+      const originObject = {
+        groups: [],
+      };
+      let result = renameKeyObject(originObject, "groups", "items");
+      expect(result).to.have.any.keys("items");
+    });
+    it("should change key when found oldKey at level 1", () => {
+      const originObject = {
+        test: {
+          groups: [],
+        },
+      };
+      let result = renameKeyObject(originObject, "groups", "items");
+      expect(result.test).to.have.any.keys("items");
+    });
+  });
+  describe("transformGroupSchema(obj)", () => {
+    it("should transform success", () => {
+      const originObject = {
+        groups: [],
+      };
+      let result = transformGroupSchema(originObject);
+      expect(result).to.be.not.equal(originObject);
     });
   });
 });
