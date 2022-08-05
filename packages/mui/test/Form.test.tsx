@@ -144,18 +144,60 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  // There is an issue with TextareaAutosize in mui/material that fails in the tests
-  // Re-enable when the following MUI issue is fixed: https://github.com/mui-org/material-ui/issues/29632
-  test.skip("textarea field", () => {
+  test("up/down field", () => {
+    const schema: RJSFSchema = {
+      type: "number",
+    };
+    const uiSchema: UiSchema = {
+      "ui:widget": "updown",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("textarea field", () => {
     const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema: UiSchema = {
       "ui:widget": "textarea",
     };
+    // The `TextareaAutosize` code reads the following data from the `getComputedStyle()` function in a useEffect hook
+    jest.spyOn(window, "getComputedStyle").mockImplementation(() => {
+      return {
+        width: 100,
+        "box-sizing": 10,
+        "padding-bottom": 1,
+        "padding-top": 1,
+        "border-bottom-width": 1,
+        "border-top-width": 1,
+      } as unknown as CSSStyleDeclaration;
+    });
     const tree = renderer
       .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />,
+        {
+          createNodeMock: (element) => {
+            if (element.type === "textarea") {
+              // the `TextareaAutosize` code expects a ref for two textareas to exist, so use the feature of
+              // react-test-renderer to create one
+              // See: https://reactjs.org/docs/test-renderer.html#ideas
+              if (element.props["aria-hidden"]) {
+                // The hidden one reads the following values
+                return {
+                  style: { width: 10 },
+                  scrollHeight: 100,
+                };
+              }
+              // The other one only really needs an empty object
+              return {};
+            }
+            return null;
+          },
+        }
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -221,10 +263,7 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  // There is a bug in the Material UI <Slider /> component that prevents this from working.
-  // Error: `TypeError: Cannot read property 'addEventListener' of null`
-  // From: https://github.com/mui-org/material-ui/blob/v4.5.2/packages/material-ui/src/Slider/Slider.js#L622
-  test.skip("slider field", () => {
+  test("slider field", () => {
     const schema: RJSFSchema = {
       type: "integer",
       minimum: 42,
@@ -235,7 +274,31 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+        <Form
+          schema={schema}
+          validator={validator}
+          uiSchema={uiSchema}
+          formData={75}
+        />,
+        {
+          createNodeMock: (element) => {
+            // the `Slider` code expects a ref for a span.root to exist, so use the feature of
+            // react-test-renderer to create one
+            // See: https://reactjs.org/docs/test-renderer.html#ideas
+            if (element.type === "span" && element.props.id === "root") {
+              // Pretend to be an event listening component inside of an event listening document
+              return {
+                addEventListener: jest.fn(),
+                removeEventListener: jest.fn(),
+                ownerDocument: {
+                  addEventListener: jest.fn(),
+                  removeEventListener: jest.fn(),
+                },
+              };
+            }
+            return null;
+          },
+        }
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -252,6 +315,65 @@ describe("single fields", () => {
     const uiSchema: UiSchema = {
       "my-field": {
         "ui:widget": "hidden",
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("field with description", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+          description: "some description",
+        },
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("field with description in uiSchema", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      properties: {
+        "my-field": {
+          type: "string",
+          description: "some description",
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      "my-field": {
+        "ui:description": "some other description",
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("title field", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      "ui:title": "Titre 1",
+      title: {
+        "ui:title": "Titre 2",
       },
     };
     const tree = renderer

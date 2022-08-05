@@ -44,6 +44,16 @@ export type RangeSpecType = {
   max?: number;
 };
 
+/** Properties describing a Range specification in terms of attribute that can be added to the `HTML` `<input>` */
+export type InputPropsType = Omit<RangeSpecType, "step"> & {
+  /** Specifies the type of the <input> element */
+  type: string;
+  /** Specifies the interval between legal numbers in an input field or "any" */
+  step?: number | "any";
+  /** Specifies the `autoComplete` value for an <input> element */
+  autoComplete?: HTMLInputElement["autocomplete"];
+};
+
 /** Type describing an id used for a field in the `IdSchema` */
 export type FieldId = {
   /** The id for a field */
@@ -148,6 +158,8 @@ export type RegistryWidgetsType<T = any, F = any> = {
 export interface TemplatesType<T = any, F = any> {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  /** The template to use while rendering the standard html input (temporarily optional to allow builds to work) */
+  BaseInputTemplate?: React.ComponentType<WidgetProps<T, F>>;
   /** The template to use for rendering the description of a field */
   DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, F>>;
   /** The template to use while rendering form errors */
@@ -503,6 +515,8 @@ type UIOptionsBaseType = {
   help?: string;
   /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
   autofocus?: boolean;
+  /** Use to mark the field as supporting auto complete on a text input or textarea input */
+  autocomplete?: HTMLInputElement["autocomplete"];
   /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
   disabled?: boolean;
   /** Will disable any of the enum options specified in the array (by value) */
