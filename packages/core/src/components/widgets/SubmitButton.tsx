@@ -8,15 +8,18 @@ export default function SubmitButton<T, F>({
   const {
     submitText,
     norender,
-    props: submitButtonProps,
+    props: submitButtonProps = {},
   } = getSubmitButtonOptions(uiSchema);
   if (norender) {
     return null;
   }
-  const props = { className: "btn btn-info", ...submitButtonProps };
   return (
     <div>
-      <button type="submit" {...props}>
+      <button
+        type="submit"
+        {...submitButtonProps}
+        className={`btn btn-info ${submitButtonProps.className}`}
+      >
         {submitText}
       </button>
     </div>
