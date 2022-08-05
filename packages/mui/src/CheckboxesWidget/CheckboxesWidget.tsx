@@ -58,7 +58,7 @@ const CheckboxesWidget = ({
       <FormLabel required={required} htmlFor={id}>
         {label || schema.title}
       </FormLabel>
-      <FormGroup row={!!inline}>
+      <FormGroup id={id} row={!!inline}>
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
