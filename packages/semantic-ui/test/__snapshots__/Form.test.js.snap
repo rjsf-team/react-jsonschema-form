@@ -513,13 +513,11 @@ exports[`single fields format color 1`] = `
       disabled={false}
       id="root"
       label=""
-      list={null}
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
       placeholder=""
       readOnly={false}
-      required={false}
       type="color"
       value=""
     />
