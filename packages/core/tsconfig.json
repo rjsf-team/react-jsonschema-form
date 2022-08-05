@@ -7,6 +7,5 @@
       "*": ["src/*", "node_modules/*"]
     },
     "jsx": "react",
-    "outDir": "lib"
   }
 }
