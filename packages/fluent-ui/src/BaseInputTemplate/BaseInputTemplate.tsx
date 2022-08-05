@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import { getInputProps, WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of ITextFieldProps from @fluentui/react
@@ -44,7 +44,7 @@ const allowedProps = [
   "list",
 ];
 
-const TextWidget = ({
+const BaseInputTemplate = ({
   id,
   placeholder,
   required,
@@ -58,8 +58,11 @@ const TextWidget = ({
   autofocus,
   options,
   schema,
+  type,
   rawErrors,
+  multiline,
 }: WidgetProps) => {
+  const inputProps = getInputProps(schema, type, options);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -71,7 +74,6 @@ const TextWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
-  const inputType = schema.type === "string" ? "text" : `${schema.type}`;
 
   return (
     <TextField
@@ -82,9 +84,10 @@ const TextWidget = ({
       required={required}
       disabled={disabled}
       readOnly={readonly}
+      multiline={multiline}
       // TODO: once fluent-ui supports the name prop, we can add it back in here.
       // name={name}
-      type={inputType as string}
+      {...inputProps}
       value={value || value === 0 ? value : ""}
       onChange={_onChange as any}
       onBlur={_onBlur}
@@ -95,4 +98,4 @@ const TextWidget = ({
   );
 };
 
-export default TextWidget;
+export default BaseInputTemplate;

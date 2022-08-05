@@ -1412,6 +1412,7 @@ exports[`single fields number field 0 1`] = `
             onInput={[Function]}
             placeholder=""
             readOnly={false}
+            step="any"
             type="number"
             value="0"
           />
@@ -1492,6 +1493,7 @@ exports[`single fields number field 1`] = `
             onInput={[Function]}
             placeholder=""
             readOnly={false}
+            step="any"
             type="number"
             value=""
           />

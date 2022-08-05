@@ -217,6 +217,7 @@ exports[`object fields object 1`] = `
                   placeholder=""
                   readOnly={false}
                   required={false}
+                  step="any"
                   type="number"
                   value=""
                 />
