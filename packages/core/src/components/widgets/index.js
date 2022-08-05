@@ -1,6 +1,5 @@
 import AltDateWidget from "./AltDateWidget";
 import AltDateTimeWidget from "./AltDateTimeWidget";
-import BaseInput from "./BaseInput";
 import CheckboxWidget from "./CheckboxWidget";
 import CheckboxesWidget from "./CheckboxesWidget";
 import ColorWidget from "./ColorWidget";
@@ -19,7 +18,6 @@ import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 import SubmitButton from "./SubmitButton";
 export default {
-  BaseInput,
   PasswordWidget,
   RadioWidget,
   UpDownWidget,

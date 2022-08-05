@@ -158,8 +158,8 @@ export type RegistryWidgetsType<T = any, F = any> = {
 export interface TemplatesType<T = any, F = any> {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
-  /** The template to use while rendering the standard html input (temporarily optional to allow builds to work) */
-  BaseInputTemplate?: React.ComponentType<WidgetProps<T, F>>;
+  /** The template to use while rendering the standard html input */
+  BaseInputTemplate: React.ComponentType<WidgetProps<T, F>>;
   /** The template to use for rendering the description of a field */
   DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, F>>;
   /** The template to use while rendering form errors */

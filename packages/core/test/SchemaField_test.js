@@ -397,7 +397,7 @@ describe("SchemaField", () => {
           schema,
           uiSchema,
           customValidate,
-          widgets: { BaseInput: customStringWidget },
+          templates: { BaseInputTemplate: customStringWidget },
         });
         Simulate.submit(node);
 
@@ -451,7 +451,7 @@ describe("SchemaField", () => {
             schema,
             uiSchema: hideUiSchema,
             customValidate,
-            widgets: { BaseInput: customStringWidget },
+            templates: { BaseInputTemplate: customStringWidget },
           });
           Simulate.submit(node);
 
