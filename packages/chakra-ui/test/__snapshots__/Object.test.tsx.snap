@@ -148,7 +148,7 @@ exports[`object fields additionalProperties 1`] = `
               <label
                 className="chakra-form__label emotion-6"
                 htmlFor="root_foo-key"
-                id="field-5064060079-7-label"
+                id="root_foo-key-label"
               >
                 foo Key
               </label>

@@ -428,7 +428,7 @@ exports[`single fields checkboxes field 1`] = `
       <label
         className="chakra-form__label emotion-2"
         htmlFor="root"
-        id="field-3069029058-35-label"
+        id="root-label"
       />
       <div
         className="chakra-stack emotion-3"
@@ -1723,7 +1723,7 @@ exports[`single fields radio field 1`] = `
       <label
         className="chakra-form__label emotion-2"
         htmlFor="root"
-        id="field-3069029058-37-label"
+        id="root-label"
       />
       <div
         className="chakra-radio-group emotion-0"
@@ -1741,7 +1741,7 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="chakra-radio__input"
               disabled={false}
-              id="radio-3069029058-39"
+              id="root-radio-true"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -1790,7 +1790,7 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="chakra-radio__input"
               disabled={false}
-              id="radio-3069029058-40"
+              id="root-radio-false"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}

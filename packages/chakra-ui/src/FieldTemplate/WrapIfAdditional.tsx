@@ -50,7 +50,9 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     <Grid key={`${id}-key`} alignItems="center" gap={2}>
       <GridItem>
         <FormControl isRequired={required}>
-          <FormLabel htmlFor={`${id}-key`}>{keyLabel}</FormLabel>
+          <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>
+            {keyLabel}
+          </FormLabel>
           <Input
             defaultValue={label}
             disabled={disabled || readonly}
