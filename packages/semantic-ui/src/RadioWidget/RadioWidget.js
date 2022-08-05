@@ -19,8 +19,6 @@ function RadioWidget(props) {
     uiSchema,
     rawErrors = [],
   } = props;
-  // Generating a unique field name to identify this set of radio buttons
-  const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
   const semanticProps = getSemanticProps({ formContext, options, uiSchema });
   // eslint-disable-next-line no-shadow
@@ -42,7 +40,7 @@ function RadioWidget(props) {
           <Form.Field
             required={required}
             control={Radio}
-            name={name}
+            name={`${id}-${option.value}`}
             {...semanticProps}
             onFocus={_onFocus}
             onBlur={_onBlur}

@@ -220,6 +220,152 @@ exports[`single fields checkboxes field 1`] = `
 </form>
 `;
 
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+              >
+                my-field
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+            <small
+              className="text-muted form-text"
+            >
+              some description
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+              >
+                my-field
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+            <small
+              className="text-muted form-text"
+            >
+              some other description
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"
@@ -388,6 +534,50 @@ exports[`single fields hidden field 1`] = `
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+      >
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
     </div>
   </div>
   <div>
@@ -675,6 +865,56 @@ exports[`single fields select field 1`] = `
           bar
         </option>
       </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+      >
+        
+      </label>
+      <input
+        className="form-control-range"
+        disabled={false}
+        id="root"
+        label=""
+        max={100}
+        min={42}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        readOnly={false}
+        type="range"
+        value={75}
+      />
+      <span
+        className="range-view"
+      >
+        75
+      </span>
     </div>
   </div>
   <div>
@@ -1065,6 +1305,49 @@ exports[`single fields unsupported field 1`] = `
       <pre>
         {}
       </pre>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+      >
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        readOnly={false}
+        type="number"
+        value=""
+      />
     </div>
   </div>
   <div>
