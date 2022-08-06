@@ -1,5 +1,4 @@
 import get from "lodash/get";
-import fill from "lodash/fill";
 
 import {
   ANY_OF_KEY,
@@ -225,8 +224,9 @@ export function computeDefaults<T = any>(
               AdditionalItemsHandling.Invert
             );
             const fillerDefault = fillerSchema.default;
-            const fillerEntries: T[] = fill(
-              new Array(schema.minItems - defaultsLength),
+            const fillerEntries: T[] = new Array(
+              schema.minItems - defaultsLength
+            ).fill(
               computeDefaults<any>(
                 validator,
                 fillerSchema,
