@@ -1,4 +1,5 @@
 import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
+import { getDefaultRegistry } from "@rjsf/core";
 import validator from "@rjsf/validator-ajv6";
 
 import Templates from "../../src/Templates";
@@ -19,7 +20,7 @@ export function mockRegistry() {
   return {
     fields: {},
     widgets: { TextWidget: BaseInputTemplate },
-    templates: Templates,
+    templates: { ...getDefaultRegistry().templates, ...Templates },
     formContext: {},
     rootSchema: {},
     schemaUtils: mockSchemaUtils,
