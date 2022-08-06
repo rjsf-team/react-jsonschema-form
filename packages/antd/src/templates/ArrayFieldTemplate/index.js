@@ -12,8 +12,6 @@ import FixedArrayFieldTemplate from "./FixedArrayFieldTemplate";
 import NormalArrayFieldTemplate from "./NormalArrayFieldTemplate";
 
 const ArrayFieldTemplate = ({
-  DescriptionField,
-  TitleField,
   autofocus,
   canAdd,
   className,
@@ -114,7 +112,6 @@ const ArrayFieldTemplate = ({
       <FixedArrayFieldTemplate
         canAdd={canAdd}
         className={className}
-        DescriptionField={DescriptionField}
         disabled={disabled}
         formContext={formContext}
         formData={formData}
@@ -126,7 +123,6 @@ const ArrayFieldTemplate = ({
         required={required}
         schema={schema}
         title={title}
-        TitleField={TitleField}
         uiSchema={uiSchema}
       />
     );
@@ -142,7 +138,6 @@ const ArrayFieldTemplate = ({
     <NormalArrayFieldTemplate
       canAdd={canAdd}
       className={className}
-      DescriptionField={DescriptionField}
       disabled={disabled}
       formContext={formContext}
       formData={formData}
@@ -154,7 +149,6 @@ const ArrayFieldTemplate = ({
       required={required}
       schema={schema}
       title={title}
-      TitleField={TitleField}
       uiSchema={uiSchema}
     />
   );

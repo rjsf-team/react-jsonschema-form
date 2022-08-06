@@ -20,4 +20,16 @@ describe("object fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("additionalProperties", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      additionalProperties: true,
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} formData={{ foo: "foo" }} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

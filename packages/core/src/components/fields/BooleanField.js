@@ -21,7 +21,7 @@ function BooleanField(props) {
     rawErrors,
   } = props;
   const { title } = schema;
-  const { widgets, formContext, fields } = registry;
+  const { widgets, formContext } = registry;
   const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
@@ -63,7 +63,6 @@ function BooleanField(props) {
       formContext={formContext}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      DescriptionField={fields.DescriptionField}
     />
   );
 }

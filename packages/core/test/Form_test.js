@@ -315,7 +315,7 @@ describeRepeated("Form common", (createFormComponent) => {
 
     const formData = { foo: "invalid" };
 
-    function FieldTemplate(props) {
+    function CustomFieldTemplate(props) {
       const {
         id,
         classNames,
@@ -365,7 +365,9 @@ describeRepeated("Form common", (createFormComponent) => {
         schema,
         uiSchema,
         formData,
-        FieldTemplate,
+        templates: {
+          FieldTemplate: CustomFieldTemplate,
+        },
         liveValidate: true,
       }).node;
     });
@@ -2602,7 +2604,7 @@ describeRepeated("Form common", (createFormComponent) => {
           items: { type: "string" },
         },
         formData: ["foo", "bar"],
-        ArrayFieldTemplate: ArrayTemplateWithForm,
+        templates: { ArrayFieldTemplate: ArrayTemplateWithForm },
         onSubmit: outerOnSubmit,
       };
       createFormComponent(outerFormProps);

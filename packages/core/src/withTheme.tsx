@@ -7,13 +7,7 @@ import Form, { FormProps } from "./components/Form";
  */
 export type WithThemeProps<T = any, F = any> = Pick<
   FormProps<T, F>,
-  | "fields"
-  | "widgets"
-  | "ArrayFieldTemplate"
-  | "ObjectFieldTemplate"
-  | "FieldTemplate"
-  | "ErrorList"
-  | "_internalFormWrapper"
+  "fields" | "templates" | "widgets" | "_internalFormWrapper"
 >;
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */

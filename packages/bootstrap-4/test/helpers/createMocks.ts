@@ -1,7 +1,8 @@
 import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
-import TextWidget from "../../src/TextWidget/TextWidget";
+import Templates from "../../src/Templates";
+import TextWidget from "../../src/TextWidget";
 
 export const mockSchema: RJSFSchema = {
   type: "array",
@@ -13,6 +14,17 @@ export const mockSchema: RJSFSchema = {
 export const mockEventHandlers = (): void => void 0;
 
 export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
+
+export function mockRegistry() {
+  return {
+    fields: {},
+    widgets: { TextWidget },
+    templates: Templates,
+    formContext: {},
+    rootSchema: {},
+    schemaUtils: mockSchemaUtils,
+  };
+}
 
 export function makeWidgetMockProps(
   props: Partial<WidgetProps> = {}
@@ -35,13 +47,7 @@ export function makeWidgetMockProps(
     formContext: {},
     id: "_id",
     placeholder: "",
-    registry: {
-      fields: {},
-      widgets: { TextWidget },
-      formContext: {},
-      rootSchema: {},
-      schemaUtils: mockSchemaUtils,
-    },
+    registry: mockRegistry(),
     ...props,
   };
 }

@@ -682,14 +682,14 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 
@@ -841,14 +841,14 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 
@@ -1952,14 +1952,14 @@ describe("StringField", () => {
   });
 
   describe("UpDownWidget", () => {
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
           format: "updown",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 

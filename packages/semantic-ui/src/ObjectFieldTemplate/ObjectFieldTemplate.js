@@ -5,9 +5,7 @@ import { canExpand, getUiOptions } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
 
 function ObjectFieldTemplate({
-  DescriptionField,
   description,
-  TitleField,
   onAddClick,
   title,
   properties,
@@ -18,24 +16,28 @@ function ObjectFieldTemplate({
   schema,
   formData,
   idSchema,
+  registry,
 }) {
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (
     <React.Fragment>
       {fieldTitle && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
-          options={uiOptions.options}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
       {fieldDescription && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
+          registry={registry}
         />
       )}
       {properties.map(prop => prop.content)}

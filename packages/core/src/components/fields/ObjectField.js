@@ -1,44 +1,12 @@
-import AddButton from "../AddButton";
 import React, { Component } from "react";
 import {
   orderProperties,
-  canExpand,
   ADDITIONAL_PROPERTY_FLAG,
   REF_KEY,
 } from "@rjsf/utils";
 
 import * as types from "../../types";
-
-function DefaultObjectFieldTemplate(props) {
-  const { TitleField, DescriptionField } = props;
-  return (
-    <fieldset id={props.idSchema.$id}>
-      {(props.uiSchema["ui:title"] || props.title) && (
-        <TitleField
-          id={`${props.idSchema.$id}__title`}
-          title={props.title || props.uiSchema["ui:title"]}
-          required={props.required}
-          formContext={props.formContext}
-        />
-      )}
-      {props.description && (
-        <DescriptionField
-          id={`${props.idSchema.$id}__description`}
-          description={props.description}
-          formContext={props.formContext}
-        />
-      )}
-      {props.properties.map((prop) => prop.content)}
-      {canExpand(props.schema, props.uiSchema, props.formData) && (
-        <AddButton
-          className="object-property-expand"
-          onClick={props.onAddClick(props.schema)}
-          disabled={props.disabled || props.readonly}
-        />
-      )}
-    </fieldset>
-  );
-}
+import DefaultObjectFieldTemplate from "../templates/ObjectFieldTemplate";
 
 class ObjectField extends Component {
   static defaultProps = {
@@ -193,8 +161,8 @@ class ObjectField extends Component {
       registry,
     } = this.props;
 
-    const { fields, formContext, schemaUtils } = registry;
-    const { SchemaField, TitleField, DescriptionField } = fields;
+    const { fields, formContext, schemaUtils, templates } = registry;
+    const { SchemaField } = fields;
     const schema = schemaUtils.retrieveSchema(this.props.schema, formData);
 
     const title = schema.title === undefined ? name : schema.title;
@@ -217,14 +185,12 @@ class ObjectField extends Component {
 
     const Template =
       uiSchema["ui:ObjectFieldTemplate"] ||
-      registry.ObjectFieldTemplate ||
+      templates.ObjectFieldTemplate ||
       DefaultObjectFieldTemplate;
 
     const templateProps = {
       title: uiSchema["ui:title"] || title,
       description,
-      TitleField,
-      DescriptionField,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties =
           ADDITIONAL_PROPERTY_FLAG in schema.properties[name];

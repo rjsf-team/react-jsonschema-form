@@ -8,7 +8,7 @@ export default function SubmitButton<T, F>({
   const {
     submitText,
     norender,
-    props: submitButtonProps,
+    props: submitButtonProps = {},
   } = getSubmitButtonOptions(uiSchema);
   if (norender) {
     return null;

@@ -2,29 +2,32 @@ import React from "react";
 import { getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
   uiSchema,
   idSchema,
+  registry,
 }: ObjectFieldTemplateProps) => {
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
       {description && (
-        <DescriptionField
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={description}
+          registry={registry}
         />
       )}
 

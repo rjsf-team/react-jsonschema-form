@@ -12,7 +12,7 @@ const ArrayFieldTitle = ({ TitleField, idSchema, uiSchema, title }) => {
   }
 
   const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} options={uiSchema["ui:options"]} />;
+  return <TitleField id={id} title={title} uiSchema={uiSchema} />;
 };
 
 function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
@@ -120,9 +120,10 @@ function DefaultFixedArrayFieldTemplate({
   required,
   schema,
   title,
-  TitleField,
   itemProps,
+  registry,
 }) {
+  const { TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
@@ -131,7 +132,7 @@ function DefaultFixedArrayFieldTemplate({
     <div className={cleanClassNames([className, classNames])}>
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
+        TitleField={TitleFieldTemplate}
         idSchema={idSchema}
         uiSchema={uiSchema}
         title={fieldTitle}
@@ -175,16 +176,16 @@ function DefaultNormalArrayFieldTemplate({
   className,
   classNames,
   disabled,
-  DescriptionField,
   items,
   onAddClick,
   readOnly,
   required,
   schema,
   title,
-  TitleField,
   itemProps,
+  registry,
 }) {
+  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
@@ -198,7 +199,7 @@ function DefaultNormalArrayFieldTemplate({
     >
       <ArrayFieldTitle
         key={`array-field-title-${idSchema.$id}`}
-        TitleField={TitleField}
+        TitleField={TitleFieldTemplate}
         idSchema={idSchema}
         uiSchema={uiSchema}
         title={fieldTitle}
@@ -208,7 +209,7 @@ function DefaultNormalArrayFieldTemplate({
       {fieldDescription && (
         <ArrayFieldDescription
           key={`array-field-description-${idSchema.$id}`}
-          DescriptionField={DescriptionField}
+          DescriptionField={DescriptionFieldTemplate}
           idSchema={idSchema}
           description={fieldDescription}
         />

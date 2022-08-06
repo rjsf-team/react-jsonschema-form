@@ -1,11 +1,9 @@
 import React from "react";
-
-import { FieldProps } from "@rjsf/utils";
-
+import { TitleFieldProps } from "@rjsf/utils";
 import { Box, Divider, Heading } from "@chakra-ui/react";
 
-const TitleField = ({ title /* , id, required */ }: FieldProps) => (
-  <Box mt={1} mb={4}>
+const TitleField = ({ id, title /* , required */ }: TitleFieldProps) => (
+  <Box id={id} mt={1} mb={4}>
     <Heading as="h5">{title}</Heading>
     <Divider />
   </Box>

@@ -44,6 +44,16 @@ export type RangeSpecType = {
   max?: number;
 };
 
+/** Properties describing a Range specification in terms of attribute that can be added to the `HTML` `<input>` */
+export type InputPropsType = Omit<RangeSpecType, "step"> & {
+  /** Specifies the type of the <input> element */
+  type: string;
+  /** Specifies the interval between legal numbers in an input field or "any" */
+  step?: number | "any";
+  /** Specifies the `autoComplete` value for an <input> element */
+  autoComplete?: HTMLInputElement["autocomplete"];
+};
+
 /** Type describing an id used for a field in the `IdSchema` */
 export type FieldId = {
   /** The id for a field */
@@ -148,20 +158,32 @@ export type RegistryWidgetsType<T = any, F = any> = {
 export interface TemplatesType<T = any, F = any> {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
-  /** The template to use while rendering an object */
-  ObjectFieldTemplate?: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
+  /** The template to use while rendering the standard html input */
+  BaseInputTemplate: React.ComponentType<WidgetProps<T, F>>;
+  /** The template to use for rendering the description of a field */
+  DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, F>>;
+  /** The template to use while rendering form errors */
+  ErrorListTemplate: React.ComponentType<ErrorListProps<T, F>>;
   /** The template to use while rendering a field */
-  FieldTemplate?: React.ComponentType<FieldTemplateProps<T, F>>;
+  FieldTemplate: React.ComponentType<FieldTemplateProps<T, F>>;
+  /** The template to use while rendering an object */
+  ObjectFieldTemplate: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
+  /** The template to use for rendering the title of a field */
+  TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
 }
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
  * context, schema utils and templates.
  */
-export interface Registry<T = any, F = any> extends TemplatesType<T, F> {
+export interface Registry<T = any, F = any> {
   /** The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any custom
    * registered fields
    */
   fields: RegistryFieldsType<T, F>;
+  /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific fields and any custom
+   * registered templates
+   */
+  templates: TemplatesType<T, F>;
   /** The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any custom
    * registered widgets
    */
@@ -282,21 +304,27 @@ export type FieldTemplateProps<T = any, F = any> = {
 };
 
 /** The properties that are passed to a `TitleField` implementation */
-export type TitleFieldProps = {
+export type TitleFieldProps<T = any, F = any> = {
   /** The id of the field title in the hierarchy */
   id: string;
   /** The title for the field being rendered */
   title: string;
+  /** The uiSchema object for this title field */
+  uiSchema?: UiSchema<T, F>;
   /** A boolean value stating if the field is required */
   required?: boolean;
+  /** The `registry` object */
+  registry: Registry<T, F>;
 };
 
 /** The properties that are passed to a `DescriptionField` implementation */
-export type DescriptionFieldProps = {
+export type DescriptionFieldProps<T = any, F = any> = {
   /** The id of the field description in the hierarchy */
   id: string;
   /** The description of the field being rendered */
   description: string | React.ReactElement;
+  /** The `registry` object */
+  registry: Registry<T, F>;
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */
@@ -331,10 +359,6 @@ export type ArrayFieldTemplateItemType = {
 
 /** The properties that are passed to an ArrayFieldTemplate implementation */
 export type ArrayFieldTemplateProps<T = any, F = any> = {
-  /** The `DescriptionField` from the registry (in case you wanted to utilize it) */
-  DescriptionField: React.ComponentType<DescriptionFieldProps>;
-  /** The `TitleField` from the registry (in case you wanted to utilize it) */
-  TitleField: React.ComponentType<TitleFieldProps>;
   /** A boolean value stating whether new elements can be added to the array */
   canAdd?: boolean;
   /** The className string */
@@ -381,10 +405,6 @@ export type ObjectFieldTemplatePropertyType = {
 
 /** The properties that are passed to an ObjectFieldTemplate implementation */
 export type ObjectFieldTemplateProps<T = any, F = any> = {
-  /** The `DescriptionField` from the registry (in case you wanted to utilize it) */
-  DescriptionField: React.ComponentType<DescriptionFieldProps>;
-  /** The `TitleField` from the registry (in case you wanted to utilize it) */
-  TitleField: React.ComponentType<TitleFieldProps>;
   /** A string value containing the title for the object */
   title: string;
   /** A string value containing the description for the object */
@@ -495,6 +515,8 @@ type UIOptionsBaseType = {
   help?: string;
   /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
   autofocus?: boolean;
+  /** Use to mark the field as supporting auto complete on a text input or textarea input */
+  autocomplete?: HTMLInputElement["autocomplete"];
   /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
   disabled?: boolean;
   /** Will disable any of the enum options specified in the array (by value) */
@@ -528,7 +550,7 @@ export type UIOptionsType = UIOptionsBaseType & {
  */
 export type UiSchema<T = any, F = any> = GenericObjectType &
   MakeUIType<UIOptionsBaseType> &
-  MakeUIType<TemplatesType<T, F>> & {
+  MakeUIType<Partial<TemplatesType<T, F>>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
     "ui:rootFieldId"?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
