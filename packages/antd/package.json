@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "4.2.0",
+  "version": "4.2.3",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/antd.esm.js",
@@ -9,7 +9,7 @@
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
-   },
+  },
   "files": [
     "dist"
   ],
@@ -41,7 +41,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "@rjsf/core": "^4.2.0",
+    "@rjsf/core": "^4.2.3",
     "antd": "^4.0.0",
     "atob": "^2.0.3",
     "babel-eslint": "^10.0.1",
