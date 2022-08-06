@@ -35,7 +35,7 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",
