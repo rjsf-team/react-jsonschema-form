@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import isObject from "lodash/isObject";
 
 import { CustomValidatorOptionsType } from "./types";
 
@@ -41,7 +42,7 @@ export default function createAjvInstance(
   }
 
   // add more custom formats to validate against
-  if (customFormats instanceof Object) {
+  if (isObject(customFormats)) {
     Object.keys(customFormats).forEach((formatName) => {
       ajv.addFormat(formatName, customFormats[formatName]);
     });

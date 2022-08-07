@@ -1,3 +1,4 @@
+import union from "lodash/union";
 import { REQUIRED_KEY } from "./constants";
 import getSchemaType from "./getSchemaType";
 import isObject from "./isObject";
@@ -30,7 +31,7 @@ export default function mergeSchemas(
       Array.isArray(right)
     ) {
       // Don't include duplicate values when merging 'required' fields.
-      acc[key] = Array.from(new Set([...left, ...right]));
+      acc[key] = union(left, right);
     } else {
       acc[key] = right;
     }

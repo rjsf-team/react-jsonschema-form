@@ -1,5 +1,7 @@
 import React from "react";
 import classNames from "classnames";
+import isObject from "lodash/isObject";
+import isNumber from "lodash/isNumber";
 
 import { canExpand } from "@rjsf/utils";
 import Button from "antd/lib/button";
@@ -61,12 +63,12 @@ const ObjectFieldTemplate = ({
         ? 24
         : 12;
 
-    if (colSpan instanceof Object) {
+    if (isObject(colSpan)) {
       return (
         colSpan[widget] || colSpan[field] || colSpan[type] || defaultColSpan
       );
     }
-    if (typeof colSpan === "number") {
+    if (isNumber(colSpan)) {
       return colSpan;
     }
     return defaultColSpan;
