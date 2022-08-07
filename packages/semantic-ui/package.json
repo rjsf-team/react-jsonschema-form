@@ -16,6 +16,7 @@
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
+    "precommit": "lint-staged",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
   },
