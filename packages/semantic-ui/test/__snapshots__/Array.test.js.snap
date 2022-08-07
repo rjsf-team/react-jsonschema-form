@@ -478,6 +478,7 @@ exports[`array fields fixed array 1`] = `
                         onFocus={[Function]}
                         placeholder=""
                         required={true}
+                        step="any"
                         type="number"
                         value=""
                       />

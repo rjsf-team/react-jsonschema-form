@@ -1,10 +1,13 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
+import { getInputProps } from "@rjsf/utils";
 
-function URLWidget(props) {
+function BaseInputTemplate(props) {
   const {
     id,
+    placeholder,
     name,
     label,
     value,
@@ -19,10 +22,16 @@ function URLWidget(props) {
     schema,
     uiSchema,
     formContext,
+    type,
     registry,
     rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
+  const inputProps = getInputProps(schema, type, options);
+  const semanticProps = getSemanticProps({
+    uiSchema,
+    formContext,
+    options,
+  });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
@@ -30,11 +39,13 @@ function URLWidget(props) {
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+
   return (
     <Form.Input
       key={id}
       id={id}
-      type="url"
+      placeholder={placeholder}
+      {...inputProps}
       label={displayLabel ? label || schema.title : false}
       required={required}
       autoFocus={autofocus}
@@ -49,4 +60,4 @@ function URLWidget(props) {
     />
   );
 }
-export default URLWidget;
+export default BaseInputTemplate;
