@@ -41,18 +41,19 @@ const WrapIfAdditional = ({
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
+  const keyId = `${id}-key`;
 
   return (
-    <Row key={`${id}-key`}>
+    <Row key={keyId}>
       <Col xs={5}>
         <Form.Group>
-          <Form.Label>{keyLabel}</Form.Label>
+          <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>
           <Form.Control
             required={required}
             defaultValue={label}
             disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
+            id={keyId}
+            name={keyId}
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
           />
