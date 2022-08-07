@@ -1,10 +1,8 @@
 import React from "react";
-
 import Form from "react-bootstrap/Form";
+import { getInputProps, getUiOptions, WidgetProps } from "@rjsf/utils";
 
-import { getUiOptions, WidgetProps } from "@rjsf/utils";
-
-const TextWidget = ({
+const BaseInputTemplate = ({
   id,
   placeholder,
   required,
@@ -21,7 +19,10 @@ const TextWidget = ({
   schema,
   rawErrors = [],
   uiSchema,
+  children,
+  extraProps,
 }: WidgetProps) => {
+  const inputProps = { ...extraProps, ...getInputProps(schema, type, options) };
   const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
     target: { value },
@@ -32,14 +33,15 @@ const TextWidget = ({
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
-  const inputType =
-    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <Form.Group className="mb-0">
-      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
-        {uiOptions.title || schema.title || label}
+      <Form.Label
+        htmlFor={id}
+        className={rawErrors.length > 0 ? "text-danger" : ""}
+      >
+        {uiOptions.title || label || schema.title}
         {(label || uiOptions.title) && required ? "*" : null}
       </Form.Label>
       <Form.Control
@@ -51,12 +53,13 @@ const TextWidget = ({
         readOnly={readonly}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
         list={schema.examples ? `examples_${id}` : undefined}
-        type={inputType}
+        {...inputProps}
         value={value || value === 0 ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
       />
+      {children}
       {schema.examples ? (
         <datalist id={`examples_${id}`}>
           {(schema.examples as string[])
@@ -70,4 +73,4 @@ const TextWidget = ({
   );
 };
 
-export default TextWidget;
+export default BaseInputTemplate;
