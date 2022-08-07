@@ -1,5 +1,5 @@
 import React from "react";
-
+import { getInputProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 
@@ -22,7 +22,9 @@ const TextWidget = ({
   // required,
   schema,
   value,
+  type,
 }) => {
+  const inputProps = getInputProps(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext;
 
   const handleNumberChange = (nextValue) => onChange(nextValue);
@@ -34,7 +36,7 @@ const TextWidget = ({
 
   const handleFocus = ({ target }) => onFocus(id, target.value);
 
-  return schema.type === "number" || schema.type === "integer" ? (
+  return inputProps.type === "number" || inputProps.type === "integer" ? (
     <InputNumber
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
@@ -44,7 +46,7 @@ const TextWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={INPUT_STYLE}
-      type="number"
+      {...inputProps}
       value={value}
     />
   ) : (
@@ -57,7 +59,7 @@ const TextWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={INPUT_STYLE}
-      type={options.inputType || "text"}
+      {...inputProps}
       value={value}
     />
   );
