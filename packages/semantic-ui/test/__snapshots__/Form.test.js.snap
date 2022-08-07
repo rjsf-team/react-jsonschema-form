@@ -507,20 +507,26 @@ exports[`single fields format color 1`] = `
   <div
     className="grouped equal width fields"
   >
-    <input
-      autoFocus={false}
-      className="form-control"
-      disabled={false}
-      id="root"
-      label=""
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      placeholder=""
-      readOnly={false}
-      type="color"
-      value=""
-    />
+    <div
+      className="field"
+    >
+      <div
+        className="ui fluid input"
+      >
+        <input
+          aria-describedby={null}
+          autoFocus={false}
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          type="color"
+          value=""
+        />
+      </div>
+    </div>
   </div>
   <button
     className="ui primary button"
@@ -555,6 +561,7 @@ exports[`single fields format date 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="date"
           value=""
         />
@@ -594,6 +601,7 @@ exports[`single fields format datetime 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="datetime-local"
           value=""
         />
@@ -719,6 +727,7 @@ exports[`single fields number field 0 1`] = `
           onChange={[Function]}
           onFocus={[Function]}
           placeholder=""
+          step="any"
           type="number"
           value={0}
         />
@@ -759,6 +768,7 @@ exports[`single fields number field 1`] = `
           onChange={[Function]}
           onFocus={[Function]}
           placeholder=""
+          step="any"
           type="number"
           value=""
         />
@@ -798,6 +808,7 @@ exports[`single fields password field 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="password"
           value=""
         />
@@ -845,7 +856,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="hidden"
             disabled={false}
-            name="root-true"
+            name="root-radio-true"
             readOnly={true}
             tabIndex={0}
             type="radio"
@@ -875,7 +886,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="hidden"
             disabled={false}
-            name="root-false"
+            name="root-radio-false"
             readOnly={true}
             tabIndex={0}
             type="radio"
@@ -1089,6 +1100,7 @@ exports[`single fields string field format email 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="email"
           value=""
         />
@@ -1128,6 +1140,7 @@ exports[`single fields string field format uri 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="url"
           value=""
         />
@@ -1383,6 +1396,7 @@ exports[`single fields up/down field 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           type="number"
           value=""
         />

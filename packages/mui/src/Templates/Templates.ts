@@ -1,14 +1,14 @@
 import ArrayFieldTemplate from "../ArrayFieldTemplate";
+import BaseInputTemplate from "../BaseInputTemplate";
 import DescriptionField from "../DescriptionField";
 import ErrorList from "../ErrorList";
 import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import TitleField from "../TitleField";
-import TextWidget from "../TextWidget";
 
 export default {
   ArrayFieldTemplate,
-  BaseInputTemplate: TextWidget,
+  BaseInputTemplate,
   DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,
   FieldTemplate,

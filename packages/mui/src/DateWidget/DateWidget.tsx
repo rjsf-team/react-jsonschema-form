@@ -3,9 +3,9 @@ import { WidgetProps } from "@rjsf/utils";
 
 const DateWidget = (props: WidgetProps) => {
   const { registry } = props;
-  const { TextWidget } = registry.widgets;
+  const { BaseInputTemplate } = registry.templates;
   return (
-    <TextWidget
+    <BaseInputTemplate
       type="date"
       InputLabelProps={{
         shrink: true,
