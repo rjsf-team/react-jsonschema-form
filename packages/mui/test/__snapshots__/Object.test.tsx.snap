@@ -1615,6 +1615,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 onFocus={[Function]}
                 placeholder=""
                 required={false}
+                step="any"
                 type="number"
                 value=""
               />

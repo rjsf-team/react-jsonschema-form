@@ -1,8 +1,8 @@
 import React from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import { WidgetProps } from "@rjsf/utils";
+import { getInputProps, WidgetProps } from "@rjsf/utils";
 
-const TextWidget = ({
+const BaseInputTemplate = ({
   id,
   placeholder,
   required,
@@ -23,6 +23,10 @@ const TextWidget = ({
   registry,
   ...textFieldProps
 }: WidgetProps) => {
+  const inputProps = getInputProps(schema, type, options);
+  // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
+  const { step, min, max, ...rest } = inputProps;
+  const otherProps = { inputProps: { step, min, max }, ...rest };
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,8 +39,6 @@ const TextWidget = ({
 
   const { schemaUtils } = registry;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
-  const inputType =
-    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   return (
     <TextField
@@ -46,7 +48,7 @@ const TextWidget = ({
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
-      type={inputType as string}
+      {...otherProps}
       value={value || value === 0 ? value : ""}
       error={rawErrors.length > 0}
       onChange={_onChange}
@@ -57,4 +59,4 @@ const TextWidget = ({
   );
 };
 
-export default TextWidget;
+export default BaseInputTemplate;
