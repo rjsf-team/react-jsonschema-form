@@ -1,22 +1,20 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { schemaRequiresTrueValue } from "@rjsf/utils";
+import { WidgetProps } from "@rjsf/utils";
 
-function CheckboxWidget(props) {
-  const {
-    schema,
-    id,
-    value,
-    disabled,
-    readonly,
-    label,
-    autofocus,
-    onBlur,
-    onFocus,
-    onChange,
-    registry,
-  } = props;
-
+function CheckboxWidget<T = any, F = any>({
+  schema,
+  id,
+  value,
+  disabled,
+  readonly,
+  label,
+  autofocus = false,
+  onBlur,
+  onFocus,
+  onChange,
+  registry,
+}: WidgetProps<T, F>) {
   const { DescriptionFieldTemplate } = registry.templates;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -27,6 +25,7 @@ function CheckboxWidget(props) {
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
         <DescriptionFieldTemplate
+          id={id + "__description"}
           description={schema.description}
           registry={registry}
         />
@@ -52,18 +51,5 @@ function CheckboxWidget(props) {
 CheckboxWidget.defaultProps = {
   autofocus: false,
 };
-
-if (process.env.NODE_ENV !== "production") {
-  CheckboxWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    value: PropTypes.bool,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    onChange: PropTypes.func,
-  };
-}
 
 export default CheckboxWidget;

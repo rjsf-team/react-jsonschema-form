@@ -1,35 +1,56 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { ChangeEvent, Component } from "react";
 
-import { dataURItoBlob, shouldRender } from "@rjsf/utils";
+import { dataURItoBlob, shouldRender, WidgetProps } from "@rjsf/utils";
 
-function addNameToDataURL(dataURL, name) {
+function addNameToDataURL(dataURL: string, name: string) {
+  if (dataURL === null) {
+    return null;
+  }
   return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
 }
 
-function processFile(file) {
+type FileInfoType = {
+  dataURL?: string | null;
+  name: string;
+  size: number;
+  type: string;
+};
+
+function processFile(file: File): Promise<FileInfoType> {
   const { name, size, type } = file;
   return new Promise((resolve, reject) => {
     const reader = new window.FileReader();
     reader.onerror = reject;
     reader.onload = (event) => {
-      resolve({
-        dataURL: addNameToDataURL(event.target.result, name),
-        name,
-        size,
-        type,
-      });
+      if (typeof event.target?.result === "string") {
+        resolve({
+          dataURL: addNameToDataURL(event.target.result, name),
+          name,
+          size,
+          type,
+        });
+      } else {
+        resolve({
+          dataURL: null,
+          name,
+          size,
+          type,
+        });
+      }
     };
     reader.readAsDataURL(file);
   });
 }
 
-function processFiles(files) {
-  return Promise.all([].map.call(files, processFile));
+function processFiles(files: FileList) {
+  return Promise.all(Array.from(files).map(processFile));
 }
 
-function FilesInfo(props) {
-  const { filesInfo } = props;
+function FilesInfo({
+  filesInfo,
+}: {
+  filesInfo: { name: string; size: number; type: string }[];
+}) {
   if (filesInfo.length === 0) {
     return null;
   }
@@ -47,7 +68,7 @@ function FilesInfo(props) {
   );
 }
 
-function extractFileInfo(dataURLs) {
+function extractFileInfo(dataURLs: string[]) {
   return dataURLs
     .filter((dataURL) => typeof dataURL !== "undefined")
     .map((dataURL) => {
@@ -60,20 +81,31 @@ function extractFileInfo(dataURLs) {
     });
 }
 
-class FileWidget extends Component {
-  constructor(props) {
+type FileWidgetStateType = {
+  values: any[];
+  filesInfo: FileInfoType[];
+};
+
+class FileWidget<T, F> extends Component<
+  WidgetProps<T, F>,
+  FileWidgetStateType
+> {
+  constructor(props: WidgetProps<T, F>) {
     super(props);
     const { value } = props;
     const values = Array.isArray(value) ? value : [value];
     this.state = { values, filesInfo: extractFileInfo(values) };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: WidgetProps<T, F>, nextState: any): boolean {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onChange = (event) => {
+  onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { multiple, onChange } = this.props;
+    if (!event.target.files) {
+      return;
+    }
     processFiles(event.target.files).then((filesInfo) => {
       const state = {
         values: filesInfo.map((fileInfo) => fileInfo.dataURL),
@@ -90,13 +122,19 @@ class FileWidget extends Component {
   };
 
   render() {
-    const { multiple, id, readonly, disabled, autofocus, options } = this.props;
+    const {
+      multiple,
+      id,
+      readonly,
+      disabled,
+      autofocus = false,
+      options,
+    } = this.props;
     const { filesInfo } = this.state;
     return (
       <div>
         <p>
           <input
-            ref={(ref) => (this.inputRef = ref)}
             id={id}
             type="file"
             disabled={readonly || disabled}
@@ -104,28 +142,13 @@ class FileWidget extends Component {
             defaultValue=""
             autoFocus={autofocus}
             multiple={multiple}
-            accept={options.accept}
+            accept={options.accept ? String(options.accept) : undefined}
           />
         </p>
         <FilesInfo filesInfo={filesInfo} />
       </div>
     );
   }
-}
-
-FileWidget.defaultProps = {
-  autofocus: false,
-};
-
-if (process.env.NODE_ENV !== "production") {
-  FileWidget.propTypes = {
-    multiple: PropTypes.bool,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.arrayOf(PropTypes.string),
-    ]),
-    autofocus: PropTypes.bool,
-  };
 }
 
 export default FileWidget;

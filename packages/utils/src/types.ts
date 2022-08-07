@@ -172,6 +172,48 @@ export interface TemplatesType<T = any, F = any> {
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
 }
 
+/** The set of RJSF widgets that can be used by themes or users */
+export interface WidgetsType<T = any, F = any> {
+  /** A widget for rendering password fields */
+  PasswordWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering radio button fields */
+  RadioWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering number fields */
+  UpDownWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering number range fields */
+  RangeWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering dropdowns */
+  SelectWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering text fields */
+  TextWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering date fields */
+  DateWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering datetime fields */
+  DateTimeWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** Alternative widget for rendering date fields */
+  AltDateWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** Alternative widget for rendering datetime fields */
+  AltDateTimeWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering email fields */
+  EmailWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering url fields */
+  URLWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering text areas */
+  TextareaWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for hiding fields */
+  HiddenWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering color fields */
+  ColorWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering file properties */
+  FileWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering checkboxes */
+  CheckboxWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering checkbox groups */
+  CheckboxesWidget: React.ComponentType<WidgetProps<T, F>>;
+  /** A widget for rendering submit button */
+  SubmitButton: React.ComponentType<WidgetProps<T, F>>;
+}
+
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
  * context, schema utils and templates.
  */

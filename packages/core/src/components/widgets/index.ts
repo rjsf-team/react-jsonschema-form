@@ -17,7 +17,9 @@ import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 import SubmitButton from "./SubmitButton";
-export default {
+import { WidgetsType } from "@rjsf/utils";
+
+const widgets: WidgetsType = {
   PasswordWidget,
   RadioWidget,
   UpDownWidget,
@@ -38,3 +40,5 @@ export default {
   CheckboxesWidget,
   SubmitButton,
 };
+
+export default widgets;
