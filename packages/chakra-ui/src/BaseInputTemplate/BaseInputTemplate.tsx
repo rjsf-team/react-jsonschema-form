@@ -1,9 +1,9 @@
 import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import { getInputProps, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const TextWidget = (props: WidgetProps) => {
+const BaseInputTemplate = (props: WidgetProps) => {
   const {
     id,
     type,
@@ -23,6 +23,7 @@ const TextWidget = (props: WidgetProps) => {
     disabled,
     registry,
   } = props;
+  const inputProps = getInputProps(schema, type, options);
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
 
@@ -39,9 +40,6 @@ const TextWidget = (props: WidgetProps) => {
   const displayLabel =
     schemaUtils.getDisplayLabel(schema, uiSchema) &&
     (!!label || !!schema.title);
-
-  const inputType =
-    (type || schema.type) === "string" ? "text" : `${type || schema.type}`;
 
   return (
     <FormControl
@@ -66,7 +64,7 @@ const TextWidget = (props: WidgetProps) => {
         onFocus={_onFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        type={inputType}
+        {...inputProps}
         list={schema.examples ? `examples_${id}` : undefined}
       />
       {schema.examples ? (
@@ -82,4 +80,4 @@ const TextWidget = (props: WidgetProps) => {
   );
 };
 
-export default TextWidget;
+export default BaseInputTemplate;
