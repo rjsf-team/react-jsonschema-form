@@ -19,8 +19,7 @@
           "prepublishOnly",
           "build:dist",
           "publish-to-gh-pages"
-        ],
-        "accessToken": "ZmFmMjBmY2QtZTc1Mi00MGViLThkMGItODA5OTU4MDc5MWEyfHJlYWQtd3JpdGU="
+        ]
       }
     }
   },
