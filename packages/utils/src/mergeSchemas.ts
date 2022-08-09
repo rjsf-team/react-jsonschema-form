@@ -1,4 +1,5 @@
 import union from "lodash/union";
+
 import { REQUIRED_KEY } from "./constants";
 import getSchemaType from "./getSchemaType";
 import isObject from "./isObject";
