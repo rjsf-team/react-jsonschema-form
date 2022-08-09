@@ -97,7 +97,10 @@ class FileWidget<T, F> extends Component<
     this.state = { values, filesInfo: extractFileInfo(values) };
   }
 
-  shouldComponentUpdate(nextProps: WidgetProps<T, F>, nextState: any): boolean {
+  shouldComponentUpdate(
+    nextProps: WidgetProps<T, F>,
+    nextState: FileWidgetStateType
+  ): boolean {
     return shouldRender(this, nextProps, nextState);
   }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
- * the value to undefined when it is falsy during the `onChange` handling.
+ *  the value to undefined when it is falsy during the `onChange` handling.
  *
  * @param props - The `WidgetProps` for this component
  */

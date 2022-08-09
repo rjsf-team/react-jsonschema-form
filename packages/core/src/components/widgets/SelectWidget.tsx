@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 
 function getValue(
@@ -15,6 +15,11 @@ function getValue(
   }
 }
 
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function SelectWidget<T = any, F = any>({
   schema,
   id,
@@ -32,6 +37,28 @@ function SelectWidget<T = any, F = any>({
 }: WidgetProps<T, F>) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
+
+  const handleFocus = (event: FocusEvent<HTMLSelectElement>) => {
+    if (onFocus) {
+      const newValue = getValue(event, multiple);
+      return onFocus(id, processSelectValue(schema, newValue));
+    }
+  };
+
+  const handleBlur = (event: FocusEvent<HTMLSelectElement>) => {
+    if (onBlur) {
+      const newValue = getValue(event, multiple);
+      return onBlur(id, processSelectValue(schema, newValue));
+    }
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    if (onChange) {
+      const newValue = getValue(event, multiple);
+      return onChange(processSelectValue(schema, newValue));
+    }
+  };
+
   return (
     <select
       id={id}
@@ -41,24 +68,9 @@ function SelectWidget<T = any, F = any>({
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
-      onBlur={
-        onBlur &&
-        ((event) => {
-          const newValue = getValue(event, multiple);
-          onBlur(id, processSelectValue(schema, newValue));
-        })
-      }
-      onFocus={
-        onFocus &&
-        ((event) => {
-          const newValue = getValue(event, multiple);
-          onFocus(id, processSelectValue(schema, newValue));
-        })
-      }
-      onChange={(event) => {
-        const newValue = getValue(event, multiple);
-        onChange(processSelectValue(schema, newValue));
-      }}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      onChange={handleChange}
     >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>

@@ -1,3 +1,5 @@
+import { RegistryWidgetsType } from "@rjsf/utils";
+
 import AltDateWidget from "./AltDateWidget";
 import AltDateTimeWidget from "./AltDateTimeWidget";
 import CheckboxWidget from "./CheckboxWidget";
@@ -17,9 +19,8 @@ import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 import SubmitButton from "./SubmitButton";
-import { WidgetsType } from "@rjsf/utils";
 
-const widgets: WidgetsType = {
+const widgets: RegistryWidgetsType = {
   PasswordWidget,
   RadioWidget,
   UpDownWidget,

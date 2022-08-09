@@ -2,6 +2,11 @@ import React from "react";
 import { schemaRequiresTrueValue } from "@rjsf/utils";
 import { WidgetProps } from "@rjsf/utils";
 
+/** The `CheckBoxWidget` is a widget for rendering boolean properties.
+ *  It is typically used to represent a boolean.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function CheckboxWidget<T = any, F = any>({
   schema,
   id,
@@ -47,9 +52,5 @@ function CheckboxWidget<T = any, F = any>({
     </div>
   );
 }
-
-CheckboxWidget.defaultProps = {
-  autofocus: false,
-};
 
 export default CheckboxWidget;

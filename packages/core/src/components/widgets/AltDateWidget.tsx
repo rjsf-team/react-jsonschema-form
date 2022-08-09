@@ -53,6 +53,10 @@ function DateElement(props: any) {
   );
 }
 
+/** The `AltDateWidget` is an alternative widget for rendering date properties.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 class AltDateWidget<T = any, F = any> extends Component<
   WidgetProps<T, F>,
   DateObject
@@ -81,7 +85,10 @@ class AltDateWidget<T = any, F = any> extends Component<
     }
   }
 
-  shouldComponentUpdate(nextProps: WidgetProps<T, F>, nextState: any): boolean {
+  shouldComponentUpdate(
+    nextProps: WidgetProps<T, F>,
+    nextState: DateObject
+  ): boolean {
     return shouldRender(this, nextProps, nextState);
   }
 
@@ -100,7 +107,7 @@ class AltDateWidget<T = any, F = any> extends Component<
     );
   };
 
-  setNow = (event: MouseEvent) => {
+  setNow = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -110,7 +117,7 @@ class AltDateWidget<T = any, F = any> extends Component<
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
-  clear = (event: MouseEvent) => {
+  clear = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {

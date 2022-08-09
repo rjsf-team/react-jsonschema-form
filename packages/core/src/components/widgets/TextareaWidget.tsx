@@ -1,6 +1,10 @@
-import React from "react";
+import React, { FocusEvent } from "react";
 import { WidgetProps } from "@rjsf/utils";
 
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function TextareaWidget<T = any, F = any>({
   id,
   options = {},
@@ -14,11 +18,27 @@ function TextareaWidget<T = any, F = any>({
   onBlur,
   onFocus,
 }: WidgetProps<T, F>) {
-  const _onChange = ({
+  const handleChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     return onChange(value === "" ? options.emptyValue : value);
   };
+
+  const handleBlur = ({
+    target: { value },
+  }: FocusEvent<HTMLTextAreaElement>) => {
+    if (onBlur) {
+      return onBlur(id, value);
+    }
+  };
+  const handleFocus = ({
+    target: { value },
+  }: FocusEvent<HTMLTextAreaElement>) => {
+    if (onFocus) {
+      return onFocus(id, value);
+    }
+  };
+
   return (
     <textarea
       id={id}
@@ -30,9 +50,9 @@ function TextareaWidget<T = any, F = any>({
       readOnly={readonly}
       autoFocus={autofocus}
       rows={options.rows}
-      onBlur={onBlur && ((event) => onBlur(id, event.target.value))}
-      onFocus={onFocus && ((event) => onFocus(id, event.target.value))}
-      onChange={_onChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      onChange={handleChange}
     />
   );
 }

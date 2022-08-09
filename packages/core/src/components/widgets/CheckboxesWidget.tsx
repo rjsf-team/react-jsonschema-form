@@ -1,5 +1,5 @@
+import React, { ChangeEvent } from "react";
 import { WidgetProps } from "@rjsf/utils";
-import React from "react";
 
 function selectValue(value: any, selected: any[], all: any[]) {
   const at = all.indexOf(value);
@@ -13,6 +13,11 @@ function deselectValue(value: any, selected: any[]) {
   return selected.filter((v) => v !== value);
 }
 
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function CheckboxesWidget<T = any, F = any>({
   id,
   disabled,
@@ -31,6 +36,16 @@ function CheckboxesWidget<T = any, F = any>({
             enumDisabled && enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
+
+          const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+            const all = enumOptions.map(({ value }) => value);
+            if (event.target.checked) {
+              onChange(selectValue(option.value, value, all));
+            } else {
+              onChange(deselectValue(option.value, value));
+            }
+          };
+
           const checkbox = (
             <span>
               <input
@@ -39,14 +54,7 @@ function CheckboxesWidget<T = any, F = any>({
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={(event) => {
-                  const all = enumOptions.map(({ value }) => value);
-                  if (event.target.checked) {
-                    onChange(selectValue(option.value, value, all));
-                  } else {
-                    onChange(deselectValue(option.value, value));
-                  }
-                }}
+                onChange={handleChange}
               />
               <span>{option.label}</span>
             </span>

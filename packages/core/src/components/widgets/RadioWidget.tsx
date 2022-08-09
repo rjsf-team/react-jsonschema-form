@@ -1,6 +1,11 @@
-import React from "react";
+import React, { FocusEvent } from "react";
 import { WidgetProps } from "@rjsf/utils";
 
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function RadioWidget<T = any, F = any>({
   options,
   value,
@@ -27,21 +32,39 @@ function RadioWidget<T = any, F = any>({
             enumDisabled && enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
+
+          const handleChange = () => {
+            if (onChange) {
+              return onChange(option.value);
+            }
+          };
+
+          const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+            if (onBlur) {
+              return onBlur(id, event.target.value);
+            }
+          };
+
+          const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+            if (onFocus) {
+              return onFocus(id, event.target.value);
+            }
+          };
+
           const radio = (
             <span>
               <input
                 type="radio"
+                id={`${id}_${i}`}
                 checked={checked}
                 name={name}
                 required={required}
                 value={option.value}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && i === 0}
-                onChange={(_) => onChange(option.value)}
-                onBlur={onBlur && ((event) => onBlur(id, event.target.value))}
-                onFocus={
-                  onFocus && ((event) => onFocus(id, event.target.value))
-                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
               />
               <span>{option.label}</span>
             </span>
