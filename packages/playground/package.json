@@ -54,7 +54,7 @@
     "core-js": "^3.19.2",
     "dayjs": "^1.8.28",
     "framer-motion": "^5.5.5",
-    "json-schema-merge-allof": "^0.6.0",
+    "json-schema-merge-allof": "^0.8.1",
     "jss": "^10.0.3",
     "less": "^3.11.3",
     "less-loader": "^5.0.0",
