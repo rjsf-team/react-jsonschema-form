@@ -1,7 +1,5 @@
-import React from "react";
-import { asNumber } from "@rjsf/utils";
-
-import * as types from "../../types";
+import React, { Component } from "react";
+import { asNumber, FieldProps } from "@rjsf/utils";
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -14,6 +12,10 @@ const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
 // functionality, but it is fairly complex compared to simply defining two
 // different matchers.
 const trailingCharMatcher = /[0.]0*$/;
+
+type NumberFieldState = {
+  lastValue: any;
+};
 
 /**
  * The NumberField class has some special handling for dealing with trailing
@@ -32,8 +34,15 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-class NumberField extends React.Component {
-  constructor(props) {
+class NumberField<T = any, F = any> extends Component<
+  FieldProps<T, F>,
+  NumberFieldState
+> {
+  /** Constructs the `NumberField` from the `props`
+   *
+   * @param props - The `FieldProps` for this component
+   */
+  constructor(props: FieldProps<T, F>) {
     super(props);
 
     this.state = {
@@ -41,7 +50,12 @@ class NumberField extends React.Component {
     };
   }
 
-  handleChange = (value) => {
+  /** Handle the change from the `StringField` to properly convert to a number
+   *
+   * @param value - The current value for the change occurring
+   */
+  handleChange = (value: any) => {
+    const { onChange } = this.props;
     // Cache the original value in component state
     this.setState({ lastValue: value });
 
@@ -54,14 +68,16 @@ class NumberField extends React.Component {
     // Check that the value is a string (this can happen if the widget used is a
     // <select>, due to an enum declaration etc) then, if the value ends in a
     // trailing decimal point or multiple zeroes, strip the trailing values
-    let processed =
+    const processed =
       typeof value === "string" && value.match(trailingCharMatcherWithPrefix)
         ? asNumber(value.replace(trailingCharMatcher, ""))
         : asNumber(value);
 
-    this.props.onChange(processed);
+    onChange(processed as unknown as T);
   };
 
+  /** Renders the `NumberField` dealing with resolving the `lastValue` and current `value`
+   */
   render() {
     const { StringField } = this.props.registry.fields;
     const { formData, ...props } = this.props;
@@ -78,7 +94,7 @@ class NumberField extends React.Component {
       // If the cached "lastValue" is a match, use that instead of the formData
       // value to prevent the input value from changing in the UI
       if (lastValue.match(re)) {
-        value = lastValue;
+        value = lastValue as unknown as T; // Need to cast
       }
     }
 
@@ -87,13 +103,5 @@ class NumberField extends React.Component {
     );
   }
 }
-
-if (process.env.NODE_ENV !== "production") {
-  NumberField.propTypes = types.fieldProps;
-}
-
-NumberField.defaultProps = {
-  uiSchema: {},
-};
 
 export default NumberField;

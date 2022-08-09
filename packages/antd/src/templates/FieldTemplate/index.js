@@ -14,7 +14,6 @@ const FieldTemplate = ({
   disabled,
   displayLabel,
   // errors,
-  // fields,
   formContext,
   help,
   hidden,

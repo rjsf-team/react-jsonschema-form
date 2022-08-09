@@ -1,5 +1,5 @@
 import toConstant from "./toConstant";
-import { RJSFSchema } from "./types";
+import { RJSFSchema, EnumOptionsType } from "./types";
 
 /** Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned. The
  * labels for the options will be extracted from the non-standard `enumNames` if it exists othewise will be the same as
@@ -9,15 +9,12 @@ import { RJSFSchema } from "./types";
  * @param schema - The schema from which to extract the options list
  * @returns - The list of options from the schema
  */
-export default function optionsList(schema: RJSFSchema) {
+export default function optionsList(
+  schema: RJSFSchema
+): EnumOptionsType[] | undefined {
   if (schema.enum) {
-    // enumNames is not officially on the RJSFSchema, so hack them on here
-    const schemaHack: { enumNames?: string[] } = schema as {
-      enumNames?: string[];
-    };
     return schema.enum.map((value, i) => {
-      const label =
-        (schemaHack.enumNames && schemaHack.enumNames[i]) || String(value);
+      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
       return { label, value };
     });
   }

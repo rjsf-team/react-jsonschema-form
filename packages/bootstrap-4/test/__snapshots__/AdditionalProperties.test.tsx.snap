@@ -82,6 +82,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                     value="should appear"
                   />
                 </div>
+                
               </div>
             </div>
             <div

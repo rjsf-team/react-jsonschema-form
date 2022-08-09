@@ -10,7 +10,7 @@ import { UIOptionsType, UiSchema } from "./types";
  */
 export default function getUiOptions<T = any, F = any>(
   uiSchema: UiSchema<T, F> = {}
-): UIOptionsType {
+): UIOptionsType<T, F> {
   return Object.keys(uiSchema)
     .filter((key) => key.indexOf("ui:") === 0)
     .reduce((options, key) => {

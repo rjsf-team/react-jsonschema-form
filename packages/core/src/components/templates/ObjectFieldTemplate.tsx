@@ -31,7 +31,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
     uiSchema,
   } = props;
   const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
-  const options = getUiOptions(uiSchema);
+  const options = getUiOptions<T, F>(uiSchema);
   return (
     <fieldset id={idSchema.$id}>
       {(options.title || title) && (
@@ -43,10 +43,10 @@ export default function ObjectFieldTemplate<T = any, F = any>(
           registry={registry}
         />
       )}
-      {description && (
+      {(options.description || description) && (
         <DescriptionFieldTemplate
           id={`${idSchema.$id}__description`}
-          description={description}
+          description={options.description || description!}
           registry={registry}
         />
       )}

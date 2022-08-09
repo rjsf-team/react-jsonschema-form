@@ -1,9 +1,19 @@
 import React from "react";
-import { getWidget, getUiOptions, optionsList } from "@rjsf/utils";
+import {
+  getWidget,
+  getUiOptions,
+  optionsList,
+  FieldProps,
+  RJSFSchemaDefinition,
+} from "@rjsf/utils";
+import isObject from "lodash/isObject";
 
-import * as types from "../../types";
-
-function BooleanField(props) {
+/** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
+ * two boolean values based on the various alternatives in the schema.
+ *
+ * @param props - The `FieldProps` for this template
+ */
+function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
   const {
     schema,
     name,
@@ -22,17 +32,24 @@ function BooleanField(props) {
   } = props;
   const { title } = schema;
   const { widgets, formContext } = registry;
-  const { widget = "checkbox", ...options } = getUiOptions(uiSchema);
+  const { widget = "checkbox", ...options } = getUiOptions<T, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
   let enumOptions;
 
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList({
-      oneOf: schema.oneOf.map((option) => ({
-        ...option,
-        title: option.title || (option.const === true ? "Yes" : "No"),
-      })),
+      oneOf: schema.oneOf
+        .map((option: RJSFSchemaDefinition) => {
+          if (isObject(option)) {
+            return {
+              ...option,
+              title: option.title || (option.const === true ? "Yes" : "No"),
+            };
+          }
+          return undefined;
+        })
+        .filter((o) => o) as RJSFSchemaDefinition[], // cast away the error that typescript can't grok is fixed
     });
   } else {
     enumOptions = optionsList({
@@ -66,16 +83,5 @@ function BooleanField(props) {
     />
   );
 }
-
-if (process.env.NODE_ENV !== "production") {
-  BooleanField.propTypes = types.fieldProps;
-}
-
-BooleanField.defaultProps = {
-  uiSchema: {},
-  disabled: false,
-  readonly: false,
-  autofocus: false,
-};
 
 export default BooleanField;

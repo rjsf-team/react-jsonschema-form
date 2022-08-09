@@ -1,7 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { UnsupportedFieldProps } from "@rjsf/utils";
 
-function UnsupportedField({ schema, idSchema, reason }) {
+/** The `UnsupportedField` component is use to render a field in the schema is one that is not supported by
+ * react-jsonschema-form.
+ *
+ * @param props - The `FieldProps` for this template
+ */
+function UnsupportedField<T = any, F = any>(
+  props: UnsupportedFieldProps<T, F>
+) {
+  const { schema, idSchema, reason } = props;
   return (
     <div className="unsupported-field">
       <p>
@@ -16,14 +24,6 @@ function UnsupportedField({ schema, idSchema, reason }) {
       {schema && <pre>{JSON.stringify(schema, null, 2)}</pre>}
     </div>
   );
-}
-
-if (process.env.NODE_ENV !== "production") {
-  UnsupportedField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    idSchema: PropTypes.object,
-    reason: PropTypes.string,
-  };
 }
 
 export default UnsupportedField;

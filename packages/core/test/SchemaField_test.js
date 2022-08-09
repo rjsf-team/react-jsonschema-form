@@ -70,10 +70,10 @@ describe("SchemaField", () => {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
-      const fields = { UnsupportedField: CustomUnsupportedField };
+      const templates = { UnsupportedFieldTemplate: CustomUnsupportedField };
       const { node } = createFormComponent({
         schema: { type: "invalid" },
-        fields,
+        templates,
       });
 
       expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
@@ -203,7 +203,7 @@ describe("SchemaField", () => {
       expect(node.querySelectorAll("#custom")).to.have.length.of(1);
     });
 
-    it("should not pass classNames to child component", () => {
+    it("should not pass ui:classNames to child component", () => {
       const CustomSchemaField = function (props) {
         return (
           <SchemaField
@@ -218,7 +218,32 @@ describe("SchemaField", () => {
       };
       const uiSchema = {
         "ui:field": "customSchemaField",
-        classNames: "foo",
+        "ui:classNames": "foo",
+      };
+      const fields = { customSchemaField: CustomSchemaField };
+
+      const { node } = createFormComponent({ schema, uiSchema, fields });
+
+      expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+    });
+    it("should not pass ui:options.classNames to child component", () => {
+      const CustomSchemaField = function (props) {
+        return (
+          <SchemaField
+            {...props}
+            uiSchema={{ ...props.uiSchema, "ui:field": undefined }}
+          />
+        );
+      };
+
+      const schema = {
+        type: "string",
+      };
+      const uiSchema = {
+        "ui:field": "customSchemaField",
+        "ui:options": {
+          classNames: "foo",
+        },
       };
       const fields = { customSchemaField: CustomSchemaField };
 

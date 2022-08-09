@@ -132,6 +132,7 @@ exports[`array fields array icons 1`] = `
                         value="a"
                       />
                     </div>
+                    
                   </div>
                 </div>
                 <div
@@ -290,6 +291,7 @@ exports[`array fields array icons 1`] = `
                         value="b"
                       />
                     </div>
+                    
                   </div>
                 </div>
                 <div
@@ -503,7 +505,6 @@ exports[`array fields checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         readOnly={false}
-        required={false}
         value={Array []}
       >
         <option
@@ -529,6 +530,7 @@ exports[`array fields checkboxes 1`] = `
         </option>
       </select>
     </div>
+    
   </div>
   <div>
     <button
@@ -593,6 +595,7 @@ exports[`array fields fixed array 1`] = `
                         value=""
                       />
                     </div>
+                    
                   </div>
                 </div>
                 <div
@@ -633,6 +636,7 @@ exports[`array fields fixed array 1`] = `
                         value=""
                       />
                     </div>
+                    
                   </div>
                 </div>
                 <div

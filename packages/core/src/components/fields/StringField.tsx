@@ -1,9 +1,17 @@
 import React from "react";
-import { getWidget, getUiOptions, optionsList, hasWidget } from "@rjsf/utils";
+import {
+  getWidget,
+  getUiOptions,
+  optionsList,
+  hasWidget,
+  FieldProps,
+} from "@rjsf/utils";
 
-import * as types from "../../types";
-
-function StringField(props) {
+/** The `StringField` component is used to render a schema field that represents a string type
+ *
+ * @param props - The `FieldProps` for this template
+ */
+function StringField<T = any, F = any>(props: FieldProps<T, F>) {
   const {
     schema,
     name,
@@ -11,9 +19,9 @@ function StringField(props) {
     idSchema,
     formData,
     required,
-    disabled,
-    readonly,
-    autofocus,
+    disabled = false,
+    readonly = false,
+    autofocus = false,
     onChange,
     onBlur,
     onFocus,
@@ -22,17 +30,19 @@ function StringField(props) {
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils } = registry;
-  const enumOptions = schemaUtils.isSelect(schema) && optionsList(schema);
+  const enumOptions = schemaUtils.isSelect(schema)
+    ? optionsList(schema)
+    : undefined;
   let defaultWidget = enumOptions ? "select" : "text";
-  if (format && hasWidget(schema, format, widgets)) {
+  if (format && hasWidget<T, F>(schema, format, widgets)) {
     defaultWidget = format;
   }
   const {
     widget = defaultWidget,
     placeholder = "",
     ...options
-  } = getUiOptions(uiSchema);
-  const Widget = getWidget(schema, widget, widgets);
+  } = getUiOptions<T, F>(uiSchema);
+  const Widget = getWidget<T, F>(schema, widget, widgets);
   return (
     <Widget
       options={{ ...options, enumOptions }}
@@ -55,16 +65,5 @@ function StringField(props) {
     />
   );
 }
-
-if (process.env.NODE_ENV !== "production") {
-  StringField.propTypes = types.fieldProps;
-}
-
-StringField.defaultProps = {
-  uiSchema: {},
-  disabled: false,
-  readonly: false,
-  autofocus: false,
-};
 
 export default StringField;

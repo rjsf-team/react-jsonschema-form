@@ -191,7 +191,9 @@ exports[`object fields additionalProperties 1`] = `
                       >
                         <span
                           id="root_foo__description"
-                        />
+                        >
+                          
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -408,7 +410,9 @@ exports[`object fields object 1`] = `
                   >
                     <span
                       id="root_a__description"
-                    />
+                    >
+                      
+                    </span>
                   </div>
                 </div>
               </div>
@@ -571,7 +575,9 @@ exports[`object fields object 1`] = `
                   >
                     <span
                       id="root_b__description"
-                    />
+                    >
+                      
+                    </span>
                   </div>
                 </div>
               </div>
