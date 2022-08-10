@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { isObject } from "lodash";
+import isObject from "lodash/isObject";
 
 import { CustomValidatorOptionsType } from "./types";
 
