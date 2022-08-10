@@ -1,7 +1,6 @@
 import AddButton from "../AddButton";
 import IconButton from "../IconButton";
 import React, { Component } from "react";
-import includes from "lodash/includes";
 import {
   getWidget,
   getUiOptions,
@@ -249,7 +248,7 @@ class ArrayField extends Component {
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
       // future-proof to check for requirement against these.
-      return !includes(itemSchema.type, "null");
+      return !itemSchema.type.includes("null");
     }
     // All non-null array item types are inherently required by design
     return itemSchema.type !== "null";
