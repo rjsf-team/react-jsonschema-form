@@ -15,7 +15,7 @@ const BTN_STYLE = {
   width: "calc(100% / 3)",
 };
 
-const Index = ({
+const ArrayFieldItemTemplate = ({
   children,
   disabled,
   formContext,
@@ -74,8 +74,8 @@ const Index = ({
   );
 };
 
-Index.defaultProps = {
+ArrayFieldItemTemplate.defaultProps = {
   formContext: {},
 };
 
-export default Index;
+export default ArrayFieldItemTemplate;
