@@ -1,16 +1,20 @@
 import React from "react";
-import { Box, Grid, GridItem } from "@chakra-ui/react";
 import {
   getUiOptions,
-  ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
+  ArrayFieldTemplateItemType,
 } from "@rjsf/utils";
 
 import AddButton from "../AddButton";
 
-const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+/** The `ArrayFieldTemplate` component is the template used to render all items in an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
+export default function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   const {
     canAdd,
+    className,
     disabled,
     idSchema,
     uiSchema,
@@ -29,12 +33,12 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
   return (
-    <Box>
+    <fieldset className={className} id={idSchema.$id}>
       <ArrayFieldTitleTemplate
         idSchema={idSchema}
         title={uiOptions.title || title}
-        uiSchema={uiSchema}
         required={required}
+        uiSchema={uiSchema}
         registry={registry}
       />
       {(uiOptions.description || schema.description) && (
@@ -44,27 +48,20 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
           registry={registry}
         />
       )}
-      <Grid key={`array-item-list-${idSchema.$id}`}>
-        <GridItem>
-          {items.length > 0 &&
-            items.map((itemProps: ArrayFieldTemplateItemType) => (
-              <ArrayFieldItemTemplate {...itemProps} />
-            ))}
-        </GridItem>
-        {canAdd && (
-          <GridItem justifySelf={"flex-end"}>
-            <Box mt={2}>
-              <AddButton
-                className="array-item-add"
-                onClick={onAddClick}
-                disabled={disabled || readonly}
-              />
-            </Box>
-          </GridItem>
-        )}
-      </Grid>
-    </Box>
-  );
-};
+      <div className="row array-item-list">
+        {items &&
+          items.map((itemProps: ArrayFieldTemplateItemType) => (
+            <ArrayFieldItemTemplate {...itemProps} />
+          ))}
+      </div>
 
-export default ArrayFieldTemplate;
+      {canAdd && (
+        <AddButton
+          className="array-item-add"
+          onClick={onAddClick}
+          disabled={disabled || readonly}
+        />
+      )}
+    </fieldset>
+  );
+}
