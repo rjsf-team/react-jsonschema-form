@@ -15,7 +15,7 @@ const BTN_STYLE = {
   width: "calc(100% / 3)",
 };
 
-const ArrayFieldTemplateItem = ({
+const ArrayFieldItemTemplate = ({
   children,
   disabled,
   formContext,
@@ -74,8 +74,8 @@ const ArrayFieldTemplateItem = ({
   );
 };
 
-ArrayFieldTemplateItem.defaultProps = {
+ArrayFieldItemTemplate.defaultProps = {
   formContext: {},
 };
 
-export default ArrayFieldTemplateItem;
+export default ArrayFieldItemTemplate;
