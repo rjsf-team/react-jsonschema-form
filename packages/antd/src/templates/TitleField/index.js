@@ -1,4 +1,3 @@
-import React from "react";
 import classNames from "classnames";
 
 import { withConfigConsumer } from "antd/lib/config-provider/context";

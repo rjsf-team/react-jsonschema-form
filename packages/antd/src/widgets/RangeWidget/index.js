@@ -1,6 +1,4 @@
 /* eslint-disable no-else-return */
-import React from "react";
-
 import { rangeSpec } from "@rjsf/utils";
 import Slider from "antd/lib/slider";
 

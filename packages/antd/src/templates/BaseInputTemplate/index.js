@@ -1,4 +1,3 @@
-import React from "react";
 import { getInputProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";

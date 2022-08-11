@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
