@@ -1,5 +1,4 @@
 import get from "lodash/get";
-import map from "lodash/map";
 
 import isObject from "./isObject";
 
@@ -23,7 +22,7 @@ export default function mergeDefaultsWithFormData<T = any>(
 ): T {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
-    const mapped = map(formData, (value, idx) => {
+    const mapped = formData.map((value, idx) => {
       if (defaultsArray[idx]) {
         return mergeDefaultsWithFormData<any>(defaultsArray[idx], value);
       }

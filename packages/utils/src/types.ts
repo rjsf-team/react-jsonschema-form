@@ -157,7 +157,15 @@ export type RegistryWidgetsType<T = any, F = any> = {
 /** The set of RJSF templates that can be overridden by themes or users */
 export interface TemplatesType<T = any, F = any> {
   /** The template to use while rendering normal or fixed array fields */
-  ArrayFieldTemplate?: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  ArrayFieldTemplate: React.ComponentType<ArrayFieldTemplateProps<T, F>>;
+  /** The template to use while rendering the description for an array field */
+  ArrayFieldDescriptionTemplate: React.ComponentType<
+    ArrayFieldDescriptionProps<T, F>
+  >;
+  /** The template to use while rendering an item in an array field */
+  ArrayFieldItemTemplate: React.ComponentType<ArrayFieldTemplateItemType>;
+  /** The template to use while rendering the title for an array field */
+  ArrayFieldTitleTemplate: React.ComponentType<ArrayFieldTitleProps<T, F>>;
   /** The template to use while rendering the standard html input */
   BaseInputTemplate: React.ComponentType<WidgetProps<T, F>>;
   /** The template to use for rendering the description of a field */
@@ -325,6 +333,24 @@ export type DescriptionFieldProps<T = any, F = any> = {
   description: string | React.ReactElement;
   /** The `registry` object */
   registry: Registry<T, F>;
+};
+
+/** The properties that are passed to a `ArrayFieldTitle` implementation */
+export type ArrayFieldTitleProps<T = any, F = any> = Pick<
+  TitleFieldProps<T, F>,
+  "title" | "uiSchema" | "required" | "registry"
+> & {
+  /** The idSchema of the field in the hierarchy */
+  idSchema: IdSchema<T>;
+};
+
+/** The properties that are passed to a `ArrayFieldDescription` implementation */
+export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
+  DescriptionFieldProps<T, F>,
+  "description" | "registry"
+> & {
+  /** The idSchema of the field in the hierarchy */
+  idSchema: IdSchema<T>;
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */

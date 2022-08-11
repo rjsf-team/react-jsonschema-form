@@ -1,5 +1,3 @@
-import isEmpty from "lodash/isEmpty";
-
 import { ValidationData } from "../../src";
 import { TestValidatorParams, TestValidatorType } from "../schema/types";
 
@@ -16,15 +14,20 @@ export default function getTestValidator<T = any>({
     _isValid: isValid,
     validator: {
       validateFormData: jest.fn().mockImplementation(() => {
-        // console.warn('validateFormData', JSON.stringify(args));
-        if (!isEmpty(testValidator._data)) {
+        if (
+          Array.isArray(testValidator._data) &&
+          testValidator._data.length > 0
+        ) {
           return testValidator._data.shift();
         }
         return { errors: [], errorSchema: {} };
       }),
       isValid: jest.fn().mockImplementation(() => {
         // console.warn('isValid',  JSON.stringify(args));
-        if (!isEmpty(testValidator._isValid)) {
+        if (
+          Array.isArray(testValidator._isValid) &&
+          testValidator._isValid.length > 0
+        ) {
           return testValidator._isValid.shift();
         }
         return true;

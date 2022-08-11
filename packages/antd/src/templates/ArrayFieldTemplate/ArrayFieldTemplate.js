@@ -7,13 +7,11 @@ import Row from "antd/lib/row";
 import { withConfigConsumer } from "antd/lib/config-provider/context";
 import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
-import ArrayFieldTemplateItem from "./ArrayFieldTemplateItem";
-
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: "8px",
 };
 
-const NormalArrayFieldTemplate = ({
+const ArrayFieldTemplate = ({
   canAdd,
   className,
   disabled,
@@ -30,7 +28,11 @@ const NormalArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
+  const {
+    ArrayFieldDescriptionTemplate,
+    ArrayFieldItemTemplate,
+    ArrayFieldTitleTemplate,
+  } = registry.templates;
   const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -45,9 +47,8 @@ const NormalArrayFieldTemplate = ({
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>
-            <TitleFieldTemplate
-              id={`${idSchema.$id}__title`}
-              key={`array-field-title-${idSchema.$id}`}
+            <ArrayFieldTitleTemplate
+              idSchema={idSchema}
               required={required}
               title={uiSchema["ui:title"] || title}
               uiSchema={uiSchema}
@@ -58,10 +59,9 @@ const NormalArrayFieldTemplate = ({
 
         {(uiSchema["ui:description"] || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
-            <DescriptionFieldTemplate
+            <ArrayFieldDescriptionTemplate
               description={uiSchema["ui:description"] || schema.description}
-              id={`${idSchema.$id}__description`}
-              key={`array-field-description-${idSchema.$id}`}
+              idSchema={idSchema}
               registry={registry}
             />
           </Col>
@@ -70,7 +70,7 @@ const NormalArrayFieldTemplate = ({
         <Col className="row array-item-list" span={24}>
           {items &&
             items.map((itemProps) => (
-              <ArrayFieldTemplateItem
+              <ArrayFieldItemTemplate
                 {...itemProps}
                 formContext={formContext}
               />
@@ -99,6 +99,4 @@ const NormalArrayFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: "form" })(
-  NormalArrayFieldTemplate
-);
+export default withConfigConsumer({ prefixCls: "form" })(ArrayFieldTemplate);

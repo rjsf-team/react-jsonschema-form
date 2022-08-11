@@ -1,6 +1,7 @@
 import { withTheme, getDefaultRegistry } from "@rjsf/core";
 
-import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
+import ArrayFieldItemTemplate from "./templates/ArrayFieldItemTemplate";
+import ArrayFieldTemplate from "./templates/ArrayFieldTemplate/ArrayFieldTemplate";
 import BaseInputTemplate from "./templates/BaseInputTemplate";
 import DescriptionField from "./templates/DescriptionField";
 import ErrorList from "./templates/ErrorList";
@@ -44,6 +45,7 @@ export const Theme = {
   fields,
   templates: {
     ...templates,
+    ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     BaseInputTemplate,
     DescriptionFieldTemplate: DescriptionField,
