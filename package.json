@@ -26,7 +26,8 @@
     "trailingComma": "es5",
     "useTabs": false,
     "semi": true,
-    "tabWidth": 2
+    "tabWidth": 2,
+    "endOfLine": "lf"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
