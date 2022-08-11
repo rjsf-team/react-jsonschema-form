@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import renderer from "react-test-renderer";
 import { UiSchema, RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
