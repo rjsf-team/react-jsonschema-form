@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import React, { Component, createRef } from "react";
+import { Component, createRef } from "react";
 
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import deepEquals from "./deepEquals";
 
 /** Determines whether the given `component` should be rerendered by comparing its current set of props and state

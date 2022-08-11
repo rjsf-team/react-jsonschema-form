@@ -1,5 +1,4 @@
 /* Utils for tests. */
-
 import React from "react";
 import sinon from "sinon";
 import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";

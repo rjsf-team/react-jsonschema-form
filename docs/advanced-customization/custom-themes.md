@@ -5,7 +5,7 @@ The `withTheme` component provides an easy way to extend the functionality of re
 ## Usage
 
 ```jsx
-import React, { Component } from "react";
+import { Component } from "react";
 import validator from "@rjsf/validator-ajv6";
 import { withTheme } from "@rjsf/core";
 

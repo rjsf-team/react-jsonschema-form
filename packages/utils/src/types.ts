@@ -1,4 +1,3 @@
-import React from "react";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
