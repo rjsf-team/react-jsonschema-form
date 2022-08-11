@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";

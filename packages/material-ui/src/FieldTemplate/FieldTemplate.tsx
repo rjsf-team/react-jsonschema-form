@@ -1,4 +1,3 @@
-import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import List from "@material-ui/core/List";
