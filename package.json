@@ -17,21 +17,11 @@
     "pre-commit:husky": "lerna run --concurrency 1 --stream precommit",
     "prepare": "husky install"
   },
-  "dependencies": {
-    "lerna": "^4.0.0",
-    "prettier": "^2.7.1"
-  },
-  "prettier": {
-    "bracketSameLine": false,
-    "trailingComma": "es5",
-    "useTabs": false,
-    "semi": true,
-    "tabWidth": 2
-  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.2",
+    "@nrwl/nx-cloud": "latest",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "dts-cli": "^1.5.2",
@@ -41,7 +31,11 @@
     "eslint-plugin-react": "^7.30.1",
     "husky": "^8.0.1",
     "jest-environment-jsdom": "^27.5.1",
+    "lerna": "^5.3.0",
     "lint-staged": "^13.0.3",
+    "nx": "14.5.2",
+    "prettier": "^2.7.1",
+    "source-map-loader": "^1.1.2",
     "ts-jest": "^27.1.5",
     "ts-loader": "^8.4.0",
     "tslib": "^2.4.0",
