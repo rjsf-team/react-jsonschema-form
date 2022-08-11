@@ -61,7 +61,10 @@ Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
 To use the default Bootstrap 3 theme, add a Bootstrap 3 CSS tag to your HTML page:
 
 ```html
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+/>
 ```
 
 ### Installation
@@ -73,7 +76,7 @@ npm install @rjsf/core
 ## Usage
 
 ```javascript
-import Form from '@rjsf/core';
+import Form from "@rjsf/core";
 ```
 
 <!-- ROADMAP -->

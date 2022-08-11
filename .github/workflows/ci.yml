@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master, rjsf-v5 ]
+    branches: [master, rjsf-v5]
   pull_request:
-    branches: [ master, rjsf-v5 ]
+    branches: [master, rjsf-v5]
 
 jobs:
   build:
@@ -14,30 +14,30 @@ jobs:
         node-version: [14.x, 16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run lint
-    - run: npm run cs-check
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run cs-check
 
-    - name: Build with Netlify badge
-      if: github.ref != 'refs/heads/master'
-      run: npm run build
-      env:
-        SHOW_NETLIFY_BADGE: true
-    - name: Build
-      if: github.ref == 'refs/heads/master'
-      run: npm run build
+      - name: Build with Netlify badge
+        if: github.ref != 'refs/heads/master'
+        run: npm run build
+        env:
+          SHOW_NETLIFY_BADGE: true
+      - name: Build
+        if: github.ref == 'refs/heads/master'
+        run: npm run build
 
-    - if: matrix.node-version == '16.x'
-      uses: actions/upload-artifact@v2
-      with:
-        name: dist
-        path: packages/playground/build
-    - run: npm test
+      - if: matrix.node-version == '16.x'
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: packages/playground/build
+      - run: npm test
 
   deploy_preview:
     runs-on: ubuntu-latest
@@ -101,10 +101,10 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.6
-    - run: pip install -r requirements.docs.txt
-    - run: mkdocs build --clean
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.6
+      - run: pip install -r requirements.docs.txt
+      - run: mkdocs build --clean

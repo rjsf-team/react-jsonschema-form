@@ -1,10 +1,13 @@
 {
   "presets": [
-    ["@babel/preset-env", {
-      "modules": false,  // don't convert modules into CommonJS
-      "useBuiltIns": "usage",  // use polyfill when needed
-      "corejs": 3
-    }],
+    [
+      "@babel/preset-env",
+      {
+        "modules": false, // don't convert modules into CommonJS
+        "useBuiltIns": "usage", // use polyfill when needed
+        "corejs": 3
+      }
+    ],
     "@babel/preset-react"
   ],
   "plugins": [
@@ -21,9 +24,7 @@
   ],
   "env": {
     "development": {
-      "plugins": [
-        "@babel/plugin-transform-react-jsx"
-      ]
+      "plugins": ["@babel/plugin-transform-react-jsx"]
     }
   }
 }

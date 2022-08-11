@@ -2,50 +2,52 @@
 
 This is an advanced feature that lets you customize even more aspects of the form:
 
-_ | Custom Field  | Custom Template | Custom Widget
---|---------- | ------------- | ----
-**What it does** | Overrides all behaviour | Overrides just the layout (not behaviour) | Overrides just the input box (not layout, labels, or help, or validation)
-**Usage** | Global or per-field | Global or per-field | Global or per-field
-**Global Example** | `<Form fields={MyCustomField} />` |  `<Form ArrayFieldTemplate={MyArrayTemplate} />` | `<Form widgets={MyCustomWidget} />`
-**Per-Field Example** | `"ui:field": MyCustomField` |  `"ui:ArrayFieldTemplate": MyArrayTemplate` | `"ui:widget":MyCustomWidget`
-**Documentation** | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#FieldTemplate) / [ArrayFieldTemplate](#ArrayFieldTemplate) / [ObjectFieldTemplate](#ObjectFieldTemplate) | [Custom Widgets](custom-widgets-fields.md)
+| \_                    | Custom Field                              | Custom Template                                                                                                           | Custom Widget                                                             |
+| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **What it does**      | Overrides all behaviour                   | Overrides just the layout (not behaviour)                                                                                 | Overrides just the input box (not layout, labels, or help, or validation) |
+| **Usage**             | Global or per-field                       | Global or per-field                                                                                                       | Global or per-field                                                       |
+| **Global Example**    | `<Form fields={MyCustomField} />`         | `<Form ArrayFieldTemplate={MyArrayTemplate} />`                                                                           | `<Form widgets={MyCustomWidget} />`                                       |
+| **Per-Field Example** | `"ui:field": MyCustomField`               | `"ui:ArrayFieldTemplate": MyArrayTemplate`                                                                                | `"ui:widget":MyCustomWidget`                                              |
+| **Documentation**     | [Custom Fields](custom-widgets-fields.md) | [FieldTemplate](#FieldTemplate) / [ArrayFieldTemplate](#ArrayFieldTemplate) / [ObjectFieldTemplate](#ObjectFieldTemplate) | [Custom Widgets](custom-widgets-fields.md)                                |
 
 ## ArrayFieldTemplate
 
-You can use an `ArrayFieldTemplate` to customize how your arrays are rendered. 
-This allows you to customize your array, and each element in the array. You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets). 
-
+You can use an `ArrayFieldTemplate` to customize how your arrays are rendered.
+This allows you to customize your array, and each element in the array. You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets).
 
 ```jsx
-import validator from '@rjsf/validator-ajv6';
+import validator from "@rjsf/validator-ajv6";
 
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 function ArrayFieldTemplate(props) {
   return (
     <div>
-      {props.items.map(element => element.children)}
-      {props.canAdd && <button type="button" onClick={props.onAddClick}></button>}
+      {props.items.map((element) => element.children)}
+      {props.canAdd && (
+        <button type="button" onClick={props.onAddClick}></button>
+      )}
     </div>
   );
 }
 
-render((
-  <Form schema={schema} ArrayFieldTemplate={ArrayFieldTemplate} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} ArrayFieldTemplate={ArrayFieldTemplate} />,
+  document.getElementById("app")
+);
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
 
 ```js
 const uiSchema = {
-  "ui:ArrayFieldTemplate": ArrayFieldTemplate
-}
+  "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+};
 ```
 
 Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customArray.js) for another example.
@@ -89,7 +91,7 @@ The following props are part of each element in `items`:
 
 ## FieldTemplate
 
-To take control over the inner organization of each field (each form row), you can define a *field template* for your form.
+To take control over the inner organization of each field (each form row), you can define a _field template_ for your form.
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
@@ -97,14 +99,26 @@ A field template is basically a React stateless component being passed field-rel
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
 function CustomFieldTemplate(props) {
-  const {id, classNames, label, help, required, description, errors, children} = props;
+  const {
+    id,
+    classNames,
+    label,
+    help,
+    required,
+    description,
+    errors,
+    children,
+  } = props;
   return (
     <div className={classNames}>
-      <label htmlFor={id}>{label}{required ? "*" : null}</label>
+      <label htmlFor={id}>
+        {label}
+        {required ? "*" : null}
+      </label>
       {description}
       {children}
       {errors}
@@ -113,17 +127,22 @@ function CustomFieldTemplate(props) {
   );
 }
 
-render((
-  <Form schema={schema} validator={validator} FieldTemplate={CustomFieldTemplate} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    FieldTemplate={CustomFieldTemplate}
+  />,
+  document.getElementById("app")
+);
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
 
 ```js
 const uiSchema = {
-  "ui:FieldTemplate": CustomFieldTemplate
-}
+  "ui:FieldTemplate": CustomFieldTemplate,
+};
 ```
 
 If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
@@ -167,12 +186,12 @@ const schema = {
   description: "Object description",
   properties: {
     name: {
-      type: "string"
+      type: "string",
     },
     age: {
-      type: "number"
-    }
-  }
+      type: "number",
+    },
+  },
 };
 
 function ObjectFieldTemplate(props) {
@@ -180,21 +199,28 @@ function ObjectFieldTemplate(props) {
     <div>
       {props.title}
       {props.description}
-      {props.properties.map(element => <div className="property-wrapper">{element.content}</div>)}
+      {props.properties.map((element) => (
+        <div className="property-wrapper">{element.content}</div>
+      ))}
     </div>
   );
 }
 
-render((
-  <Form schema={schema} validator={validator} ObjectFieldTemplate={ObjectFieldTemplate} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    ObjectFieldTemplate={ObjectFieldTemplate}
+  />,
+  document.getElementById("app")
+);
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
 
 ```js
 const uiSchema = {
-  "ui:ObjectFieldTemplate": ObjectFieldTemplate
+  "ui:ObjectFieldTemplate": ObjectFieldTemplate,
 };
 ```
 

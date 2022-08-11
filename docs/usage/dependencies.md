@@ -14,24 +14,25 @@ In the following example the `billing_address` field will be required if `credit
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  "type": "object",
+  type: "object",
 
-  "properties": {
-    "name": { "type": "string" },
-    "credit_card": { "type": "number" },
-    "billing_address": { "type": "string" }
+  properties: {
+    name: { type: "string" },
+    credit_card: { type: "number" },
+    billing_address: { type: "string" },
   },
 
-  "required": ["name"],
+  required: ["name"],
 
-  "dependencies": {
-    "credit_card": ["billing_address"]
-  }
+  dependencies: {
+    credit_card: ["billing_address"],
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ### Bidirectional
@@ -43,28 +44,29 @@ field will be required if `billing_address` is defined, making them both require
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  "type": "object",
+  type: "object",
 
-  "properties": {
-    "name": { "type": "string" },
-    "credit_card": { "type": "number" },
-    "billing_address": { "type": "string" }
+  properties: {
+    name: { type: "string" },
+    credit_card: { type: "number" },
+    billing_address: { type: "string" },
   },
 
-  "required": ["name"],
+  required: ["name"],
 
-  "dependencies": {
-    "credit_card": ["billing_address"],
-    "billing_address": ["credit_card"]
-  }
+  dependencies: {
+    credit_card: ["billing_address"],
+    billing_address: ["credit_card"],
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
-*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))*
+_(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#property-dependencies))_
 
 ## Schema dependencies
 
@@ -76,33 +78,34 @@ This library also supports modifying portions of a schema based on form data.
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  "type": "object",
+  type: "object",
 
-  "properties": {
-    "name": { "type": "string" },
-    "credit_card": { "type": "number" }
+  properties: {
+    name: { type: "string" },
+    credit_card: { type: "number" },
   },
 
-  "required": ["name"],
+  required: ["name"],
 
-  "dependencies": {
-    "credit_card": {
-      "properties": {
-        "billing_address": { "type": "string" }
+  dependencies: {
+    credit_card: {
+      properties: {
+        billing_address: { type: "string" },
       },
-      "required": ["billing_address"]
-    }
-  }
+      required: ["billing_address"],
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 In this example the `billing_address` field will be displayed in the form if `credit_card` is defined.
 
-*(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))*
+_(Sample schemas courtesy of the [Space Telescope Science Institute](https://spacetelescope.github.io/understanding-json-schema/reference/object.html#schema-dependencies))_
 
 ### Dynamic
 
@@ -112,72 +115,57 @@ The JSON Schema standard says that the dependency is triggered if the property i
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  "title": "Person",
-  "type": "object",
-  "properties": {
+  title: "Person",
+  type: "object",
+  properties: {
     "Do you have any pets?": {
-      "type": "string",
-      "enum": [
-        "No",
-        "Yes: One",
-        "Yes: More than one"
-      ],
-      "default": "No"
-    }
+      type: "string",
+      enum: ["No", "Yes: One", "Yes: More than one"],
+      default: "No",
+    },
   },
-  "required": [
-    "Do you have any pets?"
-  ],
-  "dependencies": {
+  required: ["Do you have any pets?"],
+  dependencies: {
     "Do you have any pets?": {
-      "oneOf": [
+      oneOf: [
         {
-          "properties": {
+          properties: {
             "Do you have any pets?": {
-              "enum": [
-                "No"
-              ]
-            }
-          }
+              enum: ["No"],
+            },
+          },
         },
         {
-          "properties": {
+          properties: {
             "Do you have any pets?": {
-              "enum": [
-                "Yes: One"
-              ]
+              enum: ["Yes: One"],
             },
             "How old is your pet?": {
-              "type": "number"
-            }
+              type: "number",
+            },
           },
-          "required": [
-            "How old is your pet?"
-          ]
+          required: ["How old is your pet?"],
         },
         {
-          "properties": {
+          properties: {
             "Do you have any pets?": {
-              "enum": [
-                "Yes: More than one"
-              ]
+              enum: ["Yes: More than one"],
             },
             "Do you want to get rid of any?": {
-              "type": "boolean"
-            }
+              type: "boolean",
+            },
           },
-          "required": [
-            "Do you want to get rid of any?"
-          ]
-        }
-      ]
-    }
-  }
+          required: ["Do you want to get rid of any?"],
+        },
+      ],
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 In this example the user is prompted with different follow-up questions dynamically based on their answer to the first question.

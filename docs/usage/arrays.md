@@ -12,13 +12,14 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## Arrays of objects
@@ -33,16 +34,17 @@ const schema = {
   items: {
     type: "object",
     properties: {
-        name: {
-            type: "string"
-        }
-    }
-  }
+      name: {
+        type: "string",
+      },
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## uiSchema for array items
@@ -55,19 +57,20 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
   items: {
-    "ui:widget": "textarea"
-  }
+    "ui:widget": "textarea",
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## The `additionalItems` keyword
@@ -80,16 +83,17 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
+    type: "string",
   },
   additionalItems: {
-    type: "boolean"
-  }
+    type: "boolean",
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## Array item options
@@ -104,19 +108,20 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    orderable: false
-  }
+  "ui:options": {
+    orderable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ### `addable` option
@@ -129,19 +134,20 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    addable: false
-  }
+  "ui:options": {
+    addable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ### `removable` option
@@ -154,21 +160,21 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "array",
   items: {
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 const uiSchema = {
-  "ui:options":  {
-    removable: false
-  }
+  "ui:options": {
+    removable: false,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
-
 
 ## Multiple-choice list
 
@@ -186,12 +192,13 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
@@ -206,28 +213,29 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
 const uiSchema = {
-  "ui:widget": "checkboxes"
+  "ui:widget": "checkboxes",
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## Custom widgets
 
-In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the uiSchema with the property of `ui:widget`. 
+In addition to [ArrayFieldTemplate](../advanced-customization/custom-templates.md#arrayfieldtemplate) you use your own widget by providing it to the uiSchema with the property of `ui:widget`.
 
-Example: 
+Example:
 
 ```jsx
 import validator from "@rjsf/validator-ajv6";
 
-const CustomSelectComponent = props => {
+const CustomSelectComponent = (props) => {
   return (
     <select>
       {props.value.map((item, index) => (
@@ -248,16 +256,22 @@ const schema = {
 };
 
 const uiSchema = {
-  "ui:widget": "CustomSelect"
+  "ui:widget": "CustomSelect",
 };
 
 const widgets = {
   CustomSelect: CustomSelectComponent,
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} widgets={widgets} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    widgets={widgets}
+    validator={validator}
+  />,
+  document.getElementById("app")
+);
 ```
 
 ## Specifying the minimum or maximum number of items
@@ -277,16 +291,16 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 You can also specify the maximum number of items in an array using the `maxItems` property.
-
 
 ## Inline checkboxes
 
@@ -303,17 +317,18 @@ const schema = {
     type: "string",
     enum: ["foo", "bar", "fuzz", "qux"],
   },
-  uniqueItems: true
+  uniqueItems: true,
 };
 
 const uiSchema = {
   "ui:widget": "checkboxes",
   "ui:options": {
-    inline: true
-  }
+    inline: true,
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```

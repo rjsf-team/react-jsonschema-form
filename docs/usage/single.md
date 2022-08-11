@@ -18,12 +18,13 @@ Here is an example of a string field:
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## Titles and descriptions
@@ -36,12 +37,13 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   title: "My form",
   description: "My description",
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## Enumerated values
@@ -53,12 +55,13 @@ import validator from "@rjsf/validator-ajv6";
 
 const schema = {
   type: "string",
-  enum: ["one", "two", "three"]
+  enum: ["one", "two", "three"],
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ### Custom labels for `enum` fields
@@ -72,12 +75,13 @@ import validator from "@rjsf/validator-ajv6";
 const schema = {
   type: "number",
   enum: [1, 2, 3],
-  enumNames: ["one", "two", "three"]
+  enumNames: ["one", "two", "three"],
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 #### Alternative JSON-Schema compliant approach
@@ -88,35 +92,30 @@ JSON Schema has an alternative approach to enumerations using `anyOf`; react-jso
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  "type": "number",
-  "anyOf": [
+  type: "number",
+  anyOf: [
     {
-      "type": "number",
-      "title": "one",
-      "enum": [
-        1
-      ]
+      type: "number",
+      title: "one",
+      enum: [1],
     },
     {
-      "type": "number",
-      "title": "two",
-      "enum": [
-        2
-      ]
+      type: "number",
+      title: "two",
+      enum: [2],
     },
     {
-      "type": "number",
-      "title": "three",
-      "enum": [
-        3
-      ]
-    }
-  ]
+      type: "number",
+      title: "three",
+      enum: [3],
+    },
+  ],
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ### Disabled attribute for `enum` fields
@@ -128,18 +127,18 @@ import validator from "@rjsf/validator-ajv6";
 
 const schema = {
   type: "boolean",
-  enum: [true, false]
+  enum: [true, false],
 };
 
-const uiSchema={
+const uiSchema = {
   "ui:enumDisabled": [true],
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
-
 
 ## Nullable types
 
@@ -149,10 +148,11 @@ JSON Schema supports specifying multiple types in an array; however, react-jsons
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: ["string", "null"]
+  type: ["string", "null"],
 };
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```

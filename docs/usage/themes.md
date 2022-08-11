@@ -6,7 +6,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 ## Supported themes
 
 | Theme Name            | Status    | Package Name / Link |
-|-----------------------| --------- |---------------------|
+| --------------------- | --------- | ------------------- |
 | antd                  | Published | `@rjsf/antd`        |
 | Bootstrap 3 (default) | Published | `@rjsf/core`        |
 | Bootstrap 4           | Published | `@rjsf/bootstrap-4` |

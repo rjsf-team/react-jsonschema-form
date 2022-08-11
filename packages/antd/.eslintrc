@@ -1,8 +1,4 @@
 {
-    "extends": "../../.eslintrc-javascript",
-    "plugins": [
-        "jsx-a11y",
-        "react",
-        "import"
-    ]
+  "extends": "../../.eslintrc-javascript",
+  "plugins": ["jsx-a11y", "react", "import"]
 }

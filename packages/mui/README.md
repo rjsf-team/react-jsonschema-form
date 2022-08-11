@@ -87,14 +87,14 @@ yarn add @rjsf/mui
 ### Material UI version 5
 
 ```js
-import Form from '@rjsf/mui';
+import Form from "@rjsf/mui";
 ```
 
 or
 
 ```js
-import { withTheme } from '@rjsf/core';
-import Theme from '@rjsf/mui';
+import { withTheme } from "@rjsf/core";
+import Theme from "@rjsf/mui";
 
 // Make modifications to the theme with your own fields and widgets
 

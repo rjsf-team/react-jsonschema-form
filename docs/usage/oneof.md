@@ -2,9 +2,9 @@
 
 react-jsonschema-form supports custom widgets for oneOf, anyOf, and allOf.
 
-- A schema with `oneOf` is valid if *exactly one* of the subschemas is valid.
-- A schema with `anyOf` is valid if *at least one* of the subschemas is valid.
-- A schema with `allOf` is valid if *all* of the subschemas are valid.
+- A schema with `oneOf` is valid if _exactly one_ of the subschemas is valid.
+- A schema with `anyOf` is valid if _at least one_ of the subschemas is valid.
+- A schema with `allOf` is valid if _all_ of the subschemas are valid.
 
 ## oneOf
 
@@ -12,30 +12,31 @@ react-jsonschema-form supports custom widgets for oneOf, anyOf, and allOf.
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-    type: "object",
-    oneOf: [
-      {
-        properties: {
-          lorem: {
-            type: "string",
-          },
+  type: "object",
+  oneOf: [
+    {
+      properties: {
+        lorem: {
+          type: "string",
         },
-        required: ["lorem"],
       },
-      {
-        properties: {
-          ipsum: {
-            type: "string",
-          },
+      required: ["lorem"],
+    },
+    {
+      properties: {
+        ipsum: {
+          type: "string",
         },
-        required: ["ipsum"],
       },
-    ],
-  };
+      required: ["ipsum"],
+    },
+  ],
+};
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## anyOf
@@ -44,32 +45,33 @@ render((
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-    type: "object",
-    anyOf: [
-      {
-        properties: {
-          lorem: {
-            type: "string",
-          },
+  type: "object",
+  anyOf: [
+    {
+      properties: {
+        lorem: {
+          type: "string",
         },
-        required: ["lorem"],
       },
-      {
-        properties: {
-          lorem: {
-            type: "string",
-          },
-          ipsum: {
-            type: "string",
-          },
-        }
+      required: ["lorem"],
+    },
+    {
+      properties: {
+        lorem: {
+          type: "string",
+        },
+        ipsum: {
+          type: "string",
+        },
       },
-    ],
-  };
+    },
+  ],
+};
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 ## allOf
@@ -83,15 +85,16 @@ const schema = {
   title: "Field",
   allOf: [
     {
-      type: ["string", "boolean"]
+      type: ["string", "boolean"],
     },
     {
-      type: "boolean"
+      type: "boolean",
     },
   ],
-  };
+};
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```

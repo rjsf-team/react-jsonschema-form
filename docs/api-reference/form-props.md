@@ -34,17 +34,18 @@ You can provide custom buttons to your form via the `Form` component's `children
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
+render(
   <Form schema={schema} validator={validator}>
     <div>
       <button type="submit">Submit</button>
       <button type="button">Cancel</button>
     </div>
-  </Form>
-), document.getElementById("app"));
+  </Form>,
+  document.getElementById("app")
+);
 ```
 
 > **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
@@ -63,12 +64,13 @@ It's possible to disable the whole form by setting the `disabled` prop. The `dis
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} validator={validator} disabled />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} disabled />,
+  document.getElementById("app")
+);
 ```
 
 If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`.
@@ -81,12 +83,13 @@ It's possible to make the whole form read-only by setting the `readonly` prop. T
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} validator={validator} readonly />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} readonly />,
+  document.getElementById("app")
+);
 ```
 
 If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`.
@@ -132,12 +135,13 @@ To avoid collisions with existing ids in the DOM, it is possible to change the p
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
 
-render((
-  <Form schema={schema} validator={validator} idPrefix={"rjsf_prefix"}/>
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} idPrefix={"rjsf_prefix"} />,
+  document.getElementById("app")
+);
 ```
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
@@ -153,19 +157,18 @@ const schema = {
   type: "object",
   properties: {
     first: {
-      type: "string"
-    }
-  }
+      type: "string",
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} idSeparator={"/"}/>
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} idSeparator={"/"} />,
+  document.getElementById("app")
+);
 ```
 
-This will render `<input id="root/first">` instead of `<input
-id="root_first">` when rendering `first`.
-
+This will render `<input id="root/first">` instead of `<input id="root_first">` when rendering `first`.
 
 ## liveOmit
 
@@ -215,13 +218,15 @@ To react when submitted form data are invalid, pass an `onError` handler. It wil
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
-const onError = (errors) => console.log("I have", errors.length, "errors to fix");
+const onError = (errors) =>
+  console.log("I have", errors.length, "errors to fix");
 
-render((
-  <Form schema={schema} validator={validator} onError={onError} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} onError={onError} />,
+  document.getElementById("app")
+);
 ```
 
 ## onFocus
@@ -236,13 +241,14 @@ You can pass a function as the `onSubmit` prop of your `Form` component to liste
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: "string"
+  type: "string",
 };
-const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
+const onSubmit = ({ formData }, e) => console.log("Data submitted: ", formData);
 
-render((
-  <Form schema={schema} validator={validator} onSubmit={onSubmit} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} />,
+  document.getElementById("app")
+);
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
@@ -291,7 +297,7 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## validator
 
-**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work. 
+**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.
 `@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
 
 ## widgets

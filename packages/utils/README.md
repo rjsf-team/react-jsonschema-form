@@ -67,7 +67,7 @@ yarn add @rjsf/utils
 ## Usage
 
 ```jsx
-import * as Utils from '@rjsf/utils';
+import * as Utils from "@rjsf/utils";
 ```
 
 <!-- ROADMAP -->

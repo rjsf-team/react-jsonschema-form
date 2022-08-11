@@ -77,24 +77,24 @@ yarn add @rjsf/validator-ajv6
 ## Usage
 
 ```jsx
-import Form from '@rjsf/core';
-import validator from '@rjsf/validator-ajv6';
+import Form from "@rjsf/core";
+import validator from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: 'string',
+  type: "string",
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 or, using a more complex example using custom validator with custom formats
 
 ```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import Form from "@rjsf/core";
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
 const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
 };
 
 const validator = customizeValidator({
@@ -102,18 +102,18 @@ const validator = customizeValidator({
 });
 
 const schema = {
-  type: 'string',
-  format: 'phone-us'
+  type: "string",
+  format: "phone-us",
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 or, using a more complex example using a custom with additional meta schema
 
 ```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import Form from "@rjsf/core";
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
 const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
 
@@ -122,23 +122,23 @@ const validator = customizeValidator({
 });
 
 const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  type: 'string',
+  $schema: "http://json-schema.org/draft-04/schema#",
+  type: "string",
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 Finally, you can combine both additional meta schemas and custom formats.
 
 ```jsx
-import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import Form from "@rjsf/core";
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
 const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
 
 const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
 };
 
 const validator = customizeValidator({
@@ -147,12 +147,12 @@ const validator = customizeValidator({
 });
 
 const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  type: 'string',
-  format: 'phone-us'
+  $schema: "http://json-schema.org/draft-04/schema#",
+  type: "string",
+  format: "phone-us",
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 <!-- ROADMAP -->

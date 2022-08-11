@@ -74,14 +74,14 @@ npm install @rjsf/antd
 ## Usage
 
 ```javascript
-import Form from '@rjsf/antd';
+import Form from "@rjsf/antd";
 ```
 
 or
 
 ```javascript
-import { withTheme } from '@rjsf/core';
-import { Theme as AntDTheme } from '@rjsf/antd';
+import { withTheme } from "@rjsf/core";
+import { Theme as AntDTheme } from "@rjsf/antd";
 
 // Make modifications to the theme with your own fields and widgets
 

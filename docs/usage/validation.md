@@ -21,14 +21,20 @@ import validator from "@rjsf/validator-ajv6";
 
 const schema = {
   type: ["string"],
-  const: "test"
+  const: "test",
 };
 
 const formData = "a";
 
-render((
-  <Form schema={schema} formData={formData} validator={validator} liveValidate />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    formData={formData}
+    validator={validator}
+    liveValidate
+  />,
+  document.getElementById("app")
+);
 ```
 
 ## HTML5 Validation
@@ -43,14 +49,15 @@ const schema = {
   properties: {
     name: {
       type: "string",
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} noHtml5Validate />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} noHtml5Validate />,
+  document.getElementById("app")
+);
 ```
 
 ## Custom validation rules
@@ -73,17 +80,23 @@ function customValidate(formData, errors) {
 const schema = {
   type: "object",
   properties: {
-    pass1: {type: "string", minLength: 3},
-    pass2: {type: "string", minLength: 3},
-  }
+    pass1: { type: "string", minLength: 3 },
+    pass2: { type: "string", minLength: 3 },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} customValidate={customValidate} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    customValidate={customValidate}
+  />,
+  document.getElementById("app")
+);
 ```
 
 > Notes:
+>
 > - The `customValidate()` function must implement the `CustomValidator` interface found in `@rjsf/utils`.
 > - The `customValidate()` function must **always** return the `errors` object received as second argument.
 > - The `customValidate()` function is called **after** the JSON schema validation.
@@ -97,9 +110,9 @@ If you need to change these messages or make any other modifications to the erro
 import validator from "@rjsf/validator-ajv6";
 
 function transformErrors(errors) {
-  return errors.map(error => {
+  return errors.map((error) => {
     if (error.name === "pattern") {
-      error.message = "Only digits are allowed"
+      error.message = "Only digits are allowed";
     }
     return error;
   });
@@ -108,16 +121,22 @@ function transformErrors(errors) {
 const schema = {
   type: "object",
   properties: {
-    onlyNumbersString: {type: "string", pattern: "^\\d*$"},
-  }
+    onlyNumbersString: { type: "string", pattern: "^\\d*$" },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} transformErrors={transformErrors} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    transformErrors={transformErrors}
+  />,
+  document.getElementById("app")
+);
 ```
 
 > Notes:
+>
 > - The `transformErrors()` function must implement the `ErrorTransformer` interface found in `@rjsf/utils`.
 > - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
 
@@ -132,7 +151,7 @@ Each element in the `errors` list passed to `transformErrors` is a `RJSFValidati
 
 ## Error List Display
 
-To take control over how the form errors are displayed, you can define an *error list template* for your form.
+To take control over how the form errors are displayed, you can define an _error list template_ for your form.
 This list is the form global error list that appears at the top of your forms.
 
 An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
@@ -146,11 +165,9 @@ function ErrorListTemplate(props: ErrorListProps) {
     <div>
       <h2>Custom error list</h2>
       <ul>
-        {errors.map(error => (
-            <li key={error.stack}>
-              {error.stack}
-            </li>
-          ))}
+        {errors.map((error) => (
+          <li key={error.stack}>{error.stack}</li>
+        ))}
       </ul>
     </div>
   );
@@ -158,17 +175,20 @@ function ErrorListTemplate(props: ErrorListProps) {
 
 const schema = {
   type: "string",
-  const: "test"
+  const: "test",
 };
 
-render((
-  <Form schema={schema}
-        validator={validator}
-        showErrorList={true}
-        formData={""}
-        liveValidate
-        ErrorList={ErrorListTemplate} />
-), document.getElementById("app"));
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    showErrorList={true}
+    formData={""}
+    liveValidate
+    ErrorList={ErrorListTemplate}
+  />,
+  document.getElementById("app")
+);
 ```
 
 > Note: Your custom `ErrorList` template will only render when `showErrorList` is `true`.
@@ -180,7 +200,6 @@ The following props are passed to `ErrorList` as defined by the `ErrorListProps`
 - `schema`: The schema that was passed to `Form`.
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to `Form`.
-
 
 ## The case of empty strings
 
@@ -217,16 +236,18 @@ const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
 
 ```jsx
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
-const validator = customizeValidator({ additionalMetaSchemas: [metaSchemaDraft04] });
+const validator = customizeValidator({
+  additionalMetaSchemas: [metaSchemaDraft04],
+});
 
 const schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  type: "string"
+  $schema: "http://json-schema.org/draft-04/schema#",
+  type: "string",
 };
 
-return (<Form schema={schema} validator={validator} />);
+return <Form schema={schema} validator={validator} />;
 ```
 
 ## customFormats
@@ -236,22 +257,23 @@ react-jsonschema-form adds two formats, `color` and `data-url`, to support certa
 To add formats of your own, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv6`:
 
 ```jsx
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: 'string',
-  format: 'phone-us'
+  type: "string",
+  format: "phone-us",
 };
 
 const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
 };
 
 const validator = customizeValidator({ customFormats });
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
 
 Format values can be anything AJV’s [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
@@ -276,10 +298,10 @@ const schema = {
       properties: {
         bar: {
           type: "string",
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
 
 const extraErrors = {
@@ -288,14 +310,15 @@ const extraErrors = {
   },
   candy: {
     bar: {
-    __errors: ["some error that got added as a prop"],
-    }
-  }
+      __errors: ["some error that got added as a prop"],
+    },
+  },
 };
 
-render((
-  <Form schema={schema} validator={validator} extraErrors={extraErrors} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} extraErrors={extraErrors} />,
+  document.getElementById("app")
+);
 ```
 
 An important note is that these errors are "display only" and will not block the user from submitting the form again.
@@ -306,11 +329,11 @@ In version 5, with the advent of the decoupling of the validation implementation
 For instance, if you need more information from `ajv` about errors via the `verbose` option, now you can turn it on!
 
 ```jsx
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from "@rjsf/validator-ajv6";
 
 const schema = {
-  type: 'string',
-  format: 'phone-us'
+  type: "string",
+  format: "phone-us",
 };
 
 const ajvOptionsOverrides = {
@@ -319,7 +342,8 @@ const ajvOptionsOverrides = {
 
 const validator = customizeValidator({ ajvOptionsOverrides });
 
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} validator={validator} />,
+  document.getElementById("app")
+);
 ```
