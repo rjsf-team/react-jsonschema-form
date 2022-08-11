@@ -1,13 +1,13 @@
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
-import { AddButtonProps } from "@rjsf/core";
+import IconButton from "@material-ui/core/IconButton";
+import { IconButtonProps } from "@rjsf/utils";
 
-const AddButton: React.ComponentType<AddButtonProps> = (props) => {
+const AddButton: React.ComponentType<IconButtonProps> = (props) => {
   return (
-    <Button {...props} color="secondary">
-      <AddIcon /> Add Item
-    </Button>
+    <IconButton title="Add Item" {...props} color="secondary">
+      <AddIcon />
+    </IconButton>
   );
 };
 

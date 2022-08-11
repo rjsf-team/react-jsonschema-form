@@ -206,11 +206,12 @@ exports[`object fields additionalProperties 1`] = `
             className="emotion-0"
           >
             <button
-              aria-label="remove"
+              aria-label="Remove"
               className="chakra-button emotion-14"
               disabled={false}
               onClick={[Function]}
               tabIndex={-1}
+              title="Remove"
               type="button"
             >
               <svg

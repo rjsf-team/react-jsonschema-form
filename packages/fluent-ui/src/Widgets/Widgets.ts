@@ -8,7 +8,6 @@ import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 export default {
   CheckboxWidget,
   CheckboxesWidget,
@@ -20,5 +19,4 @@ export default {
   SelectWidget,
   TextareaWidget,
   UpDownWidget,
-  SubmitButton,
 };

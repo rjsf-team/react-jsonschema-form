@@ -1,9 +1,9 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { WidgetProps, getSubmitButtonOptions } from "@rjsf/utils";
+import { SubmitButtonProps, getSubmitButtonOptions } from "@rjsf/utils";
 
-const SubmitButton: React.ComponentType<WidgetProps> = (props) => {
+const SubmitButton: React.ComponentType<SubmitButtonProps> = (props) => {
   const {
     submitText,
     norender,

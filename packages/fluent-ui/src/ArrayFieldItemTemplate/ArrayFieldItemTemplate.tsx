@@ -1,8 +1,6 @@
 import React from "react";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 
-import IconButton from "../IconButton";
-
 const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
   const {
     children,
@@ -15,7 +13,10 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     onDropIndexClick,
     onReorderClick,
     readonly,
+    registry,
   } = props;
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
   return (
     <div className="ms-Grid" dir="ltr">
       <div className="ms-Grid-row">
@@ -28,25 +29,19 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
             style={{ textAlign: "right" }}
           >
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-up"
-                className="array-item-move-up"
+              <MoveUpButton
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-down"
-                className="array-item-move-down"
+              <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
               />
             )}
             {hasRemove && (
-              <IconButton
-                icon="remove"
-                className="array-item-remove"
+              <RemoveButton
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
               />

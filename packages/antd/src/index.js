@@ -5,8 +5,15 @@ import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
 import BaseInputTemplate from "./templates/BaseInputTemplate";
 import DescriptionField from "./templates/DescriptionField";
 import ErrorList from "./templates/ErrorList";
+import {
+  AddButton,
+  MoveDownButton,
+  MoveUpButton,
+  RemoveButton,
+} from "./templates/IconButton";
 import FieldTemplate from "./templates/FieldTemplate";
 import ObjectFieldTemplate from "./templates/ObjectFieldTemplate";
+import SubmitButton from "./templates/SubmitButton";
 import TitleField from "./templates/TitleField";
 
 import AltDateTimeWidget from "./widgets/AltDateTimeWidget";
@@ -20,7 +27,6 @@ import RadioWidget from "./widgets/RadioWidget";
 import RangeWidget from "./widgets/RangeWidget";
 import SelectWidget from "./widgets/SelectWidget";
 import TextareaWidget from "./widgets/TextareaWidget";
-import SubmitButton from "./widgets/SubmitButton";
 
 // import './index.less';
 
@@ -38,7 +44,6 @@ export const Widgets = {
   RangeWidget,
   SelectWidget,
   TextareaWidget,
-  SubmitButton,
 };
 
 export const Theme = {
@@ -48,6 +53,13 @@ export const Theme = {
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     BaseInputTemplate,
+    ButtonTemplates: {
+      AddButton,
+      MoveDownButton,
+      MoveUpButton,
+      RemoveButton,
+      SubmitButton,
+    },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldTemplate,

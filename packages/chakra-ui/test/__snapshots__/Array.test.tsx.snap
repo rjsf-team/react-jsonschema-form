@@ -361,11 +361,12 @@ exports[`array fields array icons 1`] = `
                 role="group"
               >
                 <button
-                  aria-label="arrow-up"
+                  aria-label="Move up"
                   className="chakra-button emotion-11"
                   disabled={true}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Move up"
                   type="button"
                 >
                   <svg
@@ -381,11 +382,12 @@ exports[`array fields array icons 1`] = `
                   </svg>
                 </button>
                 <button
-                  aria-label="arrow-down"
+                  aria-label="Move down"
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Move down"
                   type="button"
                 >
                   <svg
@@ -401,11 +403,12 @@ exports[`array fields array icons 1`] = `
                   </svg>
                 </button>
                 <button
-                  aria-label="remove"
+                  aria-label="Remove"
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Remove"
                   type="button"
                 >
                   <svg
@@ -467,11 +470,12 @@ exports[`array fields array icons 1`] = `
                 role="group"
               >
                 <button
-                  aria-label="arrow-up"
+                  aria-label="Move up"
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Move up"
                   type="button"
                 >
                   <svg
@@ -487,11 +491,12 @@ exports[`array fields array icons 1`] = `
                   </svg>
                 </button>
                 <button
-                  aria-label="arrow-down"
+                  aria-label="Move down"
                   className="chakra-button emotion-11"
                   disabled={true}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Move down"
                   type="button"
                 >
                   <svg
@@ -507,11 +512,12 @@ exports[`array fields array icons 1`] = `
                   </svg>
                 </button>
                 <button
-                  aria-label="remove"
+                  aria-label="Remove"
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
                   tabIndex={-1}
+                  title="Remove"
                   type="button"
                 >
                   <svg

@@ -6,7 +6,6 @@ import {
   getTemplate,
   getUiOptions,
 } from "@rjsf/utils";
-import AddButton from "../AddButton";
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -42,6 +41,10 @@ export default function ObjectFieldTemplate<T = any, F = any>(
     T,
     F
   >("DescriptionFieldTemplate", registry, options);
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <fieldset id={idSchema.$id}>
       {(options.title || title) && (

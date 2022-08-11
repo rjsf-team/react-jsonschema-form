@@ -1,10 +1,6 @@
-import React from "react";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import RemoveIcon from "@mui/icons-material/Remove";
+import React, { CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 
@@ -20,8 +16,11 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     onDropIndexClick,
     onReorderClick,
     readonly,
+    registry,
   } = props;
-  const btnStyle = {
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
+  const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
@@ -37,42 +36,28 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
           </Paper>
         </Box>
       </Grid>
-
       {hasToolbar && (
         <Grid item={true}>
           {(hasMoveUp || hasMoveDown) && (
-            <IconButton
-              size="small"
-              className="array-item-move-up"
-              tabIndex={-1}
-              style={btnStyle as any}
+            <MoveUpButton
+              style={btnStyle}
               disabled={disabled || readonly || !hasMoveUp}
               onClick={onReorderClick(index, index - 1)}
-            >
-              <ArrowUpwardIcon fontSize="small" />
-            </IconButton>
+            />
           )}
           {(hasMoveUp || hasMoveDown) && (
-            <IconButton
-              size="small"
-              tabIndex={-1}
-              style={btnStyle as any}
+            <MoveDownButton
+              style={btnStyle}
               disabled={disabled || readonly || !hasMoveDown}
               onClick={onReorderClick(index, index + 1)}
-            >
-              <ArrowDownwardIcon fontSize="small" />
-            </IconButton>
+            />
           )}
           {hasRemove && (
-            <IconButton
-              size="small"
-              tabIndex={-1}
-              style={btnStyle as any}
+            <RemoveButton
+              style={btnStyle}
               disabled={disabled || readonly}
               onClick={onDropIndexClick(index)}
-            >
-              <RemoveIcon fontSize="small" />
-            </IconButton>
+            />
           )}
         </Grid>
       )}

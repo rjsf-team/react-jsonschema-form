@@ -28,7 +28,7 @@ exports[`array fields array 1`] = `
                 className="MuiBox-root MuiBox-root-2"
               >
                 <button
-                  className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
+                  className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -43,10 +43,11 @@ exports[`array fields array 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   tabIndex={0}
+                  title="Add Item"
                   type="button"
                 >
                   <span
-                    className="MuiButton-label"
+                    className="MuiIconButton-label"
                   >
                     <svg
                       aria-hidden={true}
@@ -58,7 +59,6 @@ exports[`array fields array 1`] = `
                         d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                       />
                     </svg>
-                     Add Item
                   </span>
                 </button>
               </div>
@@ -172,7 +172,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
+                className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -196,6 +196,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Move up"
                 type="button"
               >
                 <span
@@ -238,6 +239,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Move down"
                 type="button"
               >
                 <span
@@ -283,6 +285,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <span
@@ -361,7 +364,7 @@ exports[`array fields array icons 1`] = `
               className="MuiGrid-root MuiGrid-item"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root array-item-move-up MuiIconButton-sizeSmall"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -385,6 +388,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Move up"
                 type="button"
               >
                 <span
@@ -430,6 +434,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Move down"
                 type="button"
               >
                 <span
@@ -472,6 +477,7 @@ exports[`array fields array icons 1`] = `
                   }
                 }
                 tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <span
@@ -504,7 +510,7 @@ exports[`array fields array icons 1`] = `
                 className="MuiBox-root MuiBox-root-16"
               >
                 <button
-                  className="MuiButtonBase-root MuiButton-root MuiButton-text array-item-add MuiButton-textSecondary"
+                  className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -519,10 +525,11 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   tabIndex={0}
+                  title="Add Item"
                   type="button"
                 >
                   <span
-                    className="MuiButton-label"
+                    className="MuiIconButton-label"
                   >
                     <svg
                       aria-hidden={true}
@@ -534,7 +541,6 @@ exports[`array fields array icons 1`] = `
                         d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                       />
                     </svg>
-                     Add Item
                   </span>
                   <span
                     className="MuiTouchRipple-root"

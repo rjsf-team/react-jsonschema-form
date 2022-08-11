@@ -29,7 +29,13 @@ const ArrayFieldItemTemplate = props => {
     onReorderClick,
     readonly,
     wrapItem,
+    registry,
   } = props;
+  const {
+    MoveDownButton,
+    MoveUpButton,
+    RemoveButton,
+  } = registry.templates.ButtonTemplates;
   return (
     <div className="array-item">
       <MaybeWrap wrap={wrapItem} component={Segment}>
@@ -48,28 +54,22 @@ const ArrayFieldItemTemplate = props => {
               {(hasMoveUp || hasMoveDown || hasRemove) && (
                 <Button.Group size="mini" vertical={!horizontalButtons}>
                   {(hasMoveUp || hasMoveDown) && (
-                    <Button
-                      icon="angle up"
+                    <MoveUpButton
                       className="array-item-move-up"
-                      tabIndex="-1"
                       disabled={disabled || readonly || !hasMoveUp}
                       onClick={onReorderClick(index, index - 1)}
                     />
                   )}
                   {(hasMoveUp || hasMoveDown) && (
-                    <Button
-                      icon="angle down"
+                    <MoveDownButton
                       className="array-item-move-down"
-                      tabIndex="-1"
                       disabled={disabled || readonly || !hasMoveDown}
                       onClick={onReorderClick(index, index + 1)}
                     />
                   )}
                   {hasRemove && (
-                    <Button
-                      icon="trash"
+                    <RemoveButton
                       className="array-item-remove"
-                      tabIndex="-1"
                       disabled={disabled || readonly}
                       onClick={onDropIndexClick(index)}
                     />

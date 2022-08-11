@@ -57,6 +57,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       {id === "root" ? (
         children

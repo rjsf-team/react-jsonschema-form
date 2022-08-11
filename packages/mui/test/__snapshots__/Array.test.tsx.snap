@@ -112,17 +112,17 @@ exports[`array fields array 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #9c27b0;
 }
 
@@ -143,8 +143,16 @@ exports[`array fields array 1`] = `
 }
 
 .emotion-7:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-7:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-7:hover {
   background-color: rgba(156, 39, 176, 0.04);
 }
 
@@ -155,6 +163,7 @@ exports[`array fields array 1`] = `
 }
 
 .emotion-7.Mui-disabled {
+  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
@@ -298,7 +307,7 @@ exports[`array fields array 1`] = `
                 className="MuiBox-root emotion-6"
               >
                 <button
-                  className="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root array-item-add emotion-7"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-7"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -314,6 +323,7 @@ exports[`array fields array 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   tabIndex={0}
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -327,7 +337,6 @@ exports[`array fields array 1`] = `
                       d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                     />
                   </svg>
-                   Add Item
                 </button>
               </div>
             </div>
@@ -820,6 +829,96 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   border-radius: inherit;
 }
 
+.emotion-21 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #d32f2f;
+  padding: 5px;
+  font-size: 1.125rem;
+}
+
+.emotion-21::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-21.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-21 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-21:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-21:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-21:hover {
+  background-color: rgba(211, 47, 47, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-21:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-21.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
 .emotion-44 {
   box-sizing: border-box;
   display: -webkit-box;
@@ -877,17 +976,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #9c27b0;
 }
 
@@ -908,8 +1007,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
 }
 
 .emotion-47:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-47:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-47:hover {
   background-color: rgba(156, 39, 176, 0.04);
 }
 
@@ -920,6 +1027,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
 }
 
 .emotion-47.Mui-disabled {
+  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
@@ -1123,7 +1231,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-15"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-16"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-16"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -1148,6 +1256,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Move up"
                 type="button"
               >
                 <svg
@@ -1188,6 +1297,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Move down"
                 type="button"
               >
                 <svg
@@ -1206,7 +1316,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                 />
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -1231,6 +1341,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <svg
@@ -1320,7 +1431,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-15"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-16"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -1345,6 +1456,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Move up"
                 type="button"
               >
                 <svg
@@ -1388,6 +1500,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Move down"
                 type="button"
               >
                 <svg
@@ -1403,7 +1516,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -1428,6 +1541,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   }
                 }
                 tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <svg
@@ -1457,7 +1571,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                 className="MuiBox-root emotion-46"
               >
                 <button
-                  className="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root array-item-add emotion-47"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-47"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -1473,6 +1587,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   tabIndex={0}
+                  title="Add Item"
                   type="button"
                 >
                   <svg
@@ -1486,7 +1601,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                       d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                     />
                   </svg>
-                   Add Item
                   <span
                     className="MuiTouchRipple-root emotion-20"
                   />

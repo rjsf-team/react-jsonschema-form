@@ -21,6 +21,13 @@ const registry: Registry = {
     ArrayFieldTemplate: FakeTemplate,
     ArrayFieldTitleTemplate: FakeTemplate,
     BaseInputTemplate: FakeTemplate,
+    ButtonTemplates: {
+      AddButton: FakeTemplate,
+      MoveDownButton: FakeTemplate,
+      MoveUpButton: FakeTemplate,
+      RemoveButton: FakeTemplate,
+      SubmitButton: FakeTemplate,
+    },
     DescriptionFieldTemplate: FakeTemplate,
     ErrorListTemplate: FakeTemplate,
     FieldTemplate: FakeTemplate,
@@ -56,9 +63,21 @@ const uiOptions: UIOptionsType = {
     CustomTemplate as unknown as UIOptionsType["UnsupportedFieldTemplate"],
 };
 
-const KEYS = Object.keys(registry.templates);
+const KEYS = Object.keys(registry.templates).filter(
+  (k) => k !== "ButtonTemplates"
+);
 
 describe("getTemplate", () => {
+  it("returns the ButtonTemplates from the registry", () => {
+    expect(getTemplate<"ButtonTemplates">("ButtonTemplates", registry)).toBe(
+      registry.templates.ButtonTemplates
+    );
+  });
+  it("returns the ButtonTemplates from the registry even with uiOptions", () => {
+    expect(
+      getTemplate<"ButtonTemplates">("ButtonTemplates", registry, uiOptions)
+    ).toBe(registry.templates.ButtonTemplates);
+  });
   it("returns the template from registry", () => {
     KEYS.forEach((key) => {
       const name = key as keyof TemplatesType;

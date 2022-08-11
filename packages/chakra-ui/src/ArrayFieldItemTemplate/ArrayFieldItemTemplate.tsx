@@ -2,8 +2,6 @@ import React, { useMemo } from "react";
 import { Box, ButtonGroup, HStack } from "@chakra-ui/react";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 
-import IconButton from "../IconButton";
-
 const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
   const {
     children,
@@ -16,7 +14,10 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     onDropIndexClick,
     onReorderClick,
     readonly,
+    registry,
   } = props;
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
   const onRemoveClick = useMemo(
     () => onDropIndexClick(index),
     [index, onDropIndexClick]
@@ -39,25 +40,19 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
         <Box>
           <ButtonGroup isAttached mb={1}>
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-up"
-                tabIndex={-1}
+              <MoveUpButton
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onArrowUpClick}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-down"
-                tabIndex={-1}
+              <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onArrowDownClick}
               />
             )}
             {hasRemove && (
-              <IconButton
-                icon="remove"
-                tabIndex={-1}
+              <RemoveButton
                 disabled={disabled || readonly}
                 onClick={onRemoveClick}
               />

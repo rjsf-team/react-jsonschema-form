@@ -1,6 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
 import React from "react";
-import { Button, Form, Grid } from "semantic-ui-react";
+import { Form, Grid } from "semantic-ui-react";
 
 const WrapIfAdditional = ({
   children,
@@ -14,7 +14,9 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  registry,
 }) => {
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const { readonlyAsDisabled = true, wrapperStyle } = formContext;
 
   const keyLabel = `${label} Key`; // i18n ?
@@ -53,11 +55,9 @@ const WrapIfAdditional = ({
             {children}
           </Grid.Column>
           <Grid.Column>
-            <Button
-              size="mini"
-              icon="trash"
+            <RemoveButton
+              iconType="mini"
               className="array-item-remove"
-              tabIndex="-1"
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
             />

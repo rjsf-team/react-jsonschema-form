@@ -6,8 +6,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import IconButton from "../IconButton/IconButton";
-
 type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   FieldTemplateProps,
   | "classNames"
@@ -19,6 +17,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   | "readonly"
   | "required"
   | "schema"
+  | "registry"
 >;
 
 const WrapIfAdditional = ({
@@ -31,7 +30,9 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  registry,
 }: WrapIfAdditionalProps) => {
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
@@ -61,12 +62,9 @@ const WrapIfAdditional = ({
       </Col>
       <Col xs={5}>{children}</Col>
       <Col xs={2} className="py-4">
-        <IconButton
-          block={true}
+        <RemoveButton
+          iconType="block"
           className="w-100"
-          variant="danger"
-          icon="remove"
-          tabIndex={-1}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
         />

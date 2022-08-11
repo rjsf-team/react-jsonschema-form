@@ -182,6 +182,19 @@ export interface TemplatesType<T = any, F = any> {
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
   UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, F>>;
+  /** The set of templates associated with buttons in the form */
+  ButtonTemplates: {
+    /** The template to use for the main `Submit` button  */
+    SubmitButton: React.ComponentType<SubmitButtonProps<T, F>>;
+    /** The template to use for the Add button used for AdditionalProperties and Array items */
+    AddButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Move Down button used for Array items */
+    MoveDownButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Move Up button used for Array items */
+    MoveUpButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Remove button used for AdditionalProperties and Array items */
+    RemoveButton: React.ComponentType<IconButtonProps>;
+  };
 }
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
@@ -531,6 +544,20 @@ export interface WidgetProps<T = any, F = any>
 
 /** The definition of a React-based Widget component */
 export type Widget<T = any, F = any> = React.ComponentType<WidgetProps<T, F>>;
+
+/** The type that defines the props used by the Submit button */
+export type SubmitButtonProps<T = any, F = any> = {
+  /** The uiSchema for this widget */
+  uiSchema?: UiSchema<T, F>;
+};
+
+/** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
+export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** An alternative specification for the type of the icon button */
+  iconType?: string;
+  /** The name representation or actual react element implementation for the icon */
+  icon?: string | React.ReactElement;
+};
 
 /** The type that defines how to change the behavior of the submit button for the form */
 export type UISchemaSubmitButtonOptions = {

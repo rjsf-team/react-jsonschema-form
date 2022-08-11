@@ -93,6 +93,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 disabled={false}
                 onClick={[Function]}
                 tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <svg
@@ -133,6 +134,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 "width": "100%",
               }
             }
+            title="Add Item"
             type="button"
           >
             <svg

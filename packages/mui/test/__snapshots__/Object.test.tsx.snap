@@ -529,6 +529,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #d32f2f;
   padding: 5px;
   font-size: 1.125rem;
 }
@@ -551,6 +552,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
 
 .emotion-20:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-20:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-20:hover {
+  background-color: rgba(211, 47, 47, 0.04);
 }
 
 @media (hover: none) {
@@ -646,17 +657,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #9c27b0;
 }
 
@@ -677,8 +688,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
 }
 
 .emotion-25:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-25:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-25:hover {
   background-color: rgba(156, 39, 176, 0.04);
 }
 
@@ -689,6 +708,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
 }
 
 .emotion-25.Mui-disabled {
+  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
@@ -919,7 +939,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid-root MuiGrid-item emotion-19"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-20"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-20"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -943,6 +963,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                 }
               }
               tabIndex={-1}
+              title="Remove"
               type="button"
             >
               <svg
@@ -970,7 +991,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           className="MuiGrid-root MuiGrid-item emotion-19"
         >
           <button
-            className="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root object-property-expand emotion-25"
+            className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium object-property-expand emotion-25"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -986,6 +1007,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             onTouchMove={[Function]}
             onTouchStart={[Function]}
             tabIndex={0}
+            title="Add Item"
             type="button"
           >
             <svg
@@ -999,7 +1021,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                 d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
               />
             </svg>
-             Add Item
             <span
               className="MuiTouchRipple-root emotion-22"
             />

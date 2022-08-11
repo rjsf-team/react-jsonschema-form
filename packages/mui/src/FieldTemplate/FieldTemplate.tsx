@@ -24,6 +24,7 @@ const FieldTemplate = ({
   rawHelp,
   rawDescription,
   schema,
+  registry,
 }: FieldTemplateProps) => {
   if (hidden) {
     return children;
@@ -39,6 +40,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       <FormControl
         fullWidth={true}

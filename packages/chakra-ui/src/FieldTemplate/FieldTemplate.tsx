@@ -24,6 +24,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     onDropPropertyClick,
     onKeyChange,
     readonly,
+    registry,
     required,
     rawErrors = [],
     rawHelp,
@@ -46,6 +47,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       <FormControl
         isRequired={required}

@@ -1,7 +1,6 @@
 import React from "react";
 import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 
-import IconButton from "../../IconButton";
 import Label from "./Label";
 
 /** The properties that are passed to a WrapIfAdditionalTemplate implementation */
@@ -18,6 +17,7 @@ export type WrapIfAdditionalProps<T = any, F = any> = {
   | "readonly"
   | "required"
   | "schema"
+  | "registry"
 >;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -39,7 +39,9 @@ export default function WrapIfAdditional<T = any, F = any>(
     required,
     schema,
     children,
+    registry,
   } = props;
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
@@ -64,11 +66,8 @@ export default function WrapIfAdditional<T = any, F = any>(
         </div>
         <div className="form-additional form-group col-xs-5">{children}</div>
         <div className="col-xs-2">
-          <IconButton
-            type="danger"
-            icon="remove"
+          <RemoveButton
             className="array-item-remove btn-block"
-            tabIndex="-1"
             style={{ border: "0" }}
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}

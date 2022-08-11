@@ -11,8 +11,6 @@ import {
   ObjectFieldTemplateProps,
 } from "@rjsf/utils";
 
-import AddButton from "../AddButton/AddButton";
-
 const ObjectFieldTemplate = ({
   description,
   title,
@@ -38,6 +36,10 @@ const ObjectFieldTemplate = ({
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
       {(uiOptions.title || title) && (
