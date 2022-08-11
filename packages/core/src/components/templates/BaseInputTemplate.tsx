@@ -1,4 +1,3 @@
-import React from "react";
 import { getInputProps, WidgetProps } from "@rjsf/utils";
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.

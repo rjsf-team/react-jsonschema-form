@@ -1,5 +1,3 @@
-import React from "react";
-
 import { getUiOptions, WidgetProps } from "@rjsf/utils";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";

@@ -1,4 +1,3 @@
-import React from "react";
 import { DescriptionFieldProps } from "@rjsf/utils";
 
 const DescriptionField = ({ id, description }: DescriptionFieldProps) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Theme as MuiV4Theme } from "@rjsf/material-ui";
 import { Theme as MuiV5Theme } from "@rjsf/mui";
 import { Theme as FluentUITheme } from "@rjsf/fluent-ui";

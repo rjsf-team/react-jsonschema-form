@@ -1,4 +1,3 @@
-import React from "react";
 import RemoveIcon from "@material-ui/icons/Remove";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";

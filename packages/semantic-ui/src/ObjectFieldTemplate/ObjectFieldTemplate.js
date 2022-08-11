@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from "react";
+import { Fragment } from "react";
 import { Grid } from "semantic-ui-react";
 import { canExpand, getUiOptions } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
@@ -23,7 +23,7 @@ function ObjectFieldTemplate({
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (
-    <React.Fragment>
+    <Fragment>
       {fieldTitle && (
         <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
@@ -59,7 +59,7 @@ function ObjectFieldTemplate({
           </Grid.Row>
         </Grid.Column>
       )}
-    </React.Fragment>
+    </Fragment>
   );
 }
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { DescriptionFieldProps } from "@rjsf/utils";
 
 /** The `DescriptionField` is the template to use to render the description of a field

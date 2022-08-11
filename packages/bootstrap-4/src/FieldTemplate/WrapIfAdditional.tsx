@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 
 import Row from "react-bootstrap/Row";

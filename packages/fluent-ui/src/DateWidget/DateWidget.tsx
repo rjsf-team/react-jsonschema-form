@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps, pad } from "@rjsf/utils";
 import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";

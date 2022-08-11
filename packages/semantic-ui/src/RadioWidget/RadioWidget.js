@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-no-undef,react/no-array-index-key,react/prop-types */
-import React from "react";
 import { Form, Radio } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 

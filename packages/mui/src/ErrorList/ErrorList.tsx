@@ -1,4 +1,3 @@
-import React from "react";
 import ErrorIcon from "@mui/icons-material/Error";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";

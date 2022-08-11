@@ -1,4 +1,3 @@
-import React from "react";
 import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
 import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";

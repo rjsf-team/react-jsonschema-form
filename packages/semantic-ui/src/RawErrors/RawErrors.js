@@ -1,5 +1,4 @@
 /* eslint-disable react/no-array-index-key */
-import React from "react";
 import PropTypes from "prop-types";
 import { nanoid } from "nanoid";
 import { Label, List } from "semantic-ui-react";

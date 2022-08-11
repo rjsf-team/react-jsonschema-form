@@ -1,5 +1,3 @@
-import React from "react";
-
 import { IconButton, IIconProps } from "@fluentui/react";
 import { AddButtonProps as FuiIconButtonProps } from "@rjsf/core";
 

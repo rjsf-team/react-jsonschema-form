@@ -1,5 +1,3 @@
-import React from "react";
-
 import { FieldTemplateProps } from "@rjsf/utils";
 
 import Form from "react-bootstrap/Form";

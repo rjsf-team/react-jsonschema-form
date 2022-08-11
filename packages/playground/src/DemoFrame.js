@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useRef, useCallback, cloneElement } from "react";
 import { CssBaseline } from "@mui/material";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
@@ -35,12 +35,12 @@ SOFTWARE.
 
 function DemoFrame(props) {
   const { children, classes, theme, ...other } = props;
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     ready: false,
   });
-  const instanceRef = React.useRef();
+  const instanceRef = useRef();
 
-  const handleRef = React.useCallback((ref) => {
+  const handleRef = useCallback((ref) => {
     instanceRef.current = {
       contentDocument: ref ? ref.node.contentDocument : null,
       contentWindow: ref ? ref.node.contentWindow : null,
@@ -68,7 +68,7 @@ function DemoFrame(props) {
   if (theme === "material-ui-4") {
     body = state.ready ? (
       <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
-        {React.cloneElement(children, {
+        {cloneElement(children, {
           container: state.container,
           window: state.window,
         })}
@@ -78,7 +78,7 @@ function DemoFrame(props) {
     body = state.ready ? (
       <CacheProvider value={state.emotionCache}>
         <CssBaseline />
-        {React.cloneElement(children, {
+        {cloneElement(children, {
           container: state.container,
           window: state.window,
         })}

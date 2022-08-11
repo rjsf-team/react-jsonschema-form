@@ -1,4 +1,4 @@
-import React, { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
 
 import Form, { FormProps } from "./components/Form";
 

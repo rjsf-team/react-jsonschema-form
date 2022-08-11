@@ -1,5 +1,3 @@
-import React from "react";
-
 import { WidgetProps, localToUTC, utcToLocal } from "@rjsf/utils";
 
 const DateTimeWidget = (props: WidgetProps) => {

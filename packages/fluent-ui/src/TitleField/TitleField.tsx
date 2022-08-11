@@ -1,4 +1,3 @@
-import React from "react";
 import { TitleFieldProps } from "@rjsf/utils";
 import { Label } from "@fluentui/react";
 

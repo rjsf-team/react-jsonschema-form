@@ -1,4 +1,3 @@
-import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/utils";
 import { allowedProps } from "../CheckboxWidget";

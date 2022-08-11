@@ -1,5 +1,3 @@
-import React from "react";
-
 import Alert from "antd/lib/alert";
 import List from "antd/lib/list";
 import Space from "antd/lib/space";

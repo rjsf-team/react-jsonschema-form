@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import React from "react";
 import { Form } from "semantic-ui-react";
 import HelpField from "../HelpField";
 import RawErrors from "../RawErrors";

@@ -1,4 +1,3 @@
-import React from "react";
 import { getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({

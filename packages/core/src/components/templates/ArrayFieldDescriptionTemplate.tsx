@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrayFieldDescriptionProps } from "@rjsf/utils";
 
 /** The `ArrayFieldDescriptionTemplate` component renders a `DescriptionFieldTemplate` with an `id` derived from

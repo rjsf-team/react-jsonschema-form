@@ -1,4 +1,3 @@
-import React from "react";
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";

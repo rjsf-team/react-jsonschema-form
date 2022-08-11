@@ -1,4 +1,4 @@
-import React from "react";
+import { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { mergeObjects, deepEquals, getSchemaType } from "@rjsf/utils";
 
@@ -219,7 +219,7 @@ function SchemaFieldRender(props) {
 
   return (
     <FieldTemplate {...fieldProps}>
-      <React.Fragment>
+      <Fragment>
         {field}
 
         {/*
@@ -272,12 +272,12 @@ function SchemaFieldRender(props) {
             uiSchema={uiSchema}
           />
         )}
-      </React.Fragment>
+      </Fragment>
     </FieldTemplate>
   );
 }
 
-class SchemaField extends React.Component {
+class SchemaField extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !deepEquals(this.props, nextProps);
   }
