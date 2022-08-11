@@ -165,7 +165,7 @@ export interface TemplatesType<T = any, F = any> {
     ArrayFieldDescriptionProps<T, F>
   >;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: React.ComponentType<ArrayFieldTemplateItemType>;
+  ArrayFieldItemTemplate: React.ComponentType<ArrayFieldTemplateItemType<T, F>>;
   /** The template to use while rendering the title for an array field */
   ArrayFieldTitleTemplate: React.ComponentType<ArrayFieldTitleProps<T, F>>;
   /** The template to use while rendering the standard html input */
