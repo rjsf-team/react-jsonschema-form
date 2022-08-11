@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Fragment } from "react";
 import { Input } from "semantic-ui-react";
 import { rangeSpec } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
@@ -37,7 +36,7 @@ function RangeWidget(props) {
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <Fragment>
+    <>
       <Input
         id={id}
         key={id}
@@ -54,7 +53,7 @@ function RangeWidget(props) {
         onFocus={_onFocus}
       />
       <span>{value}</span>
-    </Fragment>
+    </>
   );
 }
 export default RangeWidget;

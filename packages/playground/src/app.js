@@ -1,4 +1,4 @@
-import { Fragment, Component } from "react";
+import { Component } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
@@ -521,7 +521,7 @@ class Playground extends Component {
           {this.state.form && (
             <DemoFrame
               head={
-                <Fragment>
+                <>
                   <link
                     rel="stylesheet"
                     id="theme"
@@ -536,7 +536,7 @@ class Playground extends Component {
                       }}
                     />
                   )}
-                </Fragment>
+                </>
               }
               style={{
                 width: "100%",

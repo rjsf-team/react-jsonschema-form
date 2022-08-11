@@ -1,4 +1,4 @@
-import { Component, Fragment } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { mergeObjects, deepEquals, getSchemaType } from "@rjsf/utils";
 
@@ -219,7 +219,7 @@ function SchemaFieldRender(props) {
 
   return (
     <FieldTemplate {...fieldProps}>
-      <Fragment>
+      <>
         {field}
 
         {/*
@@ -272,7 +272,7 @@ function SchemaFieldRender(props) {
             uiSchema={uiSchema}
           />
         )}
-      </Fragment>
+      </>
     </FieldTemplate>
   );
 }

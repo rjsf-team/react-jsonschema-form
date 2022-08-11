@@ -1,5 +1,3 @@
-import { Fragment } from "react";
-
 import { Grid, GridItem } from "@chakra-ui/react";
 
 import { canExpand, getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
@@ -25,7 +23,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
 
   return (
-    <Fragment>
+    <>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
@@ -62,7 +60,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
           </GridItem>
         )}
       </Grid>
-    </Fragment>
+    </>
   );
 };
 
