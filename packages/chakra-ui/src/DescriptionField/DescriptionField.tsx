@@ -1,4 +1,3 @@
-import React from "react";
 import { DescriptionFieldProps } from "@rjsf/utils";
 import { Text } from "@chakra-ui/react";
 

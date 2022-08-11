@@ -1,4 +1,3 @@
-import React from "react";
 import { ErrorListProps } from "@rjsf/utils";
 import { List, ListIcon, ListItem, Alert, AlertTitle } from "@chakra-ui/react";
 import { WarningIcon } from "@chakra-ui/icons";
