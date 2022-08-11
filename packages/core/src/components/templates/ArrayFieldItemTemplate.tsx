@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 
 import IconButton from "../IconButton";

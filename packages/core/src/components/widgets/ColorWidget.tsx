@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `ColorWidget` component uses the `BaseInputTemplate` changing the type to `color` and disables it when it is

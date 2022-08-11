@@ -1,4 +1,3 @@
-import React from "react";
 import { ErrorListProps, RJSFValidationError } from "@rjsf/utils";
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`

@@ -1,4 +1,3 @@
-import React from "react";
 import { getWidget, getUiOptions, optionsList, hasWidget } from "@rjsf/utils";
 
 import * as types from "../../types";

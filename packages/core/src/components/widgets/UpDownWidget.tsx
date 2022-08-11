@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `UpDownWidget` component uses the `BaseInputTemplate` changing the type to `number`.

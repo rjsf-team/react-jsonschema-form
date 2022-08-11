@@ -1,4 +1,3 @@
-import React from "react";
 import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form */

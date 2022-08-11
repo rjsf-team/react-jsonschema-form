@@ -1,5 +1,3 @@
-import React from "react";
-
 const REQUIRED_FIELD_SYMBOL = "*";
 
 export type LabelProps = {

@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { asNumber } from "@rjsf/utils";
 
 import * as types from "../../types";
@@ -32,7 +32,7 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-class NumberField extends React.Component {
+class NumberField extends Component {
   constructor(props) {
     super(props);
 

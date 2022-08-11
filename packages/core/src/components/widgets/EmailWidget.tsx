@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `EmailWidget` component uses the `BaseInputTemplate` changing the type to `email`.

@@ -1,4 +1,3 @@
-import React from "react";
 import { ArrayFieldTitleProps } from "@rjsf/utils";
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
