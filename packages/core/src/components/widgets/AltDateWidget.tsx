@@ -1,7 +1,6 @@
-import React, { Component, MouseEvent } from "react";
+import React, { MouseEvent, useEffect, useReducer } from "react";
 
 import {
-  shouldRender,
   parseDateString,
   toDateString,
   pad,
@@ -17,23 +16,47 @@ function rangeOptions(start: number, stop: number) {
   return options;
 }
 
-function readyForChange(state: any) {
-  return Object.keys(state).every((key) => state[key] !== -1);
+function readyForChange(state: DateObject) {
+  return Object.values(state).every((value) => value !== -1);
 }
 
-function DateElement(props: any) {
-  const {
-    type,
-    range,
-    value,
-    select,
-    rootId,
-    disabled,
-    readonly,
-    autofocus,
-    registry,
-    onBlur,
-  } = props;
+function dateElementProps(
+  state: DateObject,
+  time: boolean,
+  yearsRange: [number, number] = [1900, new Date().getFullYear() + 2]
+) {
+  const { year, month, day, hour, minute, second } = state;
+  const data = [
+    {
+      type: "year",
+      range: yearsRange,
+      value: year,
+    },
+    { type: "month", range: [1, 12], value: month },
+    { type: "day", range: [1, 31], value: day },
+  ] as { type: string; range: [number, number]; value: number | undefined }[];
+  if (time) {
+    data.push(
+      { type: "hour", range: [0, 23], value: hour },
+      { type: "minute", range: [0, 59], value: minute },
+      { type: "second", range: [0, 59], value: second }
+    );
+  }
+  return data;
+}
+
+function DateElement({
+  type,
+  range,
+  value,
+  select,
+  rootId,
+  disabled,
+  readonly,
+  autofocus,
+  registry,
+  onBlur,
+}: any) {
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
   return (
@@ -53,146 +76,107 @@ function DateElement(props: any) {
   );
 }
 
-/** The `AltDateWidget` is an alternative widget for rendering date properties. */
-class AltDateWidget<T = any, F = any> extends Component<
-  WidgetProps<T, F>,
-  DateObject
-> {
-  static defaultProps = {
-    time: false,
-    disabled: false,
-    readonly: false,
-    autofocus: false,
-    options: {
-      yearsRange: [1900, new Date().getFullYear() + 2],
+/** The `AltDateWidget` is an alternative widget for rendering date properties.
+ * @param props - The `WidgetProps` for this component
+ */
+function AltDateWidget<T = any, F = any>({
+  time = false,
+  disabled = false,
+  readonly = false,
+  autofocus = false,
+  options,
+  id,
+  registry,
+  onBlur,
+  onChange,
+  value,
+}: WidgetProps<T, F>) {
+  const [state, setState] = useReducer(
+    (state: DateObject, action: Partial<DateObject>) => {
+      return { ...state, ...action };
     },
-  };
+    parseDateString(value, time)
+  );
 
-  /**
-   *
-   * @param props - The `WidgetProps` for this component
-   */
-  constructor(props: WidgetProps<T, F>) {
-    super(props);
-    this.state = parseDateString(props.value, props.time);
-  }
-
-  componentDidUpdate(prevProps: WidgetProps<T, F>) {
-    if (
-      prevProps.value &&
-      prevProps.value !== parseDateString(this.props.value, this.props.time)
-    ) {
-      this.setState(parseDateString(this.props.value, this.props.time));
+  useEffect(() => {
+    if (value && value !== toDateString(state, time)) {
+      setState(parseDateString(value, time));
     }
-  }
+  }, [value]);
 
-  shouldComponentUpdate(
-    nextProps: WidgetProps<T, F>,
-    nextState: DateObject
-  ): boolean {
-    return shouldRender(this, nextProps, nextState);
-  }
+  useEffect(() => {
+    if (readyForChange(state)) {
+      // Only propagate to parent state if we have a complete date{time}
+      onChange(toDateString(state, time));
+    }
+  }, [state, time]);
 
-  onChange = (property: keyof DateObject, value: any) => {
-    this.setState(
-      { [property]: typeof value === "undefined" ? -1 : value } as Pick<
-        DateObject,
-        keyof DateObject
-      >,
-      () => {
-        // Only propagate to parent state if we have a complete date{time}
-        if (readyForChange(this.state)) {
-          this.props.onChange(toDateString(this.state, this.props.time));
-        }
-      }
-    );
+  const handleChange = (property: keyof DateObject, value: string) => {
+    setState({ [property]: value });
   };
 
-  setNow = (event: MouseEvent<HTMLAnchorElement>) => {
+  const handleSetNow = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;
     }
     const nowDateObj = parseDateString(new Date().toJSON(), time);
-    this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
+    setState(nowDateObj);
   };
 
-  clear = (event: MouseEvent<HTMLAnchorElement>) => {
+  const handleClear = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
       return;
     }
-    this.setState(parseDateString("", time), () => onChange(undefined));
+    setState(parseDateString("", time));
+    onChange(undefined);
   };
 
-  get dateElementProps() {
-    const { time, options } = this.props;
-    const { year, month, day, hour, minute, second } = this.state;
-    const data = [
-      {
-        type: "year",
-        range: options.yearsRange,
-        value: year,
-      },
-      { type: "month", range: [1, 12], value: month },
-      { type: "day", range: [1, 31], value: day },
-    ] as { type: string; range: [number, number]; value: number | undefined }[];
-    if (time) {
-      data.push(
-        { type: "hour", range: [0, 23], value: hour },
-        { type: "minute", range: [0, 59], value: minute },
-        { type: "second", range: [0, 59], value: second }
-      );
-    }
-    return data;
-  }
-
-  render() {
-    const { id, disabled, readonly, autofocus, registry, onBlur, options } =
-      this.props;
-    return (
-      <ul className="list-inline">
-        {this.dateElementProps.map((elemProps, i) => (
-          <li key={i}>
-            <DateElement
-              rootId={id}
-              select={this.onChange}
-              {...elemProps}
-              disabled={disabled}
-              readonly={readonly}
-              registry={registry}
-              onBlur={onBlur}
-              autofocus={autofocus && i === 0}
-            />
-          </li>
-        ))}
-        {(options.hideNowButton !== "undefined"
-          ? !options.hideNowButton
-          : true) && (
-          <li>
-            <a href="#" className="btn btn-info btn-now" onClick={this.setNow}>
-              Now
-            </a>
-          </li>
-        )}
-        {(options.hideClearButton !== "undefined"
-          ? !options.hideClearButton
-          : true) && (
-          <li>
-            <a
-              href="#"
-              className="btn btn-warning btn-clear"
-              onClick={this.clear}
-            >
-              Clear
-            </a>
-          </li>
-        )}
-      </ul>
-    );
-  }
+  return (
+    <ul className="list-inline">
+      {dateElementProps(
+        state,
+        time,
+        options.yearsRange as [number, number] | undefined
+      ).map((elemProps, i) => (
+        <li key={i}>
+          <DateElement
+            rootId={id}
+            select={handleChange}
+            {...elemProps}
+            disabled={disabled}
+            readonly={readonly}
+            registry={registry}
+            onBlur={onBlur}
+            autofocus={autofocus && i === 0}
+          />
+        </li>
+      ))}
+      {(options.hideNowButton !== "undefined"
+        ? !options.hideNowButton
+        : true) && (
+        <li>
+          <a href="#" className="btn btn-info btn-now" onClick={handleSetNow}>
+            Now
+          </a>
+        </li>
+      )}
+      {(options.hideClearButton !== "undefined"
+        ? !options.hideClearButton
+        : true) && (
+        <li>
+          <a
+            href="#"
+            className="btn btn-warning btn-clear"
+            onClick={handleClear}
+          >
+            Clear
+          </a>
+        </li>
+      )}
+    </ul>
+  );
 }
 
 export default AltDateWidget;
