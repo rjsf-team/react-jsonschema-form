@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 

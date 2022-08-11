@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import { getUiOptions, WidgetProps } from "@rjsf/utils";
 import FormControl from "react-bootstrap/FormControl";
