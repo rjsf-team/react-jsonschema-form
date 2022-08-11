@@ -1,16 +1,3 @@
-import React from "react";
-
-/**
- * Extract props meant for semantic UI components from props that are
- * passed to Widgets, Templates and Fields.
- * @param {Object} params
- * @param {Object?} params.formContext
- * @param {Object?} params.uiSchema
- * @param {Object?} params.options
- * @param {Object?} params.defaultSchemaProps
- * @param {Object?} params.defaultContextProps
- * @returns {any}
- */
 export function getSemanticProps({
   formContext = {},
   uiSchema = {},
