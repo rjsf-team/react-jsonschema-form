@@ -1,4 +1,3 @@
-import * as React from "react";
 import Form from "react-bootstrap/Form";
 import { getInputProps, getUiOptions, WidgetProps } from "@rjsf/utils";
 

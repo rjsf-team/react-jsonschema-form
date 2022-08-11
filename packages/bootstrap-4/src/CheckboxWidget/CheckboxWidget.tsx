@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { WidgetProps } from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
 

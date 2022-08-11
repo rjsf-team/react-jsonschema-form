@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { AddButtonProps } from "@rjsf/core";
 
 import { Button, ButtonProps } from "@chakra-ui/react";

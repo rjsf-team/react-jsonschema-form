@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import IconButton from "./IconButton";
 
 /** The properties that are passed to the `AddButton` */
