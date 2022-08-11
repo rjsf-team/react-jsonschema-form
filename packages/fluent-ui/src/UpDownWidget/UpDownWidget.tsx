@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
 import { WidgetProps, rangeSpec } from "@rjsf/utils";
