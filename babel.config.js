@@ -1,7 +1,7 @@
 const BABEL_ENV = process.env.BABEL_ENV;
-const IS_TEST = BABEL_ENV === "test"
-const ignore = IS_TEST ? [] : ['test/**/*.js']
-const targets = IS_TEST ? { node: "current" } : { browsers: "defaults" }
+const IS_TEST = BABEL_ENV === "test";
+const ignore = IS_TEST ? [] : ["test/**/*.js"];
+const targets = IS_TEST ? { node: "current" } : { browsers: "defaults" };
 
 module.exports = {
   presets: [
@@ -9,15 +9,20 @@ module.exports = {
       "@babel/preset-env",
       {
         modules: ["cjs", "test"].includes(BABEL_ENV) ? "commonjs" : false,
-        targets
+        targets,
       },
     ],
-    "@babel/preset-react"
+    [
+      "@babel/preset-react",
+      {
+        runtime: "automatic",
+      },
+    ],
   ],
   plugins: [
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-optional-chaining"
+    "@babel/plugin-proposal-optional-chaining",
   ],
   ignore,
-  sourceMaps: "inline"
+  sourceMaps: "inline",
 };
