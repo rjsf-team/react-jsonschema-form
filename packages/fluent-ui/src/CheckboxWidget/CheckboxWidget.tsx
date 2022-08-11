@@ -1,6 +1,7 @@
 import { Checkbox } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
+import { useCallback } from "react";
 
 // Keys of ICheckboxProps from @fluentui/react
 export const allowedProps = [
@@ -42,7 +43,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     options,
   } = props;
 
-  const _onChange = React.useCallback((_, checked?: boolean): void => {
+  const _onChange = useCallback((_, checked?: boolean): void => {
     onChange(checked);
   }, []);
 
