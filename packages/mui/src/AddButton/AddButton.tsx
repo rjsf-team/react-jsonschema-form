@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import { AddButtonProps } from "@rjsf/core";

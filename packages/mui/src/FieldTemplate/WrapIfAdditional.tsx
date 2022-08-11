@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import RemoveIcon from "@mui/icons-material/Remove";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";

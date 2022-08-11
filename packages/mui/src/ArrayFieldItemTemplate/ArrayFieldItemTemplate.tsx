@@ -1,4 +1,3 @@
-import React from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import RemoveIcon from "@mui/icons-material/Remove";
