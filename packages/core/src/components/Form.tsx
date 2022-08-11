@@ -31,6 +31,7 @@ import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 
 import getDefaultRegistry from "../getDefaultRegistry";
+import React from "react";
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, F = any> {
