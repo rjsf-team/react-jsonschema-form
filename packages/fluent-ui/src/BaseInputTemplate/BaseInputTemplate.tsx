@@ -1,4 +1,3 @@
-import * as React from "react";
 import { TextField } from "@fluentui/react";
 import { getInputProps, WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";

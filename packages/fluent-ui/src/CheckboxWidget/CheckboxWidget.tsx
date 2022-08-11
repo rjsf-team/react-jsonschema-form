@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Checkbox } from "@fluentui/react";
 import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";

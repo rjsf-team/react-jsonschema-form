@@ -1,4 +1,3 @@
-import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { WidgetProps, processSelectValue } from "@rjsf/utils";
