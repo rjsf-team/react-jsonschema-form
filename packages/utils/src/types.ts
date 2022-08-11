@@ -368,7 +368,7 @@ export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldTemplateItemType = {
+export type ArrayFieldTemplateItemType<T = any, F = any> = {
   /** The html for the item's content */
   children: React.ReactElement;
   /** The className string */
@@ -395,6 +395,8 @@ export type ArrayFieldTemplateItemType = {
   readonly: boolean;
   /** A stable, unique key for the array item */
   key: string;
+  /** The `registry` object */
+  registry: Registry<T, F>;
 };
 
 /** The properties that are passed to an ArrayFieldTemplate implementation */
@@ -408,7 +410,7 @@ export type ArrayFieldTemplateProps<T = any, F = any> = {
   /** An object containing the id for this object & ids for its properties */
   idSchema: IdSchema<T>;
   /** An array of objects representing the items in the array */
-  items: ArrayFieldTemplateItemType[];
+  items: ArrayFieldTemplateItemType<T, F>[];
   /** A function that adds a new item to the array */
   onAddClick: (event?: any) => void;
   /** A boolean value stating if the array is read-only */

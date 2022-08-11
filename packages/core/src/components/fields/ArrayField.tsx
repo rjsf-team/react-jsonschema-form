@@ -23,35 +23,27 @@ import { nanoid } from "nanoid";
 
 import DefaultArrayFieldTemplate from "../templates/ArrayFieldTemplate";
 
+/** Type used to represent the keyed form data used in the state */
 type KeyedFormDataType<T> = { key: string; item: T };
 
+/** Type used for the state of the `ArrayField` component */
 type ArrayFieldState<T> = {
+  /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
+  /** Flag indicating whether any of the keyed form data has been updated */
   updatedKeyedFormData: boolean;
 };
 
-type ArrayFieldItemGeneratorProps<T, F> = {
-  key: string;
-  index: number;
-  name: string;
-  canRemove?: boolean;
-  canMoveUp?: boolean;
-  canMoveDown?: boolean;
-  itemSchema: RJSFSchema;
-  itemData: T;
-  itemUiSchema: UiSchema<T, F>;
-  itemIdSchema: IdSchema<T>;
-  itemErrorSchema?: ErrorSchema<T>;
-  autofocus?: boolean;
-  onBlur: FieldProps<T, F>["onBlur"];
-  onFocus: FieldProps<T, F>["onFocus"];
-  rawErrors?: string[];
-};
-
+/** Used to generate a unique ID for an element in a row */
 function generateRowId() {
   return nanoid();
 }
 
+/** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
+ *
+ * @param formData - The data for the form
+ * @returns - The `formData` converted into a `KeyedFormDataType` element
+ */
 function generateKeyedFormData<T>(formData: T[]): KeyedFormDataType<T>[] {
   return !Array.isArray(formData)
     ? []
@@ -63,6 +55,11 @@ function generateKeyedFormData<T>(formData: T[]): KeyedFormDataType<T>[] {
       });
 }
 
+/** Converts `KeyedFormDataType` data into the inner `formData`
+ *
+ * @param keyedFormData - The `KeyedFormDataType` to be converted
+ * @returns - The inner `formData` item(s) in the `keyedFormData`
+ */
 function keyedToPlainFormData<T>(
   keyedFormData: KeyedFormDataType<T> | KeyedFormDataType<T>[]
 ): T[] {
@@ -72,10 +69,17 @@ function keyedToPlainFormData<T>(
   return [];
 }
 
+/** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
+ * and fixed array, allowing user to add and remove elements from the array data.
+ */
 class ArrayField<T = any, F = any> extends Component<
   FieldProps<T[], F>,
   ArrayFieldState<T>
 > {
+  /** Constructs an `ArrayField` from the `props`, generating the initial keyed data from the `formData`
+   *
+   * @param props - The `FieldProps` for this template
+   */
   constructor(props: FieldProps<T[], F>) {
     super(props);
     const { formData = [] } = props;
@@ -86,6 +90,12 @@ class ArrayField<T = any, F = any> extends Component<
     };
   }
 
+  /** React lifecycle method that is called when the props are about to change allowing the state to be updated. It
+   * regenerates the keyed form data and returns it
+   *
+   * @param nextProps - The next set of props data
+   * @param prevState - The previous set of state data
+   */
   static getDerivedStateFromProps<T = any, F = any>(
     nextProps: Readonly<FieldProps<T[], F>>,
     prevState: Readonly<ArrayFieldState<T>>
@@ -114,6 +124,9 @@ class ArrayField<T = any, F = any> extends Component<
     };
   }
 
+  /** Returns the appropriate title for an item by getting first the title from the schema.items, then falling back to
+   * the description from the schema.items, and finally the string "Item"
+   */
   get itemTitle() {
     const { schema } = this.props;
     return get(
@@ -123,6 +136,12 @@ class ArrayField<T = any, F = any> extends Component<
     );
   }
 
+  /** Determines whether the item described in the schema is always required, which is determined by whether any item
+   * may be null.
+   *
+   * @param itemSchema - The schema for the item
+   * @return - True if the item schema type does not contain the "null" type
+   */
   isItemRequired(itemSchema: RJSFSchema) {
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
@@ -133,6 +152,13 @@ class ArrayField<T = any, F = any> extends Component<
     return itemSchema.type !== "null";
   }
 
+  /** Determines whether more items can be added to the array. If the uiSchema indicates the array doesn't allow adding
+   * then false is returned. Otherwise, if the schema indicates that there are a maximum number of items and the
+   * `formData` matches that value, then false is returned, otherwise true is returned.
+   *
+   * @param formItems - The list of items in the form
+   * @returns - True if the item is addable otherwise false
+   */
   canAddItem(formItems: any[]) {
     const { schema, uiSchema } = this.props;
     let { addable } = getUiOptions<T[], F>(uiSchema);
@@ -148,6 +174,9 @@ class ArrayField<T = any, F = any> extends Component<
     return addable;
   }
 
+  /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
+   * that the schema is fixed and allows additional items.
+   */
   _getNewFormDataRow = (): T => {
     const { schema, registry } = this.props;
     const { schemaUtils } = registry;
@@ -159,6 +188,12 @@ class ArrayField<T = any, F = any> extends Component<
     return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
   };
 
+  /** Callback handler for when the user clicks on the add button. Creates a new row of keyed form data at the end of
+   * the list, adding it into the state, and then returning `onChange()` with the plain form data converted from the
+   * keyed data
+   *
+   * @param event - The event for the click
+   */
   onAddClick = (event: MouseEvent) => {
     if (event) {
       event.preventDefault();
@@ -180,6 +215,12 @@ class ArrayField<T = any, F = any> extends Component<
     );
   };
 
+  /** Callback handler for when the user clicks on the add button on an existing array element. Creates a new row of
+   * keyed form data inserted at the `index`, adding it into the state, and then returning `onChange()` with the plain
+   * form data converted from the keyed data
+   *
+   * @param index - The index at which the add button is clicked
+   */
   onAddIndexClick = (index: number) => {
     return (event: MouseEvent) => {
       if (event) {
@@ -204,6 +245,12 @@ class ArrayField<T = any, F = any> extends Component<
     };
   };
 
+  /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
+   * keyed form data at the `index` in the state, and then returning `onChange()` with the plain form data converted
+   * from the keyed data
+   *
+   * @param index - The index at which the remove button is clicked
+   */
   onDropIndexClick = (index: number) => {
     return (event: MouseEvent) => {
       if (event) {
@@ -239,6 +286,13 @@ class ArrayField<T = any, F = any> extends Component<
     };
   };
 
+  /** Callback handler for when the user clicks on one of the move item buttons on an existing array element. Moves the
+   * row of keyed form data at the `index` to the `newIndex` in the state, and then returning `onChange()` with the
+   * plain form data converted from the keyed data
+   *
+   * @param index - The index of the item to move
+   * @param newIndex - The index to where the item is to be moved
+   */
   onReorderClick = (index: number, newIndex: number) => {
     return (event: React.MouseEvent<HTMLButtonElement>) => {
       if (event) {
@@ -286,6 +340,11 @@ class ArrayField<T = any, F = any> extends Component<
     };
   };
 
+  /** Callback handler used to deal with changing the value of the data in the array at the `index`. Calls the
+   * `onChange` callback with the updated form data
+   *
+   * @param index - The index of the item being changed
+   */
   onChangeForIndex = (index: number) => {
     return (value: any, newErrorSchema?: ErrorSchema<T>) => {
       const { formData, onChange, errorSchema } = this.props;
@@ -307,11 +366,14 @@ class ArrayField<T = any, F = any> extends Component<
     };
   };
 
+  /** Callback handler used to change the value for a checkbox */
   onSelectChange = (value: any) => {
     const { onChange } = this.props;
     onChange(value);
   };
 
+  /** Renders the `ArrayField` depending on the specific needs of the schema and uischema elements
+   */
   render() {
     const { schema, uiSchema, idSchema, registry } = this.props;
     const { schemaUtils } = registry;
@@ -344,6 +406,8 @@ class ArrayField<T = any, F = any> extends Component<
     return this.renderNormalArray();
   }
 
+  /** Renders a normal array without any limitations of length
+   */
   renderNormalArray() {
     const {
       schema,
@@ -430,6 +494,8 @@ class ArrayField<T = any, F = any> extends Component<
     return <Template {...arrayProps} />;
   }
 
+  /** Renders an array using the custom widget provided by the user in the `uiSchema`
+   */
   renderCustomWidget() {
     const {
       schema,
@@ -478,6 +544,8 @@ class ArrayField<T = any, F = any> extends Component<
     );
   }
 
+  /** Renders an array as a set of checkboxes
+   */
   renderMultiSelect() {
     const {
       schema,
@@ -528,6 +596,8 @@ class ArrayField<T = any, F = any> extends Component<
     );
   }
 
+  /** Renders an array of files using the `FileWidget`
+   */
   renderFiles() {
     const {
       schema,
@@ -570,6 +640,8 @@ class ArrayField<T = any, F = any> extends Component<
     );
   }
 
+  /** Renders an array that has a maximum limit of items
+   */
   renderFixedArray() {
     const {
       schema,
@@ -681,7 +753,28 @@ class ArrayField<T = any, F = any> extends Component<
     return <Template {...arrayProps} />;
   }
 
-  renderArrayFieldItem(props: ArrayFieldItemGeneratorProps<T[], F>) {
+  /** Renders the individual array item using a `SchemaField` along with the additional properties required to be send
+   * back to the `ArrayFieldItemTemplate`.
+   *
+   * @param props - The props for the individual array item to be rendered
+   */
+  renderArrayFieldItem(props: {
+    key: string;
+    index: number;
+    name: string;
+    canRemove?: boolean;
+    canMoveUp?: boolean;
+    canMoveDown?: boolean;
+    itemSchema: RJSFSchema;
+    itemData: T[];
+    itemUiSchema: UiSchema<T[], F>;
+    itemIdSchema: IdSchema<T[]>;
+    itemErrorSchema?: ErrorSchema<T[]>;
+    autofocus?: boolean;
+    onBlur: FieldProps<T[], F>["onBlur"];
+    onFocus: FieldProps<T[], F>["onFocus"];
+    rawErrors?: string[];
+  }) {
     const {
       key,
       index,
@@ -758,6 +851,7 @@ class ArrayField<T = any, F = any> extends Component<
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
       readonly,
+      registry,
     };
   }
 }
