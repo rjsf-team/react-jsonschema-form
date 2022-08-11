@@ -53,10 +53,7 @@ function DateElement(props: any) {
   );
 }
 
-/** The `AltDateWidget` is an alternative widget for rendering date properties.
- *
- * @param props - The `WidgetProps` for this component
- */
+/** The `AltDateWidget` is an alternative widget for rendering date properties. */
 class AltDateWidget<T = any, F = any> extends Component<
   WidgetProps<T, F>,
   DateObject
@@ -71,6 +68,10 @@ class AltDateWidget<T = any, F = any> extends Component<
     },
   };
 
+  /**
+   *
+   * @param props - The `WidgetProps` for this component
+   */
   constructor(props: WidgetProps<T, F>) {
     super(props);
     this.state = parseDateString(props.value, props.time);

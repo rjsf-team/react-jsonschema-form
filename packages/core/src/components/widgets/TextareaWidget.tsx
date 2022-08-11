@@ -27,16 +27,12 @@ function TextareaWidget<T = any, F = any>({
   const handleBlur = ({
     target: { value },
   }: FocusEvent<HTMLTextAreaElement>) => {
-    if (onBlur) {
-      return onBlur(id, value);
-    }
+    return onBlur(id, value);
   };
   const handleFocus = ({
     target: { value },
   }: FocusEvent<HTMLTextAreaElement>) => {
-    if (onFocus) {
-      return onFocus(id, value);
-    }
+    return onFocus(id, value);
   };
 
   return (

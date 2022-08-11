@@ -86,6 +86,10 @@ type FileWidgetStateType = {
   filesInfo: FileInfoType[];
 };
 
+/**
+ *  The `FileWidget` is a widget for rendering file upload fields.
+ *  It is typically used with a string property with data-url format.
+ */
 class FileWidget<T, F> extends Component<
   WidgetProps<T, F>,
   FileWidgetStateType

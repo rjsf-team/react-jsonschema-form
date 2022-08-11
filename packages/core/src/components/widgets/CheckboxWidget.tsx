@@ -26,6 +26,16 @@ function CheckboxWidget<T = any, F = any>({
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    return onChange(event.target.checked);
+  };
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    return onBlur(id, event.target.checked);
+  };
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    return onFocus(id, event.target.checked);
+  };
+
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
@@ -43,9 +53,9 @@ function CheckboxWidget<T = any, F = any>({
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)}
-          onBlur={onBlur && ((event) => onBlur(id, event.target.checked))}
-          onFocus={onFocus && ((event) => onFocus(id, event.target.checked))}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         />
         <span>{label}</span>
       </label>

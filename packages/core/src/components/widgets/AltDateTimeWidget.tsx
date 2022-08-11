@@ -10,12 +10,12 @@ function AltDateTimeWidget<T = any, F = any>({
   time = true,
   ...props
 }: WidgetProps<T, F>) {
+  const { AltDateWidget } = props.registry.widgets;
   const options = {
-    yearsRange: [1900, new Date().getFullYear() + 2],
+    ...(AltDateWidget?.defaultProps?.options ?? {}),
     ...props.options,
   };
 
-  const { AltDateWidget } = props.registry.widgets;
   return <AltDateWidget time={time} {...props} options={options} />;
 }
 
