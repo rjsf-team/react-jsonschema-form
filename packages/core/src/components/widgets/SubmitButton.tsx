@@ -18,7 +18,7 @@ export default function SubmitButton<T, F>({
       <button
         type="submit"
         {...submitButtonProps}
-        className={`btn btn-info ${submitButtonProps.className}`}
+        className={submitButtonProps.className || `btn btn-info`}
       >
         {submitText}
       </button>
