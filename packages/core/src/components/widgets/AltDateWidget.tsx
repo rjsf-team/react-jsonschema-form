@@ -45,7 +45,23 @@ function dateElementProps(
   return data;
 }
 
-function DateElement({
+type DateElementProps<T, F> = Pick<
+  WidgetProps<T, F>,
+  | "value"
+  | "disabled"
+  | "readonly"
+  | "autofocus"
+  | "registry"
+  | "onBlur"
+  | "onFocus"
+> & {
+  rootId: string;
+  select: (property: keyof DateObject, value: any) => void;
+  type: string;
+  range: [number, number];
+};
+
+function DateElement<T, F>({
   type,
   range,
   value,
@@ -56,7 +72,8 @@ function DateElement({
   autofocus,
   registry,
   onBlur,
-}: any) {
+  onFocus,
+}: DateElementProps<T, F>) {
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
   return (
@@ -70,8 +87,11 @@ function DateElement({
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value: any) => select(type, value)}
+      onChange={(value: any) => select(type as keyof DateObject, value)}
       onBlur={onBlur}
+      onFocus={onFocus}
+      registry={registry}
+      label=""
     />
   );
 }
@@ -88,6 +108,7 @@ function AltDateWidget<T = any, F = any>({
   id,
   registry,
   onBlur,
+  onFocus,
   onChange,
   value,
 }: WidgetProps<T, F>) {
@@ -149,6 +170,7 @@ function AltDateWidget<T = any, F = any>({
             readonly={readonly}
             registry={registry}
             onBlur={onBlur}
+            onFocus={onFocus}
             autofocus={autofocus && i === 0}
           />
         </li>
