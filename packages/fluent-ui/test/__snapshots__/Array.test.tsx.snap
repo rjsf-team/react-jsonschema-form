@@ -545,6 +545,7 @@ exports[`array fields checkboxes 1`] = `
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
+        aria-required={false}
         className="ms-Dropdown dropdown-67"
         data-is-focusable={true}
         id="Dropdown15"

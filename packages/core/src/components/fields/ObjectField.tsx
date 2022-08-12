@@ -14,6 +14,7 @@ import {
 } from "@rjsf/utils";
 import get from "lodash/get";
 import has from "lodash/has";
+import isObject from "lodash/isObject";
 import set from "lodash/set";
 import unset from "lodash/unset";
 
@@ -184,7 +185,7 @@ class ObjectField<T = any, F = any> extends Component<
    * @param schema - The schema element to which the new property is being added
    */
   handleAddClick = (schema: RJSFSchema) => () => {
-    if (typeof schema.additionalProperties !== "object") {
+    if (!isObject(schema.additionalProperties)) {
       return;
     }
     const { formData, onChange, registry } = this.props;

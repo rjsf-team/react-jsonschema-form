@@ -70,11 +70,10 @@ function getFieldComponent<T, F>(
   return componentName in fields
     ? fields[componentName]
     : () => {
-        // cast this as a Partial to avoid issues
-        const UnsupportedField = templates.UnsupportedFieldTemplate;
+        const { UnsupportedFieldTemplate } = templates;
 
         return (
-          <UnsupportedField
+          <UnsupportedFieldTemplate
             schema={schema}
             idSchema={idSchema}
             reason={`Unknown field type ${schema.type}`}

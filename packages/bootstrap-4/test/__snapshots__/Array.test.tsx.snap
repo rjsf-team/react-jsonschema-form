@@ -505,6 +505,7 @@ exports[`array fields checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         readOnly={false}
+        required={false}
         value={Array []}
       >
         <option

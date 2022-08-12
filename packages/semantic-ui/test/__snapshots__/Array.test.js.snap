@@ -302,6 +302,7 @@ exports[`array fields checkboxes 1`] = `
         onKeyDown={[Function]}
         onMouseDown={[Function]}
         readOnly={false}
+        required={false}
         role="listbox"
         tabIndex={0}
       >

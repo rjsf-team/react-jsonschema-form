@@ -113,6 +113,7 @@ exports[`single fields checkboxes field 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
           <label
@@ -139,6 +140,7 @@ exports[`single fields checkboxes field 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
           <label
@@ -165,6 +167,7 @@ exports[`single fields checkboxes field 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
           <label
@@ -191,6 +194,7 @@ exports[`single fields checkboxes field 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
           <label

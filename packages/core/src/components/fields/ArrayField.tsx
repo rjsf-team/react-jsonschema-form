@@ -415,10 +415,10 @@ class ArrayField<T = any, F = any> extends Component<
       errorSchema,
       idSchema,
       name,
-      required,
-      disabled,
-      readonly,
-      autofocus,
+      disabled = false,
+      readonly = false,
+      autofocus = false,
+      required = false,
       registry,
       onBlur,
       onFocus,
@@ -440,7 +440,7 @@ class ArrayField<T = any, F = any> extends Component<
       canAdd: this.canAddItem(formData),
       items: keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
-        // While we are actually dealing with a single item of type T, the
+        // While we are actually dealing with a single item of type T, the types require a T[], so cast
         const itemCast = item as unknown as T[];
         const itemSchema = schemaUtils.retrieveSchema(_schemaItems, itemCast);
         const itemErrorSchema = errorSchema
@@ -450,7 +450,7 @@ class ArrayField<T = any, F = any> extends Component<
         const itemIdSchema = schemaUtils.toIdSchema(
           itemSchema,
           itemIdPrefix,
-          item as unknown as T[],
+          itemCast,
           idPrefix,
           idSeparator
         );
@@ -501,12 +501,12 @@ class ArrayField<T = any, F = any> extends Component<
       schema,
       idSchema,
       uiSchema,
-      disabled,
-      readonly,
+      disabled = false,
+      readonly = false,
+      autofocus = false,
+      required = false,
       hideError,
-      required,
       placeholder,
-      autofocus,
       onBlur,
       onFocus,
       formData: items = [],
@@ -552,11 +552,11 @@ class ArrayField<T = any, F = any> extends Component<
       idSchema,
       uiSchema,
       formData: items = [],
-      disabled,
-      readonly,
-      required,
+      disabled = false,
+      readonly = false,
+      autofocus = false,
+      required = false,
       placeholder,
-      autofocus,
       onBlur,
       onFocus,
       registry,
@@ -604,9 +604,10 @@ class ArrayField<T = any, F = any> extends Component<
       uiSchema,
       idSchema,
       name,
-      disabled,
-      readonly,
-      autofocus,
+      disabled = false,
+      readonly = false,
+      autofocus = false,
+      required = false,
       onBlur,
       onFocus,
       registry,
@@ -631,6 +632,7 @@ class ArrayField<T = any, F = any> extends Component<
         value={items}
         disabled={disabled}
         readonly={readonly}
+        required={required}
         registry={registry}
         formContext={formContext}
         autofocus={autofocus}
@@ -652,10 +654,10 @@ class ArrayField<T = any, F = any> extends Component<
       idSeparator = "_",
       idSchema,
       name,
-      required,
-      disabled,
-      readonly,
-      autofocus,
+      disabled = false,
+      readonly = false,
+      autofocus = false,
+      required = false,
       registry,
       onBlur,
       onFocus,
@@ -692,7 +694,7 @@ class ArrayField<T = any, F = any> extends Component<
       formData,
       items: keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
-        // While we are actually dealing with a single item of type T, the
+        // While we are actually dealing with a single item of type T, the types require a T[], so cast
         const itemCast = item as unknown as T[];
         const additional = index >= itemSchemas.length;
         const itemSchema =
@@ -856,4 +858,7 @@ class ArrayField<T = any, F = any> extends Component<
   }
 }
 
+/** `ArrayField` is `React.ComponentType<FieldProps<T[], F>>` (necessarily) but the `registry` requires things to be a
+ * `Field` which is defined as `React.ComponentType<FieldProps<T, F>>`, so cast it to make `registry` happy.
+ */
 export default ArrayField as unknown as Field;
