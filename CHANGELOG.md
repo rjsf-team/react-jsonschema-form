@@ -17,6 +17,11 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0 (coming soon)
 
+## @rjsf/core
+- Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
+## @rjsf/semantic-ui
+- Fix missing error class on fields (https://github.com/rjsf-team/react-jsonschema-form/issues/2666)
+
 # 4.2.1
 * fix typo by @epicfaace in https://github.com/rjsf-team/react-jsonschema-form/pull/2854
 * Build all packages with TypeScript, including core by @nickgros in https://github.com/rjsf-team/react-jsonschema-form/pull/2799
@@ -47,7 +52,7 @@ should change the heading of the (upcoming) version to include a major version b
   - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
   - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
 - Fixed (#2831) for `material-ui` by removing the `DefaultChildren` passed into the themes
-  
+
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 
