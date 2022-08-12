@@ -590,9 +590,11 @@ type MakeUIType<Type> = {
 };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys
+ * remap the keys. It also contains all of the properties of `TemplatesType` except "ButtonTemplates"
  */
-type UIOptionsBaseType<T = any, F = any> = Partial<TemplatesType<T, F>> & {
+type UIOptionsBaseType<T = any, F = any> = Partial<
+  Omit<TemplatesType<T, F>, "ButtonTemplates">
+> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
   /** We know that for title, it will be a string, if it is provided */
