@@ -1,3 +1,5 @@
+import { RegistryFieldsType } from "@rjsf/utils";
+
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
 import MultiSchemaField from "./MultiSchemaField";
@@ -6,9 +8,8 @@ import ObjectField from "./ObjectField";
 import SchemaField from "./SchemaField";
 import StringField from "./StringField";
 import NullField from "./NullField";
-import UnsupportedField from "./UnsupportedField";
 
-export default {
+const fields: RegistryFieldsType = {
   AnyOfField: MultiSchemaField,
   ArrayField,
   BooleanField,
@@ -18,5 +19,6 @@ export default {
   SchemaField,
   StringField,
   NullField,
-  UnsupportedField,
 };
+
+export default fields;

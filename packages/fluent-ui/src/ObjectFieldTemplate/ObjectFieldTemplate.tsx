@@ -23,10 +23,10 @@ const ObjectFieldTemplate = ({
           registry={registry}
         />
       )}
-      {description && (
+      {(uiOptions.description || description) && (
         <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
           registry={registry}
         />
       )}

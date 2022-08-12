@@ -33,7 +33,9 @@ Array [
           className="custom-control-label"
           htmlFor="_id_0"
           title=""
-        />
+        >
+          
+        </label>
       </div>
     </form>
   </div>,
@@ -73,7 +75,9 @@ Array [
           className="custom-control-label"
           htmlFor="_id_0"
           title=""
-        />
+        >
+          
+        </label>
       </div>
     </form>
   </div>,

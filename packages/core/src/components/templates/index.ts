@@ -10,6 +10,7 @@ import ErrorList from "./ErrorList";
 import FieldTemplate from "./FieldTemplate";
 import ObjectFieldTemplate from "./ObjectFieldTemplate";
 import TitleField from "./TitleField";
+import UnsupportedField from "./UnsupportedField";
 
 const templates: TemplatesType = {
   ArrayFieldDescriptionTemplate,
@@ -22,6 +23,7 @@ const templates: TemplatesType = {
   FieldTemplate,
   ObjectFieldTemplate,
   TitleFieldTemplate: TitleField,
+  UnsupportedFieldTemplate: UnsupportedField,
 };
 
 export default templates;

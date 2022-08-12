@@ -35,7 +35,7 @@ export default function BaseInputTemplate<T = any, F = any>(
     console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const inputProps = { ...rest, ...getInputProps(schema, type, options) };
+  const inputProps = { ...rest, ...getInputProps<T, F>(schema, type, options) };
 
   let inputValue;
   if (inputProps.type === "number" || inputProps.type === "integer") {

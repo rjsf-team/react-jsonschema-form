@@ -1,14 +1,7 @@
 import React from "react";
 import TestRenderer from "react-test-renderer";
 
-import {
-  IdSchema,
-  Registry,
-  RJSFSchema,
-  Widget,
-  WidgetProps,
-  getWidget,
-} from "../src";
+import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget } from "../src";
 
 const subschema: RJSFSchema = {
   type: "boolean",
@@ -93,20 +86,10 @@ const widgetProps: WidgetProps = {
 };
 
 describe("getWidget()", () => {
-  let consoleErrorSpy: jest.SpyInstance;
-  beforeAll(() => {
-    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(); // Disable the output
-  });
-  afterAll(() => {
-    consoleErrorSpy.mockRestore();
-  });
   it("should fail if widget has incorrect type", () => {
-    const AWidget = new Number(1);
-    expect(() => getWidget(schema, AWidget as unknown as Widget)).toThrowError(
-      "Unsupported widget definition: object"
+    expect(() => getWidget(schema)).toThrowError(
+      "Unsupported widget definition: undefined"
     );
-    // The force cast of the number to a Widget causes `React.createElement()` to log an error to the console
-    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
   it("should fail if widget has no type property", () => {
