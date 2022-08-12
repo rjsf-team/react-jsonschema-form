@@ -1,6 +1,8 @@
 import { withTheme, getDefaultRegistry } from "@rjsf/core";
 
-import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
+import ArrayFieldItemTemplate from "./templates/ArrayFieldItemTemplate";
+import ArrayFieldTemplate from "./templates/ArrayFieldTemplate/ArrayFieldTemplate";
+import BaseInputTemplate from "./templates/BaseInputTemplate";
 import DescriptionField from "./templates/DescriptionField";
 import ErrorList from "./templates/ErrorList";
 import FieldTemplate from "./templates/FieldTemplate";
@@ -11,18 +13,13 @@ import AltDateTimeWidget from "./widgets/AltDateTimeWidget";
 import AltDateWidget from "./widgets/AltDateWidget";
 import CheckboxesWidget from "./widgets/CheckboxesWidget";
 import CheckboxWidget from "./widgets/CheckboxWidget";
-import ColorWidget from "./widgets/ColorWidget";
 import DateTimeWidget from "./widgets/DateTimeWidget";
 import DateWidget from "./widgets/DateWidget";
-import EmailWidget from "./widgets/EmailWidget";
 import PasswordWidget from "./widgets/PasswordWidget";
 import RadioWidget from "./widgets/RadioWidget";
 import RangeWidget from "./widgets/RangeWidget";
 import SelectWidget from "./widgets/SelectWidget";
 import TextareaWidget from "./widgets/TextareaWidget";
-import TextWidget from "./widgets/TextWidget";
-import UpDownWidget from "./widgets/UpDownWidget";
-import URLWidget from "./widgets/URLWidget";
 import SubmitButton from "./widgets/SubmitButton";
 
 // import './index.less';
@@ -34,18 +31,13 @@ export const Widgets = {
   AltDateWidget,
   CheckboxesWidget,
   CheckboxWidget,
-  ColorWidget,
   DateTimeWidget,
   DateWidget,
-  EmailWidget,
   PasswordWidget,
   RadioWidget,
   RangeWidget,
   SelectWidget,
   TextareaWidget,
-  TextWidget,
-  UpDownWidget,
-  URLWidget,
   SubmitButton,
 };
 
@@ -53,7 +45,9 @@ export const Theme = {
   fields,
   templates: {
     ...templates,
+    ArrayFieldItemTemplate,
     ArrayFieldTemplate,
+    BaseInputTemplate,
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldTemplate,

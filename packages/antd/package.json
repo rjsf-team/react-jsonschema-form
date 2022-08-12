@@ -10,6 +10,7 @@
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
+    "precommit": "lint-staged",
     "test": "dts test",
     "test:update": "dts test --u"
   },
@@ -24,7 +25,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "jest": {
     "moduleNameMapper": {

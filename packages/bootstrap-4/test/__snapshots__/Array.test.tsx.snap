@@ -115,6 +115,7 @@ exports[`array fields array icons 1`] = `
                     >
                       <label
                         className="form-label"
+                        htmlFor="root_0"
                       />
                       <input
                         autoFocus={false}
@@ -272,6 +273,7 @@ exports[`array fields array icons 1`] = `
                     >
                       <label
                         className="form-label"
+                        htmlFor="root_1"
                       />
                       <input
                         autoFocus={false}
@@ -574,6 +576,7 @@ exports[`array fields fixed array 1`] = `
                     >
                       <label
                         className="form-label"
+                        htmlFor="root_0"
                       />
                       <input
                         autoFocus={false}
@@ -612,6 +615,7 @@ exports[`array fields fixed array 1`] = `
                     >
                       <label
                         className="form-label"
+                        htmlFor="root_1"
                       />
                       <input
                         autoFocus={false}
@@ -624,6 +628,7 @@ exports[`array fields fixed array 1`] = `
                         placeholder=""
                         readOnly={false}
                         required={true}
+                        step="any"
                         type="number"
                         value=""
                       />

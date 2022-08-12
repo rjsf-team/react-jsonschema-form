@@ -209,6 +209,7 @@ exports[`object fields object 1`] = `
             onFocus={[Function]}
             placeholder=""
             required={false}
+            step="any"
             type="number"
             value=""
           />

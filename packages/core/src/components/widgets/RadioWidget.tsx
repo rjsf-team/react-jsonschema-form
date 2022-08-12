@@ -24,13 +24,11 @@ function RadioWidget<T = any, F = any>({
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
 
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    return onBlur(id, event.target.value);
-  };
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, event.target.value);
 
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
-    return onFocus(id, event.target.value);
-  };
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, event.target.value);
 
   return (
     <div className="field-radio-group" id={id}>
@@ -42,9 +40,7 @@ function RadioWidget<T = any, F = any>({
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
-          const handleChange = () => {
-            return onChange(option.value);
-          };
+          const handleChange = () => onChange(option.value);
 
           const radio = (
             <span>

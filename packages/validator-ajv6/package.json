@@ -8,12 +8,17 @@
   "files": [
     "dist"
   ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "start": "dts watch",
     "build": "rimraf dist && dts build --format cjs,esm,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
+    "precommit": "lint-staged",
     "test": "dts test",
     "test:update": "dts test --u"
   },

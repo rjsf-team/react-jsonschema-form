@@ -1,8 +1,9 @@
 import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
+import { getDefaultRegistry } from "@rjsf/core";
 import validator from "@rjsf/validator-ajv6";
 
 import Templates from "../../src/Templates";
-import TextWidget from "../../src/TextWidget";
+import BaseInputTemplate from "../../src/BaseInputTemplate";
 
 export const mockSchema: RJSFSchema = {
   type: "array",
@@ -18,8 +19,8 @@ export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
 export function mockRegistry() {
   return {
     fields: {},
-    widgets: { TextWidget },
-    templates: Templates,
+    widgets: { TextWidget: BaseInputTemplate },
+    templates: { ...getDefaultRegistry().templates, ...Templates },
     formContext: {},
     rootSchema: {},
     schemaUtils: mockSchemaUtils,

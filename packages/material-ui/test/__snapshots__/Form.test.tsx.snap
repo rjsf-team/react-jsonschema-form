@@ -203,6 +203,7 @@ exports[`single fields checkboxes field 1`] = `
     />
     <div
       className="MuiFormGroup-root"
+      id="root"
     >
       <label
         className="MuiFormControlLabel-root"
@@ -1032,6 +1033,7 @@ exports[`single fields number field 0 1`] = `
           onFocus={[Function]}
           placeholder=""
           required={false}
+          step="any"
           type="number"
           value={0}
         />
@@ -1096,6 +1098,7 @@ exports[`single fields number field 1`] = `
           onFocus={[Function]}
           placeholder=""
           required={false}
+          step="any"
           type="number"
           value=""
         />
@@ -1214,6 +1217,7 @@ exports[`single fields radio field 1`] = `
     />
     <div
       className="MuiFormGroup-root"
+      id="root"
       onBlur={[Function]}
       onFocus={[Function]}
       role="radiogroup"
@@ -1925,6 +1929,7 @@ exports[`single fields textarea field 1`] = `
           placeholder=""
           required={false}
           rows={5}
+          value=""
         />
       </div>
     </div>
@@ -2138,14 +2143,8 @@ exports[`single fields up/down field 1`] = `
     className="MuiFormControl-root MuiFormControl-fullWidth"
   >
     <div
-      className="MuiFormControl-root MuiFormControl-fullWidth"
+      className="MuiFormControl-root MuiTextField-root"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-      >
-        
-      </label>
       <div
         className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
         onClick={[Function]}
@@ -2160,6 +2159,7 @@ exports[`single fields up/down field 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
+          placeholder=""
           required={false}
           type="number"
           value=""
