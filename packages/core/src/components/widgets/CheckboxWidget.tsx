@@ -1,32 +1,45 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { schemaRequiresTrueValue } from "@rjsf/utils";
+import { WidgetProps } from "@rjsf/utils";
 
-function CheckboxWidget(props) {
-  const {
-    schema,
-    id,
-    value,
-    disabled,
-    readonly,
-    label,
-    autofocus,
-    onBlur,
-    onFocus,
-    onChange,
-    registry,
-  } = props;
-
+/** The `CheckBoxWidget` is a widget for rendering boolean properties.
+ *  It is typically used to represent a boolean.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+function CheckboxWidget<T = any, F = any>({
+  schema,
+  id,
+  value,
+  disabled,
+  readonly,
+  label,
+  autofocus = false,
+  onBlur,
+  onFocus,
+  onChange,
+  registry,
+}: WidgetProps<T, F>) {
   const { DescriptionFieldTemplate } = registry.templates;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(event.target.checked);
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, event.target.checked);
+
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, event.target.checked);
+
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
         <DescriptionFieldTemplate
+          id={id + "__description"}
           description={schema.description}
           registry={registry}
         />
@@ -39,31 +52,14 @@ function CheckboxWidget(props) {
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          onChange={(event) => onChange(event.target.checked)}
-          onBlur={onBlur && ((event) => onBlur(id, event.target.checked))}
-          onFocus={onFocus && ((event) => onFocus(id, event.target.checked))}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
         />
         <span>{label}</span>
       </label>
     </div>
   );
-}
-
-CheckboxWidget.defaultProps = {
-  autofocus: false,
-};
-
-if (process.env.NODE_ENV !== "production") {
-  CheckboxWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    value: PropTypes.bool,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    onChange: PropTypes.func,
-  };
 }
 
 export default CheckboxWidget;
