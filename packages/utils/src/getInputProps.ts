@@ -8,10 +8,10 @@ import { InputPropsType, RJSFSchema, UIOptionsType } from "./types";
  * @param [options={}] - The UI Options for the field provided by the widget
  * @param [autoDefaultStepAny=true] - Determines whether to auto-default step=any when the type is number and no step
  */
-export default function getInputProps(
+export default function getInputProps<T = any, F = any>(
   schema: RJSFSchema,
   defaultType?: string,
-  options: UIOptionsType = {},
+  options: UIOptionsType<T, F> = {},
   autoDefaultStepAny = true
 ) {
   const inputProps: InputPropsType = {
