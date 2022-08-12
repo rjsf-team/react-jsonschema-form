@@ -9,9 +9,11 @@ export type GenericObjectType = {
 };
 
 /** Map the JSONSchema7 to our own type so that we can easily bump to JSONSchema8 at some future date and only have to
- * update this one type.
+ * update this one type. Also, because we are supporting the non-standard `enumNames` prop in the code, define it here.
  */
-export type RJSFSchema = JSONSchema7;
+export type RJSFSchema = JSONSchema7 & {
+  enumNames?: string[];
+};
 
 /** Map the JSONSchema7Definition to our own type so that we can easily bump to JSONSchema8Definition at some future
  * date and only have to update this one type.
@@ -163,7 +165,7 @@ export interface TemplatesType<T = any, F = any> {
     ArrayFieldDescriptionProps<T, F>
   >;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: React.ComponentType<ArrayFieldTemplateItemType>;
+  ArrayFieldItemTemplate: React.ComponentType<ArrayFieldTemplateItemType<T, F>>;
   /** The template to use while rendering the title for an array field */
   ArrayFieldTitleTemplate: React.ComponentType<ArrayFieldTitleProps<T, F>>;
   /** The template to use while rendering the standard html input */
@@ -178,6 +180,8 @@ export interface TemplatesType<T = any, F = any> {
   ObjectFieldTemplate: React.ComponentType<ObjectFieldTemplateProps<T, F>>;
   /** The template to use for rendering the title of a field */
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
+  /** The template to use for rendering information about an unsupported field type in the schema */
+  UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, F>>;
 }
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
@@ -221,7 +225,7 @@ export interface FieldProps<T = any, F = any>
   /** The uiSchema for this field */
   uiSchema?: UiSchema<T, F>;
   /** The tree of unique ids for every child field */
-  idSchema: IdSchema;
+  idSchema: IdSchema<T>;
   /** The data for this field */
   formData: T;
   /** The tree of errors for this field and its children */
@@ -291,8 +295,6 @@ export type FieldTemplateProps<T = any, F = any> = {
    * you don't want to clutter the UI
    */
   displayLabel?: boolean;
-  /** An array containing all Form's fields including your custom fields and the built-in fields */
-  fields: Field<T, F>[];
   /** The schema object for this field */
   schema: RJSFSchema;
   /** The uiSchema object for this field */
@@ -311,7 +313,19 @@ export type FieldTemplateProps<T = any, F = any> = {
   registry: Registry<T, F>;
 };
 
-/** The properties that are passed to a `TitleField` implementation */
+/** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
+export type UnsupportedFieldProps<T = any, F = any> = {
+  /** The schema object for this field */
+  schema: RJSFSchema;
+  /** The tree of unique ids for every child field */
+  idSchema?: IdSchema<T>;
+  /** The reason why the schema field has an unsupported type */
+  reason: string;
+  /** The `registry` object */
+  registry: Registry<T, F>;
+};
+
+/** The properties that are passed to a `TitleFieldTemplate` implementation */
 export type TitleFieldProps<T = any, F = any> = {
   /** The id of the field title in the hierarchy */
   id: string;
@@ -325,7 +339,7 @@ export type TitleFieldProps<T = any, F = any> = {
   registry: Registry<T, F>;
 };
 
-/** The properties that are passed to a `DescriptionField` implementation */
+/** The properties that are passed to a `DescriptionFieldTemplate` implementation */
 export type DescriptionFieldProps<T = any, F = any> = {
   /** The id of the field description in the hierarchy */
   id: string;
@@ -335,7 +349,7 @@ export type DescriptionFieldProps<T = any, F = any> = {
   registry: Registry<T, F>;
 };
 
-/** The properties that are passed to a `ArrayFieldTitle` implementation */
+/** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */
 export type ArrayFieldTitleProps<T = any, F = any> = Pick<
   TitleFieldProps<T, F>,
   "title" | "uiSchema" | "required" | "registry"
@@ -344,7 +358,7 @@ export type ArrayFieldTitleProps<T = any, F = any> = Pick<
   idSchema: IdSchema<T>;
 };
 
-/** The properties that are passed to a `ArrayFieldDescription` implementation */
+/** The properties that are passed to a `ArrayFieldDescriptionTemplate` implementation */
 export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
   DescriptionFieldProps<T, F>,
   "description" | "registry"
@@ -354,7 +368,7 @@ export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldTemplateItemType = {
+export type ArrayFieldTemplateItemType<T = any, F = any> = {
   /** The html for the item's content */
   children: React.ReactElement;
   /** The className string */
@@ -381,6 +395,8 @@ export type ArrayFieldTemplateItemType = {
   readonly: boolean;
   /** A stable, unique key for the array item */
   key: string;
+  /** The `registry` object */
+  registry: Registry<T, F>;
 };
 
 /** The properties that are passed to an ArrayFieldTemplate implementation */
@@ -392,9 +408,9 @@ export type ArrayFieldTemplateProps<T = any, F = any> = {
   /** A boolean value stating if the array is disabled */
   disabled?: boolean;
   /** An object containing the id for this object & ids for its properties */
-  idSchema: IdSchema;
+  idSchema: IdSchema<T>;
   /** An array of objects representing the items in the array */
-  items: ArrayFieldTemplateItemType[];
+  items: ArrayFieldTemplateItemType<T, F>[];
   /** A function that adds a new item to the array */
   onAddClick: (event?: any) => void;
   /** A boolean value stating if the array is read-only */
@@ -411,6 +427,8 @@ export type ArrayFieldTemplateProps<T = any, F = any> = {
   formContext?: F;
   /** The formData for this array */
   formData: T;
+  /** An array of strings listing all generated error messages from encountered errors for this widget */
+  rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, F>;
 };
@@ -450,7 +468,7 @@ export type ObjectFieldTemplateProps<T = any, F = any> = {
   /** The uiSchema object for this object field */
   uiSchema?: UiSchema<T, F>;
   /** An object containing the id for this object & ids for its properties */
-  idSchema: IdSchema;
+  idSchema: IdSchema<T>;
   /** The form data for the object */
   formData: T;
   /** The `formContext` object that was passed to Form */
@@ -484,8 +502,13 @@ export interface WidgetProps<T = any, F = any>
   autofocus?: boolean;
   /** The placeholder for the widget, if any */
   placeholder?: string;
-  /** A map of UI Options passed as a prop to the component */
-  options: NonNullable<UIOptionsType>;
+  /** A map of UI Options passed as a prop to the component, including the optional `enumOptions`
+   * which is a special case on top of `UIOptionsType` needed only by widgets
+   */
+  options: NonNullable<UIOptionsType<T, F>> & {
+    /** The enum options list for a type that supports them */
+    enumOptions?: EnumOptionsType[];
+  };
   /** The `formContext` object that you passed to `Form` */
   formContext?: F;
   /** The input blur event handler; call it with the widget id and value */
@@ -522,6 +545,16 @@ export type UISchemaSubmitButtonOptions = {
   };
 };
 
+/** This type represents an element used to render an enum option */
+export type EnumOptionsType = {
+  /** The value for the enum option */
+  value: any;
+  /** The label for the enum options */
+  label: string;
+  /** The schema associated with the enum option when the option represents a `oneOf` or `anyOf` choice */
+  schema?: RJSFSchema;
+};
+
 /** This type remaps the keys of `Type` to prepend `ui:` onto them. As a result it does not need to be exported */
 type MakeUIType<Type> = {
   [Property in keyof Type as `ui:${string & Property}`]: Type[Property];
@@ -530,7 +563,9 @@ type MakeUIType<Type> = {
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
  * remap the keys
  */
-type UIOptionsBaseType = {
+type UIOptionsBaseType<T = any, F = any> = Partial<TemplatesType<T, F>> & {
+  /** Any classnames that the user wants to be applied to a field in the ui */
+  classNames?: string;
   /** We know that for title, it will be a string, if it is provided */
   title?: string;
   /** We know that for description, it will be a string, if it is provided */
@@ -555,6 +590,10 @@ type UIOptionsBaseType = {
   readonly?: boolean;
   /** This property allows you to reorder the properties that are shown for a particular object */
   order?: string[];
+  /** Flag, if set to `true`, will mark the field as being able to be ordered */
+  orderable?: boolean;
+  /** Flag, if set to `true`, will mark the field as being able to be removed */
+  removable?: boolean;
   /** Used to change the input type (for example, `tel` or `email`) for an <input> */
   inputType?: string;
   /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
@@ -563,10 +602,12 @@ type UIOptionsBaseType = {
   rows?: number;
   /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
   submitButtonOptions?: UISchemaSubmitButtonOptions;
+  /** A widget can either be directly included or is the registered `name` for it */
+  widget?: Widget<T, F> | string;
 };
 
 /** The type that represents the Options potentially provided by `ui:options` */
-export type UIOptionsType = UIOptionsBaseType & {
+export type UIOptionsType<T = any, F = any> = UIOptionsBaseType<T, F> & {
   /** Anything else will be one of these types */
   [key: string]: boolean | number | string | object | any[] | null | undefined;
 };
@@ -575,8 +616,7 @@ export type UIOptionsType = UIOptionsBaseType & {
  * starting with `ui:`
  */
 export type UiSchema<T = any, F = any> = GenericObjectType &
-  MakeUIType<UIOptionsBaseType> &
-  MakeUIType<Partial<TemplatesType<T, F>>> & {
+  MakeUIType<UIOptionsBaseType<T, F>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
     "ui:rootFieldId"?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
@@ -588,7 +628,7 @@ export type UiSchema<T = any, F = any> = GenericObjectType &
      */
     "ui:widget"?: Widget<T, F> | string;
     /** An object that contains all of the potential UI options in a single object */
-    "ui:options"?: UIOptionsType;
+    "ui:options"?: UIOptionsType<T, F>;
   };
 
 /** A `CustomValidator` function takes in a `formData` and `errors` object and returns the given `errors` object back,
@@ -735,7 +775,7 @@ export interface SchemaUtilsType<T = any> {
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: RJSFSchema, formData: T): RJSFSchema;
+  retrieveSchema(schema: RJSFSchema, formData?: T): RJSFSchema;
   /** Generates an `IdSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired

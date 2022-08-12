@@ -127,10 +127,10 @@ describe("ArrayField", () => {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
-      const fields = { UnsupportedField: CustomUnsupportedField };
+      const templates = { UnsupportedFieldTemplate: CustomUnsupportedField };
       const { node } = createFormComponent({
         schema: { type: "array" },
-        fields,
+        templates,
       });
 
       expect(node.querySelectorAll("#custom")[0].textContent).to.eql(

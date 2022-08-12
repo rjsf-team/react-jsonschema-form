@@ -82,6 +82,7 @@ exports[`object fields additionalProperties 1`] = `
                     value="foo"
                   />
                 </div>
+                
               </div>
             </div>
             <div
@@ -221,6 +222,7 @@ exports[`object fields object 1`] = `
                 value=""
               />
             </div>
+            
           </div>
         </div>
       </div>
@@ -264,6 +266,7 @@ exports[`object fields object 1`] = `
                 value=""
               />
             </div>
+            
           </div>
         </div>
       </div>

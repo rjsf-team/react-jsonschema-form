@@ -68,9 +68,11 @@ exports[`object fields additionalProperties 1`] = `
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
+    
   </div>
   <div>
     <br />
@@ -177,6 +179,7 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
+          
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
@@ -224,9 +227,11 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
+    
   </div>
   <div>
     <br />

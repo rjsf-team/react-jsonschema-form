@@ -3,7 +3,7 @@ import classNames from "classnames";
 import isObject from "lodash/isObject";
 import isNumber from "lodash/isNumber";
 
-import { canExpand } from "@rjsf/utils";
+import { canExpand, getUiOptions } from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -32,6 +32,7 @@ const ObjectFieldTemplate = ({
 }) => {
   const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
+  const uiOptions = getUiOptions(uiSchema);
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
@@ -46,9 +47,11 @@ const ObjectFieldTemplate = ({
 
   const findUiSchema = (element) => element.content.props.uiSchema;
 
-  const findUiSchemaField = (element) => findUiSchema(element)["ui:field"];
+  const findUiSchemaField = (element) =>
+    getUiOptions(findUiSchema(element)).field;
 
-  const findUiSchemaWidget = (element) => findUiSchema(element)["ui:widget"];
+  const findUiSchemaWidget = (element) =>
+    getUiOptions(findUiSchema(element)).widget;
 
   const calculateColSpan = (element) => {
     const type = findSchemaType(element);
@@ -77,22 +80,22 @@ const ObjectFieldTemplate = ({
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
-        {uiSchema["ui:title"] !== false && (uiSchema["ui:title"] || title) && (
+        {uiOptions.title !== false && (uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
             <TitleFieldTemplate
               id={`${idSchema.$id}-title`}
               required={required}
-              title={uiSchema["ui:title"] || title}
+              title={uiOptions.title || title}
               uiSchema={uiSchema}
               registry={registry}
             />
           </Col>
         )}
-        {uiSchema["ui:description"] !== false &&
-          (uiSchema["ui:description"] || description) && (
+        {uiOptions.description !== false &&
+          (uiOptions.description || description) && (
             <Col span={24} style={DESCRIPTION_COL_STYLE}>
               <DescriptionFieldTemplate
-                description={uiSchema["ui:description"] || description}
+                description={uiOptions.description || description}
                 id={`${idSchema.$id}-description`}
                 registry={registry}
               />

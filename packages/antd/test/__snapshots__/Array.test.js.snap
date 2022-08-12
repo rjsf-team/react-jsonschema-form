@@ -216,7 +216,9 @@ exports[`array fields array icons 1`] = `
                       >
                         <span
                           id="root_0__description"
-                        />
+                        >
+                          
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -410,7 +412,9 @@ exports[`array fields array icons 1`] = `
                       >
                         <span
                           id="root_1__description"
-                        />
+                        >
+                          
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -827,7 +831,9 @@ exports[`array fields fixed array 1`] = `
                       >
                         <span
                           id="root_0__description"
-                        />
+                        >
+                          
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -989,7 +995,9 @@ exports[`array fields fixed array 1`] = `
                       >
                         <span
                           id="root_1__description"
-                        />
+                        >
+                          
+                        </span>
                       </div>
                     </div>
                   </div>

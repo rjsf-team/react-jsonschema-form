@@ -11,7 +11,9 @@ import AddButton from "../AddButton";
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
  */
-export default function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+export default function ArrayFieldTemplate<T = any, F = any>(
+  props: ArrayFieldTemplateProps<T, F>
+) {
   const {
     canAdd,
     className,
@@ -31,7 +33,7 @@ export default function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
     ArrayFieldItemTemplate,
     ArrayFieldTitleTemplate,
   } = registry.templates;
-  const uiOptions = getUiOptions(uiSchema);
+  const uiOptions = getUiOptions<T, F>(uiSchema);
   return (
     <fieldset className={className} id={idSchema.$id}>
       <ArrayFieldTitleTemplate
@@ -54,7 +56,6 @@ export default function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
             <ArrayFieldItemTemplate {...itemProps} />
           ))}
       </div>
-
       {canAdd && (
         <AddButton
           className="array-item-add"

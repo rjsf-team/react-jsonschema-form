@@ -106,6 +106,7 @@ exports[`array fields array icons 1`] = `
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
               <div
@@ -192,6 +193,7 @@ exports[`array fields array icons 1`] = `
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
               <div
@@ -372,6 +374,7 @@ exports[`array fields checkboxes 1`] = `
         </div>
       </div>
     </div>
+    
   </div>
   <button
     className="ui primary button"
@@ -439,6 +442,7 @@ exports[`array fields fixed array 1`] = `
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
             </div>
@@ -484,6 +488,7 @@ exports[`array fields fixed array 1`] = `
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
             </div>

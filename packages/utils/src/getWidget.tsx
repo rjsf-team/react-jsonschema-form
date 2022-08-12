@@ -87,21 +87,21 @@ function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
  * on the schema type and `widget` name. If no widget component can be found an `Error` is thrown.
  *
  * @param schema - The schema for the field
- * @param widget - Either the name of the widget OR a `Widget` implementation to use
+ * @param [widget] - Either the name of the widget OR a `Widget` implementation to use
  * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */
 export default function getWidget<T = any, F = any>(
   schema: RJSFSchema,
-  widget: Widget<T, F> | string,
+  widget?: Widget<T, F> | string,
   registeredWidgets: RegistryWidgetsType<T, F> = {}
 ): Widget<T, F> {
   const type = getSchemaType(schema);
 
   if (
     typeof widget === "function" ||
-    ReactIs.isForwardRef(React.createElement(widget)) ||
+    (widget && ReactIs.isForwardRef(React.createElement(widget))) ||
     ReactIs.isMemo(widget)
   ) {
     return mergeWidgetOptions<T, F>(widget as Widget<T, F>);
