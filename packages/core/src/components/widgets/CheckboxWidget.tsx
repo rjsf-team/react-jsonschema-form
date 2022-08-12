@@ -26,15 +26,14 @@ function CheckboxWidget<T = any, F = any>({
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    return onChange(event.target.checked);
-  };
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    return onBlur(id, event.target.checked);
-  };
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    return onFocus(id, event.target.checked);
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(event.target.checked);
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, event.target.checked);
+
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, event.target.checked);
 
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>

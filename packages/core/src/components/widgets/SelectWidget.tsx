@@ -10,9 +10,8 @@ function getValue(
       .slice()
       .filter((o) => o.selected)
       .map((o) => o.value);
-  } else {
-    return (event.target as HTMLSelectElement).value;
   }
+  return (event.target as HTMLSelectElement).value;
 }
 
 /** The `SelectWidget` is a widget for rendering dropdowns.

@@ -20,20 +20,15 @@ function TextareaWidget<T = any, F = any>({
 }: WidgetProps<T, F>) {
   const handleChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLTextAreaElement>) => {
-    return onChange(value === "" ? options.emptyValue : value);
-  };
+  }: React.ChangeEvent<HTMLTextAreaElement>) =>
+    onChange(value === "" ? options.emptyValue : value);
 
-  const handleBlur = ({
-    target: { value },
-  }: FocusEvent<HTMLTextAreaElement>) => {
-    return onBlur(id, value);
-  };
+  const handleBlur = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
+    onBlur(id, value);
+
   const handleFocus = ({
     target: { value },
-  }: FocusEvent<HTMLTextAreaElement>) => {
-    return onFocus(id, value);
-  };
+  }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
     <textarea
