@@ -1,4 +1,3 @@
-import React from "react";
 import { getUiOptions } from "@rjsf/utils";
 import classNames from "classnames";
 import Button from "antd/lib/button";

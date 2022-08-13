@@ -1,5 +1,3 @@
-import React from "react";
-
 import Input from "antd/lib/input";
 
 const INPUT_STYLE = {

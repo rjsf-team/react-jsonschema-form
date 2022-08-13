@@ -1,6 +1,4 @@
 /* eslint-disable no-else-return */
-import React from "react";
-
 import { processSelectValue } from "@rjsf/utils";
 import Select from "antd/lib/select";
 
