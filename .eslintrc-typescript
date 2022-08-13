@@ -2,9 +2,9 @@
   "parser": "@typescript-eslint/parser",
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "react/jsx-uses-react": 2,
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2,
     "react/jsx-tag-spacing": [1, {
       "beforeSelfClosing": "always"
     }],
