@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types,react/no-array-index-key */
-import { Fragment } from "react";
+import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
@@ -58,7 +58,7 @@ function CheckboxesWidget(props) {
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
-    <Fragment>
+    <React.Fragment>
       {title && (
         <TitleFieldTemplate
           id={`${id}-title`}
@@ -89,7 +89,7 @@ function CheckboxesWidget(props) {
           );
         })}
       </Form.Group>
-    </Fragment>
+    </React.Fragment>
   );
 }
 export default CheckboxesWidget;
