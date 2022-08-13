@@ -1,5 +1,3 @@
-import React from "react";
-
 function ObjectFieldTemplate({ TitleField, properties, title, description }) {
   return (
     <div>
