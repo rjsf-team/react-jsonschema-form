@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 const FileWidget = (props: WidgetProps) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import Button, { ButtonProps } from "react-bootstrap/Button";
 import { IoIosRemove } from "react-icons/io";
 import { GrAdd } from "react-icons/gr";
