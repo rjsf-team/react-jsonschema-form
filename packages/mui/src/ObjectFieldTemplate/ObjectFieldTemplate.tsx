@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid";
 import { ObjectFieldTemplateProps, canExpand, getUiOptions } from "@rjsf/utils";
 
