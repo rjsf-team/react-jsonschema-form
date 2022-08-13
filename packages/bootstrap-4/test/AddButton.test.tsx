@@ -1,4 +1,3 @@
-import React from "react";
 import AddButton from "../src/AddButton";
 import renderer from "react-test-renderer";
 

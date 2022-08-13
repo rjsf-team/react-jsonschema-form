@@ -1,4 +1,3 @@
-import React from "react";
 import IconButton from "../src/IconButton";
 import renderer from "react-test-renderer";
 
