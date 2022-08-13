@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 
 import { MaybeWrap } from "../util";

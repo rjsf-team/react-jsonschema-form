@@ -1,5 +1,4 @@
 import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
-import React from "react";
 import { Button, Form, Grid } from "semantic-ui-react";
 
 const WrapIfAdditional = ({

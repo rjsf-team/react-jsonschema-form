@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
-import React from "react";
 import { getUiOptions, isFixedItems } from "@rjsf/utils";
 
 import AddButton from "../AddButton";
