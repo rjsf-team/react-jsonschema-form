@@ -1,4 +1,4 @@
-import { Registry, RegistryFieldsType, RegistryWidgetsType } from "@rjsf/utils";
+import { Registry } from "@rjsf/utils";
 
 import fields from "./components/fields";
 import templates from "./components/templates";
@@ -13,11 +13,9 @@ export default function getDefaultRegistry<T = any, F = any>(): Omit<
   "schemaUtils"
 > {
   return {
-    /** Until the fields have been converted to Typescript, force the cast here */
-    fields: fields as unknown as RegistryFieldsType<T, F>,
+    fields,
     templates,
-    /** Until the widgets have been converted to Typescript, force the cast here */
-    widgets: widgets as unknown as RegistryWidgetsType<T, F>,
+    widgets,
     rootSchema: {},
     formContext: {} as F,
   };

@@ -1,21 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component, MouseEvent } from "react";
 
-import { shouldRender, parseDateString, toDateString, pad } from "@rjsf/utils";
+import {
+  shouldRender,
+  parseDateString,
+  toDateString,
+  pad,
+  WidgetProps,
+  DateObject,
+} from "@rjsf/utils";
 
-function rangeOptions(start, stop) {
-  let options = [];
+function rangeOptions(start: number, stop: number) {
+  const options = [];
   for (let i = start; i <= stop; i++) {
     options.push({ value: i, label: pad(i, 2) });
   }
   return options;
 }
 
-function readyForChange(state) {
+function readyForChange(state: any) {
   return Object.keys(state).every((key) => state[key] !== -1);
 }
 
-function DateElement(props) {
+function DateElement(props: any) {
   const {
     type,
     range,
@@ -41,13 +47,17 @@ function DateElement(props) {
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value) => select(type, value)}
+      onChange={(value: any) => select(type, value)}
       onBlur={onBlur}
     />
   );
 }
 
-class AltDateWidget extends Component {
+/** The `AltDateWidget` is an alternative widget for rendering date properties. */
+class AltDateWidget<T = any, F = any> extends Component<
+  WidgetProps<T, F>,
+  DateObject
+> {
   static defaultProps = {
     time: false,
     disabled: false,
@@ -58,12 +68,16 @@ class AltDateWidget extends Component {
     },
   };
 
-  constructor(props) {
+  /**
+   *
+   * @param props - The `WidgetProps` for this component
+   */
+  constructor(props: WidgetProps<T, F>) {
     super(props);
     this.state = parseDateString(props.value, props.time);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: WidgetProps<T, F>) {
     if (
       prevProps.value &&
       prevProps.value !== parseDateString(this.props.value, this.props.time)
@@ -72,13 +86,19 @@ class AltDateWidget extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(
+    nextProps: WidgetProps<T, F>,
+    nextState: DateObject
+  ): boolean {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onChange = (property, value) => {
+  onChange = (property: keyof DateObject, value: any) => {
     this.setState(
-      { [property]: typeof value === "undefined" ? -1 : value },
+      { [property]: typeof value === "undefined" ? -1 : value } as Pick<
+        DateObject,
+        keyof DateObject
+      >,
       () => {
         // Only propagate to parent state if we have a complete date{time}
         if (readyForChange(this.state)) {
@@ -88,7 +108,7 @@ class AltDateWidget extends Component {
     );
   };
 
-  setNow = (event) => {
+  setNow = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -98,7 +118,7 @@ class AltDateWidget extends Component {
     this.setState(nowDateObj, () => onChange(toDateString(this.state, time)));
   };
 
-  clear = (event) => {
+  clear = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const { time, disabled, readonly, onChange } = this.props;
     if (disabled || readonly) {
@@ -118,7 +138,7 @@ class AltDateWidget extends Component {
       },
       { type: "month", range: [1, 12], value: month },
       { type: "day", range: [1, 31], value: day },
-    ];
+    ] as { type: string; range: [number, number]; value: number | undefined }[];
     if (time) {
       data.push(
         { type: "hour", range: [0, 23], value: hour },
@@ -173,22 +193,6 @@ class AltDateWidget extends Component {
       </ul>
     );
   }
-}
-
-if (process.env.NODE_ENV !== "production") {
-  AltDateWidget.propTypes = {
-    schema: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    readonly: PropTypes.bool,
-    autofocus: PropTypes.bool,
-    onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    time: PropTypes.bool,
-    options: PropTypes.object,
-  };
 }
 
 export default AltDateWidget;

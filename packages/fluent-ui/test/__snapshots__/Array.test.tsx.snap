@@ -67,6 +67,7 @@ exports[`array fields array 1`] = `
         </span>
       </button>
     </span>
+    
   </div>
   <div>
     <br />
@@ -170,6 +171,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>
@@ -323,6 +325,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>
@@ -478,6 +481,7 @@ exports[`array fields array icons 1`] = `
         </span>
       </button>
     </span>
+    
   </div>
   <div>
     <br />
@@ -572,6 +576,7 @@ exports[`array fields checkboxes 1`] = `
         </span>
       </div>
     </div>
+    
   </div>
   <div>
     <br />
@@ -675,6 +680,7 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>
@@ -731,11 +737,13 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>
       </div>
     </div>
+    
   </div>
   <div>
     <br />

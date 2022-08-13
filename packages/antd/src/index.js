@@ -1,7 +1,7 @@
 import { withTheme, getDefaultRegistry } from "@rjsf/core";
 
 import ArrayFieldItemTemplate from "./templates/ArrayFieldItemTemplate";
-import ArrayFieldTemplate from "./templates/ArrayFieldTemplate/ArrayFieldTemplate";
+import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
 import BaseInputTemplate from "./templates/BaseInputTemplate";
 import DescriptionField from "./templates/DescriptionField";
 import ErrorList from "./templates/ErrorList";

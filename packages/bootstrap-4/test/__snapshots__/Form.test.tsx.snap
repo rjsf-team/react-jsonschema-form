@@ -207,6 +207,7 @@ exports[`single fields checkboxes field 1`] = `
         </div>
       </form>
     </div>
+    
   </div>
   <div>
     <button
@@ -398,6 +399,7 @@ exports[`single fields format color 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -441,6 +443,7 @@ exports[`single fields format date 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -484,6 +487,7 @@ exports[`single fields format datetime 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -530,6 +534,7 @@ exports[`single fields hidden field 1`] = `
               type="hidden"
               value=""
             />
+            
           </div>
         </div>
       </div>
@@ -598,7 +603,9 @@ exports[`single fields null field 1`] = `
 >
   <div
     className="form-group"
-  />
+  >
+    
+  </div>
   <div>
     <button
       className="btn btn-primary"
@@ -642,6 +649,7 @@ exports[`single fields number field 0 1`] = `
         value={0}
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -686,6 +694,7 @@ exports[`single fields number field 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -729,6 +738,7 @@ exports[`single fields password field 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -806,6 +816,7 @@ exports[`single fields radio field 1`] = `
         </label>
       </div>
     </div>
+    
   </div>
   <div>
     <button
@@ -866,6 +877,7 @@ exports[`single fields select field 1`] = `
         </option>
       </select>
     </div>
+    
   </div>
   <div>
     <button
@@ -917,6 +929,7 @@ exports[`single fields slider field 1`] = `
         75
       </span>
     </div>
+    
   </div>
   <div>
     <button
@@ -960,6 +973,7 @@ exports[`single fields string field format data-url 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1003,6 +1017,7 @@ exports[`single fields string field format email 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1046,6 +1061,7 @@ exports[`single fields string field format uri 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1089,6 +1105,7 @@ exports[`single fields string field regular 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1132,6 +1149,7 @@ exports[`single fields string field with placeholder 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1175,6 +1193,7 @@ exports[`single fields textarea field 1`] = `
         rows={5}
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1255,6 +1274,7 @@ exports[`single fields title field 1`] = `
                 value=""
               />
             </div>
+            
           </div>
         </div>
       </div>
@@ -1303,6 +1323,7 @@ exports[`single fields unsupported field 1`] = `
         {}
       </pre>
     </div>
+    
   </div>
   <div>
     <button
@@ -1346,6 +1367,7 @@ exports[`single fields up/down field 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -1389,6 +1411,7 @@ exports[`single fields using custom tagName 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button

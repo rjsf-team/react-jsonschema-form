@@ -36,10 +36,12 @@ describe("uiSchema", () => {
 
     const uiSchema = {
       foo: {
-        classNames: "class-for-foo",
+        "ui:classNames": "class-for-foo",
       },
       bar: {
-        classNames: "class-for-bar another-for-bar",
+        "ui:options": {
+          classNames: "class-for-bar another-for-bar",
+        },
       },
     };
 

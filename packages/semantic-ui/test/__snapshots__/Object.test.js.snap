@@ -85,6 +85,7 @@ exports[`object fields additionalProperties 1`] = `
                   />
                 </div>
               </div>
+              
             </div>
           </div>
           <div
@@ -184,6 +185,7 @@ exports[`object fields object 1`] = `
           />
         </div>
       </div>
+      
     </div>
     <div
       className="grouped equal width fields"
@@ -215,6 +217,7 @@ exports[`object fields object 1`] = `
           />
         </div>
       </div>
+      
     </div>
   </div>
   <button
