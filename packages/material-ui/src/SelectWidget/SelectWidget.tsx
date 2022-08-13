@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { WidgetProps, processSelectValue } from "@rjsf/utils";
