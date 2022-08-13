@@ -3,6 +3,7 @@ import {
   ObjectFieldTemplatePropertyType,
   ObjectFieldTemplateProps,
   canExpand,
+  getTemplate,
   getUiOptions,
 } from "@rjsf/utils";
 import AddButton from "../AddButton";
@@ -30,8 +31,17 @@ export default function ObjectFieldTemplate<T = any, F = any>(
     title,
     uiSchema,
   } = props;
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const options = getUiOptions<T, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, F>(
+    "TitleFieldTemplate",
+    registry,
+    options
+  );
+  const DescriptionFieldTemplate = getTemplate<
+    "DescriptionFieldTemplate",
+    T,
+    F
+  >("DescriptionFieldTemplate", registry, options);
   return (
     <fieldset id={idSchema.$id}>
       {(options.title || title) && (

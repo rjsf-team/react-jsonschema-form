@@ -4,20 +4,18 @@ import {
   deepEquals,
   getUiOptions,
   getSchemaType,
+  getTemplate,
   FieldProps,
   FieldTemplateProps,
   IdSchema,
   Registry,
   RJSFSchema,
   RJSFSchemaDefinition,
-  TemplatesType,
   UIOptionsType,
   ID_KEY,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
-
-import DefaultFieldTemplate from "../templates/FieldTemplate";
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: { [key: string]: string } = {
@@ -47,7 +45,7 @@ function getFieldComponent<T, F>(
   registry: Registry<T, F>
 ) {
   const field = uiOptions.field;
-  const { fields, templates } = registry;
+  const { fields } = registry;
   if (typeof field === "function") {
     return field;
   }
@@ -70,7 +68,11 @@ function getFieldComponent<T, F>(
   return componentName in fields
     ? fields[componentName]
     : () => {
-        const { UnsupportedFieldTemplate } = templates;
+        const UnsupportedFieldTemplate = getTemplate<
+          "UnsupportedFieldTemplate",
+          T,
+          F
+        >("UnsupportedFieldTemplate", registry, uiOptions);
 
         return (
           <UnsupportedFieldTemplate
@@ -156,10 +158,18 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, templates } = registry;
+  const { formContext, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, F>(uiSchema);
-  const FieldTemplate: TemplatesType<T, F>["FieldTemplate"] =
-    uiOptions.FieldTemplate || templates.FieldTemplate || DefaultFieldTemplate;
+  const FieldTemplate = getTemplate<"FieldTemplate", T, F>(
+    "FieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<
+    "DescriptionFieldTemplate",
+    T,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   const schema = schemaUtils.retrieveSchema(_schema, formData);
   const idSchema = mergeObjects(
     schemaUtils.toIdSchema(schema, undefined, formData, idPrefix, idSeparator),
@@ -171,7 +181,6 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     idSchema,
     registry
   );
-  const { DescriptionFieldTemplate } = templates;
   const disabled = Boolean(props.disabled || uiOptions.disabled);
   const readonly = Boolean(
     props.readonly ||

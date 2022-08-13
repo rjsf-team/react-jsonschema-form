@@ -1,9 +1,13 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { getTemplate, WidgetProps } from "@rjsf/utils";
 
 const FileWidget = (props: WidgetProps) => {
-  const { registry } = props;
-  const { BaseInputTemplate } = registry.templates;
+  const { options, registry } = props;
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+    "BaseInputTemplate",
+    registry,
+    options
+  );
   return <BaseInputTemplate {...props} type="file" />;
 };
 

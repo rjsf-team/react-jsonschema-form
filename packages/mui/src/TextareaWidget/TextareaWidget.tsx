@@ -1,9 +1,13 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { getTemplate, WidgetProps } from "@rjsf/utils";
 
 const TextareaWidget = (props: WidgetProps) => {
   const { options, registry } = props;
-  const { BaseInputTemplate } = registry.templates;
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+    "BaseInputTemplate",
+    registry,
+    options
+  );
 
   let rows: string | number = 5;
   if (typeof options.rows === "string" || typeof options.rows === "number") {

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types,react/no-array-index-key */
 import React from "react";
 import { Form } from "semantic-ui-react";
+import { getTemplate } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
 
 function selectValue(value, selected, all) {
@@ -32,7 +33,11 @@ function CheckboxesWidget(props) {
     rawErrors = [],
     registry,
   } = props;
-  const { TitleFieldTemplate } = registry.templates;
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    options
+  );
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
   const semanticProps = getSemanticProps({

@@ -4,7 +4,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import { canExpand, getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
+import {
+  canExpand,
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 import AddButton from "../AddButton/AddButton";
 
@@ -22,8 +27,17 @@ const ObjectFieldTemplate = ({
   readonly,
   registry,
 }: ObjectFieldTemplateProps) => {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <>
       {(uiOptions.title || title) && (

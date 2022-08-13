@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  getTemplate,
   getUiOptions,
   orderProperties,
   ErrorSchema,
@@ -7,7 +8,6 @@ import {
   GenericObjectType,
   IdSchema,
   RJSFSchema,
-  TemplatesType,
   ADDITIONAL_PROPERTY_FLAG,
   PROPERTIES_KEY,
   REF_KEY,
@@ -17,8 +17,6 @@ import has from "lodash/has";
 import isObject from "lodash/isObject";
 import set from "lodash/set";
 import unset from "lodash/unset";
-
-import DefaultObjectFieldTemplate from "../templates/ObjectFieldTemplate";
 
 /** Type used for the state of the `ObjectField` component */
 type ObjectFieldState = {
@@ -230,7 +228,7 @@ class ObjectField<T = any, F = any> extends Component<
       registry,
     } = this.props;
 
-    const { fields, formContext, schemaUtils, templates } = registry;
+    const { fields, formContext, schemaUtils } = registry;
     const { SchemaField } = fields;
     const schema = schemaUtils.retrieveSchema(rawSchema, formData);
     const uiOptions = getUiOptions<T, F>(uiSchema);
@@ -254,10 +252,11 @@ class ObjectField<T = any, F = any> extends Component<
       );
     }
 
-    const Template: TemplatesType<T, F>["ObjectFieldTemplate"] =
-      uiOptions.ObjectFieldTemplate ||
-      templates.ObjectFieldTemplate ||
-      DefaultObjectFieldTemplate;
+    const Template = getTemplate<"ObjectFieldTemplate", T, F>(
+      "ObjectFieldTemplate",
+      registry,
+      uiOptions
+    );
 
     const templateProps = {
       title: uiOptions.title || title,

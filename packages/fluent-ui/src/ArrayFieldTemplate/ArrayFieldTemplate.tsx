@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  getTemplate,
   getUiOptions,
   ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
@@ -24,12 +25,23 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     schema,
     title,
   } = props;
-  const {
-    ArrayFieldDescriptionTemplate,
-    ArrayFieldItemTemplate,
-    ArrayFieldTitleTemplate,
-  } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const ArrayFieldDescriptionTemplate =
+    getTemplate<"ArrayFieldDescriptionTemplate">(
+      "ArrayFieldDescriptionTemplate",
+      registry,
+      uiOptions
+    );
+  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate">(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate<"ArrayFieldTitleTemplate">(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <>
       <ArrayFieldTitleTemplate
@@ -43,6 +55,7 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         <ArrayFieldDescriptionTemplate
           idSchema={idSchema}
           description={(uiOptions.description || schema.description)!}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}
