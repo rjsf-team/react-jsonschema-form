@@ -1,4 +1,4 @@
-import React from "react";
+import { createElement } from "react";
 import ReactIs from "react-is";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -101,7 +101,7 @@ export default function getWidget<T = any, F = any>(
 
   if (
     typeof widget === "function" ||
-    (widget && ReactIs.isForwardRef(React.createElement(widget))) ||
+    (widget && ReactIs.isForwardRef(createElement(widget))) ||
     ReactIs.isMemo(widget)
   ) {
     return mergeWidgetOptions<T, F>(widget as Widget<T, F>);
