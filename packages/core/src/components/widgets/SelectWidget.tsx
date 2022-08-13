@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FocusEvent } from "react";
+import { ChangeEvent, FocusEvent } from "react";
+import * as React from "react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 
 function getValue(

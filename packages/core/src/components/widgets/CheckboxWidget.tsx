@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { schemaRequiresTrueValue } from "@rjsf/utils";
 import { WidgetProps } from "@rjsf/utils";
 

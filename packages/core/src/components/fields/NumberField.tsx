@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { asNumber, FieldProps } from "@rjsf/utils";
 
 // Matches a string that ends in a . character, optionally followed by a sequence of

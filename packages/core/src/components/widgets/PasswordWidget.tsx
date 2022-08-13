@@ -1,4 +1,3 @@
-import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.

@@ -1,4 +1,3 @@
-import React from "react";
 import { FieldTemplateProps } from "@rjsf/utils";
 
 import Label from "./Label";

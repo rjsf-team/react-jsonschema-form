@@ -1,4 +1,5 @@
-import React, { FocusEvent } from "react";
+import { FocusEvent } from "react";
+import * as React from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.

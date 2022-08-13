@@ -1,4 +1,3 @@
-import React from "react";
 import { localToUTC, utcToLocal, WidgetProps } from "@rjsf/utils";
 
 /** The `DateTimeWidget` component uses the `BaseInputTemplate` changing the type to `datetime-local` and transforms

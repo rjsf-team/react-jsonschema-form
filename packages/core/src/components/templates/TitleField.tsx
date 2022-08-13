@@ -1,4 +1,3 @@
-import React from "react";
 import { TitleFieldProps } from "@rjsf/utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";

@@ -1,4 +1,4 @@
-import React, { FocusEvent } from "react";
+import { FocusEvent } from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `RadioWidget` is a widget for rendering a radio group.

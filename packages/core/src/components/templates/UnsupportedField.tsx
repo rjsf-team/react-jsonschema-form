@@ -1,4 +1,3 @@
-import React from "react";
 import { UnsupportedFieldProps } from "@rjsf/utils";
 
 /** The `UnsupportedField` component is use to render a field in the schema is one that is not supported by
