@@ -1,4 +1,4 @@
-import React from "react";
+import { Children } from "react";
 
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";
@@ -16,7 +16,7 @@ describe("FieldTemplate", () => {
 
   describe("FieldTemplate should only have one child", () => {
     function FieldTemplate(props) {
-      if (React.Children.count(props.children) !== 1) {
+      if (Children.count(props.children) !== 1) {
         throw "Got wrong number of children";
       }
       return null;

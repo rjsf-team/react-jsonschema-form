@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { expect } from "chai";
 
 import DescriptionField from "../src/components/templates/DescriptionField";
@@ -17,7 +17,7 @@ describe("DescriptionField", () => {
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class DescriptionFieldWrapper extends React.Component {
+  class DescriptionFieldWrapper extends Component {
     constructor(props) {
       super(props);
     }
