@@ -1,4 +1,3 @@
-import React from "react";
 import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
 import { PrimaryButton } from "@fluentui/react";
 
