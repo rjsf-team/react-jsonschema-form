@@ -1,5 +1,9 @@
 import React from "react";
-import { getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
+import {
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
   description,
@@ -10,8 +14,17 @@ const ObjectFieldTemplate = ({
   idSchema,
   registry,
 }: ObjectFieldTemplateProps) => {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <>
       {(uiOptions.title || title) && (
@@ -30,7 +43,6 @@ const ObjectFieldTemplate = ({
           registry={registry}
         />
       )}
-
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
           {properties.map((element) => element.content)}

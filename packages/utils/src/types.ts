@@ -365,6 +365,8 @@ export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
 > & {
   /** The idSchema of the field in the hierarchy */
   idSchema: IdSchema<T>;
+  /** The uiSchema object for this description field */
+  uiSchema?: UiSchema<T, F>;
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */

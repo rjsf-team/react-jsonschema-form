@@ -1,9 +1,14 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { getTemplate, getUiOptions, WidgetProps } from "@rjsf/utils";
 
 const TextareaWidget = (props: WidgetProps) => {
-  const { registry } = props;
-  const { BaseInputTemplate } = registry.templates;
+  const { uiSchema, registry } = props;
+  const options = getUiOptions(uiSchema);
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+    "BaseInputTemplate",
+    registry,
+    options
+  );
   // TODO: rows and columns.
   return <BaseInputTemplate {...props} multiline />;
 };

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types,react/destructuring-assignment */
 import React from "react";
-import { getUiOptions, isFixedItems } from "@rjsf/utils";
+import { getTemplate, getUiOptions, isFixedItems } from "@rjsf/utils";
 
 import AddButton from "../AddButton";
 import { cleanClassNames, getSemanticProps } from "../util";
@@ -30,12 +30,22 @@ function ArrayFieldTemplate({
   });
   const { horizontalButtons, wrapItem } = semanticProps;
   const itemProps = { horizontalButtons, wrapItem };
-  const {
-    ArrayFieldDescriptionTemplate,
-    ArrayFieldItemTemplate,
-    ArrayFieldTitleTemplate,
-  } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const ArrayFieldDescriptionTemplate = getTemplate(
+    "ArrayFieldDescriptionTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldItemTemplate = getTemplate(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
+  );
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || schema.description;
   return (
@@ -57,6 +67,7 @@ function ArrayFieldTemplate({
         <ArrayFieldDescriptionTemplate
           idSchema={idSchema}
           description={fieldDescription}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

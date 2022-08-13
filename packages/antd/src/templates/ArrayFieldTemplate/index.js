@@ -1,5 +1,5 @@
 import React from "react";
-import { getUiOptions } from "@rjsf/utils";
+import { getTemplate, getUiOptions } from "@rjsf/utils";
 import classNames from "classnames";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
@@ -28,13 +28,23 @@ const ArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const {
-    ArrayFieldDescriptionTemplate,
-    ArrayFieldItemTemplate,
-    ArrayFieldTitleTemplate,
-  } = registry.templates;
-  const { labelAlign = "right", rowGutter = 24 } = formContext;
   const uiOptions = getUiOptions(uiSchema);
+  const ArrayFieldDescriptionTemplate = getTemplate(
+    "ArrayFieldDescriptionTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldItemTemplate = getTemplate(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
+  );
+  const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
@@ -63,6 +73,7 @@ const ArrayFieldTemplate = ({
             <ArrayFieldDescriptionTemplate
               description={uiOptions.description || schema.description}
               idSchema={idSchema}
+              uiSchema={uiSchema}
               registry={registry}
             />
           </Col>

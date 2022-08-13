@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
   ArrayFieldTemplateItemType,
@@ -28,12 +29,22 @@ export default function ArrayFieldTemplate<T = any, F = any>(
     schema,
     title,
   } = props;
-  const {
-    ArrayFieldDescriptionTemplate,
-    ArrayFieldItemTemplate,
-    ArrayFieldTitleTemplate,
-  } = registry.templates;
   const uiOptions = getUiOptions<T, F>(uiSchema);
+  const ArrayFieldDescriptionTemplate = getTemplate<
+    "ArrayFieldDescriptionTemplate",
+    T,
+    F
+  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, F>(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate<"ArrayFieldTitleTemplate", T, F>(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <fieldset className={className} id={idSchema.$id}>
       <ArrayFieldTitleTemplate
@@ -47,6 +58,7 @@ export default function ArrayFieldTemplate<T = any, F = any>(
         <ArrayFieldDescriptionTemplate
           idSchema={idSchema}
           description={(uiOptions.description || schema.description)!}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

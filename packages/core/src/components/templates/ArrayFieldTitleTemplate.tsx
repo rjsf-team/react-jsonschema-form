@@ -1,17 +1,30 @@
 import React from "react";
-import { ArrayFieldTitleProps } from "@rjsf/utils";
+import {
+  getTemplate,
+  getUiOptions,
+  ArrayFieldTitleProps,
+  TemplatesType,
+} from "@rjsf/utils";
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
  * the `idSchema`.
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
-export default function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
+export default function ArrayFieldTitleTemplate<T = any, F = any>(
+  props: ArrayFieldTitleProps
+) {
   const { idSchema, title, uiSchema, required, registry } = props;
   if (!title) {
     return null;
   }
-  const { TitleFieldTemplate } = registry.templates;
+  const options = getUiOptions<T, F>(uiSchema);
+  const TitleFieldTemplate: TemplatesType<T, F>["TitleFieldTemplate"] =
+    getTemplate<"TitleFieldTemplate", T, F>(
+      "TitleFieldTemplate",
+      registry,
+      options
+    );
   const id = `${idSchema.$id}__title`;
   return (
     <TitleFieldTemplate

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Grid } from "semantic-ui-react";
-import { canExpand, getUiOptions } from "@rjsf/utils";
+import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
 import AddButton from "../AddButton/AddButton";
 
 function ObjectFieldTemplate({
@@ -18,8 +18,17 @@ function ObjectFieldTemplate({
   idSchema,
   registry,
 }) {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (

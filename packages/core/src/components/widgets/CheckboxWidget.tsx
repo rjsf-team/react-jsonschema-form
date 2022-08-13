@@ -1,6 +1,5 @@
 import React from "react";
-import { schemaRequiresTrueValue } from "@rjsf/utils";
-import { WidgetProps } from "@rjsf/utils";
+import { getTemplate, schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -9,6 +8,7 @@ import { WidgetProps } from "@rjsf/utils";
  */
 function CheckboxWidget<T = any, F = any>({
   schema,
+  options,
   id,
   value,
   disabled,
@@ -20,7 +20,11 @@ function CheckboxWidget<T = any, F = any>({
   onChange,
   registry,
 }: WidgetProps<T, F>) {
-  const { DescriptionFieldTemplate } = registry.templates;
+  const DescriptionFieldTemplate = getTemplate<
+    "DescriptionFieldTemplate",
+    T,
+    F
+  >("DescriptionFieldTemplate", registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

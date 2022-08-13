@@ -8,6 +8,7 @@ import findSchemaDefinition from "./findSchemaDefinition";
 import getInputProps from "./getInputProps";
 import getSchemaType from "./getSchemaType";
 import getSubmitButtonOptions from "./getSubmitButtonOptions";
+import getTemplate from "./getTemplate";
 import getUiOptions from "./getUiOptions";
 import getWidget from "./getWidget";
 import guessType from "./guessType";
@@ -48,6 +49,7 @@ export {
   getInputProps,
   getSchemaType,
   getSubmitButtonOptions,
+  getTemplate,
   getUiOptions,
   getWidget,
   guessType,
