@@ -3,7 +3,7 @@ import classNames from "classnames";
 import isObject from "lodash/isObject";
 import isNumber from "lodash/isNumber";
 
-import { canExpand, getUiOptions } from "@rjsf/utils";
+import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -30,9 +30,18 @@ const ObjectFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
-  const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(

@@ -12,18 +12,20 @@ import {
   RegistryWidgetsType,
   RegistryFieldsType,
   SchemaUtilsType,
+  TemplatesType,
   UiSchema,
   ValidationData,
   ValidatorType,
   WidgetProps,
   createSchemaUtils,
   deepEquals,
+  getTemplate,
+  getUiOptions,
   isObject,
   mergeObjects,
   shouldRender,
   NAME_KEY,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
-  TemplatesType,
 } from "@rjsf/utils";
 import _pick from "lodash/pick";
 import _get from "lodash/get";
@@ -400,7 +402,12 @@ export default class Form<T = any, F = any> extends Component<
   renderErrors(registry: Registry<T, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const { showErrorList, formContext } = this.props;
-    const { ErrorListTemplate } = registry.templates;
+    const options = getUiOptions<T, F>(uiSchema);
+    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, F>(
+      "ErrorListTemplate",
+      registry,
+      options
+    );
 
     if (errors && errors.length && showErrorList != false) {
       return (

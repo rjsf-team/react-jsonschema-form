@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  getTemplate,
   getWidget,
   getUiOptions,
   isFixedItems,
@@ -12,7 +13,6 @@ import {
   FieldProps,
   IdSchema,
   RJSFSchema,
-  TemplatesType,
   UiSchema,
   ITEMS_KEY,
 } from "@rjsf/utils";
@@ -20,8 +20,6 @@ import get from "lodash/get";
 import isObject from "lodash/isObject";
 import set from "lodash/set";
 import { nanoid } from "nanoid";
-
-import DefaultArrayFieldTemplate from "../templates/ArrayFieldTemplate";
 
 /** Type used to represent the keyed form data used in the state */
 type KeyedFormDataType<T> = { key: string; item: T };
@@ -378,8 +376,12 @@ class ArrayField<T = any, F = any> extends Component<
     const { schema, uiSchema, idSchema, registry } = this.props;
     const { schemaUtils } = registry;
     if (!(ITEMS_KEY in schema)) {
-      const { templates } = registry;
-      const { UnsupportedFieldTemplate } = templates;
+      const uiOptions = getUiOptions<T[], F>(uiSchema);
+      const UnsupportedFieldTemplate = getTemplate<
+        "UnsupportedFieldTemplate",
+        T[],
+        F
+      >("UnsupportedFieldTemplate", registry, uiOptions);
 
       return (
         <UnsupportedFieldTemplate
@@ -428,8 +430,7 @@ class ArrayField<T = any, F = any> extends Component<
     } = this.props;
     const { keyedFormData } = this.state;
     const title = schema.title === undefined ? name : schema.title;
-    const { schemaUtils, templates, formContext } = registry;
-    const { ArrayFieldTemplate } = templates;
+    const { schemaUtils, formContext } = registry;
     const uiOptions = getUiOptions<T[], F>(uiSchema);
     const _schemaItems = isObject(schema.items)
       ? (schema.items as RJSFSchema)
@@ -486,11 +487,11 @@ class ArrayField<T = any, F = any> extends Component<
       registry,
     };
 
-    // Check if a custom template was passed in
-    const Template: TemplatesType<T[], F>["ArrayFieldTemplate"] =
-      uiOptions.ArrayFieldTemplate ||
-      ArrayFieldTemplate ||
-      DefaultArrayFieldTemplate;
+    const Template = getTemplate<"ArrayFieldTemplate", T[], F>(
+      "ArrayFieldTemplate",
+      registry,
+      uiOptions
+    );
     return <Template {...arrayProps} />;
   }
 
@@ -667,8 +668,7 @@ class ArrayField<T = any, F = any> extends Component<
     let { formData: items = [] } = this.props;
     const title = schema.title || name;
     const uiOptions = getUiOptions<T[], F>(uiSchema);
-    const { schemaUtils, formContext, templates } = registry;
-    const { ArrayFieldTemplate } = templates;
+    const { schemaUtils, formContext } = registry;
     const _schemaItems = isObject(schema.items)
       ? (schema.items as RJSFSchema[])
       : [];
@@ -747,11 +747,11 @@ class ArrayField<T = any, F = any> extends Component<
       rawErrors,
     };
 
-    // Check if a custom template was passed in
-    const Template: TemplatesType<T[], F>["ArrayFieldTemplate"] =
-      uiOptions.ArrayFieldTemplate ||
-      ArrayFieldTemplate ||
-      DefaultArrayFieldTemplate;
+    const Template = getTemplate<"ArrayFieldTemplate", T[], F>(
+      "ArrayFieldTemplate",
+      registry,
+      uiOptions
+    );
     return <Template {...arrayProps} />;
   }
 

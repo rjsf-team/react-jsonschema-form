@@ -1,6 +1,11 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import { ObjectFieldTemplateProps, canExpand, getUiOptions } from "@rjsf/utils";
+import {
+  ObjectFieldTemplateProps,
+  canExpand,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 
 import AddButton from "../AddButton/AddButton";
 
@@ -18,8 +23,17 @@ const ObjectFieldTemplate = ({
   onAddClick,
   registry,
 }: ObjectFieldTemplateProps) => {
-  const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <>
       {(uiOptions.title || title) && (
