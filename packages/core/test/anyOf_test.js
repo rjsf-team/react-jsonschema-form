@@ -1173,11 +1173,8 @@ describe("anyOf", () => {
       expect(inputs).to.have.length.of(0);
     });
   });
-<<<<<<< HEAD
 
-=======
->>>>>>> a3f932c (Verify custom field is only rendered once with anyOf/oneOf)
-  describe("Custom Field", function() {
+  describe("Custom Field", function () {
     const schema = {
       anyOf: [
         {
@@ -1191,12 +1188,12 @@ describe("anyOf", () => {
     const uiSchema = {
       "ui:field": () => <div className="custom-field">Custom field</div>,
     };
-    it("should be rendered once", function() {
+    it("should be rendered once", function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll(".custom-field");
       expect(fields).to.have.length.of(1);
     });
-    it("should not render <select>", function() {
+    it("should not render <select>", function () {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll("select");
       expect(selects).to.have.length.of(0);
