@@ -18,7 +18,6 @@ export default function AddButton({
           icon="plus"
           className="btn-add col-xs-12"
           title="Add"
-          tabIndex={0}
           onClick={onClick}
           disabled={disabled}
         />

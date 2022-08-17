@@ -1296,7 +1296,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Move down"
                 type="button"
               >
@@ -1340,7 +1340,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Remove"
                 type="button"
               >
@@ -1455,7 +1455,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Move up"
                 type="button"
               >
@@ -1540,7 +1540,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Remove"
                 type="button"
               >

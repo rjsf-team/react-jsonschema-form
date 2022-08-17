@@ -128,7 +128,7 @@ exports[`object fields additionalProperties 1`] = `
                   "paddingRight": 6,
                 }
               }
-              tabIndex={-1}
+              tabIndex={0}
               title="Remove"
               type="button"
             >

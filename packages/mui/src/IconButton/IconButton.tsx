@@ -13,7 +13,6 @@ export default function MuiIconButton(props: IconButtonProps) {
     <IconButton
       {...otherProps}
       size="small"
-      tabIndex={-1}
       color={color as MuiIconButtonProps["color"]}
     >
       {icon}

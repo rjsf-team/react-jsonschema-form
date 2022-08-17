@@ -238,7 +238,7 @@ exports[`array fields array icons 1`] = `
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Move down"
                 type="button"
               >
@@ -284,7 +284,7 @@ exports[`array fields array icons 1`] = `
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Remove"
                 type="button"
               >
@@ -387,7 +387,7 @@ exports[`array fields array icons 1`] = `
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Move up"
                 type="button"
               >
@@ -476,7 +476,7 @@ exports[`array fields array icons 1`] = `
                     "paddingRight": 6,
                   }
                 }
-                tabIndex={-1}
+                tabIndex={0}
                 title="Remove"
                 type="button"
               >

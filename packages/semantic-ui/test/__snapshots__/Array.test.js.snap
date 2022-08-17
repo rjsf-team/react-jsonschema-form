@@ -119,7 +119,7 @@ exports[`array fields array icons 1`] = `
                     className="ui icon disabled button array-item-move-up"
                     disabled={true}
                     onClick={[Function]}
-                    tabIndex="-1"
+                    tabIndex={-1}
                     title="Move up"
                   >
                     <i
@@ -131,7 +131,6 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-move-down"
                     onClick={[Function]}
-                    tabIndex="-1"
                     title="Move down"
                   >
                     <i
@@ -143,7 +142,6 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-remove"
                     onClick={[Function]}
-                    tabIndex="-1"
                     title="Remove"
                   >
                     <i
@@ -208,7 +206,6 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-move-up"
                     onClick={[Function]}
-                    tabIndex="-1"
                     title="Move up"
                   >
                     <i
@@ -221,7 +218,7 @@ exports[`array fields array icons 1`] = `
                     className="ui icon disabled button array-item-move-down"
                     disabled={true}
                     onClick={[Function]}
-                    tabIndex="-1"
+                    tabIndex={-1}
                     title="Move down"
                   >
                     <i
@@ -233,7 +230,6 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-remove"
                     onClick={[Function]}
-                    tabIndex="-1"
                     title="Remove"
                   >
                     <i

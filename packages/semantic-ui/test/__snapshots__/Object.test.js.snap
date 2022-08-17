@@ -94,7 +94,6 @@ exports[`object fields additionalProperties 1`] = `
             <button
               className="ui mini icon button array-item-remove"
               onClick={[Function]}
-              tabIndex="-1"
               title="Remove"
             >
               <i

@@ -962,7 +962,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   "paddingRight": 6,
                 }
               }
-              tabIndex={-1}
+              tabIndex={0}
               title="Remove"
               type="button"
             >

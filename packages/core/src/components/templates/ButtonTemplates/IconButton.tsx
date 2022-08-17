@@ -7,7 +7,6 @@ export default function IconButton(props: IconButtonProps) {
     <button
       type="button"
       className={`btn btn-${iconType} ${className}`}
-      tabIndex={-1}
       {...otherProps}
     >
       <i className={`glyphicon glyphicon-${icon}`} />

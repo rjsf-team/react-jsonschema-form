@@ -5,13 +5,7 @@ import { Button } from "semantic-ui-react";
 function IconButton(props) {
   const { icon, iconType, className, ...otherProps } = props;
   return (
-    <Button
-      icon={icon}
-      size={iconType}
-      tabIndex="-1"
-      className={className}
-      {...otherProps}
-    />
+    <Button icon={icon} size={iconType} className={className} {...otherProps} />
   );
 }
 

@@ -15,7 +15,6 @@ const ChakraIconButton = memo((props: IconButtonProps) => {
   const { icon, iconType, ...otherProps } = props;
   return (
     <IconButton
-      tabIndex={-1}
       aria-label={props.title!}
       {...otherProps}
       icon={icon as ChakraIconButtonProps["icon"]}

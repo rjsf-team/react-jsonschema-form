@@ -9,7 +9,6 @@ const IconButton = (props: IconButtonProps & ButtonProps) => {
   return (
     <Button
       block={iconType === "block"}
-      tabIndex={-1}
       {...otherProps}
       variant={props.variant || "light"}
       size="sm"

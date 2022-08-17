@@ -210,7 +210,6 @@ exports[`object fields additionalProperties 1`] = `
               className="chakra-button emotion-14"
               disabled={false}
               onClick={[Function]}
-              tabIndex={-1}
               title="Remove"
               type="button"
             >

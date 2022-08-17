@@ -365,7 +365,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={true}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Move up"
                   type="button"
                 >
@@ -386,7 +385,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Move down"
                   type="button"
                 >
@@ -407,7 +405,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Remove"
                   type="button"
                 >
@@ -474,7 +471,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Move up"
                   type="button"
                 >
@@ -495,7 +491,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={true}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Move down"
                   type="button"
                 >
@@ -516,7 +511,6 @@ exports[`array fields array icons 1`] = `
                   className="chakra-button emotion-11"
                   disabled={false}
                   onClick={[Function]}
-                  tabIndex={-1}
                   title="Remove"
                   type="button"
                 >
