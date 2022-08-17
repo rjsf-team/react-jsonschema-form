@@ -5,7 +5,6 @@ import {
   ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
 } from "@rjsf/utils";
-import AddButton from "../AddButton";
 
 const rightJustify = {
   float: "right",
@@ -42,6 +41,10 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
       <ArrayFieldTitleTemplate

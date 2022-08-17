@@ -1,9 +1,7 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
-
-import IconButton from "../IconButton";
 
 const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
   const {
@@ -17,8 +15,11 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     onDropIndexClick,
     onReorderClick,
     readonly,
+    registry,
   } = props;
-  const btnStyle = {
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
+  const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
@@ -35,11 +36,9 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
             <div className="d-flex flex-row">
               {(hasMoveUp || hasMoveDown) && (
                 <div className="m-0 p-0">
-                  <IconButton
-                    icon="arrow-up"
+                  <MoveUpButton
                     className="array-item-move-up"
-                    tabIndex={-1}
-                    style={btnStyle as any}
+                    style={btnStyle}
                     disabled={disabled || readonly || !hasMoveUp}
                     onClick={onReorderClick(index, index - 1)}
                   />
@@ -47,10 +46,8 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               )}
               {(hasMoveUp || hasMoveDown) && (
                 <div className="m-0 p-0">
-                  <IconButton
-                    icon="arrow-down"
-                    tabIndex={-1}
-                    style={btnStyle as any}
+                  <MoveDownButton
+                    style={btnStyle}
                     disabled={disabled || readonly || !hasMoveDown}
                     onClick={onReorderClick(index, index + 1)}
                   />
@@ -58,10 +55,8 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               )}
               {hasRemove && (
                 <div className="m-0 p-0">
-                  <IconButton
-                    icon="remove"
-                    tabIndex={-1}
-                    style={btnStyle as any}
+                  <RemoveButton
+                    style={btnStyle}
                     disabled={disabled || readonly}
                     onClick={onDropIndexClick(index)}
                   />

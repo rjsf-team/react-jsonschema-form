@@ -4,11 +4,9 @@ import isObject from "lodash/isObject";
 import isNumber from "lodash/isNumber";
 
 import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
-import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
 import { withConfigConsumer } from "antd/lib/config-provider/context";
-import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: "8px",
@@ -41,6 +39,10 @@ const ObjectFieldTemplate = ({
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -123,15 +125,11 @@ const ObjectFieldTemplate = ({
         <Col span={24}>
           <Row gutter={rowGutter} justify="end">
             <Col flex="192px">
-              <Button
-                block
+              <AddButton
                 className="object-property-expand"
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
-                type="primary"
-              >
-                <PlusCircleOutlined /> Add Item
-              </Button>
+              />
             </Col>
           </Row>
         </Col>

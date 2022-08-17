@@ -182,6 +182,19 @@ export interface TemplatesType<T = any, F = any> {
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
   UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, F>>;
+  /** The set of templates associated with buttons in the form */
+  ButtonTemplates: {
+    /** The template to use for the main `Submit` button  */
+    SubmitButton: React.ComponentType<SubmitButtonProps<T, F>>;
+    /** The template to use for the Add button used for AdditionalProperties and Array items */
+    AddButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Move Down button used for Array items */
+    MoveDownButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Move Up button used for Array items */
+    MoveUpButton: React.ComponentType<IconButtonProps>;
+    /** The template to use for the Remove button used for AdditionalProperties and Array items */
+    RemoveButton: React.ComponentType<IconButtonProps>;
+  };
 }
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
@@ -532,6 +545,20 @@ export interface WidgetProps<T = any, F = any>
 /** The definition of a React-based Widget component */
 export type Widget<T = any, F = any> = React.ComponentType<WidgetProps<T, F>>;
 
+/** The type that defines the props used by the Submit button */
+export type SubmitButtonProps<T = any, F = any> = {
+  /** The uiSchema for this widget */
+  uiSchema?: UiSchema<T, F>;
+};
+
+/** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
+export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** An alternative specification for the type of the icon button */
+  iconType?: string;
+  /** The name representation or actual react element implementation for the icon */
+  icon?: string | React.ReactElement;
+};
+
 /** The type that defines how to change the behavior of the submit button for the form */
 export type UISchemaSubmitButtonOptions = {
   /** The text of the submit button. Set to "Submit" by default */
@@ -563,9 +590,11 @@ type MakeUIType<Type> = {
 };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys
+ * remap the keys. It also contains all the properties, optionally, of `TemplatesType` except "ButtonTemplates"
  */
-type UIOptionsBaseType<T = any, F = any> = Partial<TemplatesType<T, F>> & {
+type UIOptionsBaseType<T = any, F = any> = Partial<
+  Omit<TemplatesType<T, F>, "ButtonTemplates">
+> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
   /** We know that for title, it will be a string, if it is provided */
@@ -592,10 +621,14 @@ type UIOptionsBaseType<T = any, F = any> = Partial<TemplatesType<T, F>> & {
   readonly?: boolean;
   /** This property allows you to reorder the properties that are shown for a particular object */
   order?: string[];
-  /** Flag, if set to `true`, will mark the field as being able to be ordered */
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be added to (defaults to true) */
+  addable?: boolean;
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be ordered (defaults to true) */
   orderable?: boolean;
-  /** Flag, if set to `true`, will mark the field as being able to be removed */
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be removed (defaults to true) */
   removable?: boolean;
+  /** Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row */
+  inline?: boolean;
   /** Used to change the input type (for example, `tel` or `email`) for an <input> */
   inputType?: string;
   /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
@@ -604,7 +637,9 @@ type UIOptionsBaseType<T = any, F = any> = Partial<TemplatesType<T, F>> & {
   rows?: number;
   /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
   submitButtonOptions?: UISchemaSubmitButtonOptions;
-  /** A widget can either be directly included or is the registered `name` for it */
+  /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
+   * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
+   */
   widget?: Widget<T, F> | string;
 };
 
@@ -615,20 +650,16 @@ export type UIOptionsType<T = any, F = any> = UIOptionsBaseType<T, F> & {
 };
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
- * starting with `ui:`
+ * starting with `ui:`.
  */
 export type UiSchema<T = any, F = any> = GenericObjectType &
   MakeUIType<UIOptionsBaseType<T, F>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
     "ui:rootFieldId"?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
-     * to look up an implementation from the `fields` list or an actual one-off field implementation itself
+     * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
      */
     "ui:field"?: Field<T, F> | string;
-    /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
-     * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
-     */
-    "ui:widget"?: Widget<T, F> | string;
     /** An object that contains all of the potential UI options in a single object */
     "ui:options"?: UIOptionsType<T, F>;
   };

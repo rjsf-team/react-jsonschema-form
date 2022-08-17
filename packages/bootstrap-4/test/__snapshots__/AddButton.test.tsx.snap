@@ -10,6 +10,7 @@ exports[`AddButton simple 1`] = `
       "width": "100%",
     }
   }
+  title="Add Item"
   type="button"
 >
   <svg

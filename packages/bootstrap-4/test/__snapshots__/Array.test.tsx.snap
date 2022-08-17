@@ -40,6 +40,7 @@ exports[`array fields array 1`] = `
                         "width": "100%",
                       }
                     }
+                    title="Add Item"
                     type="button"
                   >
                     <svg
@@ -156,7 +157,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Move up"
                         type="button"
                       >
                         <svg
@@ -194,7 +195,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Move down"
                         type="button"
                       >
                         <svg
@@ -221,7 +222,7 @@ exports[`array fields array icons 1`] = `
                       className="m-0 p-0"
                     >
                       <button
-                        className="btn btn-light btn-sm"
+                        className="btn btn-danger btn-sm"
                         disabled={false}
                         onClick={[Function]}
                         style={
@@ -232,7 +233,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Remove"
                         type="button"
                       >
                         <svg
@@ -315,7 +316,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Move up"
                         type="button"
                       >
                         <svg
@@ -353,7 +354,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Move down"
                         type="button"
                       >
                         <svg
@@ -380,7 +381,7 @@ exports[`array fields array icons 1`] = `
                       className="m-0 p-0"
                     >
                       <button
-                        className="btn btn-light btn-sm"
+                        className="btn btn-danger btn-sm"
                         disabled={false}
                         onClick={[Function]}
                         style={
@@ -391,7 +392,7 @@ exports[`array fields array icons 1`] = `
                             "paddingRight": 6,
                           }
                         }
-                        tabIndex={-1}
+                        title="Remove"
                         type="button"
                       >
                         <svg
@@ -439,6 +440,7 @@ exports[`array fields array icons 1`] = `
                         "width": "100%",
                       }
                     }
+                    title="Add Item"
                     type="button"
                   >
                     <svg

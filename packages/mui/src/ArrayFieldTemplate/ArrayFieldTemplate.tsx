@@ -9,8 +9,6 @@ import {
   getUiOptions,
 } from "@rjsf/utils";
 
-import AddButton from "../AddButton";
-
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
   const {
     canAdd,
@@ -42,6 +40,10 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <Paper elevation={2}>
       <Box p={2}>

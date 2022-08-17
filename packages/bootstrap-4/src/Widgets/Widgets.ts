@@ -5,7 +5,6 @@ import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import FileWidget from "../FileWidget/FileWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 
 export default {
   CheckboxWidget,
@@ -15,5 +14,4 @@ export default {
   SelectWidget,
   TextareaWidget,
   FileWidget,
-  SubmitButton,
 };

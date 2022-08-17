@@ -5,6 +5,7 @@ import ArrayFieldItemTemplate from "./ArrayFieldItemTemplate";
 import ArrayFieldTemplate from "./ArrayFieldTemplate";
 import ArrayFieldTitleTemplate from "./ArrayFieldTitleTemplate";
 import BaseInputTemplate from "./BaseInputTemplate";
+import ButtonTemplates from "./ButtonTemplates";
 import DescriptionField from "./DescriptionField";
 import ErrorList from "./ErrorList";
 import FieldTemplate from "./FieldTemplate";
@@ -17,6 +18,7 @@ const templates: TemplatesType = {
   ArrayFieldItemTemplate,
   ArrayFieldTemplate,
   ArrayFieldTitleTemplate,
+  ButtonTemplates,
   BaseInputTemplate,
   DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,

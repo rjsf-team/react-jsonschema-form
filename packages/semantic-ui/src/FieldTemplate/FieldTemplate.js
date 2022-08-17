@@ -37,7 +37,13 @@ function FieldTemplate({
   }
 
   return (
-    <WrapIfAdditional classNames={classNames} id={id} label={label} {...props}>
+    <WrapIfAdditional
+      classNames={classNames}
+      id={id}
+      label={label}
+      registry={registry}
+      {...props}
+    >
       <Form.Group key={id} widths="equal" grouped>
         <MaybeWrap wrap={wrapContent} className="sui-field-content">
           {children}

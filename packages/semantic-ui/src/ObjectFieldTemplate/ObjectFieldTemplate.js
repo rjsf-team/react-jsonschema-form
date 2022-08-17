@@ -2,7 +2,6 @@
 import React from "react";
 import { Grid } from "semantic-ui-react";
 import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
-import AddButton from "../AddButton/AddButton";
 
 function ObjectFieldTemplate({
   description,
@@ -29,6 +28,10 @@ function ObjectFieldTemplate({
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (

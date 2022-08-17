@@ -6,8 +6,6 @@ import {
   ArrayFieldTemplateItemType,
 } from "@rjsf/utils";
 
-import AddButton from "../AddButton";
-
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
@@ -45,6 +43,10 @@ export default function ArrayFieldTemplate<T = any, F = any>(
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <fieldset className={className} id={idSchema.$id}>
       <ArrayFieldTitleTemplate

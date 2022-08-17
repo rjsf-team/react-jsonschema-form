@@ -7,7 +7,6 @@ import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import UpDownWidget from "../UpDownWidget/UpDownWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 
 const widgets = {
   AltDateTimeWidget,
@@ -19,7 +18,6 @@ const widgets = {
   SelectWidget,
   TextareaWidget,
   UpDownWidget,
-  SubmitButton,
 };
 
 export default widgets;

@@ -1,11 +1,9 @@
 import React from "react";
 import { getTemplate, getUiOptions } from "@rjsf/utils";
 import classNames from "classnames";
-import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
 import { withConfigConsumer } from "antd/lib/config-provider/context";
-import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: "8px",
@@ -44,6 +42,10 @@ const ArrayFieldTemplate = ({
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   const { labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
@@ -93,15 +95,11 @@ const ArrayFieldTemplate = ({
           <Col span={24}>
             <Row gutter={rowGutter} justify="end">
               <Col flex="192px">
-                <Button
-                  block
+                <AddButton
                   className="array-item-add"
                   disabled={disabled || readonly}
                   onClick={onAddClick}
-                  type="primary"
-                >
-                  <PlusCircleOutlined /> Add Item
-                </Button>
+                />
               </Col>
             </Row>
           </Col>

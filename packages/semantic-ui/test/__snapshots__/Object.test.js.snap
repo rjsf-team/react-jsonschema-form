@@ -94,7 +94,7 @@ exports[`object fields additionalProperties 1`] = `
             <button
               className="ui mini icon button array-item-remove"
               onClick={[Function]}
-              tabIndex="-1"
+              title="Remove"
             >
               <i
                 aria-hidden="true"
@@ -124,13 +124,13 @@ exports[`object fields additionalProperties 1`] = `
           <button
             className="ui tiny icon left labeled button"
             onClick={[Function]}
+            title="Add Item"
           >
             <i
               aria-hidden="true"
               className="plus icon"
               onClick={[Function]}
             />
-            Add Item
           </button>
         </div>
       </div>

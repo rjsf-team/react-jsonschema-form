@@ -28,13 +28,13 @@ exports[`array fields array 1`] = `
           <button
             className="ui tiny icon left labeled button"
             onClick={[Function]}
+            title="Add Item"
           >
             <i
               aria-hidden="true"
               className="plus icon"
               onClick={[Function]}
             />
-            Add Item
           </button>
         </div>
       </div>
@@ -119,7 +119,8 @@ exports[`array fields array icons 1`] = `
                     className="ui icon disabled button array-item-move-up"
                     disabled={true}
                     onClick={[Function]}
-                    tabIndex="-1"
+                    tabIndex={-1}
+                    title="Move up"
                   >
                     <i
                       aria-hidden="true"
@@ -130,7 +131,7 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-move-down"
                     onClick={[Function]}
-                    tabIndex="-1"
+                    title="Move down"
                   >
                     <i
                       aria-hidden="true"
@@ -141,7 +142,7 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-remove"
                     onClick={[Function]}
-                    tabIndex="-1"
+                    title="Remove"
                   >
                     <i
                       aria-hidden="true"
@@ -205,7 +206,7 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-move-up"
                     onClick={[Function]}
-                    tabIndex="-1"
+                    title="Move up"
                   >
                     <i
                       aria-hidden="true"
@@ -217,7 +218,8 @@ exports[`array fields array icons 1`] = `
                     className="ui icon disabled button array-item-move-down"
                     disabled={true}
                     onClick={[Function]}
-                    tabIndex="-1"
+                    tabIndex={-1}
+                    title="Move down"
                   >
                     <i
                       aria-hidden="true"
@@ -228,7 +230,7 @@ exports[`array fields array icons 1`] = `
                   <button
                     className="ui icon button array-item-remove"
                     onClick={[Function]}
-                    tabIndex="-1"
+                    title="Remove"
                   >
                     <i
                       aria-hidden="true"
@@ -253,13 +255,13 @@ exports[`array fields array icons 1`] = `
           <button
             className="ui tiny icon left labeled button"
             onClick={[Function]}
+            title="Add Item"
           >
             <i
               aria-hidden="true"
               className="plus icon"
               onClick={[Function]}
             />
-            Add Item
           </button>
         </div>
       </div>

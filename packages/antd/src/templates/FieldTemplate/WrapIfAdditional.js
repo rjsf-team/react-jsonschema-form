@@ -1,12 +1,10 @@
 import React from "react";
 
 import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
-import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
 import Row from "antd/lib/row";
-import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -26,6 +24,7 @@ const WrapIfAdditional = ({
   onKeyChange,
   readonly,
   required,
+  registry,
   schema,
 }) => {
   const {
@@ -37,6 +36,7 @@ const WrapIfAdditional = ({
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = formContext;
+  const { RemoveButton } = registry.templates.ButtonTemplates;
 
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
@@ -80,14 +80,11 @@ const WrapIfAdditional = ({
           {children}
         </Col>
         <Col flex="192px">
-          <Button
+          <RemoveButton
             block
             className="array-item-remove"
-            danger
             disabled={disabled || readonly}
-            icon={<DeleteOutlined />}
             onClick={onDropPropertyClick(label)}
-            type="primary"
           />
         </Col>
       </Row>

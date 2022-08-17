@@ -22,6 +22,7 @@ const FieldTemplate = ({
   readonly,
   required,
   schema,
+  registry,
 }: FieldTemplateProps) => {
   return (
     <WrapIfAdditional
@@ -34,6 +35,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       <Form.Group>
         {children}

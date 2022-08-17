@@ -1,14 +1,12 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { ArrayFieldTemplateItemType } from "@rjsf/utils";
-
-import IconButton from "../IconButton";
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
  */
-export default function ArrayFieldItemTemplate(
-  props: ArrayFieldTemplateItemType
+export default function ArrayFieldItemTemplate<T = any, F = any>(
+  props: ArrayFieldTemplateItemType<T, F>
 ) {
   const {
     children,
@@ -22,8 +20,11 @@ export default function ArrayFieldItemTemplate(
     onDropIndexClick,
     onReorderClick,
     readonly,
+    registry,
   } = props;
-  const btnStyle = {
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
+  const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
@@ -42,34 +43,21 @@ export default function ArrayFieldItemTemplate(
             }}
           >
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-up"
-                aria-label="Move up"
-                className="array-item-move-up"
-                tabIndex="-1"
+              <MoveUpButton
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
-              <IconButton
-                icon="arrow-down"
-                className="array-item-move-down"
-                aria-label="Move down"
-                tabIndex="-1"
+              <MoveDownButton
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
               />
             )}
             {hasRemove && (
-              <IconButton
-                type="danger"
-                icon="remove"
-                aria-label="Remove"
-                className="array-item-remove"
-                tabIndex="-1"
+              <RemoveButton
                 style={btnStyle}
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
