@@ -16,7 +16,6 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
-  WidgetProps,
   createSchemaUtils,
   deepEquals,
   getTemplate,
@@ -737,15 +736,13 @@ export default class Form<T = any, F = any> extends Component<
 
     const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
     const registry = this.getRegistry();
-    const _SchemaField = registry.fields.SchemaField;
+    const { SchemaField: _SchemaField } = registry.fields;
+    const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || "form";
-    const SubmitButton = registry.widgets.SubmitButton as React.ComponentType<
-      Partial<WidgetProps<T, F>>
-    >;
 
     return (
       <FormTag

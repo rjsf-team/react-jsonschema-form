@@ -7,8 +7,6 @@ import {
   ObjectFieldTemplateProps,
 } from "@rjsf/utils";
 
-import AddButton from "../AddButton";
-
 const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
     description,
@@ -35,6 +33,10 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
 
   return (
     <React.Fragment>

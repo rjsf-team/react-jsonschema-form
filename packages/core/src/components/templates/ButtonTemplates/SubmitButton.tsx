@@ -1,10 +1,11 @@
 import React from "react";
-import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
+import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
 
-/** The `SubmitButton` renders a button that represent the `Submit` action on a form */
+/** The `SubmitButton` renders a button that represent the `Submit` action on a form
+ */
 export default function SubmitButton<T, F>({
   uiSchema,
-}: Partial<WidgetProps<T, F>>) {
+}: SubmitButtonProps<T, F>) {
   const {
     submitText,
     norender,

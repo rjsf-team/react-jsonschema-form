@@ -18,7 +18,6 @@ import TextareaWidget from "./TextareaWidget";
 import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
-import SubmitButton from "./SubmitButton";
 
 const widgets: RegistryWidgetsType = {
   PasswordWidget,
@@ -39,7 +38,6 @@ const widgets: RegistryWidgetsType = {
   FileWidget,
   CheckboxWidget,
   CheckboxesWidget,
-  SubmitButton,
 };
 
 export default widgets;

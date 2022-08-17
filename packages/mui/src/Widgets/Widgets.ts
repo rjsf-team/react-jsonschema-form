@@ -6,7 +6,6 @@ import RadioWidget from "../RadioWidget/RadioWidget";
 import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
-import SubmitButton from "../SubmitButton/SubmitButton";
 
 export default {
   CheckboxWidget,
@@ -17,5 +16,4 @@ export default {
   RangeWidget,
   SelectWidget,
   TextareaWidget,
-  SubmitButton,
 };

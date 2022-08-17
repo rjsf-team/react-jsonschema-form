@@ -92,7 +92,7 @@ exports[`object fields additionalProperties 1`] = `
                 className="btn btn-danger btn-block btn-sm"
                 disabled={false}
                 onClick={[Function]}
-                tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <svg
@@ -133,6 +133,7 @@ exports[`object fields additionalProperties 1`] = `
                 "width": "100%",
               }
             }
+            title="Add Item"
             type="button"
           >
             <svg

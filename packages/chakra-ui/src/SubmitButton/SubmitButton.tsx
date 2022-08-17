@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Button } from "@chakra-ui/react";
-import { getSubmitButtonOptions, WidgetProps } from "@rjsf/utils";
+import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
 
-const SubmitButton = ({ uiSchema }: WidgetProps) => {
+const SubmitButton = ({ uiSchema }: SubmitButtonProps) => {
   const {
     submitText,
     norender,

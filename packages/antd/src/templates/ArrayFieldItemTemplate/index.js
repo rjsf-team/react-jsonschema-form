@@ -3,9 +3,6 @@ import React from "react";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
-import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
-import ArrowUpOutlined from "@ant-design/icons/ArrowUpOutlined";
-import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
 
 const BTN_GRP_STYLE = {
   width: "100%",
@@ -27,7 +24,10 @@ const ArrayFieldItemTemplate = ({
   onDropIndexClick,
   onReorderClick,
   readonly,
+  registry,
 }) => {
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
   const { rowGutter = 24, toolbarAlign = "top" } = formContext;
 
   return (
@@ -38,33 +38,26 @@ const ArrayFieldItemTemplate = ({
         <Col flex="192px">
           <Button.Group style={BTN_GRP_STYLE}>
             {(hasMoveUp || hasMoveDown) && (
-              <Button
+              <MoveUpButton
                 disabled={disabled || readonly || !hasMoveUp}
-                icon={<ArrowUpOutlined />}
                 onClick={onReorderClick(index, index - 1)}
                 style={BTN_STYLE}
-                type="default"
               />
             )}
 
             {(hasMoveUp || hasMoveDown) && (
-              <Button
+              <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
-                icon={<ArrowDownOutlined />}
                 onClick={onReorderClick(index, index + 1)}
                 style={BTN_STYLE}
-                type="default"
               />
             )}
 
             {hasRemove && (
-              <Button
-                danger
+              <RemoveButton
                 disabled={disabled || readonly}
-                icon={<DeleteOutlined />}
                 onClick={onDropIndexClick(index)}
                 style={BTN_STYLE}
-                type="primary"
               />
             )}
           </Button.Group>

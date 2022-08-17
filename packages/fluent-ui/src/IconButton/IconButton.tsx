@@ -1,21 +1,10 @@
 import React from "react";
-
 import { IconButton, IIconProps } from "@fluentui/react";
-import { AddButtonProps as FuiIconButtonProps } from "@rjsf/core";
+import { IconButtonProps } from "@rjsf/utils";
 
-const mappings: { [x: string]: string } = {
-  remove: "Delete",
-  "arrow-up": "Up",
-  "arrow-down": "Down",
-};
-
-type IconButtonProps = FuiIconButtonProps & {
-  icon: string;
-};
-
-export default (props: IconButtonProps) => {
+export default function FluentIconButton(props: IconButtonProps) {
   const iconProps: IIconProps = {
-    iconName: mappings[props.icon],
+    iconName: props.icon as string,
   };
 
   return (
@@ -26,4 +15,16 @@ export default (props: IconButtonProps) => {
       color="secondary"
     />
   );
-};
+}
+
+export function MoveDownButton(props: IconButtonProps) {
+  return <FluentIconButton title="Move down" {...props} icon="Down" />;
+}
+
+export function MoveUpButton(props: IconButtonProps) {
+  return <FluentIconButton title="Move up" {...props} icon="Up" />;
+}
+
+export function RemoveButton(props: IconButtonProps) {
+  return <FluentIconButton title="Remove" {...props} icon="Delete" />;
+}
