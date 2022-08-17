@@ -274,7 +274,7 @@ exports[`single fields checkbox field 1`] = `
       className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
     >
       <span
-        className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-2"
+        className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
         onBlur={[Function]}
         onContextMenu={[Function]}
         onDragLeave={[Function]}
@@ -326,7 +326,7 @@ exports[`single fields checkbox field 1`] = `
     className="MuiBox-root emotion-7"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-8"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-8"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -614,7 +614,7 @@ exports[`single fields checkbox field 2`] = `
       className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
     >
       <span
-        className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-2"
+        className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
         onBlur={[Function]}
         onContextMenu={[Function]}
         onDragLeave={[Function]}
@@ -663,7 +663,7 @@ exports[`single fields checkbox field 2`] = `
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1005,7 +1005,7 @@ exports[`single fields checkboxes field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -1055,7 +1055,7 @@ exports[`single fields checkboxes field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -1105,7 +1105,7 @@ exports[`single fields checkboxes field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -1155,7 +1155,7 @@ exports[`single fields checkboxes field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -1207,7 +1207,7 @@ exports[`single fields checkboxes field 1`] = `
     className="MuiBox-root emotion-27"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-28"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-28"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1752,7 +1752,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
             className="MuiFormControl-root MuiTextField-root emotion-4"
           >
             <label
-              className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-5"
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
               data-shrink={false}
               htmlFor="root_my-field"
               id="root_my-field-label"
@@ -1760,13 +1760,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               my-field
             </label>
             <div
-              className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
               onClick={[Function]}
             >
               <input
                 aria-invalid={false}
                 autoFocus={false}
-                className="MuiOutlinedInput-input MuiInputBase-input emotion-7"
+                className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                 disabled={false}
                 id="root_my-field"
                 onAnimationStart={[Function]}
@@ -1805,7 +1805,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     className="MuiBox-root emotion-11"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-12"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-12"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2338,7 +2338,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
             className="MuiFormControl-root MuiTextField-root emotion-4"
           >
             <label
-              className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-5"
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
               data-shrink={false}
               htmlFor="root_my-field"
               id="root_my-field-label"
@@ -2346,13 +2346,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               my-field
             </label>
             <div
-              className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
               onClick={[Function]}
             >
               <input
                 aria-invalid={false}
                 autoFocus={false}
-                className="MuiOutlinedInput-input MuiInputBase-input emotion-7"
+                className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                 disabled={false}
                 id="root_my-field"
                 onAnimationStart={[Function]}
@@ -2391,7 +2391,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     className="MuiBox-root emotion-11"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-12"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-12"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2754,13 +2754,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -2793,7 +2793,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -3147,13 +3147,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -3186,7 +3186,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -3549,13 +3549,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -3588,7 +3588,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -3783,7 +3783,7 @@ exports[`single fields hidden field 1`] = `
     className="MuiBox-root emotion-2"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-3"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-3"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -4188,18 +4188,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <label
-        className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-2"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-2"
         data-shrink={false}
         htmlFor="root"
       />
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-3"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-3"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-4"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-4"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -4228,7 +4228,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     className="MuiBox-root emotion-7"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-8"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-8"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -4389,7 +4389,7 @@ exports[`single fields null field 1`] = `
     className="MuiBox-root emotion-1"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-2"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -4743,13 +4743,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -4783,7 +4783,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -5146,13 +5146,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -5186,7 +5186,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -5540,13 +5540,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -5579,7 +5579,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -5948,7 +5948,7 @@ exports[`single fields radio field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -6009,7 +6009,7 @@ exports[`single fields radio field 1`] = `
         className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
       >
         <span
-          className="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-4"
+          className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
           onBlur={[Function]}
           onContextMenu={[Function]}
           onDragLeave={[Function]}
@@ -6072,7 +6072,7 @@ exports[`single fields radio field 1`] = `
     className="MuiBox-root emotion-17"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-18"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-18"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -6500,7 +6500,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
         variant="outlined"
       >
@@ -6508,7 +6508,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           aria-expanded="false"
           aria-haspopup="listbox"
           aria-labelledby="root"
-          className="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
           id="root"
           onBlur={[Function]}
           onFocus={[Function]}
@@ -6566,7 +6566,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-8"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-9"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -6951,7 +6951,7 @@ exports[`single fields slider field 1`] = `
       
     </label>
     <span
-      className="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root emotion-2"
+      className="MuiSlider-root MuiSlider-colorPrimary MuiSlider-sizeMedium emotion-2"
       id="root"
       label=""
       onBlur={[Function]}
@@ -6971,7 +6971,7 @@ exports[`single fields slider field 1`] = `
         }
       />
       <span
-        className="MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium MuiSlider-thumb emotion-5"
+        className="MuiSlider-thumb MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium emotion-5"
         data-focusvisible={false}
         data-index={0}
         onMouseLeave={[Function]}
@@ -7034,7 +7034,7 @@ exports[`single fields slider field 1`] = `
     className="MuiBox-root emotion-7"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-8"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-8"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -7211,7 +7211,7 @@ exports[`single fields string field format data-url 1`] = `
     className="MuiBox-root emotion-1"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-2"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -7577,13 +7577,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -7616,7 +7616,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -7970,13 +7970,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -8009,7 +8009,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -8360,13 +8360,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -8399,7 +8399,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -8750,13 +8750,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -8789,7 +8789,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -9156,13 +9156,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline emotion-2"
         onClick={[Function]}
       >
         <textarea
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputMultiline emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -9182,7 +9182,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         />
         <textarea
           aria-hidden={true}
-          className="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputMultiline emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
           readOnly={true}
           style={
             Object {
@@ -9219,7 +9219,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-7"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-8"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-8"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -9791,7 +9791,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
             className="MuiFormControl-root MuiTextField-root emotion-7"
           >
             <label
-              className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-8"
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-8"
               data-shrink={false}
               htmlFor="root_title"
               id="root_title-label"
@@ -9799,13 +9799,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
               title
             </label>
             <div
-              className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-9"
+              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-9"
               onClick={[Function]}
             >
               <input
                 aria-invalid={false}
                 autoFocus={false}
-                className="MuiOutlinedInput-input MuiInputBase-input emotion-10"
+                className="MuiInputBase-input MuiOutlinedInput-input emotion-10"
                 disabled={false}
                 id="root_title"
                 onAnimationStart={[Function]}
@@ -9839,7 +9839,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
     className="MuiBox-root emotion-13"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-14"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-14"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -10014,7 +10014,7 @@ exports[`single fields unsupported field 1`] = `
     className="MuiBox-root emotion-1"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-2"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -10377,13 +10377,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -10416,7 +10416,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -10782,13 +10782,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiTextField-root emotion-1"
     >
       <div
-        className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         onClick={[Function]}
       >
         <input
           aria-invalid={false}
           autoFocus={false}
-          className="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
           disabled={false}
           id="root"
           onAnimationStart={[Function]}
@@ -10821,7 +10821,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-6"
   >
     <button
-      className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
