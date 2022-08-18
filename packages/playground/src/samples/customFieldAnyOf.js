@@ -36,7 +36,7 @@ export default {
       onChange,
       ...other
     }) => {
-      const changeHandlerFactory = fieldName => event => {
+      const changeHandlerFactory = (fieldName) => (event) => {
         onChange(
           formData
             ? { ...formData, [fieldName]: event.target.value }
@@ -53,7 +53,8 @@ export default {
                 flexDirection: "column",
                 width: "50%",
                 margin: "1rem",
-              }}>
+              }}
+            >
               <div className="form-group field field-string">
                 <label className="control-label" htmlFor={`${$id}-city`}>
                   City
@@ -75,7 +76,8 @@ export default {
                 flexDirection: "column",
                 width: "50%",
                 margin: "1rem",
-              }}>
+              }}
+            >
               <div className="form-group field field-string">
                 <label className="control-label" htmlFor={`${$id}-lat`}>
                   Latitude
