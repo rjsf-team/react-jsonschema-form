@@ -1,8 +1,15 @@
 import { processSelectValue, RJSFSchema } from "../src";
 
 describe("processSelectValue", () => {
-  it("always returns undefined for an empty string value", () => {
+  it("always returns undefined for an empty string value with no options", () => {
     expect(processSelectValue({}, "")).toBeUndefined();
+  });
+  it("always returns undefined for an empty string value with options.emptyValue", () => {
+    expect(processSelectValue({}, "", {})).toBeUndefined();
+  });
+  it("always returns options.emptyValue for an empty string value when present", () => {
+    const options = { emptyValue: "default value" };
+    expect(processSelectValue({}, "", options)).toBe(options.emptyValue);
   });
   it("returns an array of numbers when the type is array and items represents a number", () => {
     const schema: RJSFSchema = {

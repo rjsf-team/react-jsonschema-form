@@ -39,17 +39,17 @@ function SelectWidget<T = any, F = any>({
 
   const handleFocus = (event: FocusEvent<HTMLSelectElement>) => {
     const newValue = getValue(event, multiple);
-    return onFocus(id, processSelectValue(schema, newValue));
+    return onFocus(id, processSelectValue(schema, newValue, options));
   };
 
   const handleBlur = (event: FocusEvent<HTMLSelectElement>) => {
     const newValue = getValue(event, multiple);
-    return onBlur(id, processSelectValue(schema, newValue));
+    return onBlur(id, processSelectValue(schema, newValue, options));
   };
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newValue = getValue(event, multiple);
-    return onChange(processSelectValue(schema, newValue));
+    return onChange(processSelectValue(schema, newValue, options));
   };
 
   return (
