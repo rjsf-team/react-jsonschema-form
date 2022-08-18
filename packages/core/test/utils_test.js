@@ -2671,14 +2671,52 @@ describe("utils", () => {
                   title: "Breed name",
                   type: "string",
                 },
-                Spots: {
-                  default: "small",
-                  enum: ["large", "small"],
-                  title: "Spots",
-                  type: "string",
-                },
               },
-              required: ["BreedName", "Spots"],
+              allOf: [
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Alsatian",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Fur: {
+                        default: "brown",
+                        enum: ["black", "brown"],
+                        title: "Fur",
+                        type: "string",
+                      },
+                    },
+                    required: ["Fur"],
+                  },
+                },
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Dalmation",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Spots: {
+                        default: "small",
+                        enum: ["large", "small"],
+                        title: "Spots",
+                        type: "string",
+                      },
+                    },
+                    required: ["Spots"],
+                  },
+                },
+              ],
+              required: ["BreedName"],
               title: "Breed",
             },
           },

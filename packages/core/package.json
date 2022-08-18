@@ -44,7 +44,7 @@
     "@types/json-schema": "^7.0.7",
     "ajv": "^6.7.0",
     "core-js-pure": "^3.6.5",
-    "json-schema-merge-allof": "^0.6.0",
+    "json-schema-merge-allof": "^0.8.1",
     "jsonpointer": "^5.0.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
