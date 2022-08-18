@@ -16,11 +16,19 @@ export default function withTheme<T = any, F = any>(
 ) {
   return forwardRef(
     (
-      { fields, widgets, ...directProps }: FormProps<T, F>,
+      { fields, widgets, templates, ...directProps }: FormProps<T, F>,
       ref: ForwardedRef<Form<T, F>>
     ) => {
       fields = { ...themeProps.fields, ...fields };
       widgets = { ...themeProps.widgets, ...widgets };
+      templates = {
+        ...themeProps.templates,
+        ...templates,
+        ButtonTemplates: {
+          ...themeProps?.templates?.ButtonTemplates,
+          ...templates?.ButtonTemplates,
+        },
+      };
 
       return (
         <Form<T, F>
@@ -28,6 +36,7 @@ export default function withTheme<T = any, F = any>(
           {...directProps}
           fields={fields}
           widgets={widgets}
+          templates={templates}
           ref={ref}
         />
       );
