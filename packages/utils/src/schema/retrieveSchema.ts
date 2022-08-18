@@ -1,6 +1,6 @@
 import get from "lodash/get";
 import set from "lodash/set";
-import mergeAllOf from "json-schema-merge-allof";
+import mergeAllOf, { Options } from "json-schema-merge-allof";
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -242,40 +242,10 @@ export default function retrieveSchema<
   }
 
   const formData: GenericObjectType = rawFormData || {};
-  // For each level of the dependency, we need to recursively determine the appropriate resolved schema given the current state of formData.
-  // Otherwise, nested allOf subschemas will not be correctly displayed.
-  if (resolvedSchema.properties) {
-    const properties: GenericObjectType = {};
-
-    Object.entries(resolvedSchema.properties).forEach((entries) => {
-      const propName = entries[0];
-      const propSchema = entries[1] as S;
-      const rawPropData = formData[propName];
-      const propData = isObject(rawPropData) ? rawPropData : {};
-      const resolvedPropSchema = retrieveSchema<T, S>(
-        validator,
-        propSchema,
-        rootSchema,
-        propData
-      );
-
-      properties[propName] = resolvedPropSchema;
-
-      if (
-        propSchema !== resolvedPropSchema &&
-        resolvedSchema.properties !== properties
-      ) {
-        resolvedSchema = { ...resolvedSchema, properties };
-      }
-    });
-  }
 
   if (ALL_OF_KEY in schema) {
     try {
-      resolvedSchema = mergeAllOf({
-        ...resolvedSchema,
-        allOf: resolvedSchema.allOf,
-      }) as S;
+      resolvedSchema = mergeAllOf( resolvedSchema, { deep: false } as Options) as S;
     } catch (e) {
       console.warn("could not merge subschemas in allOf:\n" + e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
