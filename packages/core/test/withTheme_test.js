@@ -260,18 +260,93 @@ describe("withTheme", () => {
       );
     });
 
-    it("should forward the ref", () => {
-      const ref = createRef();
-      const schema = {};
+    it("should use the withTheme submit button template", () => {
+      const themeTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return (
+              <button className="with-theme-button-template">
+                ThemeSubmit
+              </button>
+            );
+          },
+        },
+      };
+      const schema = {
+        type: "object",
+        properties: {
+          fieldA: {
+            type: "string",
+          },
+          fieldB: {
+            type: "string",
+          },
+        },
+      };
       const uiSchema = {};
-
-      createComponent(withTheme({}), {
-        schema,
-        uiSchema,
-        ref,
-      });
-
-      expect(ref.current.submit).not.eql(undefined);
+      let { node } = createComponent(
+        WrapperClassComponent({ templates: themeTemplates }),
+        {
+          schema,
+          uiSchema,
+        }
+      );
+      expect(
+        node.querySelectorAll(".with-theme-button-template")
+      ).to.have.length.of(1);
     });
+
+    it("should use only the user defined submit button", () => {
+      const themeTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return (
+              <button className="with-theme-button-template">
+                ThemeSubmit
+              </button>
+            );
+          },
+        },
+      };
+      const userTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return <button className="user-button-template">UserSubmit</button>;
+          },
+        },
+      };
+
+      const schema = {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      };
+      let { node } = createComponent(
+        WrapperClassComponent({ templates: themeTemplates }),
+        {
+          schema,
+          templates: userTemplates,
+        }
+      );
+      expect(
+        node.querySelectorAll(".with-theme-button-template")
+      ).to.have.length.of(0);
+      expect(node.querySelectorAll(".user-button-template")).to.have.length.of(
+        1
+      );
+    });
+  });
+
+  it("should forward the ref", () => {
+    const ref = createRef();
+    const schema = {};
+    const uiSchema = {};
+
+    createComponent(withTheme({}), {
+      schema,
+      uiSchema,
+      ref,
+    });
+
+    expect(ref.current.submit).not.eql(undefined);
   });
 });

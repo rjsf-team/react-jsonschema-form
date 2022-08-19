@@ -1,4 +1,4 @@
-import { withTheme, getDefaultRegistry } from "@rjsf/core";
+import { withTheme } from "@rjsf/core";
 
 import ArrayFieldItemTemplate from "./templates/ArrayFieldItemTemplate";
 import ArrayFieldTemplate from "./templates/ArrayFieldTemplate";
@@ -28,10 +28,6 @@ import RangeWidget from "./widgets/RangeWidget";
 import SelectWidget from "./widgets/SelectWidget";
 import TextareaWidget from "./widgets/TextareaWidget";
 
-// import './index.less';
-
-const { fields, templates, widgets } = getDefaultRegistry();
-
 export const Widgets = {
   AltDateTimeWidget,
   AltDateWidget,
@@ -47,9 +43,7 @@ export const Widgets = {
 };
 
 export const Theme = {
-  fields,
   templates: {
-    ...templates,
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
     BaseInputTemplate,
@@ -66,7 +60,7 @@ export const Theme = {
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
   },
-  widgets: { ...widgets, ...Widgets },
+  widgets: Widgets,
 };
 
 export const Form = withTheme(Theme);

@@ -71,7 +71,9 @@ export interface FormProps<T = any, F = any> {
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<T, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<TemplatesType<T, F>>;
+  templates?: Partial<Omit<TemplatesType<T, F>, "ButtonTemplates">> & {
+    ButtonTemplates?: Partial<TemplatesType<T, F>["ButtonTemplates"]>;
+  };
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<T, F>;
   // Callbacks
@@ -685,15 +687,20 @@ export default class Form<T = any, F = any> extends Component<
   /** Returns the registry for the form */
   getRegistry(): Registry<T, F> {
     const { schemaUtils } = this.state;
-    // For BC, accept passed SchemaField and TitleField props and pass them to
-    // the 'fields' registry one.
-    const { fields, templates, widgets } = getDefaultRegistry();
+    const { fields, templates, widgets, formContext } = getDefaultRegistry();
     return {
       fields: { ...fields, ...this.props.fields },
-      templates: { ...templates, ...this.props.templates },
+      templates: {
+        ...templates,
+        ...this.props.templates,
+        ButtonTemplates: {
+          ...templates.ButtonTemplates,
+          ...this.props.templates?.ButtonTemplates,
+        },
+      },
       widgets: { ...widgets, ...this.props.widgets },
       rootSchema: this.props.schema,
-      formContext: this.props.formContext || ({} as F),
+      formContext: this.props.formContext || formContext,
       schemaUtils,
     };
   }

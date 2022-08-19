@@ -1,14 +1,11 @@
 import Templates from "../Templates";
 import Widgets from "../Widgets";
 
-import { WithThemeProps, getDefaultRegistry } from "@rjsf/core";
-
-const { fields, templates, widgets } = getDefaultRegistry();
+import { WithThemeProps } from "@rjsf/core";
 
 const Theme: WithThemeProps = {
-  fields,
-  templates: { ...templates, ...Templates },
-  widgets: { ...widgets, ...Widgets },
+  templates: Templates,
+  widgets: Widgets,
 };
 
 export default Theme;
