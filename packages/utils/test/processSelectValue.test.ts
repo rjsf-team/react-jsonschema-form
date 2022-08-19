@@ -7,7 +7,19 @@ describe("processSelectValue", () => {
   it("always returns undefined for an empty string value with options.emptyValue", () => {
     expect(processSelectValue({}, "", {})).toBeUndefined();
   });
-  it("always returns options.emptyValue for an empty string value when present", () => {
+  it("always returns options.emptyValue for an empty string value when present and empty string", () => {
+    const options = { emptyValue: "" };
+    expect(processSelectValue({}, "", options)).toBe(options.emptyValue);
+  });
+  it("always returns options.emptyValue for an empty string value when present and null", () => {
+    const options = { emptyValue: null };
+    expect(processSelectValue({}, "", options)).toBe(options.emptyValue);
+  });
+  it("always returns options.emptyValue for an empty string value when present and zero", () => {
+    const options = { emptyValue: 0 };
+    expect(processSelectValue({}, "", options)).toBe(options.emptyValue);
+  });
+  it("always returns options.emptyValue for an empty string value when present and truthy", () => {
     const options = { emptyValue: "default value" };
     expect(processSelectValue({}, "", options)).toBe(options.emptyValue);
   });

@@ -22,7 +22,9 @@ export default function processSelectValue<T = any, F = any>(
 ) {
   const { enum: schemaEnum, type, items } = schema;
   if (value === "") {
-    return (options && options.emptyValue) || undefined;
+    return options && options.emptyValue !== undefined
+      ? options.emptyValue
+      : undefined;
   }
   if (type === "array" && items && nums.has(get(items, "type"))) {
     return value.map(asNumber);
