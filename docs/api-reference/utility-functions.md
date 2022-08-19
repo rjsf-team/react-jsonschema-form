@@ -91,6 +91,17 @@ Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schem
 #### Throws
 - Error indicating that no schema for that reference exists
 
+### getInputProps<T = any, F = any>()
+Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
+
+#### Parameters
+- schema: RJSFSchema - The schema for the field provided by the widget
+- [defaultType]: string - The default type, if any, for the field provided by the widget
+- [options={}]: UIOptionsType<T, F> - The UI Options for the field provided by the widget
+- [autoDefaultStepAny=true]: boolean - Determines whether to auto-default step=any when the type is number and no step
+#### Returns
+- InputPropsType: The extracted `InputPropsType` object
+
 ### getSchemaType()
 Gets the type of a given `schema`.
 If the type is not explicitly defined, then an attempt is made to infer it from other elements of the schema as follows:
@@ -123,6 +134,18 @@ Get all passed options from ui:options, and ui:<optionName>, returning them in a
 
 #### Returns
 - UIOptionsType: An object containing all of the `ui:xxx` options with the stripped off
+
+### getTemplate<Name extends keyof TemplatesType<T, F>, T = any, F = any>()
+Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
+otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
+
+#### Parameters
+- name: Name - The name of the template to fetch, restricted to the keys of `TemplatesType`
+- registry: Registry<T, F> - The `Registry` from which to read the template
+- [uiOptions={}]: UIOptionsType<T, F> - The `UIOptionsType` from which to read an alternate template
+
+#### Returns
+- TemplatesType<T, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
 
 ### getWidget<T = any, F = any>()
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
@@ -301,13 +324,15 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 - Error when the date cannot be parsed from the string
 
-### processSelectValue()
+### processSelectValue<T = any, F = any>()
 Returns the real value for a select widget due to a silly limitation in the DOM which causes option change event values to always be retrieved as strings.
 Uses the `schema` to help determine the value's true type.
+If the value is an empty string, then the `emptyValue` from the `options` is returned, falling back to undefined.
 
 #### Parameters
 - schema: RJSFSchema - The schema to used to determine the value's true type
 - [value]: any - The value to convert
+- [options]: UIOptionsType<T, F> - The UIOptionsType from which to potentially extract the `emptyValue`
 
 #### Returns
 - string | boolean | number | string[] | boolean[] | number[] | undefined: The `value` converted to the proper type
