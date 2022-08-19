@@ -19,8 +19,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
+- Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
+
 ## @rjsf/semantic-ui
 - Fix missing error class on fields (https://github.com/rjsf-team/react-jsonschema-form/issues/2666)
+
+## Dev / docs / playground
+- Demonstrate use of `ui:field` with `anyOf` (#2890)
+
 # 4.2.1 (upcoming)
 
 # 4.2.0
