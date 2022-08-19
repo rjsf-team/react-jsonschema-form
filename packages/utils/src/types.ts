@@ -253,6 +253,8 @@ export interface FieldProps<T = any, F = any>
   autofocus?: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
+  /** A boolean value stating if the field is hiding its errors */
+  hideError?: boolean;
   /** A boolean value stating if the field is read-only */
   readonly: boolean;
   /** The required status of this field */
@@ -430,6 +432,8 @@ export type ArrayFieldTemplateProps<T = any, F = any> = {
   readonly?: boolean;
   /** A boolean value stating if the array is required */
   required?: boolean;
+  /** A boolean value stating if the field is hiding its errors */
+  hideError?: boolean;
   /** The schema object for this array */
   schema: RJSFSchema;
   /** The uiSchema object for this array field */
@@ -476,6 +480,8 @@ export type ObjectFieldTemplateProps<T = any, F = any> = {
   readonly?: boolean;
   /** A boolean value stating if the object is required */
   required?: boolean;
+  /** A boolean value stating if the field is hiding its errors */
+  hideError?: boolean;
   /** The schema object for this object */
   schema: RJSFSchema;
   /** The uiSchema object for this object field */
@@ -511,6 +517,8 @@ export interface WidgetProps<T = any, F = any>
   disabled?: boolean;
   /** A boolean value stating if the widget is read-only */
   readonly?: boolean;
+  /** A boolean value stating if the widget is hiding its errors */
+  hideError?: boolean;
   /** A boolean value stating if the widget should autofocus */
   autofocus?: boolean;
   /** The placeholder for the widget, if any */

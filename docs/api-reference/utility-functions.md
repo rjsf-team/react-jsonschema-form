@@ -10,13 +10,13 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there is the special `ADDITIONAL_PROPERTY_FLAG` flag that is added to a schema under certain conditions by the `retrieveSchema()` utility.
 
-These constants can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/rjsf-v5/packages/utils/src/constants.ts).
+These constants can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/utils/src/constants.ts).
 
 ## Types
 Additionally, the Typescript types used by the utility functions represent nearly all the types used by RJSF.
 Those types are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These types can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/rjsf-v5/packages/utils/src/types.ts).
+These types can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/utils/src/types.ts).
 
 ## Non-Validator utility functions
 

@@ -14,12 +14,12 @@ In version 5, all existing `templates` were consolidated into a new `TemplatesTy
 They can also be overloaded globally on the `Form` via the `templates` prop as well globally or per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
-A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` on objects and elements of arrays, as well as the `Move up/down` buttons used for reordering arrays.
-This category, unlike the others, can only be overridden global and NOT on a per-field basis. 
+A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.
+This category, unlike the others, can only be overridden globally via the `templates` prop on `Form`.
 
 Below is the table that lists all the `templates`, their props interface, their `uiSchema` name and from where they originated in the previous version of RJSF: 
 
-| Template*                                                        | Props                      | UiSchema name                    | Origin                                                                                                                                                       |
+| Template*                                                        | Props Type                 | UiSchema name                    | Origin                                                                                                                                                       |
 |------------------------------------------------------------------|----------------------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [ArrayFieldTemplate](#ArrayFieldTemplate)                        | ArrayFieldTemplateProps    | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                          |
 | [ArrayFieldDescriptionTemplate*](#ArrayFieldDescriptionTemplate) | ArrayFieldDescriptionProps | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                         |
@@ -38,17 +38,17 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [ButtonTemplates.RemoveButton*](#RemoveButton)                   | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
 | [ButtonTemplates.SubmitButton*](#SubmitButton)                   | SubmitButtonProps          | n/a                              | Formerly a `field` in each theme move to `templates.ButtonTemplates`                                                                                         |
 
-
-* indicates a new template in version 5
+\* indicates a new template in version 5
 
 ## ArrayFieldTemplate
 
 You can use an `ArrayFieldTemplate` to customize how your arrays are rendered. 
 This allows you to customize your array, and each element in the array.
+If you only want to customize how the array's title, description or how the array items are presented, you may want to consider providing your own [ArrayFieldDescriptionTemplate](#ArrayFieldDescriptionTemplate), [ArrayFieldItemTemplate](#ArrayFieldItemTemplate) and/or [ArrayFieldTitleTemplate](#ArrayFieldTitleTemplate) instead.
 You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets). 
 
-
-```jsx
+```tsx
+import { ArrayFieldTemplateProps } from "@rjsf/utils";
 import validator from '@rjsf/validator-ajv6';
 
 const schema = {
@@ -58,7 +58,7 @@ const schema = {
   }
 };
 
-function ArrayFieldTemplate(props) {
+function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div>
       {props.items.map(element => element.children)}
@@ -68,7 +68,7 @@ function ArrayFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema} ArrayFieldTemplate={ArrayFieldTemplate} />
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldTemplate }} />
 ), document.getElementById("app"));
 ```
 
@@ -80,7 +80,7 @@ const uiSchema = {
 }
 ```
 
-Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customArray.js) for another example.
+Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/playground/src/samples/customArray.js) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -92,6 +92,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `onAddClick: (event?) => void`: A function that adds a new item to the array.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
+- `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
@@ -117,31 +118,301 @@ The following props are part of each element in `items`:
 - `readonly`: A boolean value stating if the array item is read-only.
 - `registry`: The `registry` object.
 
-> Note: Array and object field templates are always rendered inside of the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
+> Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
 
 ## ArrayFieldDescriptionTemplate
 
-TODO
+The out-of-the-box version of this template will render the `DescriptionFieldTemplate` with a generated id, if there is a `description` otherwise nothing is rendered.
+If you want different behavior for the rendering of the description of an array field, you can customize this template.
+If you want a different behavior for the rendering of ALL descriptions in th `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
+
+```tsx
+import { ArrayFieldDescriptionProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
+function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
+  const { description, idSchema } = props;
+  const id = `${idSchema.$id}__description`;
+  return (
+    <details id={id}>
+      <summary>Description</summary>
+      {description}
+    </details>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldDescriptionTemplate }} />
+), document.getElementById("app"));
+```
+
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+
+```js
+const uiSchema = {
+  "ui:ArrayFieldDescriptionTemplate": ArrayFieldDescriptionTemplate
+}
+```
+
+The following props are passed to each `ArrayFieldDescriptionTemplate`:
+
+- `description`: The description of the array field being rendered.
+- `idSchema`: The idSchema of the array field in the hierarchy.
+- `uiSchema`: The uiSchema object for this array field.
+- `registry`: The `registry` object.
 
 ## ArrayFieldItemTemplate
 
-TODO
+The `ArrayFieldItemTemplate` is used to render the representation of a single item in an array.
+All of the `ArrayFieldTemplate` implementations in all themes get this template from the `registry` in order to render array fields items.
+Each theme has an implementation of the `ArrayFieldItemTemplate` to render an array field item in a manner best suited to the theme.
+If you want to change how an array field item is rendered you can customize this template (for instance to remove the move up/down and remove buttons).
+
+```tsx
+import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
+function ArrayFieldItemTemplate(props: ArrayFieldTemplateItemType) {
+  const { children, className } = props;
+  return (
+    <div className={className}>{children}</div>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldItemTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to each `ArrayFieldItemTemplate`:
+
+- `children`: The html for the item's content.
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array item is disabled.
+- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
+- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
+- `hasRemove`: A boolean value stating whether the array item can be removed.
+- `hasToolbar`: A boolean value stating whether the array item has a toolbar.
+- `index`: A number stating the index the array item occurs in `items`.
+- `key`: A stable, unique key for the array item.
+- `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
+- `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
+- `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `readonly`: A boolean value stating if the array item is read-only.
+- `registry`: The `registry` object.
 
 ## ArrayFieldTitleTemplate
 
-TODO
+The out-of-the-box version of this template will render the `TitleFieldTemplate` with a generated id, if there is a `title` otherwise nothing is rendered.
+If you want a different behavior for the rendering of the title of an array field, you can customize this template.
+If you want a different behavior for the rendering of ALL titles in th `Form`, see [TitleFieldTemplate](#titlefieldtemplate) 
+
+```tsx
+import { ArrayFieldTitleTemplateProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "array",
+  items: {
+    type: "string"
+  }
+};
+
+function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
+  const { description, idSchema } = props;
+  const id = `${idSchema.$id}__title`;
+  return (
+    <h1 id={id}>
+      {title}
+    </h1>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldTitleTemplate }} />
+), document.getElementById("app"));
+```
+
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+
+```js
+const uiSchema = {
+  "ui:ArrayFieldTitleTemplate": ArrayFieldTitleTemplate
+}
+```
+
+The following props are passed to each `ArrayFieldTitleTemplate`:
+
+- `title`: The title of the array field being rendered.
+- `idSchema`: The idSchema of the array field in the hierarchy.
+- `uiSchema`: The uiSchema object for this array field.
+- `required`: A boolean value stating if the field is required
+- `registry`: The `registry` object.
 
 ## BaseInputTemplate
 
-TODO
+The `BaseInputTemplate` is the template to use to render the basic `<input>` component for a theme.
+It is used as the template for rendering many of the `<input>` based widgets that differ by `type` and callbacks only.
+For example, the `TextWidget` implementation in `core` is simply a wrapper around `BaseInputTemplate` that it gets from the `registry`.
+Additionally, each theme implements its own version of `BaseInputTemplate` without needing to provide a different implementation of `TextWidget`.
+
+If you desire a different implementation for the `<input>` based widgets, you can customize this template.
+For instance, say you have a `CustomTextInput` component that you want to integrate:
+
+```tsx
+import { getInputProps, WidgetProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+import CustomTextInput from '../CustomTextInput';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function BaseInputTemplate(props: WidgetProps) {
+  const {
+    schema,
+    id,
+    options,
+    label,
+    value,
+    type,
+    placeholder,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    rawErrors,
+    hideError,
+    uiSchema,
+    registry,
+    formContext,
+    ...rest
+  } = props;
+  const onTextChange = ({ target: { value: val } }: React.ChangeEvent<HTMLInputElement>) => {
+    // Use the options.emptyValue if it is specified and newVal is also an empty string
+    onChange(val === '' ? options.emptyValue || '' : val);
+  };
+  const onTextBlur = ({ target: { value: val } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, val);
+  const onTextFocus = ({ target: { value: val } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, val);
+
+  const inputProps = { ...rest, ...getInputProps(schema, type, options) };
+  const hasError = rawErrors.length > 0 && !hideError;
+
+  return (
+    <CustomTextInput
+      id={id}
+      label={label}
+      value={value}
+      placeholder={placeholder}
+      disabled={disabled}
+      readOnly={readonly}
+      autoFocus={autofocus}
+      error={hasError}
+      errors={hasError ? rawErrors : undefined}
+      onChange={onTextChange}
+      onBlur={onTextBlur}
+      onFocus={onTextFocus}
+      {...inputProps}
+    />
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to the `BaseInputTemplate`:
+
+- `id`: The generated id for this widget;
+- `schema`: The JSONSchema subschema object for this widget;
+- `uiSchema`: The uiSchema for this widget;
+- `value`: The current value for this widget;
+- `placeholder`: The placeholder for the widget, if any;
+- `required`: The required status of this widget;
+- `disabled`: A boolean value stating if the widget is disabled;
+- `hideError`: A boolean value stating if the widget is hiding its errors.
+- `readonly`: A boolean value stating if the widget is read-only;
+- `autofocus`: A boolean value stating if the widget should autofocus;
+- `label`: The computed label for this widget, as a string
+- `multiple`: A boolean value stating if the widget can accept multiple values;
+- `onChange`: The value change event handler; call it with the new value every time it changes;
+- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
+- `onBlur`: The input blur event handler; call it with the widget id and value;
+- `onFocus`: The input focus event handler; call it with the widget id and value;
+- `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
+- `formContext`: The `formContext` object that you passed to `Form`.
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
+- `registry`:  The `registry` object
 
 ## DescriptionFieldTemplate
 
-TODO
+Each theme implements a `DescriptionFieldTemplate` used to render the description of a field.
+If you want to customize how descriptions are rendered you can.
+
+```tsx
+import { DescriptionFieldProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function DescriptionFieldTemplate(props: DescriptionFieldProps) {
+  const { description, id } = props;
+  return (
+    <details id={id}>
+      <summary>Description</summary>
+      {description}
+    </details>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to the `DescriptionFieldTemplate`:
+
+- `description`: The description of the field being rendered.
+- `id`: The id of the field in the hierarchy.
+- `registry`: The `registry` object.
 
 ## ErrorListTemplate
 
 TODO
+
+The following props are passed to the `ErrorListTemplate`:
+
+- `schema`: The JSONSchema subschema object for this widget;
+- `uiSchema`: The uiSchema for this widget;
+- `formContext`: The `formContext` object that you passed to `Form`.
+- `errors`: A component instance listing any encountered errors for this field.
+- `errorSchema`: The errorSchema constructed by `Form`
 
 ## FieldTemplate
 
@@ -149,14 +420,15 @@ To take control over the inner organization of each field (each form row), you c
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
-```jsx
+```tsx
+import { FieldTemplateProps } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
   type: "string"
 };
 
-function CustomFieldTemplate(props) {
+function CustomFieldTemplate(props: FieldTemplateProps) {
   const {id, classNames, label, help, required, description, errors, children} = props;
   return (
     <div className={classNames}>
@@ -170,7 +442,7 @@ function CustomFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema} validator={validator} FieldTemplate={CustomFieldTemplate} />
+  <Form schema={schema} validator={validator} templates={{ FieldTemplate: CustomFieldTemplate }} />
 ), document.getElementById("app"));
 ```
 
@@ -192,6 +464,7 @@ The following props are passed to a custom field template component:
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
+- `hideError`: A boolean value stating if the field is hiding its errors.
 - `errors`: A component instance listing any encountered errors for this field.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.
@@ -213,7 +486,8 @@ The following props are passed to a custom field template component:
 
 ## ObjectFieldTemplate
 
-```jsx
+```tsx
+import { ObjectFieldTemplateProps } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
 const schema = {
@@ -230,7 +504,7 @@ const schema = {
   }
 };
 
-function ObjectFieldTemplate(props) {
+function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
   return (
     <div>
       {props.title}
@@ -241,7 +515,7 @@ function ObjectFieldTemplate(props) {
 }
 
 render((
-  <Form schema={schema} validator={validator} ObjectFieldTemplate={ObjectFieldTemplate} />
+  <Form schema={schema} validator={validator} templates={{ ObjectFieldTemplate }} />
 ), document.getElementById("app"));
 ```
 
@@ -253,7 +527,7 @@ const uiSchema = {
 };
 ```
 
-Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/4542cd254ffdc6dfaf55e8c9f6f17dc900d0d041/packages/playground/src/samples/customObject.js) for a better example.
+Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/playground/src/samples/customObject.js) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
@@ -264,6 +538,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `onAddClick: (schema: RJSFSchema) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
+- `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
 - `idSchema`: An object containing the id for this object & ids for its properties.
@@ -283,33 +558,239 @@ The following props are part of each element in `properties`:
 
 ## TitleFieldTemplate
 
-TODO
+Each theme implements a `TitleFieldTemplate` used to render the title of a field.
+If you want to customize how titles are rendered you can.
+
+```tsx
+import { TitleFieldProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function TitleFieldTemplate(props: TitleFieldProps) {
+  const { id, required, title } = props;
+  return (
+    <header id={id}>
+      {title}
+      {required && <mark>*</mark>}
+    </header>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ TitleFieldTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to each `TitleFieldTemplate`:
+
+- `id`: The id of the field in the hierarchy.
+- `title`: The title of the field being rendered.
+- `uiSchema`: The uiSchema object for this field.
+- `required`: A boolean value stating if the field is required
+- `registry`: The `registry` object.
 
 ## UnsupportedFieldTemplate
 
-TODO
+The `UnsupportedField` component is used to render a field in the schema is one that is not supported by react-jsonschema-form.
+If you want to customize how an unsupported field is rendered (perhaps for localization purposes) you can.
+
+```tsx
+import { UnsupportedFieldProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "invalid"
+};
+
+function UnsupportedFieldTemplate(props: UnsupportedFieldProps) {
+  const { schema, reason } = props;
+  return (
+    <div>
+      <FormattedMessage defaultMessage="Unsupported field schema, reason = {reason}" value={{ reason }} />
+      <pre>{JSON.stringify(schema, null, 2)}</pre>
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ UnsupportedFieldTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to each `UnsupportedFieldTemplate`:
+
+- `schema`: The schema object for this unsupported field.
+- `idSchema`: An object containing the id for this unsupported field.
+- `reason`: The reason why the schema field has an unsupported type.
+- `registry`: The `registry` object.
 
 ## ButtonTemplates
 
-TODO
+There are several buttons that are potentially rendered in the `Form`.
+Each of these buttons have been customized in the themes, and can be customized by you as well.
+All but one of these buttons (i.e. the `SubmitButton`) are rendered currently as icons with title text for a description.
+
+Each button template (except for the `SubmitButton`) accepts, as props, the standard [HTML button attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) along with the following:
+
+- `iconType`: An alternative specification for the type of the icon button.
+- `icon`: The name representation or actual react element implementation for the icon.
 
 ### AddButton
 
-TODO
+The `AddButton` is used to render an add action on a `Form` for both a new `additionalProperties` element for an object or a new element in an array.
+You can customize the `AddButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from "react";
+import { IconButtonProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string"
+};
+
+function AddButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage="Add" />
+    </button>
+  );
+};
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />
+), document.getElementById("app"));
+```
 
 ### MoveDownButton
 
-TODO
+The `MoveDownButton` is used to render a move down action on a `Form` for elements in an array.
+You can customize the `MoveDownButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from "react";
+import { IconButtonProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string"
+};
+
+function MoveDownButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage="Move Down" />
+    </button>
+  );
+};
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveDownButton } }} />
+), document.getElementById("app"));
+```
 
 ### MoveUpButton
 
-TODO
+The `MoveUpButton` is used to render a move up action on a `Form` for elements in an array.
+You can customize the `MoveUpButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from "react";
+import { IconButtonProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string"
+};
+
+function MoveUpButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage="Move Up" />
+    </button>
+  );
+};
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveUpButton } }} />
+), document.getElementById("app"));
+```
 
 ### RemoveButton
 
-TODO
+The `RemoveButton` is used to render a remove action on a `Form` for both a existing `additionalProperties` element for an object or an existing element in an array.
+You can customize the `RemoveButton` to render something other than the icon button that is provided by a theme as follows:
+
+```tsx
+import React from "react";
+import { IconButtonProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string"
+};
+
+function RemoveButton(props: IconButtonProps) {
+  const { icon, iconType, ...btnProps } = props;
+  return (
+    <button {...btnProps}>
+      {icon} <FormattedMessage defaultMessage="Remove" />
+    </button>
+  );
+};
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { RemoveButton } }} />
+), document.getElementById("app"));
+```
 
 ### SubmitButton
 
-TODO
+The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOptions` capabilities in the `uiSchema` but it can also be fully customized as you see fit.
+> NOTE: However you choose to implement this, making it something other than a `submit` type `button` may result in the `Form` not submitting when pressed.
+> You could also choose to provide your own submit button as the [children prop](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/form-props#children) of the `Form` should you so choose.
 
+```tsx
+import React from "react";
+import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
+import { FormattedMessage } from "react-intl";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string"
+};
+
+function SubmitButton(props: SubmitButtonProps) {
+  const { uiSchema } = props;
+  const { norender } = getSubmitButtonOptions(uiSchema);
+  if (norender) {
+    return null;
+  }
+  return (
+    <button type="submit">
+      <FormattedMessage defaultMessage="Okay" />
+    </button>
+  );
+};
+
+render((
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { SubmitButton } }} />
+), document.getElementById("app"));
+```
+
+The following prop is passed to a `SubmitButton`:
+
+- `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
