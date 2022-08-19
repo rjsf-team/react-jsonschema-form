@@ -695,7 +695,7 @@ export default class Form<T = any, F = any> extends Component<
         ...this.props.templates,
         ButtonTemplates: {
           ...templates.ButtonTemplates,
-          ...(this.props.templates && this.props.templates.ButtonTemplates),
+          ...this.props.templates?.ButtonTemplates,
         },
       },
       widgets: { ...widgets, ...this.props.widgets },
