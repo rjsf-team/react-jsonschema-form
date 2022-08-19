@@ -611,7 +611,7 @@ type UIOptionsBaseType<T = any, F = any> = Partial<
   autocomplete?: HTMLInputElement["autocomplete"];
   /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
   disabled?: boolean;
-  /** The value to use when no other value was provided in the input */
+  /** The default value to use when an input for a field is empty */
   emptyValue?: any;
   /** Will disable any of the enum options specified in the array (by value) */
   enumDisabled?: Array<string | number | boolean>;
