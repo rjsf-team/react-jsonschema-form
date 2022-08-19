@@ -40,7 +40,8 @@ const SelectWidget = (props: WidgetProps) => {
         schema,
         e.map((v: { label: any; value: any }) => {
           return v.value;
-        })
+        }),
+        options
       )
     );
   };
@@ -48,15 +49,15 @@ const SelectWidget = (props: WidgetProps) => {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue(schema, value));
+    onChange(processSelectValue(schema, value, options));
   const _onBlur = ({
     target: { value },
   }: React.FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, processSelectValue(schema, value));
+    onBlur(id, processSelectValue(schema, value, options));
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, processSelectValue(schema, value));
+    onFocus(id, processSelectValue(schema, value, options));
 
   return (
     <FormControl
