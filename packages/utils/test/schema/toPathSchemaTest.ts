@@ -16,6 +16,14 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         __rjsf_additionalProperties: true,
       });
     });
+    it("should return a pathSchema for root field, without additional properties", () => {
+      const schema: RJSFSchema = {
+        type: "string",
+        additionalProperties: false,
+      };
+
+      expect(toPathSchema(testValidator, schema)).toEqual({ $name: "" });
+    });
     it("should return a pathSchema for nested objects", () => {
       const schema: RJSFSchema = {
         type: "object",
