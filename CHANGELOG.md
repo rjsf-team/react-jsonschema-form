@@ -16,6 +16,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 # v5.0.0 (coming soon)
+## @rjsf/utils
+- clear errors on formData change when liveOmit=true when "additionalProperties: false" [issue 1507](https://github.com/rjsf-team/react-jsonschema-form/issues/1507) (https://github.com/rjsf-team/react-jsonschema-form/pull/2631)
 
 ## @rjsf/core
 - Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
