@@ -1,7 +1,7 @@
 {
   "name": "@rjsf/semantic-ui",
   "version": "4.2.0",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.js",
   "module": "dist/semantic-ui.esm.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "files": [
