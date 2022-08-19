@@ -39,8 +39,7 @@ export default function toPathSchema<T = any>(
     [NAME_KEY]: name.replace(/^\./, ""),
   } as PathSchema;
 
-  if (ADDITIONAL_PROPERTIES_KEY in schema && 
-    schema[ADDITIONAL_PROPERTIES_KEY] === true) {
+  if (ADDITIONAL_PROPERTIES_KEY in schema && schema[ADDITIONAL_PROPERTIES_KEY] === true) {
     set(pathSchema, RJSF_ADDITONAL_PROPERTIES_FLAG, true);
   }
 
