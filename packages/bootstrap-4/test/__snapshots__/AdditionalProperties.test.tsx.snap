@@ -36,6 +36,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
               >
                 <label
                   className="form-label"
+                  htmlFor="root-key"
                 >
                   additionalProperty Key
                 </label>
@@ -62,6 +63,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 >
                   <label
                     className="form-label"
+                    htmlFor="root"
                   >
                     additionalProperty
                   </label>
@@ -80,6 +82,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                     value="should appear"
                   />
                 </div>
+                
               </div>
             </div>
             <div
@@ -89,7 +92,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 className="btn btn-danger btn-block btn-sm"
                 disabled={false}
                 onClick={[Function]}
-                tabIndex={-1}
+                title="Remove"
                 type="button"
               >
                 <svg
@@ -130,6 +133,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 "width": "100%",
               }
             }
+            title="Add Item"
             type="button"
           >
             <svg

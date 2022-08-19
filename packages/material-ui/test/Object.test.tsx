@@ -10,8 +10,8 @@ describe("object fields", () => {
     const schema: RJSFSchema = {
       type: "object",
       properties: {
-        a: { type: "string" },
-        b: { type: "number" },
+        a: { type: "string", title: "A" },
+        b: { type: "number", title: "B" },
       },
     };
     const tree = renderer

@@ -6,8 +6,10 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   DEPENDENCIES_KEY,
   ITEMS_KEY,
+  NAME_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from "../constants";
 import { PathSchema, RJSFSchema, ValidatorType } from "../types";
 import retrieveSchema from "./retrieveSchema";
@@ -34,12 +36,12 @@ export default function toPathSchema<T = any>(
   }
 
   const pathSchema: PathSchema = {
-    $name: name.replace(/^\./, ""),
+    [NAME_KEY]: name.replace(/^\./, ""),
   } as PathSchema;
 
   if (ADDITIONAL_PROPERTIES_KEY in schema && 
     schema[ADDITIONAL_PROPERTIES_KEY] === true) {
-    set(pathSchema, '__rjsf_additionalProperties', true);
+    set(pathSchema, RJSF_ADDITONAL_PROPERTIES_FLAG, true);
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {

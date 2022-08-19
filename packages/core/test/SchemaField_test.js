@@ -5,8 +5,6 @@ import { createSchemaUtils } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
 import SchemaField from "../src/components/fields/SchemaField";
-import TitleField from "../src/components/fields/TitleField";
-import DescriptionField from "../src/components/fields/DescriptionField";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 import getDefaultRegistry from "../src/getDefaultRegistry";
@@ -44,13 +42,12 @@ describe("SchemaField", () => {
       });
 
       const { registry } = receivedProps;
+      const defaultRegistry = getDefaultRegistry();
       expect(registry).eql({
-        widgets: getDefaultRegistry(schemaUtils).widgets,
-        fields: getDefaultRegistry(schemaUtils).fields,
+        fields: defaultRegistry.fields,
+        templates: defaultRegistry.templates,
+        widgets: defaultRegistry.widgets,
         rootSchema: schema,
-        ArrayFieldTemplate: undefined,
-        FieldTemplate: undefined,
-        ObjectFieldTemplate: undefined,
         formContext: {},
         schemaUtils,
       });
@@ -73,10 +70,10 @@ describe("SchemaField", () => {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
-      const fields = { UnsupportedField: CustomUnsupportedField };
+      const templates = { UnsupportedFieldTemplate: CustomUnsupportedField };
       const { node } = createFormComponent({
         schema: { type: "invalid" },
-        fields,
+        templates,
       });
 
       expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
@@ -163,12 +160,17 @@ describe("SchemaField", () => {
       });
 
       const { registry } = receivedProps;
-      expect(registry.widgets).eql(getDefaultRegistry().widgets);
+      const defaultRegistry = getDefaultRegistry();
+      expect(registry.widgets).eql(defaultRegistry.widgets);
       expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an("object");
       expect(registry.fields.SchemaField).eql(SchemaField);
-      expect(registry.fields.TitleField).eql(TitleField);
-      expect(registry.fields.DescriptionField).eql(DescriptionField);
+      expect(registry.templates.TitleFieldTemplate).eql(
+        defaultRegistry.templates.TitleFieldTemplate
+      );
+      expect(registry.templates.DescriptionFieldTemplate).eql(
+        defaultRegistry.templates.DescriptionFieldTemplate
+      );
     });
 
     it("should use registered custom component for object", () => {
@@ -201,7 +203,7 @@ describe("SchemaField", () => {
       expect(node.querySelectorAll("#custom")).to.have.length.of(1);
     });
 
-    it("should not pass classNames to child component", () => {
+    it("should not pass ui:classNames to child component", () => {
       const CustomSchemaField = function (props) {
         return (
           <SchemaField
@@ -216,7 +218,32 @@ describe("SchemaField", () => {
       };
       const uiSchema = {
         "ui:field": "customSchemaField",
-        classNames: "foo",
+        "ui:classNames": "foo",
+      };
+      const fields = { customSchemaField: CustomSchemaField };
+
+      const { node } = createFormComponent({ schema, uiSchema, fields });
+
+      expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+    });
+    it("should not pass ui:options.classNames to child component", () => {
+      const CustomSchemaField = function (props) {
+        return (
+          <SchemaField
+            {...props}
+            uiSchema={{ ...props.uiSchema, "ui:field": undefined }}
+          />
+        );
+      };
+
+      const schema = {
+        type: "string",
+      };
+      const uiSchema = {
+        "ui:field": "customSchemaField",
+        "ui:options": {
+          classNames: "foo",
+        },
       };
       const fields = { customSchemaField: CustomSchemaField };
 
@@ -325,8 +352,8 @@ describe("SchemaField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField,
+        templates: {
+          DescriptionFieldTemplate: CustomDescriptionField,
         },
       });
 
@@ -349,7 +376,7 @@ describe("SchemaField", () => {
       },
     };
 
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.addError("container");
       errors.foo.addError("test");
       return errors;
@@ -359,7 +386,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        validate,
+        customValidate,
       });
       Simulate.submit(node);
 
@@ -374,7 +401,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        validate,
+        customValidate,
       });
       Simulate.submit(node);
 
@@ -394,8 +421,8 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          validate,
-          widgets: { BaseInput: customStringWidget },
+          customValidate,
+          templates: { BaseInputTemplate: customStringWidget },
         });
         Simulate.submit(node);
 
@@ -415,7 +442,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -429,7 +456,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -448,8 +475,8 @@ describe("SchemaField", () => {
           const { node } = createFormComponent({
             schema,
             uiSchema: hideUiSchema,
-            validate,
-            widgets: { BaseInput: customStringWidget },
+            customValidate,
+            templates: { BaseInputTemplate: customStringWidget },
           });
           Simulate.submit(node);
 
@@ -475,7 +502,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 
@@ -489,7 +516,7 @@ describe("SchemaField", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema: hideUiSchema,
-          validate,
+          customValidate,
         });
         Simulate.submit(node);
 

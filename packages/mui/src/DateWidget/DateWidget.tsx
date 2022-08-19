@@ -1,11 +1,15 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { getTemplate, WidgetProps } from "@rjsf/utils";
 
 const DateWidget = (props: WidgetProps) => {
-  const { registry } = props;
-  const { TextWidget } = registry.widgets;
+  const { options, registry } = props;
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+    "BaseInputTemplate",
+    registry,
+    options
+  );
   return (
-    <TextWidget
+    <BaseInputTemplate
       type="date"
       InputLabelProps={{
         shrink: true,

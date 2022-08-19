@@ -1,13 +1,14 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import { ObjectFieldTemplateProps, canExpand, getUiOptions } from "@rjsf/utils";
-
-import AddButton from "../AddButton/AddButton";
+import {
+  ObjectFieldTemplateProps,
+  canExpand,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
@@ -18,21 +19,39 @@ const ObjectFieldTemplate = ({
   schema,
   formData,
   onAddClick,
+  registry,
 }: ObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
-      {description && (
-        <DescriptionField
+      {(uiOptions.description || description) && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
+          registry={registry}
         />
       )}
       <Grid container={true} spacing={2} style={{ marginTop: "10px" }}>

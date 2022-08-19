@@ -775,4 +775,30 @@ describe("oneOf", () => {
     expect(idSelects[2].value).eql("transform");
     expect(idSelects[3].value).eql("to_absolute");
   });
+
+  describe("Custom Field", function () {
+    const schema = {
+      anyOf: [
+        {
+          type: "number",
+        },
+        {
+          type: "string",
+        },
+      ],
+    };
+    const uiSchema = {
+      "ui:field": () => <div className="custom-field">Custom field</div>,
+    };
+    it("should be rendered once", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const fields = node.querySelectorAll(".custom-field");
+      expect(fields).to.have.length.of(1);
+    });
+    it("should not render <select>", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(0);
+    });
+  });
 });

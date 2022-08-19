@@ -1,6 +1,6 @@
 import React from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, processSelectValue } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of IDropdownProps from @fluentui/react
@@ -80,12 +80,14 @@ const SelectWidget = ({
         onChange(valueOrDefault.filter((key: any) => key !== item.key));
       }
     } else {
-      onChange(item.key);
+      onChange(processSelectValue(schema, item.key, options));
     }
   };
-  const _onBlur = (e: any) => onBlur(id, e.target.value);
+  const _onBlur = (e: any) =>
+    onBlur(id, processSelectValue(schema, e.target.value, options));
 
-  const _onFocus = (e: any) => onFocus(id, e.target.value);
+  const _onFocus = (e: any) =>
+    onFocus(id, processSelectValue(schema, e.target.value, options));
 
   const newOptions = (enumOptions as { value: any; label: any }[]).map(
     (option) => ({

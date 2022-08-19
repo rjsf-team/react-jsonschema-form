@@ -14,7 +14,6 @@ const FieldTemplate = ({
   disabled,
   displayLabel,
   // errors,
-  // fields,
   formContext,
   help,
   hidden,
@@ -58,6 +57,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       {id === "root" ? (
         children

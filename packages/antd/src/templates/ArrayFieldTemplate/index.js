@@ -1,35 +1,24 @@
 import React from "react";
+import { getTemplate, getUiOptions } from "@rjsf/utils";
+import classNames from "classnames";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
+import { withConfigConsumer } from "antd/lib/config-provider/context";
 
-import {
-  getUiOptions,
-  getWidget,
-  isFixedItems,
-  optionsList,
-  ITEMS_KEY,
-} from "@rjsf/utils";
-
-import FixedArrayFieldTemplate from "./FixedArrayFieldTemplate";
-import NormalArrayFieldTemplate from "./NormalArrayFieldTemplate";
+const DESCRIPTION_COL_STYLE = {
+  paddingBottom: "8px",
+};
 
 const ArrayFieldTemplate = ({
-  DescriptionField,
-  TitleField,
-  autofocus,
   canAdd,
   className,
   disabled,
   formContext,
-  formData,
+  // formData,
   idSchema,
   items,
-  label,
-  name,
   onAddClick,
-  onBlur,
-  onChange,
-  onFocus,
-  placeholder,
-  rawErrors,
+  prefixCls,
   readonly,
   registry,
   required,
@@ -37,127 +26,87 @@ const ArrayFieldTemplate = ({
   title,
   uiSchema,
 }) => {
-  const { fields, schemaUtils, widgets } = registry;
-  const { UnsupportedField } = fields;
+  const uiOptions = getUiOptions(uiSchema);
+  const ArrayFieldDescriptionTemplate = getTemplate(
+    "ArrayFieldDescriptionTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldItemTemplate = getTemplate(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
+  const { labelAlign = "right", rowGutter = 24 } = formContext;
 
-  const renderFiles = () => {
-    const { widget = "files", ...options } = getUiOptions(uiSchema);
-
-    const Widget = getWidget(schema, widget, widgets);
-
-    return (
-      <Widget
-        autofocus={autofocus}
-        disabled={disabled}
-        formContext={formContext}
-        id={idSchema && idSchema.$id}
-        multiple
-        onBlur={onBlur}
-        onChange={onChange}
-        onFocus={onFocus}
-        options={options}
-        rawErrors={rawErrors}
-        readonly={readonly}
-        registry={registry}
-        schema={schema}
-        title={schema.title || name} // Why not props.title?
-        value={formData}
-      />
-    );
-  };
-
-  const renderMultiSelect = () => {
-    const itemsSchema = schemaUtils.retrieveSchema(schema.items, formData);
-    const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = {
-      ...getUiOptions(uiSchema),
-      enumOptions,
-    };
-
-    const Widget = getWidget(schema, widget, widgets);
-
-    return (
-      <Widget
-        autofocus={autofocus}
-        disabled={disabled}
-        formContext={formContext}
-        id={idSchema && idSchema.$id}
-        label={label}
-        multiple
-        onBlur={onBlur}
-        onChange={onChange}
-        onFocus={onFocus}
-        options={options}
-        placeholder={placeholder}
-        rawErrors={rawErrors}
-        readonly={readonly}
-        registry={registry}
-        required={required}
-        schema={schema}
-        value={formData}
-      />
-    );
-  };
-
-  if (!(ITEMS_KEY in schema)) {
-    return (
-      <UnsupportedField
-        idSchema={idSchema}
-        reason="Missing items definition"
-        schema={schema}
-      />
-    );
-  }
-
-  if (isFixedItems(schema)) {
-    return (
-      <FixedArrayFieldTemplate
-        canAdd={canAdd}
-        className={className}
-        DescriptionField={DescriptionField}
-        disabled={disabled}
-        formContext={formContext}
-        formData={formData}
-        idSchema={idSchema}
-        items={items}
-        onAddClick={onAddClick}
-        readonly={readonly}
-        registry={registry}
-        required={required}
-        schema={schema}
-        title={title}
-        TitleField={TitleField}
-        uiSchema={uiSchema}
-      />
-    );
-  }
-  if (schemaUtils.isFilesArray(schema, uiSchema)) {
-    return renderFiles();
-  }
-  if (schemaUtils.isMultiSelect(schema)) {
-    return renderMultiSelect();
-  }
+  const labelClsBasic = `${prefixCls}-item-label`;
+  const labelColClassName = classNames(
+    labelClsBasic,
+    labelAlign === "left" && `${labelClsBasic}-left`
+    // labelCol.className,
+  );
 
   return (
-    <NormalArrayFieldTemplate
-      canAdd={canAdd}
-      className={className}
-      DescriptionField={DescriptionField}
-      disabled={disabled}
-      formContext={formContext}
-      formData={formData}
-      idSchema={idSchema}
-      items={items}
-      onAddClick={onAddClick}
-      readonly={readonly}
-      registry={registry}
-      required={required}
-      schema={schema}
-      title={title}
-      TitleField={TitleField}
-      uiSchema={uiSchema}
-    />
+    <fieldset className={className} id={idSchema.$id}>
+      <Row gutter={rowGutter}>
+        {(uiOptions.title || title) && (
+          <Col className={labelColClassName} span={24}>
+            <ArrayFieldTitleTemplate
+              idSchema={idSchema}
+              required={required}
+              title={uiOptions.title || title}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+
+        {(uiOptions.description || schema.description) && (
+          <Col span={24} style={DESCRIPTION_COL_STYLE}>
+            <ArrayFieldDescriptionTemplate
+              description={uiOptions.description || schema.description}
+              idSchema={idSchema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+
+        <Col className="row array-item-list" span={24}>
+          {items &&
+            items.map((itemProps) => (
+              <ArrayFieldItemTemplate
+                {...itemProps}
+                formContext={formContext}
+              />
+            ))}
+        </Col>
+
+        {canAdd && (
+          <Col span={24}>
+            <Row gutter={rowGutter} justify="end">
+              <Col flex="192px">
+                <AddButton
+                  className="array-item-add"
+                  disabled={disabled || readonly}
+                  onClick={onAddClick}
+                />
+              </Col>
+            </Row>
+          </Col>
+        )}
+      </Row>
+    </fieldset>
   );
 };
 
-export default ArrayFieldTemplate;
+export default withConfigConsumer({ prefixCls: "form" })(ArrayFieldTemplate);

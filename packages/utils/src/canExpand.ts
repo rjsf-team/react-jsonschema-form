@@ -1,9 +1,9 @@
 import { RJSFSchema, UiSchema } from "./types";
 import getUiOptions from "./getUiOptions";
 
-/** Checks as to whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The
- * UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and
- * the `formData` object doesn't already have `schema.maxProperties` elements.
+/** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
+ * the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the
+ * `formData` object doesn't already have `schema.maxProperties` elements.
  *
  * @param schema - The schema for the field that is being checked
  * @param [uiSchema={}] - The uiSchema for the field

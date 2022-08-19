@@ -1100,7 +1100,7 @@ describe("anyOf", () => {
         },
       },
     };
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.userId.addError("test");
       return errors;
     }
@@ -1108,7 +1108,7 @@ describe("anyOf", () => {
     it("should show error on options with different types", () => {
       const { node } = createFormComponent({
         schema,
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
@@ -1143,7 +1143,7 @@ describe("anyOf", () => {
         uiSchema: {
           "ui:hideError": true,
         },
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
@@ -1171,6 +1171,32 @@ describe("anyOf", () => {
         ".form-group.field-error input[type=text]"
       );
       expect(inputs).to.have.length.of(0);
+    });
+  });
+
+  describe("Custom Field", function () {
+    const schema = {
+      anyOf: [
+        {
+          type: "number",
+        },
+        {
+          type: "string",
+        },
+      ],
+    };
+    const uiSchema = {
+      "ui:field": () => <div className="custom-field">Custom field</div>,
+    };
+    it("should be rendered once", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const fields = node.querySelectorAll(".custom-field");
+      expect(fields).to.have.length.of(1);
+    });
+    it("should not render <select>", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(0);
     });
   });
 });

@@ -207,6 +207,155 @@ exports[`single fields checkboxes field 1`] = `
         </div>
       </form>
     </div>
+    
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="root_my-field"
+              >
+                my-field
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+            <small
+              className="text-muted form-text"
+            >
+              some description
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    
+    <div
+      className="p-0 container-fluid"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <div
+          className="col-12"
+        >
+           
+          <div
+            className="form-group"
+          >
+            <div
+              className="mb-0 form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="root_my-field"
+              >
+                my-field
+              </label>
+              <input
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+            <small
+              className="text-muted form-text"
+            >
+              some other description
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div>
     <button
@@ -234,9 +383,8 @@ exports[`single fields format color 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -251,6 +399,7 @@ exports[`single fields format color 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -278,9 +427,8 @@ exports[`single fields format date 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -295,6 +443,7 @@ exports[`single fields format date 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -322,9 +471,8 @@ exports[`single fields format datetime 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -339,6 +487,7 @@ exports[`single fields format datetime 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -385,9 +534,53 @@ exports[`single fields hidden field 1`] = `
               type="hidden"
               value=""
             />
+            
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
     </div>
   </div>
   <div>
@@ -410,7 +603,9 @@ exports[`single fields null field 1`] = `
 >
   <div
     className="form-group"
-  />
+  >
+    
+  </div>
   <div>
     <button
       className="btn btn-primary"
@@ -437,9 +632,8 @@ exports[`single fields number field 0 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -450,10 +644,12 @@ exports[`single fields number field 0 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
+        step="any"
         type="number"
         value={0}
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -481,9 +677,8 @@ exports[`single fields number field 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -494,10 +689,12 @@ exports[`single fields number field 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
+        step="any"
         type="number"
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -525,6 +722,7 @@ exports[`single fields password field 1`] = `
     >
       <label
         className="form-label"
+        htmlFor="root"
       />
       <input
         autoFocus={false}
@@ -534,11 +732,13 @@ exports[`single fields password field 1`] = `
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder=""
         readOnly={false}
         type="password"
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -616,6 +816,7 @@ exports[`single fields radio field 1`] = `
         </label>
       </div>
     </div>
+    
   </div>
   <div>
     <button
@@ -676,6 +877,59 @@ exports[`single fields select field 1`] = `
         </option>
       </select>
     </div>
+    
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        max={100}
+        min={42}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        step={1}
+        type="number"
+        value={75}
+      />
+      <span
+        className="range-view"
+      >
+        75
+      </span>
+    </div>
+    
   </div>
   <div>
     <button
@@ -703,9 +957,8 @@ exports[`single fields string field format data-url 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control-file"
@@ -720,6 +973,7 @@ exports[`single fields string field format data-url 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -747,9 +1001,8 @@ exports[`single fields string field format email 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -764,6 +1017,7 @@ exports[`single fields string field format email 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -791,9 +1045,8 @@ exports[`single fields string field format uri 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -808,6 +1061,7 @@ exports[`single fields string field format uri 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -835,9 +1089,8 @@ exports[`single fields string field regular 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -852,6 +1105,7 @@ exports[`single fields string field regular 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -879,9 +1133,8 @@ exports[`single fields string field with placeholder 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -896,6 +1149,7 @@ exports[`single fields string field with placeholder 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -939,6 +1193,7 @@ exports[`single fields textarea field 1`] = `
         rows={5}
       />
     </div>
+    
   </div>
   <div>
     <button
@@ -963,6 +1218,7 @@ exports[`single fields title field 1`] = `
   >
     <div
       className="my-1"
+      id="root-title"
     >
       <h5>
         Titre 1
@@ -999,6 +1255,7 @@ exports[`single fields title field 1`] = `
             >
               <label
                 className="form-label"
+                htmlFor="root_title"
               >
                 Titre 2
               </label>
@@ -1017,6 +1274,7 @@ exports[`single fields title field 1`] = `
                 value=""
               />
             </div>
+            
           </div>
         </div>
       </div>
@@ -1065,6 +1323,51 @@ exports[`single fields unsupported field 1`] = `
         {}
       </pre>
     </div>
+    
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <div
+      className="mb-0 form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="number"
+        value=""
+      />
+    </div>
+    
   </div>
   <div>
     <button
@@ -1092,9 +1395,8 @@ exports[`single fields using custom tagName 1`] = `
     >
       <label
         className="form-label"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <input
         autoFocus={false}
         className="form-control"
@@ -1109,6 +1411,7 @@ exports[`single fields using custom tagName 1`] = `
         value=""
       />
     </div>
+    
   </div>
   <div>
     <button

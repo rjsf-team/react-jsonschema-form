@@ -44,7 +44,9 @@ const RadioWidget = ({
       isRequired={required}
       isReadOnly={readonly}
     >
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      <FormLabel htmlFor={id} id={`${id}-label`}>
+        {label || schema.title}
+      </FormLabel>
       <RadioGroup
         onChange={onChange}
         onBlur={_onBlur}
@@ -62,6 +64,7 @@ const RadioWidget = ({
               <Radio
                 value={`${option.value}`}
                 key={i}
+                id={`${id}-radio-${option.value}`}
                 disabled={disabled || itemDisabled || readonly}
               >
                 {`${option.label}`}

@@ -22,6 +22,7 @@ function TextareaWidget(props) {
     uiSchema,
     formContext,
     registry,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     formContext,
@@ -47,6 +48,7 @@ function TextareaWidget(props) {
       name={name}
       {...semanticProps}
       value={value || ""}
+      error={rawErrors.length > 0}
       rows={options.rows || 5}
       onChange={_onChange}
       onBlur={_onBlur}

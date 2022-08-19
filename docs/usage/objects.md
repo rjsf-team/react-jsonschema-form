@@ -5,6 +5,8 @@
 Objects are defined with a type equal to `object` and properties specified in the `properties` keyword.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   "title": "My title",
   "description": "My description",
@@ -20,7 +22,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -29,6 +31,8 @@ render((
 You can specify which properties are required using the `required` attribute:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   "title": "My title",
   "description": "My description",
@@ -45,7 +49,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -54,6 +58,8 @@ render((
 Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "object",
   properties: {
@@ -67,8 +73,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -85,6 +90,8 @@ const uiSchema = {
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   "type": "object",
   "properties": {
@@ -99,7 +106,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 

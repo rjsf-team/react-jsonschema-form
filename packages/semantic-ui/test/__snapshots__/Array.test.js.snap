@@ -28,13 +28,240 @@ exports[`array fields array 1`] = `
           <button
             className="ui tiny icon left labeled button"
             onClick={[Function]}
+            title="Add Item"
           >
             <i
               aria-hidden="true"
               className="plus icon"
               onClick={[Function]}
             />
-            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="grouped equal width fields"
+  >
+    <div
+      className="field field-array field-array-of-string sortable-form-fields"
+    >
+      <div>
+        <div
+          className="row array-item-list"
+        >
+          <div
+            className="array-item"
+          >
+            <div
+              className="ui grid"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "display": "grid",
+                  "gridTemplateColumns": "1fr 65px",
+                }
+              }
+            >
+              <div
+                className="middle aligned sixteen wide column"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="required field"
+                  >
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby={null}
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_0"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="a"
+                      />
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <div
+                className="column"
+              >
+                <div
+                  className="ui mini vertical buttons"
+                >
+                  <button
+                    className="ui icon disabled button array-item-move-up"
+                    disabled={true}
+                    onClick={[Function]}
+                    tabIndex={-1}
+                    title="Move up"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="angle up icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                  <button
+                    className="ui icon button array-item-move-down"
+                    onClick={[Function]}
+                    title="Move down"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="angle down icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                  <button
+                    className="ui icon button array-item-remove"
+                    onClick={[Function]}
+                    title="Remove"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="trash icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+          >
+            <div
+              className="ui grid"
+              style={
+                Object {
+                  "alignItems": "center",
+                  "display": "grid",
+                  "gridTemplateColumns": "1fr 65px",
+                }
+              }
+            >
+              <div
+                className="middle aligned sixteen wide column"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="required field"
+                  >
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby={null}
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_1"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="b"
+                      />
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <div
+                className="column"
+              >
+                <div
+                  className="ui mini vertical buttons"
+                >
+                  <button
+                    className="ui icon button array-item-move-up"
+                    onClick={[Function]}
+                    title="Move up"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="angle up icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                  <button
+                    className="ui icon disabled button array-item-move-down"
+                    disabled={true}
+                    onClick={[Function]}
+                    tabIndex={-1}
+                    title="Move down"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="angle down icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                  <button
+                    className="ui icon button array-item-remove"
+                    onClick={[Function]}
+                    title="Remove"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="trash icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style={
+            Object {
+              "marginTop": "1rem",
+              "position": "relative",
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="ui tiny icon left labeled button"
+            onClick={[Function]}
+            title="Add Item"
+          >
+            <i
+              aria-hidden="true"
+              className="plus icon"
+              onClick={[Function]}
+            />
           </button>
         </div>
       </div>
@@ -149,6 +376,7 @@ exports[`array fields checkboxes 1`] = `
         </div>
       </div>
     </div>
+    
   </div>
   <button
     className="ui primary button"
@@ -216,6 +444,7 @@ exports[`array fields fixed array 1`] = `
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
             </div>
@@ -255,11 +484,13 @@ exports[`array fields fixed array 1`] = `
                         onFocus={[Function]}
                         placeholder=""
                         required={true}
+                        step="any"
                         type="number"
                         value=""
                       />
                     </div>
                   </div>
+                  
                 </div>
               </div>
             </div>

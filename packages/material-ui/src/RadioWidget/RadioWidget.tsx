@@ -36,6 +36,7 @@ const RadioWidget = ({
         {label || schema.title}
       </FormLabel>
       <RadioGroup
+        id={id}
         value={`${value}`}
         row={row as boolean}
         onChange={_onChange}

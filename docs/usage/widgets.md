@@ -5,6 +5,8 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 Example:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "object",
   properties: {
@@ -21,8 +23,7 @@ const uiSchema =  {
 };
 
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -67,6 +68,8 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string"
 };
@@ -81,8 +84,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -101,6 +103,8 @@ render((
 It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "object",
   properties: {
@@ -113,8 +117,7 @@ const uiSchema = {
 };
 
 render((
-  <Form schema={schema}
-        uiSchema={uiSchema} />
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
 ), document.getElementById("app"));
 ```
 
@@ -131,13 +134,15 @@ There are two ways to use file widgets.
 
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   type: "string",
   format: "data-url",
 };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 

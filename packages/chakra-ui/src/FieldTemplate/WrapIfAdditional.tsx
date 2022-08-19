@@ -1,7 +1,5 @@
-import * as React from "react";
-
+import React from "react";
 import { FieldTemplateProps, ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
-
 import {
   FormControl,
   FormLabel,
@@ -9,8 +7,6 @@ import {
   GridItem,
   Input,
 } from "@chakra-ui/react";
-
-import IconButton from "../IconButton";
 
 type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   FieldTemplateProps,
@@ -23,6 +19,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   | "readonly"
   | "required"
   | "schema"
+  | "registry"
 >;
 
 const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
@@ -34,10 +31,12 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     onDropPropertyClick,
     onKeyChange,
     readonly,
+    registry,
     required,
     schema,
   } = props;
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
     return <>{children}</>;
   }
@@ -50,7 +49,9 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     <Grid key={`${id}-key`} alignItems="center" gap={2}>
       <GridItem>
         <FormControl isRequired={required}>
-          <FormLabel htmlFor={`${id}-key`}>{keyLabel}</FormLabel>
+          <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>
+            {keyLabel}
+          </FormLabel>
           <Input
             defaultValue={label}
             disabled={disabled || readonly}
@@ -64,9 +65,7 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
       </GridItem>
       <GridItem>{children}</GridItem>
       <GridItem>
-        <IconButton
-          icon="remove"
-          tabIndex={-1}
+        <RemoveButton
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
         />

@@ -128,7 +128,8 @@ exports[`object fields additionalProperties 1`] = `
                   "paddingRight": 6,
                 }
               }
-              tabIndex={-1}
+              tabIndex={0}
+              title="Remove"
               type="button"
             >
               <span
@@ -159,7 +160,7 @@ exports[`object fields additionalProperties 1`] = `
           className="MuiGrid-root MuiGrid-item"
         >
           <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-text object-property-expand MuiButton-textSecondary"
+            className="MuiButtonBase-root MuiIconButton-root object-property-expand MuiIconButton-colorSecondary"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -174,10 +175,11 @@ exports[`object fields additionalProperties 1`] = `
             onTouchMove={[Function]}
             onTouchStart={[Function]}
             tabIndex={0}
+            title="Add Item"
             type="button"
           >
             <span
-              className="MuiButton-label"
+              className="MuiIconButton-label"
             >
               <svg
                 aria-hidden={true}
@@ -189,7 +191,6 @@ exports[`object fields additionalProperties 1`] = `
                   d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                 />
               </svg>
-               Add Item
             </span>
             <span
               className="MuiTouchRipple-root"
@@ -270,7 +271,7 @@ exports[`object fields object 1`] = `
               htmlFor="root_a"
               id="root_a-label"
             >
-              a
+              A
             </label>
             <div
               className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -315,7 +316,7 @@ exports[`object fields object 1`] = `
               htmlFor="root_b"
               id="root_b-label"
             >
-              b
+              B
             </label>
             <div
               className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -333,6 +334,7 @@ exports[`object fields object 1`] = `
                 onFocus={[Function]}
                 placeholder=""
                 required={false}
+                step="any"
                 type="number"
                 value=""
               />

@@ -69,7 +69,9 @@ const CheckboxesWidget = (props: WidgetProps) => {
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
+      <FormLabel htmlFor={id} id={`${id}-label`}>
+        {label || schema.title}
+      </FormLabel>
       <CheckboxGroup
         onChange={(option) => onChange(option)}
         defaultValue={value}

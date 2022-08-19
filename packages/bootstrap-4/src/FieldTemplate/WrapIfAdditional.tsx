@@ -6,8 +6,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import IconButton from "../IconButton/IconButton";
-
 type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   FieldTemplateProps,
   | "classNames"
@@ -19,6 +17,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   | "readonly"
   | "required"
   | "schema"
+  | "registry"
 >;
 
 const WrapIfAdditional = ({
@@ -31,9 +30,11 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  registry,
 }: WrapIfAdditionalProps) => {
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
     return children;
@@ -41,18 +42,19 @@ const WrapIfAdditional = ({
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
+  const keyId = `${id}-key`;
 
   return (
-    <Row key={`${id}-key`}>
+    <Row key={keyId}>
       <Col xs={5}>
         <Form.Group>
-          <Form.Label>{keyLabel}</Form.Label>
+          <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>
           <Form.Control
             required={required}
             defaultValue={label}
             disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
+            id={keyId}
+            name={keyId}
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
           />
@@ -60,12 +62,9 @@ const WrapIfAdditional = ({
       </Col>
       <Col xs={5}>{children}</Col>
       <Col xs={2} className="py-4">
-        <IconButton
-          block={true}
+        <RemoveButton
+          iconType="block"
           className="w-100"
-          variant="danger"
-          icon="remove"
-          tabIndex={-1}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
         />

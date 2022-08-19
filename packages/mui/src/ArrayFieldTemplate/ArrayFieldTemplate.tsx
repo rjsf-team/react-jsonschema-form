@@ -1,201 +1,80 @@
 import React from "react";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import RemoveIcon from "@mui/icons-material/Remove";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import { ArrayFieldTemplateProps, getUiOptions, IdSchema } from "@rjsf/utils";
-
-import AddButton from "../AddButton/AddButton";
+import {
+  ArrayFieldTemplateItemType,
+  ArrayFieldTemplateProps,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 
 const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const { schema, registry } = props;
-  const { schemaUtils } = registry;
-
-  if (schemaUtils.isMultiSelect(schema)) {
-    return <DefaultFixedArrayFieldTemplate {...props} />;
-  } else {
-    return <DefaultNormalArrayFieldTemplate {...props} />;
-  }
-};
-
-type ArrayFieldTitleProps = {
-  TitleField: any;
-  idSchema: IdSchema;
-  title?: string;
-  required?: boolean;
-};
-
-const ArrayFieldTitle = ({
-  TitleField,
-  idSchema,
-  title,
-  required,
-}: ArrayFieldTitleProps) => {
-  if (!title) {
-    return null;
-  }
-
-  const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required} />;
-};
-
-type ArrayFieldDescriptionProps = {
-  DescriptionField: any;
-  idSchema: IdSchema;
-  description?: string;
-};
-
-const ArrayFieldDescription = ({
-  DescriptionField,
-  idSchema,
-  description,
-}: ArrayFieldDescriptionProps) => {
-  if (!description) {
-    return null;
-  }
-
-  const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description} />;
-};
-
-// Used in the two templates
-const DefaultArrayItem = (props: any) => {
-  const btnStyle = {
-    flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
-    fontWeight: "bold",
-    minWidth: 0,
-  };
-  return (
-    <Grid container={true} key={props.key} alignItems="center">
-      <Grid item={true} xs style={{ overflow: "auto" }}>
-        <Box mb={2}>
-          <Paper elevation={2}>
-            <Box p={2}>{props.children}</Box>
-          </Paper>
-        </Box>
-      </Grid>
-
-      {props.hasToolbar && (
-        <Grid item={true}>
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              size="small"
-              className="array-item-move-up"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveUp}
-              onClick={props.onReorderClick(props.index, props.index - 1)}
-            >
-              <ArrowUpwardIcon fontSize="small" />
-            </IconButton>
-          )}
-
-          {(props.hasMoveUp || props.hasMoveDown) && (
-            <IconButton
-              size="small"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly || !props.hasMoveDown}
-              onClick={props.onReorderClick(props.index, props.index + 1)}
-            >
-              <ArrowDownwardIcon fontSize="small" />
-            </IconButton>
-          )}
-
-          {props.hasRemove && (
-            <IconButton
-              size="small"
-              tabIndex={-1}
-              style={btnStyle as any}
-              disabled={props.disabled || props.readonly}
-              onClick={props.onDropIndexClick(props.index)}
-            >
-              <RemoveIcon fontSize="small" />
-            </IconButton>
-          )}
-        </Grid>
-      )}
-    </Grid>
+  const {
+    canAdd,
+    disabled,
+    idSchema,
+    uiSchema,
+    items,
+    onAddClick,
+    readonly,
+    registry,
+    required,
+    schema,
+    title,
+  } = props;
+  const uiOptions = getUiOptions(uiSchema);
+  const ArrayFieldDescriptionTemplate =
+    getTemplate<"ArrayFieldDescriptionTemplate">(
+      "ArrayFieldDescriptionTemplate",
+      registry,
+      uiOptions
+    );
+  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate">(
+    "ArrayFieldItemTemplate",
+    registry,
+    uiOptions
   );
-};
-
-const DefaultFixedArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const uiOptions = getUiOptions(props.uiSchema);
-  return (
-    <fieldset className={props.className}>
-      <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={uiOptions.title || props.title}
-        required={props.required}
-      />
-
-      {(uiOptions.description || props.schema.description) && (
-        <div
-          className="field-description"
-          key={`field-description-${props.idSchema.$id}`}
-        >
-          {uiOptions.description || props.schema.description}
-        </div>
-      )}
-
-      <div
-        className="row array-item-list"
-        key={`array-item-list-${props.idSchema.$id}`}
-      >
-        {props.items && props.items.map(DefaultArrayItem)}
-      </div>
-
-      {props.canAdd && (
-        <AddButton
-          className="array-item-add"
-          onClick={props.onAddClick}
-          disabled={props.disabled || props.readonly}
-        />
-      )}
-    </fieldset>
+  const ArrayFieldTitleTemplate = getTemplate<"ArrayFieldTitleTemplate">(
+    "ArrayFieldTitleTemplate",
+    registry,
+    uiOptions
   );
-};
-
-const DefaultNormalArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-  const uiOptions = getUiOptions(props.uiSchema);
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <Paper elevation={2}>
       <Box p={2}>
-        <ArrayFieldTitle
-          key={`array-field-title-${props.idSchema.$id}`}
-          TitleField={props.TitleField}
-          idSchema={props.idSchema}
-          title={uiOptions.title || props.title}
-          required={props.required}
+        <ArrayFieldTitleTemplate
+          idSchema={idSchema}
+          title={uiOptions.title || title}
+          uiSchema={uiSchema}
+          required={required}
+          registry={registry}
         />
-
-        {(uiOptions.description || props.schema.description) && (
-          <ArrayFieldDescription
-            key={`array-field-description-${props.idSchema.$id}`}
-            DescriptionField={props.DescriptionField}
-            idSchema={props.idSchema}
-            description={uiOptions.description || props.schema.description}
+        {(uiOptions.description || schema.description) && (
+          <ArrayFieldDescriptionTemplate
+            idSchema={idSchema}
+            description={(uiOptions.description || schema.description)!}
+            uiSchema={uiSchema}
+            registry={registry}
           />
         )}
-
-        <Grid container={true} key={`array-item-list-${props.idSchema.$id}`}>
-          {props.items && props.items.map((p) => DefaultArrayItem(p))}
-
-          {props.canAdd && (
+        <Grid container={true} key={`array-item-list-${idSchema.$id}`}>
+          {items &&
+            items.map((itemProps: ArrayFieldTemplateItemType) => (
+              <ArrayFieldItemTemplate {...itemProps} />
+            ))}
+          {canAdd && (
             <Grid container justifyContent="flex-end">
               <Grid item={true}>
                 <Box mt={2}>
                   <AddButton
                     className="array-item-add"
-                    onClick={props.onAddClick}
-                    disabled={props.disabled || props.readonly}
+                    onClick={onAddClick}
+                    disabled={disabled || readonly}
                   />
                 </Box>
               </Grid>

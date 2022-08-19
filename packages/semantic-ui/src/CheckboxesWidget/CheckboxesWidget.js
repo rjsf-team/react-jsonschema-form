@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types,react/no-array-index-key */
 import React from "react";
 import { Form } from "semantic-ui-react";
+import { getTemplate } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
-import TitleField from "../TitleField";
 
 function selectValue(value, selected, all) {
   const at = all.indexOf(value);
@@ -30,7 +30,14 @@ function CheckboxesWidget(props) {
     formContext,
     schema,
     uiSchema,
+    rawErrors = [],
+    registry,
   } = props;
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    options
+  );
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
   const semanticProps = getSemanticProps({
@@ -57,8 +64,15 @@ function CheckboxesWidget(props) {
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <React.Fragment>
-      {title && <TitleField title={title} />}
-      <Form.Group {...inlineOption}>
+      {title && (
+        <TitleFieldTemplate
+          id={`${id}-title`}
+          title={title}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <Form.Group id={id} {...inlineOption}>
         {enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
@@ -70,6 +84,7 @@ function CheckboxesWidget(props) {
               label={option.label}
               {...semanticProps}
               checked={checked}
+              error={rawErrors.length > 0}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}
               onChange={_onChange(option)}

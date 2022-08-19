@@ -43,6 +43,7 @@ function SelectWidget(props) {
     onChange,
     onBlur,
     onFocus,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     schema,
@@ -67,14 +68,14 @@ function SelectWidget(props) {
     event,
     // eslint-disable-next-line no-shadow
     { value }
-  ) => onChange && onChange(processSelectValue(schema, value));
+  ) => onChange && onChange(processSelectValue(schema, value, options));
   // eslint-disable-next-line no-shadow
   const _onBlur = ({ target: { value } }) =>
-    onBlur && onBlur(id, processSelectValue(schema, value));
+    onBlur && onBlur(id, processSelectValue(schema, value, options));
   const _onFocus = ({
     // eslint-disable-next-line no-shadow
     target: { value },
-  }) => onFocus && onFocus(id, processSelectValue(schema, value));
+  }) => onFocus && onFocus(id, processSelectValue(schema, value, options));
 
   return (
     <Form.Dropdown
@@ -83,6 +84,7 @@ function SelectWidget(props) {
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
+      error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}
       {...semanticProps}

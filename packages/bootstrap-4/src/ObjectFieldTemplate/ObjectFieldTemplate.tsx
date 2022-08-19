@@ -4,14 +4,15 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import { canExpand, getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
-
-import AddButton from "../AddButton/AddButton";
+import {
+  canExpand,
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
@@ -22,21 +23,39 @@ const ObjectFieldTemplate = ({
   onAddClick,
   disabled,
   readonly,
+  registry,
 }: ObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
+          registry={registry}
+          uiSchema={uiSchema}
         />
       )}
-      {description && (
-        <DescriptionField
+      {(uiOptions.description || description) && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
+          registry={registry}
         />
       )}
       <Container fluid className="p-0">

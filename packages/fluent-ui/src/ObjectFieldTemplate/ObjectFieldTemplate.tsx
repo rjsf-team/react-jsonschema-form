@@ -1,33 +1,48 @@
 import React from "react";
-import { getUiOptions, ObjectFieldTemplateProps } from "@rjsf/utils";
+import {
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
   uiSchema,
   idSchema,
+  registry,
 }: ObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
   return (
     <>
       {(uiOptions.title || title) && (
-        <TitleField
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
-      {description && (
-        <DescriptionField
+      {(uiOptions.description || description) && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
+          registry={registry}
         />
       )}
-
       <div className="ms-Grid" dir="ltr">
         <div className="ms-Grid-row">
           {properties.map((element) => element.content)}

@@ -1,10 +1,8 @@
 import React from "react";
-
-import { FieldProps } from "@rjsf/utils";
-
+import { DescriptionFieldProps } from "@rjsf/utils";
 import { Text } from "@chakra-ui/react";
 
-const DescriptionField = ({ description, id }: FieldProps) => {
+const DescriptionField = ({ description, id }: DescriptionFieldProps) => {
   if (!description) {
     return null;
   }

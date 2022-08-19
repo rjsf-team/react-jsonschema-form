@@ -4,25 +4,19 @@
   "main": "dist/cjs/index.js",
   "module": "dist/semantic-ui.esm.js",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
-  "lint-staged": {
-    "{src,test}/**/*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
   "files": [
     "dist"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "build": "rimraf dist && tsdx build --format cjs,es,umd",
-    "lint": "eslint src test",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
+    "precommit": "lint-staged",
     "test": "tsdx test",
     "test:update": "tsdx test --u"
   },
@@ -40,18 +34,18 @@
     "semantic-ui-react": "1.3.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.18.9",
-    "@babel/core": "^7.18.9",
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.10",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-transform-react-jsx": "^7.18.6",
-    "@babel/preset-env": "^7.18.9",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
     "@babel/register": "^7.18.9",
     "@rjsf/core": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
     "atob": "^2.0.3",
-    "eslint": "^8.20.0",
+    "eslint": "^8.22.0",
     "jest": "^25.4.0",
     "nanoid": "^3.3.4",
     "prop-types": "^15.8.1",

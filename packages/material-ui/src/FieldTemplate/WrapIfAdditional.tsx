@@ -1,8 +1,6 @@
-import React from "react";
-import RemoveIcon from "@material-ui/icons/Remove";
+import React, { CSSProperties } from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
@@ -18,6 +16,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   | "readonly"
   | "required"
   | "schema"
+  | "registry"
 >;
 
 const WrapIfAdditional = ({
@@ -30,10 +29,12 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  registry,
 }: WrapIfAdditionalProps) => {
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-  const btnStyle = {
+  const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
@@ -66,15 +67,12 @@ const WrapIfAdditional = ({
         {children}
       </Grid>
       <Grid item={true}>
-        <IconButton
-          size="small"
-          tabIndex={-1}
-          style={btnStyle as any}
+        <RemoveButton
+          iconType="default"
+          style={btnStyle}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
-        >
-          <RemoveIcon />
-        </IconButton>
+        />
       </Grid>
     </Grid>
   );
