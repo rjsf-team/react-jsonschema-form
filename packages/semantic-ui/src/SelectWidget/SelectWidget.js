@@ -68,14 +68,14 @@ function SelectWidget(props) {
     event,
     // eslint-disable-next-line no-shadow
     { value }
-  ) => onChange && onChange(processSelectValue(schema, value));
+  ) => onChange && onChange(processSelectValue(schema, value, options));
   // eslint-disable-next-line no-shadow
   const _onBlur = ({ target: { value } }) =>
-    onBlur && onBlur(id, processSelectValue(schema, value));
+    onBlur && onBlur(id, processSelectValue(schema, value, options));
   const _onFocus = ({
     // eslint-disable-next-line no-shadow
     target: { value },
-  }) => onFocus && onFocus(id, processSelectValue(schema, value));
+  }) => onFocus && onFocus(id, processSelectValue(schema, value, options));
 
   return (
     <Form.Dropdown

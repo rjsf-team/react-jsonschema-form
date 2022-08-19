@@ -60,19 +60,19 @@ const SelectWidget = ({
           onBlur &&
           ((event: React.FocusEvent) => {
             const newValue = getValue(event, multiple);
-            onBlur(id, processSelectValue(schema, newValue));
+            onBlur(id, processSelectValue(schema, newValue, options));
           })
         }
         onFocus={
           onFocus &&
           ((event: React.FocusEvent) => {
             const newValue = getValue(event, multiple);
-            onFocus(id, processSelectValue(schema, newValue));
+            onFocus(id, processSelectValue(schema, newValue, options));
           })
         }
         onChange={(event: React.ChangeEvent) => {
           const newValue = getValue(event, multiple);
-          onChange(processSelectValue(schema, newValue));
+          onChange(processSelectValue(schema, newValue, options));
         }}
       >
         {!multiple && schema.default === undefined && (

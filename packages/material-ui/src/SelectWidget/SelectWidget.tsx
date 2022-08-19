@@ -26,13 +26,13 @@ const SelectWidget = ({
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue(schema, value));
+    onChange(processSelectValue(schema, value, options));
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, processSelectValue(schema, value));
+    onBlur(id, processSelectValue(schema, value, options));
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, processSelectValue(schema, value));
+    onFocus(id, processSelectValue(schema, value, options));
 
   return (
     <TextField
