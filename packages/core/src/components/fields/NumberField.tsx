@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { asNumber, FieldProps } from "@rjsf/utils";
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
@@ -12,10 +12,6 @@ const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
 // functionality, but it is fairly complex compared to simply defining two
 // different matchers.
 const trailingCharMatcher = /[0.]0*$/;
-
-type NumberFieldState = {
-  lastValue: any;
-};
 
 /**
  * The NumberField class has some special handling for dealing with trailing
@@ -34,30 +30,20 @@ type NumberFieldState = {
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-class NumberField<T = any, F = any> extends Component<
-  FieldProps<T, F>,
-  NumberFieldState
-> {
-  /** Constructs the `NumberField` from the `props`
-   *
-   * @param props - The `FieldProps` for this component
-   */
-  constructor(props: FieldProps<T, F>) {
-    super(props);
+function NumberField<T = any, F = any>(props: FieldProps<T, F>) {
+  const { registry, onChange, formData, value: initialValue } = props;
+  const [lastValue, setLastValue] = useState(initialValue);
+  const { StringField } = registry.fields;
 
-    this.state = {
-      lastValue: props.value,
-    };
-  }
+  let value = formData;
 
   /** Handle the change from the `StringField` to properly convert to a number
    *
    * @param value - The current value for the change occurring
    */
-  handleChange = (value: any) => {
-    const { onChange } = this.props;
+  const handleChange = (value: FieldProps<T, F>["value"]) => {
     // Cache the original value in component state
-    this.setState({ lastValue: value });
+    setLastValue(value);
 
     // Normalize decimals that don't start with a zero character in advance so
     // that the rest of the normalization logic is simpler
@@ -76,32 +62,20 @@ class NumberField<T = any, F = any> extends Component<
     onChange(processed as unknown as T);
   };
 
-  /** Renders the `NumberField` dealing with resolving the `lastValue` and current `value`
-   */
-  render() {
-    const { StringField } = this.props.registry.fields;
-    const { formData, ...props } = this.props;
-    const { lastValue } = this.state;
+  if (typeof lastValue === "string" && typeof value === "number") {
+    // Construct a regular expression that checks for a string that consists
+    // of the formData value suffixed with zero or one '.' characters and zero
+    // or more '0' characters
+    const re = new RegExp(`${value}`.replace(".", "\\.") + "\\.?0*$");
 
-    let value = formData;
-
-    if (typeof lastValue === "string" && typeof value === "number") {
-      // Construct a regular expression that checks for a string that consists
-      // of the formData value suffixed with zero or one '.' characters and zero
-      // or more '0' characters
-      const re = new RegExp(`${value}`.replace(".", "\\.") + "\\.?0*$");
-
-      // If the cached "lastValue" is a match, use that instead of the formData
-      // value to prevent the input value from changing in the UI
-      if (lastValue.match(re)) {
-        value = lastValue as unknown as T; // Need to cast
-      }
+    // If the cached "lastValue" is a match, use that instead of the formData
+    // value to prevent the input value from changing in the UI
+    if (lastValue.match(re)) {
+      value = lastValue as unknown as T;
     }
-
-    return (
-      <StringField {...props} formData={value} onChange={this.handleChange} />
-    );
   }
+
+  return <StringField {...props} formData={value} onChange={handleChange} />;
 }
 
 export default NumberField;
