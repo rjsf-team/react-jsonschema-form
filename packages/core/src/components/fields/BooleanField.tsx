@@ -54,11 +54,6 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
   } else {
     enumOptions = optionsList({
       enum: schema.enum || [true, false],
-      enumNames:
-        schema.enumNames ||
-        (schema.enum && schema.enum[0] === false
-          ? ["No", "Yes"]
-          : ["Yes", "No"]),
     });
   }
 

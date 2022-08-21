@@ -35,8 +35,33 @@ Here's a list of supported alternative widgets for different JSON Schema data ty
   * `select`: a select box with `true` and `false` as options;
   * by default, a checkbox is used
 
-> Note: To set the labels for a boolean field, instead of using `true` and `false` you can set `enumNames` in your schema. Note that `enumNames` belongs in your `schema`, not the `uiSchema`, and the order is always `[true, false]`.
+> Note: To set the labels for a boolean field, instead of using `true` and `false`, your schema can use `oneOf` with `const` values for both true and false, where you can specify the custom label in the `title` field. You will also need to specify a widget in your `uiSchema`. See the following example:
 
+schema: 
+
+```json
+{
+  "properties": {
+    "booleanWithCustomLabels": {
+      "type": "boolean",
+      "oneOf": [
+        {"const": true, "title": "Custom label for true"},
+        {"const": false, "title": "Custom label for false"}
+      ]
+    }
+  }
+}
+```
+
+uiSchema:
+
+```json
+  { 
+    "booleanWithCustomLabels": {
+      "ui:widget": "radio" // or "select"
+    }
+  }
+```
 ## For `string` fields
 
   * `textarea`: a `textarea` element is used;
