@@ -1,4 +1,4 @@
-import React, { FocusEvent } from "react";
+import React, { FocusEvent, useCallback } from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -24,11 +24,15 @@ function RadioWidget<T = any, F = any>({
   // checked={checked} has been moved above name={name}, As mentioned in #349;
   // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
 
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, event.target.value);
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => onBlur(id, event.target.value),
+    [onBlur, id]
+  );
 
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, event.target.value);
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.value),
+    [onFocus, id]
+  );
 
   return (
     <div className="field-radio-group" id={id}>
