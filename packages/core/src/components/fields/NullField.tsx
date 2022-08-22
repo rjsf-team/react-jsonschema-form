@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect } from "react";
 import { FieldProps } from "@rjsf/utils";
 
 /** The `NullField` component is used to render a field in the schema is null. It also ensures that the `formData` is
@@ -6,22 +6,15 @@ import { FieldProps } from "@rjsf/utils";
  *
  * @param props - The `FieldProps` for this template
  */
-class NullField<T = any, F = any> extends Component<FieldProps<T, F>> {
-  /** React lifecycle method is called after a component mounts. Will convert an undefined formData to a null via the
-   * onChange callback
-   */
-  componentDidMount() {
-    const { formData, onChange } = this.props;
+function NullField<T = any, F = any>(props: FieldProps<T, F>) {
+  const { formData, onChange } = props;
+  useEffect(() => {
     if (formData === undefined) {
       onChange(null as unknown as T);
     }
-  }
+  }, []);
 
-  /** Renders null for the null field
-   */
-  render() {
-    return null;
-  }
+  return null;
 }
 
 export default NullField;
