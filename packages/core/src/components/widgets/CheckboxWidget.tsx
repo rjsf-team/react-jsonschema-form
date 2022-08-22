@@ -39,7 +39,7 @@ function CheckboxWidget<T = any, F = any>({
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) =>
       onBlur(id, event.target.checked),
-    []
+    [onBlur, id]
   );
 
   const handleFocus = useCallback(
