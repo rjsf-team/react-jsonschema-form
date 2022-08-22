@@ -69,8 +69,8 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             className="p-0 m-0"
           >
             {items &&
-              items.map((itemProps: ArrayFieldTemplateItemType) => (
-                <ArrayFieldItemTemplate {...itemProps} />
+              items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
+                <ArrayFieldItemTemplate key={key} {...itemProps} />
               ))}
             {canAdd && (
               <Container className="">

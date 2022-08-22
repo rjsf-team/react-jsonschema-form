@@ -62,8 +62,8 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       <Grid key={`array-item-list-${idSchema.$id}`}>
         <GridItem>
           {items.length > 0 &&
-            items.map((itemProps: ArrayFieldTemplateItemType) => (
-              <ArrayFieldItemTemplate {...itemProps} />
+            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
+              <ArrayFieldItemTemplate key={key} {...itemProps} />
             ))}
         </GridItem>
         {canAdd && (
