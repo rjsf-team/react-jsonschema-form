@@ -123,14 +123,14 @@ function AltDateWidget<T = any, F = any>({
     if (value && value !== toDateString(state, time)) {
       setState(parseDateString(value, time));
     }
-  }, [value]);
+  }, [value, state, time]);
 
   useEffect(() => {
     if (readyForChange(state)) {
       // Only propagate to parent state if we have a complete date{time}
       onChange(toDateString(state, time));
     }
-  }, [state, time]);
+  }, [state, time, onChange]);
 
   const handleChange = (property: keyof DateObject, value: string) => {
     setState({ [property]: value });

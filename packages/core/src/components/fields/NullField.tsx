@@ -12,7 +12,7 @@ function NullField<T = any, F = any>(props: FieldProps<T, F>) {
     if (formData === undefined) {
       onChange(null as unknown as T);
     }
-  }, []);
+  }, [formData, onChange]);
 
   return null;
 }

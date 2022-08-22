@@ -66,8 +66,8 @@ export default function ArrayFieldTemplate<T = any, F = any>(
       )}
       <div className="row array-item-list">
         {items &&
-          items.map((itemProps: ArrayFieldTemplateItemType) => (
-            <ArrayFieldItemTemplate {...itemProps} />
+          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
       </div>
       {canAdd && (
