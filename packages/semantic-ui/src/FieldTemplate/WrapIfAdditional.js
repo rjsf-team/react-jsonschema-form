@@ -23,7 +23,7 @@ const WrapIfAdditional = ({
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <>{children}</>;
+    return <div className={classNames}>{children}</div>;
   }
 
   const handleBlur = ({ target }) => onKeyChange(target.value);

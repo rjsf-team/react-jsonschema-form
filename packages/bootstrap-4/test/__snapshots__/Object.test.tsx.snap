@@ -7,154 +7,158 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="row"
+            className="col-12"
           >
+             
             <div
-              className="col-5"
+              className="form-group field field-string row"
             >
               <div
-                className="form-group"
-              >
-                <label
-                  className="form-label"
-                  htmlFor="root_foo-key"
-                >
-                  foo Key
-                </label>
-                <input
-                  className="form-control"
-                  defaultValue="foo"
-                  disabled={false}
-                  id="root_foo-key"
-                  name="root_foo-key"
-                  onBlur={[Function]}
-                  required={false}
-                  type="text"
-                />
-              </div>
-            </div>
-            <div
-              className="col-5"
-            >
-              <div
-                className="form-group"
+                className="col-5"
               >
                 <div
-                  className="mb-0 form-group"
+                  className="form-group"
                 >
                   <label
                     className="form-label"
-                    htmlFor="root_foo"
+                    htmlFor="root_foo-key"
                   >
-                    foo
+                    foo Key
                   </label>
                   <input
-                    autoFocus={false}
                     className="form-control"
+                    defaultValue="foo"
                     disabled={false}
-                    id="root_foo"
+                    id="root_foo-key"
+                    name="root_foo-key"
                     onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
                     required={false}
                     type="text"
-                    value="foo"
                   />
                 </div>
-                
               </div>
-            </div>
-            <div
-              className="py-4 col-2"
-            >
-              <button
-                className="btn btn-danger btn-block btn-sm"
-                disabled={false}
-                onClick={[Function]}
-                title="Remove"
-                type="button"
+              <div
+                className="col-5"
               >
-                <svg
-                  fill="currentColor"
-                  height="1em"
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  className="form-group"
                 >
-                  <path
-                    d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
-                  />
-                </svg>
-              </button>
+                  <div
+                    className="mb-0 form-group"
+                  >
+                    <label
+                      className="form-label"
+                      htmlFor="root_foo"
+                    >
+                      foo
+                    </label>
+                    <input
+                      autoFocus={false}
+                      className="form-control"
+                      disabled={false}
+                      id="root_foo"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  
+                </div>
+              </div>
+              <div
+                className="py-4 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-block btn-sm"
+                  disabled={false}
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className="row"
-      >
         <div
-          className="py-4 col-3 offset-9"
+          className="row"
         >
-          <button
-            className="ml-1 object-property-expand btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
-            style={
-              Object {
-                "width": "100%",
-              }
-            }
-            title="Add Item"
-            type="button"
+          <div
+            className="py-4 col-3 offset-9"
           >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              strokeWidth="0"
+            <button
+              className="ml-1 object-property-expand btn btn-primary"
+              disabled={false}
+              onClick={[Function]}
               style={
                 Object {
-                  "color": undefined,
+                  "width": "100%",
                 }
               }
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
+              title="Add Item"
+              type="button"
             >
-              <path
-                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-              />
-            </svg>
-          </button>
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -178,96 +182,108 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
+             
             <div
-              className="mb-0 form-group"
+              className="form-group field field-string"
             >
-              <label
-                className="form-label"
-                htmlFor="root_a"
+              <div
+                className="form-group"
               >
-                A
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_a"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_a"
+                  >
+                    A
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
+              </div>
             </div>
-            
           </div>
         </div>
-      </div>
-      <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
-      >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
+             
             <div
-              className="mb-0 form-group"
+              className="form-group field field-number"
             >
-              <label
-                className="form-label"
-                htmlFor="root_b"
+              <div
+                className="form-group"
               >
-                B
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_b"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                step="any"
-                type="number"
-                value=""
-              />
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_b"
+                  >
+                    B
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                
+              </div>
             </div>
-            
           </div>
         </div>
       </div>

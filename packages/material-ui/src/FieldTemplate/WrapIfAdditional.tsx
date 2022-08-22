@@ -21,6 +21,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
 
 const WrapIfAdditional = ({
   children,
+  classNames,
   disabled,
   id,
   label,
@@ -42,15 +43,21 @@ const WrapIfAdditional = ({
   };
 
   if (!additional) {
-    return <>{children}</>;
+    return <div className={classNames}>{children}</div>;
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
 
   return (
-    <Grid container={true} key={`${id}-key`} alignItems="center" spacing={2}>
-      <Grid item={true} xs>
+    <Grid
+      container
+      key={`${id}-key`}
+      alignItems="center"
+      spacing={2}
+      className={classNames}
+    >
+      <Grid item xs>
         <FormControl fullWidth={true} required={required}>
           <InputLabel>{keyLabel}</InputLabel>
           <Input
