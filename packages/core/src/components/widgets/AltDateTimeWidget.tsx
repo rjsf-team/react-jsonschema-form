@@ -11,12 +11,7 @@ function AltDateTimeWidget<T = any, F = any>({
   ...props
 }: WidgetProps<T, F>) {
   const { AltDateWidget } = props.registry.widgets;
-  const options = {
-    ...(AltDateWidget?.defaultProps?.options ?? {}),
-    ...props.options,
-  };
-
-  return <AltDateWidget time={time} {...props} options={options} />;
+  return <AltDateWidget time={time} {...props} />;
 }
 
 export default AltDateTimeWidget;
