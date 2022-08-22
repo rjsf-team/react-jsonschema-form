@@ -1069,7 +1069,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
         const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
@@ -1086,8 +1088,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
@@ -1378,7 +1382,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
 
         const expected = toDateString(
           parseDateString(new Date().toJSON()),
@@ -1399,8 +1405,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
