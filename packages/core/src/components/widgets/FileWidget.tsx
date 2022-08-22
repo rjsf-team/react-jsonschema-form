@@ -1,6 +1,6 @@
-import React, { ChangeEvent, Component } from "react";
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 
-import { dataURItoBlob, shouldRender, WidgetProps } from "@rjsf/utils";
+import { dataURItoBlob, WidgetProps } from "@rjsf/utils";
 
 function addNameToDataURL(dataURL: string, name: string) {
   if (dataURL === null) {
@@ -81,81 +81,63 @@ function extractFileInfo(dataURLs: string[]) {
     });
 }
 
-type FileWidgetStateType = {
-  values: any[];
-  filesInfo: FileInfoType[];
-};
-
 /**
  *  The `FileWidget` is a widget for rendering file upload fields.
  *  It is typically used with a string property with data-url format.
  */
-class FileWidget<T, F> extends Component<
-  WidgetProps<T, F>,
-  FileWidgetStateType
-> {
-  constructor(props: WidgetProps<T, F>) {
-    super(props);
-    const { value } = props;
-    const values = Array.isArray(value) ? value : [value];
-    this.state = { values, filesInfo: extractFileInfo(values) };
-  }
+function FileWidget<T, F>({
+  multiple,
+  id,
+  readonly,
+  disabled,
+  onChange,
+  value,
+  autofocus = false,
+  options,
+}: WidgetProps<T, F>) {
+  const extractedFilesInfo = useMemo(
+    () =>
+      Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value]),
+    [value]
+  );
+  const [filesInfo, setFilesInfo] =
+    useState<FileInfoType[]>(extractedFilesInfo);
 
-  shouldComponentUpdate(
-    nextProps: WidgetProps<T, F>,
-    nextState: FileWidgetStateType
-  ): boolean {
-    return shouldRender(this, nextProps, nextState);
-  }
-
-  onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { multiple, onChange } = this.props;
-    if (!event.target.files) {
-      return;
-    }
-    processFiles(event.target.files).then((filesInfo) => {
-      const state = {
-        values: filesInfo.map((fileInfo) => fileInfo.dataURL),
-        filesInfo,
-      };
-      this.setState(state, () => {
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.files) {
+        return;
+      }
+      processFiles(event.target.files).then((filesInfoEvent) => {
+        setFilesInfo(filesInfoEvent);
+        const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL);
         if (multiple) {
-          onChange(state.values);
+          onChange(newValue);
         } else {
-          onChange(state.values[0]);
+          onChange(newValue[0]);
         }
       });
-    });
-  };
+    },
+    [multiple, onChange]
+  );
 
-  render() {
-    const {
-      multiple,
-      id,
-      readonly,
-      disabled,
-      autofocus = false,
-      options,
-    } = this.props;
-    const { filesInfo } = this.state;
-    return (
-      <div>
-        <p>
-          <input
-            id={id}
-            type="file"
-            disabled={readonly || disabled}
-            onChange={this.onChange}
-            defaultValue=""
-            autoFocus={autofocus}
-            multiple={multiple}
-            accept={options.accept ? String(options.accept) : undefined}
-          />
-        </p>
-        <FilesInfo filesInfo={filesInfo} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <p>
+        <input
+          id={id}
+          type="file"
+          disabled={readonly || disabled}
+          onChange={handleChange}
+          defaultValue=""
+          autoFocus={autofocus}
+          multiple={multiple}
+          accept={options.accept ? String(options.accept) : undefined}
+        />
+      </p>
+      <FilesInfo filesInfo={filesInfo} />
+    </div>
+  );
 }
 
 export default FileWidget;

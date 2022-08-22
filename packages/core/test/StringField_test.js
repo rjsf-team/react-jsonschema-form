@@ -138,8 +138,10 @@ describe("StringField", () => {
         },
       });
 
-      Simulate.change(node.querySelector("input"), {
-        target: { value: "yo" },
+      act(() => {
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "yo" },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -356,9 +358,10 @@ describe("StringField", () => {
           enum: ["foo", "bar"],
         },
       });
-
-      Simulate.change(node.querySelector("select"), {
-        target: { value: "foo" },
+      act(() => {
+        Simulate.change(node.querySelector("select"), {
+          target: { value: "foo" },
+        });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "foo",
@@ -1906,12 +1909,13 @@ describe("StringField", () => {
         },
       });
 
-      Simulate.change(node.querySelector("[type=file]"), {
-        target: {
-          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
-        },
+      act(() => {
+        Simulate.change(node.querySelector("[type=file]"), {
+          target: {
+            files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+          },
+        });
       });
-
       await new Promise(setImmediate);
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
