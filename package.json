@@ -29,6 +29,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.1",
     "jest-environment-jsdom": "^27.5.1",
     "lerna": "^5.4.3",
