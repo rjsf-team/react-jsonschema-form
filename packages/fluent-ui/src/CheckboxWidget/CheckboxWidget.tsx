@@ -43,9 +43,12 @@ const CheckboxWidget = (props: WidgetProps) => {
     options,
   } = props;
 
-  const _onChange = React.useCallback((_, checked?: boolean): void => {
-    onChange(checked);
-  }, []);
+  const _onChange = React.useCallback(
+    (_, checked?: boolean): void => {
+      onChange(checked);
+    },
+    [onChange]
+  );
 
   const _onBlur = ({
     target: { value },

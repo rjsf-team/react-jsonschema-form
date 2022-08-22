@@ -63,8 +63,8 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         />
       )}
       {items.length > 0 &&
-        items.map((itemProps: ArrayFieldTemplateItemType) => (
-          <ArrayFieldItemTemplate {...itemProps} />
+        items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
+          <ArrayFieldItemTemplate key={key} {...itemProps} />
         ))}
       {canAdd && (
         <span style={rightJustify}>

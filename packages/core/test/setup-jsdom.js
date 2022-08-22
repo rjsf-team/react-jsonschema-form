@@ -1,4 +1,5 @@
-var { JSDOM } = require("jsdom");
+import { JSDOM } from "jsdom";
+import html from "html";
 
 // Setup the jsdom environment
 // @see https://github.com/facebook/react/issues/5046
@@ -15,5 +16,5 @@ global.atob = require("atob");
 
 // HTML debugging helper
 global.d = function d(node) {
-  console.log(require("html").prettyPrint(node.outerHTML, { indent_size: 2 }));
+  console.log(html.prettyPrint(node.outerHTML, { indent_size: 2 }));
 };

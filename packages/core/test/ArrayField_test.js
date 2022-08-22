@@ -1442,6 +1442,7 @@ describe("ArrayField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         readAsDataUrl() {},
       });
 
