@@ -1,4 +1,4 @@
-import React, { FocusEvent, useCallback } from "react";
+import React, { FocusEvent } from "react";
 import { WidgetProps } from "@rjsf/utils";
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
@@ -18,23 +18,17 @@ function TextareaWidget<T = any, F = any>({
   onBlur,
   onFocus,
 }: WidgetProps<T, F>) {
-  const handleChange = useCallback(
-    ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) =>
-      onChange(value === "" ? options.emptyValue : value),
-    [onChange, options.emptyValue]
-  );
+  const handleChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLTextAreaElement>) =>
+    onChange(value === "" ? options.emptyValue : value);
 
-  const handleBlur = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
-      onBlur(id, value),
-    [onBlur, id]
-  );
+  const handleBlur = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
+    onBlur(id, value);
 
-  const handleFocus = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
-      onFocus(id, value),
-    [id, onFocus]
-  );
+  const handleFocus = ({
+    target: { value },
+  }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
     <textarea

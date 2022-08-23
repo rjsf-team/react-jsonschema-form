@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { getInputProps, WidgetProps } from "@rjsf/utils";
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -44,21 +44,15 @@ export default function BaseInputTemplate<T = any, F = any>(
     inputValue = value == null ? "" : value;
   }
 
-  const _onChange = useCallback(
-    ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(value === "" ? options.emptyValue : value),
-    [onChange, options]
-  );
-  const _onBlur = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onBlur(id, value),
-    [onBlur, id]
-  );
-  const _onFocus = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onFocus(id, value),
-    [onFocus, id]
-  );
+  const _onChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
+    onChange(value === "" ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, value);
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
     <>

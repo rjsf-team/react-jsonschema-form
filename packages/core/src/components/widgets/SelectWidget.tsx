@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEvent, useCallback } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 
 function getValue(
@@ -37,29 +37,20 @@ function SelectWidget<T = any, F = any>({
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
 
-  const handleFocus = useCallback(
-    (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onFocus(id, processSelectValue(schema, newValue, options));
-    },
-    [onFocus, id, schema, multiple, options]
-  );
+  const handleFocus = (event: FocusEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event, multiple);
+    return onFocus(id, processSelectValue(schema, newValue, options));
+  };
 
-  const handleBlur = useCallback(
-    (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onBlur(id, processSelectValue(schema, newValue, options));
-    },
-    [onBlur, id, schema, multiple, options]
-  );
+  const handleBlur = (event: FocusEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event, multiple);
+    return onBlur(id, processSelectValue(schema, newValue, options));
+  };
 
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onChange(processSelectValue(schema, newValue, options));
-    },
-    [onChange, schema, multiple, options]
-  );
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event, multiple);
+    return onChange(processSelectValue(schema, newValue, options));
+  };
 
   return (
     <select
