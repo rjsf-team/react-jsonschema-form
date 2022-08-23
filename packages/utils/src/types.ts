@@ -9,11 +9,9 @@ export type GenericObjectType = {
 };
 
 /** Map the JSONSchema7 to our own type so that we can easily bump to JSONSchema8 at some future date and only have to
- * update this one type. Also, because we are supporting the non-standard `enumNames` prop in the code, define it here.
+ * update this one type.
  */
-export type RJSFSchema = JSONSchema7 & {
-  enumNames?: string[];
-};
+export type RJSFSchema = JSONSchema7;
 
 /** Map the JSONSchema7Definition to our own type so that we can easily bump to JSONSchema8Definition at some future
  * date and only have to update this one type.

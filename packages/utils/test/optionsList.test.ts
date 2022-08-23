@@ -7,18 +7,8 @@ describe("optionsList()", () => {
       enum: ["Opt1", "Opt2", "Opt3"],
     };
 
-    const enumNameSchema = {
-      ...enumSchema,
-      enumNames: ["Option1", "Option2", "Option3"],
-    };
     expect(optionsList(enumSchema)).toEqual(
       enumSchema.enum!.map((opt) => ({ label: opt, value: opt }))
-    );
-    expect(optionsList(enumNameSchema)).toEqual(
-      enumNameSchema.enum!.map((opt, index) => {
-        const label = enumNameSchema.enumNames[index] || opt;
-        return { label: label, value: opt };
-      })
     );
   });
   it("should generate options for a oneOf|anyOf schema", () => {

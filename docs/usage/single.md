@@ -63,26 +63,7 @@ render((
 
 ### Custom labels for `enum` fields
 
-This library supports a custom [`enumNames`](https://github.com/rjsf-team/react-jsonschema-form/issues/57) property for `enum` fields, which, however is not JSON-Schema compliant (see below for a compliant approach).
-The `enumNames` property allows defining custom labels for each option of an `enum`:
-
-```jsx
-import validator from "@rjsf/validator-ajv6";
-
-const schema = {
-  type: "number",
-  enum: [1, 2, 3],
-  enumNames: ["one", "two", "three"]
-};
-
-render((
-  <Form schema={schema} validator={validator} />
-), document.getElementById("app"));
-```
-
-#### Alternative JSON-Schema compliant approach
-
-JSON Schema has an alternative approach to enumerations using `anyOf`; react-jsonschema-form supports it as well.
+JSON Schema supports the following approaches to enumerations using `oneOf`/`anyOf`; react-jsonschema-form supports it as well.
 
 ```jsx
 import validator from "@rjsf/validator-ajv6";
@@ -111,6 +92,21 @@ const schema = {
         3
       ]
     }
+  ]
+};
+
+render((
+  <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
+```jsx
+const schema = {
+  "type": "number",
+  "oneOf": [
+    {"const": 1, "title": "one"},
+    {"const": 2, "title": "two"},
+    {"const": 3, "title": "three"}
   ]
 };
 
