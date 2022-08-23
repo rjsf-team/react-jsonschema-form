@@ -286,58 +286,62 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiBox-root emotion-2"
+        className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
       >
         <div
-          className="MuiGrid-root MuiGrid-container emotion-3"
+          className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-4"
+            className="MuiGrid-root MuiGrid-container emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-5"
+              className="MuiGrid-root MuiGrid-container emotion-4"
             >
               <div
-                className="MuiBox-root emotion-6"
+                className="MuiGrid-root MuiGrid-item emotion-5"
               >
-                <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-7"
-                  disabled={false}
-                  onBlur={[Function]}
-                  onClick={[Function]}
-                  onContextMenu={[Function]}
-                  onDragLeave={[Function]}
-                  onFocus={[Function]}
-                  onKeyDown={[Function]}
-                  onKeyUp={[Function]}
-                  onMouseDown={[Function]}
-                  onMouseLeave={[Function]}
-                  onMouseUp={[Function]}
-                  onTouchEnd={[Function]}
-                  onTouchMove={[Function]}
-                  onTouchStart={[Function]}
-                  tabIndex={0}
-                  title="Add Item"
-                  type="button"
+                <div
+                  className="MuiBox-root emotion-6"
                 >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
-                    data-testid="AddIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-7"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    title="Add Item"
+                    type="button"
                   >
-                    <path
-                      d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                      data-testid="AddIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1150,428 +1154,136 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiBox-root emotion-2"
+        className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
       >
         <div
-          className="MuiGrid-root MuiGrid-container emotion-3"
+          className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-4"
+            className="MuiGrid-root MuiGrid-container emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container emotion-4"
             >
               <div
-                className="MuiBox-root emotion-6"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+                  className="MuiBox-root emotion-6"
                 >
                   <div
-                    className="MuiBox-root emotion-2"
+                    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+                      className="MuiBox-root emotion-2"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root emotion-10"
+                        className="form-group field field-string"
                       >
                         <div
-                          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                            disabled={false}
-                            id="root_0"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value="a"
-                          />
-                          <fieldset
-                            aria-hidden={true}
-                            className="MuiOutlinedInput-notchedOutline emotion-13"
+                          <div
+                            className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
-                            <legend
-                              className="emotion-14"
+                            <div
+                              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
+                              onClick={[Function]}
                             >
-                              <span
-                                className="notranslate"
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
+                                disabled={false}
+                                id="root_0"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="a"
+                              />
+                              <fieldset
+                                aria-hidden={true}
+                                className="MuiOutlinedInput-notchedOutline emotion-13"
                               >
-                                ​
-                              </span>
-                            </legend>
-                          </fieldset>
+                                <legend
+                                  className="emotion-14"
+                                >
+                                  <span
+                                    className="notranslate"
+                                  >
+                                    ​
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item emotion-15"
-            >
-              <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-16"
-                disabled={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={-1}
-                title="Move up"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="ArrowUpwardIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-                  />
-                </svg>
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Move down"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="ArrowDownwardIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-                  />
-                </svg>
-                <span
-                  className="MuiTouchRipple-root emotion-20"
-                />
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Remove"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="RemoveIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 13H5v-2h14v2z"
-                  />
-                </svg>
-                <span
-                  className="MuiTouchRipple-root emotion-20"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container emotion-4"
-          >
-            <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
-            >
               <div
-                className="MuiBox-root emotion-6"
-              >
-                <div
-                  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
-                >
-                  <div
-                    className="MuiBox-root emotion-2"
-                  >
-                    <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
-                    >
-                      <div
-                        className="MuiFormControl-root MuiTextField-root emotion-10"
-                      >
-                        <div
-                          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
-                          onClick={[Function]}
-                        >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                            disabled={false}
-                            id="root_1"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value="b"
-                          />
-                          <fieldset
-                            aria-hidden={true}
-                            className="MuiOutlinedInput-notchedOutline emotion-13"
-                          >
-                            <legend
-                              className="emotion-14"
-                            >
-                              <span
-                                className="notranslate"
-                              >
-                                ​
-                              </span>
-                            </legend>
-                          </fieldset>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item emotion-15"
-            >
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Move up"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="ArrowUpwardIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-                  />
-                </svg>
-                <span
-                  className="MuiTouchRipple-root emotion-20"
-                />
-              </button>
-              <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-16"
-                disabled={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={-1}
-                title="Move down"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="ArrowDownwardIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-                  />
-                </svg>
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Remove"
-                type="button"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
-                  data-testid="RemoveIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 13H5v-2h14v2z"
-                  />
-                </svg>
-                <span
-                  className="MuiTouchRipple-root emotion-20"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container emotion-44"
-          >
-            <div
-              className="MuiGrid-root MuiGrid-item emotion-15"
-            >
-              <div
-                className="MuiBox-root emotion-46"
+                className="MuiGrid-root MuiGrid-item emotion-15"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-47"
+                  className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-16"
+                  disabled={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={-1}
+                  title="Move up"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="ArrowUpwardIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -1586,25 +1298,329 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchEnd={[Function]}
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
                   tabIndex={0}
-                  title="Add Item"
+                  title="Move down"
                   type="button"
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-48"
-                    data-testid="AddIcon"
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="ArrowDownwardIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                      d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
                     />
                   </svg>
                   <span
                     className="MuiTouchRipple-root emotion-20"
                   />
                 </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="RemoveIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                  <span
+                    className="MuiTouchRipple-root emotion-20"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-container emotion-4"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
+              >
+                <div
+                  className="MuiBox-root emotion-6"
+                >
+                  <div
+                    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+                  >
+                    <div
+                      className="MuiBox-root emotion-2"
+                    >
+                      <div
+                        className="form-group field field-string"
+                      >
+                        <div
+                          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+                        >
+                          <div
+                            className="MuiFormControl-root MuiTextField-root emotion-10"
+                          >
+                            <div
+                              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
+                              onClick={[Function]}
+                            >
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
+                                disabled={false}
+                                id="root_1"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="b"
+                              />
+                              <fieldset
+                                aria-hidden={true}
+                                className="MuiOutlinedInput-notchedOutline emotion-13"
+                              >
+                                <legend
+                                  className="emotion-14"
+                                >
+                                  <span
+                                    className="notranslate"
+                                  >
+                                    ​
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="MuiGrid-root MuiGrid-item emotion-15"
+              >
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-16"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Move up"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="ArrowUpwardIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                    />
+                  </svg>
+                  <span
+                    className="MuiTouchRipple-root emotion-20"
+                  />
+                </button>
+                <button
+                  className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-16"
+                  disabled={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={-1}
+                  title="Move down"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="ArrowDownwardIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="m20 12-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-17"
+                    data-testid="RemoveIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                  <span
+                    className="MuiTouchRipple-root emotion-20"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-container emotion-44"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-item emotion-15"
+              >
+                <div
+                  className="MuiBox-root emotion-46"
+                >
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium array-item-add emotion-47"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    title="Add Item"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-48"
+                      data-testid="AddIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                      />
+                    </svg>
+                    <span
+                      className="MuiTouchRipple-root emotion-20"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2041,71 +2057,75 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-array"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
-        variant="outlined"
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
         <div
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-labelledby="root"
-          className="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          id="root"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          role="button"
-          tabIndex={0}
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
+          variant="outlined"
         >
-          <span
-            className="notranslate"
-          >
-            ​
-          </span>
-        </div>
-        <input
-          aria-hidden={true}
-          autoFocus={false}
-          className="MuiSelect-nativeInput emotion-4"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
-          value=""
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
-          data-testid="ArrowDropDownIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7 10l5 5 5-5z"
-          />
-        </svg>
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-6"
-        >
-          <legend
-            className="emotion-7"
+          <div
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-labelledby="root"
+            className="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            id="root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            role="button"
+            tabIndex={0}
           >
             <span
               className="notranslate"
             >
               ​
             </span>
-          </legend>
-        </fieldset>
+          </div>
+          <input
+            aria-hidden={true}
+            autoFocus={false}
+            className="MuiSelect-nativeInput emotion-4"
+            disabled={false}
+            onAnimationStart={[Function]}
+            onChange={[Function]}
+            required={false}
+            tabIndex={-1}
+            value=""
+          />
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-6"
+          >
+            <legend
+              className="emotion-7"
+            >
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -2591,76 +2611,84 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiBox-root emotion-2"
+        className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
       >
         <div
-          className="MuiGrid-root MuiGrid-container emotion-3"
+          className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-4"
+            className="MuiGrid-root MuiGrid-container emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container emotion-4"
             >
               <div
-                className="MuiBox-root emotion-6"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+                  className="MuiBox-root emotion-6"
                 >
                   <div
-                    className="MuiBox-root emotion-2"
+                    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+                      className="MuiBox-root emotion-2"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root emotion-10"
+                        className="form-group field field-string"
                       >
                         <div
-                          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                            disabled={false}
-                            id="root_0"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value=""
-                          />
-                          <fieldset
-                            aria-hidden={true}
-                            className="MuiOutlinedInput-notchedOutline emotion-13"
+                          <div
+                            className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
-                            <legend
-                              className="emotion-14"
+                            <div
+                              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
+                              onClick={[Function]}
                             >
-                              <span
-                                className="notranslate"
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
+                                disabled={false}
+                                id="root_0"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value=""
+                              />
+                              <fieldset
+                                aria-hidden={true}
+                                className="MuiOutlinedInput-notchedOutline emotion-13"
                               >
-                                ​
-                              </span>
-                            </legend>
-                          </fieldset>
+                                <legend
+                                  className="emotion-14"
+                                >
+                                  <span
+                                    className="notranslate"
+                                  >
+                                    ​
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2668,67 +2696,71 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container emotion-4"
-          >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container emotion-4"
             >
               <div
-                className="MuiBox-root emotion-6"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
+                  className="MuiBox-root emotion-6"
                 >
                   <div
-                    className="MuiBox-root emotion-2"
+                    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 emotion-1"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+                      className="MuiBox-root emotion-2"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root emotion-10"
+                        className="form-group field field-number"
                       >
                         <div
-                          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                            disabled={false}
-                            id="root_1"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            step="any"
-                            type="number"
-                            value=""
-                          />
-                          <fieldset
-                            aria-hidden={true}
-                            className="MuiOutlinedInput-notchedOutline emotion-13"
+                          <div
+                            className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
-                            <legend
-                              className="emotion-14"
+                            <div
+                              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-11"
+                              onClick={[Function]}
                             >
-                              <span
-                                className="notranslate"
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiOutlinedInput-input emotion-12"
+                                disabled={false}
+                                id="root_1"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                step="any"
+                                type="number"
+                                value=""
+                              />
+                              <fieldset
+                                aria-hidden={true}
+                                className="MuiOutlinedInput-notchedOutline emotion-13"
                               >
-                                ​
-                              </span>
-                            </legend>
-                          </fieldset>
+                                <legend
+                                  className="emotion-14"
+                                >
+                                  <span
+                                    className="notranslate"
+                                  >
+                                    ​
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

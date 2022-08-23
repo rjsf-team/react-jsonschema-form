@@ -21,6 +21,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
 >;
 
 const WrapIfAdditional = ({
+  classNames,
   children,
   disabled,
   id,
@@ -37,7 +38,7 @@ const WrapIfAdditional = ({
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return children;
+    return <div className={classNames}>{children}</div>;
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
@@ -45,7 +46,7 @@ const WrapIfAdditional = ({
   const keyId = `${id}-key`;
 
   return (
-    <Row key={keyId}>
+    <Row className={classNames} key={keyId}>
       <Col xs={5}>
         <Form.Group>
           <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>

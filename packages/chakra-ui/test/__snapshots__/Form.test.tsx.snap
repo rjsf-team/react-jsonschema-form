@@ -87,54 +87,58 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-boolean"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <label
-        className="chakra-checkbox emotion-2"
-        onClick={[Function]}
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
       >
-        <input
-          aria-disabled={false}
-          checked={false}
-          className="chakra-checkbox__input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          style={
-            Object {
-              "border": "0px",
-              "clip": "rect(0px, 0px, 0px, 0px)",
-              "height": "1px",
-              "margin": "-1px",
-              "overflow": "hidden",
-              "padding": "0px",
-              "position": "absolute",
-              "whiteSpace": "nowrap",
-              "width": "1px",
+        <label
+          className="chakra-checkbox emotion-2"
+          onClick={[Function]}
+        >
+          <input
+            aria-disabled={false}
+            checked={false}
+            className="chakra-checkbox__input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            style={
+              Object {
+                "border": "0px",
+                "clip": "rect(0px, 0px, 0px, 0px)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0px",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
             }
-          }
-          type="checkbox"
-        />
-        <span
-          aria-hidden={true}
-          className="chakra-checkbox__control emotion-3"
-          onMouseDown={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-        />
-        
-      </label>
+            type="checkbox"
+          />
+          <span
+            aria-hidden={true}
+            className="chakra-checkbox__control emotion-3"
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+          />
+          
+        </label>
+      </div>
     </div>
   </div>
   <div
@@ -238,54 +242,58 @@ exports[`single fields checkbox field 2`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-boolean"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <label
-        className="chakra-checkbox emotion-2"
-        onClick={[Function]}
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
       >
-        <input
-          aria-disabled={false}
-          checked={false}
-          className="chakra-checkbox__input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          style={
-            Object {
-              "border": "0px",
-              "clip": "rect(0px, 0px, 0px, 0px)",
-              "height": "1px",
-              "margin": "-1px",
-              "overflow": "hidden",
-              "padding": "0px",
-              "position": "absolute",
-              "whiteSpace": "nowrap",
-              "width": "1px",
+        <label
+          className="chakra-checkbox emotion-2"
+          onClick={[Function]}
+        >
+          <input
+            aria-disabled={false}
+            checked={false}
+            className="chakra-checkbox__input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            style={
+              Object {
+                "border": "0px",
+                "clip": "rect(0px, 0px, 0px, 0px)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0px",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
             }
-          }
-          type="checkbox"
-        />
-        <span
-          aria-hidden={true}
-          className="chakra-checkbox__control emotion-3"
-          onMouseDown={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-        />
-        
-      </label>
+            type="checkbox"
+          />
+          <span
+            aria-hidden={true}
+            className="chakra-checkbox__control emotion-3"
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+          />
+          
+        </label>
+      </div>
     </div>
   </div>
   <div
@@ -418,225 +426,229 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-array"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <label
-        className="chakra-form__label emotion-2"
-        htmlFor="root"
-        id="root-label"
-      />
       <div
-        className="chakra-stack emotion-3"
+        className="chakra-form-control emotion-1"
+        role="group"
       >
         <label
-          className="chakra-checkbox emotion-4"
-          onClick={[Function]}
+          className="chakra-form__label emotion-2"
+          htmlFor="root"
+          id="root-label"
+        />
+        <div
+          className="chakra-stack emotion-3"
         >
-          <input
-            aria-disabled={false}
-            checked={false}
-            className="chakra-checkbox__input"
-            disabled={false}
-            id="root_0"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            style={
-              Object {
-                "border": "0px",
-                "clip": "rect(0px, 0px, 0px, 0px)",
-                "height": "1px",
-                "margin": "-1px",
-                "overflow": "hidden",
-                "padding": "0px",
-                "position": "absolute",
-                "whiteSpace": "nowrap",
-                "width": "1px",
-              }
-            }
-            type="checkbox"
-            value="foo"
-          />
-          <span
-            aria-hidden={true}
-            className="chakra-checkbox__control emotion-5"
-            onMouseDown={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-          />
-          <span
-            className="chakra-checkbox__label emotion-6"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
+          <label
+            className="chakra-checkbox emotion-4"
+            onClick={[Function]}
           >
-            <p
-              className="chakra-text emotion-0"
-            >
-              foo
-            </p>
-          </span>
-        </label>
-        <label
-          className="chakra-checkbox emotion-4"
-          onClick={[Function]}
-        >
-          <input
-            aria-disabled={false}
-            checked={false}
-            className="chakra-checkbox__input"
-            disabled={false}
-            id="root_1"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            style={
-              Object {
-                "border": "0px",
-                "clip": "rect(0px, 0px, 0px, 0px)",
-                "height": "1px",
-                "margin": "-1px",
-                "overflow": "hidden",
-                "padding": "0px",
-                "position": "absolute",
-                "whiteSpace": "nowrap",
-                "width": "1px",
+            <input
+              aria-disabled={false}
+              checked={false}
+              className="chakra-checkbox__input"
+              disabled={false}
+              id="root_0"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              style={
+                Object {
+                  "border": "0px",
+                  "clip": "rect(0px, 0px, 0px, 0px)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0px",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                }
               }
-            }
-            type="checkbox"
-            value="bar"
-          />
-          <span
-            aria-hidden={true}
-            className="chakra-checkbox__control emotion-5"
-            onMouseDown={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-          />
-          <span
-            className="chakra-checkbox__label emotion-6"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          >
-            <p
-              className="chakra-text emotion-0"
+              type="checkbox"
+              value="foo"
+            />
+            <span
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+            />
+            <span
+              className="chakra-checkbox__label emotion-6"
+              onMouseDown={[Function]}
+              onTouchStart={[Function]}
             >
-              bar
-            </p>
-          </span>
-        </label>
-        <label
-          className="chakra-checkbox emotion-4"
-          onClick={[Function]}
-        >
-          <input
-            aria-disabled={false}
-            checked={false}
-            className="chakra-checkbox__input"
-            disabled={false}
-            id="root_2"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            style={
-              Object {
-                "border": "0px",
-                "clip": "rect(0px, 0px, 0px, 0px)",
-                "height": "1px",
-                "margin": "-1px",
-                "overflow": "hidden",
-                "padding": "0px",
-                "position": "absolute",
-                "whiteSpace": "nowrap",
-                "width": "1px",
+              <p
+                className="chakra-text emotion-0"
+              >
+                foo
+              </p>
+            </span>
+          </label>
+          <label
+            className="chakra-checkbox emotion-4"
+            onClick={[Function]}
+          >
+            <input
+              aria-disabled={false}
+              checked={false}
+              className="chakra-checkbox__input"
+              disabled={false}
+              id="root_1"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              style={
+                Object {
+                  "border": "0px",
+                  "clip": "rect(0px, 0px, 0px, 0px)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0px",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                }
               }
-            }
-            type="checkbox"
-            value="fuzz"
-          />
-          <span
-            aria-hidden={true}
-            className="chakra-checkbox__control emotion-5"
-            onMouseDown={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-          />
-          <span
-            className="chakra-checkbox__label emotion-6"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          >
-            <p
-              className="chakra-text emotion-0"
+              type="checkbox"
+              value="bar"
+            />
+            <span
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+            />
+            <span
+              className="chakra-checkbox__label emotion-6"
+              onMouseDown={[Function]}
+              onTouchStart={[Function]}
             >
-              fuzz
-            </p>
-          </span>
-        </label>
-        <label
-          className="chakra-checkbox emotion-4"
-          onClick={[Function]}
-        >
-          <input
-            aria-disabled={false}
-            checked={false}
-            className="chakra-checkbox__input"
-            disabled={false}
-            id="root_3"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            style={
-              Object {
-                "border": "0px",
-                "clip": "rect(0px, 0px, 0px, 0px)",
-                "height": "1px",
-                "margin": "-1px",
-                "overflow": "hidden",
-                "padding": "0px",
-                "position": "absolute",
-                "whiteSpace": "nowrap",
-                "width": "1px",
+              <p
+                className="chakra-text emotion-0"
+              >
+                bar
+              </p>
+            </span>
+          </label>
+          <label
+            className="chakra-checkbox emotion-4"
+            onClick={[Function]}
+          >
+            <input
+              aria-disabled={false}
+              checked={false}
+              className="chakra-checkbox__input"
+              disabled={false}
+              id="root_2"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              style={
+                Object {
+                  "border": "0px",
+                  "clip": "rect(0px, 0px, 0px, 0px)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0px",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                }
               }
-            }
-            type="checkbox"
-            value="qux"
-          />
-          <span
-            aria-hidden={true}
-            className="chakra-checkbox__control emotion-5"
-            onMouseDown={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-          />
-          <span
-            className="chakra-checkbox__label emotion-6"
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-          >
-            <p
-              className="chakra-text emotion-0"
+              type="checkbox"
+              value="fuzz"
+            />
+            <span
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+            />
+            <span
+              className="chakra-checkbox__label emotion-6"
+              onMouseDown={[Function]}
+              onTouchStart={[Function]}
             >
-              qux
-            </p>
-          </span>
-        </label>
+              <p
+                className="chakra-text emotion-0"
+              >
+                fuzz
+              </p>
+            </span>
+          </label>
+          <label
+            className="chakra-checkbox emotion-4"
+            onClick={[Function]}
+          >
+            <input
+              aria-disabled={false}
+              checked={false}
+              className="chakra-checkbox__input"
+              disabled={false}
+              id="root_3"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              style={
+                Object {
+                  "border": "0px",
+                  "clip": "rect(0px, 0px, 0px, 0px)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0px",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                }
+              }
+              type="checkbox"
+              value="qux"
+            />
+            <span
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+            />
+            <span
+              className="chakra-checkbox__label emotion-6"
+              onMouseDown={[Function]}
+              onTouchStart={[Function]}
+            >
+              <p
+                className="chakra-text emotion-0"
+              >
+                qux
+              </p>
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -713,52 +725,60 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="emotion-1"
+      className="chakra-form-control emotion-0"
+      role="group"
     >
+      
       <div
-        className="emotion-0"
+        className="emotion-1"
       >
         <div
-          className="chakra-form-control emotion-0"
-          role="group"
+          className="emotion-0"
         >
           <div
-            className="chakra-form-control emotion-4"
-            role="group"
+            className="form-group field field-string"
           >
-            <label
-              className="chakra-form__label emotion-5"
-              htmlFor="root_my-field"
-              id="root_my-field-label"
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
             >
-              my-field
-            </label>
-            <input
-              autoFocus={false}
-              className="chakra-input emotion-0"
-              disabled={false}
-              id="root_my-field"
-              name="root_my-field"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              readOnly={false}
-              required={false}
-              type="text"
-              value=""
-            />
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-5"
+                  htmlFor="root_my-field"
+                  id="root_my-field-label"
+                >
+                  my-field
+                </label>
+                <input
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-7"
+              >
+                some description
+              </p>
+            </div>
           </div>
-          <p
-            className="chakra-text emotion-7"
-          >
-            some description
-          </p>
         </div>
       </div>
     </div>
@@ -836,52 +856,60 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="emotion-1"
+      className="chakra-form-control emotion-0"
+      role="group"
     >
+      
       <div
-        className="emotion-0"
+        className="emotion-1"
       >
         <div
-          className="chakra-form-control emotion-0"
-          role="group"
+          className="emotion-0"
         >
           <div
-            className="chakra-form-control emotion-4"
-            role="group"
+            className="form-group field field-string"
           >
-            <label
-              className="chakra-form__label emotion-5"
-              htmlFor="root_my-field"
-              id="root_my-field-label"
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
             >
-              my-field
-            </label>
-            <input
-              autoFocus={false}
-              className="chakra-input emotion-0"
-              disabled={false}
-              id="root_my-field"
-              name="root_my-field"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              readOnly={false}
-              required={false}
-              type="text"
-              value=""
-            />
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-5"
+                  htmlFor="root_my-field"
+                  id="root_my-field-label"
+                >
+                  my-field
+                </label>
+                <input
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-7"
+              >
+                some other description
+              </p>
+            </div>
           </div>
-          <p
-            className="chakra-text emotion-7"
-          >
-            some other description
-          </p>
         </div>
       </div>
     </div>
@@ -944,28 +972,32 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="color"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="color"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1026,28 +1058,32 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="date"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="date"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1108,28 +1144,32 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="datetime-local"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="datetime-local"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1192,18 +1232,22 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="emotion-1"
+      className="chakra-form-control emotion-0"
+      role="group"
     >
-      <input
-        id="root_my-field"
-        type="hidden"
-        value=""
-      />
+      
+      <div
+        className="emotion-1"
+      >
+        <input
+          id="root_my-field"
+          type="hidden"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1264,28 +1308,32 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1342,9 +1390,13 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
-  />
+    className="form-group field field-null"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    />
+  </div>
   <div
     className="emotion-1"
   >
@@ -1403,29 +1455,33 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-number"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        step="any"
-        type="number"
-        value={0}
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          step="any"
+          type="number"
+          value={0}
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1486,29 +1542,33 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-number"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        step="any"
-        type="number"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          step="any"
+          type="number"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1569,28 +1629,32 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="password"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="password"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -1715,125 +1779,129 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-boolean"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <label
-        className="chakra-form__label emotion-2"
-        htmlFor="root"
-        id="root-label"
-      />
       <div
-        className="chakra-radio-group emotion-0"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        role="radiogroup"
+        className="chakra-form-control emotion-1"
+        role="group"
       >
+        <label
+          className="chakra-form__label emotion-2"
+          htmlFor="root"
+          id="root-label"
+        />
         <div
-          className="chakra-stack emotion-4"
+          className="chakra-radio-group emotion-0"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          role="radiogroup"
         >
-          <label
-            className="chakra-radio emotion-5"
+          <div
+            className="chakra-stack emotion-4"
           >
-            <input
-              checked={false}
-              className="chakra-radio__input"
-              disabled={false}
-              id="root-radio-true"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                Object {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
-                }
-              }
-              type="radio"
-              value="true"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-radio__control emotion-6"
-              disabled={false}
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-radio__label emotion-7"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
+            <label
+              className="chakra-radio emotion-5"
             >
-              Yes
-            </span>
-          </label>
-          <label
-            className="chakra-radio emotion-5"
-          >
-            <input
-              checked={false}
-              className="chakra-radio__input"
-              disabled={false}
-              id="root-radio-false"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                Object {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
+              <input
+                checked={false}
+                className="chakra-radio__input"
+                disabled={false}
+                id="root-radio-true"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                readOnly={false}
+                required={false}
+                style={
+                  Object {
+                    "border": "0px",
+                    "clip": "rect(0px, 0px, 0px, 0px)",
+                    "height": "1px",
+                    "margin": "-1px",
+                    "overflow": "hidden",
+                    "padding": "0px",
+                    "position": "absolute",
+                    "whiteSpace": "nowrap",
+                    "width": "1px",
+                  }
                 }
-              }
-              type="radio"
-              value="false"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-radio__control emotion-6"
-              disabled={false}
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-radio__label emotion-7"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
+                type="radio"
+                value="true"
+              />
+              <span
+                aria-hidden={true}
+                className="chakra-radio__control emotion-6"
+                disabled={false}
+                onMouseDown={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+              />
+              <span
+                className="chakra-radio__label emotion-7"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+              >
+                Yes
+              </span>
+            </label>
+            <label
+              className="chakra-radio emotion-5"
             >
-              No
-            </span>
-          </label>
+              <input
+                checked={false}
+                className="chakra-radio__input"
+                disabled={false}
+                id="root-radio-false"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                readOnly={false}
+                required={false}
+                style={
+                  Object {
+                    "border": "0px",
+                    "clip": "rect(0px, 0px, 0px, 0px)",
+                    "height": "1px",
+                    "margin": "-1px",
+                    "overflow": "hidden",
+                    "padding": "0px",
+                    "position": "absolute",
+                    "whiteSpace": "nowrap",
+                    "width": "1px",
+                  }
+                }
+                type="radio"
+                value="false"
+              />
+              <span
+                aria-hidden={true}
+                className="chakra-radio__control emotion-6"
+                disabled={false}
+                onMouseDown={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+              />
+              <span
+                className="chakra-radio__label emotion-7"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+              >
+                No
+              </span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -1936,67 +2004,71 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
       <div
-        className="chakra-select__wrapper emotion-2"
+        className="chakra-form-control emotion-1"
+        role="group"
       >
-        <select
-          autoFocus={false}
-          className="chakra-select emotion-3"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          readOnly={false}
-          required={false}
-          value=""
+        <div
+          className="chakra-select__wrapper emotion-2"
         >
-          <option
+          <select
+            autoFocus={false}
+            className="chakra-select emotion-3"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
             value=""
           >
-             
-          </option>
-          <option
-            value="foo"
+            <option
+              value=""
+            >
+               
+            </option>
+            <option
+              value="foo"
+            >
+              foo
+            </option>
+            <option
+              value="bar"
+            >
+              bar
+            </option>
+          </select>
+          <div
+            className="chakra-select__icon-wrapper emotion-4"
           >
-            foo
-          </option>
-          <option
-            value="bar"
-          >
-            bar
-          </option>
-        </select>
-        <div
-          className="chakra-select__icon-wrapper emotion-4"
-        >
-          <svg
-            aria-hidden={true}
-            className="chakra-select__icon"
-            focusable={false}
-            role="presentation"
-            style={
-              Object {
-                "color": "currentColor",
-                "height": "1em",
-                "width": "1em",
+            <svg
+              aria-hidden={true}
+              className="chakra-select__icon"
+              focusable={false}
+              role="presentation"
+              style={
+                Object {
+                  "color": "currentColor",
+                  "height": "1em",
+                  "width": "1em",
+                }
               }
-            }
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
-              fill="currentColor"
-            />
-          </svg>
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -2059,85 +2131,89 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-integer"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
       <div
-        className="chakra-slider emotion-0"
-        label=""
-        onBlur={[Function]}
-        onFocus={[Function]}
-        style={
-          Object {
-            "WebkitTapHighlightColor": "rgba(0,0,0,0)",
-            "outline": 0,
-            "paddingBottom": 0,
-            "paddingTop": 0,
-            "position": "relative",
-            "touchAction": "none",
-            "userSelect": "none",
-          }
-        }
-        tabIndex={-1}
+        className="chakra-form-control emotion-1"
+        role="group"
       >
         <div
-          className="chakra-slider__track emotion-0"
-          id="slider-track-root"
-          style={
-            Object {
-              "position": "absolute",
-              "top": "50%",
-              "transform": "translateY(-50%)",
-              "width": "100%",
-            }
-          }
-        >
-          <div
-            className="chakra-slider__filled-track emotion-0"
-            style={
-              Object {
-                "left": "0%",
-                "position": "absolute",
-                "top": "50%",
-                "transform": "translateY(-50%)",
-                "width": "56.89655172413793%",
-              }
-            }
-          />
-        </div>
-        <div
-          aria-orientation="horizontal"
-          aria-valuemax={100}
-          aria-valuemin={42}
-          aria-valuenow={75}
-          className="chakra-slider__thumb emotion-0"
-          id="slider-thumb-root"
+          className="chakra-slider emotion-0"
+          label=""
           onBlur={[Function]}
           onFocus={[Function]}
-          onKeyDown={[Function]}
-          role="slider"
           style={
             Object {
-              "MozUserSelect": "none",
-              "WebkitUserSelect": "none",
-              "left": "calc(56.89655172413793% - 0px)",
-              "msUserSelect": "none",
-              "position": "absolute",
+              "WebkitTapHighlightColor": "rgba(0,0,0,0)",
+              "outline": 0,
+              "paddingBottom": 0,
+              "paddingTop": 0,
+              "position": "relative",
               "touchAction": "none",
               "userSelect": "none",
             }
           }
-          tabIndex={0}
-        />
-        <input
-          name="root"
-          type="hidden"
-          value={75}
-        />
+          tabIndex={-1}
+        >
+          <div
+            className="chakra-slider__track emotion-0"
+            id="slider-track-root"
+            style={
+              Object {
+                "position": "absolute",
+                "top": "50%",
+                "transform": "translateY(-50%)",
+                "width": "100%",
+              }
+            }
+          >
+            <div
+              className="chakra-slider__filled-track emotion-0"
+              style={
+                Object {
+                  "left": "0%",
+                  "position": "absolute",
+                  "top": "50%",
+                  "transform": "translateY(-50%)",
+                  "width": "56.89655172413793%",
+                }
+              }
+            />
+          </div>
+          <div
+            aria-orientation="horizontal"
+            aria-valuemax={100}
+            aria-valuemin={42}
+            aria-valuenow={75}
+            className="chakra-slider__thumb emotion-0"
+            id="slider-thumb-root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="slider"
+            style={
+              Object {
+                "MozUserSelect": "none",
+                "WebkitUserSelect": "none",
+                "left": "calc(56.89655172413793% - 0px)",
+                "msUserSelect": "none",
+                "position": "absolute",
+                "touchAction": "none",
+                "userSelect": "none",
+              }
+            }
+            tabIndex={0}
+          />
+          <input
+            name="root"
+            type="hidden"
+            value={75}
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -2195,20 +2271,24 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
-    <div>
-      <p>
-        <input
-          autoFocus={false}
-          defaultValue=""
-          disabled={false}
-          id="root"
-          onChange={[Function]}
-          type="file"
-        />
-      </p>
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div>
+        <p>
+          <input
+            autoFocus={false}
+            defaultValue=""
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            type="file"
+          />
+        </p>
+      </div>
     </div>
   </div>
   <div
@@ -2269,28 +2349,32 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="email"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="email"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -2351,28 +2435,32 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="url"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="url"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -2433,28 +2521,32 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -2515,28 +2607,32 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder="placeholder"
-        readOnly={false}
-        required={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="placeholder"
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -2597,27 +2693,31 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <textarea
-        autoFocus={false}
-        className="chakra-textarea emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <textarea
+          autoFocus={false}
+          className="chakra-textarea emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -2700,59 +2800,67 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-object"
   >
     <div
-      className="emotion-1"
-      id="root-title"
-    >
-      <h5
-        className="chakra-heading emotion-0"
-      >
-        Titre 1
-      </h5>
-      <hr
-        aria-orientation="horizontal"
-        className="chakra-divider emotion-3"
-      />
-    </div>
-    <div
-      className="emotion-4"
+      className="chakra-form-control emotion-0"
+      role="group"
     >
       <div
-        className="emotion-0"
+        className="emotion-1"
+        id="root-title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          Titre 1
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <div
+        className="emotion-4"
       >
         <div
-          className="chakra-form-control emotion-0"
-          role="group"
+          className="emotion-0"
         >
           <div
-            className="chakra-form-control emotion-7"
-            role="group"
+            className="form-group field field-string"
           >
-            <label
-              className="chakra-form__label emotion-8"
-              htmlFor="root_title"
-              id="root_title-label"
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
             >
-              title
-            </label>
-            <input
-              autoFocus={false}
-              className="chakra-input emotion-0"
-              disabled={false}
-              id="root_title"
-              name="root_title"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              readOnly={false}
-              required={false}
-              type="text"
-              value=""
-            />
+              <div
+                className="chakra-form-control emotion-7"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-8"
+                  htmlFor="root_title"
+                  id="root_title-label"
+                >
+                  title
+                </label>
+                <input
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_title"
+                  name="root_title"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2812,30 +2920,34 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-undefined"
   >
     <div
-      className="unsupported-field"
+      className="chakra-form-control emotion-0"
+      role="group"
     >
-      <p>
-        Unsupported field schema
-        <span>
-           for
-           field 
-          <code>
-            root
-          </code>
-        </span>
-        <em>
-          : 
-          Unknown field type undefined
-        </em>
-        .
-      </p>
-      <pre>
-        {}
-      </pre>
+      <div
+        className="unsupported-field"
+      >
+        <p>
+          Unsupported field schema
+          <span>
+             for
+             field 
+            <code>
+              root
+            </code>
+          </span>
+          <em>
+            : 
+            Unknown field type undefined
+          </em>
+          .
+        </p>
+        <pre>
+          {}
+        </pre>
+      </div>
     </div>
   </div>
   <div
@@ -2959,85 +3071,89 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-number"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
       <div
-        className="chakra-numberinput emotion-2"
-        value=""
+        className="chakra-form-control emotion-1"
+        role="group"
       >
-        <input
-          aria-readonly={false}
-          aria-required={false}
-          aria-valuemax={9007199254740991}
-          aria-valuemin={-9007199254740991}
-          autoComplete="off"
-          autoCorrect="off"
-          className="chakra-numberinput__field emotion-3"
-          disabled={false}
-          id="root"
-          inputMode="decimal"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          pattern="[0-9]*(.[0-9]+)?"
-          readOnly={false}
-          required={false}
-          role="spinbutton"
-          type="text"
-          value=""
-        />
         <div
-          aria-hidden={true}
-          className="emotion-4"
+          className="chakra-numberinput emotion-2"
+          value=""
         >
-          <div
-            className="emotion-5"
+          <input
+            aria-readonly={false}
+            aria-required={false}
+            aria-valuemax={9007199254740991}
+            aria-valuemin={-9007199254740991}
+            autoComplete="off"
+            autoCorrect="off"
+            className="chakra-numberinput__field emotion-3"
             disabled={false}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              className="chakra-icon emotion-6"
-              focusable={false}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12.8,5.4c-0.377-0.504-1.223-0.504-1.6,0l-9,12c-0.228,0.303-0.264,0.708-0.095,1.047 C2.275,18.786,2.621,19,3,19h18c0.379,0,0.725-0.214,0.895-0.553c0.169-0.339,0.133-0.744-0.095-1.047L12.8,5.4z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+            id="root"
+            inputMode="decimal"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            pattern="[0-9]*(.[0-9]+)?"
+            readOnly={false}
+            required={false}
+            role="spinbutton"
+            type="text"
+            value=""
+          />
           <div
-            className="emotion-5"
-            disabled={false}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            role="button"
-            tabIndex={-1}
+            aria-hidden={true}
+            className="emotion-4"
           >
-            <svg
-              className="chakra-icon emotion-6"
-              focusable={false}
-              viewBox="0 0 24 24"
+            <div
+              className="emotion-5"
+              disabled={false}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              role="button"
+              tabIndex={-1}
             >
-              <path
-                d="M21,5H3C2.621,5,2.275,5.214,2.105,5.553C1.937,5.892,1.973,6.297,2.2,6.6l9,12 c0.188,0.252,0.485,0.4,0.8,0.4s0.611-0.148,0.8-0.4l9-12c0.228-0.303,0.264-0.708,0.095-1.047C21.725,5.214,21.379,5,21,5z"
-                fill="currentColor"
-              />
-            </svg>
+              <svg
+                className="chakra-icon emotion-6"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12.8,5.4c-0.377-0.504-1.223-0.504-1.6,0l-9,12c-0.228,0.303-0.264,0.708-0.095,1.047 C2.275,18.786,2.621,19,3,19h18c0.379,0,0.725-0.214,0.895-0.553c0.169-0.339,0.133-0.744-0.095-1.047L12.8,5.4z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            <div
+              className="emotion-5"
+              disabled={false}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              role="button"
+              tabIndex={-1}
+            >
+              <svg
+                className="chakra-icon emotion-6"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M21,5H3C2.621,5,2.275,5.214,2.105,5.553C1.937,5.892,1.973,6.297,2.2,6.6l9,12 c0.188,0.252,0.485,0.4,0.8,0.4s0.611-0.148,0.8-0.4l9-12c0.228-0.303,0.264-0.708,0.095-1.047C21.725,5.214,21.379,5,21,5z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -3101,28 +3217,32 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-form-control emotion-0"
-    role="group"
+    className="form-group field field-string"
   >
     <div
-      className="chakra-form-control emotion-1"
+      className="chakra-form-control emotion-0"
       role="group"
     >
-      <input
-        autoFocus={false}
-        className="chakra-input emotion-0"
-        disabled={false}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        required={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div

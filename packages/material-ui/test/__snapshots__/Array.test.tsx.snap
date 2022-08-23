@@ -7,60 +7,64 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+      className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-1"
+        className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
       >
         <div
-          className="MuiGrid-root MuiGrid-container"
+          className="MuiBox-root MuiBox-root-1"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+            className="MuiGrid-root MuiGrid-container"
           >
             <div
-              className="MuiGrid-root MuiGrid-item"
+              className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
             >
               <div
-                className="MuiBox-root MuiBox-root-2"
+                className="MuiGrid-root MuiGrid-item"
               >
-                <button
-                  className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
-                  disabled={false}
-                  onBlur={[Function]}
-                  onClick={[Function]}
-                  onDragLeave={[Function]}
-                  onFocus={[Function]}
-                  onKeyDown={[Function]}
-                  onKeyUp={[Function]}
-                  onMouseDown={[Function]}
-                  onMouseLeave={[Function]}
-                  onMouseUp={[Function]}
-                  onTouchEnd={[Function]}
-                  onTouchMove={[Function]}
-                  onTouchStart={[Function]}
-                  tabIndex={0}
-                  title="Add Item"
-                  type="button"
+                <div
+                  className="MuiBox-root MuiBox-root-2"
                 >
-                  <span
-                    className="MuiIconButton-label"
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    title="Add Item"
+                    type="button"
                   >
-                    <svg
-                      aria-hidden={true}
-                      className="MuiSvgIcon-root"
-                      focusable="false"
-                      viewBox="0 0 24 24"
+                    <span
+                      className="MuiIconButton-label"
                     >
-                      <path
-                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -105,412 +109,124 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+      className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-11"
+        className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
       >
         <div
-          className="MuiGrid-root MuiGrid-container"
+          className="MuiBox-root MuiBox-root-11"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
+            className="MuiGrid-root MuiGrid-container"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
             >
               <div
-                className="MuiBox-root MuiBox-root-12"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+                  className="MuiBox-root MuiBox-root-12"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-13"
+                    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
+                      className="MuiBox-root MuiBox-root-13"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root"
+                        className="form-group field field-string"
                       >
                         <div
-                          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiInput-input"
-                            disabled={false}
-                            id="root_0"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value="a"
-                          />
+                          <div
+                            className="MuiFormControl-root MuiTextField-root"
+                          >
+                            <div
+                              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                              onClick={[Function]}
+                            >
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiInput-input"
+                                disabled={false}
+                                id="root_0"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="a"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item"
-            >
-              <button
-                className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
-                disabled={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={-1}
-                title="Move up"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Move down"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-                    />
-                  </svg>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Remove"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M19 13H5v-2h14v2z"
-                    />
-                  </svg>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
-          >
-            <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
-            >
               <div
-                className="MuiBox-root MuiBox-root-14"
-              >
-                <div
-                  className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
-                >
-                  <div
-                    className="MuiBox-root MuiBox-root-15"
-                  >
-                    <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
-                    >
-                      <div
-                        className="MuiFormControl-root MuiTextField-root"
-                      >
-                        <div
-                          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                          onClick={[Function]}
-                        >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiInput-input"
-                            disabled={false}
-                            id="root_1"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value="b"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item"
-            >
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Move up"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-                    />
-                  </svg>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
-                disabled={true}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={-1}
-                title="Move down"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
-                tabIndex={0}
-                title="Remove"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M19 13H5v-2h14v2z"
-                    />
-                  </svg>
-                </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
-          >
-            <div
-              className="MuiGrid-root MuiGrid-item"
-            >
-              <div
-                className="MuiBox-root MuiBox-root-16"
+                className="MuiGrid-root MuiGrid-item"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
+                  className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
+                  disabled={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={-1}
+                  title="Move up"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                   disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -524,8 +240,17 @@ exports[`array fields array icons 1`] = `
                   onTouchEnd={[Function]}
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
                   tabIndex={0}
-                  title="Add Item"
+                  title="Move down"
                   type="button"
                 >
                   <span
@@ -533,12 +258,12 @@ exports[`array fields array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="MuiSvgIcon-root"
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                       focusable="false"
                       viewBox="0 0 24 24"
                     >
                       <path
-                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                        d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
                       />
                     </svg>
                   </span>
@@ -546,6 +271,297 @@ exports[`array fields array icons 1`] = `
                     className="MuiTouchRipple-root"
                   />
                 </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 13H5v-2h14v2z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    className="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
+              >
+                <div
+                  className="MuiBox-root MuiBox-root-14"
+                >
+                  <div
+                    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+                  >
+                    <div
+                      className="MuiBox-root MuiBox-root-15"
+                    >
+                      <div
+                        className="form-group field field-string"
+                      >
+                        <div
+                          className="MuiFormControl-root MuiFormControl-fullWidth"
+                        >
+                          <div
+                            className="MuiFormControl-root MuiTextField-root"
+                          >
+                            <div
+                              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                              onClick={[Function]}
+                            >
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiInput-input"
+                                disabled={false}
+                                id="root_1"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="b"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="MuiGrid-root MuiGrid-item"
+              >
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Move up"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    className="MuiTouchRipple-root"
+                  />
+                </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall Mui-disabled"
+                  disabled={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={-1}
+                  title="Move down"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "flex": 1,
+                      "fontWeight": "bold",
+                      "minWidth": 0,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
+                    }
+                  }
+                  tabIndex={0}
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 13H5v-2h14v2z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    className="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-item"
+              >
+                <div
+                  className="MuiBox-root MuiBox-root-16"
+                >
+                  <button
+                    className="MuiButtonBase-root MuiIconButton-root array-item-add MuiIconButton-colorSecondary"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onDragLeave={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex={0}
+                    title="Add Item"
+                    type="button"
+                  >
+                    <span
+                      className="MuiIconButton-label"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      className="MuiTouchRipple-root"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -593,55 +609,59 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
+    className="form-group field field-array"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root"
+      className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root"
       >
         <div
-          aria-haspopup="listbox"
-          aria-labelledby="root"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-          id="root"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          role="button"
-          tabIndex={0}
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
         >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
+          <div
+            aria-haspopup="listbox"
+            aria-labelledby="root"
+            className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+            id="root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
               }
-            }
+            />
+          </div>
+          <input
+            aria-hidden={true}
+            autoFocus={false}
+            className="MuiSelect-nativeInput"
+            onAnimationStart={[Function]}
+            onChange={[Function]}
+            required={false}
+            tabIndex={-1}
+            value=""
           />
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSelect-icon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
         </div>
-        <input
-          aria-hidden={true}
-          autoFocus={false}
-          className="MuiSelect-nativeInput"
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
-          value=""
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSelect-icon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7 10l5 5 5-5z"
-          />
-        </svg>
       </div>
     </div>
   </div>
@@ -682,62 +702,70 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth"
+    className="form-group field field-array"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+      className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-4"
+        className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
       >
         <div
-          className="MuiGrid-root MuiGrid-container"
+          className="MuiBox-root MuiBox-root-4"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
+            className="MuiGrid-root MuiGrid-container"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
             >
               <div
-                className="MuiBox-root MuiBox-root-5"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+                  className="MuiBox-root MuiBox-root-5"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-6"
+                    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
+                      className="MuiBox-root MuiBox-root-6"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root"
+                        className="form-group field field-string"
                       >
                         <div
-                          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiInput-input"
-                            disabled={false}
-                            id="root_0"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            type="text"
-                            value=""
-                          />
+                          <div
+                            className="MuiFormControl-root MuiTextField-root"
+                          >
+                            <div
+                              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                              onClick={[Function]}
+                            >
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiInput-input"
+                                disabled={false}
+                                id="root_0"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -745,53 +773,57 @@ exports[`array fields fixed array 1`] = `
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
-          >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
-              style={
-                Object {
-                  "overflow": "auto",
-                }
-              }
+              className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center"
             >
               <div
-                className="MuiBox-root MuiBox-root-7"
+                className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+                style={
+                  Object {
+                    "overflow": "auto",
+                  }
+                }
               >
                 <div
-                  className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+                  className="MuiBox-root MuiBox-root-7"
                 >
                   <div
-                    className="MuiBox-root MuiBox-root-8"
+                    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
                   >
                     <div
-                      className="MuiFormControl-root MuiFormControl-fullWidth"
+                      className="MuiBox-root MuiBox-root-8"
                     >
                       <div
-                        className="MuiFormControl-root MuiTextField-root"
+                        className="form-group field field-number"
                       >
                         <div
-                          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-                          onClick={[Function]}
+                          className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
-                          <input
-                            aria-invalid={false}
-                            autoFocus={false}
-                            className="MuiInputBase-input MuiInput-input"
-                            disabled={false}
-                            id="root_1"
-                            onAnimationStart={[Function]}
-                            onBlur={[Function]}
-                            onChange={[Function]}
-                            onFocus={[Function]}
-                            placeholder=""
-                            required={true}
-                            step="any"
-                            type="number"
-                            value=""
-                          />
+                          <div
+                            className="MuiFormControl-root MuiTextField-root"
+                          >
+                            <div
+                              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                              onClick={[Function]}
+                            >
+                              <input
+                                aria-invalid={false}
+                                autoFocus={false}
+                                className="MuiInputBase-input MuiInput-input"
+                                disabled={false}
+                                id="root_1"
+                                onAnimationStart={[Function]}
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                step="any"
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

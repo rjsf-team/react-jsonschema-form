@@ -25,6 +25,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
 const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   const {
     children,
+    classNames,
     disabled,
     id,
     label,
@@ -38,7 +39,7 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
-    return <>{children}</>;
+    return <div className={classNames}>{children}</div>;
   }
   const keyLabel = `${label} Key`;
 
@@ -46,7 +47,7 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     onKeyChange(target.value);
 
   return (
-    <Grid key={`${id}-key`} alignItems="center" gap={2}>
+    <Grid key={`${id}-key`} className={classNames} alignItems="center" gap={2}>
       <GridItem>
         <FormControl isRequired={required}>
           <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>
