@@ -5,6 +5,7 @@ import {
   optionsList,
   FieldProps,
   RJSFSchemaDefinition,
+  EnumOptionsType,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 
@@ -35,7 +36,7 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
   const { widget = "checkbox", ...options } = getUiOptions<T, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
-  let enumOptions;
+  let enumOptions: EnumOptionsType[] | undefined = [];
 
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList({
@@ -52,9 +53,21 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
         .filter((o) => o) as RJSFSchemaDefinition[], // cast away the error that typescript can't grok is fixed
     });
   } else {
-    enumOptions = optionsList({
-      enum: schema.enum || [true, false],
-    });
+    schema.enum = schema.enum ?? [true, false];
+    if (
+      schema.enum &&
+      schema.enum.length === 2 &&
+      schema.enum.every((v) => typeof v === "boolean")
+    ) {
+      enumOptions = [
+        { value: schema.enum[0], label: schema.enum[0] ? "Yes" : "No" },
+        { value: schema.enum[1], label: schema.enum[1] ? "Yes" : "No" },
+      ];
+    } else {
+      enumOptions = optionsList({
+        enum: schema.enum,
+      });
+    }
   }
 
   return (
