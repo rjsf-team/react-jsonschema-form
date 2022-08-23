@@ -268,59 +268,63 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-boolean"
   >
-    <label
-      className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      <span
-        className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
-        onBlur={[Function]}
-        onContextMenu={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={null}
+      <label
+        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="PrivateSwitchBase-input emotion-3"
-          data-indeterminate={false}
-          disabled={false}
-          id="root"
-          onChange={[Function]}
-          required={false}
-          type="checkbox"
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-          data-testid="CheckBoxOutlineBlankIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-          />
-        </svg>
         <span
-          className="MuiTouchRipple-root emotion-5"
-        />
-      </span>
-      <span
-        className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-6"
-      >
-        
-      </span>
-    </label>
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
+          onBlur={[Function]}
+          onContextMenu={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="PrivateSwitchBase-input emotion-3"
+            data-indeterminate={false}
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          <span
+            className="MuiTouchRipple-root emotion-5"
+          />
+        </span>
+        <span
+          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-6"
+        >
+          
+        </span>
+      </label>
+    </div>
   </div>
   <div
     className="MuiBox-root emotion-7"
@@ -608,56 +612,60 @@ exports[`single fields checkbox field 2`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-boolean"
   >
-    <label
-      className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      <span
-        className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
-        onBlur={[Function]}
-        onContextMenu={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={null}
+      <label
+        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-1"
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="PrivateSwitchBase-input emotion-3"
-          data-indeterminate={false}
-          disabled={false}
-          id="root"
-          onChange={[Function]}
-          required={false}
-          type="checkbox"
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-          data-testid="CheckBoxOutlineBlankIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
+        <span
+          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-2"
+          onBlur={[Function]}
+          onContextMenu={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
         >
-          <path
-            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="PrivateSwitchBase-input emotion-3"
+            data-indeterminate={false}
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            required={false}
+            type="checkbox"
           />
-        </svg>
-      </span>
-      <span
-        className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-5"
-      >
-        
-      </span>
-    </label>
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+            data-testid="CheckBoxOutlineBlankIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+        <span
+          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-5"
+        >
+          
+        </span>
+      </label>
+    </div>
   </div>
   <div
     className="MuiBox-root emotion-6"
@@ -991,216 +999,220 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-array"
   >
-    <label
-      className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
-      htmlFor="root"
-    />
     <div
-      className="MuiFormGroup-root emotion-2"
-      id="root"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
+        className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+        htmlFor="root"
+      />
+      <div
+        className="MuiFormGroup-root emotion-2"
+        id="root"
       >
-        <span
-          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            data-indeterminate={false}
-            disabled={false}
-            id="root_0"
-            onChange={[Function]}
-            type="checkbox"
-          />
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
-            data-testid="CheckBoxOutlineBlankIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-            />
-          </svg>
           <span
-            className="MuiTouchRipple-root emotion-7"
-          />
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
-        >
-          foo
-        </span>
-      </label>
-      <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
-      >
-        <span
-          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
-        >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            data-indeterminate={false}
-            disabled={false}
-            id="root_1"
-            onChange={[Function]}
-            type="checkbox"
-          />
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
-            data-testid="CheckBoxOutlineBlankIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+            className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
           >
-            <path
-              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            <input
+              autoFocus={false}
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              data-indeterminate={false}
+              disabled={false}
+              id="root_0"
+              onChange={[Function]}
+              type="checkbox"
             />
-          </svg>
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+              data-testid="CheckBoxOutlineBlankIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <span
+              className="MuiTouchRipple-root emotion-7"
+            />
+          </span>
           <span
-            className="MuiTouchRipple-root emotion-7"
-          />
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
-        >
-          bar
-        </span>
-      </label>
-      <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
-      >
-        <span
-          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
-        >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            data-indeterminate={false}
-            disabled={false}
-            id="root_2"
-            onChange={[Function]}
-            type="checkbox"
-          />
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
-            data-testid="CheckBoxOutlineBlankIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
           >
-            <path
-              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-            />
-          </svg>
+            foo
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
           <span
-            className="MuiTouchRipple-root emotion-7"
-          />
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
-        >
-          fuzz
-        </span>
-      </label>
-      <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
-      >
-        <span
-          className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
-        >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            data-indeterminate={false}
-            disabled={false}
-            id="root_3"
-            onChange={[Function]}
-            type="checkbox"
-          />
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
-            data-testid="CheckBoxOutlineBlankIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+            className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
           >
-            <path
-              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            <input
+              autoFocus={false}
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              data-indeterminate={false}
+              disabled={false}
+              id="root_1"
+              onChange={[Function]}
+              type="checkbox"
             />
-          </svg>
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+              data-testid="CheckBoxOutlineBlankIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <span
+              className="MuiTouchRipple-root emotion-7"
+            />
+          </span>
           <span
-            className="MuiTouchRipple-root emotion-7"
-          />
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
+          >
+            bar
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
         >
-          qux
-        </span>
-      </label>
+          <span
+            className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              data-indeterminate={false}
+              disabled={false}
+              id="root_2"
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+              data-testid="CheckBoxOutlineBlankIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <span
+              className="MuiTouchRipple-root emotion-7"
+            />
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
+          >
+            fuzz
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
+          <span
+            className="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              data-indeterminate={false}
+              disabled={false}
+              id="root_3"
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+              data-testid="CheckBoxOutlineBlankIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <span
+              className="MuiTouchRipple-root emotion-7"
+            />
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-8"
+          >
+            qux
+          </span>
+        </label>
+      </div>
     </div>
   </div>
   <div
@@ -1726,77 +1738,85 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-object"
   >
-    
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
-      style={
-        Object {
-          "marginTop": "10px",
-        }
-      }
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
+      
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
           Object {
-            "marginBottom": "10px",
+            "marginTop": "10px",
           }
         }
       >
         <div
-          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
           <div
-            className="MuiFormControl-root MuiTextField-root emotion-4"
+            className="form-group field field-string"
           >
-            <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
-              data-shrink={false}
-              htmlFor="root_my-field"
-              id="root_my-field-label"
-            >
-              my-field
-            </label>
             <div
-              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
-              onClick={[Function]}
+              className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
             >
-              <input
-                aria-invalid={false}
-                autoFocus={false}
-                className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-                disabled={false}
-                id="root_my-field"
-                onAnimationStart={[Function]}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                required={false}
-                type="text"
-                value=""
-              />
-              <fieldset
-                aria-hidden={true}
-                className="MuiOutlinedInput-notchedOutline emotion-8"
+              <div
+                className="MuiFormControl-root MuiTextField-root emotion-4"
               >
-                <legend
-                  className="emotion-9"
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  data-shrink={false}
+                  htmlFor="root_my-field"
+                  id="root_my-field-label"
                 >
-                  <span>
-                    my-field
-                  </span>
-                </legend>
-              </fieldset>
+                  my-field
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
+                    disabled={false}
+                    id="root_my-field"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                  <fieldset
+                    aria-hidden={true}
+                    className="MuiOutlinedInput-notchedOutline emotion-8"
+                  >
+                    <legend
+                      className="emotion-9"
+                    >
+                      <span>
+                        my-field
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
+              <span
+                className="MuiTypography-root MuiTypography-caption emotion-10"
+              >
+                some description
+              </span>
             </div>
           </div>
-          <span
-            className="MuiTypography-root MuiTypography-caption emotion-10"
-          >
-            some description
-          </span>
         </div>
       </div>
     </div>
@@ -2312,77 +2332,85 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-object"
   >
-    
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
-      style={
-        Object {
-          "marginTop": "10px",
-        }
-      }
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
+      
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
           Object {
-            "marginBottom": "10px",
+            "marginTop": "10px",
           }
         }
       >
         <div
-          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
           <div
-            className="MuiFormControl-root MuiTextField-root emotion-4"
+            className="form-group field field-string"
           >
-            <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
-              data-shrink={false}
-              htmlFor="root_my-field"
-              id="root_my-field-label"
-            >
-              my-field
-            </label>
             <div
-              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
-              onClick={[Function]}
+              className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
             >
-              <input
-                aria-invalid={false}
-                autoFocus={false}
-                className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-                disabled={false}
-                id="root_my-field"
-                onAnimationStart={[Function]}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                required={false}
-                type="text"
-                value=""
-              />
-              <fieldset
-                aria-hidden={true}
-                className="MuiOutlinedInput-notchedOutline emotion-8"
+              <div
+                className="MuiFormControl-root MuiTextField-root emotion-4"
               >
-                <legend
-                  className="emotion-9"
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  data-shrink={false}
+                  htmlFor="root_my-field"
+                  id="root_my-field-label"
                 >
-                  <span>
-                    my-field
-                  </span>
-                </legend>
-              </fieldset>
+                  my-field
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
+                    disabled={false}
+                    id="root_my-field"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                  <fieldset
+                    aria-hidden={true}
+                    className="MuiOutlinedInput-notchedOutline emotion-8"
+                  >
+                    <legend
+                      className="emotion-9"
+                    >
+                      <span>
+                        my-field
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
+              <span
+                className="MuiTypography-root MuiTypography-caption emotion-10"
+              >
+                some other description
+              </span>
             </div>
           </div>
-          <span
-            className="MuiTypography-root MuiTypography-caption emotion-10"
-          >
-            some other description
-          </span>
         </div>
       </div>
     </div>
@@ -2748,44 +2776,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="color"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="color"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -3141,44 +3173,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="date"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="date"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -3543,44 +3579,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="datetime-local"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="datetime-local"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -3761,22 +3801,26 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-object"
   >
-    
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
-      style={
-        Object {
-          "marginTop": "10px",
-        }
-      }
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      <input
-        id="root_my-field"
-        type="hidden"
-        value=""
-      />
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <input
+          id="root_my-field"
+          type="hidden"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div
@@ -4182,45 +4226,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-2"
-        data-shrink={false}
-        htmlFor="root"
-      />
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-3"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-4"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="text"
-          value=""
+        <label
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-2"
+          data-shrink={false}
+          htmlFor="root"
         />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-5"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-3"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-6"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-4"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-5"
           >
-            <span />
-          </legend>
-        </fieldset>
+            <legend
+              className="emotion-6"
+            >
+              <span />
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -4383,8 +4431,12 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
-  />
+    className="form-group field field-null"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    />
+  </div>
   <div
     className="MuiBox-root emotion-1"
   >
@@ -4737,45 +4789,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-number"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          step="any"
-          type="number"
-          value={0}
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value={0}
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -5140,45 +5196,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-number"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          step="any"
-          type="number"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -5534,44 +5594,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="password"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="password"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -5931,141 +5995,145 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-boolean"
   >
-    <label
-      className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
-      htmlFor="root"
-    />
     <div
-      className="MuiFormGroup-root emotion-2"
-      id="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      role="radiogroup"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
+        className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+        htmlFor="root"
+      />
+      <div
+        className="MuiFormGroup-root emotion-2"
+        id="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        role="radiogroup"
       >
-        <span
-          className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
         >
-          <input
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            disabled={false}
-            name="root-0"
-            onChange={[Function]}
-            type="radio"
-            value="true"
-          />
           <span
-            className="emotion-6"
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
           >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
-              data-testid="RadioButtonUncheckedIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={false}
+              name="root-0"
+              onChange={[Function]}
+              type="radio"
+              value="true"
+            />
+            <span
+              className="emotion-6"
             >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-              />
-            </svg>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
-              data-testid="RadioButtonCheckedIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-              />
-            </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
           </span>
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-9"
-        >
-          Yes
-        </span>
-      </label>
-      <label
-        className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
-      >
-        <span
-          className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
-          onBlur={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
-        >
-          <input
-            checked={false}
-            className="PrivateSwitchBase-input emotion-5"
-            disabled={false}
-            name="root-1"
-            onChange={[Function]}
-            type="radio"
-            value="false"
-          />
           <span
-            className="emotion-6"
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-9"
           >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
-              data-testid="RadioButtonUncheckedIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-              />
-            </svg>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
-              data-testid="RadioButtonCheckedIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-              />
-            </svg>
+            Yes
           </span>
-        </span>
-        <span
-          className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-9"
+        </label>
+        <label
+          className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-3"
         >
-          No
-        </span>
-      </label>
+          <span
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={false}
+              name="root-1"
+              onChange={[Function]}
+              type="radio"
+              value="false"
+            />
+            <span
+              className="emotion-6"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-9"
+          >
+            No
+          </span>
+        </label>
+      </div>
     </div>
   </div>
   <div
@@ -6494,71 +6562,75 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
-        variant="outlined"
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
         <div
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-labelledby="root"
-          className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          id="root"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          role="button"
-          tabIndex={0}
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
+          variant="outlined"
         >
-          <span
-            className="notranslate"
-          >
-            ​
-          </span>
-        </div>
-        <input
-          aria-hidden={true}
-          autoFocus={false}
-          className="MuiSelect-nativeInput emotion-4"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
-          value=""
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
-          data-testid="ArrowDropDownIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7 10l5 5 5-5z"
-          />
-        </svg>
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-6"
-        >
-          <legend
-            className="emotion-7"
+          <div
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-labelledby="root"
+            className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            id="root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            role="button"
+            tabIndex={0}
           >
             <span
               className="notranslate"
             >
               ​
             </span>
-          </legend>
-        </fieldset>
+          </div>
+          <input
+            aria-hidden={true}
+            autoFocus={false}
+            className="MuiSelect-nativeInput emotion-4"
+            disabled={false}
+            onAnimationStart={[Function]}
+            onChange={[Function]}
+            required={false}
+            tabIndex={-1}
+            value=""
+          />
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-5"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-6"
+          >
+            <legend
+              className="emotion-7"
+            >
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -6942,93 +7014,97 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-integer"
   >
-    <label
-      className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
-      id="root"
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      
-    </label>
-    <span
-      className="MuiSlider-root MuiSlider-colorPrimary MuiSlider-sizeMedium emotion-2"
-      id="root"
-      label=""
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseDown={[Function]}
-    >
-      <span
-        className="MuiSlider-rail emotion-3"
-      />
-      <span
-        className="MuiSlider-track emotion-4"
-        style={
-          Object {
-            "left": "0%",
-            "width": "56.89655172413793%",
-          }
-        }
-      />
-      <span
-        className="MuiSlider-thumb MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium emotion-5"
-        data-focusvisible={false}
-        data-index={0}
-        onMouseLeave={[Function]}
-        onMouseOver={[Function]}
-        style={
-          Object {
-            "left": "56.89655172413793%",
-            "pointerEvents": undefined,
-          }
-        }
+      <label
+        className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+        id="root"
       >
-        <input
-          aria-orientation="horizontal"
-          aria-valuemax={100}
-          aria-valuemin={42}
-          aria-valuenow={75}
-          data-index={0}
-          disabled={false}
-          max={100}
-          min={42}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          step={1}
-          style={
-            Object {
-              "border": 0,
-              "clip": "rect(0 0 0 0)",
-              "direction": "ltr",
-              "height": "100%",
-              "margin": -1,
-              "overflow": "hidden",
-              "padding": 0,
-              "position": "absolute",
-              "whiteSpace": "nowrap",
-              "width": "100%",
-            }
-          }
-          type="range"
-          value={75}
+        
+      </label>
+      <span
+        className="MuiSlider-root MuiSlider-colorPrimary MuiSlider-sizeMedium emotion-2"
+        id="root"
+        label=""
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseDown={[Function]}
+      >
+        <span
+          className="MuiSlider-rail emotion-3"
         />
         <span
-          aria-hidden={true}
-          className="MuiSlider-valueLabel emotion-6"
+          className="MuiSlider-track emotion-4"
+          style={
+            Object {
+              "left": "0%",
+              "width": "56.89655172413793%",
+            }
+          }
+        />
+        <span
+          className="MuiSlider-thumb MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium emotion-5"
+          data-focusvisible={false}
+          data-index={0}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          style={
+            Object {
+              "left": "56.89655172413793%",
+              "pointerEvents": undefined,
+            }
+          }
         >
+          <input
+            aria-orientation="horizontal"
+            aria-valuemax={100}
+            aria-valuemin={42}
+            aria-valuenow={75}
+            data-index={0}
+            disabled={false}
+            max={100}
+            min={42}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            step={1}
+            style={
+              Object {
+                "border": 0,
+                "clip": "rect(0 0 0 0)",
+                "direction": "ltr",
+                "height": "100%",
+                "margin": -1,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "100%",
+              }
+            }
+            type="range"
+            value={75}
+          />
           <span
-            className="MuiSlider-valueLabelCircle"
+            aria-hidden={true}
+            className="MuiSlider-valueLabel emotion-6"
           >
             <span
-              className="MuiSlider-valueLabelLabel"
+              className="MuiSlider-valueLabelCircle"
             >
-              75
+              <span
+                className="MuiSlider-valueLabelLabel"
+              >
+                75
+              </span>
             </span>
           </span>
         </span>
       </span>
-    </span>
+    </div>
   </div>
   <div
     className="MuiBox-root emotion-7"
@@ -7192,19 +7268,23 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
-    <div>
-      <p>
-        <input
-          autoFocus={false}
-          defaultValue=""
-          disabled={false}
-          id="root"
-          onChange={[Function]}
-          type="file"
-        />
-      </p>
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    >
+      <div>
+        <p>
+          <input
+            autoFocus={false}
+            defaultValue=""
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            type="file"
+          />
+        </p>
+      </div>
     </div>
   </div>
   <div
@@ -7571,44 +7651,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="email"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="email"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -7964,44 +8048,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="url"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="url"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -8354,44 +8442,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="text"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -8744,44 +8836,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder="placeholder"
-          required={false}
-          type="text"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="placeholder"
+            required={false}
+            type="text"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -9150,68 +9246,72 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <textarea
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          rows={5}
-          style={
-            Object {
-              "height": 500,
-              "overflow": null,
-            }
-          }
-          value=""
-        />
-        <textarea
-          aria-hidden={true}
-          className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
-          readOnly={true}
-          style={
-            Object {
-              "height": 0,
-              "left": 0,
-              "overflow": "hidden",
-              "padding": 0,
-              "position": "absolute",
-              "top": 0,
-              "transform": "translateZ(0)",
-              "visibility": "hidden",
-            }
-          }
-          tabIndex={-1}
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-5"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-6"
+          <textarea
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            rows={5}
+            style={
+              Object {
+                "height": 500,
+                "overflow": null,
+              }
+            }
+            value=""
+          />
+          <textarea
+            aria-hidden={true}
+            className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
+            readOnly={true}
+            style={
+              Object {
+                "height": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "padding": 0,
+                "position": "absolute",
+                "top": 0,
+                "transform": "translateZ(0)",
+                "visibility": "hidden",
+              }
+            }
+            tabIndex={-1}
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-5"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-6"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -9753,82 +9853,90 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-object"
   >
     <div
-      className="MuiBox-root emotion-1"
-      id="root-title"
-    >
-      <h5
-        className="MuiTypography-root MuiTypography-h5 emotion-2"
-      >
-        Titre 1
-      </h5>
-      <hr
-        className="MuiDivider-root MuiDivider-fullWidth emotion-3"
-      />
-    </div>
-    <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-4"
-      style={
-        Object {
-          "marginTop": "10px",
-        }
-      }
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-5"
+        className="MuiBox-root emotion-1"
+        id="root-title"
+      >
+        <h5
+          className="MuiTypography-root MuiTypography-h5 emotion-2"
+        >
+          Titre 1
+        </h5>
+        <hr
+          className="MuiDivider-root MuiDivider-fullWidth emotion-3"
+        />
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-4"
         style={
           Object {
-            "marginBottom": "10px",
+            "marginTop": "10px",
           }
         }
       >
         <div
-          className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-5"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
           <div
-            className="MuiFormControl-root MuiTextField-root emotion-7"
+            className="form-group field field-string"
           >
-            <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-8"
-              data-shrink={false}
-              htmlFor="root_title"
-              id="root_title-label"
-            >
-              title
-            </label>
             <div
-              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-9"
-              onClick={[Function]}
+              className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
             >
-              <input
-                aria-invalid={false}
-                autoFocus={false}
-                className="MuiInputBase-input MuiOutlinedInput-input emotion-10"
-                disabled={false}
-                id="root_title"
-                onAnimationStart={[Function]}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                required={false}
-                type="text"
-                value=""
-              />
-              <fieldset
-                aria-hidden={true}
-                className="MuiOutlinedInput-notchedOutline emotion-11"
+              <div
+                className="MuiFormControl-root MuiTextField-root emotion-7"
               >
-                <legend
-                  className="emotion-12"
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-8"
+                  data-shrink={false}
+                  htmlFor="root_title"
+                  id="root_title-label"
                 >
-                  <span>
-                    title
-                  </span>
-                </legend>
-              </fieldset>
+                  title
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-9"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiOutlinedInput-input emotion-10"
+                    disabled={false}
+                    id="root_title"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                  <fieldset
+                    aria-hidden={true}
+                    className="MuiOutlinedInput-notchedOutline emotion-11"
+                  >
+                    <legend
+                      className="emotion-12"
+                    >
+                      <span>
+                        title
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -9985,29 +10093,33 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-undefined"
   >
     <div
-      className="unsupported-field"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      <p>
-        Unsupported field schema
-        <span>
-           for
-           field 
-          <code>
-            root
-          </code>
-        </span>
-        <em>
-          : 
-          Unknown field type undefined
-        </em>
-        .
-      </p>
-      <pre>
-        {}
-      </pre>
+      <div
+        className="unsupported-field"
+      >
+        <p>
+          Unsupported field schema
+          <span>
+             for
+             field 
+            <code>
+              root
+            </code>
+          </span>
+          <em>
+            : 
+            Unknown field type undefined
+          </em>
+          .
+        </p>
+        <pre>
+          {}
+        </pre>
+      </div>
     </div>
   </div>
   <div
@@ -10371,44 +10483,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-number"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="number"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="number"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>
@@ -10776,44 +10892,48 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    className="form-group field field-string"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root emotion-1"
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-        onClick={[Function]}
+        className="MuiFormControl-root MuiTextField-root emotion-1"
       >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-          disabled={false}
-          id="root"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          required={false}
-          type="text"
-          value=""
-        />
-        <fieldset
-          aria-hidden={true}
-          className="MuiOutlinedInput-notchedOutline emotion-4"
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+          onClick={[Function]}
         >
-          <legend
-            className="emotion-5"
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline emotion-4"
           >
-            <span
-              className="notranslate"
+            <legend
+              className="emotion-5"
             >
-              ​
-            </span>
-          </legend>
-        </fieldset>
+              <span
+                className="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>

@@ -7,25 +7,29 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-boolean"
   >
     <div
-      className="checkbox  form-group"
+      className="form-group"
     >
       <div
-        className="form-check"
+        className="checkbox  form-group"
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="form-check-input position-static"
-          disabled={false}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
+        <div
+          className="form-check"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="form-check-input position-static"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="checkbox"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -48,25 +52,29 @@ exports[`single fields checkbox field 2`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-boolean"
   >
     <div
-      className="checkbox  form-group"
+      className="form-group"
     >
       <div
-        className="form-check"
+        className="checkbox  form-group"
       >
-        <input
-          autoFocus={false}
-          checked={false}
-          className="form-check-input position-static"
-          disabled={false}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
+        <div
+          className="form-check"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="form-check-input position-static"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="checkbox"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -89,125 +97,129 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-array"
   >
-    <label
-      className="form-label"
-      htmlFor="root"
-    />
     <div
       className="form-group"
     >
-      <form
-        className=""
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <div
+        className="form-group"
       >
-        <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+        <form
+          className=""
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_0"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
-          <label
-            className="custom-control-label"
-            htmlFor="root_0"
-            title=""
+          <div
+            className="bg-transparent border-0 custom-control custom-checkbox"
           >
-            foo
-          </label>
-        </div>
-      </form>
-      <form
-        className=""
-      >
-        <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+            <input
+              autoFocus={false}
+              checked={false}
+              className="custom-control-input"
+              disabled={false}
+              id="root_0"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <label
+              className="custom-control-label"
+              htmlFor="root_0"
+              title=""
+            >
+              foo
+            </label>
+          </div>
+        </form>
+        <form
+          className=""
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_1"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
-          <label
-            className="custom-control-label"
-            htmlFor="root_1"
-            title=""
+          <div
+            className="bg-transparent border-0 custom-control custom-checkbox"
           >
-            bar
-          </label>
-        </div>
-      </form>
-      <form
-        className=""
-      >
-        <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+            <input
+              autoFocus={false}
+              checked={false}
+              className="custom-control-input"
+              disabled={false}
+              id="root_1"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <label
+              className="custom-control-label"
+              htmlFor="root_1"
+              title=""
+            >
+              bar
+            </label>
+          </div>
+        </form>
+        <form
+          className=""
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_2"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
-          <label
-            className="custom-control-label"
-            htmlFor="root_2"
-            title=""
+          <div
+            className="bg-transparent border-0 custom-control custom-checkbox"
           >
-            fuzz
-          </label>
-        </div>
-      </form>
-      <form
-        className=""
-      >
-        <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+            <input
+              autoFocus={false}
+              checked={false}
+              className="custom-control-input"
+              disabled={false}
+              id="root_2"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <label
+              className="custom-control-label"
+              htmlFor="root_2"
+              title=""
+            >
+              fuzz
+            </label>
+          </div>
+        </form>
+        <form
+          className=""
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="custom-control-input"
-            disabled={false}
-            id="root_3"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={false}
-            type="checkbox"
-          />
-          <label
-            className="custom-control-label"
-            htmlFor="root_3"
-            title=""
+          <div
+            className="bg-transparent border-0 custom-control custom-checkbox"
           >
-            qux
-          </label>
-        </div>
-      </form>
+            <input
+              autoFocus={false}
+              checked={false}
+              className="custom-control-input"
+              disabled={false}
+              id="root_3"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="checkbox"
+            />
+            <label
+              className="custom-control-label"
+              htmlFor="root_3"
+              title=""
+            >
+              qux
+            </label>
+          </div>
+        </form>
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -228,56 +240,64 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
+             
             <div
-              className="mb-0 form-group"
+              className="form-group field field-string"
             >
-              <label
-                className="form-label"
-                htmlFor="root_my-field"
+              <div
+                className="form-group"
               >
-                my-field
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_my-field"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_my-field"
+                  >
+                    my-field
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <small
+                  className="text-muted form-text"
+                >
+                  some description
+                </small>
+              </div>
             </div>
-            <small
-              className="text-muted form-text"
-            >
-              some description
-            </small>
           </div>
         </div>
       </div>
@@ -302,56 +322,64 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
+             
             <div
-              className="mb-0 form-group"
+              className="form-group field field-string"
             >
-              <label
-                className="form-label"
-                htmlFor="root_my-field"
+              <div
+                className="form-group"
               >
-                my-field
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_my-field"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_my-field"
+                  >
+                    my-field
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <small
+                  className="text-muted form-text"
+                >
+                  some other description
+                </small>
+              </div>
             </div>
-            <small
-              className="text-muted form-text"
-            >
-              some other description
-            </small>
           </div>
         </div>
       </div>
@@ -376,30 +404,34 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="color"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="color"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -420,30 +452,34 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="date"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="date"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -464,30 +500,34 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="datetime-local"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="datetime-local"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -508,33 +548,41 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
-    
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="d-none row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="d-none row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
-            <input
-              id="root_my-field"
-              type="hidden"
-              value=""
-            />
-            
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="form-group"
+              >
+                <input
+                  id="root_my-field"
+                  type="hidden"
+                  value=""
+                />
+                
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -559,28 +607,32 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
   <div>
@@ -602,9 +654,13 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-null"
   >
-    
+    <div
+      className="form-group"
+    >
+      
+    </div>
   </div>
   <div>
     <button
@@ -625,31 +681,35 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-number"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        step="any"
-        type="number"
-        value={0}
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          step="any"
+          type="number"
+          value={0}
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -670,31 +730,35 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-number"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        step="any"
-        type="number"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          step="any"
+          type="number"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -715,30 +779,34 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="password"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="password"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -759,64 +827,68 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-boolean"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="d-block form-label"
-      >
-        
-      </label>
       <div
-        className="form-check"
+        className="mb-0 form-group"
       >
-        <input
-          checked={false}
-          className="form-check-input"
-          disabled={false}
-          id="Yes"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="radio"
-          value={true}
-        />
         <label
-          className="form-check-label"
-          htmlFor="Yes"
-          title=""
+          className="d-block form-label"
         >
-          Yes
+          
         </label>
-      </div>
-      <div
-        className="form-check"
-      >
-        <input
-          checked={false}
-          className="form-check-input"
-          disabled={false}
-          id="No"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="radio"
-          value={false}
-        />
-        <label
-          className="form-check-label"
-          htmlFor="No"
-          title=""
+        <div
+          className="form-check"
         >
-          No
-        </label>
+          <input
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="Yes"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value={true}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="Yes"
+            title=""
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          className="form-check"
+        >
+          <input
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="No"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value={false}
+          />
+          <label
+            className="form-check-label"
+            htmlFor="No"
+            title=""
+          >
+            No
+          </label>
+        </div>
       </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -837,47 +909,51 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
       className="form-group"
     >
-      <label
-        className="form-label"
-      />
-      <select
-        autoFocus={false}
-        className="custom-select"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        readOnly={false}
-        value=""
+      <div
+        className="form-group"
       >
-        <option
+        <label
+          className="form-label"
+        />
+        <select
+          autoFocus={false}
+          className="custom-select"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          readOnly={false}
           value=""
         >
-          
-        </option>
-        <option
-          disabled={false}
-          id="foo"
-          value="foo"
-        >
-          foo
-        </option>
-        <option
-          disabled={false}
-          id="bar"
-          value="bar"
-        >
-          bar
-        </option>
-      </select>
+          <option
+            value=""
+          >
+            
+          </option>
+          <option
+            disabled={false}
+            id="foo"
+            value="foo"
+          >
+            foo
+          </option>
+          <option
+            disabled={false}
+            id="bar"
+            value="bar"
+          >
+            bar
+          </option>
+        </select>
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -898,38 +974,42 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-integer"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        max={100}
-        min={42}
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        step={1}
-        type="number"
-        value={75}
-      />
-      <span
-        className="range-view"
+      <div
+        className="mb-0 form-group"
       >
-        75
-      </span>
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          max={100}
+          min={42}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          step={1}
+          type="number"
+          value={75}
+        />
+        <span
+          className="range-view"
+        >
+          75
+        </span>
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -950,30 +1030,34 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control-file"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="file"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control-file"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="file"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -994,30 +1078,34 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="email"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="email"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1038,30 +1126,34 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="url"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="url"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1082,30 +1174,34 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1126,30 +1222,34 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder="placeholder"
-        readOnly={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="placeholder"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1170,30 +1270,34 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
-    <label
-      htmlFor="root"
-    >
-      
-    </label>
     <div
-      className="input-group"
+      className="form-group"
     >
-      <textarea
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        rows={5}
-      />
+      <label
+        htmlFor="root"
+      >
+        
+      </label>
+      <div
+        className="input-group"
+      >
+        <textarea
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          rows={5}
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1214,67 +1318,75 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-object"
   >
     <div
-      className="my-1"
-      id="root-title"
-    >
-      <h5>
-        Titre 1
-      </h5>
-      <hr
-        className="border-0 bg-secondary"
-        style={
-          Object {
-            "height": "1px",
-          }
-        }
-      />
-    </div>
-    <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
+        className="my-1"
+        id="root-title"
+      >
+        <h5>
+          Titre 1
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            Object {
+              "height": "1px",
+            }
           }
-        }
+        />
+      </div>
+      <div
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="form-group"
+            className="col-12"
           >
+             
             <div
-              className="mb-0 form-group"
+              className="form-group field field-string"
             >
-              <label
-                className="form-label"
-                htmlFor="root_title"
+              <div
+                className="form-group"
               >
-                Titre 2
-              </label>
-              <input
-                autoFocus={false}
-                className="form-control"
-                disabled={false}
-                id="root_title"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                placeholder=""
-                readOnly={false}
-                required={false}
-                type="text"
-                value=""
-              />
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_title"
+                  >
+                    Titre 2
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_title"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
+              </div>
             </div>
-            
           </div>
         </div>
       </div>
@@ -1299,31 +1411,35 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-undefined"
   >
     <div
-      className="unsupported-field"
+      className="form-group"
     >
-      <p>
-        Unsupported field schema
-        <span>
-           for
-           field 
-          <code>
-            root
-          </code>
-        </span>
-        <em>
-          : 
-          Unknown field type undefined
-        </em>
-        .
-      </p>
-      <pre>
-        {}
-      </pre>
+      <div
+        className="unsupported-field"
+      >
+        <p>
+          Unsupported field schema
+          <span>
+             for
+             field 
+            <code>
+              root
+            </code>
+          </span>
+          <em>
+            : 
+            Unknown field type undefined
+          </em>
+          .
+        </p>
+        <pre>
+          {}
+        </pre>
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1344,30 +1460,34 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-number"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="number"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="number"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
@@ -1388,30 +1508,34 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-string"
   >
     <div
-      className="mb-0 form-group"
+      className="form-group"
     >
-      <label
-        className="form-label"
-        htmlFor="root"
-      />
-      <input
-        autoFocus={false}
-        className="form-control"
-        disabled={false}
-        id="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        type="text"
-        value=""
-      />
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+      
     </div>
-    
   </div>
   <div>
     <button
