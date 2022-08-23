@@ -1242,11 +1242,19 @@ exports[`single fields hidden field 1`] = `
       <div
         className="emotion-1"
       >
-        <input
-          id="root_my-field"
-          type="hidden"
-          value=""
-        />
+        <div
+          style={
+            Object {
+              "display": "none",
+            }
+          }
+        >
+          <input
+            id="root_my-field"
+            type="hidden"
+            value=""
+          />
+        </div>
       </div>
     </div>
   </div>

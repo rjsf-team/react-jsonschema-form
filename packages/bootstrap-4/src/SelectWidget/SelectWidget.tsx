@@ -41,7 +41,10 @@ const SelectWidget = ({
 
   return (
     <Form.Group>
-      <Form.Label className={rawErrors.length > 0 ? "text-danger" : ""}>
+      <Form.Label
+        className={rawErrors.length > 0 ? "text-danger" : ""}
+        htmlFor={id}
+      >
         {label || schema.title}
         {(label || schema.title) && required ? "*" : null}
       </Form.Label>
@@ -52,8 +55,7 @@ const SelectWidget = ({
         value={typeof value === "undefined" ? emptyValue : value}
         required={required}
         multiple={multiple}
-        disabled={disabled}
-        readOnly={readonly}
+        disabled={disabled && readonly}
         autoFocus={autofocus}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
         onBlur={

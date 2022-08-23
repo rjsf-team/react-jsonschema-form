@@ -12,7 +12,6 @@
     "start": "dts watch",
     "test": "dts test",
     "test:watch": "dts test --watch",
-    "test:update": "dts test --u",
     "test-coverage": "dts test --coverage"
   },
   "lint-staged": {
