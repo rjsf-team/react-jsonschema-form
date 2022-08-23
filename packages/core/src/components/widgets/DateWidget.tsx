@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { getTemplate, WidgetProps } from "@rjsf/utils";
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
@@ -13,11 +13,10 @@ export default function DateWidget<T = any, F = any>(props: WidgetProps<T, F>) {
     registry,
     options
   );
-  return (
-    <BaseInputTemplate
-      type="date"
-      {...props}
-      onChange={(value) => onChange(value || undefined)}
-    />
+  const handleChange = useCallback(
+    (value: React.ChangeEvent) => onChange(value || undefined),
+    [onChange]
   );
+
+  return <BaseInputTemplate type="date" {...props} onChange={handleChange} />;
 }

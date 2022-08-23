@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { getTemplate, schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -30,14 +30,23 @@ function CheckboxWidget<T = any, F = any>({
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(event.target.checked);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      onChange(event.target.checked),
+    [onChange]
+  );
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, event.target.checked);
+  const handleBlur = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) =>
+      onBlur(id, event.target.checked),
+    [onBlur, id]
+  );
 
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, event.target.checked);
+  const handleFocus = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) =>
+      onFocus(id, event.target.checked),
+    [onFocus, id]
+  );
 
   return (
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
