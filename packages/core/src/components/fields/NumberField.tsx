@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { asNumber, FieldProps } from "@rjsf/utils";
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
@@ -41,26 +41,29 @@ function NumberField<T = any, F = any>(props: FieldProps<T, F>) {
    *
    * @param value - The current value for the change occurring
    */
-  const handleChange = (value: FieldProps<T, F>["value"]) => {
-    // Cache the original value in component state
-    setLastValue(value);
+  const handleChange = useCallback(
+    (value: FieldProps<T, F>["value"]) => {
+      // Cache the original value in component state
+      setLastValue(value);
 
-    // Normalize decimals that don't start with a zero character in advance so
-    // that the rest of the normalization logic is simpler
-    if (`${value}`.charAt(0) === ".") {
-      value = `0${value}`;
-    }
+      // Normalize decimals that don't start with a zero character in advance so
+      // that the rest of the normalization logic is simpler
+      if (`${value}`.charAt(0) === ".") {
+        value = `0${value}`;
+      }
 
-    // Check that the value is a string (this can happen if the widget used is a
-    // <select>, due to an enum declaration etc) then, if the value ends in a
-    // trailing decimal point or multiple zeroes, strip the trailing values
-    const processed =
-      typeof value === "string" && value.match(trailingCharMatcherWithPrefix)
-        ? asNumber(value.replace(trailingCharMatcher, ""))
-        : asNumber(value);
+      // Check that the value is a string (this can happen if the widget used is a
+      // <select>, due to an enum declaration etc) then, if the value ends in a
+      // trailing decimal point or multiple zeroes, strip the trailing values
+      const processed =
+        typeof value === "string" && value.match(trailingCharMatcherWithPrefix)
+          ? asNumber(value.replace(trailingCharMatcher, ""))
+          : asNumber(value);
 
-    onChange(processed as unknown as T);
-  };
+      onChange(processed as unknown as T);
+    },
+    [onChange]
+  );
 
   if (typeof lastValue === "string" && typeof value === "number") {
     // Construct a regular expression that checks for a string that consists
