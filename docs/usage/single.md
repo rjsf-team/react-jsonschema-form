@@ -63,7 +63,7 @@ render((
 
 ### Custom labels for `enum` fields
 
-JSON Schema supports the following approach to enumerations using `oneOf`/`anyOf`; react-jsonschema-form supports it as well.
+JSON Schema supports the following approaches to enumerations using `oneOf`/`anyOf`; react-jsonschema-form supports it as well.
 
 ```jsx
 import validator from "@rjsf/validator-ajv6";
@@ -92,6 +92,21 @@ const schema = {
         3
       ]
     }
+  ]
+};
+
+render((
+  <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
+```jsx
+const schema = {
+  "type": "number",
+  "oneOf": [
+    {"const": 1, "title": "one"},
+    {"const": 2, "title": "two"},
+    {"const": 3, "title": "three"}
   ]
 };
 
