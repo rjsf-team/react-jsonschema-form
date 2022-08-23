@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useReducer } from "react";
+import React, { MouseEvent, useCallback, useEffect, useReducer } from "react";
 
 import {
   parseDateString,
@@ -132,27 +132,36 @@ function AltDateWidget<T = any, F = any>({
     }
   }, [state, time, onChange]);
 
-  const handleChange = (property: keyof DateObject, value: string) => {
-    setState({ [property]: value });
-  };
+  const handleChange = useCallback(
+    (property: keyof DateObject, value: string) => {
+      setState({ [property]: value });
+    },
+    []
+  );
 
-  const handleSetNow = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    if (disabled || readonly) {
-      return;
-    }
-    const nowDateObj = parseDateString(new Date().toJSON(), time);
-    setState(nowDateObj);
-  };
+  const handleSetNow = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      if (disabled || readonly) {
+        return;
+      }
+      const nowDateObj = parseDateString(new Date().toJSON(), time);
+      setState(nowDateObj);
+    },
+    [disabled, readonly, time]
+  );
 
-  const handleClear = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    if (disabled || readonly) {
-      return;
-    }
-    setState(parseDateString("", time));
-    onChange(undefined);
-  };
+  const handleClear = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      if (disabled || readonly) {
+        return;
+      }
+      setState(parseDateString("", time));
+      onChange(undefined);
+    },
+    [disabled, readonly, time, onChange]
+  );
 
   return (
     <ul className="list-inline">
