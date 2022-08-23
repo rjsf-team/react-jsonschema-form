@@ -91,7 +91,20 @@ export default {
         title: "Custom select widget with options",
         type: "string",
         enum: ["foo", "bar"],
-        enumNames: ["Foo", "Bar"],
+      },
+      selectWidgetOptions2: {
+        title: "Custom select widget with options, overriding the enum titles.",
+        type: "string",
+        oneOf: [
+          {
+            const: "foo",
+            title: "Foo",
+          },
+          {
+            const: "bar",
+            title: "Bar",
+          },
+        ],
       },
     },
   },

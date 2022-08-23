@@ -137,8 +137,12 @@ describe("FormContext", () => {
         type: "array",
         items: {
           type: "string",
-          enum: ["foo"],
-          enumNames: ["bar"],
+          oneOf: [
+            {
+              const: "foo",
+              title: "bar",
+            },
+          ],
         },
         uniqueItems: true,
       },
