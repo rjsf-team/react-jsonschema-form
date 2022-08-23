@@ -36,7 +36,7 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
   const { widget = "checkbox", ...options } = getUiOptions<T, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
-  let enumOptions: EnumOptionsType[] | undefined = [];
+  let enumOptions: EnumOptionsType[] | undefined;
 
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList({
