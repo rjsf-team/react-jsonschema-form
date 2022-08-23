@@ -313,6 +313,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               hideError={hideError}
               errorSchema={errorSchema}
               formData={formData}
+              formContext={formContext}
               idPrefix={idPrefix}
               idSchema={idSchema}
               idSeparator={idSeparator}
@@ -341,6 +342,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               hideError={hideError}
               errorSchema={errorSchema}
               formData={formData}
+              formContext={formContext}
               idPrefix={idPrefix}
               idSchema={idSchema}
               idSeparator={idSeparator}
