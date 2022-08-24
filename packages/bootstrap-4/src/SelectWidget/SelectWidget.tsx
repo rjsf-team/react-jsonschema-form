@@ -55,7 +55,7 @@ const SelectWidget = ({
         value={typeof value === "undefined" ? emptyValue : value}
         required={required}
         multiple={multiple}
-        disabled={disabled && readonly}
+        disabled={disabled || readonly}
         autoFocus={autofocus}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
         onBlur={
