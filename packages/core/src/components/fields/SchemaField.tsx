@@ -256,9 +256,11 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     classNames.push("field-error has-error has-danger");
   }
   if (uiSchema?.classNames) {
-    console.warn(
-      "WARNING: 'uiSchema.classNames' is deprecated and will be removed in the next major release; Use 'ui:classNames' instead."
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "WARNING: 'uiSchema.classNames' is deprecated and will be removed in the next major release; Use 'ui:classNames' instead."
+      );
+    }
     classNames.push(uiSchema.classNames);
   }
   if (uiOptions.classNames) {
