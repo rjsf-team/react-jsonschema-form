@@ -19,9 +19,9 @@ In other words, the following `uiSchema`s are equivalent:
       "disabled": false,
       "className": "btn btn-info",
     },
-      "norender": false,
-      "submitText": "Submit"
-    }
+    "norender": false,
+    "submitText": "Submit"
+  }
 }
 ```
 
@@ -107,20 +107,6 @@ Will result in:
     <input value="My task" required="" type="text">
   </label>
 </div>
-```
-
-#### BREAKING CHANGE in version 5
-In versions previous to 5, `classNames` was the only property that did not require the `ui:` prefix. 
-Additionally, it did not support being added into the `ui:options` object.
-This was fixed in version 5 to be consistent with all the other properties in this section.
-If you were using `classNames` as follows, simply add the `ui:` prefix to it:
-
-```jsx
-const uiSchema = {
-  title: {
-    "classNames": "my class"
-  }
-};
 ```
 
 ### autocomplete
