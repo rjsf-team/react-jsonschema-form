@@ -258,7 +258,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   if (uiSchema?.classNames) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
-        "WARNING: 'uiSchema.classNames' is deprecated and will be removed in the next major release; Use 'ui:classNames' instead."
+        "WARNING: 'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead."
       );
     }
     classNames.push(uiSchema.classNames);
