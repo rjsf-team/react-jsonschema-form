@@ -6,6 +6,7 @@ import {
   FieldProps,
   RJSFSchemaDefinition,
   EnumOptionsType,
+  RJSFSchema,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 
@@ -53,19 +54,29 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
         .filter((o) => o) as RJSFSchemaDefinition[], // cast away the error that typescript can't grok is fixed
     });
   } else {
+    // We deprecated enumNames in v5 and removed it from the type, so we need to cast here.
+    const schemaWithEnumNames = schema as RJSFSchema & { enumNames?: string[] };
     schema.enum = schema.enum ?? [true, false];
     if (
+      !schemaWithEnumNames.enumNames &&
       schema.enum &&
       schema.enum.length === 2 &&
       schema.enum.every((v) => typeof v === "boolean")
     ) {
       enumOptions = [
-        { value: schema.enum[0], label: schema.enum[0] ? "Yes" : "No" },
-        { value: schema.enum[1], label: schema.enum[1] ? "Yes" : "No" },
+        {
+          value: schema.enum[0],
+          label: schema.enum[0] ? "Yes" : "No",
+        },
+        {
+          value: schema.enum[1],
+          label: schema.enum[1] ? "Yes" : "No",
+        },
       ];
     } else {
       enumOptions = optionsList({
         enum: schema.enum,
+        enumNames: schemaWithEnumNames.enumNames,
       });
     }
   }

@@ -12,6 +12,7 @@ describe("BooleanField", () => {
 
   beforeEach(() => {
     sandbox = createSandbox();
+    sandbox.stub(console, "warn");
   });
 
   afterEach(() => {
@@ -324,6 +325,25 @@ describe("BooleanField", () => {
     expect(labels).eql(["No", "Yes"]);
   });
 
+  it("should support enumNames for radio widgets", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        enumNames: ["Yes", "No"],
+      },
+      formData: true,
+      uiSchema: { "ui:widget": "radio" },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll(".field-radio-group label"),
+      (label) => label.textContent
+    );
+    expect(labels).eql(["Yes", "No"]);
+    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/))
+      .to.be.true;
+  });
+
   it("should support oneOf titles for radio widgets", () => {
     const { node } = createFormComponent({
       schema: {
@@ -433,6 +453,25 @@ describe("BooleanField", () => {
       },
     });
     expect(onBlur.calledWith(element.id, false)).to.be.true;
+  });
+
+  it("should support enumNames for select", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: "boolean",
+        enumNames: ["Yes", "No"],
+      },
+      formData: true,
+      uiSchema: { "ui:widget": "select" },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll(".field option"),
+      (label) => label.textContent
+    );
+    expect(labels).eql(["", "Yes", "No"]);
+    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/))
+      .to.be.true;
   });
 
   it("should handle a focus event with checkbox", () => {

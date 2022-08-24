@@ -1,6 +1,17 @@
 import { RJSFSchema, optionsList } from "../src";
 
 describe("optionsList()", () => {
+  let consoleWarnSpy;
+  beforeAll(() => {
+    consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
+  });
+  afterAll(() => {
+    consoleWarnSpy.mockRestore();
+  });
+  afterEach(() => {
+    consoleWarnSpy.mockClear();
+  });
+
   it("should generate options for an enum schema", () => {
     const enumSchema: RJSFSchema = {
       type: "string",
@@ -11,6 +22,29 @@ describe("optionsList()", () => {
       enumSchema.enum!.map((opt) => ({ label: opt, value: opt }))
     );
   });
+
+  it("generates options and emits a deprecation warning for a schema with enumNames", () => {
+    const enumSchema: RJSFSchema = {
+      type: "string",
+      enum: ["Opt1", "Opt2", "Opt3"],
+    };
+
+    const enumNameSchema = {
+      ...enumSchema,
+      enumNames: ["Option1", "Option2", "Option3"],
+    };
+
+    expect(optionsList(enumNameSchema)).toEqual(
+      enumNameSchema.enum!.map((opt, index) => {
+        const label = enumNameSchema.enumNames[index] || opt;
+        return { label: label, value: opt };
+      })
+    );
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringMatching(/The enumNames property is deprecated/)
+    );
+  });
+
   it("should generate options for a oneOf|anyOf schema", () => {
     const oneOfSchema = {
       title: "string",
