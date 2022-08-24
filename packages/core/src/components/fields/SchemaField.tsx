@@ -209,7 +209,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names to child components
-  const fieldUiSchema = omit(uiSchema, ["ui:classNames"]);
+  const fieldUiSchema = omit(uiSchema, ["ui:classNames", "classNames"]);
   if ("ui:options" in fieldUiSchema) {
     fieldUiSchema["ui:options"] = omit(fieldUiSchema["ui:options"], [
       "classNames",
@@ -254,6 +254,12 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   const classNames = ["form-group", "field", `field-${schema.type}`];
   if (!hideError && errors && errors.length > 0) {
     classNames.push("field-error has-error has-danger");
+  }
+  if (uiSchema?.classNames) {
+    console.warn(
+      "WARNING: 'uiSchema.classNames' is deprecated and will be removed in the next major release; Use 'ui:classNames' instead."
+    );
+    classNames.push(uiSchema.classNames);
   }
   if (uiOptions.classNames) {
     classNames.push(uiOptions.classNames);

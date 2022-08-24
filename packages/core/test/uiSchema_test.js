@@ -31,6 +31,9 @@ describe("uiSchema", () => {
         bar: {
           type: "string",
         },
+        baz: {
+          type: "string",
+        },
       },
     };
 
@@ -43,15 +46,26 @@ describe("uiSchema", () => {
           classNames: "class-for-bar another-for-bar",
         },
       },
+      baz: {
+        classNames: "class-for-baz",
+      },
     };
 
     it("should apply custom class names to target widgets", () => {
+      sandbox.stub(console, "warn");
+
       const { node } = createFormComponent({ schema, uiSchema });
-      const [foo, bar] = node.querySelectorAll(".field-string");
+      const [foo, bar, baz] = node.querySelectorAll(".field-string");
 
       expect(foo.classList.contains("class-for-foo")).eql(true);
       expect(bar.classList.contains("class-for-bar")).eql(true);
       expect(bar.classList.contains("another-for-bar")).eql(true);
+      expect(baz.classList.contains("class-for-baz")).eql(true);
+      expect(
+        console.warn.calledWithMatch(
+          /WARNING: 'uiSchema.classNames' is deprecated/
+        )
+      ).to.be.true;
     });
   });
 
