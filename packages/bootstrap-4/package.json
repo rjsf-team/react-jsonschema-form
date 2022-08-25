@@ -63,6 +63,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "react-icons": "^3.10.0"
+    "@react-icons/all-files": "^4.1.0"
   }
 }
