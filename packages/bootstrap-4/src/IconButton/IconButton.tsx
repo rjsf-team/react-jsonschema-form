@@ -1,8 +1,9 @@
 import React from "react";
 import Button, { ButtonProps } from "react-bootstrap/Button";
-import { IoIosRemove } from "react-icons/io";
-import { GrAdd } from "react-icons/gr";
-import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+import { IoIosRemove } from "@react-icons/all-files/io/IoIosRemove.esm";
+import { GrAdd } from "@react-icons/all-files/gr/GrAdd.esm";
+import { AiOutlineArrowUp } from "@react-icons/all-files/ai/AiOutlineArrowUp.esm";
+import { AiOutlineArrowDown } from "@react-icons/all-files/ai/AiOutlineArrowDown.esm";
 
 const mappings: any = {
   remove: <IoIosRemove />,
