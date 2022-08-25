@@ -1,6 +1,8 @@
 import { expect } from "chai";
+import React from "react";
 
 import { createFormComponent, createSandbox } from "./test_utils";
+import SchemaField from "../src/components/fields/SchemaField";
 
 describe("allOf", () => {
   let sandbox;
@@ -45,5 +47,37 @@ describe("allOf", () => {
     });
 
     expect(node.querySelectorAll("input")).to.have.length.of(0);
+  });
+  it("should pass form context to schema field", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          allOf: [{ type: "string" }, { type: "boolean" }],
+        },
+      },
+    };
+    const formContext = { root: "root-id", root_foo: "foo-id" };
+    function CustomSchemaField(props) {
+      const { formContext, idSchema } = props;
+      return (
+        <>
+          <code id={formContext[idSchema.$id]}>Ha</code>
+          <SchemaField {...props} />
+        </>
+      );
+    }
+    const { node } = createFormComponent({
+      schema,
+      formData: { userId: "foobarbaz" },
+      formContext,
+      fields: { SchemaField: CustomSchemaField },
+    });
+
+    const codeBlocks = node.querySelectorAll("code");
+    expect(codeBlocks).to.have.length(2);
+    Object.keys(formContext).forEach((key) => {
+      expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+    });
   });
 });

@@ -802,6 +802,7 @@ class ArrayField<T = any, F = any> extends Component<
       readonly,
       uiSchema,
       registry,
+      formContext,
     } = this.props;
     const {
       fields: { SchemaField },
@@ -825,6 +826,7 @@ class ArrayField<T = any, F = any> extends Component<
           schema={itemSchema}
           uiSchema={itemUiSchema}
           formData={itemData}
+          formContext={formContext}
           errorSchema={itemErrorSchema}
           idPrefix={idPrefix}
           idSeparator={idSeparator}
