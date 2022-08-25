@@ -18,8 +18,7 @@
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test",
-    "test:update": "dts test --u"
+    "test": "dts test"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
