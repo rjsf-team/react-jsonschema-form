@@ -4,6 +4,7 @@ import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import SchemaField from "../src/components/fields/SchemaField";
 
 describe("oneOf", () => {
   let sandbox;
@@ -392,6 +393,46 @@ describe("oneOf", () => {
     });
 
     expect(node.querySelectorAll("#custom-oneof-field")).to.have.length(1);
+  });
+
+  it("should pass form context to schema field", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        userId: {
+          oneOf: [
+            {
+              type: "number",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+      },
+    };
+    const formContext = { root: "root-id", root_userId: "userId-id" };
+    function CustomSchemaField(props) {
+      const { formContext, idSchema } = props;
+      return (
+        <>
+          <code id={formContext[idSchema.$id]}>Ha</code>
+          <SchemaField {...props} />
+        </>
+      );
+    }
+    const { node } = createFormComponent({
+      schema,
+      formData: { userId: "foobarbaz" },
+      formContext,
+      fields: { SchemaField: CustomSchemaField },
+    });
+
+    const codeBlocks = node.querySelectorAll("code");
+    expect(codeBlocks).to.have.length(3);
+    Object.keys(formContext).forEach((key) => {
+      expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+    });
   });
 
   it("should select the correct field when the form is rendered from existing data", () => {

@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
+import SchemaField from "../src/components/fields/SchemaField";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("ObjectField", () => {
@@ -189,6 +190,34 @@ describe("ObjectField", () => {
 
       expect(node.querySelector("input[type=text]").id).eql("root_foo");
       expect(node.querySelector("input[type=checkbox]").id).eql("root_bar");
+    });
+
+    it("should pass form context to schema field", () => {
+      const formContext = {
+        root: "root-id",
+        root_foo: "foo-id",
+        root_bar: "bar-id",
+      };
+      function CustomSchemaField(props) {
+        const { formContext, idSchema } = props;
+        return (
+          <>
+            <code id={formContext[idSchema.$id]}>Ha</code>
+            <SchemaField {...props} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        formContext,
+        fields: { SchemaField: CustomSchemaField },
+      });
+
+      const codeBlocks = node.querySelectorAll("code");
+      expect(codeBlocks).to.have.length(3);
+      Object.keys(formContext).forEach((key) => {
+        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+      });
     });
   });
 
