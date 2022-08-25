@@ -515,6 +515,7 @@ exports[`array fields checkboxes 1`] = `
       >
         <label
           className="form-label"
+          htmlFor="root"
         />
         <select
           autoFocus={false}
@@ -525,7 +526,6 @@ exports[`array fields checkboxes 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
-          readOnly={false}
           required={false}
           value={Array []}
         >
