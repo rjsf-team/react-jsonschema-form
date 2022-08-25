@@ -62,6 +62,7 @@
     "@rjsf/core": "^4.2.0",
     "@rjsf/utils": "^4.2.0",
     "@rjsf/validator-ajv6": "^4.2.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "antd": "^4.22.6",
     "atob": "^2.0.3",
     "dayjs": "^1.11.5",
