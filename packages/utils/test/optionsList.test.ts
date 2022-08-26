@@ -1,7 +1,7 @@
 import { RJSFSchema, optionsList } from "../src";
 
 describe("optionsList()", () => {
-  let consoleWarnSpy;
+  let consoleWarnSpy: jest.SpyInstance;
   beforeAll(() => {
     consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
   });

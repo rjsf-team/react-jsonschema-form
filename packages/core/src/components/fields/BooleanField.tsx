@@ -76,6 +76,7 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
     } else {
       enumOptions = optionsList({
         enum: schema.enum,
+        // NOTE: enumNames is deprecated, but still supported for now.
         enumNames: schemaWithEnumNames.enumNames,
       });
     }

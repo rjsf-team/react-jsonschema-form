@@ -12,9 +12,9 @@ import { RJSFSchema, EnumOptionsType } from "./types";
 export default function optionsList(
   schema: RJSFSchema & { enumNames?: string[] }
 ): EnumOptionsType[] | undefined {
-  if (schema.enumNames) {
+  if (schema.enumNames && process.env.NODE_ENV !== "production") {
     console.warn(
-      "RJSF: The enumNames property is deprecated and may be removed in a future major release. For more info, see https://react-jsonschema-form.readthedocs.io/en/latest/usage/single/#custom-labels-for-enum-fields"
+      "The enumNames property is deprecated and may be removed in a future major release."
     );
   }
   if (schema.enum) {
