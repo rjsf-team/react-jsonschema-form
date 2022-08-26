@@ -123,11 +123,11 @@ describe("AJV6Validator", () => {
           } as ErrorSchema,
         } as unknown as ErrorSchema;
         expect(validator.toErrorList(errorSchema)).toEqual([
-          { stack: "root: err1" },
-          { stack: "root: err2" },
-          { stack: "b: err3" },
-          { stack: "b: err4" },
-          { stack: "c: err5" },
+          { property: ".", stack: ".: err1" },
+          { property: ".", stack: ".: err2" },
+          { property: ".a.b", stack: ".a.b: err3" },
+          { property: ".a.b", stack: ".a.b: err4" },
+          { property: ".c", stack: ".c: err5" },
         ]);
       });
     });
@@ -284,7 +284,7 @@ describe("AJV6Validator", () => {
           });
           it("should return an error list", () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual("pass2: passwords don`t match.");
+            expect(errors[0].stack).toEqual(".pass2: passwords don`t match.");
           });
           it("should return an errorSchema", () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
@@ -319,7 +319,7 @@ describe("AJV6Validator", () => {
           });
           it("should return an error list", () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual("pass2: passwords don`t match.");
+            expect(errors[0].stack).toEqual(".pass2: passwords don`t match.");
           });
           it("should return an errorSchema", () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);

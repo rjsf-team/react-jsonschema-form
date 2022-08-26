@@ -133,7 +133,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Invalid" },
+          { property: ".", stack: ".: Invalid" },
         ]);
       });
 
@@ -160,7 +160,7 @@ describe("Validation", () => {
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           errorSchema: { __errors: ["Invalid"] },
-          errors: [{ stack: "root: Invalid" }],
+          errors: [{ property: ".", stack: ".: Invalid" }],
           formData: "1234",
         });
       });
@@ -242,8 +242,15 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: should NOT be shorter than 3 characters" },
-          { stack: "pass2: Passwords don't match" },
+          {
+            message: "should NOT be shorter than 3 characters",
+            name: "minLength",
+            params: { limit: 3 },
+            property: ".pass2",
+            schemaPath: "#/properties/pass2/minLength",
+            stack: ".pass2 should NOT be shorter than 3 characters",
+          },
+          { property: ".pass2", stack: ".pass2: Passwords don't match" },
         ]);
       });
 
@@ -281,7 +288,7 @@ describe("Validation", () => {
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "pass2: Passwords don't match" },
+          { property: ".0.pass2", stack: ".0.pass2: Passwords don't match" },
         ]);
       });
 
@@ -309,7 +316,7 @@ describe("Validation", () => {
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
-          { stack: "root: Forbidden value: bbb" },
+          { property: ".", stack: ".: Forbidden value: bbb" },
         ]);
       });
     });

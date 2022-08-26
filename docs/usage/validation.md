@@ -123,11 +123,11 @@ render((
 
 Each element in the `errors` list passed to `transformErrors` is a `RJSFValidationError` interface (in `@rjsf/utils`) and has the following properties:
 
-- `name`: name of the error, for example, "required" or "minLength"
-- `message`: message, for example, "is a required property" or "should NOT be shorter than 3 characters"
-- `params`: an object with the error params returned by ajv ([see doc](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters) for more info).
-- `property`: a string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `['first-name']`.
-- `schemaPath`: JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [bug in ajv](https://github.com/ajv-validator/ajv/issues/512)).
+- `name`: optional name of the error, for example, "required" or "minLength"
+- `message`: optional message, for example, "is a required property" or "should NOT be shorter than 3 characters"
+- `params`: optional object with the error params returned by ajv ([see doc](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters) for more info).
+- `property`: optional string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `.first-name`.
+- `schemaPath`: optional JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [bug in ajv](https://github.com/ajv-validator/ajv/issues/512)).
 - `stack`: full error name, for example ".name is a required property".
 
 ## Error List Display
@@ -135,7 +135,7 @@ Each element in the `errors` list passed to `transformErrors` is a `RJSFValidati
 To take control over how the form errors are displayed, you can define an *error list template* for your form.
 This list is the form global error list that appears at the top of your forms.
 
-An error list template is basically a React stateless component being passed errors as props so you can render them as you like:
+An error list template is basically a React stateless component being passed errors as props, so you can render them as you like:
 
 ```tsx
 import validator from "@rjsf/validator-ajv6";
@@ -167,7 +167,7 @@ render((
         showErrorList={true}
         formData={""}
         liveValidate
-        ErrorList={ErrorListTemplate} />
+        templates: {{ ErrorListTemplate }} />
 ), document.getElementById("app"));
 ```
 
@@ -180,7 +180,6 @@ The following props are passed to `ErrorList` as defined by the `ErrorListProps`
 - `schema`: The schema that was passed to `Form`.
 - `uiSchema`: The uiSchema that was passed to `Form`.
 - `formContext`: The `formContext` object that you passed to `Form`.
-
 
 ## The case of empty strings
 

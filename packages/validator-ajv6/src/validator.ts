@@ -13,7 +13,7 @@ import {
   ValidatorType,
   getDefaultFormState,
   isObject,
-  mergeObjects,
+  mergeValidationData,
   ERRORS_KEY,
   REF_KEY,
 } from "@rjsf/utils";
@@ -107,25 +107,31 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldName='root'] - The current field name, defaults to `root` if not specified
+   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
    */
-  toErrorList(errorSchema?: ErrorSchema<T>, fieldName = "root") {
-    // XXX: We should transform fieldName as a full field path string.
+  toErrorList(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []) {
     if (!errorSchema) {
       return [];
     }
     let errorList: RJSFValidationError[] = [];
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
-        errorSchema.__errors!.map((stack: string) => ({
-          stack: `${fieldName}: ${stack}`,
-        }))
+        errorSchema.__errors!.map((stack: string) => {
+          const property = "." + fieldPath.join(".");
+          return {
+            property,
+            stack: `${property}: ${stack}`,
+          };
+        })
       );
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
       if (key !== ERRORS_KEY) {
         acc = acc.concat(
-          this.toErrorList((errorSchema as GenericObjectType)[key], key)
+          this.toErrorList((errorSchema as GenericObjectType)[key], [
+            ...fieldPath,
+            key,
+          ])
         );
       }
       return acc;
@@ -284,20 +290,11 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
       this.createErrorHandler(newFormData)
     );
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    const newErrorSchema: ErrorSchema<T> = mergeObjects(
-      errorSchema,
-      userErrorSchema,
-      true
-    ) as ErrorSchema<T>;
-    // XXX: The errors list produced is not fully compliant with the format
-    // exposed by the jsonschema lib, which contains full field paths and other
-    // properties.
-    const newErrors = this.toErrorList(newErrorSchema);
-
-    return {
-      errors: newErrors,
-      errorSchema: newErrorSchema as ErrorSchema<T>,
-    };
+    return mergeValidationData<T>(
+      this,
+      { errors, errorSchema },
+      userErrorSchema
+    );
   }
 
   /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling

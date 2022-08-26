@@ -6,6 +6,7 @@ import {
   isFilesArrayTest,
   isMultiSelectTest,
   isSelectTest,
+  mergeValidationDataTest,
   retrieveSchemaTest,
   toIdSchemaTest,
   toPathSchemaTest,
@@ -20,6 +21,7 @@ getMatchingOptionTest(testValidator);
 isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
+mergeValidationDataTest(testValidator);
 retrieveSchemaTest(testValidator);
 toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);

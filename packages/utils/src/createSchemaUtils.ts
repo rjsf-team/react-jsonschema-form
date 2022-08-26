@@ -1,10 +1,12 @@
 import deepEquals from "./deepEquals";
 import {
+  ErrorSchema,
   IdSchema,
   PathSchema,
   RJSFSchema,
   SchemaUtilsType,
   UiSchema,
+  ValidationData,
   ValidatorType,
 } from "./types";
 import {
@@ -14,6 +16,7 @@ import {
   isFilesArray,
   isMultiSelect,
   isSelect,
+  mergeValidationData,
   retrieveSchema,
   toIdSchema,
   toPathSchema,
@@ -150,6 +153,26 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    */
   isSelect(schema: RJSFSchema) {
     return isSelect<T>(this.validator, schema, this.rootSchema);
+  }
+
+  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
+   * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
+   * `getValidator().toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed,
+   * then `validationData` is returned.
+   *
+   * @param validationData - The current `ValidationData` into which to merge the additional errors
+   * @param [additionalErrorSchema] - The additional set of errors
+   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+   */
+  mergeValidationData(
+    validationData: ValidationData<T>,
+    additionalErrorSchema?: ErrorSchema<T>
+  ): ValidationData<T> {
+    return mergeValidationData<T>(
+      this.validator,
+      validationData,
+      additionalErrorSchema
+    );
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
