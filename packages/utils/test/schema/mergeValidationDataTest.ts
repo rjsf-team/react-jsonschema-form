@@ -26,7 +26,9 @@ export default function mergeValidationDataTest(
         errors: [],
       };
       const errors = ["custom errors"];
-      const customErrors = [{ property: ".", stack: `.: ${errors[0]}` }];
+      const customErrors = [
+        { property: ".", message: errors[0], stack: `. ${errors[0]}` },
+      ];
       testValidator.setReturnValues({ errorList: [customErrors] });
       const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors } as ErrorSchema;
       const expected = {
@@ -45,7 +47,9 @@ export default function mergeValidationDataTest(
         errors: [{ stack: oldError, name: "foo", schemaPath: ".foo" }],
       };
       const errors = ["custom errors"];
-      const customErrors = [{ property: ".", stack: `.: ${errors[0]}` }];
+      const customErrors = [
+        { property: ".", message: errors[0], stack: `. ${errors[0]}` },
+      ];
       testValidator.setReturnValues({ errorList: [customErrors] });
       const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors } as ErrorSchema;
       const expected = {

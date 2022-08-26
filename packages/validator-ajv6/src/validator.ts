@@ -116,11 +116,12 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     let errorList: RJSFValidationError[] = [];
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
-        errorSchema.__errors!.map((stack: string) => {
-          const property = "." + fieldPath.join(".");
+        errorSchema.__errors!.map((message: string) => {
+          const property = `.${fieldPath.join(".")}`;
           return {
             property,
-            stack: `${property}: ${stack}`,
+            message,
+            stack: `${property} ${message}`,
           };
         })
       );
