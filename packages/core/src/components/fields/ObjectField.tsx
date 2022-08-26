@@ -110,11 +110,13 @@ class ObjectField<T = any, F = any> extends Component<
    * @returns - The name of the next available key from `preferredKey`
    */
   getAvailableKey = (preferredKey: string, formData: T) => {
-    const separator = this.props.duplicateKeySuffixSeparator ?? "-";
+    const { uiSchema } = this.props;
+    const { duplicateKeySuffixSeparator = "-" } = getUiOptions<T, F>(uiSchema);
+
     let index = 0;
     let newKey = preferredKey;
     while (newKey in formData) {
-      newKey = `${preferredKey}${separator}${++index}`;
+      newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
     }
     return newKey;
   };
@@ -227,7 +229,6 @@ class ObjectField<T = any, F = any> extends Component<
       onBlur,
       onFocus,
       registry,
-      duplicateKeySuffixSeparator,
     } = this.props;
 
     const { fields, formContext, schemaUtils } = registry;
@@ -302,7 +303,6 @@ class ObjectField<T = any, F = any> extends Component<
               readonly={readonly}
               hideError={hideError}
               onDropPropertyClick={this.onDropPropertyClick}
-              duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
             />
           ),
           name,

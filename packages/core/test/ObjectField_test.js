@@ -695,7 +695,9 @@ describe("ObjectField", () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData,
-        duplicateKeySuffixSeparator: "_",
+        uiSchema: {
+          "ui:duplicateKeySuffixSeparator": "_",
+        },
       });
 
       const textNode = node.querySelector("#root_first-key");

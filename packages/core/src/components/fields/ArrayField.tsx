@@ -803,7 +803,6 @@ class ArrayField<T = any, F = any> extends Component<
       uiSchema,
       registry,
       formContext,
-      duplicateKeySuffixSeparator,
     } = this.props;
     const {
       fields: { SchemaField },
@@ -842,7 +841,6 @@ class ArrayField<T = any, F = any> extends Component<
           hideError={hideError}
           autofocus={autofocus}
           rawErrors={rawErrors}
-          duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
         />
       ),
       className: "array-item",
