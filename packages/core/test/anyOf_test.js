@@ -810,7 +810,9 @@ describe("anyOf", () => {
 
       expect(node.querySelectorAll("select")).to.have.length.of(1);
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
     });
 
     it("should not change the selected option when switching order of items for anyOf inside array items", () => {
@@ -995,8 +997,12 @@ describe("anyOf", () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
-      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
+      expect(node.querySelectorAll("input#root_items_0_bar")).to.have.length.of(
+        1
+      );
     });
 
     it("should correctly infer the selected option based on value", () => {
@@ -1075,13 +1081,18 @@ describe("anyOf", () => {
         },
       });
 
-      const idSelects = node.querySelectorAll("select#root_id");
+      const rootId = node.querySelector("select#root_id");
+      expect(rootId.value).eql("chain");
+      const componentId = node.querySelector("select#root_components_0_id");
+      expect(componentId.value).eql("map");
 
-      expect(idSelects).to.have.length(4);
-      expect(idSelects[0].value).eql("chain");
-      expect(idSelects[1].value).eql("map");
-      expect(idSelects[2].value).eql("transform");
-      expect(idSelects[3].value).eql("to_absolute");
+      const fnId = node.querySelector("select#root_components_0_fn_id");
+      expect(fnId.value).eql("transform");
+
+      const transformerId = node.querySelector(
+        "select#root_components_0_fn_transformer_id"
+      );
+      expect(transformerId.value).eql("to_absolute");
     });
   });
   describe("hideError works with anyOf", () => {

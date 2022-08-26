@@ -5,6 +5,7 @@ import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import SchemaField from "../src/components/fields/SchemaField";
 
 const ArrayKeyDataAttr = "data-rjsf-itemkey";
 const ExposedArrayKeyTemplate = function (props) {
@@ -2175,6 +2176,48 @@ describe("ArrayField", () => {
         ".form-group.field-error input[type=text]"
       );
       expect(inputsNoError).to.have.length.of(0);
+    });
+  });
+  describe("FormContext gets passed", () => {
+    const schema = {
+      type: "array",
+      items: [
+        {
+          type: "string",
+          title: "Some text",
+        },
+        {
+          type: "number",
+          title: "A number",
+        },
+      ],
+    };
+    it("should pass form context to schema field", () => {
+      const formContext = {
+        root: "root-id",
+        root_0: "root_0-id",
+        root_1: "root_1-id",
+      };
+      function CustomSchemaField(props) {
+        const { formContext, idSchema } = props;
+        return (
+          <>
+            <code id={formContext[idSchema.$id]}>Ha</code>
+            <SchemaField {...props} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        formContext,
+        fields: { SchemaField: CustomSchemaField },
+      });
+
+      const codeBlocks = node.querySelectorAll("code");
+      expect(codeBlocks).to.have.length(3);
+      Object.keys(formContext).forEach((key) => {
+        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+      });
     });
   });
 });

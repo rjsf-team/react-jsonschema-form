@@ -4,6 +4,7 @@ import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import SchemaField from "../src/components/fields/SchemaField";
 
 describe("oneOf", () => {
   let sandbox;
@@ -394,6 +395,46 @@ describe("oneOf", () => {
     expect(node.querySelectorAll("#custom-oneof-field")).to.have.length(1);
   });
 
+  it("should pass form context to schema field", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        userId: {
+          oneOf: [
+            {
+              type: "number",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+      },
+    };
+    const formContext = { root: "root-id", root_userId: "userId-id" };
+    function CustomSchemaField(props) {
+      const { formContext, idSchema } = props;
+      return (
+        <>
+          <code id={formContext[idSchema.$id]}>Ha</code>
+          <SchemaField {...props} />
+        </>
+      );
+    }
+    const { node } = createFormComponent({
+      schema,
+      formData: { userId: "foobarbaz" },
+      formContext,
+      fields: { SchemaField: CustomSchemaField },
+    });
+
+    const codeBlocks = node.querySelectorAll("code");
+    expect(codeBlocks).to.have.length(3);
+    Object.keys(formContext).forEach((key) => {
+      expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+    });
+  });
+
   it("should select the correct field when the form is rendered from existing data", () => {
     const schema = {
       type: "object",
@@ -493,8 +534,9 @@ describe("oneOf", () => {
     });
 
     expect($select.value).eql("1");
+    console.log(node.innerHTML);
 
-    Simulate.change(node.querySelector("input#root_bar"), {
+    Simulate.change(node.querySelector("input#root_items_bar"), {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
@@ -584,8 +626,12 @@ describe("oneOf", () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
-      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
+      expect(node.querySelectorAll("input#root_items_0_bar")).to.have.length.of(
+        1
+      );
     });
   });
 
@@ -767,13 +813,18 @@ describe("oneOf", () => {
       },
     });
 
-    const idSelects = node.querySelectorAll("select#root_id");
+    const rootId = node.querySelector("select#root_id");
+    expect(rootId.value).eql("chain");
+    const componentId = node.querySelector("select#root_components_0_id");
+    expect(componentId.value).eql("map");
 
-    expect(idSelects).to.have.length(4);
-    expect(idSelects[0].value).eql("chain");
-    expect(idSelects[1].value).eql("map");
-    expect(idSelects[2].value).eql("transform");
-    expect(idSelects[3].value).eql("to_absolute");
+    const fnId = node.querySelector("select#root_components_0_fn_id");
+    expect(fnId.value).eql("transform");
+
+    const transformerId = node.querySelector(
+      "select#root_components_0_fn_transformer_id"
+    );
+    expect(transformerId.value).eql("to_absolute");
   });
 
   describe("Custom Field", function () {

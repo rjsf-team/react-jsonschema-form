@@ -20,8 +20,13 @@ should change the heading of the (upcoming) version to include a major version b
 - clear errors on formData change when liveOmit=true when "additionalProperties: false" [issue 1507](https://github.com/rjsf-team/react-jsonschema-form/issues/1507) (https://github.com/rjsf-team/react-jsonschema-form/pull/2631)
 
 ## @rjsf/core
-- Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
+- **BREAKING CHANGE** Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
 - Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
+- **BREAKING CHANGE** Fixed `anyOf` and `oneOf` getting incorrect, potentially duplicate ids when combined with array (https://github.com/rjsf-team/react-jsonschema-form/issues/2197)
+- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274) 
+
+## @rjsf/antd
+- Fix esm build to use `@rollup/plugin-replace` to replace `antd/lib` and `rc-picker/lib` with `antd/es` and `rc-picker/es` respectively, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2962)
 
 ## @rjsf/semantic-ui
 - Fix missing error class on fields (https://github.com/rjsf-team/react-jsonschema-form/issues/2666)

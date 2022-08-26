@@ -286,6 +286,7 @@ class ObjectField<T = any, F = any> extends Component<
               idPrefix={idPrefix}
               idSeparator={idSeparator}
               formData={get(formData, name)}
+              formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(

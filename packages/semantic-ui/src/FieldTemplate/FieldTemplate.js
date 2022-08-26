@@ -33,7 +33,7 @@ function FieldTemplate({
   );
 
   if (hidden) {
-    return children;
+    return <div style={{ display: "none" }}>{children}</div>;
   }
 
   return (

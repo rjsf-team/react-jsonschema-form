@@ -172,7 +172,13 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   >("DescriptionFieldTemplate", registry, uiOptions);
   const schema = schemaUtils.retrieveSchema(_schema, formData);
   const idSchema = mergeObjects(
-    schemaUtils.toIdSchema(schema, undefined, formData, idPrefix, idSeparator),
+    schemaUtils.toIdSchema(
+      schema,
+      _idSchema.$id,
+      formData,
+      idPrefix,
+      idSeparator
+    ),
     _idSchema
   ) as IdSchema<T>;
   const FieldComponent = getFieldComponent(
@@ -307,6 +313,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               hideError={hideError}
               errorSchema={errorSchema}
               formData={formData}
+              formContext={formContext}
               idPrefix={idPrefix}
               idSchema={idSchema}
               idSeparator={idSeparator}
@@ -335,6 +342,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               hideError={hideError}
               errorSchema={errorSchema}
               formData={formData}
+              formContext={formContext}
               idPrefix={idPrefix}
               idSchema={idSchema}
               idSeparator={idSeparator}

@@ -151,6 +151,7 @@ class AnyOfField<T = any, F = any> extends Component<
       hideError = false,
       errorSchema = {},
       formData,
+      formContext,
       idPrefix,
       idSeparator,
       idSchema,
@@ -199,6 +200,7 @@ class AnyOfField<T = any, F = any> extends Component<
             value={selectedOption}
             options={{ enumOptions }}
             registry={registry}
+            formContext={formContext}
             {...uiOptions}
             label=""
           />
@@ -213,6 +215,7 @@ class AnyOfField<T = any, F = any> extends Component<
             idPrefix={idPrefix}
             idSeparator={idSeparator}
             formData={formData}
+            formContext={formContext}
             onChange={onChange}
             onBlur={onBlur}
             onFocus={onFocus}
