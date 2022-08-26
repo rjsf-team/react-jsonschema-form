@@ -227,6 +227,7 @@ class ObjectField<T = any, F = any> extends Component<
       onBlur,
       onFocus,
       registry,
+      duplicateKeySuffixSeparator,
     } = this.props;
 
     const { fields, formContext, schemaUtils } = registry;
@@ -301,6 +302,7 @@ class ObjectField<T = any, F = any> extends Component<
               readonly={readonly}
               hideError={hideError}
               onDropPropertyClick={this.onDropPropertyClick}
+              duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
             />
           ),
           name,

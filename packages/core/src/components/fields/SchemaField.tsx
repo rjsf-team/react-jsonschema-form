@@ -157,6 +157,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     required,
     registry,
     wasPropertyKeyModified = false,
+    duplicateKeySuffixSeparator,
   } = props;
   const { formContext, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, F>(uiSchema);
@@ -330,6 +331,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               registry={registry}
               schema={schema}
               uiSchema={uiSchema}
+              duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
             />
           )}
         {schema.oneOf &&
@@ -359,6 +361,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               registry={registry}
               schema={schema}
               uiSchema={uiSchema}
+              duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
             />
           )}
       </>
