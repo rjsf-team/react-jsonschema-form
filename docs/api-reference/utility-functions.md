@@ -250,8 +250,11 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 - GenericObjectType: The merged schema object
 
 ### optionsList()
-Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned. The labels for the options will be the same as the `value`.
-If the schema has a `oneOf` or `anyOf`, then the value is the list of `const` values from the schema and the label is either the `schema.title`, if it exists, or the value.
+Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
+The labels for the options will be extracted from the non-standard `enumNames` if it exists otherwise will be the same as the `value`.
+If the schema has a `oneOf` or `anyOf`, then the value is the list of `const` values from the schema and the label is either the `schema.title` or the value.
+
+NOTE: `enumNames` is deprecated and may be removed in a future major version of RJSF.
 
 #### Parameters
 - schema: RJSFSchema - The schema from which to extract the options list
