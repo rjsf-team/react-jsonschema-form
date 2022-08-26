@@ -110,10 +110,11 @@ class ObjectField<T = any, F = any> extends Component<
    * @returns - The name of the next available key from `preferredKey`
    */
   getAvailableKey = (preferredKey: string, formData: T) => {
+    const separator = this.props.duplicateKeySuffixSeparator || "-";
     let index = 0;
     let newKey = preferredKey;
     while (newKey in formData) {
-      newKey = `${preferredKey}-${++index}`;
+      newKey = `${preferredKey}${separator}${++index}`;
     }
     return newKey;
   };

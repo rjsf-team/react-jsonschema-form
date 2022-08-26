@@ -162,6 +162,7 @@ class AnyOfField<T = any, F = any> extends Component<
       registry,
       uiSchema,
       schema,
+      duplicateKeySuffixSeparator,
     } = this.props;
 
     const { widgets, fields } = registry;
@@ -223,6 +224,7 @@ class AnyOfField<T = any, F = any> extends Component<
             disabled={disabled}
             readonly={readonly}
             hideError={hideError}
+            duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
           />
         )}
       </div>

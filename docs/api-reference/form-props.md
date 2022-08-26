@@ -91,6 +91,11 @@ render((
 
 If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`.
 
+## duplicateKeySuffixSeparator
+
+When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key. For example, when you add a key named `myKey` to a form where `myKey` is already described, then your new key will become `myKey-1`.
+`duplicateKeySuffixSeparator` allows you to override the default separator, `"-"` with a string of your choice.
+
 ## enctype
 
 The value of this prop will be passed to the `enctype` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype).

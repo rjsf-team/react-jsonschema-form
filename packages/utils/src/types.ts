@@ -261,6 +261,10 @@ export interface FieldProps<T = any, F = any>
   name: string;
   /** The `registry` object */
   registry: Registry<T, F>;
+  /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
+   * This prop allows you to change the separator between the original key name and the integer. Default is "-"
+   */
+  duplicateKeySuffixSeparator?: string;
 }
 
 /** The definition of a React-based Field component */
