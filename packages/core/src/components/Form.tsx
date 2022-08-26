@@ -334,12 +334,12 @@ export default class Form<T = any, F = any> extends Component<
       errorSchema = currentErrors.errorSchema;
     }
     if (props.extraErrors) {
-      errorSchema = mergeObjects(
-        errorSchema,
-        props.extraErrors,
-        true
-      ) as ErrorSchema<T>;
-      errors = schemaUtils.getValidator().toErrorList(errorSchema);
+      const merged = schemaUtils.mergeValidationData(
+        { errorSchema, errors },
+        props.extraErrors
+      );
+      errorSchema = merged.errorSchema;
+      errors = merged.errors;
     }
     const idSchema = schemaUtils.toIdSchema(
       retrievedSchema,
@@ -536,12 +536,12 @@ export default class Form<T = any, F = any> extends Component<
       const schemaValidationErrors = errors;
       const schemaValidationErrorSchema = errorSchema;
       if (extraErrors) {
-        errorSchema = mergeObjects(
-          errorSchema,
-          extraErrors,
-          true
-        ) as ErrorSchema<T>;
-        errors = schemaUtils.getValidator().toErrorList(errorSchema);
+        const merged = schemaUtils.mergeValidationData(
+          schemaValidation,
+          extraErrors
+        );
+        errorSchema = merged.errorSchema;
+        errors = merged.errors;
       }
       state = {
         formData: newFormData,
@@ -633,12 +633,12 @@ export default class Form<T = any, F = any> extends Component<
       const schemaValidationErrorSchema = errorSchema;
       if (errors.length > 0) {
         if (extraErrors) {
-          errorSchema = mergeObjects(
-            errorSchema,
-            extraErrors,
-            true
-          ) as ErrorSchema<T>;
-          errors = schemaUtils.getValidator().toErrorList(errorSchema);
+          const merged = schemaUtils.mergeValidationData(
+            schemaValidation,
+            extraErrors
+          );
+          errorSchema = merged.errorSchema;
+          errors = merged.errors;
         }
         this.setState(
           {

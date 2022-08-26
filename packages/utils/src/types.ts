@@ -714,11 +714,11 @@ export interface ValidatorType<T = any> {
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldName='root'] - The current field name, defaults to `root` if not specified
+   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
    */
   toErrorList(
     errorSchema?: ErrorSchema<T>,
-    fieldName?: string
+    fieldPath?: string[]
   ): RJSFValidationError[];
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
@@ -804,6 +804,20 @@ export interface SchemaUtilsType<T = any> {
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: RJSFSchema): boolean;
+  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
+   * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
+   * `validator.toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, then
+   * `validationData` is returned.
+   *
+   * @param validator - The validator used to convert an ErrorSchema to a list of errors
+   * @param validationData - The current `ValidationData` into which to merge the additional errors
+   * @param [additionalErrorSchema] - The additional set of errors
+   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+   */
+  mergeValidationData(
+    validationData: ValidationData<T>,
+    additionalErrorSchema?: ErrorSchema<T>
+  ): ValidationData<T>;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.

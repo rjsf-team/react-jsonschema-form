@@ -30,9 +30,9 @@ export default function getTestValidator<T = any>(
     },
     toErrorList(
       errorSchema?: ErrorSchema<T>,
-      fieldName?: string
+      fieldPath?: string[]
     ): RJSFValidationError[] {
-      return validator.toErrorList(errorSchema, fieldName);
+      return validator.toErrorList(errorSchema, fieldPath);
     },
     isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);
