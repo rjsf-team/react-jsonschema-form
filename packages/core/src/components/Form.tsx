@@ -62,10 +62,6 @@ export interface FormProps<T = any, F = any> {
    * to each field of the form. If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`
    */
   disabled?: boolean;
-  /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
-   * This prop allows you to change the separator between the original key name and the integer. Default is "-"
-   */
-  duplicateKeySuffixSeparator?: string;
   /** It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then
    * forwarded down to each field of the form. If you just want to make some fields read-only, see the `ui:readonly`
    * parameter in `uiSchema`
@@ -742,7 +738,6 @@ export default class Form<T = any, F = any> extends Component<
       disabled = false,
       readonly = false,
       formContext,
-      duplicateKeySuffixSeparator,
       _internalFormWrapper,
     } = this.props;
 
@@ -789,7 +784,6 @@ export default class Form<T = any, F = any> extends Component<
           registry={registry}
           disabled={disabled}
           readonly={readonly}
-          duplicateKeySuffixSeparator={duplicateKeySuffixSeparator}
         />
         {children ? children : <SubmitButton uiSchema={uiSchema} />}
       </FormTag>
