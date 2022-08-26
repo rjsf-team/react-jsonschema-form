@@ -115,6 +115,20 @@ render((
 ), document.getElementById("app"));
 ```
 
+In your JSON Schema, you may also specify `enumNames`, a non-standard field which RJSF can use to label an enumeration. **This behavior is deprecated and may be removed in a future major release of RJSF.**
+
+```jsx
+import validator from "@rjsf/validator-ajv6";
+const schema = {
+  type: "number",
+  enum: [1, 2, 3],
+  enumNames: ["one", "two", "three"]
+};
+render((
+  <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
 ### Disabled attribute for `enum` fields
 
 To disable an option, use the `ui:enumDisabled` property in the uiSchema.
