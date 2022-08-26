@@ -290,6 +290,12 @@ const uiSchema = {
   }
 };
 ```
+
+## `duplicateKeySuffixSeparator` option
+
+When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key. For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
+You can use `ui:duplicateKeySuffixSeparator` to override the default separator, `"-"` with a string of your choice.
+
 ## Theme Options
 [Semantic UI](themes/semantic-ui/uiSchema.md)
 [Chakra UI](themes/chakra-ui/uiSchema.md)
