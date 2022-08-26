@@ -11,7 +11,7 @@ This is an advanced feature that lets you customize even more aspects of the for
 | **Documentation**     | [Custom Fields](custom-widgets-fields.md) | See documentation below                                        | [Custom Widgets](custom-widgets-fields.md)                                |
 
 In version 5, all existing `templates` were consolidated into a new `TemplatesType` interface that is provided as part of the `Registry`.
-They can also be overloaded globally on the `Form` via the `templates` prop as well globally or per-field through the `uiSchema`.
+They can also be overloaded globally on the `Form` via the `templates` prop as well as globally or per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
 A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.
@@ -124,7 +124,7 @@ The following props are part of each element in `items`:
 
 The out-of-the-box version of this template will render the `DescriptionFieldTemplate` with a generated id, if there is a `description` otherwise nothing is rendered.
 If you want different behavior for the rendering of the description of an array field, you can customize this template.
-If you want a different behavior for the rendering of ALL descriptions in th `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
+If you want a different behavior for the rendering of ALL descriptions in the `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
 
 ```tsx
 import { ArrayFieldDescriptionProps } from "@rjsf/utils";
@@ -219,7 +219,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 
 The out-of-the-box version of this template will render the `TitleFieldTemplate` with a generated id, if there is a `title` otherwise nothing is rendered.
 If you want a different behavior for the rendering of the title of an array field, you can customize this template.
-If you want a different behavior for the rendering of ALL titles in th `Form`, see [TitleFieldTemplate](#titlefieldtemplate) 
+If you want a different behavior for the rendering of ALL titles in the `Form`, see [TitleFieldTemplate](#titlefieldtemplate) 
 
 ```tsx
 import { ArrayFieldTitleTemplateProps } from "@rjsf/utils";
@@ -404,15 +404,50 @@ The following props are passed to the `DescriptionFieldTemplate`:
 
 ## ErrorListTemplate
 
-TODO
+The `ErrorListTemplate` is the template that renders the all the errors associated with the fields in the `Form`, at the top.
+Each theme implements a `ErrorListTemplate` used to render its errors using components for the theme's toolkit.
+If you want to customize how all the errors are rendered you can.
+
+```tsx
+import { ErrorListProps, RJSFValidationError } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function ErrorListTemplate(props: ErrorListProps) {
+  const { errors } = props;
+  return (
+    <details id={id}>
+      <summary>Errors</summary>
+      <ul>
+        {errors.map((error: RJSFValidationError, i: number) => {
+          return (
+            <li key={i} className="error">
+              {error.stack}
+            </li>
+          );
+        })}
+      </ul>
+    </details>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />
+), document.getElementById("app"));
+```
 
 The following props are passed to the `ErrorListTemplate`:
 
-- `schema`: The JSONSchema subschema object for this widget;
-- `uiSchema`: The uiSchema for this widget;
+- `schema`: The schema that was passed to `Form`
+- `uiSchema`: The uiSchema that was passed to `Form`
 - `formContext`: The `formContext` object that you passed to `Form`.
-- `errors`: A component instance listing any encountered errors for this field.
-- `errorSchema`: The errorSchema constructed by `Form`
+- `errors`: An array of all errors in this `Form`.
+- `errorSchema`: The `ErrorSchema` constructed by `Form`
 
 ## FieldTemplate
 
