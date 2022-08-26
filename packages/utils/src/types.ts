@@ -641,6 +641,10 @@ type UIOptionsBaseType<T = any, F = any> = Partial<
    * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
    */
   widget?: Widget<T, F> | string;
+  /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
+   * This option allows you to change the separator between the original key name and the integer. Default is "-"
+   */
+  duplicateKeySuffixSeparator?: string;
 };
 
 /** The type that represents the Options potentially provided by `ui:options` */
