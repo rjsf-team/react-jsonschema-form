@@ -260,9 +260,9 @@ export default class Form<T = any, F = any> extends Component<
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
       !deepEquals(nextState.formData, this.state.formData) &&
-      this.props.onChange
+      nextProps.onChange
     ) {
-      this.props.onChange(nextState);
+      nextProps.onChange(nextState);
     }
     this.setState(nextState);
   }
@@ -562,7 +562,7 @@ export default class Form<T = any, F = any> extends Component<
     }
     this.setState(
       state as FormState<T, F>,
-      () => onChange && onChange(this.state)
+      () => onChange && onChange({ ...this.state, ...state })
     );
   };
 
