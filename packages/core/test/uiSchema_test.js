@@ -62,9 +62,7 @@ describe("uiSchema", () => {
       expect(bar.classList.contains("another-for-bar")).eql(true);
       expect(baz.classList.contains("class-for-baz")).eql(true);
       expect(
-        console.warn.calledWithMatch(
-          /WARNING: 'uiSchema.classNames' is deprecated/
-        )
+        console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)
       ).to.be.true;
     });
   });
