@@ -54,7 +54,7 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
         .filter((o) => o) as RJSFSchemaDefinition[], // cast away the error that typescript can't grok is fixed
     });
   } else {
-    // We deprecated enumNames in v5 and removed it from the type, so we need to cast here.
+    // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
     const schemaWithEnumNames = schema as RJSFSchema & { enumNames?: string[] };
     schema.enum = schema.enum ?? [true, false];
     if (
@@ -78,7 +78,7 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
         enum: schema.enum,
         // NOTE: enumNames is deprecated, but still supported for now.
         enumNames: schemaWithEnumNames.enumNames,
-      });
+      } as RJSFSchema);
     }
   }
 

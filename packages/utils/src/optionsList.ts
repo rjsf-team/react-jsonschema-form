@@ -10,16 +10,21 @@ import { RJSFSchema, EnumOptionsType } from "./types";
  * @returns - The list of options from the schema
  */
 export default function optionsList(
-  schema: RJSFSchema & { enumNames?: string[] }
+  schema: RJSFSchema
 ): EnumOptionsType[] | undefined {
-  if (schema.enumNames && process.env.NODE_ENV !== "production") {
+  // enumNames was deprecated in v5 and is intentionally omitted from the RJSFSchema type.
+  // Cast the type to include enumNames so the feature still works.
+  const schemaWithEnumNames = schema as RJSFSchema & { enumNames?: string[] };
+  if (schemaWithEnumNames.enumNames && process.env.NODE_ENV !== "production") {
     console.warn(
       "The enumNames property is deprecated and may be removed in a future major release."
     );
   }
   if (schema.enum) {
     return schema.enum.map((value, i) => {
-      const label = (schema.enumNames && schema.enumNames[i]) || String(value);
+      const label =
+        (schemaWithEnumNames.enumNames && schemaWithEnumNames.enumNames[i]) ||
+        String(value);
       return { label, value };
     });
   }
