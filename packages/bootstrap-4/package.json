@@ -30,7 +30,6 @@
   },
   "peerDependencies": {
     "@rjsf/core": "^5.0.0",
-    "@rjsf/utils": "^5.0.0",
     "react": "^16.14.0 || >=17",
     "react-bootstrap": "^1.6.5"
   },

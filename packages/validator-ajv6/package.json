@@ -33,9 +33,6 @@
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15"
   },
-  "peerDependencies": {
-    "@rjsf/utils": "^5.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
