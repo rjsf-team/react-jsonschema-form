@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React, { createRef } from "react";
-import { renderIntoDocument, Simulate } from "react-dom/test-utils";
+import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
 import validator, { customizeValidator } from "@rjsf/validator-ajv6";
@@ -1011,6 +1011,52 @@ describeRepeated("Form common", (createFormComponent) => {
         schema,
         uiSchema,
       });
+    });
+    it("should call last provided change handler", async () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            default: "bar",
+          },
+        },
+      };
+
+      const secondOnChange = sandbox.spy();
+
+      const { comp, onChange } = createFormComponent({
+        schema,
+        formData: { foo: "bar1" },
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: { foo: "bar2" },
+        });
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange: secondOnChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+      sinon.assert.callCount(secondOnChange, 1);
     });
   });
   describe("Blur handler", () => {
@@ -3401,5 +3447,63 @@ describe("Form omitExtraData and liveOmit", () => {
     });
 
     expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+  });
+  describe("Calling onChange right after updating a Form with props formData", () => {
+    const schema = {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    };
+
+    let changed = false;
+    class ArrayThatTriggersOnChangeRightAfterUpdated extends React.Component {
+      componentDidUpdate = () => {
+        if (changed) {
+          return;
+        }
+        changed = true;
+        this.props.onChange([...this.props.formData, "test"]);
+      };
+      render() {
+        const { ArrayField } = this.props.registry.fields;
+        return <ArrayField {...this.props} />;
+      }
+    }
+
+    const uiSchema = {
+      "ui:field": ArrayThatTriggersOnChangeRightAfterUpdated,
+    };
+
+    const props = {
+      schema,
+      uiSchema,
+    };
+
+    class Container extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {};
+      }
+
+      onChange = ({ formData }) => {
+        this.setState({ formData });
+      };
+
+      render() {
+        return (
+          <Form {...this.props} {...this.state} onChange={this.onChange} />
+        );
+      }
+    }
+
+    it("doesn't cause a race condition", () => {
+      const { node } = createComponent(Container, { ...props });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector("#root_0")).to.exist;
+      expect(node.querySelector("#root_1").getAttribute("value")).to.eq("test");
+    });
   });
 });
