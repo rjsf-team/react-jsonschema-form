@@ -534,7 +534,6 @@ describe("oneOf", () => {
     });
 
     expect($select.value).eql("1");
-    console.log(node.innerHTML);
 
     Simulate.change(node.querySelector("input#root_items_bar"), {
       target: { value: "Lorem ipsum dolor sit amet" },

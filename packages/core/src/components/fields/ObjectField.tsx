@@ -135,7 +135,9 @@ class ObjectField<T = any, F = any> extends Component<
       const { formData, onChange, errorSchema } = this.props;
 
       value = this.getAvailableKey(value, formData);
-      const newFormData: GenericObjectType = { ...formData };
+      const newFormData: GenericObjectType = {
+        ...(formData as GenericObjectType),
+      };
       const newKeys: GenericObjectType = { [oldValue]: value };
       const keyValues = Object.keys(newFormData).map((key) => {
         const newKey = newKeys[key] || key;
