@@ -5,22 +5,23 @@ A UI schema is basically an object literal providing information on **how** the 
 
 The uiSchema object follows the tree structure of the form field hierarchy, and defines how each property should be rendered.
 
-Note that every property within uiSchema can be rendered in one of two ways: `{"ui:options": {[property]: [value]}}`, or `{"ui:[property]": value}`.
+Note that almost every property within uiSchema can be rendered in one of two ways: `{"ui:options": {[property]: [value]}}`, or `{"ui:[property]": value}`.
 
-In other words, the following uiSchemas are equivalent:
+In other words, the following `uiSchema`s are equivalent:
 
 ```json
 {
   "ui:title": "Title",
   "ui:description": "Description",
+  "ui:classNames": "my-class",
   "ui:submitButtonOptions": {
     "props": {
       "disabled": false,
       "className": "btn btn-info",
     },
-      "norender": false,
-      "submitText": "Submit"
-    }
+    "norender": false,
+    "submitText": "Submit"
+  }
 }
 ```
 
@@ -29,6 +30,7 @@ In other words, the following uiSchemas are equivalent:
   "ui:options": {
     "title": "Title",
     "description": "Description",
+    "classNames": "my-class",
     "submitButtonOptions": {
       "props": {
         "disabled": false,
@@ -41,14 +43,57 @@ In other words, the following uiSchemas are equivalent:
 }
 ```
 
-## classNames
+For a full list of what is supported in the `uiSchema` see the `UiSchema` type in [@rjsf/utils/types.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/master/packages/utils/src/types.ts).
+Be sure to pay attention to the hierarchical intersection to these other types: `UIOptionsBaseType` and `TemplatesType`.
+
+## Exceptions to the equivalence
+There are 3 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
+
+### ui:rootFieldId
+
+By default, this library will generate ids unique to the form for all rendered widgets.
+If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
+
+```js
+const uiSchema = {
+  "ui:rootFieldId": "myform"
+};
+```
+
+This will make all widgets have an id prefixed with `myform`.
+
+### ui:field
+
+The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
+Specify either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself.
+
+See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/custom-widgets-fields#custom-field-components) for more information about how to use this property.
+
+### ui:options
+
+The `ui:options` property cannot be nested inside itself and thus is the last exception.
+
+## ui:XXX or ui:options.XXX
+
+All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
+
+NOTE: The properties specific to array items can be found [here](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/arrays#array-item-uiSchema-options)
+
+### widget
+
+The `ui:field` property overrides the `Widget` implementation used for rendering any field in the form's hierarchy.
+Specify either the name of a widget that is used to look up an implementation from the `widgets` list or an actual one-off `Widget` component implementation itself.
+
+See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/custom-widgets-fields) for more information about how to use this property.
+
+### classNames
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
 
 ```jsx
 const uiSchema = {
   title: {
-    classNames: "task-title foo-bar"
+    "ui:classNames": "task-title foo-bar"
   }
 };
 ```
@@ -64,7 +109,19 @@ Will result in:
 </div>
 ```
 
-## autofocus
+### autocomplete
+
+If you want to mark a text input, select or textarea input to use the HTML autocomplete feature, set the `ui:autocomplete` uiSchema directive to a valid [HTML autocomplete value](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#values).
+
+```js
+const schema = {type: "string"};
+const uiSchema = {
+  "ui:widget": "textarea",
+  "ui:autocomplete": "on"
+}
+```
+
+### autofocus
 
 If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
 
@@ -76,7 +133,7 @@ const uiSchema = {
 }
 ```
 
-## description
+### description
 
 Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
@@ -88,13 +145,17 @@ const uiSchema = {
 };
 ```
 
-## disabled
+### disabled
 
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
-## enumDisabled
+### emptyValue
+
+The `ui:emptyValue` uiSchema directive provides the default value to use when an input for a field is empty
+
+### enumDisabled
 
 To disable an option, use the `enumDisabled` property in uiSchema.
 
@@ -109,7 +170,7 @@ const uiSchema={
 }
 ```
 
-## help
+### help
 
 Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
 
@@ -125,7 +186,7 @@ const uiSchema = {
 
 Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
-## hideError
+### hideError
 
 The `ui:hideError` uiSchema directive will, if set to `true`, hide the default error display for the given field AND all of its child fields in the hierarchy.
 
@@ -133,7 +194,7 @@ If you need to enable the default error display of a child in the hierarchy afte
 
 This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
 
-## inputType
+### inputType
 
 To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
 
@@ -146,7 +207,7 @@ const uiSchema = {
 };
 ```
 
-## label
+### label
 
 Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
@@ -165,11 +226,11 @@ render((
 ), document.getElementById("app"));
 ```
 
-## order
+### order
 
 This property allows you to reorder the properties that are shown for a particular object. See [Objects](../usage/objects.md) for more information.
 
-## placeholder
+### placeholder
 
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
@@ -201,25 +262,13 @@ render((
 ), document.getElementById("app"));
 ```
 
-## readonly
+### readonly
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
-## rootFieldId
-
-By default, this library will generate ids unique to the form for all rendered widgets. If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
-
-```js
-const uiSchema = {
-  "ui:rootFieldId": "myform"
-};
-```
-
-This will make all widgets have an id prefixed with `myform`.
-
-## rows
+### rows
 
 You can set the initial height of a textarea widget by specifying `rows` option.
 
@@ -228,8 +277,8 @@ import validator from "@rjsf/validator-ajv6";
 
 const schema = {type: "string"};
 const uiSchema = {
-  "ui:widget": "textarea",
   "ui:options": {
+    widget: "textarea",
     rows: 15
   }
 };
@@ -239,7 +288,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-## title
+### title
 
 Sometimes it's convenient to change a field's title. This is the purpose of the `ui:title` uiSchema directive:
 
@@ -251,30 +300,29 @@ const uiSchema = {
 };
 ```
 
-## submitButtonOptions
+### submitButtonOptions
 
 Sometimes it's convenient to change the behavior of the submit button for the form. This is the purpose of the `ui:submitButtonOptions` uiSchema directive:
 
 You can pass any other prop to the submit button if you want, by default, this library will set the following options / props mentioned below for all submit buttons:
 
-### `norender` option
+#### `norender` option
 
 You can set this property to `true` to remove the submit button completely from the form. Nice option, if the form is just for viewing purposes.
 
-### `submitText` option
+#### `submitText` option
 
 You can use this option to change the text of the submit button. Set to "Submit" by default.
 
-### `props` section
+#### `props` section
 
 You can pass any other prop to the submit button if you want, via this section.
 
-
-####  `disabled` prop
+#####  `disabled` prop
 
 You can use this option to disable the submit button.
 
-#### `className` prop
+##### `className` prop
 
 You can use this option to specify a class name for the submit button.
 

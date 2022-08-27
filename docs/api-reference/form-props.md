@@ -10,10 +10,6 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
-## ArrayFieldTemplate
-
-React component used to customize how all arrays are rendered on the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
-
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
@@ -107,10 +103,6 @@ You can pass a React component to this prop to customize how form errors are dis
 
 Dictionary of registered fields in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
 
-## FieldTemplate
-
-React component used to customize each field of the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
-
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
@@ -190,10 +182,6 @@ If set to true, turns off HTML5 validation on the form. Set to `false` by defaul
 ## noValidate
 
 If set to true, turns off all validation. Set to `false` by default.
-
-## ObjectFieldTemplate
-
-React component used to customize how all objects are rendered in the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## omitExtraData
 
@@ -280,6 +268,10 @@ const CustomForm = props => <form {...props} style={...} className={...} />
 ## target
 
 The value of this prop will be passed to the `target` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-target).
+
+## templates
+
+Dictionary of registered templates in the form. See [Custom Templates](../advanced-customization/custom-templates.md) for more information.
 
 ## transformErrors
 

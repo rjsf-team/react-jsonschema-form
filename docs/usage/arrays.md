@@ -92,7 +92,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-## Array item options
+## Array item uiSchema options
 
 ### `orderable` option
 
