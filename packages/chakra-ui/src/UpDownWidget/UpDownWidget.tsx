@@ -8,10 +8,8 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { WidgetProps, utils } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
-
-const { getDisplayLabel } = utils;
 
 const UpDownWidget = (props: WidgetProps) => {
   const {
@@ -27,10 +25,13 @@ const UpDownWidget = (props: WidgetProps) => {
     onFocus,
     rawErrors,
     required,
+    registry,
   } = props;
 
+  const { schemaUtils } = registry;
   const displayLabel =
-    getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
+    schemaUtils.getDisplayLabel(schema, uiSchema) &&
+    (!!label || !!schema.title);
 
   const chakraProps = getChakra({ uiSchema });
 

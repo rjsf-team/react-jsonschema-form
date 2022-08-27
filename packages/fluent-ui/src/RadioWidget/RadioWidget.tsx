@@ -1,6 +1,10 @@
 import React from "react";
-import { ChoiceGroup, IChoiceGroupOption, IChoiceGroupProps } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import {
+  ChoiceGroup,
+  IChoiceGroupOption,
+  IChoiceGroupProps,
+} from "@fluentui/react";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [
@@ -13,7 +17,7 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
   "onChanged",
   "theme",
   "styles",
-  "ariaLabelledBy"
+  "ariaLabelledBy",
 ];
 
 const RadioWidget = ({
@@ -44,13 +48,15 @@ const RadioWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
-    key: option.value,
-    text: option.label,
-    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
-  }));
+  const newOptions = (enumOptions as { value: any; label: any }[]).map(
+    (option) => ({
+      key: option.value,
+      text: option.label,
+      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+    })
+  );
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <ChoiceGroup
       options={newOptions as any}

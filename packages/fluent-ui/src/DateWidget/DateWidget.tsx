@@ -1,14 +1,7 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/core";
-import {
-  DatePicker,
-  DayOfWeek,
-  mergeStyleSets,
-} from "@fluentui/react";
+import { WidgetProps, pad } from "@rjsf/utils";
+import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";
-import { utils } from "@rjsf/core";
-
-const { pad } = utils;
 
 // Keys of IDropdownProps from @fluentui/react
 const allowedProps = [
@@ -51,7 +44,7 @@ const allowedProps = [
   "allFocusable",
   "onAfterMenuDismiss",
   "showCloseButton",
-  "tabIndex"
+  "tabIndex",
 ];
 
 const controlClass = mergeStyleSets({
@@ -67,20 +60,20 @@ const formatDate = (date?: Date) => {
   if (!date) {
     return "";
   }
-  const yyyy = pad(date.getFullYear(), 4);	
-  const MM = pad(date.getMonth() + 1, 2);	
+  const yyyy = pad(date.getFullYear(), 4);
+  const MM = pad(date.getMonth() + 1, 2);
   const dd = pad(date.getDate(), 2);
-  return `${yyyy}-${MM}-${dd}`
-}
+  return `${yyyy}-${MM}-${dd}`;
+};
 
 const parseDate = (dateStr?: string) => {
   if (!dateStr) {
     return undefined;
   }
-  const [year, month, day] = dateStr.split("-").map(e => parseInt(e));
-  var dt = new Date(year, month - 1, day);
+  const [year, month, day] = dateStr.split("-").map((e) => parseInt(e));
+  const dt = new Date(year, month - 1, day);
   return dt;
-}
+};
 
 const DateWidget = ({
   id,
@@ -98,14 +91,14 @@ const DateWidget = ({
       const formatted = formatDate(date);
       formatted && onChange(formatted);
     }
-  }
+  };
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <DatePicker
       className={controlClass.control}

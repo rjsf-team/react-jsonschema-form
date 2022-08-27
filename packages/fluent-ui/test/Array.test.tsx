@@ -1,49 +1,65 @@
-import React from 'react';
-import Form from "../src/index";
-import { JSONSchema7 } from "json-schema";
+import React from "react";
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
+
+import Form from "../src/index";
 
 describe("array fields", () => {
   test("array", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("fixed array", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "array",
       items: [
         {
-          type: "string"
+          type: "string",
         },
         {
-          type: "number"
-        }
-      ]
+          type: "number",
+        },
+      ],
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("checkboxes", () => {
-    const schema: JSONSchema7 = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
         type: "string",
-        enum: ["a", "b", "c"]
+        enum: ["a", "b", "c"],
       },
-      uniqueItems: true
+      uniqueItems: true,
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("array icons", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} formData={["a", "b"]} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

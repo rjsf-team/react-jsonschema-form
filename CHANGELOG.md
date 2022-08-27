@@ -15,7 +15,98 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# v5.0.0 (coming soon)
+# v5.0.0-beta.1
+
+## Global changes across all themes:
+- Node 16 is now the default node engine for all packages, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2687)
+- Refactored all themes to use the new `@rjsf/utils` library functions and types
+- Refactored the individual theme forms to consolidate `templates` as part of the fix for https://github.com/rjsf-team/react-jsonschema-form/issues/2526
+  - All the work implementing the `BaseInputTemplate` should fix (https://github.com/rjsf-team/react-jsonschema-form/issues/2926, https://github.com/rjsf-team/react-jsonschema-form/issues/2889, https://github.com/rjsf-team/react-jsonschema-form/issues/2875, https://github.com/rjsf-team/react-jsonschema-form/issues/2223)
+  - Also made the display of `title` and `description` consistent across themes, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2481, https://github.com/rjsf-team/react-jsonschema-form/issues/2363, https://github.com/rjsf-team/react-jsonschema-form/issues/2219)
+  - This change also ensures that all templates are properly exported, resolving (https://github.com/rjsf-team/react-jsonschema-form/issues/2365)
+- Bumped most devDependencies to the latest versions where possible
+- Switched all repos `package.json` and `package-lock.json` files to be built and maintained by Node 16.
+- Adding button templates help to change text for buttons (https://github.com/rjsf-team/react-jsonschema-form/issues/2082, https://github.com/rjsf-team/react-jsonschema-form/issues/2357)
+
+## @rjsf/utils
+- New package created by refactoring and converting to Typescript the `utils.js` file from `core` into independent functions.
+  - Resolves (https://github.com/rjsf-team/react-jsonschema-form/issues/1655, https://github.com/rjsf-team/react-jsonschema-form/issues/2480, https://github.com/rjsf-team/react-jsonschema-form/issues/2341)
+- Updated `types` from `core` in `utils` to better match the implementation across all themes
+  - Included adding a bunch of new types for existing and new features
+  - The type updates should fix (https://github.com/rjsf-team/react-jsonschema-form/issues/2871, https://github.com/rjsf-team/react-jsonschema-form/issues/2673, https://github.com/rjsf-team/react-jsonschema-form/issues/2347, https://github.com/rjsf-team/react-jsonschema-form/issues/2186)
+- Clear errors on `formData` change when `liveOmit=true` when "additionalProperties: false" [issue 1507](https://github.com/rjsf-team/react-jsonschema-form/issues/1507) (https://github.com/rjsf-team/react-jsonschema-form/pull/2631)
+
+## @rjsf/validator-ajv6
+- New package created by refactoring and converting to Typescript the `validator.js` file from `core` into independent functions as well as a class that implements the new `ValidatorType` interface.
+  - [#2693](https://github.com/rjsf-team/react-jsonschema-form/issues/2693).
+- Added support for customizing the options passed to the creation of the `ajv` instance.
+
+## @rjsf/validator-ajv6
+- A **BREAKING CHANGE** to `toErrorList()` was made so that it takes `fieldPath: string[]` rather than `fieldName='root'` as part of the fix to (https://github.com/rjsf-team/react-jsonschema-form/issues/1596)
+  - The returned `errors` also now adds `property` from the `fieldPath` along with the proper path from the `property` to the `stack` message, making it consistent with the AJV errors.
+    - Previously the `stack` attribute would say `root: error message`; now it says `. error message`
+  - In addition, the extra information provided by AJV is no longer lost from the `errors` when merged with custom validation, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/1596).
+
+## @rjsf/core
+- Converted core to Typescript (https://github.com/rjsf-team/react-jsonschema-form/issues/583)
+- `ui:emptyValue` now works with selects (https://github.com/rjsf-team/react-jsonschema-form/issues/1041)
+- Refactoring `utils.js` into the new `@rjsf/utils` fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2719)
+- **BREAKING CHANGE** Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
+- Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
+- **BREAKING CHANGE** Fixed `anyOf` and `oneOf` getting incorrect, potentially duplicate ids when combined with array (https://github.com/rjsf-team/react-jsonschema-form/issues/2197)
+- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274) 
+- Added `ui:duplicateKeySuffixSeparator` to customize how duplicate object keys are renamed when using `additionalProperties`.
+- The `extraErrors` are now consistently appended onto the end of the schema validation-based `errors` information that is returned via the `onErrors()` callback when submit fails.
+  - In addition, the extra information provided by AJV is no longer stripped from the `errors` during the merge process, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/1596).
+- Fixed id generation for `RadioWidget` to no longer use random numbers fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2461)
+- Correctly call the `onChange` handler in the new set of props if it changed, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/1708).
+- Fixed race condition for `onChange` when `formData` is controlled prop, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/513),
+
+## @rjsf/antd
+- Fix esm build to use `@rollup/plugin-replace` to replace `antd/lib` and `rc-picker/lib` with `antd/es` and `rc-picker/es` respectively, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2962)
+
+## @rjsf/bootstrap-4
+- Bootstrap-4 `withTheme` customizations should work properly now (https://github.com/rjsf-team/react-jsonschema-form/issues/2058)
+- `ArrayFieldTemplate` refactor seems to have fixed https://github.com/rjsf-team/react-jsonschema-form/issues/2775
+- Fix issues with `SelectField` (https://github.com/rjsf-team/react-jsonschema-form/issues/2616, https://github.com/rjsf-team/react-jsonschema-form/issues/2875)
+
+## @rjsf/chakra-ui
+- Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
+
+## @rjsf/material-ui 
+- The theme for Material UI version 5 (i.e. `@rjsf/mui`) was split out of the theme for version 4 (i.e. `@rjsf/material-ui`) to resolve the following issues:
+  - [#2762](https://github.com/rjsf-team/react-jsonschema-form/issues/2762)
+  - [#2858](https://github.com/rjsf-team/react-jsonschema-form/issues/2858)
+  - [#2905](https://github.com/rjsf-team/react-jsonschema-form/issues/2905)
+  - [#2945](https://github.com/rjsf-team/react-jsonschema-form/issues/2945)
+  - [#2774](https://github.com/rjsf-team/react-jsonschema-form/issues/2774)
+- Material-UI TextWidget now respects `inputType` in uiSchema (https://github.com/rjsf-team/react-jsonschema-form/issues/2057)
+  - Also respects `step` for `number` type (https://github.com/rjsf-team/react-jsonschema-form/issues/2488)
+- Material-UI UpDownWidget now support min/max/step (https://github.com/rjsf-team/react-jsonschema-form/issues/2022)
+- Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
+- Select properly accepts true or false (https://github.com/rjsf-team/react-jsonschema-form/issues/2326)
+
+## @rjsf/mui
+- The theme for Material UI version 5 (i.e. `@rjsf/mui`) was split out of the theme for version 4 (i.e. `@rjsf/material-ui`) to resolve the following issues:
+  - [#2762](https://github.com/rjsf-team/react-jsonschema-form/issues/2762)
+  - [#2858](https://github.com/rjsf-team/react-jsonschema-form/issues/2858)
+  - [#2905](https://github.com/rjsf-team/react-jsonschema-form/issues/2905)
+  - [#2945](https://github.com/rjsf-team/react-jsonschema-form/issues/2945)
+  - [#2774](https://github.com/rjsf-team/react-jsonschema-form/issues/2774)
+- Material-UI TextWidget now respects `inputType` in uiSchema (https://github.com/rjsf-team/react-jsonschema-form/issues/2057)
+  - Also respects `step` for `number` type (https://github.com/rjsf-team/react-jsonschema-form/issues/2488)
+- Material-UI UpDownWidget now support min/max/step (https://github.com/rjsf-team/react-jsonschema-form/issues/2022)
+- Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
+
+## @rjsf/semantic-ui
+- Fix missing error class on fields (https://github.com/rjsf-team/react-jsonschema-form/issues/2666)
+- Fixed the `main` definition in `semantic-ui` to fix (https://github.com/withastro/astro/issues/4357)
+- Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
+
+## Dev / docs / playground
+- Demonstrate use of `ui:field` with `anyOf` (#2890)
+- Playground now uses webpack 5
+- Corrected number field default (https://github.com/rjsf-team/react-jsonschema-form/issues/2358)
 
 # 4.2.1
 * fix typo by @epicfaace in https://github.com/rjsf-team/react-jsonschema-form/pull/2854
@@ -47,7 +138,7 @@ should change the heading of the (upcoming) version to include a major version b
   - NOTE: `@rjsf/material-ui` was retained to avoid a breaking change, but using it will continue to cause bundler warnings
   - See the `README.md` for the `@rjsf/material-ui` package for updated usage information
 - Fixed (#2831) for `material-ui` by removing the `DefaultChildren` passed into the themes
-  
+
 ## @rjsf/bootstrap-4
 - SubmitButton widget to use new ui:submitButtonOptions on the submit button for forms (https://github.com/rjsf-team/react-jsonschema-form/pull/2640)
 

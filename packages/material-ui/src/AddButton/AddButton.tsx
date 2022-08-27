@@ -1,15 +1,13 @@
-import React from 'react';
-import { AddButtonProps } from '@rjsf/core';
+import React from "react";
+import AddIcon from "@material-ui/icons/Add";
+import IconButton from "@material-ui/core/IconButton";
+import { IconButtonProps } from "@rjsf/utils";
 
-import { useMuiComponent } from '../MuiComponentContext';
-
-const AddButton: React.FC<AddButtonProps> = props => {
-  const { AddIcon, Button } = useMuiComponent();
-
+const AddButton: React.ComponentType<IconButtonProps> = (props) => {
   return (
-    <Button {...props} color="secondary">
-      <AddIcon /> Add Item
-    </Button>
+    <IconButton title="Add Item" {...props} color="primary">
+      <AddIcon />
+    </IconButton>
   );
 };
 

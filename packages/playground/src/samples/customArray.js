@@ -4,7 +4,7 @@ function ArrayFieldTemplate(props) {
   return (
     <div className={props.className}>
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div key={element.key} className={element.className}>
             <div>{element.children}</div>
             {element.hasMoveDown && (
@@ -12,7 +12,8 @@ function ArrayFieldTemplate(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index + 1
-                )}>
+                )}
+              >
                 Down
               </button>
             )}
@@ -21,7 +22,8 @@ function ArrayFieldTemplate(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index - 1
-                )}>
+                )}
+              >
                 Up
               </button>
             )}

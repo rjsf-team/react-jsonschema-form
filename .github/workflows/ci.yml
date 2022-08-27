@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, rjsf-v5 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, rjsf-v5 ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run cs-check
-    
+
     - name: Build with Netlify badge
       if: github.ref != 'refs/heads/master'
       run: npm run build
@@ -31,14 +31,14 @@ jobs:
     - name: Build
       if: github.ref == 'refs/heads/master'
       run: npm run build
-    
-    - if: matrix.node-version == '14.x'
+
+    - if: matrix.node-version == '16.x'
       uses: actions/upload-artifact@v2
       with:
         name: dist
         path: packages/playground/build
     - run: npm test
-    
+
   deploy_preview:
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/master'
@@ -58,7 +58,7 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-  
+
   deploy_playground:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -78,7 +78,7 @@ jobs:
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
   # deploy_canary:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master'
