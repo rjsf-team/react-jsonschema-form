@@ -1,7 +1,7 @@
 import React from "react";
 import { UnsupportedFieldProps } from "@rjsf/utils";
 
-/** The `UnsupportedField` component is use to render a field in the schema is one that is not supported by
+/** The `UnsupportedField` component is used to render a field in the schema is one that is not supported by
  * react-jsonschema-form.
  *
  * @param props - The `FieldProps` for this template

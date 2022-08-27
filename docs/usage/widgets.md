@@ -118,7 +118,7 @@ render((
   * `updown`: an `input[type=number]` updown selector;
   * `range`: an `input[type=range]` slider;
   * `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
-  * By default, a regular `input[type=text]` element is used.
+  * By default, a regular `input[type=number]` element is used.
 
 > Note: If JSON Schema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
 
