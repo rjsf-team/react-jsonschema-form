@@ -5,7 +5,7 @@ import { IconButtonProps } from "@rjsf/utils";
 
 const AddButton: React.ComponentType<IconButtonProps> = (props) => {
   return (
-    <IconButton title="Add Item" {...props} color="secondary">
+    <IconButton title="Add Item" {...props} color="primary">
       <AddIcon />
     </IconButton>
   );
