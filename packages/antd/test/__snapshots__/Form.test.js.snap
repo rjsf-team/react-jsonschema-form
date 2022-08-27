@@ -44,7 +44,7 @@ exports[`single fields checkbox field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -97,7 +97,7 @@ exports[`single fields checkbox field 2`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -260,7 +260,7 @@ exports[`single fields checkboxes field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -379,7 +379,7 @@ exports[`single fields field with description 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -501,7 +501,7 @@ exports[`single fields field with description in uiSchema 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -544,7 +544,7 @@ exports[`single fields format color 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -620,7 +620,7 @@ exports[`single fields format date 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -696,7 +696,7 @@ exports[`single fields format datetime 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -731,7 +731,7 @@ exports[`single fields hidden field 1`] = `
     </fieldset>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -774,7 +774,7 @@ exports[`single fields hidden label 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -793,7 +793,7 @@ exports[`single fields null field 1`] = `
     className="form-group field field-null"
   />
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -918,7 +918,7 @@ exports[`single fields number field 0 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1037,7 +1037,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1113,7 +1113,7 @@ exports[`single fields password field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1203,7 +1203,7 @@ exports[`single fields radio field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1316,7 +1316,7 @@ exports[`single fields select field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1383,7 +1383,7 @@ exports[`single fields slider field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1415,7 +1415,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1455,7 +1455,7 @@ exports[`single fields string field format email 1`] = `
     />
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1495,7 +1495,7 @@ exports[`single fields string field format uri 1`] = `
     />
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1535,7 +1535,7 @@ exports[`single fields string field regular 1`] = `
     />
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1578,7 +1578,7 @@ exports[`single fields string field with placeholder 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1622,7 +1622,7 @@ exports[`single fields textarea field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1761,7 +1761,7 @@ exports[`single fields title field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1803,7 +1803,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"
@@ -1928,7 +1928,7 @@ exports[`single fields up/down field 1`] = `
     className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
-    type="button"
+    type="submit"
   >
     <span>
       Submit
@@ -1965,7 +1965,7 @@ exports[`single fields using custom tagName 1`] = `
     />
   </div>
   <button
-    className="ant-btn"
+    className="ant-btn ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     type="submit"

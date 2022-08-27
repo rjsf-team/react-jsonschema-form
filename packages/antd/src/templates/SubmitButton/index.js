@@ -12,7 +12,7 @@ export default ({ uiSchema }) => {
     return null;
   }
   return (
-    <Button type="submit" {...submitButtonProps}>
+    <Button type="submit" {...submitButtonProps} htmlType="submit">
       {submitText}
     </Button>
   );
