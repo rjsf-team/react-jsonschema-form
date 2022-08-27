@@ -46,9 +46,9 @@ export function RemoveButton(props: IconButtonProps) {
     <MuiIconButton
       title="Remove"
       {...otherProps}
-      color="error"
+      color="secondary"
       icon={
-        <RemoveIcon fontSize={iconType === "default" ? "default" : "small"} />
+        <RemoveIcon fontSize={iconType === "default" ? "medium" : "small"} />
       }
     />
   );

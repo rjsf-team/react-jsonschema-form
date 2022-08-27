@@ -668,7 +668,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #9c27b0;
+  color: #1976d2;
 }
 
 .emotion-25::-moz-focus-inner {
@@ -698,7 +698,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
 }
 
 .emotion-25:hover {
-  background-color: rgba(156, 39, 176, 0.04);
+  background-color: rgba(25, 118, 210, 0.04);
 }
 
 @media (hover: none) {
@@ -994,7 +994,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid-root MuiGrid-item emotion-19"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeMedium object-property-expand emotion-25"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-25"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
