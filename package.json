@@ -1,8 +1,11 @@
 {
   "name": "react-jsonschema-form",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "postinstall": "lerna bootstrap",
     "publish": "lerna publish",
@@ -36,9 +39,7 @@
     "lint-staged": "^13.0.3",
     "nx": "^14.5.10",
     "prettier": "^2.7.1",
-    "source-map-loader": "^1.1.2",
     "ts-jest": "^27.1.5",
-    "ts-loader": "^8.4.0",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2"
   }
