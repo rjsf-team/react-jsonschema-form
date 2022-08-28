@@ -41,10 +41,10 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ## Releasing
 
-To release, go to the master branch and then create a new branch with the version number (minus the `v` prefix of the version, otherwise lerna fails to push tags):
+To release, go to the master branch and then create a new branch with the version number (with an `rc` prefix instead of `v`):
 
 ```bash
-git checkout -b 5.0.1
+git checkout -b rc5.0.1
 git push
 npx lerna version
 ```
