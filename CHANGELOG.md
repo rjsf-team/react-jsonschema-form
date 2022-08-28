@@ -15,6 +15,9 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.2
+- Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
+
 # v5.0.0-beta.1
 
 ## Global changes across all themes:

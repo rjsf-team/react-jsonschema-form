@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ master, rjsf-v5 ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, rjsf-v5 ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
       run: npm run build
 
     - if: matrix.node-version == '16.x'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: dist
         path: packages/playground/build
@@ -46,7 +46,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download built files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
@@ -66,7 +66,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download built files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
@@ -103,7 +103,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: 3.6
     - run: pip install -r requirements.docs.txt

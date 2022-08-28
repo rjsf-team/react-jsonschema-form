@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/bootstrap-4",
-  "version": "4.2.0",
+  "version": "5.0.0-beta.1",
   "main": "dist/index.js",
   "module": "dist/bootstrap-4.esm.js",
   "typings": "dist/index.d.ts",
@@ -29,8 +29,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^4.0.0",
-    "@rjsf/utils": "^4.2.0",
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
     "react": "^16.14.0 || >=17",
     "react-bootstrap": "^1.6.5"
   },
@@ -44,9 +44,9 @@
     "@babel/plugin-transform-modules-commonjs": "^7.18.6",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
-    "@rjsf/core": "^4.2.0",
-    "@rjsf/utils": "^4.2.0",
-    "@rjsf/validator-ajv6": "^4.2.0",
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.1",
     "@types/react": "^17.0.48",
     "@types/react-dom": "^17.0.17",
     "@types/react-test-renderer": "^17.0.2",
