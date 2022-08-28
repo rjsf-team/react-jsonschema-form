@@ -24,12 +24,16 @@
       "prettier --write"
     ]
   },
+  "engines": {
+    "node": ">=14"
+  },
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.0",
     "@mui/material": "^5.2.2",
-    "@rjsf/core": "^4.2.0",
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
     "react": ">=17"
   },
   "devDependencies": {
