@@ -46,7 +46,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download built files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
@@ -66,7 +66,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download built files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
