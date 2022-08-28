@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "4.2.0",
+  "version": "5.0.0-beta.0",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/chakra-ui.esm.js",
@@ -33,7 +33,6 @@
     "@chakra-ui/icons": ">=1.1.1",
     "@chakra-ui/react": ">=1.7.3",
     "@rjsf/core": "^4.2.0",
-    "@rjsf/utils": "^4.2.0",
     "framer-motion": ">=5.6.0",
     "react": "^16.14.0 || >=17"
   },
@@ -59,9 +58,9 @@
     "@emotion/jest": "^11.10.0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@rjsf/core": "^4.2.0",
-    "@rjsf/utils": "^4.2.0",
-    "@rjsf/validator-ajv6": "^4.2.0",
+    "@rjsf/core": "^5.0.0-beta.0",
+    "@rjsf/utils": "^5.0.0-beta.0",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.0",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
