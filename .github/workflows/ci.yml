@@ -33,7 +33,7 @@ jobs:
       run: npm run build
 
     - if: matrix.node-version == '16.x'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: dist
         path: packages/playground/build
