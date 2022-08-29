@@ -41,23 +41,35 @@ function BaseInputTemplate(props) {
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   return (
-    <Form.Input
-      key={id}
-      id={id}
-      placeholder={placeholder}
-      {...inputProps}
-      label={displayLabel ? label || schema.title : false}
-      required={required}
-      autoFocus={autofocus}
-      disabled={disabled || readonly}
-      name={name}
-      {...semanticProps}
-      value={value || value === 0 ? value : ""}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-    />
+    <>
+      <Form.Input
+        key={id}
+        id={id}
+        placeholder={placeholder}
+        {...inputProps}
+        label={displayLabel ? label || schema.title : false}
+        required={required}
+        autoFocus={autofocus}
+        disabled={disabled || readonly}
+        name={name}
+        list={schema.examples ? `examples_${id}` : undefined}
+        {...semanticProps}
+        value={value || value === 0 ? value : ""}
+        error={rawErrors.length > 0}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+      {schema.examples && (
+        <datalist id={`examples_${id}`}>
+          {schema.examples
+            .concat(schema.default ? [schema.default] : [])
+            .map(example => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      )}
+    </>
   );
 }
 export default BaseInputTemplate;

@@ -1761,6 +1761,107 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields schema examples 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-TextField root-42"
+    >
+      <div
+        className="ms-TextField-wrapper"
+      >
+        <div
+          className="ms-TextField-fieldGroup fieldGroup-43"
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-44"
+            disabled={false}
+            id="root"
+            list="examples_root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <datalist
+      id="examples_root"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+    
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-53"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-54"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-55"
+          >
+            <span
+              className="ms-Button-label label-57"
+              id="id__159"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`single fields select field 1`] = `
 <form
   className="rjsf"

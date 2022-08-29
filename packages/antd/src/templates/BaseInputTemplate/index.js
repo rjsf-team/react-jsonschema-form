@@ -36,32 +36,50 @@ const TextWidget = ({
 
   const handleFocus = ({ target }) => onFocus(id, target.value);
 
-  return inputProps.type === "number" || inputProps.type === "integer" ? (
-    <InputNumber
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      id={id}
-      name={id}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleNumberChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={INPUT_STYLE}
-      {...inputProps}
-      value={value}
-    />
-  ) : (
-    <Input
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      id={id}
-      name={id}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleTextChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={INPUT_STYLE}
-      {...inputProps}
-      value={value}
-    />
+  const input =
+    inputProps.type === "number" || inputProps.type === "integer" ? (
+      <InputNumber
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        id={id}
+        name={id}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleNumberChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={INPUT_STYLE}
+        list={schema.examples ? `examples_${id}` : undefined}
+        {...inputProps}
+        value={value}
+      />
+    ) : (
+      <Input
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        id={id}
+        name={id}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleTextChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={INPUT_STYLE}
+        list={schema.examples ? `examples_${id}` : undefined}
+        {...inputProps}
+        value={value}
+      />
+    );
+
+  return (
+    <>
+      {input}
+      {schema.examples && (
+        <datalist id={`examples_${id}`}>
+          {schema.examples
+            .concat(schema.default ? [schema.default] : [])
+            .map((example) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      )}
+    </>
   );
 };
 
