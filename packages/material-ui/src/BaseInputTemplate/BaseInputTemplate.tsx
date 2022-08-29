@@ -26,7 +26,11 @@ const BaseInputTemplate = ({
   const inputProps = getInputProps(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, ...rest } = inputProps;
-  const otherProps = { inputProps: { step, min, max }, ...rest };
+  const otherProps = {
+    inputProps: { step, min, max },
+    ...rest,
+    ...(schema.examples ? { list: `examples_${id}` } : undefined),
+  };
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -41,21 +45,32 @@ const BaseInputTemplate = ({
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   return (
-    <TextField
-      id={id}
-      placeholder={placeholder}
-      label={displayLabel ? label || schema.title : false}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled || readonly}
-      {...otherProps}
-      value={value || value === 0 ? value : ""}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      {...(textFieldProps as TextFieldProps)}
-    />
+    <>
+      <TextField
+        id={id}
+        placeholder={placeholder}
+        label={displayLabel ? label || schema.title : false}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled || readonly}
+        {...otherProps}
+        value={value || value === 0 ? value : ""}
+        error={rawErrors.length > 0}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        {...(textFieldProps as TextFieldProps)}
+      />
+      {schema.examples && (
+        <datalist id={`examples_${id}`}>
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      )}
+    </>
   );
 };
 
