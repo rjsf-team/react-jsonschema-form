@@ -18,17 +18,13 @@ describe("ObjectFieldTemplate", () => {
 
   class ObjectFieldTemplate extends PureComponent {
     render() {
-      const {
-        TitleField,
-        DescriptionField,
-        properties,
-        title,
-        description,
-      } = this.props;
+      const { properties, title, description, registry } = this.props;
+      const { DescriptionFieldTemplate, TitleFieldTemplate } =
+        registry.templates;
       return (
         <div className="root">
-          <TitleField title={title} />
-          <DescriptionField description={description} />
+          <TitleFieldTemplate title={title} />
+          <DescriptionFieldTemplate description={description} />
           <div>
             {properties.map(({ content }, index) => (
               <div key={index} className="property">
@@ -41,8 +37,8 @@ describe("ObjectFieldTemplate", () => {
     }
   }
 
-  const TitleField = () => <div className="title-field" />;
-  const DescriptionField = ({ description }) =>
+  const TitleFieldTemplate = () => <div className="title-field" />;
+  const DescriptionFieldTemplate = ({ description }) =>
     description ? <div className="description-field" /> : null;
 
   let node;
@@ -54,10 +50,10 @@ describe("ObjectFieldTemplate", () => {
       },
       uiSchema: { "ui:description": "foobar" },
       formData,
-      ObjectFieldTemplate,
-      fields: {
-        TitleField,
-        DescriptionField,
+      templates: {
+        ObjectFieldTemplate,
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();
@@ -73,9 +69,9 @@ describe("ObjectFieldTemplate", () => {
         "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
-      fields: {
-        TitleField,
-        DescriptionField,
+      templates: {
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();
@@ -91,10 +87,10 @@ describe("ObjectFieldTemplate", () => {
         "ui:ObjectFieldTemplate": ObjectFieldTemplate,
       },
       formData,
-      ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
-      fields: {
-        TitleField,
-        DescriptionField,
+      templates: {
+        ObjectFieldTemplate: () => <div />, // Empty object field template, proof that it's overridden
+        TitleFieldTemplate,
+        DescriptionFieldTemplate,
       },
     }).node;
     sharedIts();

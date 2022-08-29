@@ -1,10 +1,13 @@
 import React from "react";
-import { ChoiceGroup, IChoiceGroupOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import {
+  ChoiceGroup,
+  IChoiceGroupOption,
+  IChoiceGroupProps,
+} from "@fluentui/react";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
-// Keys of IChoiceGroupProps from @fluentui/react
-const allowedProps = [
+const allowedProps: (keyof IChoiceGroupProps)[] = [
   "componentRef",
   "options",
   "defaultSelectedKey",
@@ -14,7 +17,7 @@ const allowedProps = [
   "onChanged",
   "theme",
   "styles",
-  "ariaLabelledBy"
+  "ariaLabelledBy",
 ];
 
 const RadioWidget = ({
@@ -23,8 +26,6 @@ const RadioWidget = ({
   options,
   value,
   required,
-  disabled,
-  readonly,
   label,
   onChange,
   onBlur,
@@ -33,7 +34,7 @@ const RadioWidget = ({
   const { enumOptions, enumDisabled } = options;
 
   function _onChange(
-    ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
+    _ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
     option?: IChoiceGroupOption
   ): void {
     if (option) {
@@ -47,15 +48,15 @@ const RadioWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const row = options ? options.inline : false;
+  const newOptions = (enumOptions as { value: any; label: any }[]).map(
+    (option) => ({
+      key: option.value,
+      text: option.label,
+      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+    })
+  );
 
-  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
-    key: option.value,
-    text: option.label,
-    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
-  }));
-
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <ChoiceGroup
       options={newOptions as any}

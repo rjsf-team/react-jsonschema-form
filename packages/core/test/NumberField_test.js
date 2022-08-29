@@ -265,7 +265,7 @@ describe("NumberField", () => {
           },
         ];
 
-        tests.forEach(test => {
+        tests.forEach((test) => {
           it(`should work with an input value of ${test.input}`, () => {
             Simulate.change($input, {
               target: { value: test.input },

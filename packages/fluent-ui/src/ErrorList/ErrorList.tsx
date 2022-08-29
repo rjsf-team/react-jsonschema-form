@@ -1,14 +1,6 @@
 import React from "react";
 import { MessageBar, MessageBarType } from "@fluentui/react";
-import { Label } from "@fluentui/react";
-import { ErrorListProps } from "@rjsf/core";
-const styles = {
-  root: [
-    {
-      fontSize: 24,
-    },
-  ],
-};
+import { ErrorListProps } from "@rjsf/utils";
 
 const ErrorList = ({ errors }: ErrorListProps) => (
   <>
@@ -18,7 +10,8 @@ const ErrorList = ({ errors }: ErrorListProps) => (
           key={i}
           messageBarType={MessageBarType.error}
           isMultiline={false}
-          dismissButtonAriaLabel="Close">
+          dismissButtonAriaLabel="Close"
+        >
           {error.stack}
         </MessageBar>
       );

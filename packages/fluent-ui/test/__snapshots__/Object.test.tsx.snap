@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`object fields object 1`] = `
+exports[`object fields additionalProperties 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -15,6 +15,7 @@ exports[`object fields object 1`] = `
       }
     }
   >
+    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -38,18 +39,129 @@ exports[`object fields object 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-50"
-                htmlFor="root_a"
-                id="TextFieldLabel3"
+                className="ms-Label root-53"
+                htmlFor="root_foo"
+                id="TextFieldLabel11"
               >
-                a
+                foo
               </label>
               <div
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel3"
+                  aria-labelledby="TextFieldLabel11"
+                  autoFocus={false}
+                  className="ms-TextField-field field-44"
+                  disabled={false}
+                  id="root_foo"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value="foo"
+                />
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-54"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-55"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-56"
+          >
+            <span
+              className="ms-Button-label label-58"
+              id="id__12"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-object"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm12  field field-string"
+          style={
+            Object {
+              "display": undefined,
+              "marginBottom": 15,
+            }
+          }
+        >
+          <div
+            className="ms-TextField root-42"
+          >
+            <div
+              className="ms-TextField-wrapper"
+            >
+              <label
+                className="ms-Label root-53"
+                htmlFor="root_a"
+                id="TextFieldLabel2"
+              >
+                A
+              </label>
+              <div
+                className="ms-TextField-fieldGroup fieldGroup-43"
+              >
+                <input
+                  aria-invalid={false}
+                  aria-labelledby="TextFieldLabel2"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -67,6 +179,7 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
+          
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
@@ -84,18 +197,18 @@ exports[`object fields object 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-50"
+                className="ms-Label root-53"
                 htmlFor="root_b"
-                id="TextFieldLabel6"
+                id="TextFieldLabel5"
               >
-                b
+                B
               </label>
               <div
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel6"
+                  aria-labelledby="TextFieldLabel5"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -107,15 +220,18 @@ exports[`object fields object 1`] = `
                   placeholder=""
                   readOnly={false}
                   required={false}
+                  step="any"
                   type="number"
                   value=""
                 />
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
+    
   </div>
   <div>
     <br />
@@ -123,7 +239,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-51"
+        className="ms-Button ms-Button--primary root-54"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -134,15 +250,15 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-52"
+          className="ms-Button-flexContainer flexContainer-55"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-53"
+            className="ms-Button-textContainer textContainer-56"
           >
             <span
-              className="ms-Button-label label-55"
-              id="id__7"
+              className="ms-Button-label label-58"
+              id="id__6"
             >
               Submit
             </span>

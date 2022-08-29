@@ -1,9 +1,11 @@
-import { WidgetProps } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
+import { getDefaultRegistry } from "@rjsf/core";
+import validator from "@rjsf/validator-ajv6";
 
-import TextWidget from "../../src/TextWidget/TextWidget";
+import Templates from "../../src/Templates";
+import BaseInputTemplate from "../../src/BaseInputTemplate";
 
-export const mockSchema: JSONSchema7 = {
+export const mockSchema: RJSFSchema = {
   type: "array",
   items: {
     type: "string",
@@ -11,6 +13,19 @@ export const mockSchema: JSONSchema7 = {
 };
 
 export const mockEventHandlers = (): void => void 0;
+
+export const mockSchemaUtils = createSchemaUtils(validator, mockSchema);
+
+export function mockRegistry() {
+  return {
+    fields: {},
+    widgets: { TextWidget: BaseInputTemplate },
+    templates: { ...getDefaultRegistry().templates, ...Templates },
+    formContext: {},
+    rootSchema: {},
+    schemaUtils: mockSchemaUtils,
+  };
+}
 
 export function makeWidgetMockProps(
   props: Partial<WidgetProps> = {}
@@ -33,13 +48,7 @@ export function makeWidgetMockProps(
     formContext: {},
     id: "_id",
     placeholder: "",
-    registry: {
-      fields: {},
-      widgets: { TextWidget },
-      formContext: {},
-      definitions: {},
-      rootSchema: {},
-    },
+    registry: mockRegistry(),
     ...props,
   };
 }

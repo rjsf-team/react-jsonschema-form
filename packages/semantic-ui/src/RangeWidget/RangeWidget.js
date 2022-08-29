@@ -1,27 +1,34 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import { Input } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
+import { rangeSpec } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
 
-const { rangeSpec } = utils;
 function RangeWidget(props) {
   const {
+    id,
+    name,
     value,
+    required,
     readonly,
     disabled,
+    onChange,
     onBlur,
     onFocus,
     options,
     schema,
-    onChange,
-    required,
-    name,
-    id,
+    uiSchema,
     formContext,
+    rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps({
+    formContext,
+    options,
+    uiSchema,
+    defaultSchemaProps: {
+      fluid: true,
+    },
+  });
 
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
@@ -41,6 +48,7 @@ function RangeWidget(props) {
         {...rangeSpec(schema)}
         {...semanticProps}
         value={value || ""}
+        error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -49,17 +57,4 @@ function RangeWidget(props) {
     </React.Fragment>
   );
 }
-
-RangeWidget.defaultProps = {
-  options: {
-    semantic: {
-      fluid: true,
-    },
-  },
-};
-
-RangeWidget.propTypes = {
-  options: PropTypes.object,
-};
-
 export default RangeWidget;

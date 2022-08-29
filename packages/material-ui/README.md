@@ -14,9 +14,9 @@
   <h3 align="center">@rjsf/material-ui</h3>
 
   <p align="center">
-  Material UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Material UI 4 theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
+    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -46,7 +46,7 @@
 
 [![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
 
-Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
+Exports `material-ui` version 4 theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
@@ -60,12 +60,14 @@ Exports `material-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@material-ui/core >= 4.2.0` ([in 4.2.0, the `slider` component was added to the core](https://github.com/mui-org/material-ui/pull/16416))
-- `@material-ui/icons`
-- `@rjsf/core >= 2.0.0`
+- `@material-ui/core >= 4.12.0` (in 4.12.0, the library developers made it forward compatible with Material-UI V5)
+- `@material-ui/icons >= 4.11.0` (in 4.11.0, the library developers made it forward compatible with Material-UI V5)
+- `@rjsf/core >= 5.0.0`
+- `@rjsf/utils >= 5.0.0`
+- `@rjsf/validator-ajv6 >= 5.0.0`
 
 ```bash
-yarn add @material-ui/core @material-ui/icons @rjsf/core
+yarn add @material-ui/core @material-ui/icons @rjsf/core @rjsf/utils @rjsf/validator-ajv6
 ```
 
 ### Installation
@@ -86,11 +88,11 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+import Theme from '@rjsf/material-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
-const Form = withTheme(MaterialUITheme);
+const Form = withTheme(Theme);
 ```
 
 <!-- ROADMAP -->
@@ -103,7 +105,7 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/stable/contributing/) to get started.
 
 <!-- CONTACT -->
 
@@ -126,4 +128,4 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/screenshot.png
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/e2e1181d1020f18cad0c80c661ddae28edb9794e/packages/material-ui/screenshot.png

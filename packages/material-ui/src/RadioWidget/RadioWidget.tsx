@@ -1,11 +1,9 @@
 import React from "react";
-
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 
 const RadioWidget = ({
   id,
@@ -22,7 +20,7 @@ const RadioWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = ({}, value: any) =>
+  const _onChange = (_: any, value: any) =>
     onChange(schema.type == "boolean" ? value !== "false" : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
@@ -38,18 +36,20 @@ const RadioWidget = ({
         {label || schema.title}
       </FormLabel>
       <RadioGroup
+        id={id}
         value={`${value}`}
         row={row as boolean}
         onChange={_onChange}
         onBlur={_onBlur}
-        onFocus={_onFocus}>
+        onFocus={_onFocus}
+      >
         {(enumOptions as any).map((option: any, i: number) => {
           const itemDisabled =
             enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
 
           const radio = (
             <FormControlLabel
-              control={<Radio color="primary" key={i} />}
+              control={<Radio name={`${id}-${i}`} color="primary" key={i} />}
               label={`${option.label}`}
               value={`${option.value}`}
               key={i}

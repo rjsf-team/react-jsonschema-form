@@ -1,29 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Header } from "semantic-ui-react";
+import { getUiOptions } from "@rjsf/utils";
 
-function TitleField({ title, options }) {
-  const { semantic } = options;
+const DEFAULT_OPTIONS = {
+  semantic: {
+    inverted: false,
+    dividing: true,
+  },
+};
+
+function TitleField({ id, title, uiSchema }) {
+  const uiOptions = getUiOptions(uiSchema);
+  const { semantic } = uiOptions.options || DEFAULT_OPTIONS;
   if (title) {
     return (
-      <Header {...semantic} as="h5">
+      <Header id={id} {...semantic} as="h5">
         {title}
       </Header>
     );
   }
 }
-
-TitleField.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-      dividing: true,
-    },
-  },
-};
-
-TitleField.propTypes = {
-  options: PropTypes.object,
-};
 
 export default TitleField;

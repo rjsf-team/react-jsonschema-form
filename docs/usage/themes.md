@@ -5,15 +5,16 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
- Theme Name | Status | Package Name / Link
- ---------- | ------- | -----------
- Bootstrap 3 (default) | Published | `@rjsf/core`
- Bootstrap 4 | Published | `@rjsf/bootstrap-4`
- material-ui | Published | `@rjsf/material-ui`
- fluent-ui | Published | `@rjsf/fluent-ui`
- antd | Published | `@rjsf/antd`
- Semantic UI | Published | `@rjsf/semantic-ui`
-
+| Theme Name            | Status    | Package Name / Link |
+|-----------------------| --------- |---------------------|
+| antd                  | Published | `@rjsf/antd`        |
+| Bootstrap 3 (default) | Published | `@rjsf/core`        |
+| Bootstrap 4           | Published | `@rjsf/bootstrap-4` |
+| Chakra UI             | Published | `@rjsf/chakra-ui`   |
+| fluent-ui             | Published | `@rjsf/fluent-ui`   |
+| material-ui 4         | Published | `@rjsf/material-ui` |
+| material-ui 5         | Published | `@rjsf/mui`         |
+| Semantic UI           | Published | `@rjsf/semantic-ui` |
 
 ## Using themes
 

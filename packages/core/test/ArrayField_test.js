@@ -5,17 +5,19 @@ import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import SchemaField from "../src/components/fields/SchemaField";
 
 const ArrayKeyDataAttr = "data-rjsf-itemkey";
-const ExposedArrayKeyTemplate = function(props) {
+const ExposedArrayKeyTemplate = function (props) {
   return (
     <div className="array">
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div
             key={element.key}
             className="array-item"
-            data-rjsf-itemkey={element.key}>
+            data-rjsf-itemkey={element.key}
+          >
             <div>{element.children}</div>
             {(element.hasMoveUp || element.hasMoveDown) && (
               <button
@@ -23,7 +25,8 @@ const ExposedArrayKeyTemplate = function(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index + 1
-                )}>
+                )}
+              >
                 Down
               </button>
             )}
@@ -33,14 +36,16 @@ const ExposedArrayKeyTemplate = function(props) {
                 onClick={element.onReorderClick(
                   element.index,
                   element.index - 1
-                )}>
+                )}
+              >
                 Up
               </button>
             )}
             {element.hasRemove && (
               <button
                 className="array-item-remove"
-                onClick={element.onDropIndexClick(element.index)}>
+                onClick={element.onDropIndexClick(element.index)}
+              >
                 Remove
               </button>
             )}
@@ -62,11 +67,11 @@ const ExposedArrayKeyTemplate = function(props) {
   );
 };
 
-const CustomOnAddClickTemplate = function(props) {
+const CustomOnAddClickTemplate = function (props) {
   return (
     <div className="array">
       {props.items &&
-        props.items.map(element => (
+        props.items.map((element) => (
           <div key={element.key} className="array-item">
             <div>{element.children}</div>
           </div>
@@ -85,8 +90,20 @@ const CustomOnAddClickTemplate = function(props) {
 
 describe("ArrayField", () => {
   let sandbox;
-  const CustomComponent = props => {
+  const CustomComponent = (props) => {
     return <div id="custom">{props.rawErrors}</div>;
+  };
+
+  const CustomSelectComponent = (props) => {
+    return (
+      <select>
+        {props.value.map((item, index) => (
+          <option key={index} id="custom-select">
+            {item}
+          </option>
+        ))}
+      </select>
+    );
   };
 
   beforeEach(() => {
@@ -107,14 +124,14 @@ describe("ArrayField", () => {
     });
 
     it("should be able to be overwritten with a custom UnsupportedField component", () => {
-      const CustomUnsupportedField = function() {
+      const CustomUnsupportedField = function () {
         return <span id="custom">Custom UnsupportedField</span>;
       };
 
-      const fields = { UnsupportedField: CustomUnsupportedField };
+      const templates = { UnsupportedFieldTemplate: CustomUnsupportedField };
       const { node } = createFormComponent({
         schema: { type: "array" },
-        fields,
+        templates,
       });
 
       expect(node.querySelectorAll("#custom")[0].textContent).to.eql(
@@ -219,7 +236,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: { TitleField: CustomTitleField },
+        templates: { TitleFieldTemplate: CustomTitleField },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
         "my list"
@@ -233,8 +250,8 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        fields: {
-          DescriptionField: CustomDescriptionField,
+        templates: {
+          DescriptionFieldTemplate: CustomDescriptionField,
         },
       });
       expect(node.querySelector("fieldset > #custom").textContent).to.eql(
@@ -253,6 +270,22 @@ describe("ArrayField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
+    it("should pass uiSchema to normal array field", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          items: {
+            "ui:placeholder": "Placeholder...",
+          },
+        },
+        formData: ["foo", "barr"],
+      });
+
+      expect(
+        node.querySelectorAll("input[placeholder='Placeholder...']")
+      ).to.have.length.of(2);
+    });
+
     it("should pass rawErrors down to custom array field templates", () => {
       const schema = {
         type: "array",
@@ -264,7 +297,9 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomComponent,
+        templates: {
+          ArrayFieldTemplate: CustomComponent,
+        },
         formData: [1],
         liveValidate: true,
       });
@@ -308,7 +343,7 @@ describe("ArrayField", () => {
     it("should assign new keys/ids when clicking the add button", () => {
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       Simulate.click(node.querySelector(".array-item-add button"));
@@ -320,7 +355,7 @@ describe("ArrayField", () => {
     it("should add a field when clicking add button even if event is not passed to onAddClick", () => {
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomOnAddClickTemplate,
+        templates: { ArrayFieldTemplate: CustomOnAddClickTemplate },
       });
 
       Simulate.click(node.querySelector(".array-item-add button"));
@@ -350,7 +385,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ["foo"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -382,7 +417,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-before array-item-move-before-to-" + beforeIndex
             }
-            onClick={item.onAddIndexClick(beforeIndex)}>
+            onClick={item.onAddIndexClick(beforeIndex)}
+          >
             {"Add Item Above"}
           </button>
         );
@@ -394,7 +430,8 @@ describe("ArrayField", () => {
             className={
               "array-item-move-after array-item-move-after-to-" + afterIndex
             }
-            onClick={item.onAddIndexClick(afterIndex)}>
+            onClick={item.onAddIndexClick(afterIndex)}
+          >
             {"Add Item Below"}
           </button>
         );
@@ -403,7 +440,8 @@ describe("ArrayField", () => {
           <div
             key={item.key}
             data-rjsf-itemkey={item.key}
-            className={`array-item item-${item.index}`}>
+            className={`array-item item-${item.index}`}
+          >
             <div>{addBeforeButton}</div>
             {item.children}
             <div>{addAfterButton}</div>
@@ -421,7 +459,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate,
+        templates: { ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate },
       });
 
       const addBeforeButtons = node.querySelectorAll(".array-item-move-before");
@@ -554,7 +592,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
       const moveDownBtns = node.querySelectorAll(".array-item-move-down");
       const startRows = node.querySelectorAll(".array-item");
@@ -582,7 +620,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
       const moveUpBtns = node.querySelectorAll(".array-item-move-up");
       const startRows = node.querySelectorAll(".array-item");
@@ -614,7 +652,8 @@ describe("ArrayField", () => {
             <button
               key={i}
               className={"array-item-move-to-" + i}
-              onClick={props.onReorderClick(props.index, i)}>
+              onClick={props.onReorderClick(props.index, i)}
+            >
               {"Move item to index " + i}
             </button>
           );
@@ -623,7 +662,8 @@ describe("ArrayField", () => {
           <div
             key={props.key}
             data-rjsf-itemkey={props.key}
-            className={`array-item item-${props.index}`}>
+            className={`array-item item-${props.index}`}
+          >
             {props.children}
             {buttons}
           </div>
@@ -641,7 +681,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar", "baz"],
-        ArrayFieldTemplate: moveAnywhereArrayFieldTemplate,
+        templates: { ArrayFieldTemplate: moveAnywhereArrayFieldTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -698,6 +738,19 @@ describe("ArrayField", () => {
       expect(moveDownBtns).to.be.null;
     });
 
+    it("should not show move up/down buttons if ui:orderable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:orderable": false },
+      });
+      const moveUpBtns = node.querySelector(".array-item-move-up");
+      const moveDownBtns = node.querySelector(".array-item-move-down");
+
+      expect(moveUpBtns).to.be.null;
+      expect(moveDownBtns).to.be.null;
+    });
+
     it("should remove a field from the list", () => {
       const { node } = createFormComponent({
         schema,
@@ -733,7 +786,7 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formData: ["foo", "bar"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -754,6 +807,17 @@ describe("ArrayField", () => {
         schema,
         formData: ["foo", "bar"],
         uiSchema: { "ui:options": { removable: false } },
+      });
+      const dropBtn = node.querySelector(".array-item-remove");
+
+      expect(dropBtn).to.be.null;
+    });
+
+    it("should not show remove button if ui:removable is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ["foo", "bar"],
+        uiSchema: { "ui:removable": false },
       });
       const dropBtn = node.querySelector(".array-item-remove");
 
@@ -863,7 +927,10 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         formData: {
-          foo: [{ bar: "bar1", baz: "baz1" }, { bar: "bar2", baz: "baz2" }],
+          foo: [
+            { bar: "bar1", baz: "baz1" },
+            { bar: "bar2", baz: "baz2" },
+          ],
         },
       });
 
@@ -1204,6 +1271,17 @@ describe("ArrayField", () => {
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(schema.title);
       });
+
+      it("should pass uiSchema to multiselect", () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            "ui:enumDisabled": ["bar"],
+          },
+        });
+
+        expect(node.querySelector("option[value=bar]").disabled).to.eql(true);
+      });
     });
 
     describe("CheckboxesWidget", () => {
@@ -1222,7 +1300,7 @@ describe("ArrayField", () => {
 
         const labels = [].map.call(
           node.querySelectorAll(".checkbox label"),
-          node => node.textContent
+          (node) => node.textContent
         );
         expect(labels).eql(["foo", "bar", "fuzz"]);
       });
@@ -1254,7 +1332,7 @@ describe("ArrayField", () => {
 
         const labels = [].map.call(
           node.querySelectorAll("[type=checkbox]"),
-          node => node.checked
+          (node) => node.checked
         );
         expect(labels).eql([true, false, true]);
       });
@@ -1307,6 +1385,27 @@ describe("ArrayField", () => {
           "should NOT have fewer than 3 items"
         );
       });
+
+      it("should pass uiSchema to checkboxes", () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: "array",
+            items: {
+              enum: ["foo", "bar", "fuzz"],
+              type: "string",
+            },
+            uniqueItems: true,
+          },
+          uiSchema: {
+            "ui:widget": "checkboxes",
+            "ui:options": {
+              inline: true,
+            },
+          },
+        });
+
+        expect(node.querySelectorAll(".checkbox-inline")).to.have.length.of(3);
+      });
     });
   });
 
@@ -1344,6 +1443,7 @@ describe("ArrayField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         readAsDataUrl() {},
       });
 
@@ -1390,6 +1490,29 @@ describe("ArrayField", () => {
       expect(node.querySelector("input[type=file]").id).eql("root");
     });
 
+    it("should pass uiSchema to files array", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        uiSchema: {
+          items: {
+            "ui:widget": "file",
+            "ui:options": { accept: ".pdf" },
+          },
+        },
+        formData: [
+          "data:text/plain;name=file1.pdf;base64,dGVzdDE=",
+          "data:image/png;name=file2.pdf;base64,ZmFrZXBuZw==",
+        ],
+      });
+
+      expect(node.querySelector("input[type=file]").accept).eql(".pdf");
+    });
+
     it("should pass rawErrors down to custom widgets", () => {
       const schema = {
         type: "array",
@@ -1434,7 +1557,10 @@ describe("ArrayField", () => {
     it("should render two lists of inputs inside of a list", () => {
       const { node } = createFormComponent({
         schema,
-        formData: [[1, 2], [3, 4]],
+        formData: [
+          [1, 2],
+          [3, 4],
+        ],
       });
       expect(node.querySelectorAll("fieldset fieldset")).to.have.length.of(2);
     });
@@ -1449,8 +1575,10 @@ describe("ArrayField", () => {
     });
 
     it("should pass rawErrors down to every level of custom widgets", () => {
-      const CustomItem = props => <div id="custom-item">{props.children}</div>;
-      const CustomTemplate = props => {
+      const CustomItem = (props) => (
+        <div id="custom-item">{props.children}</div>
+      );
+      const CustomTemplate = (props) => {
         return (
           <div id="custom">
             {props.items &&
@@ -1478,7 +1606,7 @@ describe("ArrayField", () => {
 
       const { node } = createFormComponent({
         schema,
-        ArrayFieldTemplate: CustomTemplate,
+        templates: { ArrayFieldTemplate: CustomTemplate },
         formData: [[]],
         liveValidate: true,
       });
@@ -1694,11 +1822,34 @@ describe("ArrayField", () => {
       expect(node.querySelector(".array-item-add button")).to.be.null;
     });
 
+    it("[fixed] should pass uiSchema to fixed array", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: [
+            {
+              type: "string",
+            },
+            {
+              type: "string",
+            },
+          ],
+        },
+        uiSchema: {
+          items: {
+            "ui:widget": "textarea",
+          },
+        },
+        formData: ["foo", "bar"],
+      });
+      expect(node.querySelectorAll("textarea").length).to.eql(2);
+    });
+
     describe("operations for additional items", () => {
       const { node, onChange } = createFormComponent({
         schema: schemaAdditional,
         formData: [1, 2, "foo"],
-        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
       const startRows = node.querySelectorAll(".array-item");
@@ -1803,12 +1954,100 @@ describe("ArrayField", () => {
     });
   });
 
+  describe("Custom Widget", () => {
+    it("if it does not contain enums or uniqueItems=true, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+
+    it("should pass uiSchema to custom widget", () => {
+      const CustomWidget = ({ uiSchema }) => {
+        return (
+          <div id="custom-ui-option-value">
+            {uiSchema.custom_field_key["ui:options"].test}
+          </div>
+        );
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        widgets: {
+          CustomWidget: CustomWidget,
+        },
+        uiSchema: {
+          "ui:widget": "CustomWidget",
+          custom_field_key: {
+            "ui:options": {
+              test: "foo",
+            },
+          },
+        },
+        formData: ["foo", "bar"],
+      });
+
+      expect(node.querySelector("#custom-ui-option-value").textContent).to.eql(
+        "foo"
+      );
+    });
+
+    it("if the schema has fixed items, it should still render the custom widget.", () => {
+      const schema = {
+        type: "array",
+        items: [
+          {
+            type: "string",
+            title: "Some text",
+          },
+          {
+            type: "number",
+            title: "A number",
+          },
+        ],
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          "ui:widget": "CustomSelect",
+        },
+        formData: ["foo", "bar"],
+        widgets: {
+          CustomSelect: CustomSelectComponent,
+        },
+      });
+
+      expect(node.querySelectorAll("#custom-select")).to.have.length.of(2);
+    });
+  });
+
   describe("Title", () => {
-    const TitleField = props => <div id={`title-${props.title}`} />;
+    const TitleFieldTemplate = (props) => <div id={`title-${props.title}`} />;
 
-    const fields = { TitleField };
+    const templates = { TitleFieldTemplate };
 
-    it("should pass field name to TitleField if there is no title", () => {
+    it("should pass field name to TitleFieldTemplate if there is no title", () => {
       const schema = {
         type: "object",
         properties: {
@@ -1819,29 +2058,166 @@ describe("ArrayField", () => {
         },
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-array")).to.not.be.null;
     });
 
-    it("should pass schema title to TitleField", () => {
+    it("should pass schema title to TitleFieldTemplate", () => {
       const schema = {
         type: "array",
         title: "test",
         items: {},
       };
 
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-test")).to.not.be.null;
     });
 
-    it("should pass empty schema title to TitleField", () => {
+    it("should pass empty schema title to TitleFieldTemplate", () => {
       const schema = {
         type: "array",
         title: "",
         items: {},
       };
-      const { node } = createFormComponent({ schema, fields });
+      const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-")).to.be.null;
+    });
+  });
+
+  describe("should handle nested idPrefix and idSeparator parameter", () => {
+    it("should render nested input widgets with the expected ids", () => {
+      const complexSchema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                bar: { type: "string" },
+                baz: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [
+            { bar: "bar1", baz: "baz1" },
+            { bar: "bar2", baz: "baz2" },
+          ],
+        },
+        idSeparator: "/",
+        idPrefix: "base",
+      });
+
+      const inputs = node.querySelectorAll("input[type=text]");
+      expect(inputs[0].id).eql("base/foo/0/bar");
+      expect(inputs[1].id).eql("base/foo/0/baz");
+      expect(inputs[2].id).eql("base/foo/1/bar");
+      expect(inputs[3].id).eql("base/foo/1/baz");
+    });
+  });
+
+  describe("should handle nested 'hideError: true' uiSchema value", () => {
+    const complexSchema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+        },
+      },
+    };
+    function customValidate(formData, errors) {
+      errors.foo[0].bar.addError("test");
+      errors.foo[1].bar.addError("test");
+      return errors;
+    }
+
+    it("should render nested error decorated input widgets with the expected ids", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        customValidate,
+      });
+      Simulate.submit(node);
+
+      const inputs = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputs[0].id).eql("root_foo_0_bar");
+      expect(inputs[1].id).eql("root_foo_1_bar");
+    });
+    it("should NOT render nested error decorated input widgets", () => {
+      const { node } = createFormComponent({
+        schema: complexSchema,
+        uiSchema: {
+          "ui:hideError": true,
+        },
+        formData: {
+          foo: [{ bar: "bar1" }, { bar: "bar2" }],
+        },
+        customValidate,
+        showErrorList: false,
+      });
+      Simulate.submit(node);
+
+      const inputsNoError = node.querySelectorAll(
+        ".form-group.field-error input[type=text]"
+      );
+      expect(inputsNoError).to.have.length.of(0);
+    });
+  });
+  describe("FormContext gets passed", () => {
+    const schema = {
+      type: "array",
+      items: [
+        {
+          type: "string",
+          title: "Some text",
+        },
+        {
+          type: "number",
+          title: "A number",
+        },
+      ],
+    };
+    it("should pass form context to schema field", () => {
+      const formContext = {
+        root: "root-id",
+        root_0: "root_0-id",
+        root_1: "root_1-id",
+      };
+      function CustomSchemaField(props) {
+        const { formContext, idSchema } = props;
+        return (
+          <>
+            <code id={formContext[idSchema.$id]}>Ha</code>
+            <SchemaField {...props} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        formContext,
+        fields: { SchemaField: CustomSchemaField },
+      });
+
+      const codeBlocks = node.querySelectorAll("code");
+      expect(codeBlocks).to.have.length(3);
+      Object.keys(formContext).forEach((key) => {
+        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+      });
     });
   });
 });

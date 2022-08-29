@@ -1,53 +1,69 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "3.1.0",
-  "main": "dist/index.js",
-  "module": "dist/material-ui.esm.js",
-  "typings": "dist/index.d.ts",
-  "description": "Material UI theme, fields and widgets for react-jsonschema-form",
+  "version": "5.0.0-beta.2",
+  "module": "./dist/material-ui.esm.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "description": "Material UI 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
   ],
   "scripts": {
-    "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build",
-    "test": "tsdx test"
+    "start": "dts watch",
+    "build": "rimraf dist && dts build --format cjs,esm,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "dts test",
+    "test:update": "dts test --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts?(x)": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=14"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^3.0.0",
-    "react": ">=16"
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
+    "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
-    "@rjsf/core": "^3.1.0",
-    "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.7",
-    "@types/react": "^16.9.23",
-    "@types/react-dom": "^16.9.5",
-    "@types/react-test-renderer": "^16.9.2",
-    "@types/sinon": "^9.0.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.0.0",
-    "typescript": "^3.5.3"
+    "@babel/core": "^7.18.13",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@rjsf/core": "^5.0.0-beta.2",
+    "@rjsf/utils": "^5.0.0-beta.2",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.2",
+    "@types/material-ui": "^0.21.12",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-test-renderer": "^17.0.1",
+    "dts-cli": "^1.6.0",
+    "eslint": "^8.23.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2"
   },
   "publishConfig": {
     "access": "public"
   },
   "author": "Agustin N. R. Ramirez <agustin.ramirez@cybertec.at>",
   "contributors": [
-    "Lorenz Henk <lorenz.henk@cybertec.at>"
+    "Lorenz Henk <lorenz.henk@cybertec.at>",
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
   ],
   "keywords": [
     "Material UI",
@@ -59,6 +75,7 @@
     "form",
     "react",
     "material-ui",
+    "mui",
     "rjsf-material-ui"
   ],
   "repository": {

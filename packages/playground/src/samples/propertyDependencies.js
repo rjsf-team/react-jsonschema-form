@@ -6,8 +6,7 @@ module.exports = {
     properties: {
       unidirectional: {
         title: "Unidirectional",
-        src:
-          "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
+        src: "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
         type: "object",
         properties: {
           name: {
@@ -27,8 +26,7 @@ module.exports = {
       },
       bidirectional: {
         title: "Bidirectional",
-        src:
-          "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
+        src: "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
         description:
           "Dependencies are not bidirectional, you can, of course, define the bidirectional dependencies explicitly.",
         type: "object",
