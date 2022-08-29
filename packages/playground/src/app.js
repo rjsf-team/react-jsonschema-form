@@ -3,103 +3,17 @@ import MonacoEditor from "react-monaco-editor";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
+import { shouldRender } from "@rjsf/utils";
 import DemoFrame from "./DemoFrame";
 
-// deepEquals and shouldRender and isArguments are copied from rjsf-core. TODO: unify these utility functions.
-
-function isArguments(object) {
-  return Object.prototype.toString.call(object) === "[object Arguments]";
-}
-
-function deepEquals(a, b, ca = [], cb = []) {
-  // Partially extracted from node-deeper and adapted to exclude comparison
-  // checks for functions.
-  // https://github.com/othiym23/node-deeper
-  if (a === b) {
-    return true;
-  } else if (typeof a === "function" || typeof b === "function") {
-    // Assume all functions are equivalent
-    // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
-    return true;
-  } else if (typeof a !== "object" || typeof b !== "object") {
-    return false;
-  } else if (a === null || b === null) {
-    return false;
-  } else if (a instanceof Date && b instanceof Date) {
-    return a.getTime() === b.getTime();
-  } else if (a instanceof RegExp && b instanceof RegExp) {
-    return (
-      a.source === b.source &&
-      a.global === b.global &&
-      a.multiline === b.multiline &&
-      a.lastIndex === b.lastIndex &&
-      a.ignoreCase === b.ignoreCase
-    );
-  } else if (isArguments(a) || isArguments(b)) {
-    if (!(isArguments(a) && isArguments(b))) {
-      return false;
-    }
-    let slice = Array.prototype.slice;
-    return deepEquals(slice.call(a), slice.call(b), ca, cb);
-  } else {
-    if (a.constructor !== b.constructor) {
-      return false;
-    }
-
-    let ka = Object.keys(a);
-    let kb = Object.keys(b);
-    // don't bother with stack acrobatics if there's nothing there
-    if (ka.length === 0 && kb.length === 0) {
-      return true;
-    }
-    if (ka.length !== kb.length) {
-      return false;
-    }
-
-    let cal = ca.length;
-    while (cal--) {
-      if (ca[cal] === a) {
-        return cb[cal] === b;
-      }
-    }
-    ca.push(a);
-    cb.push(b);
-
-    ka.sort();
-    kb.sort();
-    for (var j = ka.length - 1; j >= 0; j--) {
-      if (ka[j] !== kb[j]) {
-        return false;
-      }
-    }
-
-    let key;
-    for (let k = ka.length - 1; k >= 0; k--) {
-      key = ka[k];
-      if (!deepEquals(a[key], b[key], ca, cb)) {
-        return false;
-      }
-    }
-
-    ca.pop();
-    cb.pop();
-
-    return true;
-  }
-}
-
-function shouldRender(comp, nextProps, nextState) {
-  const { props, state } = comp;
-  return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
-}
-
-const log = type => console.log.bind(console, type);
-const toJson = val => JSON.stringify(val, null, 2);
+const log = (type) => console.log.bind(console, type);
+const toJson = (val) => JSON.stringify(val, null, 2);
 const liveSettingsSchema = {
   type: "object",
   properties: {
     validate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
+    readonly: { type: "boolean", title: "Readonly whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
   },
@@ -119,7 +33,7 @@ class GeoPosition extends Component {
   }
 
   onChange(name) {
-    return event => {
+    return (event) => {
       this.setState({ [name]: parseFloat(event.target.value) });
       setImmediate(() => this.props.onChange(this.state));
     };
@@ -182,7 +96,7 @@ class Editor extends Component {
     return false;
   }
 
-  onCodeChange = code => {
+  onCodeChange = (code) => {
     try {
       const parsedCode = JSON.parse(code);
       this.setState({ valid: true, code }, () =>
@@ -226,8 +140,8 @@ class Selector extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onLabelClick = label => {
-    return event => {
+  onLabelClick = (label) => {
+    return (event) => {
       event.preventDefault();
       this.setState({ current: label });
       setImmediate(() => this.props.onSelected(samples[label]));
@@ -242,7 +156,8 @@ class Selector extends Component {
             <li
               key={i}
               role="presentation"
-              className={this.state.current === label ? "active" : ""}>
+              className={this.state.current === label ? "active" : ""}
+            >
               <a href="#" onClick={this.onLabelClick(label)}>
                 {label}
               </a>
@@ -271,7 +186,8 @@ function ThemeSelector({ theme, themes, select }) {
       formData={theme}
       onChange={({ formData }) =>
         formData && select(formData, themes[formData])
-      }>
+      }
+    >
       <div />
     </Form>
   );
@@ -294,14 +210,37 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
       formData={subtheme}
       onChange={({ formData }) =>
         formData && select(formData, subthemes[formData])
-      }>
+      }
+    >
+      <div />
+    </Form>
+  );
+}
+
+function ValidatorSelector({ validator, validators, select }) {
+  const schema = {
+    type: "string",
+    enum: Object.keys(validators),
+  };
+  const uiSchema = {
+    "ui:placeholder": "Select validator",
+  };
+  return (
+    <Form
+      className="form_rjsf_validatorSelector"
+      idPrefix="rjsf_validatorSelector"
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={validator}
+      onChange={({ formData }) => formData && select(formData)}
+    >
       <div />
     </Form>
   );
 }
 
 class CopyLink extends Component {
-  onCopyClick = event => {
+  onCopyClick = (event) => {
     this.input.select();
     document.execCommand("copy");
   };
@@ -319,7 +258,7 @@ class CopyLink extends Component {
       <div className="input-group">
         <input
           type="text"
-          ref={input => (this.input = input)}
+          ref={(input) => (this.input = input)}
           className="form-control"
           defaultValue={shareURL}
         />
@@ -327,7 +266,8 @@ class CopyLink extends Component {
           <button
             className="btn btn-default"
             type="button"
-            onClick={this.onCopyClick}>
+            onClick={this.onCopyClick}
+          >
             <i className="glyphicon glyphicon-copy" />
           </button>
         </span>
@@ -342,6 +282,7 @@ class Playground extends Component {
 
     // set default theme
     const theme = "default";
+    const validator = "AJV6";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.state = {
@@ -351,10 +292,12 @@ class Playground extends Component {
       formData,
       validate,
       theme,
+      validator,
       subtheme: null,
       liveSettings: {
         validate: false,
         disable: false,
+        readonly: false,
         omitExtraData: false,
         liveOmit: false,
       },
@@ -385,7 +328,7 @@ class Playground extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-  load = data => {
+  load = (data) => {
     // Reset the ArrayFieldTemplate whenever you load new data
     const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
     // uiSchema is missing on some examples. Provide a default to
@@ -409,13 +352,13 @@ class Playground extends Component {
     );
   };
 
-  onSchemaEdited = schema => this.setState({ schema, shareURL: null });
+  onSchemaEdited = (schema) => this.setState({ schema, shareURL: null });
 
-  onUISchemaEdited = uiSchema => this.setState({ uiSchema, shareURL: null });
+  onUISchemaEdited = (uiSchema) => this.setState({ uiSchema, shareURL: null });
 
-  onFormDataEdited = formData => this.setState({ formData, shareURL: null });
+  onFormDataEdited = (formData) => this.setState({ formData, shareURL: null });
 
-  onExtraErrorsEdited = extraErrors =>
+  onExtraErrorsEdited = (extraErrors) =>
     this.setState({ extraErrors, shareURL: null });
 
   onThemeSelected = (
@@ -438,20 +381,18 @@ class Playground extends Component {
     });
   };
 
+  onValidatorSelected = (validator) => {
+    this.setState({ validator });
+  };
+
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
   onFormDataChange = ({ formData = "" }) =>
     this.setState({ formData, shareURL: null });
 
   onShare = () => {
-    const {
-      formData,
-      schema,
-      uiSchema,
-      liveSettings,
-      errorSchema,
-      theme,
-    } = this.state;
+    const { formData, schema, uiSchema, liveSettings, errorSchema, theme } =
+      this.state;
     const {
       location: { origin, pathname },
     } = document;
@@ -481,6 +422,7 @@ class Playground extends Component {
       liveSettings,
       validate,
       theme,
+      validator,
       subtheme,
       FormComponent,
       ArrayFieldTemplate,
@@ -488,7 +430,7 @@ class Playground extends Component {
       transformErrors,
     } = this.state;
 
-    const { themes } = this.props;
+    const { themes, validators } = this.props;
 
     let templateProps = {};
     if (ArrayFieldTemplate) {
@@ -514,7 +456,8 @@ class Playground extends Component {
                 idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
-                onChange={this.setLiveSettings}>
+                onChange={this.setLiveSettings}
+              >
                 <div />
               </Form>
             </div>
@@ -531,6 +474,11 @@ class Playground extends Component {
                   select={this.onSubthemeSelected}
                 />
               )}
+              <ValidatorSelector
+                validators={validators}
+                validator={validator}
+                select={this.onValidatorSelected}
+              />
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
@@ -582,8 +530,9 @@ class Playground extends Component {
                   {theme === "antd" && (
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: document.getElementById("antd-styles-iframe")
-                          .contentDocument.head.innerHTML,
+                        __html:
+                          document.getElementById("antd-styles-iframe")
+                            .contentDocument.head.innerHTML,
                       }}
                     />
                   )}
@@ -594,11 +543,13 @@ class Playground extends Component {
                 height: 1000,
                 border: 0,
               }}
-              theme={theme}>
+              theme={theme}
+            >
               <FormComponent
                 {...templateProps}
                 liveValidate={liveSettings.validate}
                 disabled={liveSettings.disable}
+                readonly={liveSettings.readonly}
                 omitExtraData={liveSettings.omitExtraData}
                 liveOmit={liveSettings.liveOmit}
                 schema={schema}
@@ -612,6 +563,7 @@ class Playground extends Component {
                 }}
                 fields={{ geo: GeoPosition }}
                 validate={validate}
+                validator={validators[validator]}
                 onBlur={(id, value) =>
                   console.log(`Touched ${id} with value ${value}`)
                 }

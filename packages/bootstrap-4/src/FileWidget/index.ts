@@ -1,2 +1,2 @@
-export { default } from './FileWidget';
-export * from './FileWidget';
+export { default } from "./FileWidget";
+export * from "./FileWidget";

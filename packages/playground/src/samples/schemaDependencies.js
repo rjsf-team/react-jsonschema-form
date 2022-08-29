@@ -5,8 +5,7 @@ module.exports = {
     type: "object",
     properties: {
       simple: {
-        src:
-          "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
+        src: "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
         title: "Simple",
         type: "object",
         properties: {

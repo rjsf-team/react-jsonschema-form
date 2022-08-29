@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -31,17 +31,17 @@ const CheckboxesWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled, inline } = options;
 
-  const _onChange = (option: any) => ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    const all = (enumOptions as any).map(({ value }: any) => value);
+  const _onChange =
+    (option: any) =>
+    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+      const all = (enumOptions as any).map(({ value }: any) => value);
 
-    if (checked) {
-      onChange(selectValue(option.value, value, all));
-    } else {
-      onChange(deselectValue(option.value, value));
-    }
-  };
+      if (checked) {
+        onChange(selectValue(option.value, value, all));
+      } else {
+        onChange(deselectValue(option.value, value));
+      }
+    };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);

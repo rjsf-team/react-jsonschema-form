@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import Checkbox from 'antd/lib/checkbox';
+import Checkbox from "antd/lib/checkbox";
 
 const CheckboxWidget = ({
   autofocus,
@@ -29,7 +29,7 @@ const CheckboxWidget = ({
   return (
     <Checkbox
       autoFocus={autofocus}
-      checked={typeof value === 'undefined' ? false : value}
+      checked={typeof value === "undefined" ? false : value}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={id}

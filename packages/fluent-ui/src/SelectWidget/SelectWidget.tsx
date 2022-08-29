@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, processSelectValue } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of IDropdownProps from @fluentui/react
@@ -46,7 +46,7 @@ const allowedProps = [
   "panelProps",
   "errorMessage",
   "placeholder",
-  "openOnKeyboardFocus"
+  "openOnKeyboardFocus",
 ];
 
 const SelectWidget = ({
@@ -59,7 +59,6 @@ const SelectWidget = ({
   readonly,
   value,
   multiple,
-  autofocus,
   onChange,
   onBlur,
   onFocus,
@@ -81,27 +80,32 @@ const SelectWidget = ({
         onChange(valueOrDefault.filter((key: any) => key !== item.key));
       }
     } else {
-      onChange(item.key);
+      onChange(processSelectValue(schema, item.key, options));
     }
   };
-  const _onBlur = (e: any) => onBlur(id, e.target.value);
+  const _onBlur = (e: any) =>
+    onBlur(id, processSelectValue(schema, e.target.value, options));
 
-  const _onFocus = (e: any) => onFocus(id, e.target.value);
+  const _onFocus = (e: any) =>
+    onFocus(id, processSelectValue(schema, e.target.value, options));
 
-  const newOptions = (enumOptions as {value: any, label: any}[]).map(option => ({
-    key: option.value,
-    text: option.label,
-    disabled: (enumDisabled as any[] || []).indexOf(option.value) !== -1
-  }));
+  const newOptions = (enumOptions as { value: any; label: any }[]).map(
+    (option) => ({
+      key: option.value,
+      text: option.label,
+      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+    })
+  );
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <>
      
       <Dropdown
         label={label || schema.title}
         multiSelect={multiple}
-        defaultSelectedKey={value}
+        defaultSelectedKey={multiple ? undefined : value}
+        defaultSelectedKeys={multiple ? value : undefined}
         required={required}
         options={newOptions}
         disabled={disabled || readonly}

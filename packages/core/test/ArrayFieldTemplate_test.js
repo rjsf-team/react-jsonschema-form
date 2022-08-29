@@ -21,7 +21,7 @@ describe("ArrayFieldTemplate", () => {
       return (
         <div className={props.uiSchema.classNames}>
           {props.canAdd && <button className="custom-array-add" />}
-          {props.items.map(element => {
+          {props.items.map((element) => {
             return (
               <div className="custom-array-item" key={element.index}>
                 {element.hasMoveUp && (
@@ -57,7 +57,7 @@ describe("ArrayFieldTemplate", () => {
           const { node } = createFormComponent({
             schema: { type: "array", items: { type: "string" } },
             formData,
-            ArrayFieldTemplate,
+            templates: { ArrayFieldTemplate },
           });
 
           expect(
@@ -89,7 +89,7 @@ describe("ArrayFieldTemplate", () => {
               "ui:ArrayFieldTemplate": ArrayFieldTemplate,
             },
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />,
+            templates: { ArrayFieldTemplate: () => <div /> },
           });
 
           expect(
@@ -116,7 +116,7 @@ describe("ArrayFieldTemplate", () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            ArrayFieldTemplate,
+            templates: { ArrayFieldTemplate },
             formData,
             schema,
             uiSchema,
@@ -152,7 +152,7 @@ describe("ArrayFieldTemplate", () => {
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />,
+            templates: { ArrayFieldTemplate: () => <div /> },
           }).node;
         });
         sharedIts();
@@ -213,7 +213,7 @@ describe("ArrayFieldTemplate", () => {
             formData,
             schema,
             uiSchema,
-            ArrayFieldTemplate,
+            templates: { ArrayFieldTemplate },
           }).node;
         });
         sharedIts();
@@ -244,7 +244,7 @@ describe("ArrayFieldTemplate", () => {
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
-            ArrayFieldTemplate: () => <div />,
+            templates: { ArrayFieldTemplate: () => <div /> },
           }).node;
         });
         sharedIts();
@@ -304,7 +304,7 @@ describe("ArrayFieldTemplate", () => {
       const { node } = createFormComponent({
         schema: { type: "array", items: { type: "string" } },
         formData,
-        ArrayFieldTemplate,
+        templates: { ArrayFieldTemplate },
       });
       expect(
         node.querySelectorAll(".field-array .field-content div")
@@ -323,7 +323,7 @@ describe("ArrayFieldTemplate", () => {
       createFormComponent({
         schema: { type: "array", items: { type: "string" } },
         formData,
-        ArrayFieldTemplate,
+        templates: { ArrayFieldTemplate },
       });
     });
 
@@ -344,7 +344,7 @@ describe("ArrayFieldTemplate", () => {
       const { node } = createFormComponent({
         schema: { type: "array", items: { type: "string" } },
         formData,
-        ArrayFieldTemplate,
+        templates: { ArrayFieldTemplate },
       });
       Simulate.click(node.querySelector(".array-item-add"));
     });

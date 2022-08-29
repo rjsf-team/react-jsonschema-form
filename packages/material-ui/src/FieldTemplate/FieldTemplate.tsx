@@ -1,12 +1,10 @@
 import React from "react";
-
-import { FieldTemplateProps } from "@rjsf/core";
-
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
+import { FieldTemplateProps } from "@rjsf/utils";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 
@@ -26,11 +24,11 @@ const FieldTemplate = ({
   rawHelp,
   rawDescription,
   schema,
+  registry,
 }: FieldTemplateProps) => {
   if (hidden) {
-    return children;
+    return <div style={{ display: "none" }}>{children}</div>;
   }
-
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -41,11 +39,14 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
+      schema={schema}
+      registry={registry}
+    >
       <FormControl
         fullWidth={true}
         error={rawErrors.length ? true : false}
-        required={required}>
+        required={required}
+      >
         {children}
         {displayLabel && rawDescription ? (
           <Typography variant="caption" color="textSecondary">

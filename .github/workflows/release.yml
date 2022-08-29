@@ -2,19 +2,17 @@ name: Release
 on:
   release:
     types: [published]
-  push:
-    branches: rel
 
 jobs:
   release_to_npm:
     name: Release to npm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2.4.0
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: npm ci
       - run: npm run build
       - run: npm test
@@ -23,6 +21,6 @@ jobs:
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npx lerna publish from-package --yes --no-verify-access
+      - run: npx lerna publish from-package --yes
       - if: always()
         run: rm .npmrc

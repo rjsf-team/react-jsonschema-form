@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import {  utils } from "@rjsf/core";
-const { getDisplayLabel } = utils;
+
 function TextareaWidget(props) {
   const {
     id,
@@ -23,18 +21,21 @@ function TextareaWidget(props) {
     schema,
     uiSchema,
     formContext,
+    registry,
+    rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({ formContext, options });
+  const semanticProps = getSemanticProps({
+    formContext,
+    options,
+    defaultSchemaProps: { inverted: false },
+  });
+  const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = getDisplayLabel(
-    schema,
-    uiSchema
-    /* TODO: , rootSchema */
-  );
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <Form.TextArea
       id={id}
@@ -47,6 +48,7 @@ function TextareaWidget(props) {
       name={name}
       {...semanticProps}
       value={value || ""}
+      error={rawErrors.length > 0}
       rows={options.rows || 5}
       onChange={_onChange}
       onBlur={_onBlur}
@@ -54,17 +56,4 @@ function TextareaWidget(props) {
     />
   );
 }
-
-TextareaWidget.defaultProps = {
-  options: {
-    semantic: {
-      inverted: false,
-    },
-  },
-};
-
-TextareaWidget.propTypes = {
-  options: PropTypes.object,
-};
-
 export default TextareaWidget;

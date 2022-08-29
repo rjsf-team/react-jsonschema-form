@@ -1,11 +1,8 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
 
-import { utils } from "@rjsf/core";
-import { WidgetProps } from "@rjsf/core";
+import { rangeSpec, WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
-
-const { rangeSpec } = utils;
 
 const styles_red = {
   // TODO: get this color from theme.
@@ -43,8 +40,6 @@ const RangeWidget = ({
   value,
   readonly,
   disabled,
-  onBlur,
-  onFocus,
   options,
   schema,
   //formContext,
@@ -55,11 +50,11 @@ const RangeWidget = ({
   label,
   id,
 }: WidgetProps) => {
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, ...rangeSpec(schema) };
 
   const _onChange = (value: number) => onChange(value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <>
       <Label>
