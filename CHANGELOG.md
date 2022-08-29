@@ -33,6 +33,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Upgraded from the `1.x` to `2.x` version of `semantic-ui-react`
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
+## Dev / docs / playground
+- Fixed missing `playground` import error by adding `source-map-loader`
+- Fixed up the incorrectly formatted `5.x Migration Guide`
+
 # v5.0.0-beta.2
 - Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
 
