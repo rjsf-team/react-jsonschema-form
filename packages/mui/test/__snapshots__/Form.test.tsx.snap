@@ -6500,7 +6500,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     >
       <div
         className="MuiFormControl-root MuiTextField-root emotion-1"
-        list="examples_root"
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -6512,6 +6511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
             disabled={false}
             id="root"
+            list="examples_root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}

@@ -27,9 +27,13 @@ const BaseInputTemplate = ({
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, ...rest } = inputProps;
   const otherProps = {
-    inputProps: { step, min, max },
+    inputProps: {
+      step,
+      min,
+      max,
+      ...(schema.examples ? { list: `examples_${id}` } : undefined),
+    },
     ...rest,
-    ...(schema.examples ? { list: `examples_${id}` } : undefined),
   };
   const _onChange = ({
     target: { value },

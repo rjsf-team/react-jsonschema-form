@@ -1479,7 +1479,6 @@ exports[`single fields schema examples 1`] = `
     >
       <div
         className="MuiFormControl-root MuiTextField-root"
-        list="examples_root"
       >
         <div
           className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -1491,6 +1490,7 @@ exports[`single fields schema examples 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            list="examples_root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
