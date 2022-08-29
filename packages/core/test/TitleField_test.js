@@ -1,7 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 
-import TitleField from "../src/components/fields/TitleField";
+import TitleField from "../src/components/templates/TitleField";
 import { createSandbox, createComponent } from "./test_utils";
 
 describe("TitleField", () => {

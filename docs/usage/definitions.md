@@ -3,6 +3,8 @@
 This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which is Barbarian for *avoiding to copy and paste commonly used field schemas*:
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   "definitions": {
     "address": {
@@ -23,7 +25,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema} />
+  <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
 

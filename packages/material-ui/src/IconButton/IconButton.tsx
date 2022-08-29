@@ -1,32 +1,55 @@
 import React from "react";
+import IconButton, {
+  IconButtonProps as MuiIconButtonProps,
+} from "@material-ui/core/IconButton";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import RemoveIcon from "@material-ui/icons/Remove";
+import { IconButtonProps } from "@rjsf/utils";
 
-import Button from "@material-ui/core/Button";
-import Add from "@material-ui/icons/Add";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
-import Remove from "@material-ui/icons/Remove";
-import { IconButtonProps as MuiIconButtonProps } from "@material-ui/core/IconButton";
-
-const mappings: any = {
-  remove: Remove,
-  plus: Add,
-  "arrow-up": ArrowUpward,
-  "arrow-down": ArrowDownward,
-};
-
-type IconButtonProps = MuiIconButtonProps & {
-  icon: string;
-  iconProps?: object;
-};
-
-const IconButton = (props: IconButtonProps) => {
-  const { icon, className, iconProps, ...otherProps } = props;
-  const IconComp = mappings[icon];
+export default function MuiIconButton(props: IconButtonProps) {
+  const { icon, color, ...otherProps } = props;
   return (
-    <Button {...otherProps} size="small">
-      <IconComp {...iconProps} />
-    </Button>
+    <IconButton
+      {...otherProps}
+      size="small"
+      color={color as MuiIconButtonProps["color"]}
+    >
+      {icon}
+    </IconButton>
   );
-};
+}
 
-export default IconButton;
+export function MoveDownButton(props: IconButtonProps) {
+  return (
+    <MuiIconButton
+      title="Move down"
+      {...props}
+      icon={<ArrowDownwardIcon fontSize="small" />}
+    />
+  );
+}
+
+export function MoveUpButton(props: IconButtonProps) {
+  return (
+    <MuiIconButton
+      title="Move up"
+      {...props}
+      icon={<ArrowUpwardIcon fontSize="small" />}
+    />
+  );
+}
+
+export function RemoveButton(props: IconButtonProps) {
+  const { iconType, ...otherProps } = props;
+  return (
+    <MuiIconButton
+      title="Remove"
+      {...otherProps}
+      color="secondary"
+      icon={
+        <RemoveIcon fontSize={iconType === "default" ? "medium" : "small"} />
+      }
+    />
+  );
+}

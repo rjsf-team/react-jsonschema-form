@@ -1,16 +1,16 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { allowedProps } from "../CheckboxWidget";
 import _pick from "lodash/pick";
 
 const styles_red = {
-      // TODO: get this color from theme.
-      color: "rgb(164, 38, 44)",
-      fontSize: 12,
-      fontWeight: "normal" as any,
-      fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`
-    };
+  // TODO: get this color from theme.
+  color: "rgb(164, 38, 44)",
+  fontSize: 12,
+  fontWeight: "normal" as any,
+  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
+};
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -42,18 +42,17 @@ const CheckboxesWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
-  const _onChange = (option: any) => (
-    _ev?: React.FormEvent<HTMLElement>,
-    checked?: boolean
-  ) => {
-    const all = (enumOptions as any).map(({ value }: any) => value);
+  const _onChange =
+    (option: any) =>
+    (_ev?: React.FormEvent<HTMLElement>, checked?: boolean) => {
+      const all = (enumOptions as any).map(({ value }: any) => value);
 
-    if (checked) {
-      onChange(selectValue(option.value, value, all));
-    } else {
-      onChange(deselectValue(option.value, value));
-    }
-  };
+      if (checked) {
+        onChange(selectValue(option.value, value, all));
+      } else {
+        onChange(deselectValue(option.value, value));
+      }
+    };
 
   const _onBlur = ({
     target: { value },
@@ -63,7 +62,7 @@ const CheckboxesWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
