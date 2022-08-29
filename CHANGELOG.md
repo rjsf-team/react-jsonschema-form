@@ -15,6 +15,17 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.3
+
+## @rjsf/material-ui
+- Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368)
+
+## @rjsf/material-ui
+- Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368)
+
+## @rjsf/semantic-ui
+- Upgraded from the `1.x` to `2.x` version of `semantic-ui-react`
+
 # v5.0.0-beta.2
 - Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
 
