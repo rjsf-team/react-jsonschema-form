@@ -408,4 +408,14 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("schema examples", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
