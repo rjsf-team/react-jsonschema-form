@@ -18,6 +18,7 @@ should change the heading of the (upcoming) version to include a major version b
 # v5.0.0-beta.3
 
 ## @rjsf/antd
+- Do not show errors if `extraErrors` has `[]` (https://github.com/rjsf-team/react-jsonschema-form/pull/2576).
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
 ## @rjsf/fluent-ui
@@ -271,11 +272,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Several dependency updates
 - Added global `readonly` flag to the `Form` (https://github.com/rjsf-team/react-jsonschema-form/pull/2554)
 - Enable source maps in playground, for development (https://github.com/rjsf-team/react-jsonschema-form/pull/2568)
-
-# v3.1.1 (upcoming)
-
-## @rjsf/antd
-- Do not show errors if `extraErrors` has `[]` (https://github.com/rjsf-team/react-jsonschema-form/pull/2576).
 
 # v3.1.0
 
