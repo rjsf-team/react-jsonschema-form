@@ -7,7 +7,7 @@ import {
   Text,
   Stack,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
 
 // const selectValue = (value, selected, all) => {
@@ -69,8 +69,13 @@ const CheckboxesWidget = (props: WidgetProps) => {
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      <CheckboxGroup onChange={option => onChange(option)} defaultValue={value}>
+      <FormLabel htmlFor={id} id={`${id}-label`}>
+        {label || schema.title}
+      </FormLabel>
+      <CheckboxGroup
+        onChange={(option) => onChange(option)}
+        defaultValue={value}
+      >
         <Stack direction={row ? "row" : "column"}>
           {(enumOptions as any).map(
             (option: { value: any; label: any }, index: any) => {

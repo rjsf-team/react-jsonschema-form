@@ -810,7 +810,9 @@ describe("anyOf", () => {
 
       expect(node.querySelectorAll("select")).to.have.length.of(1);
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
     });
 
     it("should not change the selected option when switching order of items for anyOf inside array items", () => {
@@ -995,8 +997,12 @@ describe("anyOf", () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll("input#root_foo")).to.have.length.of(1);
-      expect(node.querySelectorAll("input#root_bar")).to.have.length.of(1);
+      expect(node.querySelectorAll("input#root_items_0_foo")).to.have.length.of(
+        1
+      );
+      expect(node.querySelectorAll("input#root_items_0_bar")).to.have.length.of(
+        1
+      );
     });
 
     it("should correctly infer the selected option based on value", () => {
@@ -1075,13 +1081,18 @@ describe("anyOf", () => {
         },
       });
 
-      const idSelects = node.querySelectorAll("select#root_id");
+      const rootId = node.querySelector("select#root_id");
+      expect(rootId.value).eql("chain");
+      const componentId = node.querySelector("select#root_components_0_id");
+      expect(componentId.value).eql("map");
 
-      expect(idSelects).to.have.length(4);
-      expect(idSelects[0].value).eql("chain");
-      expect(idSelects[1].value).eql("map");
-      expect(idSelects[2].value).eql("transform");
-      expect(idSelects[3].value).eql("to_absolute");
+      const fnId = node.querySelector("select#root_components_0_fn_id");
+      expect(fnId.value).eql("transform");
+
+      const transformerId = node.querySelector(
+        "select#root_components_0_fn_transformer_id"
+      );
+      expect(transformerId.value).eql("to_absolute");
     });
   });
   describe("hideError works with anyOf", () => {
@@ -1100,7 +1111,7 @@ describe("anyOf", () => {
         },
       },
     };
-    function validate(formData, errors) {
+    function customValidate(formData, errors) {
       errors.userId.addError("test");
       return errors;
     }
@@ -1108,7 +1119,7 @@ describe("anyOf", () => {
     it("should show error on options with different types", () => {
       const { node } = createFormComponent({
         schema,
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
@@ -1143,7 +1154,7 @@ describe("anyOf", () => {
         uiSchema: {
           "ui:hideError": true,
         },
-        validate,
+        customValidate,
       });
 
       Simulate.change(node.querySelector("input#root_userId"), {
@@ -1171,6 +1182,32 @@ describe("anyOf", () => {
         ".form-group.field-error input[type=text]"
       );
       expect(inputs).to.have.length.of(0);
+    });
+  });
+
+  describe("Custom Field", function () {
+    const schema = {
+      anyOf: [
+        {
+          type: "number",
+        },
+        {
+          type: "string",
+        },
+      ],
+    };
+    const uiSchema = {
+      "ui:field": () => <div className="custom-field">Custom field</div>,
+    };
+    it("should be rendered once", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const fields = node.querySelectorAll(".custom-field");
+      expect(fields).to.have.length.of(1);
+    });
+    it("should not render <select>", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(0);
     });
   });
 });

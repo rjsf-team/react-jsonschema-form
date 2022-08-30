@@ -4,17 +4,15 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import { ObjectFieldTemplateProps } from "@rjsf/core";
-import { utils } from '@rjsf/core';
-
-import AddButton from "../AddButton/AddButton";
-
-const { canExpand } = utils;
+import {
+  canExpand,
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
   description,
-  TitleField,
   title,
   properties,
   required,
@@ -24,21 +22,40 @@ const ObjectFieldTemplate = ({
   formData,
   onAddClick,
   disabled,
-  readonly
+  readonly,
+  registry,
 }: ObjectFieldTemplateProps) => {
+  const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
-      {(uiSchema["ui:title"] || title) && (
-        <TitleField
+      {(uiOptions.title || title) && (
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
-          title={uiSchema["ui:title"] || title}
+          title={uiOptions.title || title}
           required={required}
+          registry={registry}
+          uiSchema={uiSchema}
         />
       )}
-      {description && (
-        <DescriptionField
+      {(uiOptions.description || description) && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
+          registry={registry}
         />
       )}
       <Container fluid className="p-0">
@@ -46,7 +63,8 @@ const ObjectFieldTemplate = ({
           <Row
             key={index}
             style={{ marginBottom: "10px" }}
-            className={element.hidden ? "d-none" : undefined}>
+            className={element.hidden ? "d-none" : undefined}
+          >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
@@ -60,8 +78,8 @@ const ObjectFieldTemplate = ({
               />
             </Col>
           </Row>
-        ) : null }
-      </Container> 
+        ) : null}
+      </Container>
     </>
   );
 };

@@ -15,21 +15,20 @@ export function getSemanticProps({
   formContext = {},
   uiSchema = {},
   options = {},
-  defaultSchemaProps = { fluid: true , inverted: false },
-  defaultContextProps= { }
+  defaultSchemaProps = { fluid: true, inverted: false },
+  defaultContextProps = {},
 }) {
-
-   const formContextProps = formContext.semantic;
-   let schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic;
-   let optionProps = options.semantic;
-   // formContext props should overide other props
-   return Object.assign(
+  const formContextProps = formContext.semantic;
+  let schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic;
+  let optionProps = options.semantic;
+  // formContext props should overide other props
+  return Object.assign(
     {},
     { ...(defaultSchemaProps && defaultSchemaProps) },
     { ...(defaultContextProps && defaultContextProps) },
     schemaProps,
     optionProps,
-    formContextProps,
+    formContextProps
   );
 }
 
@@ -46,11 +45,14 @@ export function getSemanticErrorProps({
   formContext = {},
   uiSchema = {},
   options = {},
-  defaultProps = { size: 'small', pointing:'above' }
+  defaultProps = { size: "small", pointing: "above" },
 }) {
-
-  const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
-  const schemaProps = uiSchema["ui:options"] && uiSchema["ui:options"].semantic && uiSchema["ui:options"].semantic.errorOptions;
+  const formContextProps =
+    formContext.semantic && formContext.semantic.errorOptions;
+  const schemaProps =
+    uiSchema["ui:options"] &&
+    uiSchema["ui:options"].semantic &&
+    uiSchema["ui:options"].semantic.errorOptions;
   const optionProps = options.semantic && options.semantic.errorOptions;
 
   return Object.assign(
@@ -58,7 +60,7 @@ export function getSemanticErrorProps({
     { ...(defaultProps && defaultProps) },
     schemaProps,
     optionProps,
-    formContextProps,
+    formContextProps
   );
 }
 

@@ -1,11 +1,8 @@
 import React from "react";
 import { Label } from "@fluentui/react";
 import { SpinButton } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps, rangeSpec } from "@rjsf/utils";
 import _pick from "lodash/pick";
-import { utils } from "@rjsf/core";
-
-const { rangeSpec } = utils;
 
 // Keys of ISpinButtonProps from @fluentui/react
 const allowedProps = [
@@ -77,11 +74,15 @@ WidgetProps) => {
   }
 
   const _onIncrement = (value: string) => {
-    if (Number(value) + step! <= max!) onChange(Number(value) + step!);
+    if (Number(value) + step! <= max!) {
+      onChange(Number(value) + step!);
+    }
   };
 
   const _onDecrement = (value: string) => {
-    if (Number(value) - step! >= min!) onChange(Number(value) - step!);
+    if (Number(value) - step! >= min!) {
+      onChange(Number(value) - step!);
+    }
   };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
@@ -92,7 +93,7 @@ WidgetProps) => {
 
   const requiredSymbol = required ? "*" : "";
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
@@ -112,7 +113,6 @@ WidgetProps) => {
         onChange={_onChange}
         onIncrement={_onIncrement}
         onDecrement={_onDecrement}
-        for=""
         {...uiProps}
       />
     </>

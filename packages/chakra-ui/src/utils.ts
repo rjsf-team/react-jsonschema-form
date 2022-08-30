@@ -1,9 +1,5 @@
 import { ChakraProps, shouldForwardProp } from "@chakra-ui/react";
-import { FormProps, UiSchema } from "@rjsf/core";
-
-export type ThemeProps<T = any> = Omit<FormProps<T>, "schema" | "uiSchema"> & {
-  uiSchema?: ChakraUiSchema;
-};
+import { UiSchema } from "@rjsf/utils";
 
 export interface ChakraUiSchema extends Omit<UiSchema, "ui:options"> {
   "ui:options"?: ChakraUiOptions;
@@ -19,7 +15,7 @@ export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
   const chakraProps =
     (uiSchema["ui:options"] && uiSchema["ui:options"].chakra) || {};
 
-  Object.keys(chakraProps).forEach(key => {
+  Object.keys(chakraProps).forEach((key) => {
     /**
      * Leveraging `shouldForwardProp` to remove props
      *
@@ -28,7 +24,6 @@ export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
      * In this case we just want to delete the unknown props. So we flip the boolean.
      */
     if (shouldForwardProp(key)) {
-      // @ts-ignore - How to type this?!... 😬
       delete (chakraProps as any)[key];
     }
   });

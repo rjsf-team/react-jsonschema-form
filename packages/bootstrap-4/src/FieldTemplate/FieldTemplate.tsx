@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FieldTemplateProps } from "@rjsf/core";
+import { FieldTemplateProps } from "@rjsf/utils";
 
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -22,6 +22,7 @@ const FieldTemplate = ({
   readonly,
   required,
   schema,
+  registry,
 }: FieldTemplateProps) => {
   return (
     <WrapIfAdditional
@@ -33,11 +34,15 @@ const FieldTemplate = ({
       onKeyChange={onKeyChange}
       readonly={readonly}
       required={required}
-      schema={schema}>
+      schema={schema}
+      registry={registry}
+    >
       <Form.Group>
         {children}
         {displayLabel && rawDescription && (
-          <Form.Text className={rawErrors.length > 0 ? "text-danger" : "text-muted"}>
+          <Form.Text
+            className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
+          >
             {rawDescription}
           </Form.Text>
         )}
@@ -45,10 +50,12 @@ const FieldTemplate = ({
           <ListGroup as="ul">
             {rawErrors.map((error: string) => {
               return (
-                <ListGroup.Item as="li" key={error} className="border-0 m-0 p-0">
-                  <small className="m-0 text-danger">
-                    {error}
-                  </small>
+                <ListGroup.Item
+                  as="li"
+                  key={error}
+                  className="border-0 m-0 p-0"
+                >
+                  <small className="m-0 text-danger">{error}</small>
                 </ListGroup.Item>
               );
             })}
@@ -57,7 +64,8 @@ const FieldTemplate = ({
         {rawHelp && (
           <Form.Text
             className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
-            id={id}>
+            id={id}
+          >
             {rawHelp}
           </Form.Text>
         )}

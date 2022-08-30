@@ -1,12 +1,12 @@
-import React from 'react';
-import { FieldProps } from '@rjsf/core';
+import React from "react";
+import Box from "@material-ui/core/Box";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import { TitleFieldProps } from "@rjsf/utils";
 
-import { useMuiComponent } from '../MuiComponentContext';
-
-const TitleField = ({ title }: FieldProps) => {
-  const { Box, Divider, Typography } = useMuiComponent();
+const TitleField = ({ id, title }: TitleFieldProps) => {
   return (
-    <Box mb={1} mt={1}>
+    <Box id={id} mb={1} mt={1}>
       <Typography variant="h5">{title}</Typography>
       <Divider />
     </Box>

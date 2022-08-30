@@ -1,9 +1,10 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import React, { createRef } from "react";
-import { renderIntoDocument, Simulate } from "react-dom/test-utils";
+import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
+import validator, { customizeValidator } from "@rjsf/validator-ajv6";
 
 import Form from "../src";
 import {
@@ -15,7 +16,7 @@ import {
   submitForm,
 } from "./test_utils";
 
-describeRepeated("Form common", createFormComponent => {
+describeRepeated("Form common", (createFormComponent) => {
   let sandbox;
 
   beforeEach(() => {
@@ -40,7 +41,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     it("should render children buttons", () => {
-      const props = { schema: {} };
+      const props = { schema: {}, validator };
       const comp = renderIntoDocument(
         <Form {...props}>
           <button type="submit">Submit</button>
@@ -53,6 +54,7 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should render errors if schema isn't object", () => {
       const props = {
+        validator,
         schema: {
           type: "object",
           title: "object",
@@ -88,7 +90,12 @@ describeRepeated("Form common", createFormComponent => {
 
     function createComponent() {
       renderIntoDocument(
-        <Form schema={schema} onChange={onChangeProp} formData={formData}>
+        <Form
+          schema={schema}
+          onChange={onChangeProp}
+          formData={formData}
+          validator={validator}
+        >
           <button type="submit">Submit</button>
           <button type="submit">Another submit</button>
         </Form>
@@ -128,7 +135,9 @@ describeRepeated("Form common", createFormComponent => {
           edit: true,
           uiSchema: {},
           idSchema: { $id: "root", count: { $id: "root_count" } },
-          additionalMetaSchemas: undefined,
+          schemaValidationErrors: undefined,
+          schemaValidationErrorSchema: undefined,
+          schemaUtils: sinon.match.object,
         });
       });
     });
@@ -147,8 +156,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Option idPrefix", function() {
-    it("should change the rendered ids", function() {
+  describe("Option idPrefix", function () {
+    it("should change the rendered ids", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -159,7 +168,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -172,8 +183,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Changing idPrefix", function() {
-    it("should work with simple example", function() {
+  describe("Changing idPrefix", function () {
+    it("should work with simple example", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -184,7 +195,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -196,7 +209,7 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.querySelector("fieldset").id).to.eql("rjsf");
     });
 
-    it("should work with oneOf", function() {
+    it("should work with oneOf", function () {
       const schema = {
         $schema: "http://json-schema.org/draft-06/schema#",
         type: "object",
@@ -240,7 +253,9 @@ describeRepeated("Form common", createFormComponent => {
         },
       };
 
-      const comp = renderIntoDocument(<Form schema={schema} idPrefix="rjsf" />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idPrefix="rjsf" validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -252,8 +267,8 @@ describeRepeated("Form common", createFormComponent => {
     });
   });
 
-  describe("Option idSeparator", function() {
-    it("should change the rendered ids", function() {
+  describe("Option idSeparator", function () {
+    it("should change the rendered ids", function () {
       const schema = {
         type: "object",
         title: "root object",
@@ -264,7 +279,9 @@ describeRepeated("Form common", createFormComponent => {
           },
         },
       };
-      const comp = renderIntoDocument(<Form schema={schema} idSeparator="." />);
+      const comp = renderIntoDocument(
+        <Form schema={schema} idSeparator="." validator={validator} />
+      );
       const node = findDOMNode(comp);
       const inputs = node.querySelectorAll("input");
       const ids = [];
@@ -298,7 +315,7 @@ describeRepeated("Form common", createFormComponent => {
 
     const formData = { foo: "invalid" };
 
-    function FieldTemplate(props) {
+    function CustomFieldTemplate(props) {
       const {
         id,
         classNames,
@@ -348,7 +365,9 @@ describeRepeated("Form common", createFormComponent => {
         schema,
         uiSchema,
         formData,
-        FieldTemplate,
+        templates: {
+          FieldTemplate: CustomFieldTemplate,
+        },
         liveValidate: true,
       }).node;
     });
@@ -400,6 +419,7 @@ describeRepeated("Form common", createFormComponent => {
   describe("ui options submitButtonOptions", () => {
     it("should not render a submit button", () => {
       const props = {
+        validator,
         schema: {},
         uiSchema: { "ui:submitButtonOptions": { norender: true } },
       };
@@ -411,6 +431,7 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should render a submit button with text Confirm", () => {
       const props = {
+        validator,
         schema: {},
         uiSchema: { "ui:submitButtonOptions": { submitText: "Confirm" } },
       };
@@ -434,7 +455,7 @@ describeRepeated("Form common", createFormComponent => {
     afterEach(() => {
       document.body.removeChild(domNode);
     });
-    it("should submit the form when clicked", done => {
+    it("should submit the form when clicked", (done) => {
       let submitCount = 0;
       const onSubmit = () => {
         submitCount++;
@@ -444,7 +465,7 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const comp = render(
-        <Form onSubmit={onSubmit} schema={{}}>
+        <Form onSubmit={onSubmit} schema={{}} validator={validator}>
           <button type="submit" value="Submit button" />
           <button type="submit" value="Another submit button" />
         </Form>,
@@ -991,6 +1012,52 @@ describeRepeated("Form common", createFormComponent => {
         uiSchema,
       });
     });
+    it("should call last provided change handler", async () => {
+      const schema = {
+        type: "object",
+        properties: {
+          foo: {
+            type: "string",
+            default: "bar",
+          },
+        },
+      };
+
+      const secondOnChange = sandbox.spy();
+
+      const { comp, onChange } = createFormComponent({
+        schema,
+        formData: { foo: "bar1" },
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: { foo: "bar2" },
+        });
+      });
+
+      act(() => {
+        setProps(comp, {
+          schema,
+          formData: {},
+          onChange: secondOnChange,
+        });
+      });
+
+      sinon.assert.callCount(onChange, 1);
+      sinon.assert.callCount(secondOnChange, 1);
+    });
   });
   describe("Blur handler", () => {
     it("should call provided blur handler on form input blur event", () => {
@@ -1094,7 +1161,6 @@ describeRepeated("Form common", createFormComponent => {
       it("should call onChange", () => {
         sinon.assert.calledOnce(onChangeProp);
         sinon.assert.calledWith(onChangeProp, {
-          additionalMetaSchemas: undefined,
           edit: true,
           errorSchema: {},
           errors: [],
@@ -1102,6 +1168,9 @@ describeRepeated("Form common", createFormComponent => {
           idSchema: { $id: "root" },
           schema: formProps.schema,
           uiSchema: {},
+          schemaValidationErrors: undefined,
+          schemaValidationErrorSchema: undefined,
+          schemaUtils: sinon.match.object,
         });
       });
     });
@@ -1195,6 +1264,7 @@ describeRepeated("Form common", createFormComponent => {
               onChange={this.onChange}
               schema={schema}
               formData={this.state.formData}
+              validator={validator}
             />
           );
         }
@@ -1202,7 +1272,7 @@ describeRepeated("Form common", createFormComponent => {
 
       const falseyValues = [0, false, null, undefined, NaN];
 
-      falseyValues.forEach(falseyValue => {
+      falseyValues.forEach((falseyValue) => {
         it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
           // It is expected that this will throw an error due to non-matching propTypes,
           // so the error message needs to be inspected
@@ -1588,7 +1658,7 @@ describeRepeated("Form common", createFormComponent => {
 
         sinon.assert.calledWithMatch(
           onError,
-          sinon.match(value => {
+          sinon.match((value) => {
             return (
               value.length === 1 &&
               value[0].message === "should NOT be shorter than 8 characters"
@@ -1628,8 +1698,6 @@ describeRepeated("Form common", createFormComponent => {
         sinon.assert.calledWithMatch(onSubmit.lastCall, {
           errors: [],
           errorSchema: {},
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
         });
       });
 
@@ -1732,7 +1800,7 @@ describeRepeated("Form common", createFormComponent => {
         const { node } = createFormComponent(formProps);
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql([
           "should NOT be shorter than 8 characters",
@@ -1834,7 +1902,7 @@ describeRepeated("Form common", createFormComponent => {
         const liNodes = fieldNodes[1].querySelectorAll(
           ".field-string .error-detail li"
         );
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
@@ -1902,7 +1970,7 @@ describeRepeated("Form common", createFormComponent => {
         });
 
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
       });
@@ -1926,7 +1994,10 @@ describeRepeated("Form common", createFormComponent => {
       };
 
       const formData = {
-        outer: [["good", "bad"], ["bad", "good"]],
+        outer: [
+          ["good", "bad"],
+          ["bad", "good"],
+        ],
       };
 
       const formProps = { schema, formData, liveValidate: true };
@@ -1958,7 +2029,7 @@ describeRepeated("Form common", createFormComponent => {
       it("should denote the error in the nested item field in error", () => {
         const { node } = createFormComponent(formProps);
         const fields = node.querySelectorAll(".field-string");
-        const errors = [].map.call(fields, field => {
+        const errors = [].map.call(fields, (field) => {
           const li = field.querySelector(".error-detail li");
           return li && li.textContent;
         });
@@ -2015,7 +2086,7 @@ describeRepeated("Form common", createFormComponent => {
         const liNodes = fieldNodes[1].querySelectorAll(
           ".field-string .error-detail li"
         );
-        const errors = [].map.call(liNodes, li => li.textContent);
+        const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
         expect(errors).eql(["should NOT be shorter than 4 characters"]);
@@ -2399,10 +2470,6 @@ describeRepeated("Form common", createFormComponent => {
       expect(node.getAttribute("action")).eql(formProps.action);
     });
 
-    it("should set attr autocomplete of form", () => {
-      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
-    });
-
     it("should set attr enctype of form", () => {
       expect(node.getAttribute("enctype")).eql(formProps.enctype);
     });
@@ -2413,40 +2480,6 @@ describeRepeated("Form common", createFormComponent => {
 
     it("should set attr novalidate of form", () => {
       expect(node.getAttribute("novalidate")).not.to.be.null;
-    });
-  });
-
-  describe("Deprecated autocomplete attribute", () => {
-    it("should set attr autocomplete of form", () => {
-      const formProps = {
-        schema: {},
-        autocomplete: "off",
-      };
-      const node = createFormComponent(formProps).node;
-      expect(node.getAttribute("autocomplete")).eql(formProps.autocomplete);
-    });
-
-    it("should log deprecation warning when it is used", () => {
-      sandbox.stub(console, "warn");
-      createFormComponent({
-        schema: {},
-        autocomplete: "off",
-      });
-      expect(
-        console.warn.calledWithMatch(
-          /Using autocomplete property of Form is deprecated/
-        )
-      ).to.be.true;
-    });
-
-    it("should use autoComplete value if both autocomplete and autoComplete are used", () => {
-      const formProps = {
-        schema: {},
-        autocomplete: "off",
-        autoComplete: "on",
-      };
-      const node = createFormComponent(formProps).node;
-      expect(node.getAttribute("autocomplete")).eql(formProps.autoComplete);
     });
   });
 
@@ -2475,6 +2508,11 @@ describeRepeated("Form common", createFormComponent => {
           "area-code": () => <div id="custom" />,
         },
       };
+      const customValidator = customizeValidator({
+        customFormats: {
+          "area-code": /^\d{3}$/,
+        },
+      });
 
       const { comp, node, onError } = createFormComponent(formProps);
 
@@ -2484,9 +2522,7 @@ describeRepeated("Form common", createFormComponent => {
       setProps(comp, {
         ...formProps,
         onError,
-        customFormats: {
-          "area-code": /^\d{3}$/,
-        },
+        validator: customValidator,
       });
 
       submitForm(node);
@@ -2514,7 +2550,6 @@ describeRepeated("Form common", createFormComponent => {
           pattern: "d+",
         },
         formData: "short",
-        additionalMetaSchemas: [],
       };
 
       const { comp, node, onError } = createFormComponent(formProps);
@@ -2526,12 +2561,16 @@ describeRepeated("Form common", createFormComponent => {
         },
       ]);
 
-      setProps(comp, {
-        ...formProps,
-        onError,
+      const customValidator = customizeValidator({
         additionalMetaSchemas: [
           require("ajv/lib/refs/json-schema-draft-04.json"),
         ],
+      });
+
+      setProps(comp, {
+        ...formProps,
+        onError,
+        validator: customValidator,
       });
 
       submitForm(node);
@@ -2553,16 +2592,6 @@ describeRepeated("Form common", createFormComponent => {
           stack: 'should match pattern "d+"',
         },
       ]);
-
-      setProps(comp, { ...formProps, onError });
-
-      submitForm(node);
-      sinon.assert.calledWithMatch(onError.lastCall, [
-        {
-          stack:
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
-        },
-      ]);
     });
   });
 
@@ -2574,7 +2603,7 @@ describeRepeated("Form common", createFormComponent => {
     });
 
     it("should render the component using a ComponentType", () => {
-      const Component = props => <div {...props} id="test" />;
+      const Component = (props) => <div {...props} id="test" />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).eql("test");
     });
@@ -2594,6 +2623,7 @@ describeRepeated("Form common", createFormComponent => {
 
         render() {
           const innerFormProps = {
+            validator,
             schema: {},
             onSubmit: innerOnSubmit,
           };
@@ -2620,7 +2650,7 @@ describeRepeated("Form common", createFormComponent => {
           items: { type: "string" },
         },
         formData: ["foo", "bar"],
-        ArrayFieldTemplate: ArrayTemplateWithForm,
+        templates: { ArrayFieldTemplate: ArrayTemplateWithForm },
         onSubmit: outerOnSubmit,
       };
       createFormComponent(outerFormProps);
@@ -3061,7 +3091,7 @@ describe("Form omitExtraData and liveOmit", () => {
       const pathSchema = {
         $name: "",
         address_list: {
-          "0": {
+          0: {
             $name: "address_list.0",
             city: {
               $name: "address_list.0.city",
@@ -3073,7 +3103,7 @@ describe("Form omitExtraData and liveOmit", () => {
               $name: "address_list.0.street_address",
             },
           },
-          "1": {
+          1: {
             $name: "address_list.1",
             city: {
               $name: "address_list.1.city",
@@ -3417,5 +3447,63 @@ describe("Form omitExtraData and liveOmit", () => {
     });
 
     expect(node.querySelectorAll(".error-detail li")).to.have.length.of(2);
+  });
+  describe("Calling onChange right after updating a Form with props formData", () => {
+    const schema = {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    };
+
+    let changed = false;
+    class ArrayThatTriggersOnChangeRightAfterUpdated extends React.Component {
+      componentDidUpdate = () => {
+        if (changed) {
+          return;
+        }
+        changed = true;
+        this.props.onChange([...this.props.formData, "test"]);
+      };
+      render() {
+        const { ArrayField } = this.props.registry.fields;
+        return <ArrayField {...this.props} />;
+      }
+    }
+
+    const uiSchema = {
+      "ui:field": ArrayThatTriggersOnChangeRightAfterUpdated,
+    };
+
+    const props = {
+      schema,
+      uiSchema,
+    };
+
+    class Container extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {};
+      }
+
+      onChange = ({ formData }) => {
+        this.setState({ formData });
+      };
+
+      render() {
+        return (
+          <Form {...this.props} {...this.state} onChange={this.onChange} />
+        );
+      }
+    }
+
+    it("doesn't cause a race condition", () => {
+      const { node } = createComponent(Container, { ...props });
+
+      Simulate.click(node.querySelector(".array-item-add button"));
+
+      expect(node.querySelector("#root_0")).to.exist;
+      expect(node.querySelector("#root_1").getAttribute("value")).to.eq("test");
+    });
   });
 });

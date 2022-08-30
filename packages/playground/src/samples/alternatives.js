@@ -67,8 +67,11 @@ module.exports = {
       blendMode: {
         title: "Blend mode",
         type: "string",
-        enum: ["screen", "multiply", "overlay"],
-        enumNames: ["Screen", "Multiply", "Overlay"],
+        oneOf: [
+          { const: "screen", title: "Screen" },
+          { const: "multiply", title: "Multiply" },
+          { const: "overlay", title: "Overlay" },
+        ],
       },
     },
   },

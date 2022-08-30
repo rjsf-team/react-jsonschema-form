@@ -18,8 +18,10 @@ describe("FormContext", () => {
 
   const formContext = { foo: "bar" };
 
-  const CustomComponent = function(props) {
-    return <div id={props.formContext.foo} />;
+  const CustomComponent = function (props) {
+    const { registry } = props;
+    const { formContext } = registry;
+    return <div id={formContext.foo} />;
   };
 
   it("should be passed to Form", () => {
@@ -70,7 +72,7 @@ describe("FormContext", () => {
           },
         },
       },
-      FieldTemplate: CustomTemplateField,
+      templates: { FieldTemplate: CustomTemplateField },
       formContext,
     });
 
@@ -89,15 +91,15 @@ describe("FormContext", () => {
           type: "string",
         },
       },
-      ArrayFieldTemplate: CustomArrayTemplateField,
+      templates: { ArrayFieldTemplate: CustomArrayTemplateField },
       formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom TitleField", () => {
-    const fields = { TitleField: CustomComponent };
+  it("should be passed to custom TitleFieldTemplate", () => {
+    const templates = { TitleFieldTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: {
@@ -109,19 +111,19 @@ describe("FormContext", () => {
           },
         },
       },
-      fields,
+      templates,
       formContext,
     });
 
     expect(node.querySelector("#" + formContext.foo)).to.exist;
   });
 
-  it("should be passed to custom DescriptionField", () => {
-    const fields = { DescriptionField: CustomComponent };
+  it("should be passed to custom DescriptionFieldTemplate", () => {
+    const templates = { DescriptionFieldTemplate: CustomComponent };
 
     const { node } = createFormComponent({
       schema: { type: "string", description: "A description" },
-      fields,
+      templates,
       formContext,
     });
 
@@ -135,8 +137,12 @@ describe("FormContext", () => {
         type: "array",
         items: {
           type: "string",
-          enum: ["foo"],
-          enumNames: ["bar"],
+          oneOf: [
+            {
+              const: "foo",
+              title: "bar",
+            },
+          ],
         },
         uniqueItems: true,
       },

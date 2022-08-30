@@ -16,15 +16,22 @@ react-jsonschema-form also comes with tools such as `uiSchema` and other form pr
 
 ## Installation
 
-First install the dependency from npm:
+First install the dependencies from npm:
 
 ```bash
-$ npm install @rjsf/core --save
+$ npm install @rjsf/core @rjsf/utils --save
 ```
+
+As of version 5, you will also need to select and install a validator implementation (such as `@rjsf/validator-ajv6`):
+
+```bash
+$ npm install @rjsf/validator-ajv6 --save
+````
 
 Then import the dependency as follows:
 
 ```js
+import validator from "@rjsf/validator-ajv6";
 import Form from "@rjsf/core";
 ```
 
@@ -51,6 +58,8 @@ const {default: Form} = JSONSchemaForm;
 ## Usage
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const schema = {
   title: "Todo",
   type: "object",
@@ -65,6 +74,7 @@ const log = (type) => console.log.bind(console, type);
 
 render((
   <Form schema={schema}
+        validator={validator}
         onChange={log("changed")}
         onSubmit={log("submitted")}
         onError={log("errors")} />
