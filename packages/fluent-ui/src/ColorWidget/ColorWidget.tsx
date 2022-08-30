@@ -6,7 +6,7 @@ import {
   getColorFromString,
   Label,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const styles_red = {
@@ -47,7 +47,7 @@ const ColorWidget = ({
     onChange(colorObj.hex);
   };
 
-  const uiProps = _pick(options.props || {}, allowedProps);
+  const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>

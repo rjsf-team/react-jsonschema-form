@@ -1,14 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { utils } from '@rjsf/core';
+import { processSelectValue } from "@rjsf/utils";
 import _ from "lodash";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-
-
-const { asNumber, guessType } = utils;
-
-const nums = new Set(["number", "integer"]);
 
 /**
  * * Returns and creates an array format required for semantic drop down
@@ -29,36 +24,6 @@ function createDefaultValueOptionsForDropDown(enumOptions, enumDisabled) {
   return options;
 }
 
-/**
- * This is a silly limitation in the DOM where option change event values are
- * always retrieved as strings.
- */
-const processValue = (schema, value) => {
-  // "enum" is a reserved word, so only "type" and "items" can be destructured
-  const { type, items } = schema;
-  if (value === "") {
-    return undefined;
-  } else if (type === "array" && items && nums.has(items.type)) {
-    return value.map(asNumber);
-  } else if (type === "boolean") {
-    return value === "true" || value === true;
-  } else if (type === "number") {
-    return asNumber(value);
-  }
-
-  // If type is undefined, but an enum is present, try and infer the type from
-  // the enum values
-  if (schema.enum) {
-    if (schema.enum.every(x => guessType(x) === "number")) {
-      return asNumber(value);
-    } else if (schema.enum.every(x => guessType(x) === "boolean")) {
-      return value === "true";
-    }
-  }
-
-  return value;
-};
-
 function SelectWidget(props) {
   const {
     schema,
@@ -78,6 +43,7 @@ function SelectWidget(props) {
     onChange,
     onBlur,
     onFocus,
+    rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
     schema,
@@ -90,8 +56,8 @@ function SelectWidget(props) {
       fluid: true,
       scrolling: true,
       upward: false,
-    }
- });
+    },
+  });
   const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown(
@@ -102,14 +68,14 @@ function SelectWidget(props) {
     event,
     // eslint-disable-next-line no-shadow
     { value }
-  ) => onChange && onChange(processValue(schema, value));
+  ) => onChange && onChange(processSelectValue(schema, value, options));
   // eslint-disable-next-line no-shadow
   const _onBlur = ({ target: { value } }) =>
-    onBlur && onBlur(id, processValue(schema, value));
+    onBlur && onBlur(id, processSelectValue(schema, value, options));
   const _onFocus = ({
     // eslint-disable-next-line no-shadow
     target: { value },
-  }) => onFocus && onFocus(id, processValue(schema, value));
+  }) => onFocus && onFocus(id, processSelectValue(schema, value, options));
 
   return (
     <Form.Dropdown
@@ -118,6 +84,7 @@ function SelectWidget(props) {
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}
+      error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}
       {...semanticProps}

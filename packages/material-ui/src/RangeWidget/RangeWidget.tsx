@@ -1,9 +1,7 @@
-import React from 'react';
-import { WidgetProps, utils } from '@rjsf/core';
-
-import { useMuiComponent } from '../MuiComponentContext';
-
-const { rangeSpec } = utils;
+import React from "react";
+import FormLabel from "@material-ui/core/FormLabel";
+import Slider from "@material-ui/core/Slider";
+import { WidgetProps, rangeSpec } from "@rjsf/utils";
 
 const RangeWidget = ({
   value,
@@ -18,14 +16,16 @@ const RangeWidget = ({
   label,
   id,
 }: WidgetProps) => {
-  const { FormLabel, Slider } = useMuiComponent();
-  let sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, ...rangeSpec(schema) };
 
-  const _onChange = (_: any, value?: number | number[])  => {
-     onChange(value ? options.emptyValue : value);
-  }
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onChange = (_: any, value?: number | number[]) => {
+    onChange(value ? options.emptyValue : value);
+  };
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, value);
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
     <>

@@ -69,7 +69,7 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 - `framer-motion >= 5.0.0`
 - `@rjsf/core >= 2.0.0`
 
-Refer to the [rjsf installation guide](https://react-jsonschema-form.readthedocs.io/en/latest/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
+Refer to the [rjsf installation guide](https://react-jsonschema-form.readthedocs.io/en/stable/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
 
 ---
 
@@ -137,7 +137,7 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
+Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/stable/contributing/) to get started.
 
 <!-- CONTACT -->
 

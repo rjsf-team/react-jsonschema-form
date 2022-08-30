@@ -62,6 +62,8 @@ You can use the reference to get your `Form` component and call the `submit` met
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
 
 ```jsx
+import validator from "@rjsf/validator-ajv6";
+
 const onSubmit = ({formData}) => console.log("Data submitted: ",  formData);
 let yourForm;
 
@@ -70,8 +72,7 @@ const schema = {
 };
 
 render((
-  <Form schema={schema}
-        onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={(form) => {yourForm = form;}}/>
 ), document.getElementById("app"));
 
 yourForm.submit();
