@@ -43,7 +43,7 @@ const FieldTemplate = ({
   const renderFieldErrors = () =>
     [...new Set(rawErrors)].map((error) => (
       <div key={`field-${id}-error-${error}`}>{error}</div>
-    )); 
+    ));
 
   return (
     <WrapIfAdditional
@@ -66,13 +66,15 @@ const FieldTemplate = ({
           colon={colon}
           extra={description}
           hasFeedback={schema.type !== "array" && schema.type !== "object"}
-          help={(!!rawHelp && help) || (!!rawErrors?.length && renderFieldErrors())}
+          help={
+            (!!rawHelp && help) || (!!rawErrors?.length && renderFieldErrors())
+          }
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
           required={required}
           style={wrapperStyle}
-          validateStatus={rawErrors?.length ? 'error' : undefined}
+          validateStatus={rawErrors?.length ? "error" : undefined}
           wrapperCol={wrapperCol}
         >
           {children}
