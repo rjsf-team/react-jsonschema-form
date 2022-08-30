@@ -75,9 +75,7 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-});
 
-describe("errors", () => {
   test("has errors", () => {
     const schema = {
       type: "object",

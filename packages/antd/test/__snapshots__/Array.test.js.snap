@@ -728,6 +728,128 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields empty errors array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-form-item ant-form-item-with-help"
+            >
+              <div
+                className="ant-row ant-form-item-row"
+                style={Object {}}
+              >
+                <div
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
+                >
+                  <label
+                    className=""
+                    htmlFor="root_name"
+                    title="name"
+                  >
+                    name
+                  </label>
+                </div>
+                <div
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-form-item-control-input"
+                  >
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_name"
+                          name="root_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-form-item-extra"
+                  >
+                    <span
+                      id="root_name__description"
+                    >
+                      
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 <form
   className="rjsf"
@@ -1024,129 +1146,7 @@ exports[`array fields fixed array 1`] = `
 </form>
 `;
 
-exports[`errors empty errors array 1`] = `
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-object"
-  >
-    <fieldset
-      id="root"
-    >
-      <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
-      >
-        
-        <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
-        >
-          <div
-            className="form-group field field-string"
-          >
-            <div
-              className="ant-form-item ant-form-item-with-help"
-            >
-              <div
-                className="ant-row ant-form-item-row"
-                style={Object {}}
-              >
-                <div
-                  className="ant-col ant-col-24 ant-form-item-label"
-                  style={Object {}}
-                >
-                  <label
-                    className=""
-                    htmlFor="root_name"
-                    title="name"
-                  >
-                    name
-                  </label>
-                </div>
-                <div
-                  className="ant-col ant-col-24 ant-form-item-control"
-                  style={Object {}}
-                >
-                  <div
-                    className="ant-form-item-control-input"
-                  >
-                    <div
-                      className="ant-form-item-control-input-content"
-                    >
-                      <span
-                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
-                        style={
-                          Object {
-                            "width": "100%",
-                          }
-                        }
-                      >
-                        <input
-                          className="ant-input"
-                          hidden={null}
-                          id="root_name"
-                          name="root_name"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          placeholder=""
-                          style={null}
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          className="ant-input-suffix"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    className="ant-form-item-extra"
-                  >
-                    <span
-                      id="root_name__description"
-                    >
-                      
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-  <button
-    className="ant-btn ant-btn-submit"
-    disabled={false}
-    onClick={[Function]}
-    type="submit"
-  >
-    <span>
-      Submit
-    </span>
-  </button>
-</form>
-`;
-
-exports[`errors has errors 1`] = `
+exports[`array fields has errors 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -1370,7 +1370,7 @@ exports[`errors has errors 1`] = `
 </form>
 `;
 
-exports[`errors no errors 1`] = `
+exports[`array fields no errors 1`] = `
 <form
   className="rjsf"
   noValidate={false}
