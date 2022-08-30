@@ -713,6 +713,7 @@ export default class Form<T = any, F = any> extends Component<
           cancelable: true,
         })
       );
+      this.formElement.current.requestSubmit();
     }
   }
 

@@ -8,6 +8,7 @@ import DemoFrame from "./DemoFrame";
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
+
 const liveSettingsSchema = {
   type: "object",
   properties: {
@@ -285,6 +286,7 @@ class Playground extends Component {
     const validator = "AJV6";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
+    this.playGroundForm = React.createRef();
     this.state = {
       form: false,
       schema,
@@ -482,6 +484,19 @@ class Playground extends Component {
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
+          <div className="row">
+            <div className="col-sm-10" />
+            <div className="col-sm-2">
+              <button
+                title="Click me to submit the form programmatically."
+                className="btn btn-default"
+                type="button"
+                onClick={() => this.playGroundForm.current.submit()}
+              >
+                Programmatic Submit
+              </button>
+            </div>
+          </div>
         </div>
         <div className="col-sm-7">
           <Editor
@@ -572,6 +587,7 @@ class Playground extends Component {
                 }
                 transformErrors={transformErrors}
                 onError={log("errors")}
+                ref={this.playGroundForm}
               />
             </DemoFrame>
           )}
