@@ -17,6 +17,8 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.3
 
+## @rjsf/core
+- Added programmatic form submit button to playground and fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2104,https://github.com/rjsf-team/react-jsonschema-form/issues/3023)
 ## @rjsf/antd
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
@@ -79,7 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
 - Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
 - **BREAKING CHANGE** Fixed `anyOf` and `oneOf` getting incorrect, potentially duplicate ids when combined with array (https://github.com/rjsf-team/react-jsonschema-form/issues/2197)
-- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274) 
+- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274)
 - Added `ui:duplicateKeySuffixSeparator` to customize how duplicate object keys are renamed when using `additionalProperties`.
 - The `extraErrors` are now consistently appended onto the end of the schema validation-based `errors` information that is returned via the `onErrors()` callback when submit fails.
   - In addition, the extra information provided by AJV is no longer stripped from the `errors` during the merge process, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/1596).
@@ -98,7 +100,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 - Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
 
-## @rjsf/material-ui 
+## @rjsf/material-ui
 - The theme for Material UI version 5 (i.e. `@rjsf/mui`) was split out of the theme for version 4 (i.e. `@rjsf/material-ui`) to resolve the following issues:
   - [#2762](https://github.com/rjsf-team/react-jsonschema-form/issues/2762)
   - [#2858](https://github.com/rjsf-team/react-jsonschema-form/issues/2858)
