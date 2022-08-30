@@ -18,7 +18,9 @@ should change the heading of the (upcoming) version to include a major version b
 # v5.0.0-beta.3
 
 ## @rjsf/core
-- Added programmatic form submit button to playground and fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2104,https://github.com/rjsf-team/react-jsonschema-form/issues/3023)
+- Added a `requestSubmit()` call to the `Form.submit()` function, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2104, https://github.com/rjsf-team/react-jsonschema-form/issues/3023)
+- Added missing `children` property on the `FormProps` type for `Form`
+
 ## @rjsf/antd
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
@@ -38,6 +40,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Fixed missing `playground` import error by adding `source-map-loader`
 - Fixed up the incorrectly formatted `5.x Migration Guide`
+- Added a `Programmatic Submit` button on the playground form to allow users to test the ability to programmatically submit a form
+- Regenerated the `package-lock.json` files using clean `node_modules` directories
 
 # v5.0.0-beta.2
 - Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
@@ -67,8 +71,6 @@ should change the heading of the (upcoming) version to include a major version b
 - New package created by refactoring and converting to Typescript the `validator.js` file from `core` into independent functions as well as a class that implements the new `ValidatorType` interface.
   - [#2693](https://github.com/rjsf-team/react-jsonschema-form/issues/2693).
 - Added support for customizing the options passed to the creation of the `ajv` instance.
-
-## @rjsf/validator-ajv6
 - A **BREAKING CHANGE** to `toErrorList()` was made so that it takes `fieldPath: string[]` rather than `fieldName='root'` as part of the fix to (https://github.com/rjsf-team/react-jsonschema-form/issues/1596)
   - The returned `errors` also now adds `property` from the `fieldPath` along with the proper path from the `property` to the `stack` message, making it consistent with the AJV errors.
     - Previously the `stack` attribute would say `root: error message`; now it says `. error message`
