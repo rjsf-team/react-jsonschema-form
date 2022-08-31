@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added missing `children` property on the `FormProps` type for `Form`
 
 ## @rjsf/antd
+- Do not show errors if `extraErrors` has `[]` (https://github.com/rjsf-team/react-jsonschema-form/pull/2576).
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
 ## @rjsf/fluent-ui
