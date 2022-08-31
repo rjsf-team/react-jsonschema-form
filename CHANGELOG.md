@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.3
 
+## @rjsf/core
+- Added a `requestSubmit()` call to the `Form.submit()` function, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2104, https://github.com/rjsf-team/react-jsonschema-form/issues/3023)
+- Added missing `children` property on the `FormProps` type for `Form`
+
 ## @rjsf/antd
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
@@ -32,6 +36,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/semantic-ui
 - Upgraded from the `1.x` to `2.x` version of `semantic-ui-react`
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
+
+## Dev / docs / playground
+- Fixed missing `playground` import error by adding `source-map-loader`
+- Fixed up the incorrectly formatted `5.x Migration Guide`
+- Added a `Programmatic Submit` button on the playground form to allow users to test the ability to programmatically submit a form
+- Regenerated the `package-lock.json` files using clean `node_modules` directories
 
 # v5.0.0-beta.2
 - Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
@@ -61,8 +71,6 @@ should change the heading of the (upcoming) version to include a major version b
 - New package created by refactoring and converting to Typescript the `validator.js` file from `core` into independent functions as well as a class that implements the new `ValidatorType` interface.
   - [#2693](https://github.com/rjsf-team/react-jsonschema-form/issues/2693).
 - Added support for customizing the options passed to the creation of the `ajv` instance.
-
-## @rjsf/validator-ajv6
 - A **BREAKING CHANGE** to `toErrorList()` was made so that it takes `fieldPath: string[]` rather than `fieldName='root'` as part of the fix to (https://github.com/rjsf-team/react-jsonschema-form/issues/1596)
   - The returned `errors` also now adds `property` from the `fieldPath` along with the proper path from the `property` to the `stack` message, making it consistent with the AJV errors.
     - Previously the `stack` attribute would say `root: error message`; now it says `. error message`
@@ -75,7 +83,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Fix overriding core submit button className (https://github.com/rjsf-team/react-jsonschema-form/issues/2979)
 - Fix `ui:field` with anyOf or oneOf no longer rendered twice (#2890)
 - **BREAKING CHANGE** Fixed `anyOf` and `oneOf` getting incorrect, potentially duplicate ids when combined with array (https://github.com/rjsf-team/react-jsonschema-form/issues/2197)
-- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274) 
+- `formContext` is now passed properly to `SchemaField`, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2394, https://github.com/rjsf-team/react-jsonschema-form/issues/2274)
 - Added `ui:duplicateKeySuffixSeparator` to customize how duplicate object keys are renamed when using `additionalProperties`.
 - The `extraErrors` are now consistently appended onto the end of the schema validation-based `errors` information that is returned via the `onErrors()` callback when submit fails.
   - In addition, the extra information provided by AJV is no longer stripped from the `errors` during the merge process, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/1596).
@@ -94,7 +102,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 - Properly handle the hidden field in this theme (https://github.com/rjsf-team/react-jsonschema-form/issues/2571)
 
-## @rjsf/material-ui 
+## @rjsf/material-ui
 - The theme for Material UI version 5 (i.e. `@rjsf/mui`) was split out of the theme for version 4 (i.e. `@rjsf/material-ui`) to resolve the following issues:
   - [#2762](https://github.com/rjsf-team/react-jsonschema-form/issues/2762)
   - [#2858](https://github.com/rjsf-team/react-jsonschema-form/issues/2858)

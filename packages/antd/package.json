@@ -6,7 +6,7 @@
   "module": "dist/antd.esm.js",
   "scripts": {
     "start": "dts watch",
-    "build": "rimraf dist && dts build --format cjs,esm,umd",
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
