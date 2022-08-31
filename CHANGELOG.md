@@ -38,7 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added support for `schema.examples` in the material ui theme fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2368, https://github.com/rjsf-team/react-jsonschema-form/issues/2557)
 
 ## @rjsf/bootstrap-4
-- Avoid importing the whole of `react-icons` (https://github.com/rjsf-team/react-jsonschema-form/pull/3046)
+- Avoid importing the whole of `react-icons` (https://github.com/rjsf-team/react-jsonschema-form/pull/3046, https://github.com/react-icons/react-icons/issues/154)
 
 ## Dev / docs / playground
 - Fixed missing `playground` import error by adding `source-map-loader`
