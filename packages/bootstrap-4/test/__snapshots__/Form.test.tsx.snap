@@ -902,6 +902,74 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields schema examples 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="form-group"
+    >
+      <div
+        className="mb-0 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          list="examples_root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+        <datalist
+          id="examples_root"
+        >
+          <option
+            value="Firefox"
+          />
+          <option
+            value="Chrome"
+          />
+          <option
+            value="Opera"
+          />
+          <option
+            value="Vivaldi"
+          />
+          <option
+            value="Safari"
+          />
+        </datalist>
+      </div>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+`;
+
 exports[`single fields select field 1`] = `
 <form
   className="rjsf"
