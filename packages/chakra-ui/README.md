@@ -38,6 +38,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Optional Chakra UI Theme properties](#optional-chakra-ui-theme-properties)
+    - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)

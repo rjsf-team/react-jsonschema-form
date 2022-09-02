@@ -30,12 +30,14 @@
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
-
+- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+  - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Material UI version 5](#material-ui-version-5)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)

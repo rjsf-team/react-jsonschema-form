@@ -31,11 +31,16 @@
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+  - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Optional Semantic UI Theme properties](#optional-semantic-ui-theme-properties)
+    - [Semantic Widget Optional Properties](#semantic-widget-optional-properties)
+    - [Custom Semantic Widget Properties](#custom-semantic-widget-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)

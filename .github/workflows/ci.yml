@@ -79,6 +79,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.6
+    - run: pip install -r requirements.docs.txt
+    - run: mkdocs build --clean
   # deploy_canary:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master'
@@ -97,14 +107,3 @@ jobs:
   #     - run: npx lerna publish from-package --yes --no-verify-access --canary
   #     - if: always()
   #       run: rm .npmrc
-
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.6
-    - run: pip install -r requirements.docs.txt
-    - run: mkdocs build --clean
