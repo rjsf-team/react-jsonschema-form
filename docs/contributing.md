@@ -41,9 +41,11 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 ## Releasing
 
-To release, go to the master branch and then run:
+To release, go to the master branch and then create a new branch with the version number (with an `rc` prefix instead of `v`):
 
 ```bash
+git checkout -b rc5.0.1
+git push
 npx lerna version
 ```
 
@@ -52,8 +54,11 @@ The command above will create a new version tag and push it to GitHub.
 
 Note that if you are releasing a new major version, you should bump the peer dependency `@rjsf/core` in the `package.json` files of other packages accordingly.
 
-Then, create a release in
-the Github "Releases" tab and add a description of the changes in the new release. You can copy
+Then, make a PR to master. Merge the PR into master -- make sure you use "merge commit", not squash and merge, so that
+the original commit where the tag was based on is still present in the master branch.
+
+Then, create a release in the Github "Releases" tab, select the new tag that you have added,
+and add a description of the changes in the new release. You can copy
 the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
