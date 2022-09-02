@@ -1212,6 +1212,66 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields schema examples 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      list="examples_root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+    <datalist
+      id="examples_root"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</div>
+`;
+
 exports[`single fields select field 1`] = `
 <form
   className="rjsf"

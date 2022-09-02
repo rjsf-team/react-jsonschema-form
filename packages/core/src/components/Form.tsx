@@ -38,6 +38,8 @@ export interface FormProps<T = any, F = any> {
   schema: RJSFSchema;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
   validator: ValidatorType<T>;
+  /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
+  children?: React.ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<T, F>;
   /** The data for the form, used to prefill a form with existing data */
@@ -713,6 +715,7 @@ export default class Form<T = any, F = any> extends Component<
           cancelable: true,
         })
       );
+      this.formElement.current.requestSubmit();
     }
   }
 
