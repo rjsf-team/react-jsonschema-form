@@ -5,6 +5,7 @@ import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
 import DemoFrame from "./DemoFrame";
+import localValidator from "@rjsf/validator-ajv6";
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -17,6 +18,7 @@ const liveSettingsSchema = {
     readonly: { type: "boolean", title: "Readonly whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
+    noValidate: { type: "boolean", title: "Disable validation" },
   },
 };
 
@@ -185,6 +187,7 @@ function ThemeSelector({ theme, themes, select }) {
       schema={schema}
       uiSchema={uiSchema}
       formData={theme}
+      validator={localValidator}
       onChange={({ formData }) =>
         formData && select(formData, themes[formData])
       }
@@ -209,6 +212,7 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
       schema={schema}
       uiSchema={uiSchema}
       formData={subtheme}
+      validator={localValidator}
       onChange={({ formData }) =>
         formData && select(formData, subthemes[formData])
       }
@@ -233,6 +237,7 @@ function ValidatorSelector({ validator, validators, select }) {
       schema={schema}
       uiSchema={uiSchema}
       formData={validator}
+      validator={localValidator}
       onChange={({ formData }) => formData && select(formData)}
     >
       <div />
@@ -458,6 +463,7 @@ class Playground extends Component {
                 idPrefix="rjsf_options"
                 schema={liveSettingsSchema}
                 formData={liveSettings}
+                validator={localValidator}
                 onChange={this.setLiveSettings}
               >
                 <div />
@@ -482,11 +488,7 @@ class Playground extends Component {
                 select={this.onValidatorSelected}
               />
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-10" />
-            <div className="col-sm-2">
+              <span> </span>
               <button
                 title="Click me to submit the form programmatically."
                 className="btn btn-default"
@@ -567,6 +569,7 @@ class Playground extends Component {
                 readonly={liveSettings.readonly}
                 omitExtraData={liveSettings.omitExtraData}
                 liveOmit={liveSettings.liveOmit}
+                noValidate={liveSettings.noValidate}
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
@@ -577,7 +580,7 @@ class Playground extends Component {
                   console.log("submit event", e);
                 }}
                 fields={{ geo: GeoPosition }}
-                validate={validate}
+                customValidate={validate}
                 validator={validators[validator]}
                 onBlur={(id, value) =>
                   console.log(`Touched ${id} with value ${value}`)
