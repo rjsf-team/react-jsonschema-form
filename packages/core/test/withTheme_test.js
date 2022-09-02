@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import React, { Component, createRef } from "react";
+import validator from "@rjsf/validator-ajv6";
 
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";
@@ -46,6 +47,7 @@ describe("withTheme", () => {
       let { node } = createComponent(WrapperClassComponent({ fields }), {
         schema,
         uiSchema,
+        validator,
       });
       expect(node.querySelectorAll(".string-field")).to.have.length.of(2);
     });
@@ -79,6 +81,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           fields: userFields,
+          validator,
         }
       );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(1);
@@ -114,6 +117,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           fields: userFields,
+          validator,
         }
       );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(0);
@@ -133,6 +137,7 @@ describe("withTheme", () => {
       let { node } = createComponent(WrapperClassComponent({ widgets }), {
         schema,
         uiSchema,
+        validator,
       });
       expect(node.querySelectorAll("#test")).to.have.length.of(1);
     });
@@ -163,6 +168,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           widgets: userWidgets,
+          validator,
         }
       );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(1);
@@ -191,6 +197,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           widgets: userWidgets,
+          validator,
         }
       );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(0);
@@ -222,6 +229,7 @@ describe("withTheme", () => {
         {
           schema,
           uiSchema,
+          validator,
         }
       );
       expect(
@@ -250,6 +258,7 @@ describe("withTheme", () => {
         {
           schema,
           templates: userTemplates,
+          validator,
         }
       );
       expect(
@@ -289,6 +298,7 @@ describe("withTheme", () => {
         {
           schema,
           uiSchema,
+          validator,
         }
       );
       expect(
@@ -325,6 +335,7 @@ describe("withTheme", () => {
         {
           schema,
           templates: userTemplates,
+          validator,
         }
       );
       expect(
@@ -344,6 +355,7 @@ describe("withTheme", () => {
     createComponent(withTheme({}), {
       schema,
       uiSchema,
+      validator,
       ref,
     });
 
