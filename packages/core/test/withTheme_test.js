@@ -8,7 +8,6 @@ import { createComponent, createSandbox } from "./test_utils";
 const WrapperClassComponent = (...args) => {
   return class extends Component {
     render() {
-      console.log(this.props);
       const Cmp = withTheme(...args);
       return <Cmp {...this.props} />;
     }
