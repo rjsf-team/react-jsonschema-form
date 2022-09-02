@@ -241,6 +241,10 @@ export default class Form<T = any, F = any> extends Component<
   constructor(props: FormProps<T, F>) {
     super(props);
 
+    if (!props.validator) {
+      throw new Error("A validator is required for Form functionality to work");
+    }
+
     this.state = this.getStateFromProps(props, props.formData);
     if (
       this.props.onChange &&

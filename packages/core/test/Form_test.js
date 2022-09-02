@@ -28,6 +28,15 @@ describeRepeated("Form common", (createFormComponent) => {
   });
 
   describe("Empty schema", () => {
+    it("Should throw error when Form is missing validator", () => {
+      expect(() =>
+        createFormComponent({ schema: {}, validator: undefined })
+      ).to.Throw(
+        Error,
+        "A validator is required for Form functionality to work"
+      );
+    });
+
     it("should render a form tag", () => {
       const { node } = createFormComponent({ schema: {} });
 
@@ -3478,6 +3487,7 @@ describe("Form omitExtraData and liveOmit", () => {
     const props = {
       schema,
       uiSchema,
+      validator,
     };
 
     class Container extends React.Component {

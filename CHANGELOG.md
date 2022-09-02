@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 - Added a `requestSubmit()` call to the `Form.submit()` function, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2104, https://github.com/rjsf-team/react-jsonschema-form/issues/3023)
 - Added missing `children` property on the `FormProps` type for `Form`
+- Throw an error when the required `validator` prop has not been provided to the `Form`
 
 ## @rjsf/antd
 - Do not show errors if `extraErrors` has `[]` (https://github.com/rjsf-team/react-jsonschema-form/pull/2576).
@@ -46,6 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed up the incorrectly formatted `5.x Migration Guide`
 - Added a `Programmatic Submit` button on the playground form to allow users to test the ability to programmatically submit a form
 - Regenerated the `package-lock.json` files using clean `node_modules` directories
+- Fixed issue with playground controls in top right corner not functioning properly due to missing validator
 
 # v5.0.0-beta.2
 - Added peer dependencies to new `@rjsf/utils` library now that it is published on npm
