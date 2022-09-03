@@ -77,7 +77,7 @@ function ArrayFieldTemplate({
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className="row array-item-list">
           {items &&
-            items.map(props => (
+            items.map((props) => (
               <ArrayFieldItemTemplate {...props} {...itemProps} />
             ))}
         </div>

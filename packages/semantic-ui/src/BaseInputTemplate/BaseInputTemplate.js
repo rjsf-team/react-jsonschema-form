@@ -64,7 +64,7 @@ function BaseInputTemplate(props) {
         <datalist id={`examples_${id}`}>
           {schema.examples
             .concat(schema.default ? [schema.default] : [])
-            .map(example => {
+            .map((example) => {
               return <option key={example} value={example} />;
             })}
         </datalist>

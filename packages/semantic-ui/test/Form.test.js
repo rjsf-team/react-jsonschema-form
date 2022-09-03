@@ -4,6 +4,12 @@ import renderer from "react-test-renderer";
 
 import Form from "../src/index";
 
+/** Mock the `react-component-ref` component used by semantic-ui to simply render the children, otherwise tests fail */
+jest.mock("@fluentui/react-component-ref", () => ({
+  ...jest.requireActual("@fluentui/react-component-ref"),
+  Ref: jest.fn().mockImplementation(({ children }) => children),
+}));
+
 describe("single fields", () => {
   describe("string field", () => {
     test("regular", () => {

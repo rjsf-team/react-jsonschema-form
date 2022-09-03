@@ -12,13 +12,13 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "rimraf dist && tsdx build --rollupTypes --format cjs,es,umd",
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,es,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.js\"",
     "cs-format": "prettier \"{src,test}/**/*.js\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "test": "dts test",
+    "test:update": "dts test --u"
   },
   "lint-staged": {
     "{src,test}/**/*.js": [
@@ -45,15 +45,14 @@
     "@rjsf/utils": "^5.0.0-beta.3",
     "@rjsf/validator-ajv6": "^5.0.0-beta.3",
     "atob": "^2.0.3",
+    "dts-cli": "^1.6.0",
     "eslint": "^8.23.0",
-    "jest": "^25.4.0",
     "nanoid": "^3.3.4",
     "prop-types": "^15.8.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-test-renderer": "^16.14.0",
-    "rimraf": "^3.0.2",
-    "tsdx": "^0.14.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2"
   },
   "publishConfig": {
     "access": "public"

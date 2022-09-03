@@ -408,6 +408,66 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields empty errors array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 <form
   className="ui form rjsf"
@@ -527,6 +587,66 @@ exports[`array fields fixed array 1`] = `
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Button, Grid, Segment } from "semantic-ui-react";
 
 import { MaybeWrap } from "../util";
 
-const gridStyle = vertical => ({
+const gridStyle = (vertical) => ({
   display: "grid",
   gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
 });
@@ -15,7 +15,7 @@ function isInitialArrayItem(props) {
   return idSchema.target && idSchema.conditions;
 }
 
-const ArrayFieldItemTemplate = props => {
+const ArrayFieldItemTemplate = (props) => {
   const {
     children,
     disabled,
@@ -31,11 +31,8 @@ const ArrayFieldItemTemplate = props => {
     wrapItem,
     registry,
   } = props;
-  const {
-    MoveDownButton,
-    MoveUpButton,
-    RemoveButton,
-  } = registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } =
+    registry.templates.ButtonTemplates;
   return (
     <div className="array-item">
       <MaybeWrap wrap={wrapItem} component={Segment}>

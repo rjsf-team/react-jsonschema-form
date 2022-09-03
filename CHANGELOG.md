@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.4
+
+## @rjsf/semantic-ui
+- Switched `devDependencies` for React to 17.x and use `dts` to build and test the library (rather than `tsdx`)
+
 # v5.0.0-beta.3
 
 ## @rjsf/core

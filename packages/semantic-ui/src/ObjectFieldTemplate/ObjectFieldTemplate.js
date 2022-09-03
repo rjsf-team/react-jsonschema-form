@@ -52,7 +52,7 @@ function ObjectFieldTemplate({
           registry={registry}
         />
       )}
-      {properties.map(prop => prop.content)}
+      {properties.map((prop) => prop.content)}
       {canExpand(schema, uiSchema, formData) && (
         <Grid.Column width={16} verticalAlign="middle">
           <Grid.Row>

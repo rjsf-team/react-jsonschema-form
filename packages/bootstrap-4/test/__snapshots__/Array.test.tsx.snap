@@ -581,6 +581,84 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields empty errors array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="form-group"
+    >
+      
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="form-group"
+              >
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 <form
   className="rjsf"
@@ -691,6 +769,84 @@ exports[`array fields fixed array 1`] = `
                     className="py-4 col-lg-3 col-3"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="form-group"
+    >
+      
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="form-group"
+              >
+                <div
+                  className="mb-0 form-group"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="root_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
               </div>
             </div>
           </div>
