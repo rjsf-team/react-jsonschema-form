@@ -34,7 +34,7 @@
     "eslint-plugin-react": "^7.31.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.1",
-    "jest-environment-jsdom": "^27.5.1",
+    "jest-environment-jsdom": "^29.0.1",
     "lerna": "^5.4.3",
     "lint-staged": "^13.0.3",
     "nx": "^14.5.10",
