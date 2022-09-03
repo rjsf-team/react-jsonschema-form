@@ -1,3 +1,5 @@
+name: Add tag without v
+
 on:
   release:
     types: [published]
