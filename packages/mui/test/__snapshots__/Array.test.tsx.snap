@@ -2156,6 +2156,597 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
 </form>
 `;
 
+exports[`array fields empty errors array 1`] = `
+.emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.emotion-1 {
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  margin-top: -16px;
+  width: calc(100% + 16px);
+  margin-left: -16px;
+}
+
+.emotion-1>.MuiGrid-item {
+  padding-top: 16px;
+}
+
+.emotion-1>.MuiGrid-item {
+  padding-left: 16px;
+}
+
+.emotion-2 {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-basis: 100%;
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  max-width: 100%;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+.emotion-4 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+}
+
+.emotion-5 {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 24px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.emotion-5.Mui-focused {
+  color: #1976d2;
+}
+
+.emotion-5.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-5.Mui-error {
+  color: #d32f2f;
+}
+
+.emotion-6 {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  color: rgba(0, 0, 0, 0.87);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  border-radius: 4px;
+}
+
+.emotion-6.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  cursor: default;
+}
+
+.emotion-6:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.87);
+}
+
+@media (hover: none) {
+  .emotion-6:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.23);
+  }
+}
+
+.emotion-6.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+  border-width: 2px;
+}
+
+.emotion-6.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: #d32f2f;
+}
+
+.emotion-6.Mui-disabled .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-7 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentColor;
+  padding: 4px 0 5px;
+  border: 0;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  -webkit-animation-name: mui-auto-fill-cancel;
+  animation-name: mui-auto-fill-cancel;
+  -webkit-animation-duration: 10ms;
+  animation-duration: 10ms;
+  padding: 16.5px 14px;
+}
+
+.emotion-7::-webkit-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7::-moz-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7:-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7::-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7:focus {
+  outline: 0;
+}
+
+.emotion-7:invalid {
+  box-shadow: none;
+}
+
+.emotion-7::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-webkit-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-moz-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-webkit-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-moz-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus:-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+.emotion-7.Mui-disabled {
+  opacity: 1;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-7:-webkit-autofill {
+  -webkit-animation-duration: 5000s;
+  animation-duration: 5000s;
+  -webkit-animation-name: mui-auto-fill;
+  animation-name: mui-auto-fill;
+}
+
+.emotion-7:-webkit-autofill {
+  border-radius: inherit;
+}
+
+.emotion-8 {
+  text-align: left;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: -5px;
+  left: 0;
+  margin: 0;
+  padding: 0 8px;
+  pointer-events: none;
+  border-radius: inherit;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  min-width: 0%;
+  border-color: rgba(0, 0, 0, 0.23);
+}
+
+.emotion-9 {
+  float: unset;
+  overflow: hidden;
+  display: block;
+  width: auto;
+  padding: 0;
+  height: 11px;
+  font-size: 0.75em;
+  visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
+}
+
+.emotion-9>span {
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline-block;
+  opacity: 0;
+  visibility: visible;
+}
+
+.emotion-10 {
+  margin-top: 24px;
+}
+
+.emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #1976d2;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-11::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-11.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-11 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-11:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: #1565c0;
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-11:hover {
+    background-color: #1976d2;
+  }
+}
+
+.emotion-11:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-11.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-11.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-12 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root emotion-4"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  data-shrink={false}
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
+                    disabled={false}
+                    id="root_name"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                  <fieldset
+                    aria-hidden={true}
+                    className="MuiOutlinedInput-notchedOutline emotion-8"
+                  >
+                    <legend
+                      className="emotion-9"
+                    >
+                      <span>
+                        name
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root emotion-10"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      Submit
+      <span
+        className="MuiTouchRipple-root emotion-12"
+      />
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 .emotion-0 {
   display: -webkit-inline-box;
@@ -2798,6 +3389,582 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       <span
         className="MuiTouchRipple-root emotion-28"
       />
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+.emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.emotion-1 {
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  margin-top: -16px;
+  width: calc(100% + 16px);
+  margin-left: -16px;
+}
+
+.emotion-1>.MuiGrid-item {
+  padding-top: 16px;
+}
+
+.emotion-1>.MuiGrid-item {
+  padding-left: 16px;
+}
+
+.emotion-2 {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-basis: 100%;
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  max-width: 100%;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:1200px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width:1536px) {
+  .emotion-2 {
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
+}
+
+.emotion-4 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+}
+
+.emotion-5 {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 24px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.emotion-5.Mui-focused {
+  color: #1976d2;
+}
+
+.emotion-5.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-5.Mui-error {
+  color: #d32f2f;
+}
+
+.emotion-6 {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  color: rgba(0, 0, 0, 0.87);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  border-radius: 4px;
+}
+
+.emotion-6.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  cursor: default;
+}
+
+.emotion-6:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.87);
+}
+
+@media (hover: none) {
+  .emotion-6:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.23);
+  }
+}
+
+.emotion-6.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+  border-width: 2px;
+}
+
+.emotion-6.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: #d32f2f;
+}
+
+.emotion-6.Mui-disabled .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-7 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentColor;
+  padding: 4px 0 5px;
+  border: 0;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  -webkit-animation-name: mui-auto-fill-cancel;
+  animation-name: mui-auto-fill-cancel;
+  -webkit-animation-duration: 10ms;
+  animation-duration: 10ms;
+  padding: 16.5px 14px;
+}
+
+.emotion-7::-webkit-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7::-moz-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7:-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7::-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7:focus {
+  outline: 0;
+}
+
+.emotion-7:invalid {
+  box-shadow: none;
+}
+
+.emotion-7::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-webkit-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-moz-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7::-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-webkit-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-moz-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus:-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+.emotion-7.Mui-disabled {
+  opacity: 1;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-7:-webkit-autofill {
+  -webkit-animation-duration: 5000s;
+  animation-duration: 5000s;
+  -webkit-animation-name: mui-auto-fill;
+  animation-name: mui-auto-fill;
+}
+
+.emotion-7:-webkit-autofill {
+  border-radius: inherit;
+}
+
+.emotion-8 {
+  text-align: left;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: -5px;
+  left: 0;
+  margin: 0;
+  padding: 0 8px;
+  pointer-events: none;
+  border-radius: inherit;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  min-width: 0%;
+  border-color: rgba(0, 0, 0, 0.23);
+}
+
+.emotion-9 {
+  float: unset;
+  overflow: hidden;
+  display: block;
+  width: auto;
+  padding: 0;
+  height: 11px;
+  font-size: 0.75em;
+  visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
+}
+
+.emotion-9>span {
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline-block;
+  opacity: 0;
+  visibility: visible;
+}
+
+.emotion-10 {
+  margin-top: 24px;
+}
+
+.emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #1976d2;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-11::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-11.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-11 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-11:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: #1565c0;
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-11:hover {
+    background-color: #1976d2;
+  }
+}
+
+.emotion-11:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-11.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-11.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root emotion-4"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  data-shrink={false}
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-6"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiOutlinedInput-input emotion-7"
+                    disabled={false}
+                    id="root_name"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                  <fieldset
+                    aria-hidden={true}
+                    className="MuiOutlinedInput-notchedOutline emotion-8"
+                  >
+                    <legend
+                      className="emotion-9"
+                    >
+                      <span>
+                        name
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root emotion-10"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      Submit
     </button>
   </div>
 </form>

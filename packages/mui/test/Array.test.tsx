@@ -1,5 +1,5 @@
 import React from "react";
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema, ErrorSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
@@ -59,6 +59,40 @@ describe("array fields", () => {
     const tree = renderer
       .create(
         <Form schema={schema} validator={validator} formData={["a", "b"]} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("no errors", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("empty errors array", () => {
+    const schema: RJSFSchema = {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    };
+    const errors: any[] = [];
+    const extraErrors = {
+      name: { __errors: errors },
+    } as unknown as ErrorSchema;
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} extraErrors={extraErrors} />
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

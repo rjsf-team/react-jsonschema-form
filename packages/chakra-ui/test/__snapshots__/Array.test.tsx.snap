@@ -919,6 +919,128 @@ exports[`array fields checkboxes 1`] = `
 </form>
 `;
 
+exports[`array fields empty errors array 1`] = `
+.emotion-1 {
+  display: grid;
+  grid-gap: 6px;
+  margin-bottom: 4px;
+}
+
+.emotion-4 {
+  margin-bottom: 1px;
+}
+
+.emotion-5 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-7 {
+  margin-top: 3px;
+}
+
+.emotion-8 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      
+      <div
+        className="emotion-1"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-5"
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <input
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-7"
+  >
+    <button
+      className="chakra-button emotion-8"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields fixed array 1`] = `
 .emotion-2 {
   display: grid;
@@ -1098,6 +1220,128 @@ exports[`array fields fixed array 1`] = `
   >
     <button
       className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+.emotion-1 {
+  display: grid;
+  grid-gap: 6px;
+  margin-bottom: 4px;
+}
+
+.emotion-4 {
+  margin-bottom: 1px;
+}
+
+.emotion-5 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-7 {
+  margin-top: 3px;
+}
+
+.emotion-8 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      
+      <div
+        className="emotion-1"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-5"
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <input
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-7"
+  >
+    <button
+      className="chakra-button emotion-8"
       disabled={false}
       type="submit"
     >

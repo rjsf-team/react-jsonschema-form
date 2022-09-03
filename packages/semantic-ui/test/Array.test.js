@@ -68,4 +68,38 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("no errors", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("empty errors array", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          validator={validator}
+          extraErrors={{ name: { __errors: [] } }}
+        />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
