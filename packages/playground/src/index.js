@@ -6,12 +6,14 @@ import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
-import validator from "@rjsf/validator-ajv6";
+import v6Validator from "@rjsf/validator-ajv6";
+import v8Validator from "@rjsf/validator-ajv8";
 import Playground from "./app";
 import { render } from "react-dom";
 
 const validators = {
-  AJV6: validator,
+  AJV6: v6Validator,
+  AJV8: v8Validator,
 };
 
 const themes = {
