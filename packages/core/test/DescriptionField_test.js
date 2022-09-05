@@ -1,7 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 
-import DescriptionField from "../src/components/fields/DescriptionField";
+import DescriptionField from "../src/components/templates/DescriptionField";
 import { createSandbox, createComponent } from "./test_utils";
 
 describe("DescriptionField", () => {

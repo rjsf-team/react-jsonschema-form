@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/core";
+import { getUiOptions, WidgetProps } from "@rjsf/utils";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 
@@ -25,6 +25,7 @@ const TextareaWidget = ({
   rawErrors = [],
   uiSchema,
 }: CustomWidgetProps) => {
+  const uiOptions = getUiOptions(uiSchema);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -39,11 +40,12 @@ const TextareaWidget = ({
   return (
     <>
       <label htmlFor={id}>
-        {uiSchema["ui:title"] || schema.title || label}
+        {uiOptions.title || schema.title || label}
         {required && (
           <span
             aria-hidden
-            className={rawErrors.length > 0 ? "text-danger ml-1" : "ml-1"}>
+            className={rawErrors.length > 0 ? "text-danger ml-1" : "ml-1"}
+          >
             &thinsp;{"*"}
           </span>
         )}

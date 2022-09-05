@@ -1,14 +1,10 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Grid } from "semantic-ui-react";
-import { utils } from '@rjsf/core';
-import AddButton from '../AddButton/AddButton';
-const { canExpand } = utils;
+import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
 
 function ObjectFieldTemplate({
-  DescriptionField,
   description,
-  TitleField,
   onAddClick,
   title,
   properties,
@@ -19,26 +15,44 @@ function ObjectFieldTemplate({
   schema,
   formData,
   idSchema,
+  registry,
 }) {
-  const fieldTitle = uiSchema["ui:title"] || title;
-  const fieldDescription = uiSchema["ui:description"] || description;
+  const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
+  const fieldTitle = uiOptions.title || title;
+  const fieldDescription = uiOptions.description || description;
   return (
     <React.Fragment>
-      {(fieldTitle) && (
-        <TitleField
+      {fieldTitle && (
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
-          options={uiSchema["ui:options"]}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
-      {(fieldDescription) && (
-        <DescriptionField
+      {fieldDescription && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
+          registry={registry}
         />
       )}
-      {properties.map(prop => prop.content)}
+      {properties.map((prop) => prop.content)}
       {canExpand(schema, uiSchema, formData) && (
         <Grid.Column width={16} verticalAlign="middle">
           <Grid.Row>
@@ -47,8 +61,12 @@ function ObjectFieldTemplate({
                 marginTop: "1rem",
                 position: "relative",
                 textAlign: "right",
-              }}>
-              <AddButton onClick={onAddClick(schema)} disabled={disabled || readOnly} />
+              }}
+            >
+              <AddButton
+                onClick={onAddClick(schema)}
+                disabled={disabled || readOnly}
+              />
             </div>
           </Grid.Row>
         </Grid.Column>

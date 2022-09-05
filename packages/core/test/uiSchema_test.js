@@ -3,6 +3,8 @@ import React from "react";
 import sinon from "sinon";
 import { render } from "react-dom";
 import { Simulate } from "react-dom/test-utils";
+import validator from "@rjsf/validator-ajv6";
+
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
@@ -29,25 +31,39 @@ describe("uiSchema", () => {
         bar: {
           type: "string",
         },
+        baz: {
+          type: "string",
+        },
       },
     };
 
     const uiSchema = {
       foo: {
-        classNames: "class-for-foo",
+        "ui:classNames": "class-for-foo",
       },
       bar: {
-        classNames: "class-for-bar another-for-bar",
+        "ui:options": {
+          classNames: "class-for-bar another-for-bar",
+        },
+      },
+      baz: {
+        classNames: "class-for-baz",
       },
     };
 
     it("should apply custom class names to target widgets", () => {
+      sandbox.stub(console, "warn");
+
       const { node } = createFormComponent({ schema, uiSchema });
-      const [foo, bar] = node.querySelectorAll(".field-string");
+      const [foo, bar, baz] = node.querySelectorAll(".field-string");
 
       expect(foo.classList.contains("class-for-foo")).eql(true);
       expect(bar.classList.contains("class-for-bar")).eql(true);
       expect(bar.classList.contains("another-for-bar")).eql(true);
+      expect(baz.classList.contains("class-for-baz")).eql(true);
+      expect(
+        console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)
+      ).to.be.true;
     });
   });
 
@@ -58,7 +74,7 @@ describe("uiSchema", () => {
       };
 
       const uiSchema = {
-        "ui:widget": props => {
+        "ui:widget": (props) => {
           return (
             <input
               type="text"
@@ -66,7 +82,7 @@ describe("uiSchema", () => {
               value={props.value}
               defaultValue={props.defaultValue}
               required={props.required}
-              onChange={event => props.onChange(event.target.value)}
+              onChange={(event) => props.onChange(event.target.value)}
             />
           );
         },
@@ -83,7 +99,7 @@ describe("uiSchema", () => {
       let widget, widgets, schema, uiSchema;
 
       beforeEach(() => {
-        sandbox.stub(console, "warn");
+        sandbox.stub(console, "error");
 
         widget = ({ label, options }) => <div id={label} style={options} />;
         widget.defaultProps = {
@@ -123,14 +139,10 @@ describe("uiSchema", () => {
         uiSchema = {
           // pass widget as function
           funcAll: {
-            "ui:widget": {
-              component: widget,
-              options: {
-                background: "purple",
-              },
-            },
+            "ui:widget": widget,
             "ui:options": {
               margin: "7px",
+              background: "purple",
             },
             "ui:padding": "42px",
           },
@@ -140,14 +152,10 @@ describe("uiSchema", () => {
 
           // pass widget as string
           stringAll: {
-            "ui:widget": {
-              component: "widget",
-              options: {
-                background: "blue",
-              },
-            },
+            "ui:widget": "widget",
             "ui:options": {
               margin: "19px",
+              background: "blue",
             },
             "ui:padding": "41px",
           },
@@ -162,7 +170,7 @@ describe("uiSchema", () => {
         };
       });
 
-      it("should log warning when deprecated ui:widget: {component, options} api is used", () => {
+      it("should log error when unsupported ui:widget: {component, options} api is used", () => {
         createFormComponent({
           schema: {
             type: "string",
@@ -174,8 +182,11 @@ describe("uiSchema", () => {
           },
           widgets,
         });
-        expect(console.warn.calledWithMatch(/ui:widget object is deprecated/))
-          .to.be.true;
+        expect(
+          console.error.calledWithMatch(
+            /ui:widget object is no longer supported/
+          )
+        ).to.be.true;
       });
 
       it("should cache MergedWidget instance", () => {
@@ -286,7 +297,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         return (
           <input
             type="text"
@@ -294,7 +305,7 @@ describe("uiSchema", () => {
             value={props.value}
             defaultValue={props.defaultValue}
             required={props.required}
-            onChange={event => props.onChange(event.target.value)}
+            onChange={(event) => props.onChange(event.target.value)}
           />
         );
       };
@@ -324,7 +335,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         const { value, options } = props;
         return (
           <input type="text" className={options.className} value={value} />
@@ -385,7 +396,7 @@ describe("uiSchema", () => {
         },
       };
 
-      const CustomWidget = props => {
+      const CustomWidget = (props) => {
         const { options } = props;
         const { enumOptions, className } = options;
         return (
@@ -538,6 +549,7 @@ describe("uiSchema", () => {
   describe("ui:focus", () => {
     const shouldFocus = (schema, uiSchema, selector = "input", formData) => {
       const props = {
+        validator,
         schema,
         uiSchema,
       };
@@ -1604,7 +1616,7 @@ describe("uiSchema", () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const labels = [].map.call(
           node.querySelectorAll(".field-radio-group label"),
-          node => node.textContent
+          (node) => node.textContent
         );
 
         expect(labels).eql(["Yes", "No"]);
@@ -1789,7 +1801,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql(["myform_foo", "myform_bar"]);
     });
@@ -1812,7 +1824,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql(["myform_0", "myform_1"]);
     });
@@ -1852,7 +1864,7 @@ describe("uiSchema", () => {
 
       const ids = [].map.call(
         node.querySelectorAll("input[type=text]"),
-        node => node.id
+        (node) => node.id
       );
       expect(ids).eql([
         "myform_0_foo",
@@ -1891,7 +1903,7 @@ describe("uiSchema", () => {
         it("should disable an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.disabled
+            (node) => node.disabled
           );
           expect(disabled).eql([true, true]);
         });
@@ -1933,7 +1945,7 @@ describe("uiSchema", () => {
         it("should disable an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.disabled
+            (node) => node.disabled
           );
           expect(disabled).eql([true, true]);
         });
@@ -2125,7 +2137,7 @@ describe("uiSchema", () => {
 
         const disabled = [].map.call(
           node.querySelectorAll("select"),
-          node => node.disabled
+          (node) => node.disabled
         );
         expect(disabled).eql([true, true, true]);
       });
@@ -2144,7 +2156,7 @@ describe("uiSchema", () => {
 
         const disabled = [].map.call(
           node.querySelectorAll("select"),
-          node => node.disabled
+          (node) => node.disabled
         );
         expect(disabled).eql([true, true, true, true, true, true]);
       });
@@ -2179,7 +2191,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2221,7 +2233,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2404,7 +2416,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true]);
@@ -2422,7 +2434,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true, true, true, true]);
@@ -2453,7 +2465,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ArrayField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2494,7 +2506,7 @@ describe("uiSchema", () => {
         it("should mark as readonly an ObjectField", () => {
           const disabled = [].map.call(
             node.querySelectorAll("[type=text]"),
-            node => node.hasAttribute("readonly")
+            (node) => node.hasAttribute("readonly")
           );
           expect(disabled).eql([true, true]);
         });
@@ -2672,7 +2684,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true]);
@@ -2690,7 +2702,7 @@ describe("uiSchema", () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll("select"), node =>
+        const readonly = [].map.call(node.querySelectorAll("select"), (node) =>
           node.hasAttribute("disabled")
         );
         expect(readonly).eql([true, true, true, true, true, true]);

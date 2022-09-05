@@ -17,6 +17,7 @@ import validation from "./validation";
 import files from "./files";
 import single from "./single";
 import customArray from "./customArray";
+import customFieldAnyOf from "./customFieldAnyOf";
 import customObject from "./customObject";
 import alternatives from "./alternatives";
 import propertyDependencies from "./propertyDependencies";
@@ -53,6 +54,7 @@ export const samples = {
   "Schema dependencies": schemaDependencies,
   "Additional Properties": additionalProperties,
   "Any Of": anyOf,
+  "Any Of with Custom Field": customFieldAnyOf,
   "One Of": oneOf,
   "All Of": allOf,
   "If Then Else": ifThenElse,

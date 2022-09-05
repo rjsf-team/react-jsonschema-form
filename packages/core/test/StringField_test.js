@@ -2,8 +2,8 @@ import React from "react";
 import { expect } from "chai";
 import { act, Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
+import { parseDateString, toDateString, utcToLocal } from "@rjsf/utils";
 
-import { parseDateString, toDateString, utcToLocal } from "../src/utils";
 import { createFormComponent, createSandbox, submitForm } from "./test_utils";
 
 describe("StringField", () => {
@@ -138,8 +138,10 @@ describe("StringField", () => {
         },
       });
 
-      Simulate.change(node.querySelector("input"), {
-        target: { value: "yo" },
+      act(() => {
+        Simulate.change(node.querySelector("input"), {
+          target: { value: "yo" },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -356,9 +358,10 @@ describe("StringField", () => {
           enum: ["foo", "bar"],
         },
       });
-
-      Simulate.change(node.querySelector("select"), {
-        target: { value: "foo" },
+      act(() => {
+        Simulate.change(node.querySelector("select"), {
+          target: { value: "foo" },
+        });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: "foo",
@@ -682,14 +685,14 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
           format: "date-time",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 
@@ -841,14 +844,14 @@ describe("StringField", () => {
       expect(node.querySelector("#custom")).to.exist;
     });
 
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "string",
           format: "date",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 
@@ -958,7 +961,10 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+      const ids = [].map.call(
+        node.querySelectorAll("select"),
+        (node) => node.id
+      );
 
       expect(ids).eql([
         "root_year",
@@ -981,7 +987,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length
+        (node) => node.length
       );
 
       expect(lengths).eql([
@@ -994,7 +1000,7 @@ describe("StringField", () => {
         60 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsValues = [].map.call(monthOptions, o => o.value);
+      const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
         "1",
@@ -1022,7 +1028,7 @@ describe("StringField", () => {
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
+      const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
       expect(monthOptionsLabels).eql([
         "month",
         "01",
@@ -1052,7 +1058,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent
+          (x) => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1066,7 +1072,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
         const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
         const now = new Date().getTime();
@@ -1083,8 +1091,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
@@ -1244,7 +1254,10 @@ describe("StringField", () => {
         uiSchema,
       });
 
-      const ids = [].map.call(node.querySelectorAll("select"), node => node.id);
+      const ids = [].map.call(
+        node.querySelectorAll("select"),
+        (node) => node.id
+      );
 
       expect(ids).eql(["root_year", "root_month", "root_day"]);
     });
@@ -1260,7 +1273,7 @@ describe("StringField", () => {
 
       const lengths = [].map.call(
         node.querySelectorAll("select"),
-        node => node.length
+        (node) => node.length
       );
 
       expect(lengths).eql([
@@ -1270,7 +1283,7 @@ describe("StringField", () => {
         31 + 1,
       ]);
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsValues = [].map.call(monthOptions, o => o.value);
+      const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
         "1",
@@ -1298,7 +1311,7 @@ describe("StringField", () => {
       });
 
       const monthOptions = node.querySelectorAll("select#root_month option");
-      const monthOptionsLabels = [].map.call(monthOptions, o => o.text);
+      const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
       expect(monthOptionsLabels).eql([
         "month",
         "01",
@@ -1358,7 +1371,7 @@ describe("StringField", () => {
 
         const buttonLabels = [].map.call(
           node.querySelectorAll("a.btn"),
-          x => x.textContent
+          (x) => x.textContent
         );
         expect(buttonLabels).eql(["Now", "Clear"]);
       });
@@ -1372,7 +1385,9 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+        });
 
         const expected = toDateString(
           parseDateString(new Date().toJSON()),
@@ -1393,8 +1408,10 @@ describe("StringField", () => {
           uiSchema,
         });
 
-        Simulate.click(node.querySelector("a.btn-now"));
-        Simulate.click(node.querySelector("a.btn-clear"));
+        act(() => {
+          Simulate.click(node.querySelector("a.btn-now"));
+          Simulate.click(node.querySelector("a.btn-clear"));
+        });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
@@ -1851,6 +1868,7 @@ describe("StringField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         readAsDataUrl() {},
       });
 
@@ -1882,6 +1900,7 @@ describe("StringField", () => {
         set onload(fn) {
           fn({ target: { result: "data:text/plain;base64,x=" } });
         },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         readAsDataUrl() {},
       });
 
@@ -1892,12 +1911,13 @@ describe("StringField", () => {
         },
       });
 
-      Simulate.change(node.querySelector("[type=file]"), {
-        target: {
-          files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
-        },
+      act(() => {
+        Simulate.change(node.querySelector("[type=file]"), {
+          target: {
+            files: [{ name: nonUriEncodedValue, size: 1, type: "type" }],
+          },
+        });
       });
-
       await new Promise(setImmediate);
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1946,14 +1966,14 @@ describe("StringField", () => {
   });
 
   describe("UpDownWidget", () => {
-    it("should allow overriding of BaseInput", () => {
+    it("should allow overriding of BaseInputTemplate", () => {
       const { node } = createFormComponent({
         schema: {
           type: "number",
           format: "updown",
         },
-        widgets: {
-          BaseInput: CustomWidget,
+        templates: {
+          BaseInputTemplate: CustomWidget,
         },
       });
 
@@ -1962,7 +1982,7 @@ describe("StringField", () => {
   });
 
   describe("Label", () => {
-    const Widget = props => <div id={`label-${props.label}`} />;
+    const Widget = (props) => <div id={`label-${props.label}`} />;
 
     const widgets = { Widget };
 

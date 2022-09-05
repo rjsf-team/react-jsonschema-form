@@ -1,7 +1,6 @@
-import React from 'react';
-import _ from 'lodash';
+import React from "react";
 
-import Checkbox from 'antd/lib/checkbox';
+import Checkbox from "antd/lib/checkbox";
 
 const CheckboxesWidget = ({
   autofocus,
@@ -29,7 +28,7 @@ const CheckboxesWidget = ({
 
   const handleFocus = ({ target }) => onFocus(id, target.value);
 
-  return !_.isEmpty(enumOptions) ? (
+  return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
