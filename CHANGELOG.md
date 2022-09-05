@@ -153,10 +153,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Playground now uses webpack 5
 - Corrected number field default (https://github.com/rjsf-team/react-jsonschema-form/issues/2358)
 
-# 4.3.0
-## @rjsf/core
-- Enhancement for color widget allows users to look and feel interaction.
-
 # 4.2.1
 * fix typo by @epicfaace in https://github.com/rjsf-team/react-jsonschema-form/pull/2854
 * Build all packages with TypeScript, including core by @nickgros in https://github.com/rjsf-team/react-jsonschema-form/pull/2799
