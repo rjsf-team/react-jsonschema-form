@@ -1,4 +1,4 @@
-import { Ajv, ErrorObject } from "ajv";
+import Ajv, { ErrorObject } from "ajv";
 import toPath from "lodash/toPath";
 import {
   CustomValidator,
@@ -37,12 +37,17 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
    */
   constructor(options: CustomValidatorOptionsType) {
-    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides } =
-      options;
+    const {
+      additionalMetaSchemas,
+      customFormats,
+      ajvOptionsOverrides,
+      ajvFormatOptions,
+    } = options;
     this.ajv = createAjvInstance(
       additionalMetaSchemas,
       customFormats,
-      ajvOptionsOverrides
+      ajvOptionsOverrides,
+      ajvFormatOptions
     );
   }
 
@@ -203,8 +208,8 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     }
 
     return errors.map((e: ErrorObject) => {
-      const { dataPath, keyword, message, params, schemaPath } = e;
-      const property = `${dataPath}`;
+      const { instancePath, keyword, message, params, schemaPath } = e;
+      const property = instancePath.replaceAll("/", ".");
 
       // put data in expected format
       return {
