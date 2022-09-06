@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.5
+
+## @rjsf/validator-ajv8
+- Added the new Ajv 8 based validator so that it can get published on npm
+
 # v5.0.0-beta.4
 
 ## @rjsf/semantic-ui

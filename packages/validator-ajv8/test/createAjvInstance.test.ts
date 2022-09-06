@@ -1,4 +1,5 @@
-import Ajv, { Ajv as AjvType } from "ajv";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
 import createAjvInstance, {
   AJV_CONFIG,
@@ -8,9 +9,10 @@ import createAjvInstance, {
 import { CustomValidatorOptionsType } from "../src";
 
 jest.mock("ajv");
+jest.mock("ajv-formats");
 
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
-  additionalMetaSchemas: [require("ajv/lib/refs/json-schema-draft-04.json")],
+  additionalMetaSchemas: [require("ajv/lib/refs/json-schema-draft-06.json")],
   customFormats: {
     "phone-us": /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
     "area-code": /\d{3}/,
@@ -19,19 +21,26 @@ export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
     $data: true,
     verbose: true,
   },
+  ajvFormatOptions: {
+    mode: "fast",
+  },
 };
 
 describe("createAjvInstance()", () => {
-  describe("no additional meta schemas, custom formats or ajv options overrides", () => {
-    let ajv: AjvType;
+  describe("no additional meta schemas, custom formats, ajv options overrides or ajv format options", () => {
+    let ajv: Ajv;
     beforeAll(() => {
       ajv = createAjvInstance();
     });
     afterAll(() => {
       (Ajv as unknown as jest.Mock).mockClear();
+      (addFormats as unknown as jest.Mock).mockClear();
     });
     it("expect a new Ajv to be constructed with the AJV_CONFIG", () => {
       expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
+    });
+    it("expect addFormats to be called with the new ajv instance and undefined", () => {
+      expect(addFormats).toHaveBeenCalledWith(ajv, undefined);
     });
     it("addFormat() was called twice", () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(2);
@@ -54,23 +63,31 @@ describe("createAjvInstance()", () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
     });
   });
-  describe("has additional meta schemas, custom formats and ajv options overrides", () => {
-    let ajv: AjvType;
+  describe("has additional meta schemas, custom formats, ajv options override and ajv format options", () => {
+    let ajv: Ajv;
     beforeAll(() => {
       ajv = createAjvInstance(
         CUSTOM_OPTIONS.additionalMetaSchemas,
         CUSTOM_OPTIONS.customFormats,
-        CUSTOM_OPTIONS.ajvOptionsOverrides
+        CUSTOM_OPTIONS.ajvOptionsOverrides,
+        CUSTOM_OPTIONS.ajvFormatOptions
       );
     });
     afterAll(() => {
       (Ajv as unknown as jest.Mock).mockClear();
+      (addFormats as unknown as jest.Mock).mockClear();
     });
     it("expect a new Ajv to be constructed with the AJV_CONFIG", () => {
       expect(Ajv).toHaveBeenCalledWith({
         ...AJV_CONFIG,
         ...CUSTOM_OPTIONS.ajvOptionsOverrides,
       });
+    });
+    it("expect addFormats to be called with the new ajv instance and options", () => {
+      expect(addFormats).toHaveBeenCalledWith(
+        ajv,
+        CUSTOM_OPTIONS.ajvFormatOptions
+      );
     });
     it("addFormat() was called twice", () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(4);
@@ -104,6 +121,42 @@ describe("createAjvInstance()", () => {
       expect(ajv.addMetaSchema).toHaveBeenCalledWith(
         CUSTOM_OPTIONS.additionalMetaSchemas
       );
+    });
+  });
+  describe("disables ajv format", () => {
+    let ajv: Ajv;
+    beforeAll(() => {
+      ajv = createAjvInstance(undefined, undefined, undefined, false);
+    });
+    afterAll(() => {
+      (Ajv as unknown as jest.Mock).mockClear();
+      (addFormats as unknown as jest.Mock).mockClear();
+    });
+    it("expect a new Ajv to be constructed with the AJV_CONFIG", () => {
+      expect(Ajv).toHaveBeenCalledWith(AJV_CONFIG);
+    });
+    it("expect addFormats NOT to be called", () => {
+      expect(addFormats).not.toHaveBeenCalled();
+    });
+    it("addFormat() was called twice", () => {
+      expect(ajv.addFormat).toHaveBeenCalledTimes(2);
+    });
+    it("the first addFormat() was for data-url", () => {
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(
+        1,
+        "data-url",
+        DATA_URL_FORMAT_REGEX
+      );
+    });
+    it("the second addFormat() was for color", () => {
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(
+        2,
+        "color",
+        COLOR_FORMAT_REGEX
+      );
+    });
+    it("addMetaSchema was not called", () => {
+      expect(ajv.addMetaSchema).not.toHaveBeenCalled();
     });
   });
 });

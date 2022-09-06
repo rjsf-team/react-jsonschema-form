@@ -39,25 +39,23 @@ jobs:
         path: packages/playground/build
     - run: npm test
 
-  deploy_preview:
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/master'
-    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-    needs: [build]
-    steps:
-      - name: Download built files
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: dist
-      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir=dist --alias="deploy-preview-${PR_NUMBER}"
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+#  deploy_preview:
+#    runs-on: ubuntu-latest
+#    if: github.ref != 'refs/heads/master'
+#    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#    needs: [build]
+#    steps:
+#      - name: Download built files
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: dist
+#          path: dist
+#      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#        run: npx netlify-cli deploy --build --prod --dir=dist --alias="deploy-preview-${PR_NUMBER}"
+#        env:
+#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#          PR_NUMBER: ${{ github.event.pull_request.number }}
 
   deploy_playground:
     runs-on: ubuntu-latest
