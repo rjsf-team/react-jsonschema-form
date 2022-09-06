@@ -46,7 +46,7 @@
 
 ## About The Project
 
-Exports `validator-ajv6` plugin for `react-jsonschema-form`.
+Exports `validator-ajv8` plugin for `react-jsonschema-form`.
 
 ### Built With
 
@@ -139,7 +139,7 @@ or, using a more complex example using custom validator config override options
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 
 const validator = customizeValidator({
   ajvOptionsOverrides: {
@@ -160,7 +160,7 @@ or, using a more complex example using `ajv-formats` custom [format options](htt
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 
 const validator = customizeValidator({
   ajvFormatOptions: {
@@ -181,7 +181,7 @@ Finally, you can combine both additional meta schemas, custom formats, custom va
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
-import { customizeValidator } from '@rjsf/validator-ajv6';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 
 const metaSchemaDraft06 = require("ajv/lib/refs/json-schema-draft-06.json");
 
