@@ -209,7 +209,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
 
     return errors.map((e: ErrorObject) => {
       const { instancePath, keyword, message, params, schemaPath } = e;
-      const property = instancePath.replaceAll("/", ".");
+      const property = instancePath.replace(/\//g, ".");
 
       // put data in expected format
       return {
