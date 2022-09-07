@@ -37,7 +37,8 @@ module.exports = {
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "mode", "javascript"),
-        ]
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.s?css$/,
@@ -73,7 +74,7 @@ module.exports = {
       },
       {
         test: /\.ttf$/,
-        use: ['file-loader'],
+        type: 'asset/resource',
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
@@ -83,7 +84,10 @@ module.exports = {
       {
         type: 'javascript/auto',
         test: /\.mjs$/,
-        use: []
+        use: [],
+        resolve: {
+          fullySpecified: false
+        }
       }
     ]
   }

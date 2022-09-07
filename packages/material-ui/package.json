@@ -1,92 +1,61 @@
 {
   "name": "@rjsf/material-ui",
-  "version": "4.2.3",
+  "version": "5.0.0-beta.5",
   "module": "./dist/material-ui.esm.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/material-ui.esm.js",
-      "require": "./dist/index.js"
-    },
-    "./v4": {
-      "import": "./dist/material-ui-v4.esm.js",
-      "require": "./dist/v4.js"
-    },
-    "./v5": {
-      "import": "./dist/material-ui-v5.esm.js",
-      "require": "./dist/v5.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "description": "Material UI theme, fields and widgets for react-jsonschema-form",
+  "description": "Material UI 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
   ],
   "scripts": {
-    "start": "tsdx watch",
-    "build": "rimraf dist && rimraf dist-temp && tsdx build -i ./src/v5.ts --name @rjsf/material-ui-v5 && tsdx build -i ./src/v4.ts --name @rjsf/material-ui-v4 && tsdx build && rimraf dist-temp",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "start": "dts watch",
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "dts test",
+    "test:update": "dts test --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts?(x)": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=14"
   },
   "peerDependencies": {
-    "@emotion/react": "^11.7.0",
-    "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@mui/icons-material": "^5.2.0",
-    "@mui/material": "^5.2.2",
-    "@rjsf/core": "^4.0.1",
-    "@types/react": "^16.8.6 || ^17.0.0",
-    "react": "^16.8.0 || ^17.0.0",
-    "react-dom": "^16.8.0 || ^17.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@material-ui/core": {
-      "optional": true
-    },
-    "@material-ui/icons": {
-      "optional": true
-    },
-    "@emotion/react": {
-      "optional": true
-    },
-    "@emotion/styled": {
-      "optional": true
-    },
-    "@mui/icons-material": {
-      "optional": true
-    },
-    "@mui/material": {
-      "optional": true
-    }
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
+    "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-proposal-class-properties": "^7.16.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
-    "@babel/plugin-transform-react-jsx": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-react": "^7.16.0",
-    "@emotion/react": "^11.7.0",
-    "@emotion/styled": "^11.6.0",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "@mui/icons-material": "^5.2.0",
-    "@mui/material": "^5.2.2",
-    "@rjsf/core": "^4.2.3",
-    "@types/jest": "^24.0.15",
-    "@types/json-schema": "^7.0.9",
+    "@babel/core": "^7.18.13",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@rjsf/core": "^5.0.0-beta.5",
+    "@rjsf/utils": "^5.0.0-beta.5",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.5",
     "@types/material-ui": "^0.21.12",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
-    "@types/sinon": "^9.0.0",
+    "dts-cli": "^1.6.0",
+    "eslint": "^8.23.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
-    "rimraf": "^2.6.3",
-    "rollup-plugin-copy": "^3.4.0"
+    "rimraf": "^3.0.2"
   },
   "publishConfig": {
     "access": "public"

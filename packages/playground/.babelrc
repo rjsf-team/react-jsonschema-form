@@ -1,7 +1,11 @@
 {
   "presets": [
-    "@babel/preset-react",
-    "@babel/preset-env"
+    ["@babel/preset-env", {
+      "modules": false,  // don't convert modules into CommonJS
+      "useBuiltIns": "usage",  // use polyfill when needed
+      "corejs": 3
+    }],
+    "@babel/preset-react"
   ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
@@ -10,7 +14,8 @@
     [
       "@babel/plugin-transform-runtime",
       {
-        "corejs": 3
+        "corejs": 3,
+        "useESModules": true
       }
     ]
   ],

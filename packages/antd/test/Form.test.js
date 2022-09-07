@@ -1,8 +1,9 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
+import React from "react";
+import renderer from "react-test-renderer";
+import validator from "@rjsf/validator-ajv6";
 
-import '../__mocks__/matchMedia.mock';
-import Form from '../src';
+import "../__mocks__/matchMedia.mock";
+import Form from "../src";
 
 const { describe, expect, test } = global;
 
@@ -10,30 +11,30 @@ describe("single fields", () => {
   describe("string field", () => {
     test("regular", () => {
       const schema = {
-        type: "string"
+        type: "string",
       };
       const tree = renderer
-        .create(<Form schema={schema} />)
+        .create(<Form schema={schema} validator={validator} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test("format email", () => {
       const schema = {
         type: "string",
-        format: "email"
+        format: "email",
       };
       const tree = renderer
-        .create(<Form schema={schema} />)
+        .create(<Form schema={schema} validator={validator} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test("format uri", () => {
       const schema = {
         type: "string",
-        format: "uri"
+        format: "uri",
       };
       const tree = renderer
-        .create(<Form schema={schema} />)
+        .create(<Form schema={schema} validator={validator} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -43,35 +44,215 @@ describe("single fields", () => {
         format: "data-url",
       };
       const tree = renderer
-        .create(<Form schema={schema} />)
+        .create(<Form schema={schema} validator={validator} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
-  test("number field", () => {
+  test("string field with placeholder", () => {
     const schema = {
-      type: "number"
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:placeholder": "placeholder",
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("number field", () => {
+    const schema = {
+      type: "number",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("number field 0", () => {
+    const schema = {
+      type: "number",
+    };
+    const formData = 0;
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} formData={formData} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("null field", () => {
     const schema = {
-      type: "null"
+      type: "null",
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("unsupported field", () => {
     const schema = {
-      type: undefined
+      type: undefined,
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format color", () => {
+    const schema = {
+      type: "string",
+      format: "color",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format date", () => {
+    const schema = {
+      type: "string",
+      format: "date",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("format datetime", () => {
+    const schema = {
+      type: "string",
+      format: "datetime",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("password field", () => {
+    const schema = {
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:widget": "password",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("up/down field", () => {
+    const schema = {
+      type: "number",
+    };
+    const uiSchema = {
+      "ui:widget": "updown",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("textarea field", () => {
+    const schema = {
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:widget": "textarea",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field", () => {
+    const schema = {
+      type: "string",
+      enum: ["foo", "bar"],
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkbox field", () => {
+    const schema = {
+      type: "boolean",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkbox field", () => {
+    const schema = {
+      type: "boolean",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkboxes field", () => {
+    const schema = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const uiSchema = {
+      "ui:widget": "checkboxes",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("radio field", () => {
+    const schema = {
+      type: "boolean",
+    };
+    const uiSchema = {
+      "ui:widget": "radio",
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("slider field", () => {
+    const schema = {
+      type: "integer",
+      minimum: 42,
+      maximum: 100,
+    };
+    const uiSchema = {
+      "ui:widget": "range",
+    };
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          validator={validator}
+          uiSchema={uiSchema}
+          formData={75}
+        />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -90,7 +271,9 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -101,11 +284,11 @@ describe("single fields", () => {
         "my-field": {
           type: "string",
           description: "some description",
-        }
-      }
+        },
+      },
     };
     const tree = renderer
-      .create(<Form schema={schema} />)
+      .create(<Form schema={schema} validator={validator} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -116,8 +299,8 @@ describe("single fields", () => {
         "my-field": {
           type: "string",
           description: "some description",
-        }
-      }
+        },
+      },
     };
     const uiSchema = {
       "my-field": {
@@ -125,16 +308,66 @@ describe("single fields", () => {
       },
     };
     const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} />)
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("title field", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+        },
+      },
+    };
+    const uiSchema = {
+      "ui:title": "Titre 1",
+      title: {
+        "ui:title": "Titre 2",
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("hidden label", () => {
+    const schema = {
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:options": {
+        label: false,
+      },
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("using custom tagName", () => {
     const schema = {
-      type: "string"
+      type: "string",
     };
     const tree = renderer
-      .create(<Form schema={schema} tagName="div" />)
+      .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("schema examples", () => {
+    const schema = {
+      type: "string",
+      examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} tagName="div" />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

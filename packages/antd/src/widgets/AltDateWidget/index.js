@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { utils } from '@rjsf/core';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-
-const { pad, parseDateString, toDateString } = utils;
+import { pad, parseDateString, toDateString } from "@rjsf/utils";
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
 
 const rangeOptions = (start, stop) => {
   let options = [];
@@ -17,7 +15,7 @@ const rangeOptions = (start, stop) => {
 
 const readyForChange = (state) => {
   return Object.keys(state).every(
-    key => typeof state[key] !== "undefined" && state[key] !== -1,
+    (key) => typeof state[key] !== "undefined" && state[key] !== -1
   );
 };
 

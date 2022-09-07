@@ -1,7 +1,7 @@
 /* eslint-disable no-else-return */
-import React from 'react';
+import React from "react";
 
-import Radio from 'antd/lib/radio';
+import Radio from "antd/lib/radio";
 
 const RadioWidget = ({
   autofocus,
@@ -24,7 +24,7 @@ const RadioWidget = ({
   const { enumOptions, enumDisabled } = options;
 
   const handleChange = ({ target: { value: nextValue } }) =>
-    onChange(schema.type === 'boolean' ? nextValue !== 'false' : nextValue);
+    onChange(schema.type === "boolean" ? nextValue !== "false" : nextValue);
 
   const handleBlur = ({ target }) => onBlur(id, target.value);
 

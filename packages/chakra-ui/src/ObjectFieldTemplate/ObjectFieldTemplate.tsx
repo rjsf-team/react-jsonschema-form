@@ -1,19 +1,15 @@
-import * as React from "react";
-
+import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
-
-import { ObjectFieldTemplateProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
-
-import AddButton from "../AddButton";
-
-const { canExpand } = utils;
+import {
+  canExpand,
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+} from "@rjsf/utils";
 
 const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
-    DescriptionField,
     description,
-    TitleField,
     title,
     properties,
     required,
@@ -24,21 +20,40 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     schema,
     formData,
     onAddClick,
+    registry,
   } = props;
+  const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
 
   return (
     <React.Fragment>
-      {(uiSchema["ui:title"] || title) && (
-        <TitleField
+      {(uiOptions.title || title) && (
+        <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
-          title={title}
+          title={uiOptions.title || title}
           required={required}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
-      {description && (
-        <DescriptionField
+      {(uiOptions.description || description) && (
+        <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
-          description={description}
+          description={uiOptions.description || description!}
+          registry={registry}
         />
       )}
       <Grid gap={description ? 2 : 6} mb={4}>
