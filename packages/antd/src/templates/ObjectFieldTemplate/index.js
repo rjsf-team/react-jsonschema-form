@@ -1,23 +1,18 @@
-import React from 'react';
-import classNames from 'classnames';
-import _ from 'lodash';
+import React from "react";
+import classNames from "classnames";
+import isObject from "lodash/isObject";
+import isNumber from "lodash/isNumber";
 
-import { utils } from '@rjsf/core';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import { withConfigConsumer } from 'antd/lib/config-provider/context';
-import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
-
-const { canExpand } = utils;
+import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
+import { withConfigConsumer } from "antd/lib/config-provider/context";
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: '8px',
+  paddingBottom: "8px",
 };
 
 const ObjectFieldTemplate = ({
-  DescriptionField,
-  TitleField,
   description,
   disabled,
   formContext,
@@ -28,16 +23,32 @@ const ObjectFieldTemplate = ({
   properties,
   readonly,
   required,
+  registry,
   schema,
   title,
   uiSchema,
 }) => {
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext;
+  const uiOptions = getUiOptions(uiSchema);
+  const TitleFieldTemplate = getTemplate(
+    "TitleFieldTemplate",
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate(
+    "DescriptionFieldTemplate",
+    registry,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
+  const { colSpan = 24, labelAlign = "right", rowGutter = 24 } = formContext;
 
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
     labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
+    labelAlign === "left" && `${labelClsBasic}-left`
     // labelCol.className,
   );
 
@@ -47,9 +58,11 @@ const ObjectFieldTemplate = ({
 
   const findUiSchema = (element) => element.content.props.uiSchema;
 
-  const findUiSchemaField = (element) => findUiSchema(element)['ui:field'];
+  const findUiSchemaField = (element) =>
+    getUiOptions(findUiSchema(element)).field;
 
-  const findUiSchemaWidget = (element) => findUiSchema(element)['ui:widget'];
+  const findUiSchemaWidget = (element) =>
+    getUiOptions(findUiSchema(element)).widget;
 
   const calculateColSpan = (element) => {
     const type = findSchemaType(element);
@@ -58,18 +71,18 @@ const ObjectFieldTemplate = ({
 
     const defaultColSpan =
       properties.length < 2 || // Single or no field in object.
-      type === 'object' ||
-      type === 'array' ||
-      widget === 'textarea'
+      type === "object" ||
+      type === "array" ||
+      widget === "textarea"
         ? 24
         : 12;
 
-    if (_.isObject(colSpan)) {
+    if (isObject(colSpan)) {
       return (
         colSpan[widget] || colSpan[field] || colSpan[type] || defaultColSpan
       );
     }
-    if (_.isNumber(colSpan)) {
+    if (isNumber(colSpan)) {
       return colSpan;
     }
     return defaultColSpan;
@@ -78,44 +91,45 @@ const ObjectFieldTemplate = ({
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
-        {uiSchema['ui:title'] !== false && (uiSchema['ui:title'] || title) && (
+        {uiOptions.title !== false && (uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
-            <TitleField
+            <TitleFieldTemplate
               id={`${idSchema.$id}-title`}
               required={required}
-              title={uiSchema['ui:title'] || title}
+              title={uiOptions.title || title}
+              uiSchema={uiSchema}
+              registry={registry}
             />
           </Col>
         )}
-        {uiSchema['ui:description'] !== false &&
-          (uiSchema['ui:description'] || description) && (
+        {uiOptions.description !== false &&
+          (uiOptions.description || description) && (
             <Col span={24} style={DESCRIPTION_COL_STYLE}>
-              <DescriptionField
-                description={uiSchema['ui:description'] || description}
+              <DescriptionFieldTemplate
+                description={uiOptions.description || description}
                 id={`${idSchema.$id}-description`}
+                registry={registry}
               />
             </Col>
           )}
-        {properties.filter((e) => !e.hidden).map((element) => (
-          <Col key={element.name} span={calculateColSpan(element)}>
-            {element.content}
-          </Col>
-        ))}
+        {properties
+          .filter((e) => !e.hidden)
+          .map((element) => (
+            <Col key={element.name} span={calculateColSpan(element)}>
+              {element.content}
+            </Col>
+          ))}
       </Row>
 
       {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify="end">
             <Col flex="192px">
-              <Button
-                block
+              <AddButton
                 className="object-property-expand"
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
-                type="primary"
-              >
-                <PlusCircleOutlined /> Add Item
-              </Button>
+              />
             </Col>
           </Row>
         </Col>
@@ -124,4 +138,4 @@ const ObjectFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: 'form' })(ObjectFieldTemplate);
+export default withConfigConsumer({ prefixCls: "form" })(ObjectFieldTemplate);

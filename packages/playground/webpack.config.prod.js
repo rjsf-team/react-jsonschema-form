@@ -54,6 +54,7 @@ module.exports = {
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "mode", "javascript"),
         ],
+        exclude: /node_modules/
       },
       {
         test: /\.s?css$/,
@@ -89,18 +90,21 @@ module.exports = {
       },
       {
         test: /\.ttf$/,
-        use: ['file-loader'],
         include: [
           path.join(__dirname, "src"),
           path.join(__dirname, "playground"),
           path.join(__dirname, "node_modules", "monaco-editor"),
-        ]
+        ],
+        type: 'asset/resource'
       },
       {
         type: 'javascript/auto',
         test: /\.mjs$/,
-        use: []
-      }
+        use: [],
+        resolve: {
+          fullySpecified: false
+        }
+      },
     ]
   }
 };

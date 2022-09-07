@@ -20,22 +20,24 @@ import CSSReset from "./CssReset";
  * Also see: https://github.com/emotion-js/emotion/issues/760#issuecomment-404353706
  */
 
-let memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) => {
-  let newCache = createCache({ container, key: "rjsf" });
-  return newCache;
-});
+const memoizedCreateCacheWithContainer = weakMemoize(
+  (container: HTMLElement) => {
+    const newCache = createCache({ container, key: "rjsf" });
+    return newCache;
+  }
+);
 
-export const __createChakraFrameProvider = (props: any) => ({
-  document,
-}: any) => {
-  return (
-    <div style={{ margin: 2 }}>
-      <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-        <ChakraProvider resetCSS={false}>
-          <CSSReset />
-          {props.children}
-        </ChakraProvider>
-      </CacheProvider>
-    </div>
-  );
-};
+export const __createChakraFrameProvider =
+  (props: any) =>
+  ({ document }: any) => {
+    return (
+      <div style={{ margin: 2 }}>
+        <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
+          <ChakraProvider resetCSS={false}>
+            <CSSReset />
+            {props.children}
+          </ChakraProvider>
+        </CacheProvider>
+      </div>
+    );
+  };

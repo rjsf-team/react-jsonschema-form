@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
 
 const CheckboxWidget = (props: WidgetProps) => {

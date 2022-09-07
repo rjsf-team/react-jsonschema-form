@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldProps } from "@rjsf/core";
+import { TitleFieldProps } from "@rjsf/utils";
 import { Label } from "@fluentui/react";
 
 const styles = {
@@ -7,15 +7,15 @@ const styles = {
     {
       fontSize: 24,
       marginBottom: 20,
-      paddingBottom: 0
+      paddingBottom: 0,
     },
   ],
 };
 
-const TitleField = ({ title }: FieldProps) => (
-  <>
-    <Label styles={styles}>{title}</Label>
-  </>
+const TitleField = ({ id, title }: TitleFieldProps) => (
+  <Label id={id} styles={styles}>
+    {title}
+  </Label>
 );
 
 export default TitleField;

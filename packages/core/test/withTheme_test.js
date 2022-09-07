@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import React, { Component, createRef } from "react";
+import validator from "@rjsf/validator-ajv6";
 
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";
@@ -46,6 +47,7 @@ describe("withTheme", () => {
       let { node } = createComponent(WrapperClassComponent({ fields }), {
         schema,
         uiSchema,
+        validator,
       });
       expect(node.querySelectorAll(".string-field")).to.have.length.of(2);
     });
@@ -79,6 +81,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           fields: userFields,
+          validator,
         }
       );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(1);
@@ -114,6 +117,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           fields: userFields,
+          validator,
         }
       );
       expect(node.querySelectorAll(".string-field")).to.have.length.of(0);
@@ -133,6 +137,7 @@ describe("withTheme", () => {
       let { node } = createComponent(WrapperClassComponent({ widgets }), {
         schema,
         uiSchema,
+        validator,
       });
       expect(node.querySelectorAll("#test")).to.have.length.of(1);
     });
@@ -163,6 +168,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           widgets: userWidgets,
+          validator,
         }
       );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(1);
@@ -191,6 +197,7 @@ describe("withTheme", () => {
           schema,
           uiSchema,
           widgets: userWidgets,
+          validator,
         }
       );
       expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(0);
@@ -218,10 +225,11 @@ describe("withTheme", () => {
       };
       const uiSchema = {};
       let { node } = createComponent(
-        WrapperClassComponent({ ...themeTemplates }),
+        WrapperClassComponent({ templates: themeTemplates }),
         {
           schema,
           uiSchema,
+          validator,
         }
       );
       expect(
@@ -246,10 +254,11 @@ describe("withTheme", () => {
         properties: { foo: { type: "string" }, bar: { type: "string" } },
       };
       let { node } = createComponent(
-        WrapperClassComponent({ ...themeTemplates }),
+        WrapperClassComponent({ templates: themeTemplates }),
         {
           schema,
-          ...userTemplates,
+          templates: userTemplates,
+          validator,
         }
       );
       expect(
@@ -260,18 +269,96 @@ describe("withTheme", () => {
       );
     });
 
-    it("should forward the ref", () => {
-      const ref = createRef();
-      const schema = {};
+    it("should use the withTheme submit button template", () => {
+      const themeTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return (
+              <button className="with-theme-button-template">
+                ThemeSubmit
+              </button>
+            );
+          },
+        },
+      };
+      const schema = {
+        type: "object",
+        properties: {
+          fieldA: {
+            type: "string",
+          },
+          fieldB: {
+            type: "string",
+          },
+        },
+      };
       const uiSchema = {};
-
-      createComponent(withTheme({}), {
-        schema,
-        uiSchema,
-        ref,
-      });
-
-      expect(ref.current.submit).not.eql(undefined);
+      let { node } = createComponent(
+        WrapperClassComponent({ templates: themeTemplates }),
+        {
+          schema,
+          uiSchema,
+          validator,
+        }
+      );
+      expect(
+        node.querySelectorAll(".with-theme-button-template")
+      ).to.have.length.of(1);
     });
+
+    it("should use only the user defined submit button", () => {
+      const themeTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return (
+              <button className="with-theme-button-template">
+                ThemeSubmit
+              </button>
+            );
+          },
+        },
+      };
+      const userTemplates = {
+        ButtonTemplates: {
+          SubmitButton() {
+            return <button className="user-button-template">UserSubmit</button>;
+          },
+        },
+      };
+
+      const schema = {
+        type: "object",
+        properties: { foo: { type: "string" }, bar: { type: "string" } },
+      };
+      let { node } = createComponent(
+        WrapperClassComponent({ templates: themeTemplates }),
+        {
+          schema,
+          templates: userTemplates,
+          validator,
+        }
+      );
+      expect(
+        node.querySelectorAll(".with-theme-button-template")
+      ).to.have.length.of(0);
+      expect(node.querySelectorAll(".user-button-template")).to.have.length.of(
+        1
+      );
+    });
+  });
+
+  it("should forward the ref", () => {
+    const ref = createRef();
+    const schema = {};
+    const uiSchema = {};
+
+    createComponent(withTheme({}), {
+      schema,
+      uiSchema,
+      validator,
+      ref,
+    });
+
+    expect(ref.current.submit).not.eql(undefined);
   });
 });

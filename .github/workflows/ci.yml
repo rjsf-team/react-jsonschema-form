@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run cs-check
-    
+
     - name: Build with Netlify badge
       if: github.ref != 'refs/heads/master'
       run: npm run build
@@ -31,34 +31,32 @@ jobs:
     - name: Build
       if: github.ref == 'refs/heads/master'
       run: npm run build
-    
-    - if: matrix.node-version == '14.x'
-      uses: actions/upload-artifact@v2
+
+    - if: matrix.node-version == '16.x'
+      uses: actions/upload-artifact@v3
       with:
         name: dist
         path: packages/playground/build
     - run: npm test
-    
-  deploy_preview:
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/master'
-    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-    needs: [build]
-    steps:
-      - name: Download built files
-        uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir=dist --alias="deploy-preview-${PR_NUMBER}"
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-  
+
+#  deploy_preview:
+#    runs-on: ubuntu-latest
+#    if: github.ref != 'refs/heads/master'
+#    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#    needs: [build]
+#    steps:
+#      - name: Download built files
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: dist
+#          path: dist
+#      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#        run: npx netlify-cli deploy --build --prod --dir=dist --alias="deploy-preview-${PR_NUMBER}"
+#        env:
+#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#          PR_NUMBER: ${{ github.event.pull_request.number }}
+
   deploy_playground:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -66,19 +64,29 @@ jobs:
     needs: [build]
     steps:
       - name: Download built files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
       - name: Deploy playground
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           keep_history: true
           target_branch: gh-pages
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.6
+    - run: pip install -r requirements.docs.txt
+    - run: mkdocs build --clean
   # deploy_canary:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master'
@@ -97,14 +105,3 @@ jobs:
   #     - run: npx lerna publish from-package --yes --no-verify-access --canary
   #     - if: always()
   #       run: rm .npmrc
-
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.6
-    - run: pip install -r requirements.docs.txt
-    - run: mkdocs build --clean

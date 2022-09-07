@@ -1,12 +1,6 @@
 import React from "react";
-import { ErrorListProps } from "@rjsf/core";
-import {
-  List,
-  ListIcon,
-  ListItem,
-  Alert,
-  AlertTitle,
-} from "@chakra-ui/react";
+import { ErrorListProps } from "@rjsf/utils";
+import { List, ListIcon, ListItem, Alert, AlertTitle } from "@chakra-ui/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
 const ErrorList = ({ errors }: ErrorListProps) => {
@@ -17,9 +11,7 @@ const ErrorList = ({ errors }: ErrorListProps) => {
       gap={3}
       status="error"
     >
-      <AlertTitle>
-        Errors
-      </AlertTitle>
+      <AlertTitle>Errors</AlertTitle>
 
       <List>
         {errors.map((error, i) => (
