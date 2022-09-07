@@ -17,8 +17,8 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.5
 
-## @rjsf/core
-- Enhancement for color widget allows users to look and feel interaction.
+## @rjsf/validator-ajv8
+- Added the new Ajv 8 based validator so that it can get published on npm
 
 # v5.0.0-beta.4
 

@@ -1,26 +1,24 @@
 {
-  "name": "@rjsf/bootstrap-4",
+  "name": "@rjsf/validator-ajv8",
   "version": "5.0.0-beta.5",
   "main": "dist/index.js",
-  "module": "dist/bootstrap-4.esm.js",
+  "module": "dist/validator-ajv8.esm.js",
   "typings": "dist/index.d.ts",
-  "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
+  "description": "The ajv-8 based validator for @rjsf/core",
   "files": [
     "dist"
   ],
-  "repository": {
-    "type": "git",
-    "url": ""
+  "engineStrict": false,
+  "engines": {
+    "node": ">=14"
   },
   "scripts": {
-    "start": "dts watch",
     "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test",
-    "test:update": "dts test --u"
+    "test": "dts test"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -28,41 +26,37 @@
       "prettier --write"
     ]
   },
-  "peerDependencies": {
-    "@rjsf/core": "^5.0.0-beta.1",
-    "@rjsf/utils": "^5.0.0-beta.1",
-    "react": "^16.14.0 || >=17",
-    "react-bootstrap": "^1.6.5"
+  "dependencies": {
+    "ajv": "^8.11.0",
+    "ajv-formats": "^2.1.1",
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15"
   },
-  "engineStrict": false,
-  "engines": {
-    "node": ">=14"
+  "peerDependencies": {
+    "@rjsf/utils": "^5.0.0-beta.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
-    "@rjsf/core": "^5.0.0-beta.5",
     "@rjsf/utils": "^5.0.0-beta.5",
-    "@rjsf/validator-ajv6": "^5.0.0-beta.5",
-    "@types/react": "^17.0.48",
-    "@types/react-dom": "^17.0.17",
-    "@types/react-test-renderer": "^17.0.2",
+    "@types/jest-expect-message": "^1.0.3",
+    "@types/json-schema": "^7.0.9",
+    "@types/lodash": "^4.14.184",
     "dts-cli": "^1.6.0",
     "eslint": "^8.23.0",
-    "react": "^17.0.2",
-    "react-bootstrap": "^1.6.5",
-    "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
+    "jest-expect-message": "^1.0.2",
     "rimraf": "^3.0.2"
   },
   "publishConfig": {
     "access": "public"
   },
+  "author": "Heath Chiavettone <heath.chiavettone@freenome.com",
+  "contributors": [],
   "keywords": [
-    "Bootstrap 4",
     "react-jsonschema-form",
     "jsonschema",
     "json-schema",
@@ -70,14 +64,12 @@
     "schema",
     "form",
     "react",
-    "bootstrap-4",
-    "rjsf-bootstrap-4"
+    "ajv-8",
+    "rjsf-validator"
   ],
-  "contributors": [
-    "Heath Chiavettone <heath.chiavettone@freenome.com"
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "@react-icons/all-files": "^4.1.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
 }
