@@ -29,8 +29,12 @@ nav:
       - semantic-ui uiSchema Reference: api-reference/themes/semantic-ui/uiSchema.md
       - chakra-ui uiSchema Reference: api-reference/themes/chakra-ui/uiSchema.md
       - "&lt;Form /&gt; props": api-reference/form-props.md
+      - Utility functions: api-reference/utility-functions.md
+  - 5.x Migration: 5.x upgrade guide.md
+  - 4.x Migration: 4.x upgrade guide.md
   - 3.x Migration: 3.x upgrade guide.md
   - 2.x Migration: 2.x upgrade guide.md
+  - Contributing: contributing.md
 
 markdown_extensions:
   - toc:

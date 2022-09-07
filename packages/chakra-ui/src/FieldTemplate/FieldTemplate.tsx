@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FieldTemplateProps } from "@rjsf/core";
+import { FieldTemplateProps } from "@rjsf/utils";
 
 import {
   Text,
@@ -24,6 +24,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     onDropPropertyClick,
     onKeyChange,
     readonly,
+    registry,
     required,
     rawErrors = [],
     rawHelp,
@@ -32,7 +33,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
   } = props;
 
   if (hidden) {
-    return <>{children}</>;
+    return <div style={{ display: "none" }}>{children}</div>;
   }
 
   return (
@@ -46,6 +47,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       readonly={readonly}
       required={required}
       schema={schema}
+      registry={registry}
     >
       <FormControl
         isRequired={required}

@@ -17,18 +17,17 @@ function RadioWidget(props) {
     options,
     formContext,
     uiSchema,
+    rawErrors = [],
   } = props;
-  // Generating a unique field name to identify this set of radio buttons
-  const name = Math.random().toString();
   const { enumOptions, enumDisabled } = options;
-  const semanticProps = getSemanticProps(
-    { formContext,
-      options,
-      uiSchema,
-    });
+  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
   // eslint-disable-next-line no-shadow
-  const _onChange = (event, { value : eventValue }) => {
-    return onChange &&  onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue);};
+  const _onChange = (event, { value: eventValue }) => {
+    return (
+      onChange &&
+      onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue)
+    );
+  };
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
@@ -41,12 +40,13 @@ function RadioWidget(props) {
           <Form.Field
             required={required}
             control={Radio}
-            name={name}
+            name={`${id}-radio-${option.value}`}
             {...semanticProps}
             onFocus={_onFocus}
             onBlur={_onBlur}
             label={`${option.label}`}
             value={`${option.value}`}
+            error={rawErrors.length > 0}
             key={`${option.value}-${i}`}
             checked={value == option.value}
             onChange={_onChange}

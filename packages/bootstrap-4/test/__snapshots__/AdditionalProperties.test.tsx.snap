@@ -7,156 +7,165 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
   onSubmit={[Function]}
 >
   <div
-    className="form-group"
+    className="form-group field field-undefined"
   >
     <div
-      className="p-0 container-fluid"
+      className="form-group"
     >
+      
       <div
-        className="row"
-        style={
-          Object {
-            "marginBottom": "10px",
-          }
-        }
+        className="p-0 container-fluid"
       >
         <div
-          className="col-12"
+          className="row"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
         >
-           
           <div
-            className="row"
+            className="col-12"
           >
+             
             <div
-              className="col-5"
+              className="form-group field field-string row"
             >
               <div
-                className="form-group"
-              >
-                <label
-                  className="form-label"
-                >
-                  additionalProperty Key
-                </label>
-                <input
-                  className="form-control"
-                  defaultValue="additionalProperty"
-                  disabled={false}
-                  id="root-key"
-                  name="root-key"
-                  onBlur={[Function]}
-                  required={false}
-                  type="text"
-                />
-              </div>
-            </div>
-            <div
-              className="col-5"
-            >
-              <div
-                className="form-group"
+                className="col-5"
               >
                 <div
-                  className="mb-0 form-group"
+                  className="form-group"
                 >
                   <label
                     className="form-label"
+                    htmlFor="root-key"
                   >
-                    additionalProperty
+                    additionalProperty Key
                   </label>
                   <input
-                    autoFocus={false}
                     className="form-control"
+                    defaultValue="additionalProperty"
                     disabled={false}
-                    id="root"
+                    id="root-key"
+                    name="root-key"
                     onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
                     required={false}
                     type="text"
-                    value="should appear"
                   />
                 </div>
               </div>
-            </div>
-            <div
-              className="py-4 col-2"
-            >
-              <button
-                className="btn btn-danger btn-block btn-sm"
-                disabled={false}
-                onClick={[Function]}
-                tabIndex={-1}
-                type="button"
+              <div
+                className="col-5"
               >
-                <svg
-                  fill="currentColor"
-                  height="1em"
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  className="form-group"
                 >
-                  <path
-                    d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
-                  />
-                </svg>
-              </button>
+                  <div
+                    className="mb-0 form-group"
+                  >
+                    <label
+                      className="form-label"
+                      htmlFor="root"
+                    >
+                      additionalProperty
+                    </label>
+                    <input
+                      autoFocus={false}
+                      className="form-control"
+                      disabled={false}
+                      id="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                  
+                </div>
+              </div>
+              <div
+                className="py-4 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-block btn-sm"
+                  disabled={false}
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className="row"
-      >
         <div
-          className="py-4 col-3 offset-9"
+          className="row"
         >
-          <button
-            className="ml-1 object-property-expand btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
-            style={
-              Object {
-                "width": "100%",
-              }
-            }
-            type="button"
+          <div
+            className="py-4 col-3 offset-9"
           >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              strokeWidth="0"
+            <button
+              className="ml-1 object-property-expand btn btn-primary"
+              disabled={false}
+              onClick={[Function]}
               style={
                 Object {
-                  "color": undefined,
+                  "width": "100%",
                 }
               }
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
+              title="Add Item"
+              type="button"
             >
-              <path
-                clipRule="evenodd"
-                d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
-                fillRule="evenodd"
-              />
-              <path
-                clipRule="evenodd"
-                d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
-                fillRule="evenodd"
-              />
-            </svg>
-          </button>
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>

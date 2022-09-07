@@ -1,20 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import { utils } from '@rjsf/core';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Form from 'antd/lib/form';
-import Input from 'antd/lib/input';
-import Row from 'antd/lib/row';
-import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
-
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
+import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
+import Col from "antd/lib/col";
+import Form from "antd/lib/form";
+import Input from "antd/lib/input";
+import Row from "antd/lib/row";
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const INPUT_STYLE = {
-  width: '100%',
+  width: "100%",
 };
 
 const WrapIfAdditional = ({
@@ -28,6 +24,7 @@ const WrapIfAdditional = ({
   onKeyChange,
   readonly,
   required,
+  registry,
   schema,
 }) => {
   const {
@@ -35,13 +32,14 @@ const WrapIfAdditional = ({
     labelCol = VERTICAL_LABEL_COL,
     readonlyAsDisabled = true,
     rowGutter = 24,
-    toolbarAlign = 'top',
+    toolbarAlign = "top",
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = formContext;
+  const { RemoveButton } = registry.templates.ButtonTemplates;
 
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
     return <div className={classNames}>{children}</div>;
@@ -82,14 +80,11 @@ const WrapIfAdditional = ({
           {children}
         </Col>
         <Col flex="192px">
-          <Button
+          <RemoveButton
             block
             className="array-item-remove"
-            danger
             disabled={disabled || readonly}
-            icon={<DeleteOutlined />}
             onClick={onDropPropertyClick(label)}
-            type="primary"
           />
         </Col>
       </Row>

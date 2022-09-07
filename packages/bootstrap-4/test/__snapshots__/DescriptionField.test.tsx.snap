@@ -4,6 +4,7 @@ exports[`DescriptionField should return h2 element when description is being pas
 <div>
   <div
     className="mb-3"
+    id="testid"
   >
     SOME THING
   </div>

@@ -1,74 +1,79 @@
 {
   "name": "@rjsf/antd",
-  "version": "4.2.3",
+  "version": "5.0.0-beta.5",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/antd.esm.js",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "rimraf dist && tsdx build --format cjs,es,umd",
-    "test": "tsdx test",
-    "test:update": "tsdx test --u"
+    "start": "dts watch",
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.js\"",
+    "cs-format": "prettier \"{src,test}/**/*.js\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "dts test",
+    "test:update": "dts test --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "files": [
     "dist"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "verbose": true,
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "browsers": [
+        "chrome",
+        "firefox",
+        "safari"
+      ]
     }
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@rjsf/core": "^4.0.0",
+    "@rjsf/core": "^5.0.0-beta.1",
+    "@rjsf/utils": "^5.0.0-beta.1",
     "antd": "^4.0.0",
-    "antd-dayjs-webpack-plugin": "1.0.0",
     "dayjs": "^1.8.0",
-    "lodash": "^4.17.15",
-    "lodash-es": "^4.17.15",
-    "react": ">=16"
+    "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
-    "@ant-design/icons": "^4.0.0",
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/preset-env": "^7.10.3",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.4.4",
-    "@rjsf/core": "^4.2.3",
-    "antd": "^4.0.0",
+    "@ant-design/icons": "^4.7.0",
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.13",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/register": "^7.18.9",
+    "@rjsf/core": "^5.0.0-beta.5",
+    "@rjsf/utils": "^5.0.0-beta.5",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.5",
+    "@rollup/plugin-replace": "^4.0.0",
+    "antd": "^4.22.8",
     "atob": "^2.0.3",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.6",
-    "concurrently": "^5.1.0",
-    "cross-env": "^2.0.1",
-    "css-loader": "^3.2.0",
-    "dayjs": "^1.8.0",
-    "eslint": "^4.9.0",
-    "eslint-config-react-app": "^2.0.1",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.21.2",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.4.0",
-    "jest": "24.9.0",
-    "less": "^3.10.3",
-    "less-loader": "^5.0.0",
+    "dayjs": "^1.11.5",
+    "dts-cli": "^1.6.0",
+    "eslint": "^8.23.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.13.1",
-    "rimraf": "^3.0.2",
-    "style-loader": "^2.0.0",
-    "webpack": "^4.20.2",
-    "webpack-dev-middleware": "^3.4.0",
-    "webpack-hot-middleware": "^2.13.2"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2"
   },
   "repository": {
     "type": "git",
@@ -85,6 +90,9 @@
     "rjsf-antd"
   ],
   "author": "Delyan Ruskov <d.ruskov@gmail.com>",
+  "contributors": [
+    "Heath Chiavettone <heath.chiavettone@freenome.com"
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/rjsf-team/react-jsonschema-form/issues"

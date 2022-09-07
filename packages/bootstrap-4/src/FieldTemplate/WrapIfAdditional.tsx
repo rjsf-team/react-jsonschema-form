@@ -1,31 +1,27 @@
-
 import React from "react";
 
-import { utils } from "@rjsf/core";
-import { JSONSchema7 } from "json-schema";
+import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-import IconButton from "../IconButton/IconButton";
-
-const { ADDITIONAL_PROPERTY_FLAG } = utils;
-
-type WrapIfAdditionalProps = {
-  children: React.ReactElement;
-  classNames: string;
-  disabled: boolean;
-  id: string;
-  label: string;
-  onDropPropertyClick: (index: string) => (event?: any) => void;
-  onKeyChange: (index: string) => (event?: any) => void;
-  readonly: boolean;
-  required: boolean;
-  schema: JSONSchema7;
-};
+type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
+  FieldTemplateProps,
+  | "classNames"
+  | "disabled"
+  | "id"
+  | "label"
+  | "onDropPropertyClick"
+  | "onKeyChange"
+  | "readonly"
+  | "required"
+  | "schema"
+  | "registry"
+>;
 
 const WrapIfAdditional = ({
+  classNames,
   children,
   disabled,
   id,
@@ -35,43 +31,41 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  registry,
 }: WrapIfAdditionalProps) => {
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
-  const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return children;
+    return <div className={classNames}>{children}</div>;
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
+  const keyId = `${id}-key`;
 
   return (
-    <Row key={`${id}-key`}>
+    <Row className={classNames} key={keyId}>
       <Col xs={5}>
         <Form.Group>
-          <Form.Label>{keyLabel}</Form.Label>
+          <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>
           <Form.Control
             required={required}
             defaultValue={label}
             disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
+            id={keyId}
+            name={keyId}
             onBlur={!readonly ? handleBlur : undefined}
             type="text"
           />
         </Form.Group>
       </Col>
-      <Col xs={5}>
-        {children}
-      </Col>
+      <Col xs={5}>{children}</Col>
       <Col xs={2} className="py-4">
-        <IconButton
-          block={true}
+        <RemoveButton
+          iconType="block"
           className="w-100"
-          variant="danger"
-          icon="remove"
-          tabIndex={-1}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
         />
