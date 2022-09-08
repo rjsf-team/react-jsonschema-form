@@ -37,6 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 - Added two new validator selections, `AJV8` and `AJV8_es` to the list of available validators for the playground; Using the second one will translate error messages to spanish.
+- Updated the validation documentation to clarify the case of empty strings being stored as `null` in certain cases.
 
 # v5.0.0-beta.5
 
