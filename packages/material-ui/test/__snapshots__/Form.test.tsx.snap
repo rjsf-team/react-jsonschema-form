@@ -681,75 +681,27 @@ exports[`single fields format color 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        style={
-          Object {
-            "alignItems": "center",
-            "display": "flex",
-            "gap": "10px",
-          }
-        }
+        className="MuiFormControl-root MuiTextField-root"
       >
         <div
-          className="MuiFormControl-root MuiTextField-root"
-          style={
-            Object {
-              "order": 1,
-            }
-          }
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
         >
-          <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
-          >
-            <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input"
-              disabled={false}
-              id="root"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              required={false}
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          className="MuiFormControl-root MuiTextField-root"
-          style={
-            Object {
-              "background": "none",
-              "border": "none",
-              "order": 2,
-              "padding": 0,
-              "width": 60,
-            }
-          }
-        >
-          <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
-          >
-            <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input"
-              disabled={false}
-              id="root"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              required={false}
-              type="color"
-              value=""
-            />
-          </div>
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="color"
+            value=""
+          />
         </div>
       </div>
     </div>

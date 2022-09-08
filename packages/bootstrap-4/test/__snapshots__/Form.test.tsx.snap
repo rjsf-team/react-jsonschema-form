@@ -410,56 +410,25 @@ exports[`single fields format color 1`] = `
       className="form-group"
     >
       <div
-        style={
-          Object {
-            "alignItems": "center",
-            "display": "flex",
-            "gap": "10px",
-          }
-        }
+        className="mb-0 form-group"
       >
-        <div
-          className="mb-0 form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="root"
-          />
-          <input
-            autoFocus={false}
-            className="form-control"
-            disabled={false}
-            id="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            readOnly={false}
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="mb-0 form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="root"
-          />
-          <input
-            autoFocus={false}
-            className="form-control"
-            disabled={false}
-            id="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            readOnly={false}
-            type="color"
-            value=""
-          />
-        </div>
+        <label
+          className="form-label"
+          htmlFor="root"
+        />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="color"
+          value=""
+        />
       </div>
       
     </div>

@@ -15,38 +15,11 @@ export default function ColorWidget<T = any, F = any>(
     registry,
     options
   );
-  const styles = {
-    root: {
-      display: "flex",
-      gap: "10px",
-      alignItems: "center",
-    },
-    input: {
-      order: 1,
-    },
-    picker: {
-      order: 2,
-      width: 60,
-      padding: 0,
-      border: "none",
-      background: "none",
-    },
-  };
   return (
-    <div style={styles.root}>
-      <BaseInputTemplate
-        type="text"
-        style={styles.input}
-        {...props}
-        disabled={disabled || readonly}
-      />
-      <BaseInputTemplate
-        type="color"
-        style={styles.picker}
-        {...props}
-        autofocus={false}
-        disabled={disabled || readonly}
-      />
-    </div>
+    <BaseInputTemplate
+      type="color"
+      {...props}
+      disabled={disabled || readonly}
+    />
   );
 }

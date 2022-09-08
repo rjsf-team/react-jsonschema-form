@@ -933,11 +933,11 @@ exports[`single fields format color 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-5 {
+.emotion-3 {
   margin-top: 3px;
 }
 
-.emotion-6 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -979,62 +979,32 @@ exports[`single fields format color 1`] = `
       role="group"
     >
       <div
-        style={
-          Object {
-            "alignItems": "center",
-            "display": "flex",
-            "gap": "10px",
-          }
-        }
+        className="chakra-form-control emotion-1"
+        role="group"
       >
-        <div
-          className="chakra-form-control emotion-1"
-          role="group"
-        >
-          <input
-            autoFocus={false}
-            className="chakra-input emotion-0"
-            disabled={false}
-            id="root"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            readOnly={false}
-            required={false}
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          className="chakra-form-control emotion-1"
-          role="group"
-        >
-          <input
-            autoFocus={false}
-            className="chakra-input emotion-0"
-            disabled={false}
-            id="root"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            readOnly={false}
-            required={false}
-            type="color"
-            value=""
-          />
-        </div>
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="color"
+          value=""
+        />
       </div>
     </div>
   </div>
   <div
-    className="emotion-5"
+    className="emotion-3"
   >
     <button
-      className="chakra-button emotion-6"
+      className="chakra-button emotion-4"
       disabled={false}
       type="submit"
     >
