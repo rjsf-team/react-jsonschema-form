@@ -15,6 +15,20 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.6
+
+## @rjsf/core
+- Added tests for the new `@rjsf/validator-ajv8` to the `validate_test.js` file to ensure the validation works with both validator implementations
+
+## @rjsf/utils
+- Fixed the `README.md` to remove references to ajv6 validator, adding link to the `utility-functions.md` in the docs
+
+## @rjsf/validator-ajv8
+- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195) 
+
+## Dev / docs / playground
+- Added two new validator selections, `AJV8` and `AJV8_es` to the list of available validators for the playground; Using the second one will translate error messages to spanish.
+
 # v5.0.0-beta.5
 
 ## @rjsf/validator-ajv8
