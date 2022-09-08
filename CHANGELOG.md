@@ -17,17 +17,30 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.6
 
+## @rjsf/bootstrap-4
+- Change custom attribute to bsPrefix by @WillowP, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2648)
+
 ## @rjsf/core
 - Added tests for the new `@rjsf/validator-ajv8` to the `validate_test.js` file to ensure the validation works with both validator implementations
 
+## @rjsf/mui
+- Fixed the `README.md` to correct the package name in several places to match the actual package
+
 ## @rjsf/utils
 - Fixed the `README.md` to remove references to ajv6 validator, adding link to the `utility-functions.md` in the docs
+- Fixed the `README.md` to correct the package name in several places to match the actual package
+- Updated `getDefaultFormState()` so that oneOf and anyOf default values do not always use the first option when formData contains a better option, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2183)
+
+## @rjsf/validator-ajv6
+- Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## @rjsf/validator-ajv8
 - Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195) 
+- Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## Dev / docs / playground
 - Added two new validator selections, `AJV8` and `AJV8_es` to the list of available validators for the playground; Using the second one will translate error messages to spanish.
+- Updated the validation documentation to clarify the case of empty strings being stored as `null` in certain cases.
 
 # v5.0.0-beta.5
 
