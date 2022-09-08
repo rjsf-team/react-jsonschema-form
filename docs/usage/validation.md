@@ -334,9 +334,10 @@ First, there are many things to be aware of related to internal migration from A
 One big difference is that Ajv 8 dropped support for any JSON Schema version before draft-06.
 So if your schema is using an older format, you have to either upgrade it or stick with the `@rjsf/validator-ajv6`.
 
-The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version and not previous versions.
-Secondly, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
+The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version and not the Ajv 6 validator.
+Second, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
 A new `ajvFormatOptions` option is available on the `customizeValidator()` API to be able to configure this.
+Finally, the Ajv 8 validator supports the localization of error messages.
 
 ### ajvFormatOptions
 
@@ -389,3 +390,94 @@ render((
   <Form schema={schema} validator={validator} />
 ), document.getElementById("app"));
 ```
+
+### Localization (L12n) support
+
+The Ajv 8 validator supports the localization of error messages using [ajv-i18n](https://github.com/ajv-validator/ajv-i18n).
+In addition, you may provide a custom solution by implementing a function that conforms to the `Localizer` interface if your language is not supported.
+
+```ts
+import { ErrorObject } from "ajv";
+/** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them
+ */
+export type Localizer = (errors?: null | ErrorObject[]) => void;
+```
+
+NOTE: The `ajv-i18n` validators implement the `Localizer` interface.
+
+#### Some examples
+
+Using a specific locale while including all of `ajv-i18n`:
+
+ ```jsx
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import localizer from "ajv-i18n";
+
+const schema = {
+  type: 'string',
+};
+
+const validator = customizeValidator({}, localizer.it);
+
+render((
+  <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
+Using a specific locale minimizing the bundle size
+
+ ```jsx
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import spanishLocalizer from "ajv-i18n/localize/es";
+
+const schema = {
+  type: 'string',
+};
+
+const validator = customizeValidator({}, spanishLocalizer);
+
+render((
+  <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
+An example of a custom `Localizer` implementation:
+
+```tsx
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import { ErrorObject } from "ajv";
+
+function localize_ru(errors: null | ErrorObject[] = []) {
+  if (!(errors && errors.length)) return;
+  errors.forEach(function(error) {
+    let outMessage = "";
+    
+    switch (error.keyword) {
+      case "pattern": {
+        outMessage = 'должно соответствовать образцу "' + error.params.pattern + '"';
+        break;
+      }
+      case "required": {
+        outMessage = "поле обязательно для заполнения";
+        break;
+      }
+      default:
+        outMessage = error.message;
+    }
+    
+    error.message = outMessage;
+  })
+}
+
+const validator = customizeValidator({}, localize_ru);
+
+render((
+    <Form schema={schema} validator={validator} />
+), document.getElementById("app"));
+```
+
+NOTES:
+
+- If you provided your own function, modify the list in place.
+- You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
+- Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
