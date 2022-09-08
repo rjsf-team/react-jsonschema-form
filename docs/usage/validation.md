@@ -407,7 +407,7 @@ NOTE: The `ajv-i18n` validators implement the `Localizer` interface.
 
 #### Some examples
 
-Using a specific local while including all of `ajv-i18n`:
+Using a specific locale while including all of `ajv-i18n`:
 
  ```jsx
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -424,7 +424,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Using a specific local minimizing the bundle size
+Using a specific locale minimizing the bundle size
 
  ```jsx
 import { customizeValidator } from '@rjsf/validator-ajv8';
