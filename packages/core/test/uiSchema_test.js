@@ -658,8 +658,7 @@ describe("uiSchema", () => {
           {
             "ui:widget": "color",
             "ui:autofocus": true,
-          },
-          'input[type="text"]'
+          }
         );
       });
 

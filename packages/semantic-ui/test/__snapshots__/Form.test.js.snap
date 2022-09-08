@@ -549,53 +549,23 @@ exports[`single fields format color 1`] = `
       className="grouped equal width fields"
     >
       <div
-        style={
-          Object {
-            "alignItems": "center",
-            "display": "flex",
-            "gap": "10px",
-          }
-        }
+        className="field"
       >
         <div
-          className="field"
+          className="ui fluid input"
         >
-          <div
-            className="ui fluid input"
-          >
-            <input
-              aria-describedby={null}
-              autoFocus={false}
-              disabled={false}
-              id="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          className="field"
-        >
-          <div
-            className="ui fluid input"
-          >
-            <input
-              aria-describedby={null}
-              autoFocus={false}
-              disabled={false}
-              id="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder=""
-              type="color"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby={null}
+            autoFocus={false}
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            type="color"
+            value=""
+          />
         </div>
       </div>
       

@@ -522,50 +522,23 @@ exports[`single fields format color 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
       style={
         Object {
-          "alignItems": "center",
-          "display": "flex",
-          "gap": "10px",
+          "width": "100%",
         }
       }
-    >
-      <input
-        className="ant-input"
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        placeholder=""
-        style={
-          Object {
-            "width": "100%",
-          }
-        }
-        type="text"
-        value=""
-      />
-      <input
-        className="ant-input"
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        placeholder=""
-        style={
-          Object {
-            "width": "100%",
-          }
-        }
-        type="color"
-        value=""
-      />
-    </div>
+      type="color"
+      value=""
+    />
   </div>
   <button
     className="ant-btn ant-btn-submit"
