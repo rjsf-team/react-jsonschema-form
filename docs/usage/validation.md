@@ -337,7 +337,7 @@ So if your schema is using an older format, you have to either upgrade it or sti
 The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version and not the Ajv 6 validator.
 Second, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
 A new `ajvFormatOptions` option is available on the `customizeValidator()` API to be able to configure this.
-Finally, the Ajv 8 validator support the localization of error messages.
+Finally, the Ajv 8 validator supports the localization of error messages.
 
 ### ajvFormatOptions
 
