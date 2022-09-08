@@ -50,7 +50,7 @@ const SelectWidget = ({
       </Form.Label>
       <Form.Control
         as="select"
-        custom
+        bsPrefix="custom-select"
         id={id}
         value={typeof value === "undefined" ? emptyValue : value}
         required={required}

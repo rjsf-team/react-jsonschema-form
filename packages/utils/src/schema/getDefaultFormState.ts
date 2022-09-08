@@ -1,4 +1,5 @@
 import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
 
 import {
   ANY_OF_KEY,
@@ -71,7 +72,7 @@ export function getInnerSchemaForArrayItem(
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
- * the each level of the schema, recursively, to fill out every level of defaults provided by the schema.
+ * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param schema - The schema for which the default state is desired
@@ -143,7 +144,7 @@ export function computeDefaults<T = any>(
     schema = schema.oneOf![
       getMatchingOption(
         validator,
-        undefined,
+        isEmpty(formData) ? undefined : formData,
         schema.oneOf as RJSFSchema[],
         rootSchema
       )
@@ -152,7 +153,7 @@ export function computeDefaults<T = any>(
     schema = schema.anyOf![
       getMatchingOption(
         validator,
-        undefined,
+        isEmpty(formData) ? undefined : formData,
         schema.anyOf as RJSFSchema[],
         rootSchema
       )

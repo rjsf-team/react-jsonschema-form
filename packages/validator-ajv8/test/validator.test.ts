@@ -7,6 +7,7 @@ import {
 } from "@rjsf/utils";
 
 import AJV8Validator from "../src/validator";
+import { Localizer } from "../src";
 
 class TestValidator extends AJV8Validator {
   withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
@@ -393,11 +394,13 @@ describe("AJV8Validator", () => {
       });
     });
   });
-  describe("validator.validateFormData(), custom options", () => {
+  describe("validator.validateFormData(), custom options, and localizer", () => {
     let validator: TestValidator;
     let schema: RJSFSchema;
+    let localizer: Localizer;
     beforeAll(() => {
-      validator = new TestValidator({});
+      localizer = jest.fn().mockImplementation();
+      validator = new TestValidator({}, localizer);
       schema = {
         $ref: "#/definitions/Dataset",
         $schema: "http://json-schema.org/draft-06/schema#",
@@ -426,13 +429,18 @@ describe("AJV8Validator", () => {
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
       });
+      expect(localizer).toHaveBeenCalledWith(undefined);
     });
     describe("validating using single custom meta schema", () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        validator = new TestValidator({
-          additionalMetaSchemas: [metaSchemaDraft6],
-        });
+        (localizer as jest.Mock).mockClear();
+        validator = new TestValidator(
+          {
+            additionalMetaSchemas: [metaSchemaDraft6],
+          },
+          localizer
+        );
         const result = validator.validateFormData(
           { datasetId: "some kind of text" },
           schema
@@ -444,6 +452,17 @@ describe("AJV8Validator", () => {
       });
       it("has a pattern match validation error about formData", () => {
         expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+      });
+      it("localizer was called with the errors", () => {
+        expect(localizer).toHaveBeenCalledWith([
+          {
+            instancePath: "/datasetId",
+            keyword: "pattern",
+            message: 'must match pattern "\\d+"',
+            params: { pattern: "\\d+" },
+            schemaPath: "#/definitions/Dataset/properties/datasetId/pattern",
+          },
+        ]);
       });
     });
     describe("validating using several custom meta schemas", () => {

@@ -757,6 +757,26 @@ export default function getDefaultFormStateTest(
           grade: "A",
         });
       });
+      it("should populate defaults for oneOf second option", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            test: {
+              oneOf: [
+                { properties: { a: { type: "string", default: "a" } } },
+                { properties: { b: { type: "string", default: "b" } } },
+              ],
+            },
+          },
+        };
+        // Mock errors so that getMatchingOption works as expected
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(
+          getDefaultFormState(testValidator, schema, { test: { b: "b" } })
+        ).toEqual({
+          test: { b: "b" },
+        });
+      });
     });
     describe("defaults with anyOf", () => {
       it("should populate defaults for anyOf", () => {
@@ -835,6 +855,26 @@ export default function getDefaultFormStateTest(
         ).toEqual({
           name: "Name",
           grade: "A",
+        });
+      });
+      it("should populate defaults for anyOf second option", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            test: {
+              anyOf: [
+                { properties: { a: { type: "string", default: "a" } } },
+                { properties: { b: { type: "string", default: "b" } } },
+              ],
+            },
+          },
+        };
+        // Mock errors so that getMatchingOption works as expected
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(
+          getDefaultFormState(testValidator, schema, { test: { b: "b" } })
+        ).toEqual({
+          test: { b: "b" },
         });
       });
     });
