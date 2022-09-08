@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.6
 
+## @rjsf/bootstrap-4
+- Change custom attribute to bsPrefix by @WillowP, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2648)
+
 ## @rjsf/core
 - Added tests for the new `@rjsf/validator-ajv8` to the `validate_test.js` file to ensure the validation works with both validator implementations
 
