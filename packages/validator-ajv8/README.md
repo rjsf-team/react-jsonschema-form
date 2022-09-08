@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/7ebc86621d8df8c21f0c39bcca6d476f6f7a2051/packages/validator-ajv6/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/7ebc86621d8df8c21f0c39bcca6d476f6f7a2051/packages/validator-ajv8/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">@rjsf/validator-ajv8</h3>
