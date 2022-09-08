@@ -1,4 +1,4 @@
-import { Options } from "ajv";
+import { Options, ErrorObject } from "ajv";
 import { FormatsPluginOptions } from "ajv-formats";
 
 /** The type describing how to customize the AJV6 validator
@@ -15,3 +15,7 @@ export interface CustomValidatorOptionsType {
   /** The `ajv-format` options to use when adding formats to `ajv`; pass `false` to disable it */
   ajvFormatOptions?: FormatsPluginOptions | false;
 }
+
+/** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them
+ */
+export type Localizer = (errors?: null | ErrorObject[]) => void;

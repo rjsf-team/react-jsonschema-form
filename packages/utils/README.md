@@ -14,7 +14,7 @@
   <h3 align="center">@rjsf/utils</h3>
 
   <p align="center">
-  AJV-6 based validator plugin for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Utility functions for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
     <br />
@@ -46,12 +46,11 @@
 
 ## About The Project
 
-Exports `utils` plugin for `react-jsonschema-form`.
+Exports `utils` functions for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [AJV](https://github.com/ajv-validator/ajv/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -71,6 +70,10 @@ yarn add @rjsf/utils
 ```jsx
 import * as Utils from '@rjsf/utils';
 ```
+
+## Documentation
+
+[Utility function documentation](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/utility-functions/)
 
 <!-- ROADMAP -->
 
