@@ -1,4 +1,5 @@
 import React from "react";
+import { render } from "react-dom";
 import { Theme as MuiV4Theme } from "@rjsf/material-ui";
 import { Theme as MuiV5Theme } from "@rjsf/mui";
 import { Theme as FluentUITheme } from "@rjsf/fluent-ui";
@@ -6,12 +7,18 @@ import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
-import validator from "@rjsf/validator-ajv6";
+import v6Validator from "@rjsf/validator-ajv6";
+import v8Validator, { customizeValidator } from "@rjsf/validator-ajv8";
+import localize_es from "ajv-i18n/localize/es";
+
 import Playground from "./app";
-import { render } from "react-dom";
+
+const esV8Validator = customizeValidator({}, localize_es);
 
 const validators = {
-  AJV6: validator,
+  AJV6: v6Validator,
+  AJV8: v8Validator,
+  AJV8_es: esV8Validator,
 };
 
 const themes = {

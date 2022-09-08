@@ -18,7 +18,7 @@ import {
   REF_KEY,
 } from "@rjsf/utils";
 
-import { CustomValidatorOptionsType } from "./types";
+import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
 
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
@@ -32,11 +32,18 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
    */
   private ajv: Ajv;
 
+  /** The Localizer function to use for localizing Ajv errors
+   *
+   * @private
+   */
+  readonly localizer?: Localizer;
+
   /** Constructs an `AJV8Validator` instance using the `options`
    *
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
+   * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    */
-  constructor(options: CustomValidatorOptionsType) {
+  constructor(options: CustomValidatorOptionsType, localizer?: Localizer) {
     const {
       additionalMetaSchemas,
       customFormats,
@@ -49,6 +56,7 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
       ajvOptionsOverrides,
       ajvFormatOptions
     );
+    this.localizer = localizer;
   }
 
   /** Transforms a ajv validation errors list:
@@ -256,6 +264,9 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
       validationError = err as Error;
     }
 
+    if (typeof this.localizer === "function") {
+      this.localizer(this.ajv.errors);
+    }
     let errors = this.transformRJSFValidationErrors(this.ajv.errors);
     // Clear errors to prevent persistent errors, see #1104
 

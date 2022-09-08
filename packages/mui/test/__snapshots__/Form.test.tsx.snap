@@ -2662,11 +2662,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
-.emotion-6 {
+.emotion-11 {
   margin-top: 24px;
 }
 
-.emotion-7 {
+.emotion-12 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2715,23 +2715,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-7::-moz-focus-inner {
+.emotion-12::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-7.Mui-disabled {
+.emotion-12.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-7 {
+  .emotion-12 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-7:hover {
+.emotion-12:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #1565c0;
@@ -2739,26 +2739,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
 }
 
 @media (hover: none) {
-  .emotion-7:hover {
+  .emotion-12:hover {
     background-color: #1976d2;
   }
 }
 
-.emotion-7:active {
+.emotion-12:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-7.Mui-focusVisible {
+.emotion-12.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-7.Mui-disabled {
+.emotion-12.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-8 {
+.emotion-13 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -2782,50 +2782,112 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiFormControl-root MuiTextField-root emotion-1"
+        style={
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "10px",
+          }
+        }
       >
         <div
-          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
-          onClick={[Function]}
+          className="MuiFormControl-root MuiTextField-root emotion-1"
+          style={
+            Object {
+              "order": 1,
+            }
+          }
         >
-          <input
-            aria-invalid={false}
-            autoFocus={false}
-            className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
-            disabled={false}
-            id="root"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            required={false}
-            type="color"
-            value=""
-          />
-          <fieldset
-            aria-hidden={true}
-            className="MuiOutlinedInput-notchedOutline emotion-4"
+          <div
+            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+            onClick={[Function]}
           >
-            <legend
-              className="emotion-5"
+            <input
+              aria-invalid={false}
+              autoFocus={false}
+              className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+              disabled={false}
+              id="root"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value=""
+            />
+            <fieldset
+              aria-hidden={true}
+              className="MuiOutlinedInput-notchedOutline emotion-4"
             >
-              <span
-                className="notranslate"
+              <legend
+                className="emotion-5"
               >
-                ​
-              </span>
-            </legend>
-          </fieldset>
+                <span
+                  className="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          className="MuiFormControl-root MuiTextField-root emotion-1"
+          style={
+            Object {
+              "background": "none",
+              "border": "none",
+              "order": 2,
+              "padding": 0,
+              "width": 60,
+            }
+          }
+        >
+          <div
+            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+            onClick={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              autoFocus={false}
+              className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
+              disabled={false}
+              id="root"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              required={false}
+              type="color"
+              value=""
+            />
+            <fieldset
+              aria-hidden={true}
+              className="MuiOutlinedInput-notchedOutline emotion-4"
+            >
+              <legend
+                className="emotion-5"
+              >
+                <span
+                  className="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div
-    className="MuiBox-root emotion-6"
+    className="MuiBox-root emotion-11"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-12"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2844,7 +2906,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     >
       Submit
       <span
-        className="MuiTouchRipple-root emotion-8"
+        className="MuiTouchRipple-root emotion-13"
       />
     </button>
   </div>
