@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -24,12 +24,12 @@ jobs:
     - run: npm run cs-check
 
     - name: Build with Netlify badge
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       run: npm run build
       env:
         SHOW_NETLIFY_BADGE: true
     - name: Build
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       run: npm run build
 
     - if: matrix.node-version == '16.x'
@@ -41,7 +41,7 @@ jobs:
 
 #  deploy_preview:
 #    runs-on: ubuntu-latest
-#    if: github.ref != 'refs/heads/master'
+#    if: github.ref != 'refs/heads/main'
 #    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
 #    needs: [build]
 #    steps:
@@ -59,7 +59,7 @@ jobs:
 
   deploy_playground:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     name: Deploy playground to GitHub Pages
     needs: [build]
     steps:
@@ -89,7 +89,7 @@ jobs:
     - run: mkdocs build --clean
   # deploy_canary:
   #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/master'
+  #   if: github.ref == 'refs/heads/main'
   #   name: Deploy canary version of packages to npm
   #   needs: [build]
   #   steps:
