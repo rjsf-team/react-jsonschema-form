@@ -13,6 +13,7 @@ import {
   RJSFSchemaDefinition,
   UIOptionsType,
   ID_KEY,
+  ADDITIONAL_PROPERTY_FLAG,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
@@ -199,7 +200,9 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = uiOptions.title || props.schema.title || schema.title || name;
+    label = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG)
+      ? name
+      : uiOptions.title || props.schema.title || schema.title || name;
   }
 
   const description =
