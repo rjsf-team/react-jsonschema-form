@@ -15,6 +15,20 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# v5.0.0-beta.7
+
+## @rjsf/core
+- Added new field `ArraySchemaField`, assigned to `SchemaField` by default, that is used by the `ArrayField` to render the `children` for each array field element
+- Refactored the internal `ErrorList` and `Help` components from inside of `SchemaField` to new templates: `FieldErrorTemplate` and `FieldHelpTemplate`; fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/3104)
+
+## @rjsf/utils
+- Added new `FieldErrorProps` and `FieldHelpProps` types
+- Added new `FieldErrorTemplate` and `FieldHelpTemplate` to the `TemplatesType`
+
+## Dev / docs / playground
+- Updated the `custom-templates.md` file to add documentation for the new `FieldErrorTemplate` and `FieldHelpTemplate`
+- Updated the `custom-widgets-fields.md` file to add documentation for the new `ArraySchemaField` field.
+
 # v5.0.0-beta.6
 
 ## @rjsf/bootstrap-4

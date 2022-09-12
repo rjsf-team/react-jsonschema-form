@@ -9,6 +9,8 @@ import ButtonTemplates from "./ButtonTemplates";
 import DescriptionField from "./DescriptionField";
 import ErrorList from "./ErrorList";
 import FieldTemplate from "./FieldTemplate";
+import FieldErrorTemplate from "./FieldErrorTemplate";
+import FieldHelpTemplate from "./FieldHelpTemplate";
 import ObjectFieldTemplate from "./ObjectFieldTemplate";
 import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
@@ -23,6 +25,8 @@ const templates: TemplatesType = {
   DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,
   FieldTemplate,
+  FieldErrorTemplate,
+  FieldHelpTemplate,
   ObjectFieldTemplate,
   TitleFieldTemplate: TitleField,
   UnsupportedFieldTemplate: UnsupportedField,

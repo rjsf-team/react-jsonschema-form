@@ -52,6 +52,7 @@ function MyForm(props) {
 The default fields you can override are:
 
  - `ArrayField`
+ - `ArraySchemaField`
  - `BooleanField`
  - `DescriptionField`
  - `OneOfField`
@@ -351,3 +352,32 @@ render((
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
+
+### Custom ArraySchemaField
+
+Everything that was mentioned above for a `Custom SchemaField` applies, but this is only used to render the Array item `children` that are then passed to the `ArrayFieldItemTemplate`.
+By default, `ArraySchemaField` assigned to the main `SchemaField` implementation.
+If you want to customize how the individual items for an array are rendered, override the `ArraySchemaField`.
+
+```jsx
+import validator from '@rjsf/validator-ajv6';
+
+const CustomArraySchemaField = function(props) {
+  const { index, registry } = props;
+  const { SchemaField } = registry.fields;
+  const name = `Index ${index}`;
+  return <SchemaField {...props} name={name} />;
+};
+
+const fields = {
+  ArraySchemaField: CustomArraySchemaField
+};
+
+const schema = {
+  type: "string"
+};
+
+render((
+  <Form schema={schema} validator={validator} fields={fields} />
+), document.getElementById("app"));
+```

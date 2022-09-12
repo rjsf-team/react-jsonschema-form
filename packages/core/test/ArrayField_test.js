@@ -2192,7 +2192,7 @@ describe("ArrayField", () => {
         },
       ],
     };
-    it("should pass form context to schema field", () => {
+    it("should pass form context to array schema field only", () => {
       const formContext = {
         root: "root-id",
         root_0: "root_0-id",
@@ -2210,13 +2210,17 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formContext,
-        fields: { SchemaField: CustomSchemaField },
+        fields: { ArraySchemaField: CustomSchemaField },
       });
 
       const codeBlocks = node.querySelectorAll("code");
-      expect(codeBlocks).to.have.length(3);
+      expect(codeBlocks).to.have.length(2);
       Object.keys(formContext).forEach((key) => {
-        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        if (key === "root") {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.not.exist;
+        } else {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        }
       });
     });
   });

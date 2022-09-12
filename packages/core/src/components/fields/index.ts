@@ -12,6 +12,7 @@ import NullField from "./NullField";
 const fields: RegistryFieldsType = {
   AnyOfField: MultiSchemaField,
   ArrayField,
+  ArraySchemaField: SchemaField,
   BooleanField,
   NumberField,
   ObjectField,

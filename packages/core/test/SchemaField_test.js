@@ -412,6 +412,63 @@ describe("SchemaField", () => {
       expect(matches[0].textContent).to.contain("test");
     });
 
+    it("should pass errors to custom FieldErrorTemplate", () => {
+      const customFieldError = (props) => {
+        return <div className="custom-field-error">{props.errors}</div>;
+      };
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        customValidate,
+        templates: { FieldErrorTemplate: customFieldError },
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .text-danger"
+      );
+      expect(matches).to.have.length.of(0);
+
+      const customMatches = node.querySelectorAll(
+        "form .form-group .form-group .custom-field-error"
+      );
+      expect(customMatches[0].textContent).to.contain("test");
+    });
+
+    it("should pass errors to custom FieldErrorTemplate, via uiSchema", () => {
+      const customFieldError = (props) => {
+        return <div className="custom-field-error">{props.errors}</div>;
+      };
+      const uiSchema = {
+        "ui:field": (props) => {
+          const { uiSchema, ...fieldProps } = props; //eslint-disable-line
+          return (
+            <SchemaField
+              {...fieldProps}
+              uiSchema={{ foo: { "ui:FieldErrorTemplate": customFieldError } }}
+            />
+          );
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        customValidate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .text-danger"
+      );
+      expect(matches).to.have.length.of(0);
+
+      const customMatches = node.querySelectorAll(
+        "form .form-group .form-group .custom-field-error"
+      );
+      expect(customMatches[0].textContent).to.contain("test");
+    });
+
     describe("Custom error rendering", () => {
       const customStringWidget = (props) => {
         return <div className="custom-text-widget">{props.rawErrors}</div>;
@@ -526,6 +583,79 @@ describe("SchemaField", () => {
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.contain("test");
       });
+    });
+  });
+  describe("help", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: { type: "string" },
+      },
+    };
+    const helpText = "help me!";
+    const uiSchema = {
+      foo: { "ui:help": helpText },
+    };
+
+    it("should render its own help", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .help-block"
+      );
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.eql(helpText);
+    });
+
+    it("should pass help to custom FieldHelpTemplate", () => {
+      const customFieldHelp = (props) => {
+        return <div className="custom-field-help">{props.help}</div>;
+      };
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        templates: { FieldHelpTemplate: customFieldHelp },
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .help-block"
+      );
+      expect(matches).to.have.length.of(0);
+
+      const customMatches = node.querySelectorAll(
+        "form .form-group .form-group .custom-field-help"
+      );
+      expect(customMatches[0].textContent).to.contain(helpText);
+    });
+
+    it("should pass errors to custom FieldErrorTemplate, via uiSchema", () => {
+      const customFieldHelp = (props) => {
+        return <div className="custom-field-help">{props.help}</div>;
+      };
+      const uiSchema = {
+        foo: { "ui:help": helpText, "ui:FieldHelpTemplate": customFieldHelp },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll(
+        "form .form-group .form-group .help-block"
+      );
+      expect(matches).to.have.length.of(0);
+
+      const customMatches = node.querySelectorAll(
+        "form .form-group .form-group .custom-field-help"
+      );
+      expect(customMatches[0].textContent).to.contain(helpText);
     });
   });
 });

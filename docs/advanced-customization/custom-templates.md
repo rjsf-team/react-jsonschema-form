@@ -28,6 +28,8 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [BaseInputTemplate*](#BaseInputTemplate)                         | WidgetProps                | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                         |
 | [DescriptionFieldTemplate*](#DescriptionFieldTemplate)           | DescriptionFieldProps      | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
 | [ErrorListTemplate*](#ErrorListTemplate)                         | ErrorListProps             | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                            |
+| [FieldErrorTemplate](#FieldErrorTemplate)                        | FieldErrorProps            | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                     |
+| [FieldHelpTemplate](#FieldHelpTemplate)                          | FieldHelpProps             | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                          |
 | [FieldTemplate](#FieldTemplate)                                  | FieldTemplateProps         | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                    |
 | [ObjectFieldTemplate](#ObjectFieldTemplate)                      | ObjectFieldTemplateProps   | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                        |
 | [TitleFieldTemplate*](#TitleFieldTemplate)                       | TitleFieldProps            | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
@@ -448,6 +450,85 @@ The following props are passed to the `ErrorListTemplate`:
 - `formContext`: The `formContext` object that you passed to `Form`.
 - `errors`: An array of all errors in this `Form`.
 - `errorSchema`: The `ErrorSchema` constructed by `Form`
+
+## FieldErrorTemplate
+The `FieldErrorTemplate` is the template that renders the all the errors associated a single field.
+If you want to customize how all the errors are rendered you can.
+
+```tsx
+import { FieldErrorProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function FieldErrorTemplate(props: FieldErrorProps) {
+  const { errors } = props;
+  return (
+    <details id={id}>
+      <summary>Errors</summary>
+      <ul>
+        {errors.map((error: string, i: number) => {
+          return (
+            <li key={i} className="error">
+              {error.stack}
+            </li>
+          );
+        })}
+      </ul>
+    </details>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ FieldErrorTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to the `FieldErrorTemplate`:
+
+- `schema`: The schema for the field
+- `uiSchema`: The uiSchema for the field
+- `idSchema`: An object containing the id for this field & ids for its properties.
+- `errors`: An array of all errors for this field
+- `errorSchema`: The `ErrorSchema` for this field
+- `registry`: The `Registry` object
+
+## FieldHelpTemplate
+The `FieldErrorTemplate` is the template that renders the all the errors associated a single field.
+If you want to customize how all the errors are rendered you can.
+
+```tsx
+import { FieldHelpProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv6';
+
+const schema = {
+  type: "string",
+  title: "My input",
+  description: "input description"
+};
+
+function FieldHelpTemplate(props: FieldHelpProps) {
+  const { help, idSchema } = props;
+  const id = `${idSchema.$id}__help`;
+  return <aside id={id}>{help}</aside>;
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ FieldHelpTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to the `FieldHelpTemplate`:
+
+- `schema`: The schema for the field
+- `uiSchema`: The uiSchema for the field
+- `idSchema`: An object containing the id for this field & ids for its properties.
+- `help`: The help information to be rendered
+- `registry`: The `Registry` object
 
 ## FieldTemplate
 
