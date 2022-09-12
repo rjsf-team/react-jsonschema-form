@@ -671,6 +671,99 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields help and error display 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ui negative message"
+  >
+    <div
+      className="header"
+    >
+      Errors
+    </div>
+    <ul
+      className="list"
+    >
+      <li
+        className="content"
+      >
+        . an error
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="error field"
+      >
+        <div
+          className="ui fluid input"
+        >
+          <input
+            aria-describedby="root-error-message"
+            aria-invalid={true}
+            autoFocus={false}
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      
+      <div
+        className="ui mini info message"
+        id="root__help"
+      >
+        <div
+          className="content"
+        >
+          <p>
+            help me!
+          </p>
+        </div>
+      </div>
+      <div
+        className="ui red pointing above small basic label"
+        onClick={[Function]}
+      >
+        <div
+          className="ui bulleted list"
+          role="list"
+        >
+          <div
+            className="item"
+            onClick={[Function]}
+            role="listitem"
+          >
+            an error
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 <form
   className="ui form rjsf"
@@ -1005,7 +1098,7 @@ exports[`single fields radio field 1`] = `
 `;
 
 exports[`single fields schema examples 1`] = `
-<div
+<form
   className="ui form rjsf"
   noValidate={false}
   onSubmit={[Function]}
@@ -1066,7 +1159,7 @@ exports[`single fields schema examples 1`] = `
   >
     Submit
   </button>
-</div>
+</form>
 `;
 
 exports[`single fields select field 1`] = `

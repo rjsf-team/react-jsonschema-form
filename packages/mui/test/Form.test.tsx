@@ -1,5 +1,5 @@
 import React from "react";
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import { RJSFSchema, UiSchema, ErrorSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
@@ -414,7 +414,27 @@ describe("single fields", () => {
       examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("help and error display", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+    };
+    const uiSchema: UiSchema = {
+      "ui:help": "help me!",
+    };
+    const extraErrors: ErrorSchema = { __errors: ["an error"] } as ErrorSchema;
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          extraErrors={extraErrors}
+        />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

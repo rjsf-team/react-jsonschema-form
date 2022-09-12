@@ -705,6 +705,124 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors"
+    data-show={true}
+    role="alert"
+    style={Object {}}
+  >
+    <div
+      className="ant-alert-content"
+    >
+      <div
+        className="ant-alert-message"
+      >
+        Errors
+      </div>
+      <div
+        className="ant-alert-description"
+      >
+        <div
+          className="ant-list ant-list-sm ant-list-split list-group"
+        >
+          <div
+            className="ant-spin-nested-loading"
+          >
+            <div
+              className="ant-spin-container"
+            >
+              <li
+                className="ant-list-item"
+              >
+                <div
+                  className="ant-space ant-space-horizontal ant-space-align-center"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-space-item"
+                    style={
+                      Object {
+                        "marginRight": 8,
+                      }
+                    }
+                  >
+                    <span
+                      aria-label="exclamation-circle"
+                      className="anticon anticon-exclamation-circle"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="exclamation-circle"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                        />
+                        <path
+                          d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    className="ant-space-item"
+                    style={Object {}}
+                  >
+                    . an error
+                  </div>
+                </div>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 <form
   className="rjsf"
@@ -1213,7 +1331,7 @@ exports[`single fields radio field 1`] = `
 `;
 
 exports[`single fields schema examples 1`] = `
-<div
+<form
   className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
@@ -1269,7 +1387,7 @@ exports[`single fields schema examples 1`] = `
       Submit
     </span>
   </button>
-</div>
+</form>
 `;
 
 exports[`single fields select field 1`] = `
