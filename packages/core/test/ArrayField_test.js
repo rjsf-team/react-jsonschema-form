@@ -2192,7 +2192,7 @@ describe("ArrayField", () => {
         },
       ],
     };
-    it("should pass form context to schema field", () => {
+    it("should pass form context to schema field for the root", () => {
       const formContext = {
         root: "root-id",
         root_0: "root_0-id",
@@ -2214,9 +2214,44 @@ describe("ArrayField", () => {
       });
 
       const codeBlocks = node.querySelectorAll("code");
-      expect(codeBlocks).to.have.length(3);
+      expect(codeBlocks).to.have.length(1);
       Object.keys(formContext).forEach((key) => {
-        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        if (key === "root") {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        } else {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.not.exist;
+        }
+      });
+    });
+    it("should pass form context to array schema field only", () => {
+      const formContext = {
+        root: "root-id",
+        root_0: "root_0-id",
+        root_1: "root_1-id",
+      };
+      function CustomSchemaField(props) {
+        const { formContext, idSchema } = props;
+        return (
+          <>
+            <code id={formContext[idSchema.$id]}>Ha</code>
+            <SchemaField {...props} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        formContext,
+        fields: { ArraySchemaField: CustomSchemaField },
+      });
+
+      const codeBlocks = node.querySelectorAll("code");
+      expect(codeBlocks).to.have.length(2);
+      Object.keys(formContext).forEach((key) => {
+        if (key === "root") {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.not.exist;
+        } else {
+          expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+        }
       });
     });
   });

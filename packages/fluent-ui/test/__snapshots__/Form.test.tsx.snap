@@ -1174,6 +1174,155 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-155"
+  >
+    <div
+      className="ms-MessageBar-content content-156"
+    >
+      <div
+        aria-hidden={true}
+        className="ms-MessageBar-icon iconContainer-157"
+      >
+        <i
+          aria-hidden={true}
+          className="icon-164"
+          data-icon-name="ErrorBadge"
+        >
+          
+        </i>
+      </div>
+      <div
+        aria-live="assertive"
+        className="ms-MessageBar-text text-159"
+        id="MessageBar162"
+        role="status"
+      >
+        <span
+          className="ms-MessageBar-innerText innerText-160"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-TextField root-42"
+    >
+      <div
+        className="ms-TextField-wrapper"
+      >
+        <div
+          className="ms-TextField-fieldGroup fieldGroup-165"
+        >
+          <input
+            aria-describedby="TextFieldDescription164"
+            aria-invalid={true}
+            autoFocus={false}
+            className="ms-TextField-field field-44"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <span
+        id="TextFieldDescription164"
+      >
+        <div
+          role="alert"
+        />
+      </span>
+    </div>
+    
+    <div
+      className="ms-List"
+      role="list"
+    >
+      <div
+        className="ms-List-surface"
+        role="presentation"
+      >
+        <div
+          className="ms-List-page"
+          role="presentation"
+          style={Object {}}
+        >
+          <div
+            className="ms-List-cell"
+            data-automationid="ListCell"
+            data-list-index={0}
+            role="listitem"
+          >
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      className="css-153"
+      id="root"
+    >
+      help me!
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-53"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-54"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-55"
+          >
+            <span
+              className="ms-Button-label label-57"
+              id="id__166"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 <form
   className="rjsf"
@@ -1762,7 +1911,7 @@ exports[`single fields radio field 1`] = `
 `;
 
 exports[`single fields schema examples 1`] = `
-<div
+<form
   className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
@@ -1859,7 +2008,7 @@ exports[`single fields schema examples 1`] = `
       </button>
     </div>
   </div>
-</div>
+</form>
 `;
 
 exports[`single fields select field 1`] = `

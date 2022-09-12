@@ -128,7 +128,7 @@ export type FormValidation<T = any> = FieldValidation & {
   [key in keyof T]?: FormValidation<T[key]>;
 };
 
-/** The properties that are passed to an `ErrorList` implementation */
+/** The properties that are passed to an `ErrorListTemplate` implementation */
 export type ErrorListProps<T = any, F = any> = {
   /** The errorSchema constructed by `Form` */
   errorSchema: ErrorSchema<T>;
@@ -140,6 +140,36 @@ export type ErrorListProps<T = any, F = any> = {
   schema: RJSFSchema;
   /** The uiSchema that was passed to `Form` */
   uiSchema?: UiSchema<T, F>;
+};
+
+/** The properties that are passed to an `FieldErrorTemplate` implementation */
+export type FieldErrorProps<T = any, F = any> = {
+  /** The errorSchema constructed by `Form` */
+  errorSchema?: ErrorSchema<T>;
+  /** An array of the errors */
+  errors?: string[];
+  /** The tree of unique ids for every child field */
+  idSchema: IdSchema<T>;
+  /** The schema that was passed to field */
+  schema: RJSFSchema;
+  /** The uiSchema that was passed to field */
+  uiSchema?: UiSchema<T, F>;
+  /** The `registry` object */
+  registry: Registry<T, F>;
+};
+
+/** The properties that are passed to an `FieldHelpTemplate` implementation */
+export type FieldHelpProps<T = any, F = any> = {
+  /** The help information to be rendered */
+  help?: string | React.ReactElement;
+  /** The tree of unique ids for every child field */
+  idSchema: IdSchema<T>;
+  /** The schema that was passed to `Form` */
+  schema: RJSFSchema;
+  /** The uiSchema that was passed to `Form` */
+  uiSchema?: UiSchema<T, F>;
+  /** The `registry` object */
+  registry: Registry<T, F>;
 };
 
 /** The set of `Fields` stored in the `Registry` */
@@ -170,8 +200,12 @@ export interface TemplatesType<T = any, F = any> {
   BaseInputTemplate: React.ComponentType<WidgetProps<T, F>>;
   /** The template to use for rendering the description of a field */
   DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, F>>;
-  /** The template to use while rendering form errors */
+  /** The template to use while rendering the errors for the whole form */
   ErrorListTemplate: React.ComponentType<ErrorListProps<T, F>>;
+  /** The template to use while rendering the errors for a single field */
+  FieldErrorTemplate: React.ComponentType<FieldErrorProps<T, F>>;
+  /** The template to use while rendering the errors for a single field */
+  FieldHelpTemplate: React.ComponentType<FieldHelpProps<T, F>>;
   /** The template to use while rendering a field */
   FieldTemplate: React.ComponentType<FieldTemplateProps<T, F>>;
   /** The template to use while rendering an object */

@@ -30,6 +30,8 @@ const registry: Registry = {
     },
     DescriptionFieldTemplate: FakeTemplate,
     ErrorListTemplate: FakeTemplate,
+    FieldErrorTemplate: FakeTemplate,
+    FieldHelpTemplate: FakeTemplate,
     FieldTemplate: FakeTemplate,
     ObjectFieldTemplate: FakeTemplate,
     TitleFieldTemplate: FakeTemplate,
@@ -54,6 +56,10 @@ const uiOptions: UIOptionsType = {
     CustomTemplate as unknown as UIOptionsType["DescriptionFieldTemplate"],
   ErrorListTemplate:
     CustomTemplate as unknown as UIOptionsType["ErrorListTemplate"],
+  FieldErrorTemplate:
+    CustomTemplate as unknown as UIOptionsType["FieldErrorTemplate"],
+  FieldHelpTemplate:
+    CustomTemplate as unknown as UIOptionsType["FieldHelpTemplate"],
   FieldTemplate: CustomTemplate as unknown as UIOptionsType["FieldTemplate"],
   ObjectFieldTemplate:
     CustomTemplate as unknown as UIOptionsType["ObjectFieldTemplate"],

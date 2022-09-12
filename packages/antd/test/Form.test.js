@@ -367,7 +367,27 @@ describe("single fields", () => {
       examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
     };
     const tree = renderer
-      .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("help and error display", () => {
+    const schema = {
+      type: "string",
+    };
+    const uiSchema = {
+      "ui:help": "help me!",
+    };
+    const extraErrors = { __errors: ["an error"] };
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          extraErrors={extraErrors}
+        />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

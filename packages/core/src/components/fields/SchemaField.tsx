@@ -85,56 +85,6 @@ function getFieldComponent<T, F>(
       };
 }
 
-/** The `Help` component renders any help desired for a field
- *
- * @param props - The id and help information to be rendered
- */
-function Help(props: { id: string; help?: string | React.ReactElement }) {
-  const { id, help } = props;
-  if (!help) {
-    return null;
-  }
-  if (typeof help === "string") {
-    return (
-      <p id={id} className="help-block">
-        {help}
-      </p>
-    );
-  }
-  return (
-    <div id={id} className="help-block">
-      {help}
-    </div>
-  );
-}
-
-/** The `ErrorList` component renders the errors local to the particular field
- *
- * @param props - The list of errors to show
- */
-function ErrorList(props: { errors?: string[] }) {
-  const { errors = [] } = props;
-  if (errors.length === 0) {
-    return null;
-  }
-
-  return (
-    <div>
-      <ul className="error-detail bs-callout bs-callout-info">
-        {errors
-          .filter((elem) => !!elem)
-          .map((error, index) => {
-            return (
-              <li className="text-danger" key={index}>
-                {error}
-              </li>
-            );
-          })}
-      </ul>
-    </div>
-  );
-}
-
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
  * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
  * `oneOf` fields.
@@ -170,6 +120,16 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     T,
     F
   >("DescriptionFieldTemplate", registry, uiOptions);
+  const FieldHelpTemplate = getTemplate<"FieldHelpTemplate", T, F>(
+    "FieldHelpTemplate",
+    registry,
+    uiOptions
+  );
+  const FieldErrorTemplate = getTemplate<"FieldErrorTemplate", T, F>(
+    "FieldErrorTemplate",
+    registry,
+    uiOptions
+  );
   const schema = schemaUtils.retrieveSchema(_schema, formData);
   const idSchema = mergeObjects(
     schemaUtils.toIdSchema(
@@ -247,12 +207,11 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     props.schema.description ||
     schema.description ||
     "";
-  const errors = __errors;
   const help = uiOptions.help;
   const hidden = uiOptions.widget === "hidden";
 
   const classNames = ["form-group", "field", `field-${schema.type}`];
-  if (!hideError && errors && errors.length > 0) {
+  if (!hideError && __errors && __errors.length > 0) {
     classNames.push("field-error has-error has-danger");
   }
   if (uiSchema?.classNames) {
@@ -267,6 +226,25 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     classNames.push(uiOptions.classNames);
   }
 
+  const helpComponent = (
+    <FieldHelpTemplate
+      help={help}
+      idSchema={idSchema}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
+  const errorsComponent = hideError ? undefined : (
+    <FieldErrorTemplate
+      errors={__errors}
+      errorSchema={errorSchema}
+      idSchema={idSchema}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
   const fieldProps: Omit<FieldTemplateProps<T, F>, "children"> = {
     description: (
       <DescriptionFieldTemplate
@@ -276,10 +254,10 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
       />
     ),
     rawDescription: description,
-    help: <Help id={`${id}__help`} help={help} />,
+    help: helpComponent,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: hideError ? undefined : <ErrorList errors={errors} />,
-    rawErrors: hideError ? undefined : errors,
+    errors: errorsComponent,
+    rawErrors: hideError ? undefined : __errors,
     id,
     label,
     hidden,
