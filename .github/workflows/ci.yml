@@ -31,6 +31,8 @@ jobs:
     - name: Build
       if: github.ref == 'refs/heads/main'
       run: npm run build
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
 
     - if: matrix.node-version == '16.x'
       uses: actions/upload-artifact@v3

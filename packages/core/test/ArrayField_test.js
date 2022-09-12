@@ -2210,6 +2210,33 @@ describe("ArrayField", () => {
       const { node } = createFormComponent({
         schema,
         formContext,
+        fields: { SchemaField: CustomSchemaField },
+      });
+
+      const codeBlocks = node.querySelectorAll("code");
+      expect(codeBlocks).to.have.length(3);
+      Object.keys(formContext).forEach((key) => {
+        expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
+      });
+    });
+    it("should pass form context to array schema field only", () => {
+      const formContext = {
+        root: "root-id",
+        root_0: "root_0-id",
+        root_1: "root_1-id",
+      };
+      function CustomSchemaField(props) {
+        const { formContext, idSchema } = props;
+        return (
+          <>
+            <code id={formContext[idSchema.$id]}>Ha</code>
+            <SchemaField {...props} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        formContext,
         fields: { ArraySchemaField: CustomSchemaField },
       });
 

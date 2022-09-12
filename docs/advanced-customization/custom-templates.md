@@ -452,8 +452,8 @@ The following props are passed to the `ErrorListTemplate`:
 - `errorSchema`: The `ErrorSchema` constructed by `Form`
 
 ## FieldErrorTemplate
-The `FieldErrorTemplate` is the template that renders the all the errors associated a single field.
-If you want to customize how all the errors are rendered you can.
+The `FieldErrorTemplate` is the template that renders all the errors associated a single field.
+If you want to customize how the errors are rendered you can.
 
 ```tsx
 import { FieldErrorProps } from "@rjsf/utils";
@@ -498,8 +498,8 @@ The following props are passed to the `FieldErrorTemplate`:
 - `registry`: The `Registry` object
 
 ## FieldHelpTemplate
-The `FieldErrorTemplate` is the template that renders the all the errors associated a single field.
-If you want to customize how all the errors are rendered you can.
+The `FieldHelpTemplate` is the template that renders the help associated a single field.
+If you want to customize how the help is rendered you can.
 
 ```tsx
 import { FieldHelpProps } from "@rjsf/utils";
