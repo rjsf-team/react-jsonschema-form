@@ -2,10 +2,8 @@
 import React from "react";
 import { getTemplate, getUiOptions } from "@rjsf/utils";
 import { Form } from "semantic-ui-react";
-import HelpField from "../HelpField";
-import RawErrors from "../RawErrors";
 import WrapIfAdditional from "./WrapIfAdditional";
-import { getSemanticProps, getSemanticErrorProps, MaybeWrap } from "../util";
+import { getSemanticProps, MaybeWrap } from "../util";
 
 function FieldTemplate({
   id,
@@ -14,8 +12,8 @@ function FieldTemplate({
   classNames,
   displayLabel,
   label,
-  rawErrors = [],
-  rawHelp,
+  errors,
+  help,
   hidden,
   rawDescription,
   registry,
@@ -24,7 +22,6 @@ function FieldTemplate({
 }) {
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent } = semanticProps;
-  const errorOptions = getSemanticErrorProps(props);
   const uiOptions = getUiOptions(uiSchema);
   const DescriptionFieldTemplate = getTemplate(
     "DescriptionFieldTemplate",
@@ -57,8 +54,8 @@ function FieldTemplate({
               )}
             </MaybeWrap>
           )}
-          <HelpField helpText={rawHelp} id={`${id}__help`} />
-          <RawErrors errors={rawErrors} options={errorOptions} />
+          {help}
+          {errors}
         </MaybeWrap>
       </Form.Group>
     </WrapIfAdditional>

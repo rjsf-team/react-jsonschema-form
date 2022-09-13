@@ -737,6 +737,7 @@ exports[`single fields help and error display 1`] = `
       </div>
       <div
         className="ui red pointing above small basic label"
+        id="root__error"
         onClick={[Function]}
       >
         <div

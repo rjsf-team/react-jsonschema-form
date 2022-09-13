@@ -11,6 +11,7 @@ import {
   MoveUpButton,
   RemoveButton,
 } from "./templates/IconButton";
+import FieldErrorTemplate from "./templates/FieldErrorTemplate";
 import FieldTemplate from "./templates/FieldTemplate";
 import ObjectFieldTemplate from "./templates/ObjectFieldTemplate";
 import SubmitButton from "./templates/SubmitButton";
@@ -56,6 +57,7 @@ export const Theme = {
     },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
+    FieldErrorTemplate,
     FieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,

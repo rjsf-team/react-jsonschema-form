@@ -1351,7 +1351,7 @@ exports[`single fields help and error display 1`] = `
           <div
             aria-live="polite"
             className="chakra-form__error-message emotion-10"
-            id="root"
+            id="root__error"
           >
             an error
           </div>
@@ -1359,7 +1359,7 @@ exports[`single fields help and error display 1`] = `
       </ul>
       <div
         className="chakra-form__helper-text emotion-1"
-        id="root"
+        id="root__help"
       >
         help me!
       </div>

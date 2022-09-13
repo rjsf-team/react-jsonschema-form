@@ -6,16 +6,17 @@ import { Message } from "semantic-ui-react";
 /**
  * @return {null}
  */
-function HelpField({ helpText, id }) {
-  if (helpText) {
-    return <Message size="mini" info id={id} content={helpText} />;
+function FieldHelpTemplate({ help, idSchema }) {
+  if (help) {
+    const id = `${idSchema.$id}__help`;
+    return <Message size="mini" info id={id} content={help} />;
   }
   return null;
 }
 
-HelpField.propTypes = {
+FieldHelpTemplate.propTypes = {
   helpText: PropTypes.string,
   id: PropTypes.string,
 };
 
-export default HelpField;
+export default FieldHelpTemplate;

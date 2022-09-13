@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { nanoid } from "nanoid";
 import { Label, List } from "semantic-ui-react";
 
+import { getSemanticErrorProps } from "../util";
+
 /**
  *
  * @param errors
@@ -12,11 +14,15 @@ import { Label, List } from "semantic-ui-react";
  * @constructor
  * @return {null}
  */
-function RawErrors({ errors, options }) {
+function FieldErrorTemplate({ errors, idSchema, uiSchema, registry }) {
+  const { formContext } = registry;
+  const options = getSemanticErrorProps({ formContext, uiSchema });
   const { pointing, size } = options;
   if (errors && errors.length > 0) {
+    const id = `${idSchema.$id}__error`;
     return (
       <Label
+        id={id}
         color="red"
         pointing={pointing || "above"}
         size={size || "small"}
@@ -33,16 +39,16 @@ function RawErrors({ errors, options }) {
   return null;
 }
 
-RawErrors.defaultProps = {
+FieldErrorTemplate.defaultProps = {
   options: {
     pointing: "above",
     size: "small",
   },
 };
 
-RawErrors.propTypes = {
+FieldErrorTemplate.propTypes = {
   options: PropTypes.object,
   errors: PropTypes.array,
 };
 
-export default RawErrors;
+export default FieldErrorTemplate;
