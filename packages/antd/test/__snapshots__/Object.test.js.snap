@@ -189,11 +189,7 @@ exports[`object fields additionalProperties 1`] = `
                       <div
                         className="ant-form-item-extra"
                       >
-                        <span
-                          id="root_foo__description"
-                        >
-                          
-                        </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -407,11 +403,7 @@ exports[`object fields object 1`] = `
                   <div
                     className="ant-form-item-extra"
                   >
-                    <span
-                      id="root_a__description"
-                    >
-                      
-                    </span>
+                    
                   </div>
                 </div>
               </div>
@@ -572,11 +564,7 @@ exports[`object fields object 1`] = `
                   <div
                     className="ant-form-item-extra"
                   >
-                    <span
-                      id="root_b__description"
-                    >
-                      
-                    </span>
+                    
                   </div>
                 </div>
               </div>

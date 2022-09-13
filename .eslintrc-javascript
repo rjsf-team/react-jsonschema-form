@@ -23,6 +23,7 @@
       "ignoreRestSiblings": true
     }],
     "no-console": [0],
+    "no-prototype-builtins": ["error"],
     "object-curly-spacing": [2, "always"],
     "keyword-spacing": ["error"]
   },

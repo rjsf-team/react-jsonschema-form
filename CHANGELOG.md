@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # v5.0.0-beta.7
 
+## @rjsf/antd
+- Only show description when there really IS a description, fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/2779)
+
 ## @rjsf/core
 - Added new field `ArraySchemaField`, assigned to `SchemaField` by default, that is used by the `ArrayField` to render the `children` for each array field element
 - Refactored the internal `ErrorList` and `Help` components from inside of `SchemaField` to new templates: `FieldErrorTemplate` and `FieldHelpTemplate`; fixes (https://github.com/rjsf-team/react-jsonschema-form/issues/3104)
