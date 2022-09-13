@@ -212,11 +212,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-form-item-extra"
                       >
-                        <span
-                          id="root_0__description"
-                        >
-                          
-                        </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -411,11 +407,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-form-item-extra"
                       >
-                        <span
-                          id="root_1__description"
-                        >
-                          
-                        </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -823,11 +815,7 @@ exports[`array fields empty errors array 1`] = `
                   <div
                     className="ant-form-item-extra"
                   >
-                    <span
-                      id="root_name__description"
-                    >
-                      
-                    </span>
+                    
                   </div>
                 </div>
               </div>
@@ -953,11 +941,7 @@ exports[`array fields fixed array 1`] = `
                       <div
                         className="ant-form-item-extra"
                       >
-                        <span
-                          id="root_0__description"
-                        >
-                          
-                        </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -1117,11 +1101,7 @@ exports[`array fields fixed array 1`] = `
                       <div
                         className="ant-form-item-extra"
                       >
-                        <span
-                          id="root_1__description"
-                        >
-                          
-                        </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -1343,11 +1323,7 @@ exports[`array fields has errors 1`] = `
                   <div
                     className="ant-form-item-extra"
                   >
-                    <span
-                      id="root_name__description"
-                    >
-                      
-                    </span>
+                    
                   </div>
                 </div>
               </div>
@@ -1465,11 +1441,7 @@ exports[`array fields no errors 1`] = `
                   <div
                     className="ant-form-item-extra"
                   >
-                    <span
-                      id="root_name__description"
-                    >
-                      
-                    </span>
+                    
                   </div>
                 </div>
               </div>
