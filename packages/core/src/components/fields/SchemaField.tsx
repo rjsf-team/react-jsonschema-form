@@ -232,6 +232,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
       idSchema={idSchema}
       schema={schema}
       uiSchema={uiSchema}
+      hasErrors={!hideError && __errors && __errors.length > 0}
       registry={registry}
     />
   );

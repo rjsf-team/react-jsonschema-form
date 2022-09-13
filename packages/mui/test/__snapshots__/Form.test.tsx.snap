@@ -4276,7 +4276,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         >
           <p
             className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-17"
-            id="root"
+            id="root__error"
           >
             an error
           </p>
@@ -4284,7 +4284,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       </ul>
       <p
         className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-17"
-        id="root"
+        id="root__help"
       >
         help me!
       </p>

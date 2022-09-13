@@ -5,6 +5,8 @@ import BaseInputTemplate from "../BaseInputTemplate/BaseInputTemplate";
 import DescriptionField from "../DescriptionField";
 import ErrorList from "../ErrorList";
 import { MoveDownButton, MoveUpButton, RemoveButton } from "../IconButton";
+import FieldErrorTemplate from "../FieldErrorTemplate";
+import FieldHelpTemplate from "../FieldHelpTemplate";
 import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import SubmitButton from "../SubmitButton";
@@ -23,6 +25,8 @@ export default {
   },
   DescriptionFieldTemplate: DescriptionField,
   ErrorListTemplate: ErrorList,
+  FieldErrorTemplate,
+  FieldHelpTemplate,
   FieldTemplate,
   ObjectFieldTemplate,
   TitleFieldTemplate: TitleField,

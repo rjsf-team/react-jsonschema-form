@@ -164,10 +164,12 @@ export type FieldHelpProps<T = any, F = any> = {
   help?: string | React.ReactElement;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
-  /** The schema that was passed to `Form` */
+  /** The schema that was passed to field */
   schema: RJSFSchema;
-  /** The uiSchema that was passed to `Form` */
+  /** The uiSchema that was passed to field */
   uiSchema?: UiSchema<T, F>;
+  /** Flag indicating whether there are errors associated with this field */
+  hasErrors?: boolean;
   /** The `registry` object */
   registry: Registry<T, F>;
 };

@@ -1,14 +1,6 @@
 import React from "react";
-
 import { FieldTemplateProps } from "@rjsf/utils";
-
-import {
-  Text,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-} from "@chakra-ui/react";
-import { List, ListItem } from "@chakra-ui/react";
+import { Text, FormControl } from "@chakra-ui/react";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 
@@ -27,7 +19,8 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     registry,
     required,
     rawErrors = [],
-    rawHelp,
+    errors,
+    help,
     rawDescription,
     schema,
   } = props;
@@ -57,18 +50,8 @@ const FieldTemplate = (props: FieldTemplateProps) => {
         {displayLabel && rawDescription ? (
           <Text mt={2}>{rawDescription}</Text>
         ) : null}
-        {rawErrors && rawErrors.length > 0 && (
-          <List>
-            {rawErrors.map((error, i: number) => {
-              return (
-                <ListItem key={i}>
-                  <FormErrorMessage id={id}>{error}</FormErrorMessage>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-        {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+        {errors}
+        {help}
       </FormControl>
     </WrapIfAdditional>
   );

@@ -8,6 +8,7 @@ exports[`single fields checkbox field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -94,6 +95,7 @@ exports[`single fields checkbox field 2`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -180,6 +182,7 @@ exports[`single fields checkboxes field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -405,6 +408,7 @@ exports[`single fields field with description 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -422,6 +426,7 @@ exports[`single fields field with description 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": undefined,
@@ -520,6 +525,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -537,6 +543,7 @@ exports[`single fields field with description in uiSchema 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": undefined,
@@ -635,6 +642,7 @@ exports[`single fields format color 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -996,6 +1004,7 @@ exports[`single fields format date 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1101,6 +1110,7 @@ exports[`single fields format datetime 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1212,6 +1222,7 @@ exports[`single fields help and error display 1`] = `
   </div>
   <div
     className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1257,6 +1268,7 @@ exports[`single fields help and error display 1`] = `
     
     <div
       className="ms-List"
+      id="root__error"
       role="list"
     >
       <div
@@ -1281,7 +1293,7 @@ exports[`single fields help and error display 1`] = `
     </div>
     <span
       className="css-153"
-      id="root"
+      id="root__help"
     >
       help me!
     </span>
@@ -1331,6 +1343,7 @@ exports[`single fields hidden field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1348,6 +1361,7 @@ exports[`single fields hidden field 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": "none",
@@ -1411,6 +1425,7 @@ exports[`single fields hidden label 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1492,6 +1507,7 @@ exports[`single fields null field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-null"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1546,6 +1562,7 @@ exports[`single fields number field 0 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1628,6 +1645,7 @@ exports[`single fields number field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1710,6 +1728,7 @@ exports[`single fields password field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1791,6 +1810,7 @@ exports[`single fields radio field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1918,6 +1938,7 @@ exports[`single fields schema examples 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2019,6 +2040,7 @@ exports[`single fields select field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2113,6 +2135,7 @@ exports[`single fields slider field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-integer"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2227,6 +2250,7 @@ exports[`single fields string field format data-url 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2293,6 +2317,7 @@ exports[`single fields string field format email 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2374,6 +2399,7 @@ exports[`single fields string field format uri 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2455,6 +2481,7 @@ exports[`single fields string field regular 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2536,6 +2563,7 @@ exports[`single fields string field with placeholder 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2617,6 +2645,7 @@ exports[`single fields textarea field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2698,6 +2727,7 @@ exports[`single fields title field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2720,6 +2750,7 @@ exports[`single fields title field 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_title"
           style={
             Object {
               "display": undefined,
@@ -2814,6 +2845,7 @@ exports[`single fields unsupported field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-undefined"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2890,6 +2922,7 @@ exports[`single fields up/down field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -3050,6 +3083,7 @@ exports[`single fields using custom tagName 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,

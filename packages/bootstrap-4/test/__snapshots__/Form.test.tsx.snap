@@ -605,6 +605,7 @@ exports[`single fields help and error display 1`] = `
       
       <ul
         className="list-group"
+        id="root__error"
         onKeyDown={[Function]}
       >
         <li
@@ -622,7 +623,7 @@ exports[`single fields help and error display 1`] = `
       </ul>
       <small
         className="text-danger form-text"
-        id="root"
+        id="root__help"
       >
         help me!
       </small>

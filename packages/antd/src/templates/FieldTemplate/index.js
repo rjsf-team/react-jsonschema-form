@@ -13,7 +13,7 @@ const FieldTemplate = ({
   description,
   disabled,
   displayLabel,
-  // errors,
+  errors,
   formContext,
   help,
   hidden,
@@ -40,11 +40,6 @@ const FieldTemplate = ({
     return <div className="field-hidden">{children}</div>;
   }
 
-  const renderFieldErrors = () =>
-    [...new Set(rawErrors)].map((error) => (
-      <div key={`field-${id}-error-${error}`}>{error}</div>
-    ));
-
   return (
     <WrapIfAdditional
       classNames={classNames}
@@ -66,9 +61,7 @@ const FieldTemplate = ({
           colon={colon}
           extra={description}
           hasFeedback={schema.type !== "array" && schema.type !== "object"}
-          help={
-            (!!rawHelp && help) || (!!rawErrors?.length && renderFieldErrors())
-          }
+          help={(!!rawHelp && help) || errors}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}

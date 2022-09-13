@@ -1,8 +1,5 @@
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import { FieldTemplateProps } from "@rjsf/utils";
 
@@ -21,7 +18,8 @@ const FieldTemplate = ({
   readonly,
   required,
   rawErrors = [],
-  rawHelp,
+  errors,
+  help,
   rawDescription,
   schema,
   registry,
@@ -53,18 +51,8 @@ const FieldTemplate = ({
             {rawDescription}
           </Typography>
         ) : null}
-        {rawErrors.length > 0 && (
-          <List dense={true} disablePadding={true}>
-            {rawErrors.map((error, i: number) => {
-              return (
-                <ListItem key={i} disableGutters={true}>
-                  <FormHelperText id={id}>{error}</FormHelperText>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-        {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+        {errors}
+        {help}
       </FormControl>
     </WrapIfAdditional>
   );

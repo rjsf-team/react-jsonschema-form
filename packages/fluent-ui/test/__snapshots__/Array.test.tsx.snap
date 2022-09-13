@@ -8,6 +8,7 @@ exports[`array fields array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -114,6 +115,7 @@ exports[`array fields array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -136,6 +138,7 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
+              id="root_0"
               style={
                 Object {
                   "display": undefined,
@@ -290,6 +293,7 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
+              id="root_1"
               style={
                 Object {
                   "display": undefined,
@@ -528,6 +532,7 @@ exports[`array fields checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -623,6 +628,7 @@ exports[`array fields empty errors array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -640,6 +646,7 @@ exports[`array fields empty errors array 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_name"
           style={
             Object {
               "display": undefined,
@@ -734,6 +741,7 @@ exports[`array fields fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -756,6 +764,7 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
+              id="root_0"
               style={
                 Object {
                   "display": undefined,
@@ -812,6 +821,7 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
+              id="root_1"
               style={
                 Object {
                   "display": undefined,
@@ -901,6 +911,7 @@ exports[`array fields no errors 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -918,6 +929,7 @@ exports[`array fields no errors 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_name"
           style={
             Object {
               "display": undefined,

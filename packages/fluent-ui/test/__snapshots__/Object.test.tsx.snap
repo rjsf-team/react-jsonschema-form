@@ -8,6 +8,7 @@ exports[`object fields additionalProperties 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -25,6 +26,7 @@ exports[`object fields additionalProperties 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_foo"
           style={
             Object {
               "display": undefined,
@@ -119,6 +121,7 @@ exports[`object fields object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -136,6 +139,7 @@ exports[`object fields object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_a"
           style={
             Object {
               "display": undefined,
@@ -183,6 +187,7 @@ exports[`object fields object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
+          id="root_b"
           style={
             Object {
               "display": undefined,

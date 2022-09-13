@@ -968,7 +968,7 @@ exports[`single fields help and error display 1`] = `
         >
           <p
             className="MuiFormHelperText-root Mui-error"
-            id="root"
+            id="root__error"
           >
             an error
           </p>
@@ -976,7 +976,7 @@ exports[`single fields help and error display 1`] = `
       </ul>
       <p
         className="MuiFormHelperText-root Mui-error"
-        id="root"
+        id="root__help"
       >
         help me!
       </p>
