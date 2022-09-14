@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
+# 5.0.0-beta.8
+
+## @rjsf/core
+- When rendering additional properties with title, use the key of the property instead of the title.
+
 # v5.0.0-beta.7
 
 ## @rjsf/antd
