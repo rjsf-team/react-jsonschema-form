@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "A list of tasks",
     type: "object",

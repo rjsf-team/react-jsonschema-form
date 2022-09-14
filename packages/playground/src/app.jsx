@@ -615,7 +615,7 @@ class Playground extends Component {
               react-jsonschema-form
             </a>
             .
-            {process.env.SHOW_NETLIFY_BADGE === "true" && (
+            {import.meta.env.SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">
                   <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />
