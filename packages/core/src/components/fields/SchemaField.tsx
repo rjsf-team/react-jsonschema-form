@@ -200,9 +200,10 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG)
-      ? name
-      : uiOptions.title || props.schema.title || schema.title || name;
+    label =
+      ADDITIONAL_PROPERTY_FLAG in schema
+        ? name
+        : uiOptions.title || props.schema.title || schema.title || name;
   }
 
   const description =
