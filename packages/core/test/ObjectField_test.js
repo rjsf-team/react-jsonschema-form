@@ -446,7 +446,7 @@ describe("ObjectField", () => {
       expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
     });
 
-    it("should apply uiSchema to additionalProperties", () => {
+    it("uiSchema title should not affect additionalProperties", () => {
       const { node } = createFormComponent({
         schema,
         uiSchema: {
@@ -459,8 +459,56 @@ describe("ObjectField", () => {
         },
       });
       const labels = node.querySelectorAll("label.control-label");
-      expect(labels[0].textContent).eql("CustomName Key");
-      expect(labels[1].textContent).eql("CustomName");
+      expect(labels[0].textContent).eql("property1 Key");
+      expect(labels[1].textContent).eql("property1");
+    });
+
+    it("uiSchema title should update additionalProperties object title", () => {
+      const objectSchema = {
+        type: "object",
+        properties: {
+          main: {
+            type: "object",
+            properties: {},
+            additionalProperties: {
+              type: "object",
+              title: "propTitle",
+              properties: {
+                firstName: {
+                  type: "string",
+                  title: "First name",
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema: objectSchema,
+        uiSchema: {
+          main: {
+            additionalProperties: {
+              "ui:title": "CustomName",
+            },
+          },
+        },
+        formData: {
+          main: {
+            property1: {
+              firstName: "hello",
+            },
+          },
+        },
+      });
+      const labels = [...node.querySelectorAll("label.control-label")].map(
+        (n) => n.textContent
+      );
+      expect(labels).to.include("property1 Key");
+      const objectTitle = node.querySelector(
+        ".form-additional > fieldset > legend"
+      );
+      expect(objectTitle.textContent).eql("CustomName");
     });
 
     it("should not throw validation errors if additionalProperties is undefined", () => {
