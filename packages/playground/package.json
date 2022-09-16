@@ -100,12 +100,11 @@
     "loader-utils": "^3.2.0",
     "mini-css-extract-plugin": "^2.6.1",
     "monaco-editor": "^0.33.0",
-    "monaco-editor-webpack-plugin": "^7.0.1",
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-monaco-editor": "^0.50.1",
+    "@monaco-editor/react": "^4.4.5",
     "react-portal": "^4.2.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
@@ -113,7 +112,7 @@
     "sass": "^1.54.5",
     "source-map-loader": "^4.0.0",
     "@vitejs/plugin-react": "^2.1.0",
-    "vite": "^3.1.0"
+    "vite": "^3.1.1"
   },
   "directories": {
     "test": "test"
