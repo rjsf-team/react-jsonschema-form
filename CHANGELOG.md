@@ -41,6 +41,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - When rendering additional properties with title, use the key of the property instead of the title.
+  
+## @rjsf/playground
+- Replace Webpack with Vite
 
 # v5.0.0-beta.7
 
