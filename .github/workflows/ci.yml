@@ -27,7 +27,7 @@ jobs:
       if: github.ref != 'refs/heads/main'
       run: npm run build
       env:
-        SHOW_NETLIFY_BADGE: true
+        VITE_SHOW_NETLIFY_BADGE: true
         NODE_OPTIONS: --max_old_space_size=4096
     - name: Build
       if: github.ref == 'refs/heads/main'
