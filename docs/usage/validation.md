@@ -34,6 +34,33 @@ render((
 ), document.getElementById("app"));
 ```
 
+## Validate form programmatically
+
+It is possible to programmatically validate a form using the `validateForm()` function on `Form`.
+Add a `ref` to your `Form` component and call the `validateForm()` method to validate the form programmatically.
+The `validateForm()` method returns true if the form is valid, false otherwise.
+If you have provided an `onError` callback it will be called with the list of errors when the `validatorForm()` method returns false.
+
+```jsx
+import { createRef } from "react"
+import validator from "@rjsf/validator-ajv6";
+
+const formRef = createRef();
+const onError = (errors) => alert(errors);
+
+const schema = {
+    type: "string"
+};
+
+render((
+  <Form schema={schema} validator={validator} onError={onError} ref={formRef}/>
+), document.getElementById("app"));
+
+if (formRef.current.validateForm()) {
+  alert("Form is valid");
+}
+```
+
 ## HTML5 Validation
 
 By default, the form uses HTML5 validation. This may cause unintuitive results because the HTML5 validation errors (such as when a field is `required`) may be displayed before the form is submitted, and thus these errors will display differently from the react-jsonschema-form validation errors. You can turn off HTML validation by setting the `noHtml5Validate` to `true`.
