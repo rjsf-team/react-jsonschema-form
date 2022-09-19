@@ -147,7 +147,7 @@ export type FieldErrorProps<T = any, F = any> = {
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
   /** An array of the errors */
-  errors?: string[];
+  errors?: Array<string | React.ReactElement>;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The schema that was passed to field */

@@ -15,6 +15,22 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.9
+
+## @rjsf/bootstrap
+- Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options
+
+## @rjsf/core
+- Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options 
+
+## @rjsf/semantic-ui
+- Updated the `FieldErrorTemplate` to use the `children` variation of the `List.Item` that supports ReactElement
+ 
+## @rjsf/utils
+- Updated the `FieldErrorProps` type to make it support an array of string and ReactElement
+
+## Dev / docs / playground
+- Updated the `custom-templates.md` file to add the missing asterisk to the new `FieldErrorTemplate` and `FieldHelpTemplate`
 
 # 5.0.0-beta.8
 

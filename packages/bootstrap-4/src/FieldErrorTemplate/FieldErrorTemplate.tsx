@@ -15,9 +15,9 @@ export default function FieldErrorTemplate(props: FieldErrorProps) {
 
   return (
     <ListGroup as="ul" id={id}>
-      {errors.map((error: string) => {
+      {errors.map((error, i) => {
         return (
-          <ListGroup.Item as="li" key={error} className="border-0 m-0 p-0">
+          <ListGroup.Item as="li" key={i} className="border-0 m-0 p-0">
             <small className="m-0 text-danger">{error}</small>
           </ListGroup.Item>
         );
