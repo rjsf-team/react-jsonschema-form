@@ -487,16 +487,28 @@ class Playground extends Component {
                 validator={validator}
                 select={this.onValidatorSelected}
               />
-              <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
-              <span> </span>
               <button
                 title="Click me to submit the form programmatically."
                 className="btn btn-default"
                 type="button"
                 onClick={() => this.playGroundForm.current.submit()}
               >
-                Programmatic Submit
+                Prog. Submit
               </button>
+              <span> </span>
+              <button
+                title="Click me to validate the form programmatically."
+                className="btn btn-default"
+                type="button"
+                onClick={() => {
+                  const valid = this.playGroundForm.current.validateForm();
+                  alert(valid ? "Form is valid" : "Form has errors");
+                }}
+              >
+                Prog. Validate
+              </button>
+              <div style={{ marginTop: "5px" }} />
+              <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
           </div>
         </div>
@@ -578,6 +590,7 @@ class Playground extends Component {
                 onSubmit={({ formData }, e) => {
                   console.log("submitted formData", formData);
                   console.log("submit event", e);
+                  window.alert("Form submitted");
                 }}
                 fields={{ geo: GeoPosition }}
                 customValidate={validate}
