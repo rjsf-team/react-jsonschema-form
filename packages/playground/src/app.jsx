@@ -38,7 +38,7 @@ class GeoPosition extends Component {
   onChange(name) {
     return (event) => {
       this.setState({ [name]: parseFloat(event.target.value) });
-      setImmediate(() => this.props.onChange(this.state));
+      setTimeout(() => this.props.onChange(this.state), 0);
     };
   }
 
@@ -147,7 +147,7 @@ class Selector extends Component {
     return (event) => {
       event.preventDefault();
       this.setState({ current: label });
-      setImmediate(() => this.props.onSelected(samples[label]));
+      setTimeout(() => this.props.onSelected(samples[label]), 0);
     };
   };
 
