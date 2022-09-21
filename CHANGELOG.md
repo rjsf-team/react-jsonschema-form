@@ -36,18 +36,12 @@ should change the heading of the (upcoming) version to include a major version b
 - Also updated the `validation.md` documentation to describe how to programmatically validate a form
 - Fixed the `chakra-ui` custom `uiSchema` documentation to make it clear they work on a per-field basis, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2865)
 - Added `formElement` breaking-change documentation to the `5.x upgrade guide.md`
-
-# 5.0.0-beta.9
-
-## Dev / docs / playground
 - Replace Webpack with Vite
-
 
 # 5.0.0-beta.8
 
 ## @rjsf/core
 - When rendering additional properties with title, use the key of the property instead of the title.
-  
 
 # v5.0.0-beta.7
 

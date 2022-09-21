@@ -12,6 +12,10 @@ npm start
 
 All packages will be live-built, and a live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
 
+## Cloud builds
+
+When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially. 
+
 ## Coding style
 
 All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. Code is automatically prettified upon commit using precommit hooks.
