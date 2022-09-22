@@ -12,7 +12,7 @@ import NullField from "./NullField";
 const fields: RegistryFieldsType = {
   AnyOfField: MultiSchemaField,
   ArrayField,
-  ArraySchemaField: SchemaField,
+  // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
   BooleanField,
   NumberField,
   ObjectField,

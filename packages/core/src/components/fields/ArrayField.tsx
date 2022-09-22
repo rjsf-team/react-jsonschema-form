@@ -805,8 +805,9 @@ class ArrayField<T = any, F = any> extends Component<
       formContext,
     } = this.props;
     const {
-      fields: { ArraySchemaField },
+      fields: { ArraySchemaField, SchemaField },
     } = registry;
+    const ItemSchemaField = ArraySchemaField || SchemaField;
     const { orderable = true, removable = true } = getUiOptions<T[], F>(
       uiSchema
     );
@@ -820,7 +821,7 @@ class ArrayField<T = any, F = any> extends Component<
 
     return {
       children: (
-        <ArraySchemaField
+        <ItemSchemaField
           name={name}
           index={index}
           schema={itemSchema}
