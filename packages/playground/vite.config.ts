@@ -4,6 +4,8 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // base needs to be changed for links to work in GitHub pages
+  base: process.env.NODE_ENV === "production" ? "./" : "/",
   plugins: [react()],
   resolve: {
     alias: {
