@@ -89,7 +89,11 @@ function ArrayFieldTemplate({
               textAlign: "right",
             }}
           >
-            <AddButton onClick={onAddClick} disabled={disabled || readOnly} />
+            <AddButton
+              onClick={onAddClick}
+              disabled={disabled || readOnly}
+              uiSchema={uiSchema}
+            />
           </div>
         )}
       </div>

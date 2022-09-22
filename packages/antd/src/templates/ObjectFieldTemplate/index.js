@@ -129,6 +129,7 @@ const ObjectFieldTemplate = ({
                 className="object-property-expand"
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
+                uiSchema={uiSchema}
               />
             </Col>
           </Row>

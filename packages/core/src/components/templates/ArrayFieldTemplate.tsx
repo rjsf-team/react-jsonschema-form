@@ -75,6 +75,7 @@ export default function ArrayFieldTemplate<T = any, F = any>(
           className="array-item-add"
           onClick={onAddClick}
           disabled={disabled || readonly}
+          uiSchema={uiSchema}
         />
       )}
     </fieldset>

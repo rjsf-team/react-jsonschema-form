@@ -20,6 +20,7 @@ const FieldTemplate = ({
   readonly,
   required,
   schema,
+  uiSchema,
   registry,
 }: FieldTemplateProps) => {
   return (
@@ -33,6 +34,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <Form.Group>

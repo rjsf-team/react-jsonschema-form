@@ -7,7 +7,7 @@ import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
 import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 
 export default function IconButton(props) {
-  const { iconType = "default", icon, ...otherProps } = props;
+  const { iconType = "default", icon, uiSchema, ...otherProps } = props;
   return <Button type={iconType} icon={icon} {...otherProps} />;
 }
 

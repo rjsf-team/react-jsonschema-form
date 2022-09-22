@@ -25,6 +25,7 @@ const ArrayFieldItemTemplate = ({
   onReorderClick,
   readonly,
   registry,
+  uiSchema,
 }) => {
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
@@ -42,22 +43,23 @@ const ArrayFieldItemTemplate = ({
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
                 style={BTN_STYLE}
+                uiSchema={uiSchema}
               />
             )}
-
             {(hasMoveUp || hasMoveDown) && (
               <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
                 style={BTN_STYLE}
+                uiSchema={uiSchema}
               />
             )}
-
             {hasRemove && (
               <RemoveButton
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
                 style={BTN_STYLE}
+                uiSchema={uiSchema}
               />
             )}
           </Button.Group>

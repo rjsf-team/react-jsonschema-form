@@ -78,6 +78,7 @@ const ObjectFieldTemplate = ({
                 className="object-property-expand"
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
+                uiSchema={uiSchema}
               />
             </Grid>
           </Grid>

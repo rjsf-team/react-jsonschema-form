@@ -17,6 +17,7 @@ type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
   | "readonly"
   | "required"
   | "schema"
+  | "uiSchema"
   | "registry"
 >;
 
@@ -31,6 +32,7 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  uiSchema,
   registry,
 }: WrapIfAdditionalProps) => {
   const { RemoveButton } = registry.templates.ButtonTemplates;
@@ -68,6 +70,7 @@ const WrapIfAdditional = ({
           className="w-100"
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
+          uiSchema={uiSchema}
         />
       </Col>
     </Row>

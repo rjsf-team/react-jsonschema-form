@@ -12,7 +12,7 @@ import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from "@chakra-ui/icons";
  * icon, tabIndex, disabled, onClick
  */
 const ChakraIconButton = memo((props: IconButtonProps) => {
-  const { icon, iconType, ...otherProps } = props;
+  const { icon, iconType, uiSchema, ...otherProps } = props;
   return (
     <IconButton
       aria-label={props.title!}

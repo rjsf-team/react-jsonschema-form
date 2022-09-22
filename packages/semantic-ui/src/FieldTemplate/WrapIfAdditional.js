@@ -14,6 +14,7 @@ const WrapIfAdditional = ({
   readonly,
   required,
   schema,
+  uiSchema,
   registry,
 }) => {
   const { RemoveButton } = registry.templates.ButtonTemplates;
@@ -60,6 +61,7 @@ const WrapIfAdditional = ({
               className="array-item-remove"
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
+              uiSchema={uiSchema}
             />
           </Grid.Column>
         </Grid.Row>

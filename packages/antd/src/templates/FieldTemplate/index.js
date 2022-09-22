@@ -27,7 +27,7 @@ const FieldTemplate = ({
   registry,
   required,
   schema,
-  // uiSchema,
+  uiSchema,
 }) => {
   const {
     colon,
@@ -52,6 +52,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       {id === "root" ? (

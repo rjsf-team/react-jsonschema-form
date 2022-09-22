@@ -6,7 +6,7 @@ import { AiOutlineArrowUp } from "@react-icons/all-files/ai/AiOutlineArrowUp";
 import { AiOutlineArrowDown } from "@react-icons/all-files/ai/AiOutlineArrowDown";
 
 const IconButton = (props: IconButtonProps & ButtonProps) => {
-  const { icon, iconType, className, ...otherProps } = props;
+  const { icon, iconType, className, uiSchema, ...otherProps } = props;
   return (
     <Button
       block={iconType === "block"}

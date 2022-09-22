@@ -8,7 +8,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { IconButtonProps } from "@rjsf/utils";
 
 export default function MuiIconButton(props: IconButtonProps) {
-  const { icon, color, ...otherProps } = props;
+  const { icon, color, uiSchema, ...otherProps } = props;
   return (
     <IconButton
       {...otherProps}
