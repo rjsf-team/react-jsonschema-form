@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MonacoEditor from "react-monaco-editor";
+import MonacoEditor from "@monaco-editor/react";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
@@ -38,7 +38,7 @@ class GeoPosition extends Component {
   onChange(name) {
     return (event) => {
       this.setState({ [name]: parseFloat(event.target.value) });
-      setImmediate(() => this.props.onChange(this.state));
+      setTimeout(() => this.props.onChange(this.state), 0);
     };
   }
 
@@ -147,7 +147,7 @@ class Selector extends Component {
     return (event) => {
       event.preventDefault();
       this.setState({ current: label });
-      setImmediate(() => this.props.onSelected(samples[label]));
+      setTimeout(() => this.props.onSelected(samples[label]), 0);
     };
   };
 
@@ -615,7 +615,7 @@ class Playground extends Component {
               react-jsonschema-form
             </a>
             .
-            {process.env.SHOW_NETLIFY_BADGE === "true" && (
+            {import.meta.env.VITE_SHOW_NETLIFY_BADGE === "true" && (
               <div style={{ float: "right" }}>
                 <a href="https://www.netlify.com">
                   <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />

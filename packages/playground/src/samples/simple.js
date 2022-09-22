@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "A registration form",
     description: "A simple form example.",
