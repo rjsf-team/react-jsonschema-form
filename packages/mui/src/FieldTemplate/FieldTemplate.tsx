@@ -22,6 +22,7 @@ const FieldTemplate = ({
   help,
   rawDescription,
   schema,
+  uiSchema,
   registry,
 }: FieldTemplateProps) => {
   if (hidden) {
@@ -38,6 +39,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <FormControl

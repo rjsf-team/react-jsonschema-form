@@ -118,6 +118,7 @@ The following props are part of each element in `items`:
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+- `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -215,6 +216,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+- `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
 ## ArrayFieldTitleTemplate
@@ -756,6 +758,7 @@ Each button template (except for the `SubmitButton`) accepts, as props, the stan
 
 - `iconType`: An alternative specification for the type of the icon button.
 - `icon`: The name representation or actual react element implementation for the icon.
+- `uiSchema`: The uiSchema object for this field.
 
 ### AddButton
 

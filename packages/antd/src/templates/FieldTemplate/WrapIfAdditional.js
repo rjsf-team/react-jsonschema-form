@@ -26,6 +26,7 @@ const WrapIfAdditional = ({
   required,
   registry,
   schema,
+  uiSchema,
 }) => {
   const {
     colon,
@@ -85,6 +86,7 @@ const WrapIfAdditional = ({
             className="array-item-remove"
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
+            uiSchema={uiSchema}
           />
         </Col>
       </Row>

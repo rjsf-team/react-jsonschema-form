@@ -21,6 +21,7 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
     onReorderClick,
     readonly,
     registry,
+    uiSchema,
   } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
@@ -47,6 +48,7 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
+                uiSchema={uiSchema}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -54,6 +56,7 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
+                uiSchema={uiSchema}
               />
             )}
             {hasRemove && (
@@ -61,6 +64,7 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
+                uiSchema={uiSchema}
               />
             )}
           </div>

@@ -2,7 +2,13 @@ import React from "react";
 import { IconButtonProps } from "@rjsf/utils";
 
 export default function IconButton(props: IconButtonProps) {
-  const { iconType = "default", icon, className, ...otherProps } = props;
+  const {
+    iconType = "default",
+    icon,
+    className,
+    uiSchema,
+    ...otherProps
+  } = props;
   return (
     <button
       type="button"

@@ -39,6 +39,7 @@ function FieldTemplate({
       id={id}
       label={label}
       registry={registry}
+      uiSchema={uiSchema}
       {...props}
     >
       <Form.Group key={id} widths="equal" grouped>

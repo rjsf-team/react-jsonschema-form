@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Button } from "semantic-ui-react";
 
 function IconButton(props) {
-  const { icon, iconType, className, ...otherProps } = props;
+  const { icon, iconType, className, uiSchema, ...otherProps } = props;
   return (
     <Button icon={icon} size={iconType} className={className} {...otherProps} />
   );

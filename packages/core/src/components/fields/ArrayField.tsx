@@ -856,6 +856,7 @@ class ArrayField<T = any, F = any> extends Component<
       onReorderClick: this.onReorderClick,
       readonly,
       registry,
+      uiSchema: itemUiSchema,
     };
   }
 }

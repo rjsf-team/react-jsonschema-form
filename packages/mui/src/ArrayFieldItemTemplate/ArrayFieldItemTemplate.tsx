@@ -16,6 +16,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     onDropIndexClick,
     onReorderClick,
     readonly,
+    uiSchema,
     registry,
   } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
@@ -43,6 +44,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               style={btnStyle}
               disabled={disabled || readonly || !hasMoveUp}
               onClick={onReorderClick(index, index - 1)}
+              uiSchema={uiSchema}
             />
           )}
           {(hasMoveUp || hasMoveDown) && (
@@ -50,6 +52,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               style={btnStyle}
               disabled={disabled || readonly || !hasMoveDown}
               onClick={onReorderClick(index, index + 1)}
+              uiSchema={uiSchema}
             />
           )}
           {hasRemove && (
@@ -57,6 +60,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               style={btnStyle}
               disabled={disabled || readonly}
               onClick={onDropIndexClick(index)}
+              uiSchema={uiSchema}
             />
           )}
         </Grid>

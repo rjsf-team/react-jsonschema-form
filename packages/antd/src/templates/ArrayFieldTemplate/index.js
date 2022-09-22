@@ -99,6 +99,7 @@ const ArrayFieldTemplate = ({
                   className="array-item-add"
                   disabled={disabled || readonly}
                   onClick={onAddClick}
+                  uiSchema={uiSchema}
                 />
               </Col>
             </Row>

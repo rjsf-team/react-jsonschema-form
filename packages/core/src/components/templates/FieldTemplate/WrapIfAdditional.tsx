@@ -17,6 +17,7 @@ export type WrapIfAdditionalProps<T = any, F = any> = {
   | "readonly"
   | "required"
   | "schema"
+  | "uiSchema"
   | "registry"
 >;
 
@@ -39,6 +40,7 @@ export default function WrapIfAdditional<T = any, F = any>(
     required,
     schema,
     children,
+    uiSchema,
     registry,
   } = props;
   const { RemoveButton } = registry.templates.ButtonTemplates;
@@ -71,6 +73,7 @@ export default function WrapIfAdditional<T = any, F = any>(
             style={{ border: "0" }}
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
+            uiSchema={uiSchema}
           />
         </div>
       </div>
