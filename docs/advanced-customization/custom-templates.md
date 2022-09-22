@@ -779,7 +779,7 @@ function WrapIfAdditionalTemplate<T = any, F = any>(
 
   return (
     <div>
-      <label label={keyLabel} id={`${id}-key`}>Custom Field Key 1</label>
+      <label label={keyLabel} id={`${id}-key`}>Custom Field Key</label>
       <input 
           className="form-control"
           type="text"
