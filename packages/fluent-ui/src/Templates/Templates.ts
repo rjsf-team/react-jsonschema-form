@@ -11,6 +11,7 @@ import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import SubmitButton from "../SubmitButton";
 import TitleField from "../TitleField";
+import WrapIfAdditionalTemplate from "WrapIfAdditionalTemplate";
 
 export default {
   ArrayFieldItemTemplate,
@@ -30,4 +31,5 @@ export default {
   FieldTemplate,
   ObjectFieldTemplate,
   TitleFieldTemplate: TitleField,
+  WrapIfAdditionalTemplate,
 };

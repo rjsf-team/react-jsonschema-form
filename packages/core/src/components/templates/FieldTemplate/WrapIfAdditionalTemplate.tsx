@@ -1,33 +1,20 @@
 import React from "react";
-import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getTemplate,
+  getUiOptions,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 
 import Label from "./Label";
-
-/** The properties that are passed to a WrapIfAdditionalTemplate implementation */
-export type WrapIfAdditionalProps<T = any, F = any> = {
-  children: React.ReactNode;
-} & Pick<
-  FieldTemplateProps<T, F>,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
-export default function WrapIfAdditional<T = any, F = any>(
-  props: WrapIfAdditionalProps<T, F>
+export default function WrapIfAdditionalTemplate<T = any, F = any>(
+  props: WrapIfAdditionalTemplateProps<T, F>
 ) {
   const {
     id,
@@ -43,7 +30,8 @@ export default function WrapIfAdditional<T = any, F = any>(
     uiSchema,
     registry,
   } = props;
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const uiOptions = getUiOptions(uiSchema);
+  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 

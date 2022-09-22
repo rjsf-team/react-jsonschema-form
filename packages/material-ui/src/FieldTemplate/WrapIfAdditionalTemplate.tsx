@@ -1,26 +1,16 @@
 import React, { CSSProperties } from "react";
-import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/OutlinedInput";
-import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getTemplate,
+  getUiOptions,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 
-type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
-  FieldTemplateProps,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
-
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
@@ -33,8 +23,9 @@ const WrapIfAdditional = ({
   schema,
   uiSchema,
   registry,
-}: WrapIfAdditionalProps) => {
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+}: WrapIfAdditionalTemplateProps) => {
+  const uiOptions = getUiOptions(uiSchema);
+  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const btnStyle: CSSProperties = {
@@ -88,4 +79,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

@@ -15,6 +15,39 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.10
+
+
+## @rjsf/antd
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+## @rjsf/bootstrap
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+## @rjsf/chakra-ui
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+## @rjsf/core
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate` 
+
+## @rjsf/fluent-ui
+- Add stubbed `WrapIfAdditionalTemplate`. `additionalProperties` is currently not supported in `@rjsf/fluent-ui`.
+
+## @rjsf/material-ui
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+
+## @rjsf/mui
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+
+## @rjsf/semantic-ui
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+
+## @rjsf/utils
+- Added `WrapIfAdditionalTemplate` and `WrapIfAdditionalTemplateProps` to simplify theming and make it easier to override Field behavior for schemas with `additionalProperties`.
+
+
 # 5.0.0-beta.9
 
 ## @rjsf/antd

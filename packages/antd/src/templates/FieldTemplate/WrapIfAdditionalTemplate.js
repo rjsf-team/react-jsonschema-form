@@ -1,6 +1,10 @@
 import React from "react";
 
-import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 import Col from "antd/lib/col";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
@@ -13,7 +17,7 @@ const INPUT_STYLE = {
   width: "100%",
 };
 
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
@@ -37,7 +41,9 @@ const WrapIfAdditional = ({
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = formContext;
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+
+  const uiOptions = getUiOptions(uiSchema);
+  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
 
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
@@ -94,4 +100,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

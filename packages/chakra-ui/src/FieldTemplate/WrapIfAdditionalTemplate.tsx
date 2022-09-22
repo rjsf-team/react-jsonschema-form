@@ -1,5 +1,10 @@
 import React from "react";
-import { FieldTemplateProps, ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getTemplate,
+  getUiOptions,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 import {
   FormControl,
   FormLabel,
@@ -8,22 +13,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
-  FieldTemplateProps,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
-
-const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
+const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
   const {
     children,
     classNames,
@@ -38,7 +28,8 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     schema,
     uiSchema,
   } = props;
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const uiOptions = getUiOptions(uiSchema);
+  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
     return <div className={classNames}>{children}</div>;
@@ -78,4 +69,4 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;
