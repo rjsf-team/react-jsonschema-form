@@ -356,7 +356,7 @@ Props passed to a custom SchemaField are the same as [the ones passed to a custo
 ### Custom ArraySchemaField
 
 Everything that was mentioned above for a `Custom SchemaField` applies, but this is only used to render the Array item `children` that are then passed to the `ArrayFieldItemTemplate`.
-By default, `ArraySchemaField` is not actually provided as `ArrayField` implementation fallsback to the `SchemaField` implementation.
+By default, `ArraySchemaField` is not actually implemented in the `fields` list since `ArrayField` falls back to `SchemaField` if `ArraySchemaField` is not provided.
 If you want to customize how the individual items for an array are rendered, provide your implementation of `ArraySchemaField` as a `fields` override.
 
 ```jsx
