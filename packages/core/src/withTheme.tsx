@@ -5,14 +5,14 @@ import Form, { FormProps } from "./components/Form";
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
  */
-export type WithThemeProps<T = any, F = any> = Pick<
+export type ThemeProps<T = any, F = any> = Pick<
   FormProps<T, F>,
   "fields" | "templates" | "widgets" | "_internalFormWrapper"
 >;
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
 export default function withTheme<T = any, F = any>(
-  themeProps: WithThemeProps<T, F>
+  themeProps: ThemeProps<T, F>
 ) {
   return forwardRef(
     (

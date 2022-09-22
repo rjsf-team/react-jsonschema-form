@@ -19,10 +19,24 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/bootstrap
 - Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options
+- Updated `Theme` to use the renamed `ThemeProps` from `@rjsf/core`
+
+## @rjsf/chakra-ui
+- Updated `Theme` to use the renamed `ThemeProps` from `@rjsf/core`
 
 ## @rjsf/core
 - Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options 
 - Implemented programmatic validation via new `validateForm()` method on `Form`, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2755, https://github.com/rjsf-team/react-jsonschema-form/issues/2552, https://github.com/rjsf-team/react-jsonschema-form/issues/2381, https://github.com/rjsf-team/react-jsonschema-form/issues/2343, https://github.com/rjsf-team/react-jsonschema-form/issues/1006, https://github.com/rjsf-team/react-jsonschema-form/issues/246)
+- Renamed `WithThemeProps` to `ThemeProps` to prevent another breaking-change by returning the type back to the name it had in version 4
+
+## @rjsf/fluent-ui
+- Updated `Theme` to use the renamed `ThemeProps` from `@rjsf/core`
+
+## @rjsf/material-ui
+- Updated `Theme` to use the renamed `ThemeProps` from `@rjsf/core`
+
+## @rjsf/mui
+- Updated `Theme` to use the renamed `ThemeProps` from `@rjsf/core`
 
 ## @rjsf/semantic-ui
 - Updated the `FieldErrorTemplate` to use the `children` variation of the `List.Item` that supports ReactElement
