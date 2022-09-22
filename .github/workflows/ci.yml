@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: dist
-        path: packages/playground/build
+        path: packages/playground/dist
     - run: npm test
 
 #  deploy_preview:
