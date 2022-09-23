@@ -44,24 +44,29 @@ const RadioWidget = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
       >
-        {(enumOptions as any).map((option: any, i: number) => {
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option) => {
+            const itemDisabled =
+              Array.isArray(enumDisabled) &&
+              enumDisabled.indexOf(option.value) !== -1;
+            const radio = (
+              <FormControlLabel
+                control={
+                  <Radio
+                    name={id}
+                    id={`${id}-${option.value}`}
+                    color="primary"
+                  />
+                }
+                label={`${option.label}`}
+                value={`${option.value}`}
+                key={option.value}
+                disabled={disabled || itemDisabled || readonly}
+              />
+            );
 
-          const radio = (
-            <FormControlLabel
-              control={
-                <Radio name={id} id={`${id}-${i}`} color="primary" key={i} />
-              }
-              label={`${option.label}`}
-              value={`${option.value}`}
-              key={i}
-              disabled={disabled || itemDisabled || readonly}
-            />
-          );
-
-          return radio;
-        })}
+            return radio;
+          })}
       </RadioGroup>
     </>
   );

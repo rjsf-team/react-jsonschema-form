@@ -22,7 +22,7 @@ Array [
           checked={true}
           className="custom-control-input"
           disabled={true}
-          id="_id_0"
+          id="_id-"
           name="_id"
           onBlur={[Function]}
           onChange={[Function]}
@@ -32,7 +32,7 @@ Array [
         />
         <label
           className="custom-control-label"
-          htmlFor="_id_0"
+          htmlFor="_id-"
           title=""
         >
           
@@ -65,7 +65,7 @@ Array [
           checked={true}
           className="custom-control-input"
           disabled={true}
-          id="_id_0"
+          id="_id-"
           name="_id"
           onBlur={[Function]}
           onChange={[Function]}
@@ -75,7 +75,7 @@ Array [
         />
         <label
           className="custom-control-label"
-          htmlFor="_id_0"
+          htmlFor="_id-"
           title=""
         >
           

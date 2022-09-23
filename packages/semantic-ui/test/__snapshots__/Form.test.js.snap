@@ -144,14 +144,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_0"
+              id="root-foo"
               name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_0"
+              htmlFor="root-foo"
             >
               foo
             </label>
@@ -176,14 +176,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_1"
+              id="root-bar"
               name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_1"
+              htmlFor="root-bar"
             >
               bar
             </label>
@@ -208,14 +208,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_2"
+              id="root-fuzz"
               name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_2"
+              htmlFor="root-fuzz"
             >
               fuzz
             </label>
@@ -240,14 +240,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_3"
+              id="root-qux"
               name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_3"
+              htmlFor="root-qux"
             >
               qux
             </label>
@@ -1065,7 +1065,7 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root-radio-true"
+              id="root-true"
               name="root"
               readOnly={true}
               tabIndex={0}
@@ -1073,7 +1073,7 @@ exports[`single fields radio field 1`] = `
               value="true"
             />
             <label
-              htmlFor="root-radio-true"
+              htmlFor="root-true"
             >
               Yes
             </label>
@@ -1098,7 +1098,7 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root-radio-false"
+              id="root-false"
               name="root"
               readOnly={true}
               tabIndex={0}
@@ -1106,7 +1106,7 @@ exports[`single fields radio field 1`] = `
               value="false"
             />
             <label
-              htmlFor="root-radio-false"
+              htmlFor="root-false"
             >
               No
             </label>

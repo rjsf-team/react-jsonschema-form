@@ -205,7 +205,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_0"
+        id="root-foo"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -214,7 +214,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_0"
+        htmlFor="root-foo"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -245,7 +245,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_1"
+        id="root-bar"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -254,7 +254,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_1"
+        htmlFor="root-bar"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -285,7 +285,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_2"
+        id="root-fuzz"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -294,7 +294,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_2"
+        htmlFor="root-fuzz"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -325,7 +325,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_3"
+        id="root-qux"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -334,7 +334,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_3"
+        htmlFor="root-qux"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -1857,7 +1857,7 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
-                id="ChoiceGroup112-true"
+                id="root-true"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1866,7 +1866,7 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="ChoiceGroup112-true"
+                htmlFor="root-true"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
@@ -1886,7 +1886,7 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
-                id="ChoiceGroup112-false"
+                id="root-false"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1895,7 +1895,7 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="ChoiceGroup112-false"
+                htmlFor="root-false"
               >
                 <span
                   className="ms-ChoiceFieldLabel"

@@ -75,27 +75,29 @@ function CheckboxesWidget(props) {
         />
       )}
       <Form.Group id={id} name={id} {...inlineOption}>
-        {enumOptions.map((option, index) => {
-          const checked = value.indexOf(option.value) !== -1;
-          const itemDisabled =
-            enumDisabled && enumDisabled.indexOf(option.value) !== -1;
-          return (
-            <Form.Checkbox
-              id={`${id}_${index}`}
-              name={id}
-              key={`${id}_${index}`}
-              label={option.label}
-              {...semanticProps}
-              checked={checked}
-              error={rawErrors.length > 0}
-              disabled={disabled || itemDisabled || readonly}
-              autoFocus={autofocus && index === 0}
-              onChange={_onChange(option)}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
-            />
-          );
-        })}
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, index) => {
+            const checked = value.indexOf(option.value) !== -1;
+            const itemDisabled =
+              Array.isArray(enumDisabled) &&
+              enumDisabled.indexOf(option.value) !== -1;
+            return (
+              <Form.Checkbox
+                id={`${id}-${option.value}`}
+                name={id}
+                key={option.value}
+                label={option.label}
+                {...semanticProps}
+                checked={checked}
+                error={rawErrors.length > 0}
+                disabled={disabled || itemDisabled || readonly}
+                autoFocus={autofocus && index === 0}
+                onChange={_onChange(option)}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+              />
+            );
+          })}
       </Form.Group>
     </React.Fragment>
   );

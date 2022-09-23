@@ -70,26 +70,28 @@ const CheckboxesWidget = ({
         {label || schema.title}
         {required && <span style={styles_red}>&nbsp;*</span>}
       </Label>
-      {(enumOptions as any).map((option: any, index: number) => {
-        const checked = value.indexOf(option.value) !== -1;
-        const itemDisabled =
-          enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
-        return (
-          <Checkbox
-            id={`${id}_${index}`}
-            name={id}
-            checked={checked}
-            label={option.label}
-            disabled={disabled || itemDisabled || readonly}
-            autoFocus={autofocus && index === 0}
-            onChange={_onChange(option)}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-            key={index}
-            {...uiProps}
-          />
-        );
-      })}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, index: number) => {
+          const checked = value.indexOf(option.value) !== -1;
+          const itemDisabled =
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) !== -1;
+          return (
+            <Checkbox
+              id={`${id}-${option.value}`}
+              name={id}
+              checked={checked}
+              label={option.label}
+              disabled={disabled || itemDisabled || readonly}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange(option)}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+              key={option.value}
+              {...uiProps}
+            />
+          );
+        })}
       <span style={styles_red}>{(rawErrors || []).join("\n")}</span>
     </>
   );

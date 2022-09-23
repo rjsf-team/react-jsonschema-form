@@ -77,16 +77,16 @@ const CheckboxesWidget = (props: WidgetProps) => {
         defaultValue={value}
       >
         <Stack direction={row ? "row" : "column"}>
-          {(enumOptions as any).map(
-            (option: { value: any; label: any }, index: any) => {
+          {Array.isArray(enumOptions) &&
+            enumOptions.map((option) => {
               const checked = value.indexOf(option.value) !== -1;
               const itemDisabled =
-                enumDisabled &&
-                (enumDisabled as string[]).indexOf(option.value) !== -1;
+                Array.isArray(enumDisabled) &&
+                enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
-                  key={`${id}_${index}`}
-                  id={`${id}_${index}`}
+                  key={option.value}
+                  id={`${id}-${option.value}`}
                   name={id}
                   value={option.value}
                   isChecked={checked}
@@ -97,8 +97,7 @@ const CheckboxesWidget = (props: WidgetProps) => {
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>
               );
-            }
-          )}
+            })}
         </Stack>
       </CheckboxGroup>
     </FormControl>

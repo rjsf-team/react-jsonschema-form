@@ -122,7 +122,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="custom-control-input"
               disabled={false}
-              id="root_0"
+              id="root-foo"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -132,7 +132,7 @@ exports[`single fields checkboxes field 1`] = `
             />
             <label
               className="custom-control-label"
-              htmlFor="root_0"
+              htmlFor="root-foo"
               title=""
             >
               foo
@@ -150,7 +150,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="custom-control-input"
               disabled={false}
-              id="root_1"
+              id="root-bar"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -160,7 +160,7 @@ exports[`single fields checkboxes field 1`] = `
             />
             <label
               className="custom-control-label"
-              htmlFor="root_1"
+              htmlFor="root-bar"
               title=""
             >
               bar
@@ -178,7 +178,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="custom-control-input"
               disabled={false}
-              id="root_2"
+              id="root-fuzz"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -188,7 +188,7 @@ exports[`single fields checkboxes field 1`] = `
             />
             <label
               className="custom-control-label"
-              htmlFor="root_2"
+              htmlFor="root-fuzz"
               title=""
             >
               fuzz
@@ -206,7 +206,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="custom-control-input"
               disabled={false}
-              id="root_3"
+              id="root-qux"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -216,7 +216,7 @@ exports[`single fields checkboxes field 1`] = `
             />
             <label
               className="custom-control-label"
-              htmlFor="root_3"
+              htmlFor="root-qux"
               title=""
             >
               qux

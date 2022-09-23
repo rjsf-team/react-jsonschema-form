@@ -39,31 +39,32 @@ const RadioWidget = ({
         {uiOptions.title || schema.title || label}
         {(label || uiOptions.title || schema.title) && required ? "*" : null}
       </Form.Label>
-      {(enumOptions as any).map((option: any, i: number) => {
-        const itemDisabled =
-          Array.isArray(enumDisabled) &&
-          enumDisabled.indexOf(option.value) !== -1;
-        const checked = option.value == value;
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option) => {
+          const itemDisabled =
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) !== -1;
+          const checked = option.value == value;
 
-        const radio = (
-          <Form.Check
-            inline={inline}
-            label={option.label}
-            id={`${id}-${option.value}`}
-            key={i}
-            name={id}
-            type="radio"
-            disabled={disabled || itemDisabled || readonly}
-            checked={checked}
-            required={required}
-            value={option.value}
-            onChange={_onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-          />
-        );
-        return radio;
-      })}
+          const radio = (
+            <Form.Check
+              inline={inline}
+              label={option.label}
+              id={`${id}-${option.value}`}
+              key={option.value}
+              name={id}
+              type="radio"
+              disabled={disabled || itemDisabled || readonly}
+              checked={checked}
+              required={required}
+              value={option.value}
+              onChange={_onChange}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+            />
+          );
+          return radio;
+        })}
     </Form.Group>
   );
 };

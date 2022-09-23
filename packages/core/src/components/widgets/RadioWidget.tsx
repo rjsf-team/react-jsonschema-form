@@ -40,7 +40,8 @@ function RadioWidget<T = any, F = any>({
         enumOptions.map((option, i) => {
           const checked = option.value === value;
           const itemDisabled =
-            enumDisabled && enumDisabled.indexOf(option.value) != -1;
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
@@ -50,7 +51,7 @@ function RadioWidget<T = any, F = any>({
             <span>
               <input
                 type="radio"
-                id={`${id}_${i}`}
+                id={`${id}-${option.value}`}
                 checked={checked}
                 name={name}
                 required={required}
@@ -66,11 +67,11 @@ function RadioWidget<T = any, F = any>({
           );
 
           return inline ? (
-            <label key={i} className={`radio-inline ${disabledCls}`}>
+            <label key={option.value} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={i} className={`radio ${disabledCls}`}>
+            <div key={option.value} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

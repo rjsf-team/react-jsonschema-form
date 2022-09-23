@@ -38,18 +38,24 @@ const CheckboxesWidget = ({
       onFocus={!readonly ? handleFocus : undefined}
       value={value}
     >
-      {enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
-        <span key={optionValue}>
-          <Checkbox
-            autoFocus={i === 0 ? autofocus : false}
-            disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
-            value={optionValue}
-          >
-            {optionLabel}
-          </Checkbox>
-          {!inline && <br />}
-        </span>
-      ))}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
+          <span key={optionValue}>
+            <Checkbox
+              id={`${id}-${optionValue}`}
+              name={id}
+              autoFocus={i === 0 ? autofocus : false}
+              disabled={
+                Array.isArray(enumDisabled) &&
+                enumDisabled.indexOf(value) !== -1
+              }
+              value={optionValue}
+            >
+              {optionLabel}
+            </Checkbox>
+            {!inline && <br />}
+          </span>
+        ))}
     </Checkbox.Group>
   ) : null;
 };

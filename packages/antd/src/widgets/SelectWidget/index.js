@@ -49,8 +49,8 @@ const SelectWidget = ({
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      name={id}
       mode={typeof multiple !== "undefined" ? "multiple" : undefined}
+      name={id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}

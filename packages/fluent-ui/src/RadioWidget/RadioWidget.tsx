@@ -48,20 +48,22 @@ const RadioWidget = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const newOptions = (enumOptions as { value: any; label: any }[]).map(
-    (option) => ({
-      key: option.value,
-      text: option.label,
-      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
-    })
-  );
+  const newOptions = Array.isArray(enumOptions)
+    ? enumOptions.map((option) => ({
+        key: option.value,
+        name: id,
+        id: `${id}-${option.value}`,
+        text: option.label,
+        disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+      }))
+    : [];
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <ChoiceGroup
       id={id}
       name={id}
-      options={newOptions as any}
+      options={newOptions}
       onChange={_onChange}
       onFocus={_onFocus}
       onBlur={_onBlur}

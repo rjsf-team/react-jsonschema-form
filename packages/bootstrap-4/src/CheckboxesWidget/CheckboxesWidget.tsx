@@ -53,32 +53,34 @@ const CheckboxesWidget = ({
     <>
       <Form.Label htmlFor={id}>{label || schema.title}</Form.Label>
       <Form.Group>
-        {(enumOptions as any).map((option: any, index: number) => {
-          const checked = value.indexOf(option.value) !== -1;
-          const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, index: number) => {
+            const checked = value.indexOf(option.value) !== -1;
+            const itemDisabled =
+              Array.isArray(enumDisabled) &&
+              enumDisabled.indexOf(option.value) !== -1;
 
-          return (
-            <Form key={index}>
-              <Form.Check
-                inline={inline}
-                custom
-                required={required}
-                checked={checked}
-                className="bg-transparent border-0"
-                type={"checkbox"}
-                id={`${id}_${index}`}
-                name={id}
-                label={option.label}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                disabled={disabled || itemDisabled || readonly}
-              />
-            </Form>
-          );
-        })}
+            return (
+              <Form key={option.value}>
+                <Form.Check
+                  inline={inline}
+                  custom
+                  required={required}
+                  checked={checked}
+                  className="bg-transparent border-0"
+                  type={"checkbox"}
+                  id={`${id}-${option.value}`}
+                  name={id}
+                  label={option.label}
+                  autoFocus={autofocus && index === 0}
+                  onChange={_onChange(option)}
+                  onBlur={_onBlur}
+                  onFocus={_onFocus}
+                  disabled={disabled || itemDisabled || readonly}
+                />
+              </Form>
+            );
+          })}
       </Form.Group>
     </>
   );
