@@ -83,7 +83,7 @@ const uiSchema = {
 }
 ```
 
-Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.js) for another example.
+Please see the [customArray.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -646,7 +646,7 @@ const uiSchema = {
 };
 ```
 
-Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.js) for a better example.
+Please see the [customObject.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
