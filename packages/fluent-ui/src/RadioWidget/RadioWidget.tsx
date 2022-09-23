@@ -30,6 +30,8 @@ const RadioWidget = ({
   onChange,
   onBlur,
   onFocus,
+  disabled,
+  readonly,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
 
@@ -54,7 +56,9 @@ const RadioWidget = ({
         name: id,
         id: `${id}-${option.value}`,
         text: option.label,
-        disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
+        disabled:
+          Array.isArray(enumDisabled) &&
+          enumDisabled.indexOf(option.value) !== -1,
       }))
     : [];
 
@@ -64,6 +68,7 @@ const RadioWidget = ({
       id={id}
       name={id}
       options={newOptions}
+      disabled={disabled || readonly}
       onChange={_onChange}
       onFocus={_onFocus}
       onBlur={_onBlur}

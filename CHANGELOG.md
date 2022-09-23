@@ -43,7 +43,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Add stubbed `WrapIfAdditionalTemplate`. `additionalProperties` is currently not supported in `@rjsf/fluent-ui` (See [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777)).
 - Added `name` or `id` (for those fluent components not supporting name) to the `input` components that were missing it to support `remix`
 - Fixed `DateTimeWidget` to properly use `BaseInputTemplate` rather than `TextWidget`
-- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts and protecting against non-arrays
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts and protecting against non-arrays, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2138)
+- Fixed `RadioWidget` so that it supports read-only and disabled states
 
 ## @rjsf/material-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`

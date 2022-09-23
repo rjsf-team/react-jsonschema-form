@@ -1857,6 +1857,7 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
+                disabled={false}
                 id="root-true"
                 name="root"
                 onBlur={[Function]}
@@ -1886,6 +1887,7 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
+                disabled={false}
                 id="root-false"
                 name="root"
                 onBlur={[Function]}
