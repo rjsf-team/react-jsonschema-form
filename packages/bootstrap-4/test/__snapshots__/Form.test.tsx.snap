@@ -111,118 +111,102 @@ exports[`single fields checkboxes field 1`] = `
       <div
         className="form-group"
       >
-        <form
-          className=""
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-foo"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-foo"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root-foo"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root-foo"
-              title=""
-            >
-              foo
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            foo
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-bar"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-bar"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root-bar"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root-bar"
-              title=""
-            >
-              bar
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            bar
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-fuzz"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-fuzz"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root-fuzz"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root-fuzz"
-              title=""
-            >
-              fuzz
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            fuzz
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-qux"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-qux"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root-qux"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root-qux"
-              title=""
-            >
-              qux
-            </label>
-          </div>
-        </form>
+            qux
+          </label>
+        </div>
       </div>
       
     </div>

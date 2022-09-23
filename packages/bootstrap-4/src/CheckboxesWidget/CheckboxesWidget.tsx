@@ -61,24 +61,23 @@ const CheckboxesWidget = ({
               enumDisabled.indexOf(option.value) !== -1;
 
             return (
-              <Form key={option.value}>
-                <Form.Check
-                  inline={inline}
-                  custom
-                  required={required}
-                  checked={checked}
-                  className="bg-transparent border-0"
-                  type={"checkbox"}
-                  id={`${id}-${option.value}`}
-                  name={id}
-                  label={option.label}
-                  autoFocus={autofocus && index === 0}
-                  onChange={_onChange(option)}
-                  onBlur={_onBlur}
-                  onFocus={_onFocus}
-                  disabled={disabled || itemDisabled || readonly}
-                />
-              </Form>
+              <Form.Check
+                key={option.value}
+                inline={inline}
+                custom
+                required={required}
+                checked={checked}
+                className="bg-transparent border-0"
+                type={"checkbox"}
+                id={`${id}-${option.value}`}
+                name={id}
+                label={option.label}
+                autoFocus={autofocus && index === 0}
+                onChange={_onChange(option)}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+                disabled={disabled || itemDisabled || readonly}
+              />
             );
           })}
       </Form.Group>

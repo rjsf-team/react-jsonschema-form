@@ -11,34 +11,30 @@ Array [
   <div
     className="form-group"
   >
-    <form
-      className=""
+    <div
+      className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
     >
-      <div
-        className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
+      <input
+        autoFocus={true}
+        checked={true}
+        className="custom-control-input"
+        disabled={true}
+        id="_id-a"
+        name="_id"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={true}
+        type="checkbox"
+      />
+      <label
+        className="custom-control-label"
+        htmlFor="_id-a"
+        title=""
       >
-        <input
-          autoFocus={true}
-          checked={true}
-          className="custom-control-input"
-          disabled={true}
-          id="_id-"
-          name="_id"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={true}
-          type="checkbox"
-        />
-        <label
-          className="custom-control-label"
-          htmlFor="_id-"
-          title=""
-        >
-          
-        </label>
-      </div>
-    </form>
+        A
+      </label>
+    </div>
   </div>,
 ]
 `;
@@ -54,34 +50,30 @@ Array [
   <div
     className="form-group"
   >
-    <form
-      className=""
+    <div
+      className="bg-transparent border-0 custom-control custom-checkbox"
     >
-      <div
-        className="bg-transparent border-0 custom-control custom-checkbox"
+      <input
+        autoFocus={true}
+        checked={true}
+        className="custom-control-input"
+        disabled={true}
+        id="_id-a"
+        name="_id"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={true}
+        type="checkbox"
+      />
+      <label
+        className="custom-control-label"
+        htmlFor="_id-a"
+        title=""
       >
-        <input
-          autoFocus={true}
-          checked={true}
-          className="custom-control-input"
-          disabled={true}
-          id="_id-"
-          name="_id"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={true}
-          type="checkbox"
-        />
-        <label
-          className="custom-control-label"
-          htmlFor="_id-"
-          title=""
-        >
-          
-        </label>
-      </div>
-    </form>
+        A
+      </label>
+    </div>
   </div>,
 ]
 `;
