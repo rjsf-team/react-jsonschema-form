@@ -2,7 +2,6 @@
 import React from "react";
 import { getTemplate, getUiOptions } from "@rjsf/utils";
 import { Form } from "semantic-ui-react";
-import WrapIfAdditional from "./WrapIfAdditional";
 import { getSemanticProps, MaybeWrap } from "../util";
 
 function FieldTemplate({
@@ -23,6 +22,11 @@ function FieldTemplate({
   const semanticProps = getSemanticProps(props);
   const { wrapLabel, wrapContent } = semanticProps;
   const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate(
+    "WrapIfAdditionalTemplate",
+    registry,
+    uiOptions
+  );
   const DescriptionFieldTemplate = getTemplate(
     "DescriptionFieldTemplate",
     registry,
@@ -34,7 +38,7 @@ function FieldTemplate({
   }
 
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       id={id}
       label={label}
@@ -59,7 +63,7 @@ function FieldTemplate({
           {errors}
         </MaybeWrap>
       </Form.Group>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
 }
 

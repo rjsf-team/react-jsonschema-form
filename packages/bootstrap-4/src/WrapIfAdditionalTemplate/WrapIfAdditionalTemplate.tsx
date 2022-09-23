@@ -1,27 +1,15 @@
 import React from "react";
 
-import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
-  FieldTemplateProps,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
-
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   classNames,
   children,
   disabled,
@@ -34,7 +22,8 @@ const WrapIfAdditional = ({
   schema,
   uiSchema,
   registry,
-}: WrapIfAdditionalProps) => {
+}: WrapIfAdditionalTemplateProps) => {
+  // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
@@ -77,4 +66,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

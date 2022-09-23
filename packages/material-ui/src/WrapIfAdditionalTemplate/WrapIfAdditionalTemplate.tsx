@@ -3,24 +3,12 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
-import { ADDITIONAL_PROPERTY_FLAG, FieldTemplateProps } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 
-type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
-  FieldTemplateProps,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
-
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
@@ -33,7 +21,8 @@ const WrapIfAdditional = ({
   schema,
   uiSchema,
   registry,
-}: WrapIfAdditionalProps) => {
+}: WrapIfAdditionalTemplateProps) => {
+  // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
@@ -88,4 +77,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

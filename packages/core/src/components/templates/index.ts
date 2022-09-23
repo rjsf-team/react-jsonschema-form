@@ -14,6 +14,7 @@ import FieldHelpTemplate from "./FieldHelpTemplate";
 import ObjectFieldTemplate from "./ObjectFieldTemplate";
 import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
+import WrapIfAdditionalTemplate from "./WrapIfAdditionalTemplate";
 
 const templates: TemplatesType = {
   ArrayFieldDescriptionTemplate,
@@ -30,6 +31,7 @@ const templates: TemplatesType = {
   ObjectFieldTemplate,
   TitleFieldTemplate: TitleField,
   UnsupportedFieldTemplate: UnsupportedField,
+  WrapIfAdditionalTemplate,
 };
 
 export default templates;

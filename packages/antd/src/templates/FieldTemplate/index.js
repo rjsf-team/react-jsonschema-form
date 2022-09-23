@@ -2,7 +2,7 @@ import React from "react";
 
 import Form from "antd/lib/form";
 
-import WrapIfAdditional from "./WrapIfAdditional";
+import { getUiOptions, getTemplate } from "@rjsf/utils";
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -36,12 +36,19 @@ const FieldTemplate = ({
     wrapperStyle,
   } = formContext;
 
+  const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate(
+    "WrapIfAdditionalTemplate",
+    registry,
+    uiOptions
+  );
+
   if (hidden) {
     return <div className="field-hidden">{children}</div>;
   }
 
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       formContext={formContext}
@@ -74,7 +81,7 @@ const FieldTemplate = ({
           {children}
         </Form.Item>
       )}
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
 };
 
