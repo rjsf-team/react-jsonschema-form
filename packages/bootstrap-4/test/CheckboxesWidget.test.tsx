@@ -23,7 +23,10 @@ describe("CheckboxesWidget", () => {
       .create(
         <CheckboxesWidget
           {...makeWidgetMockProps({
-            options: { enumOptions: [{ label: "A", value: "a" }], inline: true },
+            options: {
+              enumOptions: [{ label: "A", value: "a" }],
+              inline: true,
+            },
           })}
         />
       )

@@ -27,6 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `name` to the `input` components that were missing it to support `remix`
 - Simplified the `CheckboxWidgets` code to eliminate a ternary in favor of a simple `inline={inline}` property since all the rest of the props were the same
 - Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
+- Fixed an issue where `CheckboxesWidget` incorrectly rendered inner `<form>` elements around each checkbox, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2355)
 
 ## @rjsf/chakra-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
