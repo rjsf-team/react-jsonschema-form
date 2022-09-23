@@ -1,8 +1,6 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  getTemplate,
-  getUiOptions,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import {
@@ -28,8 +26,8 @@ const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
     schema,
     uiSchema,
   } = props;
-  const uiOptions = getUiOptions(uiSchema);
-  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
+  // Button templates are not overridden in the uiSchema
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
     return <div className={classNames}>{children}</div>;

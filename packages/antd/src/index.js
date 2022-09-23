@@ -16,7 +16,7 @@ import FieldTemplate from "./templates/FieldTemplate";
 import ObjectFieldTemplate from "./templates/ObjectFieldTemplate";
 import SubmitButton from "./templates/SubmitButton";
 import TitleField from "./templates/TitleField";
-import WrapIfAdditionalTemplate from "./templates/FieldTemplate/WrapIfAdditionalTemplate";
+import WrapIfAdditionalTemplate from "./templates/WrapIfAdditionalTemplate";
 
 import AltDateTimeWidget from "./widgets/AltDateTimeWidget";
 import AltDateWidget from "./widgets/AltDateWidget";

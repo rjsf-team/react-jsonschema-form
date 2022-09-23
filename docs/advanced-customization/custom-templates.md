@@ -34,7 +34,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [ObjectFieldTemplate](#ObjectFieldTemplate)                      | ObjectFieldTemplateProps   | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                        |
 | [TitleFieldTemplate*](#TitleFieldTemplate)                       | TitleFieldProps            | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
 | [UnsupportedFieldTemplate*](#UnsupportedFieldTemplate)           | UnsupportedFieldProps      | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                          |
-| [WrapIfAdditionalTemplate*](#WrapIfAdditionalTemplate)           | WrapIfAdditionalTemplateProps      | ui:WrapIfAdditionalTemplateTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                          |
+| [WrapIfAdditionalTemplate*](#WrapIfAdditionalTemplate)           | WrapIfAdditionalTemplateProps      | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                          |
 | [ButtonTemplates.AddButton*](#AddButton)                         | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |                                                                                                                                             
 | [ButtonTemplates.MoveDownButton*](#MoveDownButton)               | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
 | [ButtonTemplates.MoveUpButton*](#MoveUpButton)                   | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
@@ -751,7 +751,8 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 
 ## WrapIfAdditionalTemplate
 
-The `WrapIfAdditionalTemplate` is used by the FieldTemplate to conditionally render additional controls if `additionalProperties` is present in the schema. You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties`.
+The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` is present in the schema.
+You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties`.
 
 ```tsx
 import { WrapIfAdditionalTemplateProps } from "@rjsf/utils";
@@ -769,8 +770,7 @@ function WrapIfAdditionalTemplate<T = any, F = any>(
     uiSchema,
     registry,
   } = props;
-  const uiOptions = getUiOptions(uiSchema);
-  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {

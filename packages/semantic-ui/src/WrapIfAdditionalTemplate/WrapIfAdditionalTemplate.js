@@ -1,8 +1,4 @@
-import {
-  ADDITIONAL_PROPERTY_FLAG,
-  getTemplate,
-  getUiOptions,
-} from "@rjsf/utils";
+import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
 import React from "react";
 import { Form, Grid } from "semantic-ui-react";
 
@@ -21,8 +17,8 @@ const WrapIfAdditionalTemplate = ({
   uiSchema,
   registry,
 }) => {
-  const uiOptions = getUiOptions(uiSchema);
-  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
+  // Button templates are not overridden in the uiSchema
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const { readonlyAsDisabled = true, wrapperStyle } = formContext;
 
   const keyLabel = `${label} Key`; // i18n ?

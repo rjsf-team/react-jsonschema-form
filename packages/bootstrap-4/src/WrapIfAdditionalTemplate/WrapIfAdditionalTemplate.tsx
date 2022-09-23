@@ -2,9 +2,7 @@ import React from "react";
 
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  getTemplate,
   WrapIfAdditionalTemplateProps,
-  getUiOptions,
 } from "@rjsf/utils";
 
 import Row from "react-bootstrap/Row";
@@ -25,8 +23,8 @@ const WrapIfAdditionalTemplate = ({
   uiSchema,
   registry,
 }: WrapIfAdditionalTemplateProps) => {
-  const uiOptions = getUiOptions(uiSchema);
-  const { RemoveButton } = getTemplate("ButtonTemplates", registry, uiOptions);
+  // Button templates are not overridden in the uiSchema
+  const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
