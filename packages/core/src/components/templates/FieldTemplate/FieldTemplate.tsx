@@ -25,7 +25,7 @@ export default function FieldTemplate<T = any, F = any>(
     uiSchema,
   } = props;
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate(
+  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
     "WrapIfAdditionalTemplate",
     registry,
     uiOptions
