@@ -36,6 +36,7 @@ const registry: Registry = {
     ObjectFieldTemplate: FakeTemplate,
     TitleFieldTemplate: FakeTemplate,
     UnsupportedFieldTemplate: FakeTemplate,
+    WrapIfAdditionalTemplate: FakeTemplate,
   },
   fields: {},
   widgets: {},
@@ -67,6 +68,8 @@ const uiOptions: UIOptionsType = {
     CustomTemplate as unknown as UIOptionsType["TitleFieldTemplate"],
   UnsupportedFieldTemplate:
     CustomTemplate as unknown as UIOptionsType["UnsupportedFieldTemplate"],
+  WrapIfAdditionalTemplate:
+    CustomTemplate as unknown as UIOptionsType["WrapIfAdditionalTemplate"],
 };
 
 const KEYS = Object.keys(registry.templates).filter(

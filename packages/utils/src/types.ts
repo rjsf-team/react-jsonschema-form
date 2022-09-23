@@ -216,6 +216,10 @@ export interface TemplatesType<T = any, F = any> {
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
   UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, F>>;
+  /** The template to use for rendering a field that allows a user to add additional properties */
+  WrapIfAdditionalTemplate: React.ComponentType<
+    WrapIfAdditionalTemplateProps<T, F>
+  >;
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
@@ -533,6 +537,25 @@ export type ObjectFieldTemplateProps<T = any, F = any> = {
   /** The `registry` object */
   registry: Registry<T, F>;
 };
+
+/** The properties that are passed to a WrapIfAdditionalTemplate implementation */
+export type WrapIfAdditionalTemplateProps<T = any, F = any> = {
+  /** The field or widget component instance for this field row */
+  children: React.ReactNode;
+} & Pick<
+  FieldTemplateProps<T, F>,
+  | "id"
+  | "classNames"
+  | "label"
+  | "required"
+  | "readonly"
+  | "disabled"
+  | "schema"
+  | "uiSchema"
+  | "onKeyChange"
+  | "onDropPropertyClick"
+  | "registry"
+>;
 
 /** The properties that are passed to a Widget implementation */
 export interface WidgetProps<T = any, F = any>

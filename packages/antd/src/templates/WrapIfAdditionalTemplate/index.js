@@ -13,7 +13,7 @@ const INPUT_STYLE = {
   width: "100%",
 };
 
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
@@ -37,6 +37,7 @@ const WrapIfAdditional = ({
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = formContext;
+  // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
 
   const keyLabel = `${label} Key`; // i18n ?
@@ -94,4 +95,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

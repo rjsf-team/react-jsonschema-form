@@ -2,7 +2,7 @@ import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
 import React from "react";
 import { Form, Grid } from "semantic-ui-react";
 
-const WrapIfAdditional = ({
+const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
@@ -17,6 +17,7 @@ const WrapIfAdditional = ({
   uiSchema,
   registry,
 }) => {
+  // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const { readonlyAsDisabled = true, wrapperStyle } = formContext;
 
@@ -70,4 +71,4 @@ const WrapIfAdditional = ({
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;
