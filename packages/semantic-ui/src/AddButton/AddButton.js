@@ -3,7 +3,7 @@ import { Button, Icon } from "semantic-ui-react";
 
 function AddButton({ uiSchema, ...props }) {
   return (
-    <Button title="Add Item" {...props} icon size="tiny" labelPosition="left">
+    <Button title="Add Item" {...props} icon size="tiny">
       <Icon name="plus" />
     </Button>
   );

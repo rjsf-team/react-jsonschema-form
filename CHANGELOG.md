@@ -80,6 +80,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/semantic-ui
 - Updated the `FieldErrorTemplate` to use the `children` variation of the `List.Item` that supports ReactElement
 - Pass `uiSchema` appropriately to all of the `IconButton`s, `ArrayFieldItemTemplate` and `WrapIfAdditional` components, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
+- Fixed `ArrayFieldTemplate` and `ObjectFieldTemplate`'s `AddButton` to show the non-labeled version. (https://github.com/rjsf-team/react-jsonschema-form/pull/3142)
  
 ## @rjsf/utils
 - Updated the `FieldErrorProps` type to make it support an array of string and ReactElement
