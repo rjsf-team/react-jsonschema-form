@@ -1,5 +1,8 @@
 import React from "react";
-import { FieldTemplateProps, ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 import {
   FormControl,
   FormLabel,
@@ -8,22 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-type WrapIfAdditionalProps = { children: React.ReactElement } & Pick<
-  FieldTemplateProps,
-  | "classNames"
-  | "disabled"
-  | "id"
-  | "label"
-  | "onDropPropertyClick"
-  | "onKeyChange"
-  | "readonly"
-  | "required"
-  | "schema"
-  | "uiSchema"
-  | "registry"
->;
-
-const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
+const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
   const {
     children,
     classNames,
@@ -38,6 +26,7 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
     schema,
     uiSchema,
   } = props;
+  // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
@@ -78,4 +67,4 @@ const WrapIfAdditional = (props: WrapIfAdditionalProps) => {
   );
 };
 
-export default WrapIfAdditional;
+export default WrapIfAdditionalTemplate;

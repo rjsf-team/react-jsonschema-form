@@ -1,9 +1,7 @@
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
-import { FieldTemplateProps } from "@rjsf/utils";
-
-import WrapIfAdditional from "./WrapIfAdditional";
+import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
 
 const FieldTemplate = ({
   id,
@@ -25,11 +23,18 @@ const FieldTemplate = ({
   uiSchema,
   registry,
 }: FieldTemplateProps) => {
+  const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+    "WrapIfAdditionalTemplate",
+    registry,
+    uiOptions
+  );
+
   if (hidden) {
     return <div style={{ display: "none" }}>{children}</div>;
   }
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -56,7 +61,7 @@ const FieldTemplate = ({
         {errors}
         {help}
       </FormControl>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
 };
 
