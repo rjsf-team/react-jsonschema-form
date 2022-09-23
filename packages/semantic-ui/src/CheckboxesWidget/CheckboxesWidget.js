@@ -74,7 +74,7 @@ function CheckboxesWidget(props) {
           registry={registry}
         />
       )}
-      <Form.Group id={id} {...inlineOption}>
+      <Form.Group id={id} name={id} {...inlineOption}>
         {enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
@@ -82,6 +82,7 @@ function CheckboxesWidget(props) {
           return (
             <Form.Checkbox
               id={`${id}_${index}`}
+              name={id}
               key={`${id}_${index}`}
               label={option.label}
               {...semanticProps}

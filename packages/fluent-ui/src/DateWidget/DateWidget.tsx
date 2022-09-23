@@ -101,6 +101,7 @@ const DateWidget = ({
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <DatePicker
+      id={id}
       className={controlClass.control}
       firstDayOfWeek={DayOfWeek.Sunday}
       placeholder={placeholder}

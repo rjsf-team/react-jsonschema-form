@@ -454,6 +454,7 @@ exports[`single fields checkboxes field 1`] = `
               className="chakra-checkbox__input"
               disabled={false}
               id="root_0"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -505,6 +506,7 @@ exports[`single fields checkboxes field 1`] = `
               className="chakra-checkbox__input"
               disabled={false}
               id="root_1"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -556,6 +558,7 @@ exports[`single fields checkboxes field 1`] = `
               className="chakra-checkbox__input"
               disabled={false}
               id="root_2"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -607,6 +610,7 @@ exports[`single fields checkboxes field 1`] = `
               className="chakra-checkbox__input"
               disabled={false}
               id="root_3"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -1444,6 +1448,7 @@ exports[`single fields hidden field 1`] = `
         >
           <input
             id="root_my-field"
+            name="root_my-field"
             type="hidden"
             value=""
           />
@@ -2591,6 +2596,7 @@ exports[`single fields string field format data-url 1`] = `
             defaultValue=""
             disabled={false}
             id="root"
+            name="root"
             onChange={[Function]}
             type="file"
           />

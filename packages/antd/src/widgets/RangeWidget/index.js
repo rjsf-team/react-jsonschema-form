@@ -38,6 +38,7 @@ const RangeWidget = ({
       autoFocus={autofocus}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
+      name={id}
       max={max}
       min={min}
       onBlur={!readonly ? handleBlur : undefined}

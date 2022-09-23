@@ -61,6 +61,7 @@ function CheckboxWidget<T = any, F = any>({
         <input
           type="checkbox"
           id={id}
+          name={id}
           checked={typeof value === "undefined" ? false : value}
           required={required}
           disabled={disabled || readonly}

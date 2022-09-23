@@ -64,6 +64,7 @@ function SelectWidget<T = any, F = any>({
   return (
     <select
       id={id}
+      name={id}
       multiple={multiple}
       className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}

@@ -8,7 +8,6 @@ function BaseInputTemplate(props) {
   const {
     id,
     placeholder,
-    name,
     label,
     value,
     required,
@@ -43,15 +42,14 @@ function BaseInputTemplate(props) {
   return (
     <>
       <Form.Input
-        key={id}
         id={id}
+        name={id}
         placeholder={placeholder}
         {...inputProps}
         label={displayLabel ? label || schema.title : false}
         required={required}
         autoFocus={autofocus}
         disabled={disabled || readonly}
-        name={name}
         list={schema.examples ? `examples_${id}` : undefined}
         {...semanticProps}
         value={value || value === 0 ? value : ""}

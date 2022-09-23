@@ -12,7 +12,6 @@ function TextareaWidget(props) {
     disabled,
     autofocus,
     label,
-    name,
     readonly,
     onBlur,
     onFocus,
@@ -39,13 +38,12 @@ function TextareaWidget(props) {
   return (
     <Form.TextArea
       id={id}
-      key={id}
+      name={id}
       label={displayLabel ? label || schema.title : false}
       placeholder={placeholder}
       autoFocus={autofocus}
       required={required}
       disabled={disabled || readonly}
-      name={name}
       {...semanticProps}
       value={value || ""}
       error={rawErrors.length > 0}

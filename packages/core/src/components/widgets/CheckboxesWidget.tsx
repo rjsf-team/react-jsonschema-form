@@ -51,6 +51,7 @@ function CheckboxesWidget<T = any, F = any>({
               <input
                 type="checkbox"
                 id={`${id}_${index}`}
+                name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}

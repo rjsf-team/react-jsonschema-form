@@ -35,6 +35,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     >
       <Form.Check
         id={id}
+        name={id}
         label={desc}
         checked={typeof value === "undefined" ? false : value}
         required={required}

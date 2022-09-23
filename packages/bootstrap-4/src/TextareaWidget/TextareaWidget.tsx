@@ -53,6 +53,7 @@ const TextareaWidget = ({
       <InputGroup>
         <FormControl
           id={id}
+          name={id}
           as="textarea"
           placeholder={placeholder}
           disabled={disabled}

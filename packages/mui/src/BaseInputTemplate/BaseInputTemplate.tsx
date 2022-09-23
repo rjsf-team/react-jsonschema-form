@@ -52,6 +52,7 @@ const BaseInputTemplate = ({
     <>
       <TextField
         id={id}
+        name={id}
         placeholder={placeholder}
         label={displayLabel ? label || schema.title : false}
         autoFocus={autofocus}

@@ -66,6 +66,7 @@ const CheckboxesWidget = ({
           const checkbox = (
             <Checkbox
               id={`${id}_${index}`}
+              name={id}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}

@@ -52,6 +52,7 @@ const SelectWidget = ({
         as="select"
         bsPrefix="custom-select"
         id={id}
+        name={id}
         value={typeof value === "undefined" ? emptyValue : value}
         required={required}
         multiple={multiple}

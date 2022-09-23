@@ -87,6 +87,7 @@ const CheckboxesWidget = (props: WidgetProps) => {
                 <Checkbox
                   key={`${id}_${index}`}
                   id={`${id}_${index}`}
+                  name={id}
                   value={option.value}
                   isChecked={checked}
                   isDisabled={disabled || itemDisabled || readonly}

@@ -59,6 +59,8 @@ const RadioWidget = ({
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <ChoiceGroup
+      id={id}
+      name={id}
       options={newOptions as any}
       onChange={_onChange}
       onFocus={_onFocus}

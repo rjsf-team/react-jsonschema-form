@@ -40,7 +40,8 @@ function RadioWidget(props) {
           <Form.Field
             required={required}
             control={Radio}
-            name={`${id}-radio-${option.value}`}
+            id={`${id}-radio-${option.value}`}
+            name={id}
             {...semanticProps}
             onFocus={_onFocus}
             onBlur={_onBlur}

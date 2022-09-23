@@ -77,6 +77,7 @@ const CheckboxesWidget = ({
         return (
           <Checkbox
             id={`${id}_${index}`}
+            name={id}
             checked={checked}
             label={option.label}
             disabled={disabled || itemDisabled || readonly}
