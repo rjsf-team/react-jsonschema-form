@@ -42,6 +42,8 @@ const RadioWidget = ({
     >
       {enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
         <Radio
+          id={`${id}-${optionValue}`}
+          name={id}
           autoFocus={i === 0 ? autofocus : false}
           disabled={enumDisabled && enumDisabled.indexOf(value) !== -1}
           key={`${optionValue}`}

@@ -20,11 +20,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
 - Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `RadioWidget` to have unique `id`s for each radio element
 
 ## @rjsf/bootstrap
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
 - Added `name` to the `input` components that were missing it to support `remix`
 - Simplified the `CheckboxWidgets` code to eliminate a ternary in favor of a simple `inline={inline}` property since all the rest of the props were the same
+- Fixed `RadioWidget` to have unique `id`s for each radio element
 
 ## @rjsf/chakra-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`

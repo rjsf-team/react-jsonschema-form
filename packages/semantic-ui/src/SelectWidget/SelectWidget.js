@@ -78,6 +78,7 @@ function SelectWidget(props) {
 
   return (
     <Form.Dropdown
+      key={id}
       id={id}
       name={id}
       label={label || schema.title}

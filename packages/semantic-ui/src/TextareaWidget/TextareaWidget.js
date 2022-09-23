@@ -38,6 +38,7 @@ function TextareaWidget(props) {
   return (
     <Form.TextArea
       id={id}
+      key={id}
       name={id}
       label={displayLabel ? label || schema.title : false}
       placeholder={placeholder}

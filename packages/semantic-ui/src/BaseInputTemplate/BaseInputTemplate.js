@@ -42,6 +42,7 @@ function BaseInputTemplate(props) {
   return (
     <>
       <Form.Input
+        key={id}
         id={id}
         name={id}
         placeholder={placeholder}

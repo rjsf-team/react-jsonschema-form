@@ -964,7 +964,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="Yes"
+            id="root-true"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -974,7 +974,7 @@ exports[`single fields radio field 1`] = `
           />
           <label
             className="form-check-label"
-            htmlFor="Yes"
+            htmlFor="root-true"
             title=""
           >
             Yes
@@ -987,7 +987,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="No"
+            id="root-false"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -997,7 +997,7 @@ exports[`single fields radio field 1`] = `
           />
           <label
             className="form-check-label"
-            htmlFor="No"
+            htmlFor="root-false"
             title=""
           >
             No

@@ -39,6 +39,7 @@ function RangeWidget(props) {
     <React.Fragment>
       <Input
         id={id}
+        key={id}
         name={id}
         type="range"
         required={required}

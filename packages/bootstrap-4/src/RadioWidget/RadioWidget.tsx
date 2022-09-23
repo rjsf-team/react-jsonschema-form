@@ -49,7 +49,7 @@ const RadioWidget = ({
           <Form.Check
             inline={inline}
             label={option.label}
-            id={option.label}
+            id={`${id}-${option.value}`}
             key={i}
             name={id}
             type="radio"
