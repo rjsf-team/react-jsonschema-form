@@ -39,6 +39,7 @@ function TextareaWidget<T = any, F = any>({
   return (
     <textarea
       id={id}
+      name={id}
       className="form-control"
       value={value ? value : ""}
       placeholder={placeholder}

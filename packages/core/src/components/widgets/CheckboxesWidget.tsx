@@ -33,7 +33,8 @@ function CheckboxesWidget<T = any, F = any>({
         enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
-            enumDisabled && enumDisabled.indexOf(option.value) != -1;
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
@@ -50,7 +51,8 @@ function CheckboxesWidget<T = any, F = any>({
             <span>
               <input
                 type="checkbox"
-                id={`${id}_${index}`}
+                id={`${id}-${option.value}`}
+                name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
@@ -60,11 +62,14 @@ function CheckboxesWidget<T = any, F = any>({
             </span>
           );
           return inline ? (
-            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            <label
+              key={option.value}
+              className={`checkbox-inline ${disabledCls}`}
+            >
               {checkbox}
             </label>
           ) : (
-            <div key={index} className={`checkbox ${disabledCls}`}>
+            <div key={option.value} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );

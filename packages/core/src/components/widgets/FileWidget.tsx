@@ -126,6 +126,7 @@ function FileWidget<T, F>({
       <p>
         <input
           id={id}
+          name={id}
           type="file"
           disabled={readonly || disabled}
           onChange={handleChange}

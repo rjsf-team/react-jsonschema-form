@@ -7,7 +7,6 @@ import { getSemanticProps } from "../util";
 function RangeWidget(props) {
   const {
     id,
-    name,
     value,
     required,
     readonly,
@@ -41,7 +40,7 @@ function RangeWidget(props) {
       <Input
         id={id}
         key={id}
-        name={name}
+        name={id}
         type="range"
         required={required}
         disabled={disabled || readonly}

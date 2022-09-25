@@ -63,6 +63,7 @@ const CheckboxWidget = (props: WidgetProps) => {
     <>
       <Checkbox
         id={id}
+        name={id}
         label={label || schema.title}
         disabled={disabled || readonly}
         autoFocus={autofocus}

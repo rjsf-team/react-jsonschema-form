@@ -98,6 +98,7 @@ const AltDateWidget = ({
       className="form-control"
       disabled={elemProps.disabled}
       id={elemProps.id}
+      name={elemProps.name}
       onBlur={elemProps.onBlur}
       onChange={(elemValue) => elemProps.select(elemProps.type, elemValue)}
       onFocus={elemProps.onFocus}
@@ -122,6 +123,7 @@ const AltDateWidget = ({
               autofocus: autofocus && i === 0,
               disabled,
               id: elemId,
+              name: id,
               onBlur,
               onFocus,
               readonly,

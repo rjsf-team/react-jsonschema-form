@@ -129,6 +129,7 @@ const AltDateWidget = (props: any) => {
                 autofocus: autofocus && i === 0,
                 disabled,
                 id: elemId,
+                name: id,
                 onBlur,
                 onFocus,
                 readonly,

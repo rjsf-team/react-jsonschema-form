@@ -37,6 +37,7 @@ const SelectWidget = ({
   return (
     <TextField
       id={id}
+      name={id}
       label={label || schema.title}
       select
       value={typeof value === "undefined" ? emptyValue : value}

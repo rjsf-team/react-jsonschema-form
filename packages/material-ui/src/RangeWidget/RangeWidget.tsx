@@ -16,7 +16,7 @@ const RangeWidget = ({
   label,
   id,
 }: WidgetProps) => {
-  const sliderProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderProps = { value, label, id, name: id, ...rangeSpec(schema) };
 
   const _onChange = (_: any, value?: number | number[]) => {
     onChange(value ? options.emptyValue : value);

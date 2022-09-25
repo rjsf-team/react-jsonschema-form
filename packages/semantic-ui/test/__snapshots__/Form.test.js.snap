@@ -32,6 +32,7 @@ exports[`single fields checkbox field 1`] = `
             className="hidden"
             disabled={false}
             id="root"
+            name="root"
             readOnly={true}
             tabIndex={0}
             type="checkbox"
@@ -85,6 +86,7 @@ exports[`single fields checkbox field 2`] = `
             className="hidden"
             disabled={false}
             id="root"
+            name="root"
             readOnly={true}
             tabIndex={0}
             type="checkbox"
@@ -121,6 +123,7 @@ exports[`single fields checkboxes field 1`] = `
       <div
         className="grouped fields"
         id="root"
+        name="root"
       >
         <div
           className="field"
@@ -141,13 +144,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_0"
+              id="root-foo"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_0"
+              htmlFor="root-foo"
             >
               foo
             </label>
@@ -172,13 +176,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_1"
+              id="root-bar"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_1"
+              htmlFor="root-bar"
             >
               bar
             </label>
@@ -203,13 +208,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_2"
+              id="root-fuzz"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_2"
+              htmlFor="root-fuzz"
             >
               fuzz
             </label>
@@ -234,13 +240,14 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              id="root_3"
+              id="root-qux"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="checkbox"
             />
             <label
-              htmlFor="root_3"
+              htmlFor="root-qux"
             >
               qux
             </label>
@@ -295,6 +302,7 @@ exports[`single fields field with description 1`] = `
                 autoFocus={false}
                 disabled={false}
                 id="root_my-field"
+                name="root_my-field"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -360,6 +368,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 autoFocus={false}
                 disabled={false}
                 id="root_my-field"
+                name="root_my-field"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -423,7 +432,9 @@ exports[`single fields field with special semantic options 1`] = `
           <div
             className="required field"
           >
-            <label>
+            <label
+              htmlFor="root_test"
+            >
               test
             </label>
             <div
@@ -433,7 +444,9 @@ exports[`single fields field with special semantic options 1`] = `
               aria-multiselectable={false}
               autoFocus={false}
               className="ui fluid selection scrolling dropdown"
+              id="root_test"
               inverted="false"
+              name="root_test"
               onBlur={[Function]}
               onChange={[Function]}
               onClick={[Function]}
@@ -559,6 +572,7 @@ exports[`single fields format color 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -604,6 +618,7 @@ exports[`single fields format date 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -649,6 +664,7 @@ exports[`single fields format datetime 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -713,6 +729,7 @@ exports[`single fields help and error display 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -787,6 +804,7 @@ exports[`single fields hidden field 1`] = `
       >
         <input
           id="root_my-field"
+          name="root_my-field"
           type="hidden"
           value=""
         />
@@ -826,6 +844,7 @@ exports[`single fields hidden label 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -895,6 +914,7 @@ exports[`single fields number field 0 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -941,6 +961,7 @@ exports[`single fields number field 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -987,6 +1008,7 @@ exports[`single fields password field 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1043,13 +1065,16 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              name="root-radio-true"
+              id="root-true"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="radio"
               value="true"
             />
-            <label>
+            <label
+              htmlFor="root-true"
+            >
               Yes
             </label>
           </div>
@@ -1073,13 +1098,16 @@ exports[`single fields radio field 1`] = `
               checked={false}
               className="hidden"
               disabled={false}
-              name="root-radio-false"
+              id="root-false"
+              name="root"
               readOnly={true}
               tabIndex={0}
               type="radio"
               value="false"
             />
-            <label>
+            <label
+              htmlFor="root-false"
+            >
               No
             </label>
           </div>
@@ -1122,6 +1150,7 @@ exports[`single fields schema examples 1`] = `
             disabled={false}
             id="root"
             list="examples_root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1185,7 +1214,9 @@ exports[`single fields select field 1`] = `
           aria-multiselectable={false}
           autoFocus={false}
           className="ui fluid selection scrolling dropdown"
+          id="root"
           inverted="false"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onClick={[Function]}
@@ -1286,6 +1317,7 @@ exports[`single fields slider field 1`] = `
           id="root"
           max={100}
           min={42}
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1328,6 +1360,7 @@ exports[`single fields string field format data-url 1`] = `
             defaultValue=""
             disabled={false}
             id="root"
+            name="root"
             onChange={[Function]}
             type="file"
           />
@@ -1369,6 +1402,7 @@ exports[`single fields string field format email 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1414,6 +1448,7 @@ exports[`single fields string field format uri 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1459,6 +1494,7 @@ exports[`single fields string field regular 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1504,6 +1540,7 @@ exports[`single fields string field with placeholder 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1547,6 +1584,7 @@ exports[`single fields textarea field 1`] = `
           disabled={false}
           id="root"
           inverted={false}
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1609,6 +1647,7 @@ exports[`single fields title field 1`] = `
                 autoFocus={false}
                 disabled={false}
                 id="root_title"
+                name="root_title"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -1704,6 +1743,7 @@ exports[`single fields up/down field 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1749,6 +1789,7 @@ exports[`single fields using custom tagName 1`] = `
             autoFocus={false}
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}

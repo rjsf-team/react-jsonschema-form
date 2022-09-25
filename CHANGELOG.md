@@ -19,27 +19,48 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, protecting against non-arrays
 
 ## @rjsf/bootstrap
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Added `name` to the `input` components that were missing it to support `remix`
+- Simplified the `CheckboxWidgets` code to eliminate a ternary in favor of a simple `inline={inline}` property since all the rest of the props were the same
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
+- Fixed an issue where `CheckboxesWidget` incorrectly rendered inner `<form>` elements around each checkbox, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2355)
 
 ## @rjsf/chakra-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
 
 ## @rjsf/core
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate` 
+- Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`
 
 ## @rjsf/fluent-ui
 - Add stubbed `WrapIfAdditionalTemplate`. `additionalProperties` is currently not supported in `@rjsf/fluent-ui` (See [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777)).
+- Added `name` or `id` (for those fluent components not supporting name) to the `input` components that were missing it to support `remix`
+- Fixed `DateTimeWidget` to properly use `BaseInputTemplate` rather than `TextWidget`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts and protecting against non-arrays, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2138)
+- Fixed `RadioWidget` so that it supports read-only and disabled states
 
 ## @rjsf/material-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
 
 ## @rjsf/mui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Added `name` to the `input` components that were missing it to support `remix`
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
 
 ## @rjsf/semantic-ui
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
+- Fixed `ArrayFieldTemplate` and `ObjectFieldTemplate`'s `AddButton` to show the non-labeled version. (https://github.com/rjsf-team/react-jsonschema-form/pull/3142)
+- Added `name` to the `input` components that were missing it to support `remix`, including fixing incorrect `name`s as `id`s in some situations
+- Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, protecting against non-arrays
 
 ## @rjsf/utils
 - Added `WrapIfAdditionalTemplate` and `WrapIfAdditionalTemplateProps` to simplify theming and make it easier to override Field behavior for schemas with `additionalProperties`.
@@ -80,7 +101,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/semantic-ui
 - Updated the `FieldErrorTemplate` to use the `children` variation of the `List.Item` that supports ReactElement
 - Pass `uiSchema` appropriately to all of the `IconButton`s, `ArrayFieldItemTemplate` and `WrapIfAdditional` components, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
-- Fixed `ArrayFieldTemplate` and `ObjectFieldTemplate`'s `AddButton` to show the non-labeled version. (https://github.com/rjsf-team/react-jsonschema-form/pull/3142)
  
 ## @rjsf/utils
 - Updated the `FieldErrorProps` type to make it support an array of string and ReactElement
