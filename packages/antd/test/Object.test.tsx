@@ -1,15 +1,14 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import validator from "@rjsf/validator-ajv6";
+import { RJSFSchema } from "@rjsf/utils";
 
 import "../__mocks__/matchMedia.mock";
 import Form from "../src";
 
-const { describe, expect, test } = global;
-
 describe("object fields", () => {
   test("object", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         a: { type: "string", title: "A" },
@@ -22,7 +21,7 @@ describe("object fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("additionalProperties", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       additionalProperties: true,
     };

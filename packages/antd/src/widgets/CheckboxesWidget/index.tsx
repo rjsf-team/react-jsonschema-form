@@ -1,5 +1,5 @@
 import React from "react";
-
+import { WidgetProps } from "@rjsf/utils";
 import Checkbox from "antd/lib/checkbox";
 
 const CheckboxesWidget = ({
@@ -17,26 +17,34 @@ const CheckboxesWidget = ({
   // required,
   // schema,
   value,
-}) => {
+}: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
 
   const { enumOptions, enumDisabled, inline } = options;
 
-  const handleChange = (nextValue) => onChange(nextValue);
+  const handleChange = (nextValue: any) => onChange(nextValue);
 
-  const handleBlur = ({ target }) => onBlur(id, target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, target.value);
 
-  const handleFocus = ({ target }) => onFocus(id, target.value);
+  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, target.value);
+
+  // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
+  // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
+  const extraProps = {
+    id,
+    onBlur: !readonly ? handleBlur : undefined,
+    onFocus: !readonly ? handleFocus : undefined,
+  };
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       disabled={disabled || (readonlyAsDisabled && readonly)}
-      id={id}
       name={id}
-      onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
       value={value}
+      {...extraProps}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (

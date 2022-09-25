@@ -2,14 +2,28 @@ import React from "react";
 import classNames from "classnames";
 import isObject from "lodash/isObject";
 import isNumber from "lodash/isNumber";
-
-import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
+import isString from "lodash/isString";
+import {
+  canExpand,
+  getTemplate,
+  getUiOptions,
+  ObjectFieldTemplateProps,
+  ObjectFieldTemplatePropertyType,
+  RJSFSchema,
+  UiSchema,
+  GenericObjectType,
+} from "@rjsf/utils";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
 import { withConfigConsumer } from "antd/lib/config-provider/context";
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: "8px",
+};
+
+// Add in the `prefixCls` element needed by the `withConfigConsumer` HOC
+export type AntdObjectFieldTemplateProps = ObjectFieldTemplateProps & {
+  prefixCls: string;
 };
 
 const ObjectFieldTemplate = ({
@@ -27,14 +41,14 @@ const ObjectFieldTemplate = ({
   schema,
   title,
   uiSchema,
-}) => {
+}: AntdObjectFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate(
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate(
+  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
     "DescriptionFieldTemplate",
     registry,
     uiOptions
@@ -52,19 +66,23 @@ const ObjectFieldTemplate = ({
     // labelCol.className,
   );
 
-  const findSchema = (element) => element.content.props.schema;
+  const findSchema = (element: ObjectFieldTemplatePropertyType): RJSFSchema =>
+    element.content.props.schema;
 
-  const findSchemaType = (element) => findSchema(element).type;
+  const findSchemaType = (element: ObjectFieldTemplatePropertyType) =>
+    findSchema(element).type;
 
-  const findUiSchema = (element) => element.content.props.uiSchema;
+  const findUiSchema = (
+    element: ObjectFieldTemplatePropertyType
+  ): UiSchema | undefined => element.content.props.uiSchema;
 
-  const findUiSchemaField = (element) =>
+  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) =>
     getUiOptions(findUiSchema(element)).field;
 
-  const findUiSchemaWidget = (element) =>
+  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) =>
     getUiOptions(findUiSchema(element)).widget;
 
-  const calculateColSpan = (element) => {
+  const calculateColSpan = (element: ObjectFieldTemplatePropertyType) => {
     const type = findSchemaType(element);
     const field = findUiSchemaField(element);
     const widget = findUiSchemaWidget(element);
@@ -78,9 +96,16 @@ const ObjectFieldTemplate = ({
         : 12;
 
     if (isObject(colSpan)) {
-      return (
-        colSpan[widget] || colSpan[field] || colSpan[type] || defaultColSpan
-      );
+      const colSpanObj: GenericObjectType = colSpan;
+      if (isString(widget)) {
+        return colSpanObj[widget];
+      }
+      if (isString(field)) {
+        return colSpanObj[field];
+      }
+      if (isString(type)) {
+        return colSpanObj[type];
+      }
     }
     if (isNumber(colSpan)) {
       return colSpan;
@@ -91,7 +116,7 @@ const ObjectFieldTemplate = ({
   return (
     <fieldset id={idSchema.$id}>
       <Row gutter={rowGutter}>
-        {uiOptions.title !== false && (uiOptions.title || title) && (
+        {(uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
             <TitleFieldTemplate
               id={`${idSchema.$id}-title`}
@@ -102,19 +127,18 @@ const ObjectFieldTemplate = ({
             />
           </Col>
         )}
-        {uiOptions.description !== false &&
-          (uiOptions.description || description) && (
-            <Col span={24} style={DESCRIPTION_COL_STYLE}>
-              <DescriptionFieldTemplate
-                description={uiOptions.description || description}
-                id={`${idSchema.$id}-description`}
-                registry={registry}
-              />
-            </Col>
-          )}
+        {(uiOptions.description || description) && (
+          <Col span={24} style={DESCRIPTION_COL_STYLE}>
+            <DescriptionFieldTemplate
+              description={uiOptions.description || description!}
+              id={`${idSchema.$id}-description`}
+              registry={registry}
+            />
+          </Col>
+        )}
         {properties
           .filter((e) => !e.hidden)
-          .map((element) => (
+          .map((element: ObjectFieldTemplatePropertyType) => (
             <Col key={element.name} span={calculateColSpan(element)}>
               {element.content}
             </Col>
@@ -139,4 +163,6 @@ const ObjectFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: "form" })(ObjectFieldTemplate);
+export default withConfigConsumer<AntdObjectFieldTemplateProps>({
+  prefixCls: "form",
+})(ObjectFieldTemplate);

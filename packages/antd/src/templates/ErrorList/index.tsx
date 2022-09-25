@@ -1,4 +1,5 @@
 import React from "react";
+import { ErrorListProps } from "@rjsf/utils";
 
 import Alert from "antd/lib/alert";
 import List from "antd/lib/list";
@@ -7,11 +8,11 @@ import ExclamationCircleOutlined from "@ant-design/icons/ExclamationCircleOutlin
 
 const ErrorList = ({
   // errorSchema,
-  errors,
-  // formContext,
   // schema,
   // uiSchema,
-}) => {
+  // formContext,
+  errors,
+}: ErrorListProps) => {
   const renderErrors = () => (
     <List className="list-group" size="small">
       {errors.map((error, index) => (

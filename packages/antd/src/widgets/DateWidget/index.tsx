@@ -1,5 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
+import { WidgetProps } from "@rjsf/utils";
 
 import DatePicker from "../../components/DatePicker";
 
@@ -22,17 +23,17 @@ const DateWidget = ({
   // required,
   // schema,
   value,
-}) => {
+}: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = (nextValue) =>
+  const handleChange = (nextValue: any) =>
     onChange(nextValue && nextValue.format("YYYY-MM-DD"));
 
   const handleBlur = () => onBlur(id, value);
 
   const handleFocus = () => onFocus(id, value);
 
-  const getPopupContainer = (node) => node.parentNode;
+  const getPopupContainer = (node: any) => node.parentNode;
 
   return (
     <DatePicker

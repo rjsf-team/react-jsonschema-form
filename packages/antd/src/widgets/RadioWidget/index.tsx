@@ -1,7 +1,6 @@
-/* eslint-disable no-else-return */
 import React from "react";
-
-import Radio from "antd/lib/radio";
+import { WidgetProps } from "@rjsf/utils";
+import Radio, { RadioChangeEvent } from "antd/lib/radio";
 
 const RadioWidget = ({
   autofocus,
@@ -18,25 +17,27 @@ const RadioWidget = ({
   // required,
   schema,
   value,
-}) => {
+}: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
 
   const { enumOptions, enumDisabled } = options;
 
-  const handleChange = ({ target: { value: nextValue } }) =>
+  const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
     onChange(schema.type === "boolean" ? nextValue !== "false" : nextValue);
 
-  const handleBlur = ({ target }) => onBlur(id, target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, target.value);
 
-  const handleFocus = ({ target }) => onFocus(id, target.value);
+  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, target.value);
 
   return (
     <Radio.Group
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={id}
-      onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
+      onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       value={`${value}`}
     >

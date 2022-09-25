@@ -1,5 +1,9 @@
 import React from "react";
-import { getTemplate, getUiOptions } from "@rjsf/utils";
+import {
+  getTemplate,
+  getUiOptions,
+  ArrayFieldTemplateProps,
+} from "@rjsf/utils";
 import classNames from "classnames";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -7,6 +11,11 @@ import { withConfigConsumer } from "antd/lib/config-provider/context";
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: "8px",
+};
+
+// Add in the `prefixCls` element needed by the `withConfigConsumer` HOC
+export type AntdArrayFieldTemplateProps = ArrayFieldTemplateProps & {
+  prefixCls: string;
 };
 
 const ArrayFieldTemplate = ({
@@ -25,19 +34,19 @@ const ArrayFieldTemplate = ({
   schema,
   title,
   uiSchema,
-}) => {
+}: AntdArrayFieldTemplateProps) => {
   const uiOptions = getUiOptions(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate(
     "ArrayFieldDescriptionTemplate",
     registry,
     uiOptions
   );
-  const ArrayFieldItemTemplate = getTemplate(
+  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate">(
     "ArrayFieldItemTemplate",
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate(
+  const ArrayFieldTitleTemplate = getTemplate<"ArrayFieldTitleTemplate">(
     "ArrayFieldTitleTemplate",
     registry,
     uiOptions
@@ -73,7 +82,7 @@ const ArrayFieldTemplate = ({
         {(uiOptions.description || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <ArrayFieldDescriptionTemplate
-              description={uiOptions.description || schema.description}
+              description={uiOptions.description || schema.description || ""}
               idSchema={idSchema}
               uiSchema={uiSchema}
               registry={registry}
@@ -83,11 +92,8 @@ const ArrayFieldTemplate = ({
 
         <Col className="row array-item-list" span={24}>
           {items &&
-            items.map((itemProps) => (
-              <ArrayFieldItemTemplate
-                {...itemProps}
-                formContext={formContext}
-              />
+            items.map(({ key, ...itemProps }) => (
+              <ArrayFieldItemTemplate key={key} {...itemProps} />
             ))}
         </Col>
 
@@ -110,4 +116,6 @@ const ArrayFieldTemplate = ({
   );
 };
 
-export default withConfigConsumer({ prefixCls: "form" })(ArrayFieldTemplate);
+export default withConfigConsumer<AntdArrayFieldTemplateProps>({
+  prefixCls: "form",
+})(ArrayFieldTemplate);

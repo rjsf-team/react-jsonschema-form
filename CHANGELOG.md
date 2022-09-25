@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
 - Added `name` to the `input` components that were missing it to support `remix`
 - Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, protecting against non-arrays
+- Converted `antd` to Typescript, indirectly fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3123)
 
 ## @rjsf/bootstrap
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`

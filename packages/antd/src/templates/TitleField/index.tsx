@@ -1,9 +1,18 @@
 import React from "react";
 import classNames from "classnames";
-
+import { TitleFieldProps } from "@rjsf/utils";
 import { withConfigConsumer } from "antd/lib/config-provider/context";
 
-const TitleField = ({ id, prefixCls, required, registry, title }) => {
+// Add in the `prefixCls` element needed by the `withConfigConsumer` HOC
+export type AntdTitleFieldProps = TitleFieldProps & { prefixCls: string };
+
+const TitleField = ({
+  id,
+  prefixCls,
+  required,
+  registry,
+  title,
+}: AntdTitleFieldProps) => {
   const { formContext } = registry;
   const { colon = true } = formContext;
 
@@ -22,7 +31,9 @@ const TitleField = ({ id, prefixCls, required, registry, title }) => {
       return;
     }
 
-    const control = document.querySelector(`[id="${id}"]`);
+    const control: HTMLLabelElement | null = document.querySelector(
+      `[id="${id}"]`
+    );
     if (control && control.focus) {
       control.focus();
     }
@@ -44,4 +55,6 @@ TitleField.defaultProps = {
   formContext: {},
 };
 
-export default withConfigConsumer({ prefixCls: "form" })(TitleField);
+export default withConfigConsumer<AntdTitleFieldProps>({ prefixCls: "form" })(
+  TitleField
+);
