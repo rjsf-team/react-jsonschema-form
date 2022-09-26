@@ -1,5 +1,5 @@
 import React from "react";
-
+import { FieldTemplateProps } from "@rjsf/utils";
 import Form from "antd/lib/form";
 
 import { getUiOptions, getTemplate } from "@rjsf/utils";
@@ -28,7 +28,7 @@ const FieldTemplate = ({
   required,
   schema,
   uiSchema,
-}) => {
+}: FieldTemplateProps) => {
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -37,7 +37,7 @@ const FieldTemplate = ({
   } = formContext;
 
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate(
+  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
     "WrapIfAdditionalTemplate",
     registry,
     uiOptions
@@ -51,7 +51,6 @@ const FieldTemplate = ({
     <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
-      formContext={formContext}
       id={id}
       label={label}
       onDropPropertyClick={onDropPropertyClick}

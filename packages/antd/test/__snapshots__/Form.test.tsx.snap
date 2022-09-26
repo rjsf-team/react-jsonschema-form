@@ -1927,9 +1927,7 @@ exports[`single fields title field 1`] = `
                   </div>
                   <div
                     className="ant-form-item-extra"
-                  >
-                    
-                  </div>
+                  />
                 </div>
               </div>
             </div>

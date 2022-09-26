@@ -4,18 +4,19 @@
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/antd.esm.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "start": "dts watch",
     "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.js\"",
-    "cs-format": "prettier \"{src,test}/**/*.js\" --write",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "dts test",
     "test:update": "dts test --u"
   },
   "lint-staged": {
-    "{src,test}/**/*.js": [
+    "{src,test}/**/*.ts?(x)": [
       "eslint --fix",
       "prettier --write"
     ]
@@ -26,20 +27,6 @@
   "engineStrict": false,
   "engines": {
     "node": ">=14"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
-    },
-    "verbose": true,
-    "testEnvironment": "jsdom",
-    "testEnvironmentOptions": {
-      "browsers": [
-        "chrome",
-        "firefox",
-        "safari"
-      ]
-    }
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
@@ -63,6 +50,10 @@
     "@rjsf/utils": "^5.0.0-beta.9",
     "@rjsf/validator-ajv6": "^5.0.0-beta.9",
     "@rollup/plugin-replace": "^4.0.0",
+    "@types/lodash": "^4.14.184",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.17",
+    "@types/react-test-renderer": "^17.0.2",
     "antd": "^4.22.8",
     "atob": "^2.0.3",
     "dayjs": "^1.11.5",

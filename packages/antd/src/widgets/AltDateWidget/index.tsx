@@ -1,23 +1,69 @@
 import React, { useEffect, useState } from "react";
 
-import { pad, parseDateString, toDateString } from "@rjsf/utils";
+import {
+  pad,
+  parseDateString,
+  toDateString,
+  DateObject,
+  WidgetProps,
+} from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
 
-const rangeOptions = (start, stop) => {
-  let options = [];
+type DateElementProps = Pick<
+  WidgetProps,
+  | "id"
+  | "name"
+  | "value"
+  | "disabled"
+  | "readonly"
+  | "autofocus"
+  | "registry"
+  | "onBlur"
+  | "onFocus"
+> & {
+  select: (property: keyof DateObject, value: any) => void;
+  type: string;
+  range: [number, number];
+};
+
+const rangeOptions = (start: number, stop: number) => {
+  const options = [];
   for (let i = start; i <= stop; i++) {
     options.push({ value: i, label: pad(i, 2) });
   }
   return options;
 };
 
-const readyForChange = (state) => {
-  return Object.keys(state).every(
-    (key) => typeof state[key] !== "undefined" && state[key] !== -1
-  );
+const readyForChange = (state: DateObject) => {
+  return Object.values(state).every((value) => value !== -1);
 };
+
+function dateElementProps(
+  state: DateObject,
+  time: boolean,
+  yearsRange: [number, number] = [1900, new Date().getFullYear() + 2]
+) {
+  const { year, month, day, hour, minute, second } = state;
+  const data = [
+    {
+      type: "year",
+      range: yearsRange,
+      value: year,
+    },
+    { type: "month", range: [1, 12], value: month },
+    { type: "day", range: [1, 31], value: day },
+  ] as { type: string; range: [number, number]; value: number }[];
+  if (time) {
+    data.push(
+      { type: "hour", range: [0, 23], value: hour || -1 },
+      { type: "minute", range: [0, 59], value: minute || -1 },
+      { type: "second", range: [0, 59], value: second || -1 }
+    );
+  }
+  return data;
+}
 
 const AltDateWidget = ({
   autofocus,
@@ -32,7 +78,7 @@ const AltDateWidget = ({
   registry,
   showTime,
   value,
-}) => {
+}: WidgetProps) => {
   const { SelectWidget } = registry.widgets;
   const { rowGutter = 24 } = formContext;
 
@@ -42,7 +88,7 @@ const AltDateWidget = ({
     setState(parseDateString(value, showTime));
   }, [showTime, value]);
 
-  const handleChange = (property, nextValue) => {
+  const handleChange = (property: keyof DateObject, nextValue: any) => {
     const nextState = {
       ...state,
       [property]: typeof nextValue === "undefined" ? -1 : nextValue,
@@ -55,7 +101,7 @@ const AltDateWidget = ({
     }
   };
 
-  const handleNow = (event) => {
+  const handleNow = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -64,7 +110,7 @@ const AltDateWidget = ({
     onChange(toDateString(nextState, showTime));
   };
 
-  const handleClear = (event) => {
+  const handleClear = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -72,27 +118,7 @@ const AltDateWidget = ({
     onChange(undefined);
   };
 
-  const dateElementProps = () => {
-    const { year, month, day, hour, minute, second } = state;
-
-    const data = [
-      { type: "year", range: options.yearsRange, value: year },
-      { type: "month", range: [1, 12], value: month },
-      { type: "day", range: [1, 31], value: day },
-    ];
-
-    if (showTime) {
-      data.push(
-        { type: "hour", range: [0, 23], value: hour },
-        { type: "minute", range: [0, 59], value: minute },
-        { type: "second", range: [0, 59], value: second }
-      );
-    }
-
-    return data;
-  };
-
-  const renderDateElement = (elemProps) => (
+  const renderDateElement = (elemProps: DateElementProps) => (
     <SelectWidget
       autofocus={elemProps.autofocus}
       className="form-control"
@@ -100,7 +126,9 @@ const AltDateWidget = ({
       id={elemProps.id}
       name={elemProps.name}
       onBlur={elemProps.onBlur}
-      onChange={(elemValue) => elemProps.select(elemProps.type, elemValue)}
+      onChange={(elemValue) =>
+        elemProps.select(elemProps.type as keyof DateObject, elemValue)
+      }
       onFocus={elemProps.onFocus}
       options={{
         enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
@@ -109,12 +137,18 @@ const AltDateWidget = ({
       readonly={elemProps.readonly}
       schema={{ type: "integer" }}
       value={elemProps.value}
+      registry={registry}
+      label=""
     />
   );
 
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
-      {dateElementProps().map((elemProps, i) => {
+      {dateElementProps(
+        state,
+        showTime,
+        options.yearsRange as [number, number] | undefined
+      ).map((elemProps, i) => {
         const elemId = id + "_" + elemProps.type;
         return (
           <Col flex="88px" key={elemId}>

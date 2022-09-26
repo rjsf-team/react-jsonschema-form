@@ -1,15 +1,14 @@
 import React from "react";
 import renderer from "react-test-renderer";
+import { RJSFSchema, ErrorSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 
 import "../__mocks__/matchMedia.mock";
 import Form from "../src";
 
-const { describe, expect, test } = global;
-
 describe("array fields", () => {
   test("array", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
         type: "string",
@@ -21,7 +20,7 @@ describe("array fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("fixed array", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "array",
       items: [
         {
@@ -38,7 +37,7 @@ describe("array fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("checkboxes", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
         type: "string",
@@ -62,7 +61,7 @@ describe("array fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("array icons", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
         type: "string",
@@ -77,7 +76,7 @@ describe("array fields", () => {
   });
 
   test("has errors", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         name: {
@@ -85,19 +84,19 @@ describe("array fields", () => {
         },
       },
     };
+    const errors: any[] = ["Bad input"];
+    const extraErrors = {
+      name: { __errors: errors },
+    } as unknown as ErrorSchema;
     const tree = renderer
       .create(
-        <Form
-          schema={schema}
-          validator={validator}
-          extraErrors={{ name: { __errors: ["Bad input"] } }}
-        />
+        <Form schema={schema} validator={validator} extraErrors={extraErrors} />
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
   test("no errors", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         name: {
@@ -111,7 +110,7 @@ describe("array fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("empty errors array", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         name: {
@@ -119,13 +118,13 @@ describe("array fields", () => {
         },
       },
     };
+    const errors: any[] = [];
+    const extraErrors = {
+      name: { __errors: errors },
+    } as unknown as ErrorSchema;
     const tree = renderer
       .create(
-        <Form
-          schema={schema}
-          validator={validator}
-          extraErrors={{ name: { __errors: [] } }}
-        />
+        <Form schema={schema} validator={validator} extraErrors={extraErrors} />
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 
 const INPUT_STYLE = {
@@ -7,29 +7,33 @@ const INPUT_STYLE = {
 };
 
 const TextareaWidget = ({
-  // autofocus,
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
   options,
   placeholder,
   readonly,
-  // required,
-  // schema,
   value,
-}) => {
+}: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = ({ target }) =>
+  const handleChange = ({ target }: React.ChangeEvent<HTMLTextAreaElement>) =>
     onChange(target.value === "" ? options.emptyValue : target.value);
 
-  const handleBlur = ({ target }) => onBlur(id, target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLTextAreaElement>) =>
+    onBlur(id, target.value);
 
-  const handleFocus = ({ target }) => onFocus(id, target.value);
+  const handleFocus = ({ target }: React.FocusEvent<HTMLTextAreaElement>) =>
+    onFocus(id, target.value);
+
+  // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
+  // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
+  const extraProps = {
+    type: "textarea",
+  };
 
   return (
     <Input.TextArea
@@ -42,8 +46,8 @@ const TextareaWidget = ({
       placeholder={placeholder}
       rows={options.rows || 4}
       style={INPUT_STYLE}
-      type="textarea"
       value={value}
+      {...extraProps}
     />
   );
 };

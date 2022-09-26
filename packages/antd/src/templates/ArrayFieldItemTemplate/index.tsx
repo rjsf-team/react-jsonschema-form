@@ -1,5 +1,5 @@
 import React from "react";
-
+import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -15,7 +15,6 @@ const BTN_STYLE = {
 const ArrayFieldItemTemplate = ({
   children,
   disabled,
-  formContext,
   hasMoveDown,
   hasMoveUp,
   hasRemove,
@@ -26,10 +25,10 @@ const ArrayFieldItemTemplate = ({
   readonly,
   registry,
   uiSchema,
-}) => {
+}: ArrayFieldTemplateItemType) => {
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
-  const { rowGutter = 24, toolbarAlign = "top" } = formContext;
+  const { rowGutter = 24, toolbarAlign = "top" } = registry.formContext;
 
   return (
     <Row align={toolbarAlign} key={`array-item-${index}`} gutter={rowGutter}>
@@ -67,10 +66,6 @@ const ArrayFieldItemTemplate = ({
       )}
     </Row>
   );
-};
-
-ArrayFieldItemTemplate.defaultProps = {
-  formContext: {},
 };
 
 export default ArrayFieldItemTemplate;

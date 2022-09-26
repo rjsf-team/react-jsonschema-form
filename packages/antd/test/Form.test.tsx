@@ -1,16 +1,15 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import validator from "@rjsf/validator-ajv6";
+import { RJSFSchema, ErrorSchema } from "@rjsf/utils";
 
 import "../__mocks__/matchMedia.mock";
 import Form from "../src";
 
-const { describe, expect, test } = global;
-
 describe("single fields", () => {
   describe("string field", () => {
     test("regular", () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: "string",
       };
       const tree = renderer
@@ -19,7 +18,7 @@ describe("single fields", () => {
       expect(tree).toMatchSnapshot();
     });
     test("format email", () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: "string",
         format: "email",
       };
@@ -29,7 +28,7 @@ describe("single fields", () => {
       expect(tree).toMatchSnapshot();
     });
     test("format uri", () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: "string",
         format: "uri",
       };
@@ -39,7 +38,7 @@ describe("single fields", () => {
       expect(tree).toMatchSnapshot();
     });
     test("format data-url", () => {
-      const schema = {
+      const schema: RJSFSchema = {
         type: "string",
         format: "data-url",
       };
@@ -50,7 +49,7 @@ describe("single fields", () => {
     });
   });
   test("string field with placeholder", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema = {
@@ -64,7 +63,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("number field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "number",
     };
     const tree = renderer
@@ -73,7 +72,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("number field 0", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "number",
     };
     const formData = 0;
@@ -85,7 +84,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("null field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "null",
     };
     const tree = renderer
@@ -94,7 +93,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("unsupported field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: undefined,
     };
     const tree = renderer
@@ -103,7 +102,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("format color", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
       format: "color",
     };
@@ -113,7 +112,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("format date", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
       format: "date",
     };
@@ -123,7 +122,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("format datetime", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
       format: "datetime",
     };
@@ -133,7 +132,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("password field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema = {
@@ -147,7 +146,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("up/down field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "number",
     };
     const uiSchema = {
@@ -161,7 +160,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("textarea field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema = {
@@ -175,7 +174,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("select field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
       enum: ["foo", "bar"],
     };
@@ -185,7 +184,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("checkbox field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "boolean",
     };
     const tree = renderer
@@ -194,7 +193,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("checkbox field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "boolean",
     };
     const tree = renderer
@@ -203,7 +202,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("checkboxes field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "array",
       items: {
         type: "string",
@@ -222,7 +221,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("radio field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "boolean",
     };
     const uiSchema = {
@@ -236,7 +235,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("slider field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "integer",
       minimum: 42,
       maximum: 100,
@@ -257,7 +256,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("hidden field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         "my-field": {
@@ -278,7 +277,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("field with description", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         "my-field": {
@@ -293,7 +292,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("field with description in uiSchema", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         "my-field": {
@@ -315,7 +314,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("title field", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "object",
       properties: {
         title: {
@@ -337,7 +336,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("hidden label", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema = {
@@ -353,7 +352,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("using custom tagName", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const tree = renderer
@@ -362,7 +361,7 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("schema examples", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
       examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
     };
@@ -372,13 +371,14 @@ describe("single fields", () => {
     expect(tree).toMatchSnapshot();
   });
   test("help and error display", () => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: "string",
     };
     const uiSchema = {
       "ui:help": "help me!",
     };
-    const extraErrors = { __errors: ["an error"] };
+    const errors: string[] = ["an error"];
+    const extraErrors = { __errors: errors } as ErrorSchema;
     const tree = renderer
       .create(
         <Form

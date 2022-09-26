@@ -1,6 +1,9 @@
 import React from "react";
-
-import { ADDITIONAL_PROPERTY_FLAG } from "@rjsf/utils";
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
+  WrapIfAdditionalTemplateProps,
+} from "@rjsf/utils";
 import Col from "antd/lib/col";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
@@ -17,7 +20,6 @@ const WrapIfAdditionalTemplate = ({
   children,
   classNames,
   disabled,
-  formContext,
   id,
   label,
   onDropPropertyClick,
@@ -27,7 +29,7 @@ const WrapIfAdditionalTemplate = ({
   registry,
   schema,
   uiSchema,
-}) => {
+}: WrapIfAdditionalTemplateProps) => {
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -36,7 +38,7 @@ const WrapIfAdditionalTemplate = ({
     toolbarAlign = "top",
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
-  } = formContext;
+  } = registry.formContext;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
 
@@ -47,7 +49,15 @@ const WrapIfAdditionalTemplate = ({
     return <div className={classNames}>{children}</div>;
   }
 
-  const handleBlur = ({ target }) => onKeyChange(target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onKeyChange(target.value);
+
+  // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
+  const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
+  const buttonUiOptions = {
+    ...uiSchema,
+    [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
+  };
 
   return (
     <div className={classNames}>
@@ -83,11 +93,10 @@ const WrapIfAdditionalTemplate = ({
         </Col>
         <Col flex="192px">
           <RemoveButton
-            block
             className="array-item-remove"
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
-            uiSchema={uiSchema}
+            uiSchema={buttonUiOptions}
           />
         </Col>
       </Row>

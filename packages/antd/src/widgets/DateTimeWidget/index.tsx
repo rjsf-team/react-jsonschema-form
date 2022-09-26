@@ -1,5 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
+import { WidgetProps } from "@rjsf/utils";
 
 import DatePicker from "../../components/DatePicker";
 
@@ -7,32 +8,27 @@ const DATE_PICKER_STYLE = {
   width: "100%",
 };
 
-const DateWidget = ({
-  // autofocus,
+const DateTimeWidget = ({
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
-  // options,
   placeholder,
   readonly,
-  // required,
-  // schema,
   value,
-}) => {
+}: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleChange = (nextValue) =>
-    onChange(nextValue && nextValue.format("YYYY-MM-DD"));
+  const handleChange = (nextValue: any) =>
+    onChange(nextValue && nextValue.toISOString());
 
   const handleBlur = () => onBlur(id, value);
 
   const handleFocus = () => onFocus(id, value);
 
-  const getPopupContainer = (node) => node.parentNode;
+  const getPopupContainer = (node: any) => node.parentNode;
 
   return (
     <DatePicker
@@ -44,11 +40,11 @@ const DateWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      showTime={false}
+      showTime
       style={DATE_PICKER_STYLE}
       value={value && dayjs(value)}
     />
   );
 };
 
-export default DateWidget;
+export default DateTimeWidget;

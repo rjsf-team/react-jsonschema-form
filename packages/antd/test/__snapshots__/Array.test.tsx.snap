@@ -211,9 +211,7 @@ exports[`array fields array icons 1`] = `
                       </div>
                       <div
                         className="ant-form-item-extra"
-                      >
-                        
-                      </div>
+                      />
                     </div>
                   </div>
                 </div>
@@ -406,9 +404,7 @@ exports[`array fields array icons 1`] = `
                       </div>
                       <div
                         className="ant-form-item-extra"
-                      >
-                        
-                      </div>
+                      />
                     </div>
                   </div>
                 </div>
@@ -814,9 +810,7 @@ exports[`array fields empty errors array 1`] = `
                   </div>
                   <div
                     className="ant-form-item-extra"
-                  >
-                    
-                  </div>
+                  />
                 </div>
               </div>
             </div>
@@ -940,9 +934,7 @@ exports[`array fields fixed array 1`] = `
                       </div>
                       <div
                         className="ant-form-item-extra"
-                      >
-                        
-                      </div>
+                      />
                     </div>
                   </div>
                 </div>
@@ -1100,9 +1092,7 @@ exports[`array fields fixed array 1`] = `
                       </div>
                       <div
                         className="ant-form-item-extra"
-                      >
-                        
-                      </div>
+                      />
                     </div>
                   </div>
                 </div>
@@ -1322,9 +1312,7 @@ exports[`array fields has errors 1`] = `
                   </div>
                   <div
                     className="ant-form-item-extra"
-                  >
-                    
-                  </div>
+                  />
                 </div>
               </div>
             </div>
@@ -1440,9 +1428,7 @@ exports[`array fields no errors 1`] = `
                   </div>
                   <div
                     className="ant-form-item-extra"
-                  >
-                    
-                  </div>
+                  />
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { getInputProps } from "@rjsf/utils";
+import { getInputProps, WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 
@@ -7,34 +7,33 @@ const INPUT_STYLE = {
   width: "100%",
 };
 
-const TextWidget = ({
-  // autofocus,
+const BaseInputTemplate = ({
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
   options,
   placeholder,
   readonly,
-  // required,
   schema,
   value,
   type,
-}) => {
+}: WidgetProps) => {
   const inputProps = getInputProps(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleNumberChange = (nextValue) => onChange(nextValue);
+  const handleNumberChange = (nextValue: number) => onChange(nextValue);
 
-  const handleTextChange = ({ target }) =>
+  const handleTextChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(target.value === "" ? options.emptyValue : target.value);
 
-  const handleBlur = ({ target }) => onBlur(id, target.value);
+  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, target.value);
 
-  const handleFocus = ({ target }) => onFocus(id, target.value);
+  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, target.value);
 
   const input =
     inputProps.type === "number" || inputProps.type === "integer" ? (
@@ -72,8 +71,8 @@ const TextWidget = ({
       {input}
       {schema.examples && (
         <datalist id={`examples_${id}`}>
-          {schema.examples
-            .concat(schema.default ? [schema.default] : [])
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example) => {
               return <option key={example} value={example} />;
             })}
@@ -83,4 +82,4 @@ const TextWidget = ({
   );
 };
 
-export default TextWidget;
+export default BaseInputTemplate;
