@@ -3,6 +3,7 @@
   "version": "5.0.0-beta.9",
   "main": "dist/index.js",
   "module": "dist/semantic-ui.esm.js",
+  "typings": "dist/index.d.ts",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist"
@@ -13,15 +14,15 @@
   },
   "scripts": {
     "build": "rimraf dist && dts build --rollupTypes --format cjs,es,umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.js\"",
-    "cs-format": "prettier \"{src,test}/**/*.js\" --write",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "dts test",
     "test:update": "dts test --u"
   },
   "lint-staged": {
-    "{src,test}/**/*.js": [
+    "{src,test}/**/*.ts(x)": [
       "eslint --fix",
       "prettier --write"
     ]
@@ -44,11 +45,14 @@
     "@rjsf/core": "^5.0.0-beta.9",
     "@rjsf/utils": "^5.0.0-beta.9",
     "@rjsf/validator-ajv6": "^5.0.0-beta.9",
+    "@types/lodash": "^4.14.184",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.17",
+    "@types/react-test-renderer": "^17.0.2",
     "atob": "^2.0.3",
     "dts-cli": "^1.6.0",
     "eslint": "^8.23.0",
     "nanoid": "^3.3.4",
-    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
