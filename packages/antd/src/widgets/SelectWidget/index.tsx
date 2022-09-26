@@ -11,7 +11,6 @@ const SelectWidget = ({
   disabled,
   formContext,
   id,
-  // label,
   multiple,
   onBlur,
   onChange,
@@ -19,7 +18,6 @@ const SelectWidget = ({
   options,
   placeholder,
   readonly,
-  // required,
   schema,
   value,
 }: WidgetProps) => {

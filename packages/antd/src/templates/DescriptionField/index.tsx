@@ -1,11 +1,7 @@
 import React from "react";
 import { DescriptionFieldProps } from "@rjsf/utils";
 
-const DescriptionField = ({
-  description,
-  id,
-}: // registry,
-DescriptionFieldProps) => {
+const DescriptionField = ({ description, id }: DescriptionFieldProps) => {
   if (!description) {
     return null;
   }

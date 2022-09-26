@@ -7,19 +7,15 @@ const INPUT_STYLE = {
 };
 
 const TextareaWidget = ({
-  // autofocus,
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
   options,
   placeholder,
   readonly,
-  // required,
-  // schema,
   value,
 }: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;

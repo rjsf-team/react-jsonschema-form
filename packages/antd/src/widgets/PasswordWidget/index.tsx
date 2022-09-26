@@ -3,19 +3,15 @@ import { WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 
 const PasswordWidget = ({
-  // autofocus,
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
   options,
   placeholder,
   readonly,
-  // required,
-  // schema,
   value,
 }: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;

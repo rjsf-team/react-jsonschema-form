@@ -23,7 +23,6 @@ const ArrayFieldTemplate = ({
   className,
   disabled,
   formContext,
-  // formData,
   idSchema,
   items,
   onAddClick,

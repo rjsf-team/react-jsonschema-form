@@ -8,18 +8,15 @@ const INPUT_STYLE = {
 };
 
 const BaseInputTemplate = ({
-  // autofocus,
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
   options,
   placeholder,
   readonly,
-  // required,
   schema,
   value,
   type,

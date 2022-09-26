@@ -6,13 +6,7 @@ import List from "antd/lib/list";
 import Space from "antd/lib/space";
 import ExclamationCircleOutlined from "@ant-design/icons/ExclamationCircleOutlined";
 
-const ErrorList = ({
-  // errorSchema,
-  // schema,
-  // uiSchema,
-  // formContext,
-  errors,
-}: ErrorListProps) => {
+const ErrorList = ({ errors }: ErrorListProps) => {
   const renderErrors = () => (
     <List className="list-group" size="small">
       {errors.map((error, index) => (

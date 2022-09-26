@@ -11,11 +11,7 @@ const CheckboxWidget = ({
   onBlur,
   onChange,
   onFocus,
-  // options,
-  // placeholder,
   readonly,
-  // required,
-  // schema,
   value,
 }: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;

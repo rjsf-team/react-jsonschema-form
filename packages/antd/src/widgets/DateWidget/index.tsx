@@ -9,19 +9,14 @@ const DATE_PICKER_STYLE = {
 };
 
 const DateWidget = ({
-  // autofocus,
   disabled,
   formContext,
   id,
-  // label,
   onBlur,
   onChange,
   onFocus,
-  // options,
   placeholder,
   readonly,
-  // required,
-  // schema,
   value,
 }: WidgetProps) => {
   const { readonlyAsDisabled = true } = formContext;
