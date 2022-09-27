@@ -31,7 +31,6 @@ function SelectWidget(props) {
     formContext,
     id,
     options,
-    name,
     label,
     required,
     disabled,
@@ -80,7 +79,8 @@ function SelectWidget(props) {
   return (
     <Form.Dropdown
       key={id}
-      name={name}
+      id={id}
+      name={id}
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
       value={typeof value === "undefined" ? emptyValue : value}

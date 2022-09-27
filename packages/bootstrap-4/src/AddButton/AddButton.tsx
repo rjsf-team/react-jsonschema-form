@@ -1,10 +1,12 @@
 import React from "react";
-
 import { IconButtonProps } from "@rjsf/utils";
 import Button from "react-bootstrap/Button";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
 
-const AddButton: React.ComponentType<IconButtonProps> = (props) => (
+const AddButton: React.ComponentType<IconButtonProps> = ({
+  uiSchema,
+  ...props
+}) => (
   <Button
     {...props}
     style={{ width: "100%" }}

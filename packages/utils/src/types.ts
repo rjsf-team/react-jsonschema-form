@@ -147,7 +147,7 @@ export type FieldErrorProps<T = any, F = any> = {
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
   /** An array of the errors */
-  errors?: string[];
+  errors?: Array<string | React.ReactElement>;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The schema that was passed to field */
@@ -216,18 +216,22 @@ export interface TemplatesType<T = any, F = any> {
   TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
   UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, F>>;
+  /** The template to use for rendering a field that allows a user to add additional properties */
+  WrapIfAdditionalTemplate: React.ComponentType<
+    WrapIfAdditionalTemplateProps<T, F>
+  >;
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
     SubmitButton: React.ComponentType<SubmitButtonProps<T, F>>;
     /** The template to use for the Add button used for AdditionalProperties and Array items */
-    AddButton: React.ComponentType<IconButtonProps>;
+    AddButton: React.ComponentType<IconButtonProps<T, F>>;
     /** The template to use for the Move Down button used for Array items */
-    MoveDownButton: React.ComponentType<IconButtonProps>;
+    MoveDownButton: React.ComponentType<IconButtonProps<T, F>>;
     /** The template to use for the Move Up button used for Array items */
-    MoveUpButton: React.ComponentType<IconButtonProps>;
+    MoveUpButton: React.ComponentType<IconButtonProps<T, F>>;
     /** The template to use for the Remove button used for AdditionalProperties and Array items */
-    RemoveButton: React.ComponentType<IconButtonProps>;
+    RemoveButton: React.ComponentType<IconButtonProps<T, F>>;
   };
 }
 
@@ -446,6 +450,8 @@ export type ArrayFieldTemplateItemType<T = any, F = any> = {
   readonly: boolean;
   /** A stable, unique key for the array item */
   key: string;
+  /** The uiSchema object for this field */
+  uiSchema?: UiSchema<T, F>;
   /** The `registry` object */
   registry: Registry<T, F>;
 };
@@ -532,6 +538,25 @@ export type ObjectFieldTemplateProps<T = any, F = any> = {
   registry: Registry<T, F>;
 };
 
+/** The properties that are passed to a WrapIfAdditionalTemplate implementation */
+export type WrapIfAdditionalTemplateProps<T = any, F = any> = {
+  /** The field or widget component instance for this field row */
+  children: React.ReactNode;
+} & Pick<
+  FieldTemplateProps<T, F>,
+  | "id"
+  | "classNames"
+  | "label"
+  | "required"
+  | "readonly"
+  | "disabled"
+  | "schema"
+  | "uiSchema"
+  | "onKeyChange"
+  | "onDropPropertyClick"
+  | "registry"
+>;
+
 /** The properties that are passed to a Widget implementation */
 export interface WidgetProps<T = any, F = any>
   extends GenericObjectType,
@@ -594,11 +619,16 @@ export type SubmitButtonProps<T = any, F = any> = {
 };
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
-export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type IconButtonProps<
+  T = any,
+  F = any
+> = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** An alternative specification for the type of the icon button */
   iconType?: string;
   /** The name representation or actual react element implementation for the icon */
   icon?: string | React.ReactElement;
+  /** The uiSchema for this widget */
+  uiSchema?: UiSchema<T, F>;
 };
 
 /** The type that defines how to change the behavior of the submit button for the form */

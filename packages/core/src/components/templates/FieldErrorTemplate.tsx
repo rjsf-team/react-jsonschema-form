@@ -18,8 +18,8 @@ export default function FieldErrorTemplate<T = any, F = any>(
     <div>
       <ul id={id} className="error-detail bs-callout bs-callout-info">
         {errors
-          .filter((elem: string) => !!elem)
-          .map((error: string, index: number) => {
+          .filter((elem) => !!elem)
+          .map((error, index: number) => {
             return (
               <li className="text-danger" key={index}>
                 {error}

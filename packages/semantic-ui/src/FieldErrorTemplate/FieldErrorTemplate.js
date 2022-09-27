@@ -30,7 +30,7 @@ function FieldErrorTemplate({ errors, idSchema, uiSchema, registry }) {
       >
         <List bulleted>
           {errors.map((error) => (
-            <List.Item key={nanoid()} content={error} />
+            <List.Item key={nanoid()}>{error}</List.Item>
           ))}
         </List>
       </Label>

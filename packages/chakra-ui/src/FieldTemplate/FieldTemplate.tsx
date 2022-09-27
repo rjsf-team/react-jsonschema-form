@@ -1,8 +1,6 @@
 import React from "react";
-import { FieldTemplateProps } from "@rjsf/utils";
+import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
 import { Text, FormControl } from "@chakra-ui/react";
-
-import WrapIfAdditional from "./WrapIfAdditional";
 
 const FieldTemplate = (props: FieldTemplateProps) => {
   const {
@@ -23,14 +21,21 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     help,
     rawDescription,
     schema,
+    uiSchema,
   } = props;
+  const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+    "WrapIfAdditionalTemplate",
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
     return <div style={{ display: "none" }}>{children}</div>;
   }
 
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -40,6 +45,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <FormControl
@@ -53,7 +59,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
         {errors}
         {help}
       </FormControl>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
 };
 

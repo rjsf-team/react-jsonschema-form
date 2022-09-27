@@ -46,6 +46,7 @@ const BaseInputTemplate = ({
       </Form.Label>
       <Form.Control
         id={id}
+        name={id}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}

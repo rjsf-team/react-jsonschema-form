@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   schema: {
     title: "Null field example",
     description: "A short form with a null field",

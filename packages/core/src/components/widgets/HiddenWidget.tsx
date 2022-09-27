@@ -11,6 +11,7 @@ function HiddenWidget<T = any, F = any>({ id, value }: WidgetProps<T, F>) {
     <input
       type="hidden"
       id={id}
+      name={id}
       value={typeof value === "undefined" ? "" : value}
     />
   );

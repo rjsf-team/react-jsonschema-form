@@ -72,6 +72,7 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             className="array-item-add"
             onClick={onAddClick}
             disabled={disabled || readonly}
+            uiSchema={uiSchema}
           />
         </span>
       )}

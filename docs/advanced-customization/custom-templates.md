@@ -28,12 +28,13 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [BaseInputTemplate*](#BaseInputTemplate)                         | WidgetProps                | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                         |
 | [DescriptionFieldTemplate*](#DescriptionFieldTemplate)           | DescriptionFieldProps      | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
 | [ErrorListTemplate*](#ErrorListTemplate)                         | ErrorListProps             | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                            |
-| [FieldErrorTemplate](#FieldErrorTemplate)                        | FieldErrorProps            | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                     |
-| [FieldHelpTemplate](#FieldHelpTemplate)                          | FieldHelpProps             | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                          |
+| [FieldErrorTemplate*](#FieldErrorTemplate)                       | FieldErrorProps            | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                     |
+| [FieldHelpTemplate*](#FieldHelpTemplate)                         | FieldHelpProps             | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                          |
 | [FieldTemplate](#FieldTemplate)                                  | FieldTemplateProps         | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                    |
 | [ObjectFieldTemplate](#ObjectFieldTemplate)                      | ObjectFieldTemplateProps   | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                        |
 | [TitleFieldTemplate*](#TitleFieldTemplate)                       | TitleFieldProps            | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
 | [UnsupportedFieldTemplate*](#UnsupportedFieldTemplate)           | UnsupportedFieldProps      | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                          |
+| [WrapIfAdditionalTemplate*](#WrapIfAdditionalTemplate)           | WrapIfAdditionalTemplateProps      | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                          |
 | [ButtonTemplates.AddButton*](#AddButton)                         | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |                                                                                                                                             
 | [ButtonTemplates.MoveDownButton*](#MoveDownButton)               | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
 | [ButtonTemplates.MoveUpButton*](#MoveUpButton)                   | IconButtonProps            | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
@@ -82,7 +83,7 @@ const uiSchema = {
 }
 ```
 
-Please see [customArray.js](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.js) for another example.
+Please see the [customArray.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -118,6 +119,7 @@ The following props are part of each element in `items`:
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+- `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -215,6 +217,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+- `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
 ## ArrayFieldTitleTemplate
@@ -643,7 +646,7 @@ const uiSchema = {
 };
 ```
 
-Please see [customObject.js](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.js) for a better example.
+Please see the [customObject.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
@@ -746,6 +749,73 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 - `reason`: The reason why the schema field has an unsupported type.
 - `registry`: The `registry` object.
 
+## WrapIfAdditionalTemplate
+
+The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` is present in the schema.
+You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties`.
+
+```tsx
+import { WrapIfAdditionalTemplateProps } from "@rjsf/utils";
+
+function WrapIfAdditionalTemplate<T = any, F = any>(
+  props: WrapIfAdditionalTemplateProps<T, F>
+) {
+  const {
+    id,
+    label,
+    onKeyChange,
+    onDropPropertyClick,
+    schema,
+    children,
+    uiSchema,
+    registry,
+  } = props;
+  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+
+  if (!additional) {
+    return <div>{children}</div>;
+  }
+
+  return (
+    <div>
+      <label label={keyLabel} id={`${id}-key`}>Custom Field Key</label>
+      <input 
+          className="form-control"
+          type="text"
+          id={`${id}-key`}
+          onBlur={function (event) { onKeyChange(event.target.value) } }
+          defaultValue={label} />
+      <div>{children}</div>
+        <RemoveButton
+          onClick={onDropPropertyClick(label)}
+          uiSchema={uiSchema}
+        />
+      </div>
+    </div>
+  );
+}
+
+render((
+  <Form schema={schema} validator={validator} templates={{ WrapIfAdditionalTemplate }} />
+), document.getElementById("app"));
+```
+
+The following props are passed to the `WrapIfAdditionalTemplate`:
+
+- `children`: The children of the component, typically specified by the `FieldTemplate`.
+
+- `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `label`: The computed label for this field, as a string.
+- `required`: A boolean value stating if the field is required.
+- `readonly`: A boolean value stating if the field is read-only.
+- `disabled`: A boolean value stating if the field is disabled.
+- `schema`: The schema object for this field.
+- `uiSchema`: The uiSchema object for this field.
+- `onKeyChange`: A function that, when called, changes the current property key to the specified value
+- `onDropPropertyClick`:  A function that, when called, removes the key from the formData.
+
 ## ButtonTemplates
 
 There are several buttons that are potentially rendered in the `Form`.
@@ -756,6 +826,7 @@ Each button template (except for the `SubmitButton`) accepts, as props, the stan
 
 - `iconType`: An alternative specification for the type of the icon button.
 - `icon`: The name representation or actual react element implementation for the icon.
+- `uiSchema`: The uiSchema object for this field.
 
 ### AddButton
 

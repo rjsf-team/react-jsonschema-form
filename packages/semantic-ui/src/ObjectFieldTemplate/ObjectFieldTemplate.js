@@ -66,6 +66,7 @@ function ObjectFieldTemplate({
               <AddButton
                 onClick={onAddClick(schema)}
                 disabled={disabled || readOnly}
+                uiSchema={uiSchema}
               />
             </div>
           </Grid.Row>

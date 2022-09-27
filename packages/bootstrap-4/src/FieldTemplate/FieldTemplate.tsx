@@ -1,8 +1,6 @@
 import React from "react";
-import { FieldTemplateProps } from "@rjsf/utils";
+import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
-
-import WrapIfAdditional from "./WrapIfAdditional";
 
 const FieldTemplate = ({
   id,
@@ -20,10 +18,17 @@ const FieldTemplate = ({
   readonly,
   required,
   schema,
+  uiSchema,
   registry,
 }: FieldTemplateProps) => {
+  const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+    "WrapIfAdditionalTemplate",
+    registry,
+    uiOptions
+  );
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -33,6 +38,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <Form.Group>
@@ -47,7 +53,7 @@ const FieldTemplate = ({
         {errors}
         {help}
       </Form.Group>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
 };
 

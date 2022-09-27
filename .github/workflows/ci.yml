@@ -27,7 +27,7 @@ jobs:
       if: github.ref != 'refs/heads/main'
       run: npm run build
       env:
-        SHOW_NETLIFY_BADGE: true
+        VITE_SHOW_NETLIFY_BADGE: true
         NODE_OPTIONS: --max_old_space_size=4096
     - name: Build
       if: github.ref == 'refs/heads/main'
@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: dist
-        path: packages/playground/build
+        path: packages/playground/dist
     - run: npm test
 
 #  deploy_preview:

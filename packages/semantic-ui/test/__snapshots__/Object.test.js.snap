@@ -78,6 +78,7 @@ exports[`object fields additionalProperties 1`] = `
                       autoFocus={false}
                       disabled={false}
                       id="root_foo"
+                      name="root_foo"
                       onBlur={[Function]}
                       onChange={[Function]}
                       onFocus={[Function]}
@@ -125,7 +126,7 @@ exports[`object fields additionalProperties 1`] = `
             }
           >
             <button
-              className="ui tiny icon left labeled button"
+              className="ui tiny icon button"
               onClick={[Function]}
               title="Add Item"
             >
@@ -185,6 +186,7 @@ exports[`object fields object 1`] = `
                 autoFocus={false}
                 disabled={false}
                 id="root_a"
+                name="root_a"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -220,6 +222,7 @@ exports[`object fields object 1`] = `
                 autoFocus={false}
                 disabled={false}
                 id="root_b"
+                name="root_b"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}

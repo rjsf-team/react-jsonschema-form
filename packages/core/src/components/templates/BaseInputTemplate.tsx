@@ -63,8 +63,8 @@ export default function BaseInputTemplate<T = any, F = any>(
   return (
     <>
       <input
-        key={id}
         id={id}
+        name={id}
         className="form-control"
         readOnly={readonly}
         disabled={disabled}

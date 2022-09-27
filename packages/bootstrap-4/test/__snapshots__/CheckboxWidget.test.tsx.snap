@@ -13,6 +13,7 @@ exports[`CheckboxWidget simple 1`] = `
       className="form-check-input"
       disabled={true}
       id="_id"
+      name="_id"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}

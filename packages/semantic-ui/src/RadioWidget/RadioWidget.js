@@ -33,27 +33,30 @@ function RadioWidget(props) {
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
-      {enumOptions.map((option, i) => {
-        const itemDisabled =
-          enumDisabled && enumDisabled.indexOf(option.value) !== -1;
-        return (
-          <Form.Field
-            required={required}
-            control={Radio}
-            name={`${id}-radio-${option.value}`}
-            {...semanticProps}
-            onFocus={_onFocus}
-            onBlur={_onBlur}
-            label={`${option.label}`}
-            value={`${option.value}`}
-            error={rawErrors.length > 0}
-            key={`${option.value}-${i}`}
-            checked={value == option.value}
-            onChange={_onChange}
-            disabled={disabled || itemDisabled || readonly}
-          />
-        );
-      })}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option) => {
+          const itemDisabled =
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) !== -1;
+          return (
+            <Form.Field
+              required={required}
+              control={Radio}
+              id={`${id}-${option.value}`}
+              name={id}
+              {...semanticProps}
+              onFocus={_onFocus}
+              onBlur={_onBlur}
+              label={`${option.label}`}
+              value={`${option.value}`}
+              error={rawErrors.length > 0}
+              key={option.value}
+              checked={value == option.value}
+              onChange={_onChange}
+              disabled={disabled || itemDisabled || readonly}
+            />
+          );
+        })}
     </Form.Group>
   );
 }

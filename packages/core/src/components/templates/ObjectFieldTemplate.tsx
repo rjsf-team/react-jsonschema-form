@@ -69,6 +69,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
           className="object-property-expand"
           onClick={onAddClick(schema)}
           disabled={disabled || readonly}
+          uiSchema={uiSchema}
         />
       )}
     </fieldset>

@@ -34,6 +34,7 @@ const CheckboxWidget = (props: WidgetProps) => {
       control={
         <Checkbox
           id={id}
+          name={id}
           checked={typeof value === "undefined" ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}

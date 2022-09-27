@@ -24,6 +24,7 @@ exports[`single fields checkbox field 1`] = `
             className="form-check-input position-static"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -69,6 +70,7 @@ exports[`single fields checkbox field 2`] = `
             className="form-check-input position-static"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -109,114 +111,102 @@ exports[`single fields checkboxes field 1`] = `
       <div
         className="form-group"
       >
-        <form
-          className=""
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-foo"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-foo"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root_0"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root_0"
-              title=""
-            >
-              foo
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            foo
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-bar"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-bar"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root_1"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root_1"
-              title=""
-            >
-              bar
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            bar
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-fuzz"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-fuzz"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root_2"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root_2"
-              title=""
-            >
-              fuzz
-            </label>
-          </div>
-        </form>
-        <form
-          className=""
+            fuzz
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
         >
-          <div
-            className="bg-transparent border-0 custom-control custom-checkbox"
+          <input
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-qux"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-qux"
+            title=""
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="custom-control-input"
-              disabled={false}
-              id="root_3"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="checkbox"
-            />
-            <label
-              className="custom-control-label"
-              htmlFor="root_3"
-              title=""
-            >
-              qux
-            </label>
-          </div>
-        </form>
+            qux
+          </label>
+        </div>
       </div>
       
     </div>
@@ -281,6 +271,7 @@ exports[`single fields field with description 1`] = `
                     className="form-control"
                     disabled={false}
                     id="root_my-field"
+                    name="root_my-field"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
@@ -363,6 +354,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                     className="form-control"
                     disabled={false}
                     id="root_my-field"
+                    name="root_my-field"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
@@ -421,6 +413,7 @@ exports[`single fields format color 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -469,6 +462,7 @@ exports[`single fields format date 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -517,6 +511,7 @@ exports[`single fields format datetime 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -593,6 +588,7 @@ exports[`single fields help and error display 1`] = `
           className="is-invalid form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -677,6 +673,7 @@ exports[`single fields hidden field 1`] = `
               >
                 <input
                   id="root_my-field"
+                  name="root_my-field"
                   type="hidden"
                   value=""
                 />
@@ -724,6 +721,7 @@ exports[`single fields hidden label 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -798,6 +796,7 @@ exports[`single fields number field 0 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -847,6 +846,7 @@ exports[`single fields number field 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -896,6 +896,7 @@ exports[`single fields password field 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -947,7 +948,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="Yes"
+            id="root-true"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -957,7 +958,7 @@ exports[`single fields radio field 1`] = `
           />
           <label
             className="form-check-label"
-            htmlFor="Yes"
+            htmlFor="root-true"
             title=""
           >
             Yes
@@ -970,7 +971,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="No"
+            id="root-false"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -980,7 +981,7 @@ exports[`single fields radio field 1`] = `
           />
           <label
             className="form-check-label"
-            htmlFor="No"
+            htmlFor="root-false"
             title=""
           >
             No
@@ -1027,6 +1028,7 @@ exports[`single fields schema examples 1`] = `
           disabled={false}
           id="root"
           list="examples_root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1094,6 +1096,7 @@ exports[`single fields select field 1`] = `
           className="custom-select"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1161,6 +1164,7 @@ exports[`single fields slider field 1`] = `
           id="root"
           max={100}
           min={42}
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1215,6 +1219,7 @@ exports[`single fields string field format data-url 1`] = `
           className="form-control-file"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1263,6 +1268,7 @@ exports[`single fields string field format email 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1311,6 +1317,7 @@ exports[`single fields string field format uri 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1359,6 +1366,7 @@ exports[`single fields string field regular 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1407,6 +1415,7 @@ exports[`single fields string field with placeholder 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1456,6 +1465,7 @@ exports[`single fields textarea field 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1542,6 +1552,7 @@ exports[`single fields title field 1`] = `
                     className="form-control"
                     disabled={false}
                     id="root_title"
+                    name="root_title"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
@@ -1645,6 +1656,7 @@ exports[`single fields up/down field 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -1693,6 +1705,7 @@ exports[`single fields using custom tagName 1`] = `
           className="form-control"
           disabled={false}
           id="root"
+          name="root"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}

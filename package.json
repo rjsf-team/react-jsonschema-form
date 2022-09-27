@@ -16,6 +16,7 @@
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
     "build": "lerna run --stream build",
+    "build-serial": "lerna run --concurrency 1 --stream build",
     "start": "lerna run start --stream --parallel",
     "pre-commit:husky": "lerna run --concurrency 1 --stream precommit",
     "prepare": "husky install"

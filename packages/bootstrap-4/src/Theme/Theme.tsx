@@ -1,9 +1,9 @@
+import { ThemeProps } from "@rjsf/core";
+
 import Templates from "../Templates";
 import Widgets from "../Widgets";
 
-import { WithThemeProps } from "@rjsf/core";
-
-const Theme: WithThemeProps = {
+const Theme: ThemeProps = {
   templates: Templates,
   widgets: Widgets,
 };

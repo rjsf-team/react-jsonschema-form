@@ -40,6 +40,7 @@ function CheckboxWidget(props) {
   return (
     <Form.Checkbox
       id={id}
+      name={id}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       {...semanticProps}

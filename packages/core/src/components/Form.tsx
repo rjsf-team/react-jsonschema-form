@@ -613,8 +613,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     event.persist();
-    const { omitExtraData, extraErrors, noValidate, onSubmit, onError } =
-      this.props;
+    const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
     const { schema, schemaUtils } = this.state;
 
@@ -631,63 +630,31 @@ export default class Form<T = any, F = any> extends Component<
       newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
 
-    if (!noValidate) {
-      const schemaValidation = this.validate(schemaUtils, newFormData);
-      let errors = schemaValidation.errors;
-      let errorSchema = schemaValidation.errorSchema;
-      const schemaValidationErrors = errors;
-      const schemaValidationErrorSchema = errorSchema;
-      if (errors.length > 0) {
-        if (extraErrors) {
-          const merged = schemaUtils.mergeValidationData(
-            schemaValidation,
-            extraErrors
-          );
-          errorSchema = merged.errorSchema;
-          errors = merged.errors;
-        }
-        this.setState(
-          {
-            errors,
-            errorSchema,
-            schemaValidationErrors,
-            schemaValidationErrorSchema,
-          },
-          () => {
-            if (onError) {
-              onError(errors);
-            } else {
-              console.error("Form validation failed", errors);
-            }
+    if (noValidate || this.validateForm()) {
+      // There are no errors generated through schema validation.
+      // Check for user provided errors and update state accordingly.
+      const errorSchema = extraErrors || {};
+      const errors = extraErrors
+        ? schemaUtils.getValidator().toErrorList(extraErrors)
+        : [];
+      this.setState(
+        {
+          formData: newFormData,
+          errors,
+          errorSchema,
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        },
+        () => {
+          if (onSubmit) {
+            onSubmit(
+              { ...this.state, formData: newFormData, status: "submitted" },
+              event
+            );
           }
-        );
-        return;
-      }
-    }
-
-    // There are no errors generated through schema validation.
-    // Check for user provided errors and update state accordingly.
-    const errorSchema = extraErrors || {};
-    const errors = extraErrors
-      ? schemaUtils.getValidator().toErrorList(extraErrors)
-      : [];
-    this.setState(
-      {
-        formData: newFormData,
-        errors,
-        errorSchema,
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-      },
-      () => {
-        if (onSubmit) {
-          onSubmit(
-            { ...this.state, formData: newFormData, status: "submitted" },
-            event
-          );
         }
-      }
-    );
+      );
+    }
   };
 
   /** Returns the registry for the form */
@@ -721,6 +688,49 @@ export default class Form<T = any, F = any> extends Component<
       );
       this.formElement.current.requestSubmit();
     }
+  }
+
+  /** Programmatically validate the form. If `onError` is provided, then it will be called with the list of errors the
+   * same way as would happen on form submission.
+   *
+   * @returns - True if the form is valid, false otherwise.
+   */
+  validateForm() {
+    const { extraErrors, onError } = this.props;
+    const { formData } = this.state;
+    const { schemaUtils } = this.state;
+    const schemaValidation = this.validate(schemaUtils, formData);
+    let errors = schemaValidation.errors;
+    let errorSchema = schemaValidation.errorSchema;
+    const schemaValidationErrors = errors;
+    const schemaValidationErrorSchema = errorSchema;
+    if (errors.length > 0) {
+      if (extraErrors) {
+        const merged = schemaUtils.mergeValidationData(
+          schemaValidation,
+          extraErrors
+        );
+        errorSchema = merged.errorSchema;
+        errors = merged.errors;
+      }
+      this.setState(
+        {
+          errors,
+          errorSchema,
+          schemaValidationErrors,
+          schemaValidationErrorSchema,
+        },
+        () => {
+          if (onError) {
+            onError(errors);
+          } else {
+            console.error("Form validation failed", errors);
+          }
+        }
+      );
+      return false;
+    }
+    return true;
   }
 
   /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
