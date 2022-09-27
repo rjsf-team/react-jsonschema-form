@@ -1,5 +1,5 @@
 import React from "react";
-import { RJSFSchema } from "@rjsf/utils";
+import { ErrorSchema, RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv6";
 import renderer from "react-test-renderer";
 
@@ -411,7 +411,8 @@ describe("single fields", () => {
     const uiSchema = {
       "ui:help": "help me!",
     };
-    const extraErrors = { __errors: ["an error"] };
+    const errors: string[] = ["an error"];
+    const extraErrors = { __errors: errors } as ErrorSchema;
     const tree = renderer
       .create(
         <Form

@@ -80,7 +80,6 @@ exports[`array fields array icons 1`] = `
                 className="ui grid"
                 style={
                   Object {
-                    "alignItems": "center",
                     "display": "grid",
                     "gridTemplateColumns": "1fr 65px",
                   }
@@ -499,7 +498,6 @@ exports[`array fields fixed array 1`] = `
                 className="ui grid"
                 style={
                   Object {
-                    "alignItems": "center",
                     "display": "grid",
                     "gridTemplateColumns": "1fr 65px",
                   }

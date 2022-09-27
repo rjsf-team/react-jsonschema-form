@@ -5,10 +5,8 @@ import { Header } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 const DEFAULT_OPTIONS = {
-  semantic: {
-    inverted: false,
-    dividing: true,
-  },
+  inverted: false,
+  dividing: true,
 };
 
 function TitleField({ id, title, uiSchema }: TitleFieldProps) {
