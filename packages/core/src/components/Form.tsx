@@ -329,7 +329,7 @@ export default class Form<T = any, F = any> extends Component<
     let schemaValidationErrorSchema: ErrorSchema<T> =
       state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(schemaUtils, formData, schema);
+      const schemaValidation = this.validate(formData, schema, schemaUtils);
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
       schemaValidationErrors = errors;
@@ -382,17 +382,21 @@ export default class Form<T = any, F = any> extends Component<
     return shouldRender(this, nextProps, nextState);
   }
 
-  /** Validates the `formData` against the `schema` using the `schemaUtils`, returning the results.
+  /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
+   * `schemaUtils` in the state), returning the results.
    *
-   * @param schemaUtils - The schemaUtils to use for validation
    * @param formData - The new form data to validate
    * @param schema - The schema used to validate against
+   * @param altSchemaUtils - The alternate schemaUtils to use for validation
    */
   validate(
-    schemaUtils: SchemaUtilsType<T>,
     formData: T,
-    schema = this.props.schema
+    schema = this.props.schema,
+    altSchemaUtils?: SchemaUtilsType<T>
   ): ValidationData<T> {
+    const schemaUtils = altSchemaUtils
+      ? altSchemaUtils
+      : this.state.schemaUtils;
     const { customValidate, transformErrors } = this.props;
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
@@ -536,7 +540,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     if (mustValidate) {
-      const schemaValidation = this.validate(schemaUtils, newFormData);
+      const schemaValidation = this.validate(newFormData);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;
       const schemaValidationErrors = errors;
@@ -699,7 +703,7 @@ export default class Form<T = any, F = any> extends Component<
     const { extraErrors, onError } = this.props;
     const { formData } = this.state;
     const { schemaUtils } = this.state;
-    const schemaValidation = this.validate(schemaUtils, formData);
+    const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
     const schemaValidationErrors = errors;
