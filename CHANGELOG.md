@@ -39,6 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate` 
 - Added `name` to the `input` components that were missing it to support `remix`
 - Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`
+- Updated the `validate()` method on `Form` to make `schemaUtils` an optional third parameter rather than a required first parameter, making the signature backwards compatible with what was provided in previous versions.
 
 ## @rjsf/fluent-ui
 - Add stubbed `WrapIfAdditionalTemplate`. `additionalProperties` is currently not supported in `@rjsf/fluent-ui` (See [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777)).
