@@ -3,7 +3,7 @@ description: Ask a Question
 title: "<title>"
 labels: [question, needs triage]
 assignees: 
-  - @rjsf-team/reviewers
+  - rjsf-team/reviewers
 body:
 - type: checkboxes
   attributes:
