@@ -3,10 +3,7 @@ description: File a bug/issue
 title: "<title>"
 labels: [bug, needs triage]
 assignees: 
-  - epicfaace
-  - jacqueswho
-  - heath-freenome
-  - nickgros
+  - @rjsf-team/reviewers
 body:
 - type: checkboxes
   attributes:
