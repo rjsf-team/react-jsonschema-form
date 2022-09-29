@@ -3,7 +3,7 @@ description: File a Feature
 title: "<title>"
 labels: [feature, needs triage]
 assignees: 
-  - @rjsf-team/reviewers
+  - rjsf-team/reviewers
 body:
 - type: checkboxes
   attributes:
