@@ -18,7 +18,7 @@ should change the heading of the (upcoming) version to include a major version b
 # 5.0.0-beta.11
 
 ## @rjsf/playground
-- Added an error boundary to prevent the entire app from crashing when an error is thrown by Form.
+- Added an error boundary to prevent the entire app from crashing when an error is thrown by Form. See [#3164](https://github.com/rjsf-team/react-jsonschema-form/pull/3164) for closed issues.
 
 # 5.0.0-beta.10
 
