@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.11
+
+## @rjsf/playground
+- Added an error boundary to prevent the entire app from crashing when an error is thrown by Form.
+
 # 5.0.0-beta.10
 
 ## @rjsf/antd
