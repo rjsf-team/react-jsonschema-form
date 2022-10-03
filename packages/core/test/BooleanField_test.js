@@ -267,7 +267,7 @@ describe("BooleanField", () => {
     Simulate.change(node.querySelector("input"), {
       target: { checked: true },
     });
-    sinon.assert.calledWithMatch(onChange.lastCall, { formData: true });
+    sinon.assert.calledWithMatch(onChange.lastCall, { formData: true }, "root");
   });
 
   it("should fill field with data", () => {
@@ -664,6 +664,7 @@ describe("BooleanField", () => {
       });
       expect($select.value).eql("true");
       expect(spy.lastCall.args[0].formData).eql(true);
+      expect(spy.lastCall.args[1]).eql("root");
     });
 
     it("should render a string field with a label", () => {
@@ -700,9 +701,13 @@ describe("BooleanField", () => {
         target: { value: "false" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: false,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: false,
+        },
+        "root"
+      );
     });
 
     it("should render the widget with the expected id", () => {

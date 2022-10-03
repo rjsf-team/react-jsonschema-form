@@ -396,8 +396,12 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData = "" }) =>
-    this.setState({ formData, shareURL: null });
+  onFormDataChange = ({ formData = "" }, id) => {
+    if (id) {
+      console.log("Field changed, id: ", id);
+    }
+    return this.setState({ formData, shareURL: null });
+  };
 
   onShare = () => {
     const { formData, schema, uiSchema, liveSettings, errorSchema, theme } =

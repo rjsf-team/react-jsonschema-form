@@ -156,9 +156,13 @@ describe("ObjectField", () => {
         target: { value: "changed" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { foo: "changed" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { foo: "changed" },
+        },
+        "root_foo"
+      );
     });
 
     it("should handle object fields with blur events", () => {
@@ -637,9 +641,13 @@ describe("ObjectField", () => {
         target: { value: "newFirst" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { newFirst: 1, first: undefined },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { newFirst: 1, first: undefined },
+        },
+        "root"
+      );
     });
 
     it("should retain and display user-input data if key-value pair has a title present in the schema when renaming key", () => {
@@ -659,9 +667,13 @@ describe("ObjectField", () => {
         target: { value: "Renamed custom title" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { "Renamed custom title": 1 },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { "Renamed custom title": 1 },
+        },
+        "root"
+      );
 
       const keyInput = node.querySelector("#root_Renamed\\ custom\\ title-key");
       expect(keyInput.value).eql("Renamed custom title");
@@ -704,9 +716,13 @@ describe("ObjectField", () => {
         target: { value: "newSecond" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { first: 1, newSecond: 2, third: 3 },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { first: 1, newSecond: 2, third: 3 },
+        },
+        "root"
+      );
 
       expect(Object.keys(onChange.lastCall.args[0].formData)).eql([
         "first",
@@ -730,9 +746,13 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { second: 2, "second-1": 1 },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { second: 2, "second-1": 1 },
+        },
+        "root"
+      );
     });
 
     it("uses a custom separator between the duplicate key name and the suffix", () => {
@@ -753,9 +773,13 @@ describe("ObjectField", () => {
         target: { value: "second" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { second: 2, second_1: 1 },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { second: 2, second_1: 1 },
+        },
+        "root"
+      );
     });
 
     it("should not attach suffix when input is only clicked", () => {

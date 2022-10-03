@@ -62,7 +62,7 @@ class ObjectField<T = any, F = any> extends Component<
    * @returns - The onPropertyChange callback for the `name` property
    */
   onPropertyChange = (name: string, addedByAdditionalProperties = false) => {
-    return (value: T, newErrorSchema?: ErrorSchema<T>) => {
+    return (value: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { formData, onChange, errorSchema } = this.props;
       if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
@@ -81,7 +81,8 @@ class ObjectField<T = any, F = any> extends Component<
           errorSchema && {
             ...errorSchema,
             [name]: newErrorSchema,
-          }
+          },
+        id
       );
     };
   };

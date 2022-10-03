@@ -144,9 +144,13 @@ describe("StringField", () => {
         });
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "yo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "yo",
+        },
+        "root"
+      );
     });
 
     it("should handle a blur event", () => {
@@ -191,7 +195,11 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: undefined });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        { formData: undefined },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with custom ui:emptyValue", () => {
@@ -205,9 +213,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "default",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "default",
+        },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with defaults set", () => {
@@ -222,9 +234,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should fill field with data", () => {
@@ -363,9 +379,13 @@ describe("StringField", () => {
           target: { value: "foo" },
         });
       });
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "foo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "foo",
+        },
+        "root"
+      );
     });
 
     it("should reflect undefined in change event if empty option selected", () => {
@@ -380,9 +400,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should reflect the change into the dom", () => {
@@ -531,9 +555,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with custom ui:emptyValue", () => {
@@ -550,9 +578,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "default",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "default",
+        },
+        "root"
+      );
     });
 
     it("should render a textarea field with rows", () => {
