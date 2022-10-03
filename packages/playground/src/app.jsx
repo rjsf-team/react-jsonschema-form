@@ -4,8 +4,9 @@ import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
-import DemoFrame from "./DemoFrame";
 import localValidator from "@rjsf/validator-ajv6";
+
+import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
 
 const log = (type) => console.log.bind(console, type);
