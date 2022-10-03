@@ -80,9 +80,10 @@ export interface FormProps<T = any, F = any> {
   widgets?: RegistryWidgetsType<T, F>;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
-   * receive the same args as `onSubmit` any time a value is updated in the form
+   * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field
+   * that caused the change
    */
-  onChange?: (data: IChangeEvent<T, F>) => void;
+  onChange?: (data: IChangeEvent<T, F>, id?: string) => void;
   /** To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of
    * encountered errors
    */
@@ -503,8 +504,9 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param formData - The new form data from a change to a field
    * @param newErrorSchema - The new `ErrorSchema` based on the field change
+   * @param id - The id of the field that caused the change
    */
-  onChange = (formData: T, newErrorSchema?: ErrorSchema<T>) => {
+  onChange = (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const {
       extraErrors,
       omitExtraData,
@@ -572,7 +574,7 @@ export default class Form<T = any, F = any> extends Component<
     }
     this.setState(
       state as FormState<T, F>,
-      () => onChange && onChange({ ...this.state, ...state })
+      () => onChange && onChange({ ...this.state, ...state }, id)
     );
   };
 

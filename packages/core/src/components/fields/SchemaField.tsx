@@ -5,6 +5,7 @@ import {
   getUiOptions,
   getSchemaType,
   getTemplate,
+  ErrorSchema,
   FieldProps,
   FieldTemplateProps,
   IdSchema,
@@ -132,16 +133,23 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     uiOptions
   );
   const schema = schemaUtils.retrieveSchema(_schema, formData);
+  const fieldId = _idSchema[ID_KEY];
   const idSchema = mergeObjects(
-    schemaUtils.toIdSchema(
-      schema,
-      _idSchema.$id,
-      formData,
-      idPrefix,
-      idSeparator
-    ),
+    schemaUtils.toIdSchema(schema, fieldId, formData, idPrefix, idSeparator),
     _idSchema
   ) as IdSchema<T>;
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
+   */
+  const handleFieldComponentChange = React.useCallback(
+    (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      const theId = id || fieldId;
+      return onChange(formData, newErrorSchema, theId);
+    },
+    [fieldId, onChange]
+  );
+
   const FieldComponent = getFieldComponent(
     schema,
     uiOptions,
@@ -180,6 +188,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   const field = (
     <FieldComponent
       {...props}
+      onChange={handleFieldComponentChange}
       idSchema={idSchema}
       schema={schema}
       uiSchema={fieldUiSchema}

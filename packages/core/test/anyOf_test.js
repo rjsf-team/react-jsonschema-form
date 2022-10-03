@@ -85,9 +85,13 @@ describe("anyOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__anyof_select"
+    );
   });
 
   it("should assign a default value and set defaults on option change when using references", () => {
@@ -124,9 +128,13 @@ describe("anyOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__anyof_select"
+    );
   });
 
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
@@ -158,9 +166,13 @@ describe("anyOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__anyof_select"
+    );
   });
 
   it("should render a custom widget", () => {
@@ -252,9 +264,13 @@ describe("anyOf", () => {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "Lorem ipsum dolor sit amet" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "Lorem ipsum dolor sit amet" },
+      },
+      "root_foo"
+    );
   });
 
   it("should clear previous data when changing options", () => {
@@ -285,16 +301,30 @@ describe("anyOf", () => {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          buzz: "Lorem ipsum dolor sit amet",
+        },
+      },
+      "root_buzz"
+    );
+
     Simulate.change(node.querySelector("input#root_foo"), {
       target: { value: "Consectetur adipiscing elit" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        buzz: "Lorem ipsum dolor sit amet",
-        foo: "Consectetur adipiscing elit",
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          buzz: "Lorem ipsum dolor sit amet",
+          foo: "Consectetur adipiscing elit",
+        },
       },
-    });
+      "root_foo"
+    );
 
     const $select = node.querySelector("select");
 
@@ -335,9 +365,13 @@ describe("anyOf", () => {
       target: { value: 12345 },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { userId: 12345 },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { userId: 12345 },
+      },
+      "root_userId"
+    );
 
     const $select = node.querySelector("select");
 
@@ -345,17 +379,25 @@ describe("anyOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { userId: undefined },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { userId: undefined },
+      },
+      "root_userId"
+    );
 
     Simulate.change(node.querySelector("input#root_userId"), {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { userId: "Lorem ipsum dolor sit amet" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { userId: "Lorem ipsum dolor sit amet" },
+      },
+      "root_userId"
+    );
   });
 
   it("should support custom fields", () => {

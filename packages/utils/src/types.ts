@@ -282,7 +282,7 @@ export interface FieldProps<T = any, F = any>
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated form data and an optional `ErrorSchema` */
-  onChange: (newFormData: T, es?: ErrorSchema<T>) => any;
+  onChange: (newFormData: T, es?: ErrorSchema<T>, id?: string) => any;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -357,7 +357,7 @@ export type FieldTemplateProps<T = any, F = any> = {
   /** The formData for this field */
   formData: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
-  onChange: (value: T) => void;
+  onChange: FieldProps["onChange"];
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
   onKeyChange: (value: string) => () => void;
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context */
