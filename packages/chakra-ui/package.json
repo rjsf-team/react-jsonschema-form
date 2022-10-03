@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "5.0.0-beta.10",
+  "version": "5.0.0-beta.9",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "dist/chakra-ui.esm.js",
@@ -34,6 +34,7 @@
     "@chakra-ui/react": ">=1.7.3",
     "@rjsf/core": "^5.0.0-beta.1",
     "@rjsf/utils": "^5.0.0-beta.1",
+    "chakra-react-select": ">=3.3.8",
     "framer-motion": ">=5.6.0",
     "react": "^16.14.0 || >=17"
   },
@@ -59,12 +60,13 @@
     "@emotion/jest": "^11.10.0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@rjsf/core": "^5.0.0-beta.10",
-    "@rjsf/utils": "^5.0.0-beta.10",
-    "@rjsf/validator-ajv6": "^5.0.0-beta.10",
+    "@rjsf/core": "^5.0.0-beta.9",
+    "@rjsf/utils": "^5.0.0-beta.9",
+    "@rjsf/validator-ajv6": "^5.0.0-beta.9",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
+    "chakra-react-select": "^3.3.8",
     "dts-cli": "^1.6.0",
     "eslint": "^8.23.0",
     "framer-motion": "^5.6.0",
@@ -75,7 +77,6 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
-    "chakra-react-select": "^3.3.8",
     "react-select": "^5.4.0"
   }
 }

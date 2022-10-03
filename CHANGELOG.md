@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.11
+
+## @rjsf/chakra-ui
+- Support `chakra-react-select` v4; In particular move `chakra-react-select@3.3.8` from `dependencies` to `devDependencies` and add `chakra-react-select@">=3.3.8"` to peerDependencies
+
 # 5.0.0-beta.10
 
 ## @rjsf/antd
