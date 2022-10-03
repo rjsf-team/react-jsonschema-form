@@ -4,8 +4,10 @@ import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
-import DemoFrame from "./DemoFrame";
 import localValidator from "@rjsf/validator-ajv6";
+
+import DemoFrame from "./DemoFrame";
+import ErrorBoundary from "./ErrorBoundary";
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -547,66 +549,68 @@ class Playground extends Component {
           )}
         </div>
         <div className="col-sm-5">
-          {this.state.form && (
-            <DemoFrame
-              head={
-                <React.Fragment>
-                  <link
-                    rel="stylesheet"
-                    id="theme"
-                    href={this.state.stylesheet || ""}
-                  />
-                  {theme === "antd" && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          document.getElementById("antd-styles-iframe")
-                            .contentDocument.head.innerHTML,
-                      }}
+          <ErrorBoundary>
+            {this.state.form && (
+              <DemoFrame
+                head={
+                  <React.Fragment>
+                    <link
+                      rel="stylesheet"
+                      id="theme"
+                      href={this.state.stylesheet || ""}
                     />
-                  )}
-                </React.Fragment>
-              }
-              style={{
-                width: "100%",
-                height: 1000,
-                border: 0,
-              }}
-              theme={theme}
-            >
-              <FormComponent
-                {...templateProps}
-                liveValidate={liveSettings.validate}
-                disabled={liveSettings.disable}
-                readonly={liveSettings.readonly}
-                omitExtraData={liveSettings.omitExtraData}
-                liveOmit={liveSettings.liveOmit}
-                noValidate={liveSettings.noValidate}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={formData}
-                onChange={this.onFormDataChange}
-                noHtml5Validate={true}
-                onSubmit={({ formData }, e) => {
-                  console.log("submitted formData", formData);
-                  console.log("submit event", e);
-                  window.alert("Form submitted");
+                    {theme === "antd" && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            document.getElementById("antd-styles-iframe")
+                              .contentDocument.head.innerHTML,
+                        }}
+                      />
+                    )}
+                  </React.Fragment>
+                }
+                style={{
+                  width: "100%",
+                  height: 1000,
+                  border: 0,
                 }}
-                fields={{ geo: GeoPosition }}
-                customValidate={validate}
-                validator={validators[validator]}
-                onBlur={(id, value) =>
-                  console.log(`Touched ${id} with value ${value}`)
-                }
-                onFocus={(id, value) =>
-                  console.log(`Focused ${id} with value ${value}`)
-                }
-                transformErrors={transformErrors}
-                onError={log("errors")}
-                ref={this.playGroundForm}
-              />
-            </DemoFrame>
-          )}
+                theme={theme}
+              >
+                <FormComponent
+                  {...templateProps}
+                  liveValidate={liveSettings.validate}
+                  disabled={liveSettings.disable}
+                  readonly={liveSettings.readonly}
+                  omitExtraData={liveSettings.omitExtraData}
+                  liveOmit={liveSettings.liveOmit}
+                  noValidate={liveSettings.noValidate}
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  formData={formData}
+                  onChange={this.onFormDataChange}
+                  noHtml5Validate={true}
+                  onSubmit={({ formData }, e) => {
+                    console.log("submitted formData", formData);
+                    console.log("submit event", e);
+                    window.alert("Form submitted");
+                  }}
+                  fields={{ geo: GeoPosition }}
+                  customValidate={validate}
+                  validator={validators[validator]}
+                  onBlur={(id, value) =>
+                    console.log(`Touched ${id} with value ${value}`)
+                  }
+                  onFocus={(id, value) =>
+                    console.log(`Focused ${id} with value ${value}`)
+                  }
+                  transformErrors={transformErrors}
+                  onError={log("errors")}
+                  ref={this.playGroundForm}
+                />
+              </DemoFrame>
+            )}
+          </ErrorBoundary>
         </div>
         <div className="col-sm-12">
           <p style={{ textAlign: "center" }}>
