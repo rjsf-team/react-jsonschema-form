@@ -91,7 +91,7 @@
     "ajv": "^8.11.0",
     "ajv-i18n": "^4.2.0",
     "atob": "^2.1.2",
-    "cross-env": "^2.0.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.23.0",
     "estraverse": "^4.2.0",
     "estraverse-fb": "^1.3.1",
