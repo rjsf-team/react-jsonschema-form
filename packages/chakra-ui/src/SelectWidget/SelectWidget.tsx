@@ -1,11 +1,11 @@
 import React from "react";
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
 import {
   GroupBase,
   OptionsOrGroups,
-  Select as ChakraMultiSelect,
+  Select
 } from "chakra-react-select";
 
 const SelectWidget = (props: WidgetProps) => {
@@ -20,19 +20,14 @@ const SelectWidget = (props: WidgetProps) => {
     disabled,
     readonly,
     value,
-    autofocus,
     onChange,
-    onBlur,
-    onFocus,
     rawErrors = [],
     uiSchema,
   } = props;
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions } = options;
   const chakraProps = getChakra({ uiSchema });
 
-  // TODO: Default emptyValue should be string when multi select is implemented
-  // const emptyValue = multiple ? [] : "";
-  const emptyValue = "";
+  /// TODO: Figure if we need an empty value at all
 
   const _onMultiChange = (e: any) => {
     return onChange(
@@ -45,19 +40,21 @@ const SelectWidget = (props: WidgetProps) => {
       )
     );
   };
-
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue(schema, value, options));
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, processSelectValue(schema, value, options));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, processSelectValue(schema, value, options));
+  
+  const _onChange = (e: any) => {
+    return onChange(
+      processSelectValue(
+        schema,
+        e.value,
+        options
+      )
+    );
+  };
+  
+  const valueLabelMap: any = {};
+  (enumOptions as any).map(({ value, label }: any) => {
+    valueLabelMap[value] = label;
+  });
 
   return (
     <FormControl
@@ -78,7 +75,7 @@ const SelectWidget = (props: WidgetProps) => {
         </FormLabel>
       )}
       {typeof multiple !== "undefined" && enumOptions ? (
-        <ChakraMultiSelect
+        <Select
           inputId={id}
           name={id}
           isMulti
@@ -88,32 +85,20 @@ const SelectWidget = (props: WidgetProps) => {
           onChange={_onMultiChange}
           value={value.map((v: any) => {
             return {
-              label: v,
+              label: valueLabelMap[v],
               value: v,
             };
           })}
         />
       ) : (
         <Select
-          id={id}
+          inputId={id}
           name={id}
-          placeholder={placeholder !== "" ? placeholder : " "}
-          value={typeof value === "undefined" ? emptyValue : value.toString()}
-          autoFocus={autofocus}
-          onBlur={_onBlur}
+          options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
+          placeholder={placeholder}
+          closeMenuOnSelect={true}
           onChange={_onChange}
-          onFocus={_onFocus}
-        >
-          {(enumOptions as any).map(({ value, label }: any, i: number) => {
-            const disabled: any =
-              enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-            return (
-              <option key={i} value={value} disabled={disabled}>
-                {label}
-              </option>
-            );
-          })}
-        </Select>
+        />
       )}
     </FormControl>
   );
