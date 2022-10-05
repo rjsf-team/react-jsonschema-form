@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Extended `Form.onChange` to optionally return the `id` of the field that caused the change, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2768)
+- Fixed a regression in earlier v5 beta versions where additional properties could not be added when `additionalProperties` was `true` ([#3719](https://github.com/rjsf-team/react-jsonschema-form/pull/3719)).
 
 ## @rjsf/utils
 - Updated the `onChange` prop on `FieldProps` and `FieldTemplateProps` to add an optional `id` parameter to the callback.
