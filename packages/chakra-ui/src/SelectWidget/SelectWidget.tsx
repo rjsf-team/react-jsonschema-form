@@ -2,11 +2,7 @@ import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { processSelectValue, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
-import {
-  GroupBase,
-  OptionsOrGroups,
-  Select
-} from "chakra-react-select";
+import { GroupBase, OptionsOrGroups, Select } from "chakra-react-select";
 
 const SelectWidget = (props: WidgetProps) => {
   const {
@@ -40,20 +36,15 @@ const SelectWidget = (props: WidgetProps) => {
       )
     );
   };
-  
+
   const _onChange = (e: any) => {
-    return onChange(
-      processSelectValue(
-        schema,
-        e.value,
-        options
-      )
-    );
+    return onChange(processSelectValue(schema, e.value, options));
   };
-  
-  const valueLabelMap: any = {};
+
+  const _valueLabelMap: any = {};
+
   (enumOptions as any).map(({ value, label }: any) => {
-    valueLabelMap[value] = label;
+    _valueLabelMap[value] = label;
   });
 
   return (
@@ -85,7 +76,7 @@ const SelectWidget = (props: WidgetProps) => {
           onChange={_onMultiChange}
           value={value.map((v: any) => {
             return {
-              label: valueLabelMap[v],
+              label: _valueLabelMap[v],
               value: v,
             };
           })}

@@ -205,17 +205,17 @@ describe("single fields", () => {
         anyOf: [
           {
             enum: [1],
-            title: "Blue"
+            title: "Blue",
           },
           {
             enum: [2],
-            title: "Red"
+            title: "Red",
           },
           {
             enum: [3],
-            title: "Green"
-          }
-        ]
+            title: "Green",
+          },
+        ],
       },
       uniqueItems: true,
     };
