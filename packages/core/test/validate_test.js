@@ -161,11 +161,15 @@ describe("Validation", () => {
           target: { value: "1234" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: { __errors: ["Invalid"] },
-          errors: [{ property: ".", message: "Invalid", stack: ". Invalid" }],
-          formData: "1234",
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: { __errors: ["Invalid"] },
+            errors: [{ property: ".", message: "Invalid", stack: ". Invalid" }],
+            formData: "1234",
+          },
+          "root"
+        );
       });
 
       it("should submit form on valid data", () => {
@@ -649,11 +653,15 @@ describe("Validation", () => {
           target: { value: "1234" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: { __errors: ["Invalid"] },
-          errors: [{ property: ".", message: "Invalid", stack: ". Invalid" }],
-          formData: "1234",
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: { __errors: ["Invalid"] },
+            errors: [{ property: ".", message: "Invalid", stack: ". Invalid" }],
+            formData: "1234",
+          },
+          "root"
+        );
       });
 
       it("should submit form on valid data", () => {

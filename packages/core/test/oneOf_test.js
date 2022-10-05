@@ -87,9 +87,13 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__oneof_select"
+    );
   });
 
   it("should assign a default value and set defaults on option change when using refs", () => {
@@ -125,9 +129,13 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__oneof_select"
+    );
   });
 
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", () => {
@@ -159,9 +167,13 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "defaultbar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "defaultbar" },
+      },
+      "root__oneof_select"
+    );
   });
 
   it("should render a custom widget", () => {
@@ -253,9 +265,13 @@ describe("oneOf", () => {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "Lorem ipsum dolor sit amet" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "Lorem ipsum dolor sit amet" },
+      },
+      "root_foo"
+    );
   });
 
   it("should clear previous data when changing options", () => {
@@ -286,16 +302,30 @@ describe("oneOf", () => {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
 
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          buzz: "Lorem ipsum dolor sit amet",
+        },
+      },
+      "root_buzz"
+    );
+
     Simulate.change(node.querySelector("input#root_foo"), {
       target: { value: "Consectetur adipiscing elit" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        buzz: "Lorem ipsum dolor sit amet",
-        foo: "Consectetur adipiscing elit",
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          buzz: "Lorem ipsum dolor sit amet",
+          foo: "Consectetur adipiscing elit",
+        },
       },
-    });
+      "root_foo"
+    );
 
     const $select = node.querySelector("select");
 
@@ -336,11 +366,15 @@ describe("oneOf", () => {
       target: { value: 12345 },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        userId: 12345,
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          userId: 12345,
+        },
       },
-    });
+      "root_userId"
+    );
 
     const $select = node.querySelector("select");
 
@@ -348,20 +382,28 @@ describe("oneOf", () => {
       target: { value: $select.options[1].value },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        userId: undefined,
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          userId: undefined,
+        },
       },
-    });
+      "root_userId"
+    );
 
     Simulate.change(node.querySelector("input#root_userId"), {
       target: { value: "Lorem ipsum dolor sit amet" },
     });
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: {
-        userId: "Lorem ipsum dolor sit amet",
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          userId: "Lorem ipsum dolor sit amet",
+        },
       },
-    });
+      "root_userId"
+    );
   });
 
   it("should support custom fields", () => {
@@ -614,9 +656,13 @@ describe("oneOf", () => {
 
     expect($select.value).eql("1");
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { lorem: undefined, ipsum: {} },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { lorem: undefined, ipsum: {} },
+      },
+      "root__oneof_select"
+    );
   });
 
   describe("Arrays", () => {

@@ -1013,13 +1013,17 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "new" },
       });
 
-      sinon.assert.calledWithMatch(onChange, {
-        formData: {
-          foo: "new",
+      sinon.assert.calledWithMatch(
+        onChange,
+        {
+          formData: {
+            foo: "new",
+          },
+          schema,
+          uiSchema,
         },
-        schema,
-        uiSchema,
-      });
+        "root_foo"
+      );
     });
     it("should call last provided change handler", async () => {
       const schema = {
@@ -1391,9 +1395,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "yo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "yo",
+        },
+        "root"
+      );
     });
     it("object", () => {
       const { node, onChange } = createFormComponent({
@@ -1411,9 +1419,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { foo: "yo" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { foo: "yo" },
+        },
+        "root_foo"
+      );
     });
     it("array of strings", () => {
       const schema = {
@@ -1429,9 +1441,13 @@ describeRepeated("Form common", (createFormComponent) => {
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "yo" },
       });
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: ["yo"],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ["yo"],
+        },
+        "root_0"
+      );
     });
     it("array of objects", () => {
       const schema = {
@@ -1451,9 +1467,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: [{ name: "yo" }],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: [{ name: "yo" }],
+        },
+        "root_0"
+      );
     });
     it("dependency with array of objects", () => {
       const schema = {
@@ -1501,12 +1521,16 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          show: true,
-          participants: [{ name: "yo" }],
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            show: true,
+            participants: [{ name: "yo" }],
+          },
         },
-      });
+        "root_participants_0_name"
+      );
     });
   });
 
@@ -1524,9 +1548,13 @@ describeRepeated("Form common", (createFormComponent) => {
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
           });
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {},
-          });
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {},
+            },
+            "root"
+          );
         });
 
         it("should not denote an error in the field", () => {
@@ -1589,11 +1617,15 @@ describeRepeated("Form common", (createFormComponent) => {
             target: { value: "short" },
           });
 
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {
-              __errors: ["should NOT be shorter than 8 characters"],
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {
+                __errors: ["should NOT be shorter than 8 characters"],
+              },
             },
-          });
+            "root"
+          );
         });
 
         it("should denote the new error in the field", () => {
@@ -1625,9 +1657,13 @@ describeRepeated("Form common", (createFormComponent) => {
             target: { value: "short" },
           });
 
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {},
-          });
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {},
+            },
+            "root"
+          );
         });
       });
 
@@ -2156,9 +2192,13 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: "not a number" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: { field1: { __errors: ["should be number"] } },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: { field1: { __errors: ["should be number"] } },
+          },
+          "root"
+        );
       });
 
       it("should only show errors for properties in selected branch", () => {
@@ -2172,16 +2212,20 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: "not a number" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: {
-            field1: {
-              __errors: ["should be number"],
-            },
-            field2: {
-              __errors: ["is a required property"],
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {
+              field1: {
+                __errors: ["should be number"],
+              },
+              field2: {
+                __errors: ["is a required property"],
+              },
             },
           },
-        });
+          "root_field1"
+        );
       });
 
       it("should not show any errors when branch is empty", () => {
@@ -2195,9 +2239,13 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: 3 },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: {},
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {},
+          },
+          "root_branch"
+        );
       });
     });
   });
@@ -2234,9 +2282,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "baz" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { bar: "baz" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { bar: "baz" },
+        },
+        "root_bar"
+      );
     });
 
     it("should replace state when props change formData keys", () => {
@@ -2262,9 +2314,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "baz" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { foo: "foo", baz: "baz" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { foo: "foo", baz: "baz" },
+        },
+        "root_baz"
+      );
     });
   });
 
@@ -3163,9 +3219,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit data on change with omitExtraData=true and liveOmit=false", () => {
@@ -3190,9 +3250,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit data on change with omitExtraData=false and liveOmit=true", () => {
@@ -3217,9 +3281,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should omit data on change with omitExtraData=true and liveOmit=true", () => {
@@ -3244,9 +3312,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit additionalProperties on change with omitExtraData=true and liveOmit=true", () => {
@@ -3275,9 +3347,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", add: { prop: 123 } },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", add: { prop: 123 } },
+      },
+      "root_foo"
+    );
   });
 
   it("should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true", () => {
@@ -3301,9 +3377,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "key1new" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { nested: { key1new: "value" } },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { nested: { key1new: "value" } },
+      },
+      "root_nested"
+    );
   });
 
   describe("Async errors", () => {

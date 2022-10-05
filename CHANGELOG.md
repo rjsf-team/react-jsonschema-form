@@ -22,8 +22,16 @@ should change the heading of the (upcoming) version to include a major version b
 - In `SelectWidget` use `Select` from `chakra-react-select` for both single- and multiple-choice select
 - In `SelectWidget` multiple-choice select display label rather than value for selected items
 
-## @rjsf/playground
+## @rjsf/core
+- Extended `Form.onChange` to optionally return the `id` of the field that caused the change, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2768)
+
+## @rjsf/utils
+- Updated the `onChange` prop on `FieldProps` and `FieldTemplateProps` to add an optional `id` parameter to the callback.
+
+## Dev / docs / playground
 - Added an error boundary to prevent the entire app from crashing when an error is thrown by Form. See [#3164](https://github.com/rjsf-team/react-jsonschema-form/pull/3164) for closed issues.
+- Updated the playground to log the `id` of the field being changed on the `onChange` handler
+- Updated `form-props.md` file to describe the new `id` parameter being returned by the `Form.onChange` handler
 
 # 5.0.0-beta.10
 

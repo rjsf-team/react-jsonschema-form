@@ -132,13 +132,25 @@ class AnyOfField<T = any, F = any> extends Component<
     }
     // Call getDefaultFormState to make sure defaults are populated on change.
     onChange(
-      schemaUtils.getDefaultFormState(options[selectedOption], newFormData) as T
+      schemaUtils.getDefaultFormState(
+        options[selectedOption],
+        newFormData
+      ) as T,
+      undefined,
+      this.getFieldId()
     );
 
     this.setState({
       selectedOption: parseInt(option, 10),
     });
   };
+
+  getFieldId() {
+    const { idSchema, schema } = this.props;
+    return `${idSchema.$id}${
+      schema.oneOf ? "__oneof_select" : "__anyof_select"
+    }`;
+  }
 
   /** Renders the `AnyOfField` selector along with a `SchemaField` for the value of the `formData`
    */
@@ -161,7 +173,6 @@ class AnyOfField<T = any, F = any> extends Component<
       options,
       registry,
       uiSchema,
-      schema,
     } = this.props;
 
     const { widgets, fields } = registry;
@@ -190,9 +201,7 @@ class AnyOfField<T = any, F = any> extends Component<
       <div className="panel panel-default panel-body">
         <div className="form-group">
           <Widget
-            id={`${idSchema.$id}${
-              schema.oneOf ? "__oneof_select" : "__anyof_select"
-            }`}
+            id={this.getFieldId()}
             schema={{ type: "number", default: 0 }}
             onChange={this.onOptionChange}
             onBlur={onBlur}

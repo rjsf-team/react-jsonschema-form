@@ -869,20 +869,24 @@ describe("ArrayField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { 1: { __errors: ["should be integer"] } },
-        errors: [
-          {
-            message: "should be integer",
-            name: "type",
-            params: { type: "integer" },
-            property: "[1]",
-            schemaPath: "#/items/type",
-            stack: "[1] should be integer",
-          },
-        ],
-        formData: [1, null, 3],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          errorSchema: { 1: { __errors: ["should be integer"] } },
+          errors: [
+            {
+              message: "should be integer",
+              name: "type",
+              params: { type: "integer" },
+              property: "[1]",
+              schemaPath: "#/items/type",
+              stack: "[1] should be integer",
+            },
+          ],
+          formData: [1, null, 3],
+        },
+        "root_1"
+      );
 
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
@@ -1181,9 +1185,13 @@ describe("ArrayField", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: ["foo", "bar"],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: ["foo", "bar"],
+          },
+          "root"
+        );
       });
 
       it("should handle a blur event", () => {
@@ -1318,9 +1326,13 @@ describe("ArrayField", () => {
           target: { checked: true },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: ["foo", "fuzz"],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: ["foo", "fuzz"],
+          },
+          "root"
+        );
       });
 
       it("should fill field with data", () => {
@@ -1460,12 +1472,16 @@ describe("ArrayField", () => {
 
       await new Promise(setImmediate);
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: [
-          "data:text/plain;name=file1.txt;base64,x=",
-          "data:text/plain;name=file2.txt;base64,x=",
-        ],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: [
+            "data:text/plain;name=file1.txt;base64,x=",
+            "data:text/plain;name=file2.txt;base64,x=",
+          ],
+        },
+        "root"
+      );
     });
 
     it("should fill field with data", () => {
@@ -1721,9 +1737,13 @@ describe("ArrayField", () => {
       Simulate.change(strInput, { target: { value: "bar" } });
       Simulate.change(numInput, { target: { value: "101" } });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: ["bar", 101],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ["bar", 101],
+        },
+        "root"
+      );
     });
 
     it("should generate additional fields and fill data", () => {
@@ -1867,9 +1887,13 @@ describe("ArrayField", () => {
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(2);
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: [1, 2, "foo", undefined],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: [1, 2, "foo", undefined],
+          },
+          "root"
+        );
       });
 
       it("should retain existing row keys/ids when adding additional items", () => {
@@ -1897,9 +1921,13 @@ describe("ArrayField", () => {
         Simulate.change(inputs[0], { target: { value: "bar" } });
         Simulate.change(inputs[1], { target: { value: "baz" } });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: [1, 2, "bar", "baz"],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: [1, 2, "bar", "baz"],
+          },
+          "root"
+        );
       });
 
       it("should remove array items when clicking remove buttons", () => {
@@ -1909,17 +1937,25 @@ describe("ArrayField", () => {
 
         expect(node.querySelectorAll(".field-string")).to.have.length.of(1);
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: [1, 2, "baz"],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: [1, 2, "baz"],
+          },
+          "root"
+        );
 
         dropBtns = node.querySelectorAll(".array-item-remove");
         Simulate.click(dropBtns[0]);
 
         expect(node.querySelectorAll(".field-string")).to.be.empty;
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: [1, 2],
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: [1, 2],
+          },
+          "root"
+        );
       });
     });
   });
@@ -1948,9 +1984,13 @@ describe("ArrayField", () => {
         },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: [1, 2],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: [1, 2],
+        },
+        "root"
+      );
     });
   });
 

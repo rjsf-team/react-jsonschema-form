@@ -193,7 +193,10 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same first argument as `onSubmit` any time a value is updated in the form.
+It will also receive, as the second argument, the `id` of the field which experienced the change.
+Generally, this will be the `id` of the field for which input data is modified.
+In the case of adding/removing of new fields in arrays or objects with `additionalProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
 
 ## onError
 
@@ -218,7 +221,9 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onSubmit
 
-You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
+You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid.
+It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after.
+The original event will also be passed as a second parameter:
 
 ```jsx
 import validator from "@rjsf/validator-ajv6";

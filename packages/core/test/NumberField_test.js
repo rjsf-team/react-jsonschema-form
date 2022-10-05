@@ -159,9 +159,13 @@ describe("NumberField", () => {
           target: { value: "2" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: 2,
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: 2,
+          },
+          "root"
+        );
       });
 
       it("should handle a blur event", () => {
@@ -271,9 +275,13 @@ describe("NumberField", () => {
               target: { value: test.input },
             });
 
-            sinon.assert.calledWithMatch(onChange.lastCall, {
-              formData: test.output,
-            });
+            sinon.assert.calledWithMatch(
+              onChange.lastCall,
+              {
+                formData: test.output,
+              },
+              "root"
+            );
             // "2." is not really a valid number in a input field of type number
             // so we need to use getAttribute("value") instead since .value outputs the empty string
             expect($input.getAttribute("value")).eql(test.input);
@@ -295,9 +303,13 @@ describe("NumberField", () => {
           target: { value: ".00" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: 0,
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: 0,
+          },
+          "root"
+        );
         expect($input.value).eql(".00");
       });
 
@@ -430,6 +442,7 @@ describe("NumberField", () => {
       });
       expect($select.value).eql("1");
       expect(spy.lastCall.args[0].formData).eql(1);
+      expect(spy.lastCall.args[1]).eql("root");
     });
 
     it("should render a string field with a label", () => {
@@ -469,7 +482,7 @@ describe("NumberField", () => {
         target: { value: "2" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 });
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 }, "root");
     });
 
     it("should fill field with data", () => {

@@ -344,7 +344,7 @@ class ArrayField<T = any, F = any> extends Component<
    * @param index - The index of the item being changed
    */
   onChangeForIndex = (index: number) => {
-    return (value: any, newErrorSchema?: ErrorSchema<T>) => {
+    return (value: any, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { formData, onChange, errorSchema } = this.props;
       const arrayData = Array.isArray(formData) ? formData : [];
       const newFormData = arrayData.map((item: T, i: number) => {
@@ -359,15 +359,16 @@ class ArrayField<T = any, F = any> extends Component<
           errorSchema && {
             ...errorSchema,
             [index]: newErrorSchema,
-          }
+          },
+        id
       );
     };
   };
 
   /** Callback handler used to change the value for a checkbox */
   onSelectChange = (value: any) => {
-    const { onChange } = this.props;
-    onChange(value);
+    const { onChange, idSchema } = this.props;
+    onChange(value, undefined, idSchema && idSchema.$id);
   };
 
   /** Renders the `ArrayField` depending on the specific needs of the schema and uischema elements
