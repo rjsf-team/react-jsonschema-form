@@ -901,7 +901,7 @@ describe("ObjectField", () => {
     });
 
     it("should add a string item if additionalProperties is true", () => {
-      // Specify that additionalProperties must be an array of strings
+      // Specify that additionalProperties is true
       const customSchema = {
         ...schema,
         additionalProperties: true,
