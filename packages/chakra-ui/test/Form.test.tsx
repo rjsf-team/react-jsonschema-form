@@ -224,6 +224,40 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("select field single choice enumDisabled", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      enum: ["foo", "bar"],
+    };
+    const uiSchema = {
+      colors: {
+        'ui:enumDisabled': ['bar']
+      }
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field multiple choice enumDisabled", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const uiSchema = {
+      colors: {
+        'ui:enumDisabled': ['bar']
+      }
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("checkbox field", () => {
     const schema: RJSFSchema = {
       type: "boolean",
