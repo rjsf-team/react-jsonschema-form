@@ -231,11 +231,13 @@ describe("single fields", () => {
     };
     const uiSchema = {
       colors: {
-        'ui:enumDisabled': ['bar']
-      }
+        "ui:enumDisabled": ["bar"],
+      },
     };
     const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />)
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -250,11 +252,13 @@ describe("single fields", () => {
     };
     const uiSchema = {
       colors: {
-        'ui:enumDisabled': ['bar']
-      }
+        "ui:enumDisabled": ["bar"],
+      },
     };
     const tree = renderer
-      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />)
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
