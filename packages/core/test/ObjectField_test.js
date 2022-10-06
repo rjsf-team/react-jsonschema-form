@@ -875,6 +875,51 @@ describe("ObjectField", () => {
       });
     });
 
+    it("should add a property matching the additionalProperties schema", () => {
+      // Specify that additionalProperties must be an array of strings
+      const additionalPropertiesArraySchema = {
+        ...schema,
+        additionalProperties: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: additionalPropertiesArraySchema,
+        formData: {},
+      });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newKey: [],
+        },
+      });
+    });
+
+    it("should add a string item if additionalProperties is true", () => {
+      // Specify that additionalProperties is true
+      const customSchema = {
+        ...schema,
+        additionalProperties: true,
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      Simulate.click(node.querySelector(".object-property-expand button"));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newKey: "New Value",
+        },
+      });
+    });
+
     it("should not provide an expand button if length equals maxProperties", () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },
