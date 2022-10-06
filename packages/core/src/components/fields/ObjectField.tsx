@@ -189,21 +189,23 @@ class ObjectField<T = any, F = any> extends Component<
    * @param schema - The schema element to which the new property is being added
    */
   handleAddClick = (schema: RJSFSchema) => () => {
-    if (!isObject(schema.additionalProperties)) {
+    if (!schema.additionalProperties) {
       return;
     }
     const { formData, onChange, registry } = this.props;
-    let type = schema.additionalProperties.type;
     const newFormData = { ...formData };
 
-    if (REF_KEY in schema.additionalProperties) {
-      const { schemaUtils } = registry;
-      const refSchema = schemaUtils.retrieveSchema(
-        { $ref: schema.additionalProperties[REF_KEY] },
-        formData
-      );
-
-      type = refSchema.type;
+    let type: RJSFSchema["type"] = undefined;
+    if (isObject(schema.additionalProperties)) {
+      type = schema.additionalProperties.type;
+      if (REF_KEY in schema.additionalProperties) {
+        const { schemaUtils } = registry;
+        const refSchema = schemaUtils.retrieveSchema(
+          { $ref: schema.additionalProperties[REF_KEY] },
+          formData
+        );
+        type = refSchema.type;
+      }
     }
 
     const newKey = this.getAvailableKey("newKey", newFormData);
