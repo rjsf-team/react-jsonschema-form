@@ -20,10 +20,8 @@ const SelectWidget = (props: WidgetProps) => {
     rawErrors = [],
     uiSchema,
   } = props;
-  const { enumOptions } = options;
+  const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
-
-  /// TODO: Figure if we need an empty value at all
 
   const _onMultiChange = (e: any) => {
     return onChange(
@@ -42,9 +40,11 @@ const SelectWidget = (props: WidgetProps) => {
   };
 
   const _valueLabelMap: any = {};
-
-  (enumOptions as any).map(({ value, label }: any) => {
+  (enumOptions as any).map((option: any) => {
+    const { value, label }: any = option;
     _valueLabelMap[value] = label;
+    option["isDisabled"] =
+      enumDisabled && (enumDisabled as any).indexOf(value) != -1;
   });
 
   return (
