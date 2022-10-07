@@ -180,7 +180,13 @@ export function computeDefaults<T = any>(
             get(formData, [key]),
             includeUndefinedValues
           );
-          if (includeUndefinedValues || computedDefault !== undefined) {
+          if (typeof computedDefault === "object") {
+            // Store computedDefault if it's a non-empty object (e.g. not {})
+            if (includeUndefinedValues && !isEmpty(computedDefault)) {
+              acc[key] = computedDefault;
+            }
+          } else if (computedDefault !== undefined) {
+            // Store computedDefault if it's a defined primitive (e.g. true)
             acc[key] = computedDefault;
           }
           return acc;

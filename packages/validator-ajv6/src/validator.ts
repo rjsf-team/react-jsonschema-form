@@ -234,19 +234,9 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer
   ): ValidationData<T> {
-    // Include form data with undefined values, which is required for validation.
-    const rootSchema = schema;
-    const newFormData = getDefaultFormState<T>(
-      this,
-      schema,
-      formData,
-      rootSchema,
-      true
-    ) as T;
-
     let validationError: Error | null = null;
     try {
-      this.ajv.validate(schema, newFormData);
+      this.ajv.validate(schema, formData);
     } catch (err) {
       validationError = err as Error;
     }
@@ -285,6 +275,16 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
     if (typeof customValidate !== "function") {
       return { errors, errorSchema };
     }
+
+    // Include form data with undefined values, which is required for custom validation.
+    const rootSchema = schema;
+    const newFormData = getDefaultFormState<T>(
+      this,
+      schema,
+      formData,
+      rootSchema,
+      true
+    ) as T;
 
     const errorHandler = customValidate(
       newFormData,
