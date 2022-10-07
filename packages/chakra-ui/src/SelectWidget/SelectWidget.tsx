@@ -17,6 +17,8 @@ const SelectWidget = (props: WidgetProps) => {
     readonly,
     value,
     onChange,
+    onBlur,
+    onFocus,
     rawErrors = [],
     uiSchema,
   } = props;
@@ -38,6 +40,14 @@ const SelectWidget = (props: WidgetProps) => {
   const _onChange = (e: any) => {
     return onChange(processSelectValue(schema, e.value, options));
   };
+
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, processSelectValue(schema, value, options));
+
+  const _onFocus = ({
+    target: { value },
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, processSelectValue(schema, value, options));
 
   const _valueLabelMap: any = {};
   (enumOptions as any).map((option: any) => {
@@ -73,7 +83,9 @@ const SelectWidget = (props: WidgetProps) => {
           options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
           placeholder={placeholder}
           closeMenuOnSelect={false}
+          onBlur={_onBlur}
           onChange={_onMultiChange}
+          onFocus={_onFocus}
           value={value.map((v: any) => {
             return {
               label: _valueLabelMap[v],
@@ -88,7 +100,9 @@ const SelectWidget = (props: WidgetProps) => {
           options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
           placeholder={placeholder}
           closeMenuOnSelect={true}
+          onBlur={_onBlur}
           onChange={_onChange}
+          onFocus={_onFocus}
         />
       )}
     </FormControl>
