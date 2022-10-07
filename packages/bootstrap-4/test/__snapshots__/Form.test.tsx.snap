@@ -107,7 +107,9 @@ exports[`single fields checkboxes field 1`] = `
       <label
         className="form-label"
         htmlFor="root"
-      />
+      >
+        
+      </label>
       <div
         className="form-group"
       >
@@ -257,31 +259,27 @@ exports[`single fields field with description 1`] = `
               <div
                 className="form-group"
               >
-                <div
-                  className="mb-0 form-group"
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
                 >
-                  <label
-                    className="form-label"
-                    htmlFor="root_my-field"
-                  >
-                    my-field
-                  </label>
-                  <input
-                    autoFocus={false}
-                    className="form-control"
-                    disabled={false}
-                    id="root_my-field"
-                    name="root_my-field"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
-                    required={false}
-                    type="text"
-                    value=""
-                  />
-                </div>
+                  my-field
+                </label>
+                <input
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
                 <small
                   className="text-muted form-text"
                 >
@@ -340,31 +338,27 @@ exports[`single fields field with description in uiSchema 1`] = `
               <div
                 className="form-group"
               >
-                <div
-                  className="mb-0 form-group"
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
                 >
-                  <label
-                    className="form-label"
-                    htmlFor="root_my-field"
-                  >
-                    my-field
-                  </label>
-                  <input
-                    autoFocus={false}
-                    className="form-control"
-                    disabled={false}
-                    id="root_my-field"
-                    name="root_my-field"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
-                    required={false}
-                    type="text"
-                    value=""
-                  />
-                </div>
+                  my-field
+                </label>
+                <input
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
                 <small
                   className="text-muted form-text"
                 >
@@ -401,28 +395,26 @@ exports[`single fields format color 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="color"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="color"
+        value=""
+      />
       
     </div>
   </div>
@@ -450,28 +442,26 @@ exports[`single fields format date 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="date"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="date"
+        value=""
+      />
       
     </div>
   </div>
@@ -499,28 +489,26 @@ exports[`single fields format datetime 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="datetime-local"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="datetime-local"
+        value=""
+      />
       
     </div>
   </div>
@@ -576,28 +564,26 @@ exports[`single fields help and error display 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="text-danger form-label"
+        htmlFor="root"
       >
-        <label
-          className="text-danger form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="is-invalid form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="text"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="is-invalid form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
       
       <ul
         className="list-group"
@@ -666,19 +652,14 @@ exports[`single fields hidden field 1`] = `
           >
              
             <div
-              className="form-group field field-string"
+              className="hidden"
             >
-              <div
-                className="form-group"
-              >
-                <input
-                  id="root_my-field"
-                  name="root_my-field"
-                  type="hidden"
-                  value=""
-                />
-                
-              </div>
+              <input
+                id="root_my-field"
+                name="root_my-field"
+                type="hidden"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -709,28 +690,20 @@ exports[`single fields hidden label 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
-      >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="text"
-          value=""
-        />
-      </div>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
     </div>
   </div>
   <div>
@@ -757,6 +730,12 @@ exports[`single fields null field 1`] = `
     <div
       className="form-group"
     >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
       
     </div>
   </div>
@@ -784,29 +763,27 @@ exports[`single fields number field 0 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          step="any"
-          type="number"
-          value={0}
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        step="any"
+        type="number"
+        value={0}
+      />
       
     </div>
   </div>
@@ -834,29 +811,27 @@ exports[`single fields number field 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          step="any"
-          type="number"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        step="any"
+        type="number"
+        value=""
+      />
       
     </div>
   </div>
@@ -884,28 +859,26 @@ exports[`single fields password field 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="password"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="password"
+        value=""
+      />
       
     </div>
   </div>
@@ -933,14 +906,15 @@ exports[`single fields radio field 1`] = `
     <div
       className="form-group"
     >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
       <div
         className="mb-0 form-group"
       >
-        <label
-          className="d-block form-label"
-        >
-          
-        </label>
         <div
           className="form-check"
         >
@@ -1015,48 +989,46 @@ exports[`single fields schema examples 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        list="examples_root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
+      <datalist
+        id="examples_root"
+      >
+        <option
+          value="Firefox"
         />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          list="examples_root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="text"
-          value=""
+        <option
+          value="Chrome"
         />
-        <datalist
-          id="examples_root"
-        >
-          <option
-            value="Firefox"
-          />
-          <option
-            value="Chrome"
-          />
-          <option
-            value="Opera"
-          />
-          <option
-            value="Vivaldi"
-          />
-          <option
-            value="Safari"
-          />
-        </datalist>
-      </div>
+        <option
+          value="Opera"
+        />
+        <option
+          value="Vivaldi"
+        />
+        <option
+          value="Safari"
+        />
+      </datalist>
       
     </div>
   </div>
@@ -1084,45 +1056,43 @@ exports[`single fields select field 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <select
-          autoFocus={false}
-          className="custom-select"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
+        
+      </label>
+      <select
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value=""
+      >
+        <option
           value=""
         >
-          <option
-            value=""
-          >
-            
-          </option>
-          <option
-            disabled={false}
-            id="foo"
-            value="foo"
-          >
-            foo
-          </option>
-          <option
-            disabled={false}
-            id="bar"
-            value="bar"
-          >
-            bar
-          </option>
-        </select>
-      </div>
+          
+        </option>
+        <option
+          disabled={false}
+          id="foo"
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          id="bar"
+          value="bar"
+        >
+          bar
+        </option>
+      </select>
       
     </div>
   </div>
@@ -1150,36 +1120,34 @@ exports[`single fields slider field 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          max={100}
-          min={42}
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          step={1}
-          type="number"
-          value={75}
-        />
-        <span
-          className="range-view"
-        >
-          75
-        </span>
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        max={100}
+        min={42}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        step={1}
+        type="number"
+        value={75}
+      />
+      <span
+        className="range-view"
+      >
+        75
+      </span>
       
     </div>
   </div>
@@ -1207,28 +1175,26 @@ exports[`single fields string field format data-url 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control-file"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="file"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control-file"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="file"
+        value=""
+      />
       
     </div>
   </div>
@@ -1256,28 +1222,26 @@ exports[`single fields string field format email 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="email"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="email"
+        value=""
+      />
       
     </div>
   </div>
@@ -1305,28 +1269,26 @@ exports[`single fields string field format uri 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="url"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="url"
+        value=""
+      />
       
     </div>
   </div>
@@ -1354,28 +1316,26 @@ exports[`single fields string field regular 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="text"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
       
     </div>
   </div>
@@ -1403,28 +1363,26 @@ exports[`single fields string field with placeholder 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder="placeholder"
-          readOnly={false}
-          type="text"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="placeholder"
+        readOnly={false}
+        type="text"
+        value=""
+      />
       
     </div>
   </div>
@@ -1453,6 +1411,7 @@ exports[`single fields textarea field 1`] = `
       className="form-group"
     >
       <label
+        className="form-label"
         htmlFor="root"
       >
         
@@ -1538,31 +1497,27 @@ exports[`single fields title field 1`] = `
               <div
                 className="form-group"
               >
-                <div
-                  className="mb-0 form-group"
+                <label
+                  className="form-label"
+                  htmlFor="root_title"
                 >
-                  <label
-                    className="form-label"
-                    htmlFor="root_title"
-                  >
-                    Titre 2
-                  </label>
-                  <input
-                    autoFocus={false}
-                    className="form-control"
-                    disabled={false}
-                    id="root_title"
-                    name="root_title"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
-                    required={false}
-                    type="text"
-                    value=""
-                  />
-                </div>
+                  Titre 2
+                </label>
+                <input
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_title"
+                  name="root_title"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
                 
               </div>
             </div>
@@ -1595,6 +1550,12 @@ exports[`single fields unsupported field 1`] = `
     <div
       className="form-group"
     >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
       <div
         className="unsupported-field"
       >
@@ -1644,28 +1605,26 @@ exports[`single fields up/down field 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="number"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="number"
+        value=""
+      />
       
     </div>
   </div>
@@ -1693,28 +1652,26 @@ exports[`single fields using custom tagName 1`] = `
     <div
       className="form-group"
     >
-      <div
-        className="mb-0 form-group"
+      <label
+        className="form-label"
+        htmlFor="root"
       >
-        <label
-          className="form-label"
-          htmlFor="root"
-        />
-        <input
-          autoFocus={false}
-          className="form-control"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="text"
-          value=""
-        />
-      </div>
+        
+      </label>
+      <input
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
       
     </div>
   </div>

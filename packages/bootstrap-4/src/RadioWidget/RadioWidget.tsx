@@ -2,7 +2,7 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { WidgetProps, getUiOptions } from "@rjsf/utils";
+import { WidgetProps } from "@rjsf/utils";
 
 const RadioWidget = ({
   id,
@@ -12,14 +12,11 @@ const RadioWidget = ({
   required,
   disabled,
   readonly,
-  label,
   onChange,
   onBlur,
   onFocus,
-  uiSchema,
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
-  const uiOptions = getUiOptions(uiSchema);
 
   const _onChange = ({
     target: { value },
@@ -35,10 +32,6 @@ const RadioWidget = ({
 
   return (
     <Form.Group className="mb-0">
-      <Form.Label className="d-block">
-        {uiOptions.title || schema.title || label}
-        {(label || uiOptions.title || schema.title) && required ? "*" : null}
-      </Form.Label>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option) => {
           const itemDisabled =
