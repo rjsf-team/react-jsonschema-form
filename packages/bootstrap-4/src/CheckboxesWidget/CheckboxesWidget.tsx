@@ -16,8 +16,6 @@ const deselectValue = (value: any, selected: any) => {
 };
 
 const CheckboxesWidget = ({
-  schema,
-  label,
   id,
   disabled,
   options,
@@ -50,38 +48,35 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
-      <Form.Label htmlFor={id}>{label || schema.title}</Form.Label>
-      <Form.Group>
-        {Array.isArray(enumOptions) &&
-          enumOptions.map((option, index: number) => {
-            const checked = value.indexOf(option.value) !== -1;
-            const itemDisabled =
-              Array.isArray(enumDisabled) &&
-              enumDisabled.indexOf(option.value) !== -1;
+    <Form.Group>
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, index: number) => {
+          const checked = value.indexOf(option.value) !== -1;
+          const itemDisabled =
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) !== -1;
 
-            return (
-              <Form.Check
-                key={option.value}
-                inline={inline}
-                custom
-                required={required}
-                checked={checked}
-                className="bg-transparent border-0"
-                type={"checkbox"}
-                id={`${id}-${option.value}`}
-                name={id}
-                label={option.label}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                disabled={disabled || itemDisabled || readonly}
-              />
-            );
-          })}
-      </Form.Group>
-    </>
+          return (
+            <Form.Check
+              key={option.value}
+              inline={inline}
+              custom
+              required={required}
+              checked={checked}
+              className="bg-transparent border-0"
+              type={"checkbox"}
+              id={`${id}-${option.value}`}
+              name={id}
+              label={option.label}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange(option)}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+              disabled={disabled || itemDisabled || readonly}
+            />
+          );
+        })}
+    </Form.Group>
   );
 };
 
