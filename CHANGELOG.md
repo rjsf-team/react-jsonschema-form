@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta.11
 
+## @rjsf/antd
+- Updated `FieldTemplate` to no longer render additional, unnecessary white space for fields that have empty `help` and `extra` information, fixing [#3147](https://github.com/rjsf-team/react-jsonschema-form/issues/3174)  
+
 ## @rjsf/bootstrap-4
 - Make label generation consistent with other themes by refactoring the code into the `FieldTemplate` instead of having the widgets implementing the label, fixing [#2007](https://github.com/rjsf-team/react-jsonschema-form/issues/2007)
 

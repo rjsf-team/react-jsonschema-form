@@ -308,7 +308,7 @@ exports[`single fields field with description 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -430,7 +430,7 @@ exports[`single fields field with description in uiSchema 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -1868,7 +1868,7 @@ exports[`single fields title field 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -1925,9 +1925,6 @@ exports[`single fields title field 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>
