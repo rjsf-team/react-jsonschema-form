@@ -16,6 +16,7 @@ const SelectWidget = (props: WidgetProps) => {
     disabled,
     readonly,
     value,
+    autofocus,
     onChange,
     onBlur,
     onFocus,
@@ -86,6 +87,7 @@ const SelectWidget = (props: WidgetProps) => {
           onBlur={_onBlur}
           onChange={_onMultiChange}
           onFocus={_onFocus}
+          autoFocus={autofocus}
           value={value.map((v: any) => {
             return {
               label: _valueLabelMap[v],
@@ -103,6 +105,7 @@ const SelectWidget = (props: WidgetProps) => {
           onBlur={_onBlur}
           onChange={_onChange}
           onFocus={_onFocus}
+          autoFocus={autofocus}
         />
       )}
     </FormControl>
