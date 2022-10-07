@@ -61,31 +61,27 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                 <div
                   className="form-group"
                 >
-                  <div
-                    className="mb-0 form-group"
+                  <label
+                    className="form-label"
+                    htmlFor="root"
                   >
-                    <label
-                      className="form-label"
-                      htmlFor="root"
-                    >
-                      additionalProperty
-                    </label>
-                    <input
-                      autoFocus={false}
-                      className="form-control"
-                      disabled={false}
-                      id="root"
-                      name="root"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value="should appear"
-                    />
-                  </div>
+                    additionalProperty
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
                   
                 </div>
               </div>

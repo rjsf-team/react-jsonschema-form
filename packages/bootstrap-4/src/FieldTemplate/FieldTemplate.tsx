@@ -13,6 +13,7 @@ const FieldTemplate = ({
   classNames,
   disabled,
   label,
+  hidden,
   onDropPropertyClick,
   onKeyChange,
   readonly,
@@ -27,6 +28,9 @@ const FieldTemplate = ({
     registry,
     uiOptions
   );
+  if (hidden) {
+    return <div className="hidden">{children}</div>;
+  }
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -42,6 +46,15 @@ const FieldTemplate = ({
       registry={registry}
     >
       <Form.Group>
+        {displayLabel && (
+          <Form.Label
+            htmlFor={id}
+            className={rawErrors.length > 0 ? "text-danger" : ""}
+          >
+            {label}
+            {required ? "*" : null}
+          </Form.Label>
+        )}
         {children}
         {displayLabel && rawDescription && (
           <Form.Text
