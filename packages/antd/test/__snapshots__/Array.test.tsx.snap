@@ -164,7 +164,7 @@ exports[`array fields array icons 1`] = `
                 className="form-group field field-string"
               >
                 <div
-                  className="ant-form-item ant-form-item-with-help"
+                  className="ant-form-item"
                 >
                   <div
                     className="ant-row ant-form-item-row"
@@ -209,9 +209,6 @@ exports[`array fields array icons 1`] = `
                           </span>
                         </div>
                       </div>
-                      <div
-                        className="ant-form-item-extra"
-                      />
                     </div>
                   </div>
                 </div>
@@ -357,7 +354,7 @@ exports[`array fields array icons 1`] = `
                 className="form-group field field-string"
               >
                 <div
-                  className="ant-form-item ant-form-item-with-help"
+                  className="ant-form-item"
                 >
                   <div
                     className="ant-row ant-form-item-row"
@@ -402,9 +399,6 @@ exports[`array fields array icons 1`] = `
                           </span>
                         </div>
                       </div>
-                      <div
-                        className="ant-form-item-extra"
-                      />
                     </div>
                   </div>
                 </div>
@@ -808,9 +802,6 @@ exports[`array fields empty errors array 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>
@@ -887,7 +878,7 @@ exports[`array fields fixed array 1`] = `
                 className="form-group field field-string"
               >
                 <div
-                  className="ant-form-item ant-form-item-with-help"
+                  className="ant-form-item"
                 >
                   <div
                     className="ant-row ant-form-item-row"
@@ -932,9 +923,6 @@ exports[`array fields fixed array 1`] = `
                           </span>
                         </div>
                       </div>
-                      <div
-                        className="ant-form-item-extra"
-                      />
                     </div>
                   </div>
                 </div>
@@ -964,7 +952,7 @@ exports[`array fields fixed array 1`] = `
                 className="form-group field field-number"
               >
                 <div
-                  className="ant-form-item ant-form-item-with-help"
+                  className="ant-form-item"
                 >
                   <div
                     className="ant-row ant-form-item-row"
@@ -1090,9 +1078,6 @@ exports[`array fields fixed array 1`] = `
                           </div>
                         </div>
                       </div>
-                      <div
-                        className="ant-form-item-extra"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1310,9 +1295,6 @@ exports[`array fields has errors 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>
@@ -1369,7 +1351,7 @@ exports[`array fields no errors 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -1426,9 +1408,6 @@ exports[`array fields no errors 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>

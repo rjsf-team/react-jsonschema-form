@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta.11
 
+## @rjsf/antd
+- Updated `FieldTemplate` to no longer render additional, unnecessary white space for fields that have empty `help` and `extra` information, fixing [#3147](https://github.com/rjsf-team/react-jsonschema-form/issues/3174)  
+
 ## @rjsf/bootstrap-4
 - Make label generation consistent with other themes by refactoring the code into the `FieldTemplate` instead of having the widgets implementing the label, fixing [#2007](https://github.com/rjsf-team/react-jsonschema-form/issues/2007)
 
@@ -28,7 +31,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 - Extended `Form.onChange` to optionally return the `id` of the field that caused the change, fixing [#2768](https://github.com/rjsf-team/react-jsonschema-form/issues/2768)
 - Fixed a regression in earlier v5 beta versions where additional properties could not be added when `additionalProperties` was `true` ([#3719](https://github.com/rjsf-team/react-jsonschema-form/pull/3719)).
-
+- Fixed a regression in v5 beta version where BooleanField was altering readonly props ([#3188](https://github.com/rjsf-team/react-jsonschema-form/pull/3188).
+-
 ## @rjsf/utils
 - Updated the `onChange` prop on `FieldProps` and `FieldTemplateProps` to add an optional `id` parameter to the callback.
 
@@ -58,7 +62,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`, removing unnecessary casts to `any` and protecting against non-arrays
 
 ## @rjsf/core
-- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate` 
+- Convert `WrapIfAdditional` to `WrapIfAdditionalTemplate`
 - Added `name` to the `input` components that were missing it to support `remix`
 - Fixed `CheckboxesWidget` and `RadioWidget` to have unique `id`s for each radio element by appending the `option.value`
 - Updated the `validate()` method on `Form` to make `schemaUtils` an optional third parameter rather than a required first parameter, making the signature backwards compatible with what was provided in previous versions.
@@ -105,7 +109,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Pass `uiSchema` appropriately to all of the `IconButton`s, `ArrayFieldItemTemplate` and `WrapIfAdditional` components, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
 
 ## @rjsf/core
-- Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options 
+- Updated the `FieldErrorTemplate` to remove the explicit typing of the `error` to string to support the two options
 - Implemented programmatic validation via new `validateForm()` method on `Form`, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/2755, https://github.com/rjsf-team/react-jsonschema-form/issues/2552, https://github.com/rjsf-team/react-jsonschema-form/issues/2381, https://github.com/rjsf-team/react-jsonschema-form/issues/2343, https://github.com/rjsf-team/react-jsonschema-form/issues/1006, https://github.com/rjsf-team/react-jsonschema-form/issues/246)
 - Renamed `WithThemeProps` to `ThemeProps` to prevent another breaking-change by returning the type back to the name it had in version 4
 - Pass `uiSchema` appropriately to all of the `IconButton`s, `ArrayFieldItemTemplate` and `WrapIfAdditional` components, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
@@ -126,7 +130,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/semantic-ui
 - Updated the `FieldErrorTemplate` to use the `children` variation of the `List.Item` that supports ReactElement
 - Pass `uiSchema` appropriately to all of the `IconButton`s, `ArrayFieldItemTemplate` and `WrapIfAdditional` components, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
- 
+
 ## @rjsf/utils
 - Updated the `FieldErrorProps` type to make it support an array of string and ReactElement
 - Updated the `IconButtonProps` type to add `uiSchema`, adding the `<T = any, F = any>` generics to it and the associated `ButtonTemplates` in `TemplatesType` AND added `uiSchema` to `ArrayFieldTemplateItemType` as well, fixing (https://github.com/rjsf-team/react-jsonschema-form/issues/3130)
@@ -198,7 +202,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## @rjsf/validator-ajv8
-- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195) 
+- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
 - Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## Dev / docs / playground

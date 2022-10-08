@@ -22,6 +22,7 @@ const FieldTemplate = ({
   onDropPropertyClick,
   onKeyChange,
   rawErrors,
+  rawDescription,
   rawHelp,
   readonly,
   registry,
@@ -66,9 +67,9 @@ const FieldTemplate = ({
       ) : (
         <Form.Item
           colon={colon}
-          extra={description}
+          extra={rawDescription && description}
           hasFeedback={schema.type !== "array" && schema.type !== "object"}
-          help={(!!rawHelp && help) || errors}
+          help={(!!rawHelp && help) || (rawErrors?.length && errors)}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
