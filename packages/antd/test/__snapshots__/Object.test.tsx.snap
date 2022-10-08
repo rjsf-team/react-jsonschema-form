@@ -129,7 +129,7 @@ exports[`object fields additionalProperties 1`] = `
                 }
               >
                 <div
-                  className="ant-form-item ant-form-item-with-help"
+                  className="ant-form-item"
                 >
                   <div
                     className="ant-row ant-form-item-row"
@@ -186,9 +186,6 @@ exports[`object fields additionalProperties 1`] = `
                           </span>
                         </div>
                       </div>
-                      <div
-                        className="ant-form-item-extra"
-                      />
                     </div>
                   </div>
                 </div>
@@ -341,7 +338,7 @@ exports[`object fields object 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -398,9 +395,6 @@ exports[`object fields object 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>
@@ -419,7 +413,7 @@ exports[`object fields object 1`] = `
             className="form-group field field-number"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -557,9 +551,6 @@ exports[`object fields object 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  />
                 </div>
               </div>
             </div>
