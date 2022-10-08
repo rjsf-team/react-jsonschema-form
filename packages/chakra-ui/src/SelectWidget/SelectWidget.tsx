@@ -58,6 +58,18 @@ const SelectWidget = (props: WidgetProps) => {
       enumDisabled && (enumDisabled as any).indexOf(value) != -1;
   });
 
+  const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
+  const formValue: any = isMultiple
+    ? (value || []).map((v: any) => {
+        return {
+          label: _valueLabelMap[v] || v,
+          value: v,
+        };
+      })
+    : {
+        label: _valueLabelMap[value] || value || "",
+        value: value || "",
+      };
   return (
     <FormControl
       mb={1}
@@ -70,44 +82,25 @@ const SelectWidget = (props: WidgetProps) => {
       {(label || schema.title) && (
         <FormLabel
           htmlFor={
-            typeof multiple !== "undefined" && enumOptions ? undefined : id
+            isMultiple ? undefined : id
           }
         >
           {label || schema.title}
         </FormLabel>
       )}
-      {typeof multiple !== "undefined" && enumOptions ? (
-        <Select
-          inputId={id}
-          name={id}
-          isMulti
-          options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
-          placeholder={placeholder}
-          closeMenuOnSelect={false}
-          onBlur={_onBlur}
-          onChange={_onMultiChange}
-          onFocus={_onFocus}
-          autoFocus={autofocus}
-          value={value.map((v: any) => {
-            return {
-              label: _valueLabelMap[v],
-              value: v,
-            };
-          })}
-        />
-      ) : (
-        <Select
-          inputId={id}
-          name={id}
-          options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
-          placeholder={placeholder}
-          closeMenuOnSelect={true}
-          onBlur={_onBlur}
-          onChange={_onChange}
-          onFocus={_onFocus}
-          autoFocus={autofocus}
-        />
-      )}
+      <Select
+        inputId={id}
+        name={id}
+        isMulti={isMultiple}
+        options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
+        placeholder={placeholder}
+        closeMenuOnSelect={false}
+        onBlur={_onBlur}
+        onChange={isMultiple ? _onMultiChange : _onChange}
+        onFocus={_onFocus}
+        autoFocus={autofocus}
+        value={formValue}
+      />
     </FormControl>
   );
 };

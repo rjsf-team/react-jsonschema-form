@@ -2133,21 +2133,20 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-7 {
-  color: gray.400;
   -webkit-margin-start: 0.125rem;
   margin-inline-start: 0.125rem;
   -webkit-margin-end: 0.125rem;
   margin-inline-end: 0.125rem;
+  max-width: calc(100% - 0.5rem);
+  overflow: hidden;
   position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .emotion-8 {
@@ -2319,7 +2318,6 @@ exports[`single fields select field 1`] = `
             >
               <div
                 className=" emotion-7"
-                id="react-select-2-placeholder"
               >
                 
               </div>
@@ -2329,7 +2327,6 @@ exports[`single fields select field 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-describedby="react-select-2-placeholder"
                   aria-expanded={false}
                   aria-haspopup={true}
                   autoCapitalize="none"
@@ -3420,21 +3417,20 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-7 {
-  color: gray.400;
   -webkit-margin-start: 0.125rem;
   margin-inline-start: 0.125rem;
   -webkit-margin-end: 0.125rem;
   margin-inline-end: 0.125rem;
+  max-width: calc(100% - 0.5rem);
+  overflow: hidden;
   position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .emotion-8 {
@@ -3606,7 +3602,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             >
               <div
                 className=" emotion-7"
-                id="react-select-5-placeholder"
               >
                 
               </div>
@@ -3616,7 +3611,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-describedby="react-select-5-placeholder"
                   aria-expanded={false}
                   aria-haspopup={true}
                   autoCapitalize="none"
