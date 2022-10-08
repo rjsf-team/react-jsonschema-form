@@ -80,11 +80,7 @@ const SelectWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
-        <FormLabel
-          htmlFor={
-            isMultiple ? undefined : id
-          }
-        >
+        <FormLabel htmlFor={isMultiple ? undefined : id}>
           {label || schema.title}
         </FormLabel>
       )}
