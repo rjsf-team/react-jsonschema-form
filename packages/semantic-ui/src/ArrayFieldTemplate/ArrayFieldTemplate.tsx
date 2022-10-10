@@ -54,8 +54,6 @@ function ArrayFieldTemplate({
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const fieldTitle = uiOptions.title || title;
-  const fieldDescription = uiOptions.description || schema.description;
   return (
     <div
       className={cleanClassNames([
@@ -65,19 +63,19 @@ function ArrayFieldTemplate({
     >
       <ArrayFieldTitleTemplate
         idSchema={idSchema}
-        title={fieldTitle}
+        title={uiOptions.title || title}
+        schema={schema}
         uiSchema={uiSchema}
         required={required}
         registry={registry}
       />
-      {fieldDescription && (
-        <ArrayFieldDescriptionTemplate
-          idSchema={idSchema}
-          description={fieldDescription}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
+      <ArrayFieldDescriptionTemplate
+        idSchema={idSchema}
+        description={uiOptions.description || schema.description}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className="row array-item-list">
           {items &&

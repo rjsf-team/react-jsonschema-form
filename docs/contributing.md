@@ -12,13 +12,24 @@ npm start
 
 All packages will be live-built, and a live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
 
+### First time step
+
+If this is the first time you have cloned the repo, run the `npm run prepare` script that will set up `husky` to provide a git precommit hook that will format and lint any code you have added to a PR.
+
+### Optional development process
+With the large number of packages, sometimes running `npm run build` or `npm start` from the root directory will overwhelm an underpowered computer.
+If that is the situation for you, you can instead use `npm run build-serial` to build the packages one at a time instead of all at once.
+Also, if you are only working on one package, you can `npm run build` and `npm run test` from within the subdirectory.
+Finally, you can simply `npm start` inside of the `playground` directory to test changes if you have already built all of your packages, without needing to watch all of the packages via the root directory `npm start`.
+
 ## Cloud builds
 
 When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially. 
 
 ## Coding style
 
-All the JavaScript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style. Code is automatically prettified upon commit using precommit hooks.
+All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
+Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
 
 ## Documentation
 
@@ -39,9 +50,14 @@ npm test
 
 ### Code coverage
 
-Code coverage reports are currently available only for the `@rjsf/core` package. They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
+Code coverage reports are currently available only for the `@rjsf/core` theme package.
+They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
+#### Utils and validator-ajvX code coverage
+
+100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` tests.
+If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
 
 ## Releasing
 

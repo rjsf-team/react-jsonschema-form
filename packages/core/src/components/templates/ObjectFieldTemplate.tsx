@@ -52,6 +52,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
           id={`${idSchema.$id}__title`}
           title={options.title || title}
           required={required}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -60,6 +61,8 @@ export default function ObjectFieldTemplate<T = any, F = any>(
         <DescriptionFieldTemplate
           id={`${idSchema.$id}__description`}
           description={options.description || description!}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

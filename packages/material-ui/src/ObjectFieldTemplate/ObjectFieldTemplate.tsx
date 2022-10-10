@@ -43,6 +43,7 @@ const ObjectFieldTemplate = ({
           id={`${idSchema.$id}-title`}
           title={title}
           required={required}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -51,6 +52,8 @@ const ObjectFieldTemplate = ({
         <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={uiOptions.description || description!}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

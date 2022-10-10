@@ -14,6 +14,7 @@ function FieldTemplate({
   hidden,
   rawDescription,
   registry,
+  schema,
   uiSchema,
   ...props
 }: FieldTemplateProps) {
@@ -41,6 +42,7 @@ function FieldTemplate({
       id={id}
       label={label}
       registry={registry}
+      schema={schema}
       uiSchema={uiSchema}
       {...props}
     >
@@ -53,6 +55,8 @@ function FieldTemplate({
                 <DescriptionFieldTemplate
                   id={`${id}-description`}
                   description={rawDescription}
+                  schema={schema}
+                  uiSchema={uiSchema}
                   registry={registry}
                 />
               )}

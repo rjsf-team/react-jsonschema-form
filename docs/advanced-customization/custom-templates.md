@@ -169,6 +169,7 @@ The following props are passed to each `ArrayFieldDescriptionTemplate`:
 
 - `description`: The description of the array field being rendered.
 - `idSchema`: The idSchema of the array field in the hierarchy.
+- `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `registry`: The `registry` object.
 
@@ -264,6 +265,7 @@ The following props are passed to each `ArrayFieldTitleTemplate`:
 
 - `title`: The title of the array field being rendered.
 - `idSchema`: The idSchema of the array field in the hierarchy.
+- `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `required`: A boolean value stating if the field is required
 - `registry`: The `registry` object.
@@ -405,6 +407,8 @@ The following props are passed to the `DescriptionFieldTemplate`:
 
 - `description`: The description of the field being rendered.
 - `id`: The id of the field in the hierarchy.
+- `schema`: The schema object for the field.
+- `uiSchema`: The uiSchema object for the field.
 - `registry`: The `registry` object.
 
 ## ErrorListTemplate
@@ -709,7 +713,8 @@ The following props are passed to each `TitleFieldTemplate`:
 
 - `id`: The id of the field in the hierarchy.
 - `title`: The title of the field being rendered.
-- `uiSchema`: The uiSchema object for this field.
+- `schema`: The schema object for the field.
+- `uiSchema`: The uiSchema object for the field.
 - `required`: A boolean value stating if the field is required
 - `registry`: The `registry` object.
 

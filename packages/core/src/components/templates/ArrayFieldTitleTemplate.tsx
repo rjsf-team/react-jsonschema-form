@@ -14,11 +14,12 @@ import {
 export default function ArrayFieldTitleTemplate<T = any, F = any>(
   props: ArrayFieldTitleProps
 ) {
-  const { idSchema, title, uiSchema, required, registry } = props;
-  if (!title) {
+  const { idSchema, title, schema, uiSchema, required, registry } = props;
+  const options = getUiOptions<T, F>(uiSchema);
+  const { label: displayLabel = true } = options;
+  if (!title || !displayLabel) {
     return null;
   }
-  const options = getUiOptions<T, F>(uiSchema);
   const TitleFieldTemplate: TemplatesType<T, F>["TitleFieldTemplate"] =
     getTemplate<"TitleFieldTemplate", T, F>(
       "TitleFieldTemplate",
@@ -31,6 +32,7 @@ export default function ArrayFieldTitleTemplate<T = any, F = any>(
       id={id}
       title={title}
       required={required}
+      schema={schema}
       uiSchema={uiSchema}
       registry={registry}
     />
