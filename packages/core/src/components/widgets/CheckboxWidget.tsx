@@ -8,6 +8,7 @@ import { getTemplate, schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";
  */
 function CheckboxWidget<T = any, F = any>({
   schema,
+  uiSchema,
   options,
   id,
   value,
@@ -54,6 +55,8 @@ function CheckboxWidget<T = any, F = any>({
         <DescriptionFieldTemplate
           id={id + "__description"}
           description={schema.description}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}

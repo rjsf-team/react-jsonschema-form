@@ -53,17 +53,17 @@ export default function ArrayFieldTemplate<T = any, F = any>(
         idSchema={idSchema}
         title={uiOptions.title || title}
         required={required}
+        schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      {(uiOptions.description || schema.description) && (
-        <ArrayFieldDescriptionTemplate
-          idSchema={idSchema}
-          description={(uiOptions.description || schema.description)!}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
+      <ArrayFieldDescriptionTemplate
+        idSchema={idSchema}
+        description={uiOptions.description || schema.description}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
       <div className="row array-item-list">
         {items &&
           items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (

@@ -72,6 +72,7 @@ function CheckboxesWidget(props: WidgetProps) {
         <TitleFieldTemplate
           id={`${id}-title`}
           title={title}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />

@@ -72,23 +72,23 @@ const ArrayFieldTemplate = ({
               idSchema={idSchema}
               required={required}
               title={uiOptions.title || title}
+              schema={schema}
               uiSchema={uiSchema}
               registry={registry}
             />
           </Col>
         )}
-
         {(uiOptions.description || schema.description) && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <ArrayFieldDescriptionTemplate
               description={uiOptions.description || schema.description || ""}
               idSchema={idSchema}
+              schema={schema}
               uiSchema={uiSchema}
               registry={registry}
             />
           </Col>
         )}
-
         <Col className="row array-item-list" span={24}>
           {items &&
             items.map(({ key, ...itemProps }) => (

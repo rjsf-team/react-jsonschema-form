@@ -221,6 +221,17 @@ describe("ArrayField", () => {
       expect(description.id).eql("root__description");
     });
 
+    it("should not render a description when label is false", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { "ui:label": false },
+      });
+
+      const description = node.querySelector("fieldset > .field-description");
+
+      expect(description).eql(null);
+    });
+
     it("should render a hidden list", () => {
       const { node } = createFormComponent({
         schema,
@@ -2121,6 +2132,20 @@ describe("ArrayField", () => {
       };
       const { node } = createFormComponent({ schema, templates });
       expect(node.querySelector("#title-")).to.be.null;
+    });
+
+    it("should not render a TitleFieldTemplate when label is false", () => {
+      const schema = {
+        type: "array",
+        title: "test",
+        items: {},
+      };
+      const { node } = createFormComponent({
+        schema,
+        templates,
+        uiSchema: { "ui:label": false },
+      });
+      expect(node.querySelector("#title-test")).to.be.null;
     });
   });
 

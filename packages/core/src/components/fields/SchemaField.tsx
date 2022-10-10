@@ -264,6 +264,8 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
       <DescriptionFieldTemplate
         id={`${id}__description`}
         description={description}
+        schema={schema}
+        uiSchema={uiSchema}
         registry={registry}
       />
     ),

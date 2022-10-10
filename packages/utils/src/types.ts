@@ -384,6 +384,8 @@ export type TitleFieldProps<T = any, F = any> = {
   id: string;
   /** The title for the field being rendered */
   title: string;
+  /** The schema object for the field being titled */
+  schema: RJSFSchema;
   /** The uiSchema object for this title field */
   uiSchema?: UiSchema<T, F>;
   /** A boolean value stating if the field is required */
@@ -396,6 +398,10 @@ export type TitleFieldProps<T = any, F = any> = {
 export type DescriptionFieldProps<T = any, F = any> = {
   /** The id of the field description in the hierarchy */
   id: string;
+  /** The schema object for the field being described */
+  schema: RJSFSchema;
+  /** The uiSchema object for this description field */
+  uiSchema?: UiSchema<T, F>;
   /** The description of the field being rendered */
   description: string | React.ReactElement;
   /** The `registry` object */
@@ -403,23 +409,25 @@ export type DescriptionFieldProps<T = any, F = any> = {
 };
 
 /** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */
-export type ArrayFieldTitleProps<T = any, F = any> = Pick<
+export type ArrayFieldTitleProps<T = any, F = any> = Omit<
   TitleFieldProps<T, F>,
-  "title" | "uiSchema" | "required" | "registry"
+  "id" | "title"
 > & {
+  /** The title for the field being rendered */
+  title?: string;
   /** The idSchema of the field in the hierarchy */
   idSchema: IdSchema<T>;
 };
 
 /** The properties that are passed to a `ArrayFieldDescriptionTemplate` implementation */
-export type ArrayFieldDescriptionProps<T = any, F = any> = Pick<
+export type ArrayFieldDescriptionProps<T = any, F = any> = Omit<
   DescriptionFieldProps<T, F>,
-  "description" | "registry"
+  "id" | "description"
 > & {
+  /** The description of the field being rendered */
+  description?: string | React.ReactElement;
   /** The idSchema of the field in the hierarchy */
   idSchema: IdSchema<T>;
-  /** The uiSchema object for this description field */
-  uiSchema?: UiSchema<T, F>;
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */

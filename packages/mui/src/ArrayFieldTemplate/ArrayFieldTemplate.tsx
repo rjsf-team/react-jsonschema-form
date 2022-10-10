@@ -50,18 +50,18 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         <ArrayFieldTitleTemplate
           idSchema={idSchema}
           title={uiOptions.title || title}
+          schema={schema}
           uiSchema={uiSchema}
           required={required}
           registry={registry}
         />
-        {(uiOptions.description || schema.description) && (
-          <ArrayFieldDescriptionTemplate
-            idSchema={idSchema}
-            description={(uiOptions.description || schema.description)!}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        )}
+        <ArrayFieldDescriptionTemplate
+          idSchema={idSchema}
+          description={uiOptions.description || schema.description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
         <Grid container={true} key={`array-item-list-${idSchema.$id}`}>
           {items &&
             items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (

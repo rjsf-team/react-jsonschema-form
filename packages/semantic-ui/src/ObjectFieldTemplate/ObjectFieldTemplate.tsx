@@ -41,6 +41,7 @@ function ObjectFieldTemplate({
           id={`${idSchema.$id}-title`}
           title={fieldTitle}
           required={required}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -49,6 +50,8 @@ function ObjectFieldTemplate({
         <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={fieldDescription}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}
