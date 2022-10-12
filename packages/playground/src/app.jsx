@@ -1,10 +1,10 @@
-import React, { Component } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { samples } from "./samples";
-import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
 import localValidator from "@rjsf/validator-ajv6";
+import React, { Component } from "react";
+import "react-app-polyfill/ie11";
+import { samples } from "./samples";
 
 import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
@@ -21,6 +21,7 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
     noValidate: { type: "boolean", title: "Disable validation" },
+    showErrorList:{ type: "string", "default":"top", title: "Show Error List", enum:[false,"top","bottom"] }
   },
 };
 

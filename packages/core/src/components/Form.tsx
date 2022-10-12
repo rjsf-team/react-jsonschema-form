@@ -1,34 +1,34 @@
-import React, { Component } from "react";
 import {
+  createSchemaUtils,
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   GenericObjectType,
+  getTemplate,
+  getUiOptions,
   IdSchema,
+  isObject,
+  mergeObjects,
+  NAME_KEY,
   PathSchema,
+  Registry,
+  RegistryFieldsType,
+  RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  Registry,
-  RegistryWidgetsType,
-  RegistryFieldsType,
+  RJSF_ADDITONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
+  shouldRender,
   TemplatesType,
   UiSchema,
   ValidationData,
   ValidatorType,
-  createSchemaUtils,
-  deepEquals,
-  getTemplate,
-  getUiOptions,
-  isObject,
-  mergeObjects,
-  shouldRender,
-  NAME_KEY,
-  RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from "@rjsf/utils";
-import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
+import _pick from "lodash/pick";
+import React, { Component } from "react";
 
 import getDefaultRegistry from "../getDefaultRegistry";
 
@@ -156,10 +156,10 @@ export interface FormProps<T = any, F = any> {
    * called. Set to `false` by default.
    */
   omitExtraData?: boolean;
-  /** When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also
-   * show. When set to false, only inline input validation errors will be shown. Set to `true` by default
+  /** When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also
+   * show. When set to false, only inline input validation errors will be shown. Set to `top` by default
    */
-  showErrorList?: boolean;
+  showErrorList?: false | "top" | "bottom";
   /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
    * Schema validation
    */
@@ -413,7 +413,7 @@ export default class Form<T = any, F = any> extends Component<
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { showErrorList, formContext } = this.props;
+    const { formContext } = this.props;
     const options = getUiOptions<T, F>(uiSchema);
     const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, F>(
       "ErrorListTemplate",
@@ -421,7 +421,7 @@ export default class Form<T = any, F = any> extends Component<
       options
     );
 
-    if (errors && errors.length && showErrorList != false) {
+    if (errors && errors.length) {
       return (
         <ErrorListTemplate
           errors={errors}
@@ -761,6 +761,7 @@ export default class Form<T = any, F = any> extends Component<
       disabled = false,
       readonly = false,
       formContext,
+      showErrorList = "top",
       _internalFormWrapper,
     } = this.props;
 
@@ -790,7 +791,7 @@ export default class Form<T = any, F = any> extends Component<
         as={as}
         ref={this.formElement}
       >
-        {this.renderErrors(registry)}
+        {showErrorList === "top" && this.renderErrors(registry)}
         <_SchemaField
           name=""
           schema={schema}
@@ -809,6 +810,7 @@ export default class Form<T = any, F = any> extends Component<
           readonly={readonly}
         />
         {children ? children : <SubmitButton uiSchema={uiSchema} />}
+        {showErrorList === "bottom" && this.renderErrors(registry)}
       </FormTag>
     );
   }

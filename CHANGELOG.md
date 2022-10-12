@@ -19,7 +19,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/chakra-ui
 - Automatically close single-choice Select widget on selection
-
+## @rjsf/core
+- ShowErrorList prop changed to support `top` or `bottom` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
 # 5.0.0-beta.11
 
 ## @rjsf/antd
@@ -46,7 +47,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ArrayFieldDescriptionTemplate` and `ArrayFieldTitleTemplate` to not render content when `ui:label` is false, fixing [#2535](https://github.com/rjsf-team/react-jsonschema-form/issues/2535)
 - Updated `ArrayFieldTemplate` to always render `ArrayFieldDescriptionTemplate` since that template deals with the optional `description`
 - Pass the `schema` into the `ArrayFieldDescriptionTemplate`, `ArrayFieldTitleTemplate`, `DescriptionFieldTemplate` and `TitleFieldTemplate`, fixing [#3176](https://github.com/rjsf-team/react-jsonschema-form/issues/3176)
-
 ## @rjsf/fluent-ui
 - Updated `ArrayFieldTemplate` to always render `ArrayFieldDescriptionTemplate` since that template deals with the optional `description`
 - Pass the `schema` into the `ArrayFieldDescriptionTemplate`, `ArrayFieldTitleTemplate`, `DescriptionFieldTemplate` and `TitleFieldTemplate`, fixing [#3176](https://github.com/rjsf-team/react-jsonschema-form/issues/3176)
