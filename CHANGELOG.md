@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.12
+
+## @rjsf/chakra-ui
+- Automatically close single-choice Select widget on selection
+
 # 5.0.0-beta.11
 
 ## @rjsf/antd
