@@ -90,7 +90,7 @@ const SelectWidget = (props: WidgetProps) => {
         isMulti={isMultiple}
         options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
         placeholder={placeholder}
-        closeMenuOnSelect={false}
+        closeMenuOnSelect={!isMultiple}
         onBlur={_onBlur}
         onChange={isMultiple ? _onMultiChange : _onChange}
         onFocus={_onFocus}
