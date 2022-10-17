@@ -1,6 +1,8 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 
@@ -11,9 +13,11 @@ import Label from "./FieldTemplate/Label";
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
-export default function WrapIfAdditionalTemplate<T = any, F = any>(
-  props: WrapIfAdditionalTemplateProps<T, F>
-) {
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     id,
     classNames,

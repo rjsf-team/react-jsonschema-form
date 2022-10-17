@@ -1,5 +1,10 @@
 import React, { ChangeEvent, FocusEvent, useCallback } from "react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  processSelectValue,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 function getValue(
   event: React.SyntheticEvent<HTMLSelectElement>,
@@ -19,7 +24,11 @@ function getValue(
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, F = any>({
+function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>({
   schema,
   id,
   options,
@@ -33,7 +42,7 @@ function SelectWidget<T = any, F = any>({
   onBlur,
   onFocus,
   placeholder,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
 

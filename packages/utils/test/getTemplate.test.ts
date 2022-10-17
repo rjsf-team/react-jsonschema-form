@@ -1,6 +1,7 @@
 import {
   createSchemaUtils,
   getTemplate,
+  RJSFSchema,
   Registry,
   TemplatesType,
   UIOptionsType,
@@ -13,7 +14,7 @@ const CustomTemplate = () => undefined;
 
 const registry: Registry = {
   formContext: {},
-  rootSchema: {},
+  rootSchema: {} as RJSFSchema,
   schemaUtils: createSchemaUtils(getTestValidator({}), {}),
   templates: {
     ArrayFieldDescriptionTemplate: FakeTemplate,

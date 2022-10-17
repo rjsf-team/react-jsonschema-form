@@ -1,4 +1,4 @@
-import { Registry } from "@rjsf/utils";
+import { Registry, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 import fields from "./components/fields";
 import templates from "./components/templates";
@@ -8,15 +8,16 @@ import widgets from "./components/widgets";
  * plus an empty `rootSchema` and `formContext. We omit schemaUtils here because it cannot be defaulted without a
  * rootSchema and validator. It will be added into the computed registry later in the Form.
  */
-export default function getDefaultRegistry<T = any, F = any>(): Omit<
-  Registry<T, F>,
-  "schemaUtils"
-> {
+export default function getDefaultRegistry<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(): Omit<Registry<T, S, F>, "schemaUtils"> {
   return {
-    fields,
-    templates,
-    widgets,
-    rootSchema: {},
+    fields: fields<T, S, F>(),
+    templates: templates<T, S, F>(),
+    widgets: widgets<T, S, F>(),
+    rootSchema: {} as S,
     formContext: {} as F,
   };
 }

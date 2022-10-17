@@ -20,6 +20,24 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 - Automatically close single-choice Select widget on selection
 
+## @rjsf/core
+- Added the new generic, `S extends StrictRJSFSchema = RJSFSchema`, for `schema`/`rootSchema` to every component that needed it.
+
+## @rjsf/utils
+- Beta-only potentially BREAKING CHANGE: Changed all types that directly or indirectly defined `schema`/`rootSchema` to add the generic `S extends StrictRJSFSchema = RJSFSchema` and use `S` as the type for them.
+  - `StrictRJSFSchema` was added as the alias to `JSON7Schema` and `RJSFSchema` was modified to be `StrictRJSFSchema & GenericObjectType`
+  - This new generic was added BEFORE the newly added `F = any` generic because it is assumed that more people will want to change the schema than the formContext types
+  - This provides future support for the newer draft versions of the schema
+
+## @rjsf/validator-ajv6
+- Fixed a few type casts given the new expanded definition of the `RJSFSchema` type change
+
+## @rjsf/validator-ajv8
+- Updated the typing to add the new `S extends StrictRJSFSchema = RJSFSchema` generic and fixed up type casts
+
+## Dev / docs / playground
+- Updated the `5.x upgrade guide` to document the new `StrictRJSFSchema` and `S` generic
+
 # 5.0.0-beta.11
 
 ## @rjsf/antd

@@ -1,12 +1,16 @@
 import React, { FocusEvent, useCallback } from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<T = any, F = any>({
+function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>({
   options,
   value,
   required,
@@ -17,7 +21,7 @@ function RadioWidget<T = any, F = any>({
   onFocus,
   onChange,
   id,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, enumDisabled, inline } = options;

@@ -1,5 +1,7 @@
 import Ajv, { ErrorObject } from "ajv";
 import toPath from "lodash/toPath";
+import isObject from "lodash/isObject";
+import clone from "lodash/clone";
 import {
   CustomValidator,
   ErrorSchema,
@@ -9,10 +11,10 @@ import {
   GenericObjectType,
   RJSFSchema,
   RJSFValidationError,
+  StrictRJSFSchema,
   ValidationData,
   ValidatorType,
   getDefaultFormState,
-  isObject,
   mergeValidationData,
   ERRORS_KEY,
   REF_KEY,
@@ -25,7 +27,11 @@ const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
-export default class AJV8Validator<T = any> implements ValidatorType<T> {
+export default class AJV8Validator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema
+> implements ValidatorType<T>
+{
   /** The AJV instance to use for all validations
    *
    * @private
@@ -167,16 +173,16 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
         this.__errors!.push(message);
       },
     };
+    if (Array.isArray(formData)) {
+      return formData.reduce((acc, value, key) => {
+        return { ...acc, [key]: this.createErrorHandler(value) };
+      }, handler);
+    }
     if (isObject(formData)) {
       const formObject: GenericObjectType = formData as GenericObjectType;
       return Object.keys(formObject).reduce((acc, key) => {
         return { ...acc, [key]: this.createErrorHandler(formObject[key]) };
       }, handler as FormValidation<T>);
-    }
-    if (Array.isArray(formData)) {
-      return formData.reduce((acc, value, key) => {
-        return { ...acc, [key]: this.createErrorHandler(value) };
-      }, handler);
     }
     return handler as FormValidation<T>;
   }
@@ -242,8 +248,8 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    */
   validateFormData(
-    formData: T,
-    schema: RJSFSchema,
+    formData: T | undefined,
+    schema: S,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer
   ): ValidationData<T> {
@@ -320,9 +326,9 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
    * @param node - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
    * @private
    */
-  private withIdRefPrefixObject(node: object) {
+  private withIdRefPrefixObject(node: S) {
     for (const key in node) {
-      const realObj: { [k: string]: any } = node;
+      const realObj: GenericObjectType = node;
       const value = realObj[key];
       if (
         key === REF_KEY &&
@@ -340,14 +346,14 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
   /** Takes a `node` object list and transforms any contained `$ref` node variables with a prefix, recursively calling
    * `withIdRefPrefix` for any other elements.
    *
-   * @param nodeThe - list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+   * @param node- The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
    * @private
    */
-  private withIdRefPrefixArray(node: object[]): RJSFSchema {
+  private withIdRefPrefixArray(node: S[]): S[] {
     for (let i = 0; i < node.length; i++) {
-      node[i] = this.withIdRefPrefix(node[i]);
+      node[i] = this.withIdRefPrefix(node[i]) as S;
     }
-    return node as RJSFSchema;
+    return node;
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
@@ -358,7 +364,7 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
    * @param formData- - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) {
+  isValid(schema: S, formData: T, rootSchema: S) {
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.
       // then rewrite the schema ref's to point to the rootSchema
@@ -382,12 +388,12 @@ export default class AJV8Validator<T = any> implements ValidatorType<T> {
    * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
    * @protected
    */
-  protected withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
-    if (schemaNode.constructor === Object) {
-      return this.withIdRefPrefixObject({ ...schemaNode });
-    }
+  protected withIdRefPrefix(schemaNode: S | S[]): S | S[] {
     if (Array.isArray(schemaNode)) {
       return this.withIdRefPrefixArray([...schemaNode]);
+    }
+    if (isObject(schemaNode)) {
+      return this.withIdRefPrefixObject(clone<S>(schemaNode));
     }
     return schemaNode;
   }
