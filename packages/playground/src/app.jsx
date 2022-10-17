@@ -1,8 +1,8 @@
 import MonacoEditor from "@monaco-editor/react";
+import React, { Component } from "react";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
 import localValidator from "@rjsf/validator-ajv6";
-import React, { Component } from "react";
 import "react-app-polyfill/ie11";
 import { samples } from "./samples";
 
