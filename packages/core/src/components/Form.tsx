@@ -1,3 +1,4 @@
+import React, { Component } from "react";
 import {
   createSchemaUtils,
   CustomValidator,
@@ -28,7 +29,6 @@ import {
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 import _pick from "lodash/pick";
-import React, { Component } from "react";
 
 import getDefaultRegistry from "../getDefaultRegistry";
 
