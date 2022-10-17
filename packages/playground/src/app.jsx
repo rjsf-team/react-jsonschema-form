@@ -1,10 +1,10 @@
-import MonacoEditor from "@monaco-editor/react";
 import React, { Component } from "react";
+import MonacoEditor from "@monaco-editor/react";
+import { samples } from "./samples";
+import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
 import localValidator from "@rjsf/validator-ajv6";
-import "react-app-polyfill/ie11";
-import { samples } from "./samples";
 
 import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
