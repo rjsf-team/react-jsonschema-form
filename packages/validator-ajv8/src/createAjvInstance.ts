@@ -31,9 +31,10 @@ export default function createAjvInstance(
   additionalMetaSchemas?: CustomValidatorOptionsType["additionalMetaSchemas"],
   customFormats?: CustomValidatorOptionsType["customFormats"],
   ajvOptionsOverrides: CustomValidatorOptionsType["ajvOptionsOverrides"] = {},
-  ajvFormatOptions?: FormatsPluginOptions | false
+  ajvFormatOptions?: FormatsPluginOptions | false,
+  AjvClass: typeof Ajv = Ajv
 ) {
-  const ajv = new Ajv({ ...AJV_CONFIG, ...ajvOptionsOverrides });
+  const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (typeof ajvFormatOptions !== "boolean") {
     addFormats(ajv, ajvFormatOptions);
   }

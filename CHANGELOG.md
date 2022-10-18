@@ -34,9 +34,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv8
 - Updated the typing to add the new `S extends StrictRJSFSchema = RJSFSchema` generic and fixed up type casts
+- Added the `AjvClass` prop to the `CustomValidatorOptionsType` to support using the `Ajv2019` or `Ajv2020` class implementation instead of the default `Ajv` class; fixing [#3189](https://github.com/rjsf-team/react-jsonschema-form/issues/3189)
 
 ## Dev / docs / playground
 - Updated the `5.x upgrade guide` to document the new `StrictRJSFSchema` and `S` generic
+- Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType`
 
 # 5.0.0-beta.11
 
