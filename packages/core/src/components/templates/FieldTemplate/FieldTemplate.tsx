@@ -1,5 +1,11 @@
 import React from "react";
-import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 
 import Label from "./Label";
 
@@ -8,9 +14,11 @@ import Label from "./Label";
  *
  * @param props - The `FieldTemplateProps` for this component
  */
-export default function FieldTemplate<T = any, F = any>(
-  props: FieldTemplateProps<T, F>
-) {
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
     label,
@@ -25,11 +33,12 @@ export default function FieldTemplate<T = any, F = any>(
     uiSchema,
   } = props;
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+  const WrapIfAdditionalTemplate = getTemplate<
     "WrapIfAdditionalTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
   if (hidden) {
     return <div className="hidden">{children}</div>;
   }

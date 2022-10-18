@@ -9,10 +9,10 @@ import {
   optionsList,
   ArrayFieldTemplateProps,
   ErrorSchema,
-  Field,
   FieldProps,
   IdSchema,
   RJSFSchema,
+  StrictRJSFSchema,
   UiSchema,
   ITEMS_KEY,
 } from "@rjsf/utils";
@@ -70,15 +70,16 @@ function keyedToPlainFormData<T>(
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
  * and fixed array, allowing user to add and remove elements from the array data.
  */
-class ArrayField<T = any, F = any> extends Component<
-  FieldProps<T[], F>,
-  ArrayFieldState<T>
-> {
+class ArrayField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> extends Component<FieldProps<T[], S, F>, ArrayFieldState<T>> {
   /** Constructs an `ArrayField` from the `props`, generating the initial keyed data from the `formData`
    *
    * @param props - The `FieldProps` for this template
    */
-  constructor(props: FieldProps<T[], F>) {
+  constructor(props: FieldProps<T[], S, F>) {
     super(props);
     const { formData = [] } = props;
     const keyedFormData = generateKeyedFormData<T>(formData);
@@ -94,8 +95,12 @@ class ArrayField<T = any, F = any> extends Component<
    * @param nextProps - The next set of props data
    * @param prevState - The previous set of state data
    */
-  static getDerivedStateFromProps<T = any, F = any>(
-    nextProps: Readonly<FieldProps<T[], F>>,
+  static getDerivedStateFromProps<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F = any
+  >(
+    nextProps: Readonly<FieldProps<T[], S, F>>,
     prevState: Readonly<ArrayFieldState<T>>
   ) {
     // Don't call getDerivedStateFromProps if keyed formdata was just updated.
@@ -140,7 +145,7 @@ class ArrayField<T = any, F = any> extends Component<
    * @param itemSchema - The schema for the item
    * @return - True if the item schema type does not contain the "null" type
    */
-  isItemRequired(itemSchema: RJSFSchema) {
+  isItemRequired(itemSchema: S) {
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
       // future-proof to check for requirement against these.
@@ -159,7 +164,7 @@ class ArrayField<T = any, F = any> extends Component<
    */
   canAddItem(formItems: any[]) {
     const { schema, uiSchema } = this.props;
-    let { addable } = getUiOptions<T[], F>(uiSchema);
+    let { addable } = getUiOptions<T[], S, F>(uiSchema);
     if (addable !== false) {
       // if ui:options.addable was not explicitly set to false, we can add
       // another item if we have not exceeded maxItems yet
@@ -178,11 +183,11 @@ class ArrayField<T = any, F = any> extends Component<
   _getNewFormDataRow = (): T => {
     const { schema, registry } = this.props;
     const { schemaUtils } = registry;
-    let itemSchema = schema.items as RJSFSchema;
+    let itemSchema = schema.items as S;
     if (isFixedItems(schema) && allowAdditionalItems(schema)) {
-      itemSchema = schema.additionalItems as RJSFSchema;
+      itemSchema = schema.additionalItems as S;
     }
-    // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], F> call on the class
+    // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
     return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
   };
 
@@ -377,10 +382,11 @@ class ArrayField<T = any, F = any> extends Component<
     const { schema, uiSchema, idSchema, registry } = this.props;
     const { schemaUtils } = registry;
     if (!(ITEMS_KEY in schema)) {
-      const uiOptions = getUiOptions<T[], F>(uiSchema);
+      const uiOptions = getUiOptions<T[], S, F>(uiSchema);
       const UnsupportedFieldTemplate = getTemplate<
         "UnsupportedFieldTemplate",
         T[],
+        S,
         F
       >("UnsupportedFieldTemplate", registry, uiOptions);
 
@@ -397,7 +403,7 @@ class ArrayField<T = any, F = any> extends Component<
       // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
       return this.renderMultiSelect();
     }
-    if (isCustomWidget<T[], F>(uiSchema)) {
+    if (isCustomWidget<T[], S, F>(uiSchema)) {
       return this.renderCustomWidget();
     }
     if (isFixedItems(schema)) {
@@ -432,13 +438,13 @@ class ArrayField<T = any, F = any> extends Component<
     const { keyedFormData } = this.state;
     const title = schema.title === undefined ? name : schema.title;
     const { schemaUtils, formContext } = registry;
-    const uiOptions = getUiOptions<T[], F>(uiSchema);
-    const _schemaItems = isObject(schema.items)
-      ? (schema.items as RJSFSchema)
-      : {};
-    const itemsSchema = schemaUtils.retrieveSchema(_schemaItems);
+    const uiOptions = getUiOptions<T[], S, F>(uiSchema);
+    const _schemaItems: S = isObject(schema.items)
+      ? (schema.items as S)
+      : ({} as S);
+    const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
-    const arrayProps: ArrayFieldTemplateProps<T[], F> = {
+    const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
       canAdd: this.canAddItem(formData),
       items: keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
@@ -462,7 +468,7 @@ class ArrayField<T = any, F = any> extends Component<
           name: name && `${name}-${index}`,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
-          itemSchema: itemSchema,
+          itemSchema,
           itemIdSchema,
           itemErrorSchema,
           itemData: itemCast,
@@ -488,7 +494,7 @@ class ArrayField<T = any, F = any> extends Component<
       registry,
     };
 
-    const Template = getTemplate<"ArrayFieldTemplate", T[], F>(
+    const Template = getTemplate<"ArrayFieldTemplate", T[], S, F>(
       "ArrayFieldTemplate",
       registry,
       uiOptions
@@ -519,8 +525,8 @@ class ArrayField<T = any, F = any> extends Component<
     const { widgets, formContext } = registry;
     const title = schema.title || name;
 
-    const { widget, ...options } = getUiOptions<T[], F>(uiSchema);
-    const Widget = getWidget<T[], F>(schema, widget, widgets);
+    const { widget, ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
@@ -566,14 +572,11 @@ class ArrayField<T = any, F = any> extends Component<
       name,
     } = this.props;
     const { widgets, schemaUtils, formContext } = registry;
-    const itemsSchema = schemaUtils.retrieveSchema(
-      schema.items as RJSFSchema,
-      items
-    );
+    const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
     const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = getUiOptions<T[], F>(uiSchema);
-    const Widget = getWidget<T[], F>(schema, widget, widgets);
+    const { widget = "select", ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
         id={idSchema && idSchema.$id}
@@ -618,8 +621,8 @@ class ArrayField<T = any, F = any> extends Component<
     } = this.props;
     const title = schema.title || name;
     const { widgets, formContext } = registry;
-    const { widget = "files", ...options } = getUiOptions<T[], F>(uiSchema);
-    const Widget = getWidget<T[], F>(schema, widget, widgets);
+    const { widget = "files", ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
         options={options}
@@ -668,16 +671,16 @@ class ArrayField<T = any, F = any> extends Component<
     const { keyedFormData } = this.state;
     let { formData: items = [] } = this.props;
     const title = schema.title || name;
-    const uiOptions = getUiOptions<T[], F>(uiSchema);
+    const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { schemaUtils, formContext } = registry;
-    const _schemaItems = isObject(schema.items)
-      ? (schema.items as RJSFSchema[])
-      : [];
-    const itemSchemas = _schemaItems.map((item: RJSFSchema, index: number) =>
+    const _schemaItems: S[] = isObject(schema.items)
+      ? (schema.items as S[])
+      : ([] as S[]);
+    const itemSchemas = _schemaItems.map((item: S, index: number) =>
       schemaUtils.retrieveSchema(item, formData[index] as unknown as T[])
     );
     const additionalSchema = isObject(schema.additionalItems)
-      ? schemaUtils.retrieveSchema(schema.additionalItems, formData)
+      ? schemaUtils.retrieveSchema(schema.additionalItems as S, formData)
       : null;
 
     if (!items || items.length < itemSchemas.length) {
@@ -687,7 +690,7 @@ class ArrayField<T = any, F = any> extends Component<
     }
 
     // These are the props passed into the render function
-    const arrayProps: ArrayFieldTemplateProps<T[], F> = {
+    const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
       canAdd: this.canAddItem(items) && !!additionalSchema,
       className: "field field-array field-array-fixed-items",
       disabled,
@@ -700,7 +703,7 @@ class ArrayField<T = any, F = any> extends Component<
         const additional = index >= itemSchemas.length;
         const itemSchema =
           additional && isObject(schema.additionalItems)
-            ? schemaUtils.retrieveSchema(schema.additionalItems, itemCast)
+            ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
             : itemSchemas[index];
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(
@@ -748,7 +751,7 @@ class ArrayField<T = any, F = any> extends Component<
       rawErrors,
     };
 
-    const Template = getTemplate<"ArrayFieldTemplate", T[], F>(
+    const Template = getTemplate<"ArrayFieldTemplate", T[], S, F>(
       "ArrayFieldTemplate",
       registry,
       uiOptions
@@ -768,14 +771,14 @@ class ArrayField<T = any, F = any> extends Component<
     canRemove?: boolean;
     canMoveUp?: boolean;
     canMoveDown?: boolean;
-    itemSchema: RJSFSchema;
+    itemSchema: S;
     itemData: T[];
-    itemUiSchema: UiSchema<T[], F>;
+    itemUiSchema: UiSchema<T[], S, F>;
     itemIdSchema: IdSchema<T[]>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
-    onBlur: FieldProps<T[], F>["onBlur"];
-    onFocus: FieldProps<T[], F>["onFocus"];
+    onBlur: FieldProps<T[], S, F>["onBlur"];
+    onFocus: FieldProps<T[], S, F>["onFocus"];
     rawErrors?: string[];
   }) {
     const {
@@ -809,7 +812,7 @@ class ArrayField<T = any, F = any> extends Component<
       fields: { ArraySchemaField, SchemaField },
     } = registry;
     const ItemSchemaField = ArraySchemaField || SchemaField;
-    const { orderable = true, removable = true } = getUiOptions<T[], F>(
+    const { orderable = true, removable = true } = getUiOptions<T[], S, F>(
       uiSchema
     );
     const has: { [key: string]: boolean } = {
@@ -863,7 +866,7 @@ class ArrayField<T = any, F = any> extends Component<
   }
 }
 
-/** `ArrayField` is `React.ComponentType<FieldProps<T[], F>>` (necessarily) but the `registry` requires things to be a
- * `Field` which is defined as `React.ComponentType<FieldProps<T, F>>`, so cast it to make `registry` happy.
+/** `ArrayField` is `React.ComponentType<FieldProps<T[], S, F>>` (necessarily) but the `registry` requires things to be a
+ * `Field` which is defined as `React.ComponentType<FieldProps<T, S, F>>`, so cast it to make `registry` happy.
  */
-export default ArrayField as unknown as Field;
+export default ArrayField;

@@ -1,7 +1,13 @@
 import isEmpty from "lodash/isEmpty";
 
 import mergeObjects from "../mergeObjects";
-import { ErrorSchema, ValidationData, ValidatorType } from "../types";
+import {
+  ErrorSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidationData,
+  ValidatorType,
+} from "../types";
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
  * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
@@ -13,8 +19,11 @@ import { ErrorSchema, ValidationData, ValidatorType } from "../types";
  * @param [additionalErrorSchema] - The additional set of errors in an `ErrorSchema`
  * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
  */
-export default function mergeValidationData<T = any>(
-  validator: ValidatorType<T>,
+export default function mergeValidationData<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema
+>(
+  validator: ValidatorType<T, S>,
   validationData: ValidationData<T>,
   additionalErrorSchema?: ErrorSchema<T>
 ): ValidationData<T> {

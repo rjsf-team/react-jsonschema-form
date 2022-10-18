@@ -3,6 +3,8 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldDescriptionProps,
+  RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 
 /** The `ArrayFieldDescriptionTemplate` component renders a `DescriptionFieldTemplate` with an `id` derived from
@@ -10,11 +12,13 @@ import {
  *
  * @param props - The `ArrayFieldDescriptionProps` for the component
  */
-export default function ArrayFieldDescriptionTemplate<T = any, F = any>(
-  props: ArrayFieldDescriptionProps
-) {
+export default function ArrayFieldDescriptionTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { idSchema, description, registry, schema, uiSchema } = props;
-  const options = getUiOptions<T, F>(uiSchema);
+  const options = getUiOptions<T, S, F>(uiSchema);
   const { label: displayLabel = true } = options;
   if (!description || !displayLabel) {
     return null;
@@ -22,6 +26,7 @@ export default function ArrayFieldDescriptionTemplate<T = any, F = any>(
   const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
     T,
+    S,
     F
   >("DescriptionFieldTemplate", registry, options);
   const id = `${idSchema.$id}__description`;

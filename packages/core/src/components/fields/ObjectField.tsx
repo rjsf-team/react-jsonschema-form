@@ -8,6 +8,7 @@ import {
   GenericObjectType,
   IdSchema,
   RJSFSchema,
+  StrictRJSFSchema,
   ADDITIONAL_PROPERTY_FLAG,
   PROPERTIES_KEY,
   REF_KEY,
@@ -31,10 +32,11 @@ type ObjectFieldState = {
  *
  * @param props - The `FieldProps` for this template
  */
-class ObjectField<T = any, F = any> extends Component<
-  FieldProps<T, F>,
-  ObjectFieldState
-> {
+class ObjectField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> extends Component<FieldProps<T, S, F>, ObjectFieldState> {
   /** Set up the initial state */
   state = {
     wasPropertyKeyModified: false,
@@ -112,7 +114,9 @@ class ObjectField<T = any, F = any> extends Component<
    */
   getAvailableKey = (preferredKey: string, formData: T) => {
     const { uiSchema } = this.props;
-    const { duplicateKeySuffixSeparator = "-" } = getUiOptions<T, F>(uiSchema);
+    const { duplicateKeySuffixSeparator = "-" } = getUiOptions<T, S, F>(
+      uiSchema
+    );
 
     let index = 0;
     let newKey = preferredKey;
@@ -188,7 +192,7 @@ class ObjectField<T = any, F = any> extends Component<
    *
    * @param schema - The schema element to which the new property is being added
    */
-  handleAddClick = (schema: RJSFSchema) => () => {
+  handleAddClick = (schema: S) => () => {
     if (!schema.additionalProperties) {
       return;
     }
@@ -201,7 +205,7 @@ class ObjectField<T = any, F = any> extends Component<
       if (REF_KEY in schema.additionalProperties) {
         const { schemaUtils } = registry;
         const refSchema = schemaUtils.retrieveSchema(
-          { $ref: schema.additionalProperties[REF_KEY] },
+          { $ref: schema.additionalProperties[REF_KEY] } as S,
           formData
         );
         type = refSchema.type;
@@ -238,8 +242,8 @@ class ObjectField<T = any, F = any> extends Component<
 
     const { fields, formContext, schemaUtils } = registry;
     const { SchemaField } = fields;
-    const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-    const uiOptions = getUiOptions<T, F>(uiSchema);
+    const schema: S = schemaUtils.retrieveSchema(rawSchema, formData);
+    const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const { properties: schemaProperties = {} } = schema;
 
     const title = schema.title === undefined ? name : schema.title;
@@ -260,7 +264,7 @@ class ObjectField<T = any, F = any> extends Component<
       );
     }
 
-    const Template = getTemplate<"ObjectFieldTemplate", T, F>(
+    const Template = getTemplate<"ObjectFieldTemplate", T, S, F>(
       "ObjectFieldTemplate",
       registry,
       uiOptions
@@ -278,7 +282,7 @@ class ObjectField<T = any, F = any> extends Component<
         const fieldUiSchema = addedByAdditionalProperties
           ? uiSchema.additionalProperties
           : uiSchema[name];
-        const hidden = getUiOptions<T, F>(fieldUiSchema).widget === "hidden";
+        const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === "hidden";
         const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
 
         return {

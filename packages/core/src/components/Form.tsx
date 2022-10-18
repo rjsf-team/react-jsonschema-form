@@ -13,6 +13,7 @@ import {
   mergeObjects,
   NAME_KEY,
   PathSchema,
+  StrictRJSFSchema,
   Registry,
   RegistryFieldsType,
   RegistryWidgetsType,
@@ -33,15 +34,19 @@ import _pick from "lodash/pick";
 import getDefaultRegistry from "../getDefaultRegistry";
 
 /** The properties that are passed to the `Form` */
-export interface FormProps<T = any, F = any> {
+export interface FormProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> {
   /** The JSON schema object for the form */
-  schema: RJSFSchema;
+  schema: S;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
-  validator: ValidatorType<T>;
+  validator: ValidatorType<T, S>;
   /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
   children?: React.ReactNode;
   /** The uiSchema for the form */
-  uiSchema?: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, S, F>;
   /** The data for the form, used to prefill a form with existing data */
   formData?: T;
   // Form presentation and behavior modifiers
@@ -71,19 +76,19 @@ export interface FormProps<T = any, F = any> {
   readonly?: boolean;
   // Form registry
   /** The dictionary of registered fields in the form */
-  fields?: RegistryFieldsType<T, F>;
+  fields?: RegistryFieldsType<T, S, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<T, F>, "ButtonTemplates">> & {
-    ButtonTemplates?: Partial<TemplatesType<T, F>["ButtonTemplates"]>;
+  templates?: Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
+    ButtonTemplates?: Partial<TemplatesType<T, S, F>["ButtonTemplates"]>;
   };
   /** The dictionary of registered widgets in the form */
-  widgets?: RegistryWidgetsType<T, F>;
+  widgets?: RegistryWidgetsType<T, S, F>;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field
    * that caused the change
    */
-  onChange?: (data: IChangeEvent<T, F>, id?: string) => void;
+  onChange?: (data: IChangeEvent<T, S, F>, id?: string) => void;
   /** To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of
    * encountered errors
    */
@@ -92,7 +97,7 @@ export interface FormProps<T = any, F = any> {
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, F>, event: React.FormEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: React.FormEvent<any>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -184,17 +189,21 @@ export interface FormProps<T = any, F = any> {
 }
 
 /** The data that is contained within the state for the `Form` */
-export interface FormState<T = any, F = any> {
+export interface FormState<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> {
   /** The JSON schema object for the form */
-  schema: RJSFSchema;
+  schema: S;
   /** The uiSchema for the form */
-  uiSchema: UiSchema<T, F>;
+  uiSchema: UiSchema<T, S, F>;
   /** The `IdSchema` for the form, computed from the `schema`, the `rootFieldId`, the `formData` and the `idPrefix` and
    * `idSeparator` props.
    */
   idSchema: IdSchema<T>;
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
-  schemaUtils: SchemaUtilsType<T>;
+  schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
   formData: T;
   /** Flag indicating whether the form is in edit mode, true when `formData` is passed to the form, otherwise false */
@@ -214,9 +223,12 @@ export interface FormState<T = any, F = any> {
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
-export interface IChangeEvent<T = any, F = any>
-  extends Omit<
-    FormState<T, F>,
+export interface IChangeEvent<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> extends Omit<
+    FormState<T, S, F>,
     "schemaValidationErrors" | "schemaValidationErrorSchema"
   > {
   /** The status of the form when submitted */
@@ -224,10 +236,11 @@ export interface IChangeEvent<T = any, F = any>
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
-export default class Form<T = any, F = any> extends Component<
-  FormProps<T, F>,
-  FormState<T, F>
-> {
+export default class Form<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
    * provide any possible type here
    */
@@ -239,7 +252,7 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param props - The initial props for the `Form`
    */
-  constructor(props: FormProps<T, F>) {
+  constructor(props: FormProps<T, S, F>) {
     super(props);
 
     if (!props.validator) {
@@ -262,7 +275,7 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param nextProps - The new set of props about to be applied to the `Form`
    */
-  UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, F>) {
+  UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, S, F>) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
@@ -283,24 +296,24 @@ export default class Form<T = any, F = any> extends Component<
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
-    props: FormProps<T, F>,
+    props: FormProps<T, S, F>,
     inputFormData?: T
-  ): FormState<T, F> {
-    const state: FormState<T, F> = this.state || {};
+  ): FormState<T, S, F> {
+    const state: FormState<T, S, F> = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
-    const uiSchema: UiSchema<T, F> =
+    const uiSchema: UiSchema<T, S, F> =
       ("uiSchema" in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== "undefined";
     const liveValidate =
       "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
-    let schemaUtils: SchemaUtilsType<T> = state.schemaUtils;
+    let schemaUtils: SchemaUtilsType<T, S> = state.schemaUtils;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)
     ) {
-      schemaUtils = createSchemaUtils<T>(props.validator, rootSchema);
+      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema);
     }
     const formData: T = schemaUtils.getDefaultFormState(
       schema,
@@ -355,7 +368,7 @@ export default class Form<T = any, F = any> extends Component<
       props.idPrefix,
       props.idSeparator
     );
-    const nextState: FormState<T, F> = {
+    const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema,
       uiSchema,
@@ -377,8 +390,8 @@ export default class Form<T = any, F = any> extends Component<
    * @returns - True if the component should be updated, false otherwise
    */
   shouldComponentUpdate(
-    nextProps: FormProps<T, F>,
-    nextState: FormState<T, F>
+    nextProps: FormProps<T, S, F>,
+    nextState: FormState<T, S, F>
   ): boolean {
     return shouldRender(this, nextProps, nextState);
   }
@@ -393,7 +406,7 @@ export default class Form<T = any, F = any> extends Component<
   validate(
     formData: T,
     schema = this.props.schema,
-    altSchemaUtils?: SchemaUtilsType<T>
+    altSchemaUtils?: SchemaUtilsType<T, S>
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils
       ? altSchemaUtils
@@ -411,7 +424,7 @@ export default class Form<T = any, F = any> extends Component<
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
-  renderErrors(registry: Registry<T, F>) {
+  renderErrors(registry: Registry<T, S, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const { formContext } = this.props;
     const options = getUiOptions<T, F>(uiSchema);
@@ -522,7 +535,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     const mustValidate = !noValidate && liveValidate;
-    let state: Partial<FormState<T, F>> = { formData, schema };
+    let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
     if (omitExtraData === true && liveOmit === true) {
@@ -573,7 +586,7 @@ export default class Form<T = any, F = any> extends Component<
       };
     }
     this.setState(
-      state as FormState<T, F>,
+      state as FormState<T, S, F>,
       () => onChange && onChange({ ...this.state, ...state }, id)
     );
   };
@@ -664,9 +677,13 @@ export default class Form<T = any, F = any> extends Component<
   };
 
   /** Returns the registry for the form */
-  getRegistry(): Registry<T, F> {
+  getRegistry(): Registry<T, S, F> {
     const { schemaUtils } = this.state;
-    const { fields, templates, widgets, formContext } = getDefaultRegistry();
+    const { fields, templates, widgets, formContext } = getDefaultRegistry<
+      T,
+      S,
+      F
+    >();
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -770,7 +787,7 @@ export default class Form<T = any, F = any> extends Component<
     const { SchemaField: _SchemaField } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
-    // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
+    // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || "form";

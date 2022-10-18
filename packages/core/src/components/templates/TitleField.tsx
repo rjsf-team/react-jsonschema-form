@@ -1,5 +1,5 @@
 import React from "react";
-import { TitleFieldProps } from "@rjsf/utils";
+import { TitleFieldProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
@@ -7,9 +7,11 @@ const REQUIRED_FIELD_SYMBOL = "*";
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, F = any>(
-  props: TitleFieldProps<T, F>
-) {
+export default function TitleField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: TitleFieldProps<T, S, F>) {
   const { id, title, required } = props;
   return (
     <legend id={id}>

@@ -1,4 +1,4 @@
-import { TemplatesType } from "@rjsf/utils";
+import { RJSFSchema, StrictRJSFSchema, TemplatesType } from "@rjsf/utils";
 
 import ArrayFieldDescriptionTemplate from "./ArrayFieldDescriptionTemplate";
 import ArrayFieldItemTemplate from "./ArrayFieldItemTemplate";
@@ -16,22 +16,28 @@ import TitleField from "./TitleField";
 import UnsupportedField from "./UnsupportedField";
 import WrapIfAdditionalTemplate from "./WrapIfAdditionalTemplate";
 
-const templates: TemplatesType = {
-  ArrayFieldDescriptionTemplate,
-  ArrayFieldItemTemplate,
-  ArrayFieldTemplate,
-  ArrayFieldTitleTemplate,
-  ButtonTemplates,
-  BaseInputTemplate,
-  DescriptionFieldTemplate: DescriptionField,
-  ErrorListTemplate: ErrorList,
-  FieldTemplate,
-  FieldErrorTemplate,
-  FieldHelpTemplate,
-  ObjectFieldTemplate,
-  TitleFieldTemplate: TitleField,
-  UnsupportedFieldTemplate: UnsupportedField,
-  WrapIfAdditionalTemplate,
-};
+function templates<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(): TemplatesType<T, S, F> {
+  return {
+    ArrayFieldDescriptionTemplate,
+    ArrayFieldItemTemplate,
+    ArrayFieldTemplate,
+    ArrayFieldTitleTemplate,
+    ButtonTemplates: ButtonTemplates<T, S, F>(),
+    BaseInputTemplate,
+    DescriptionFieldTemplate: DescriptionField,
+    ErrorListTemplate: ErrorList,
+    FieldTemplate,
+    FieldErrorTemplate,
+    FieldHelpTemplate,
+    ObjectFieldTemplate,
+    TitleFieldTemplate: TitleField,
+    UnsupportedFieldTemplate: UnsupportedField,
+    WrapIfAdditionalTemplate,
+  };
+}
 
 export default templates;

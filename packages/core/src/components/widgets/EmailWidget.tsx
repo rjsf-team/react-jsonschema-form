@@ -1,15 +1,22 @@
 import React from "react";
-import { getTemplate, WidgetProps } from "@rjsf/utils";
+import {
+  getTemplate,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `EmailWidget` component uses the `BaseInputTemplate` changing the type to `email`.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function EmailWidget<T = any, F = any>(
-  props: WidgetProps<T, F>
-) {
+export default function EmailWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, F>(
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options

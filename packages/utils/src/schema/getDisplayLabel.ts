@@ -2,7 +2,12 @@ import { UI_FIELD_KEY, UI_WIDGET_KEY } from "../constants";
 import getSchemaType from "../getSchemaType";
 import getUiOptions from "../getUiOptions";
 import isCustomWidget from "../isCustomWidget";
-import { RJSFSchema, UiSchema, ValidatorType } from "../types";
+import {
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidatorType,
+} from "../types";
 import isFilesArray from "./isFilesArray";
 import isMultiSelect from "./isMultiSelect";
 
@@ -15,21 +20,25 @@ import isMultiSelect from "./isMultiSelect";
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @returns - True if the label should be displayed or false if it should not
  */
-export default function getDisplayLabel<T = any, F = any>(
-  validator: ValidatorType,
-  schema: RJSFSchema,
-  uiSchema: UiSchema<T, F> = {},
-  rootSchema?: RJSFSchema
+export default function getDisplayLabel<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(
+  validator: ValidatorType<T, S>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F> = {},
+  rootSchema?: S
 ): boolean {
-  const uiOptions = getUiOptions<T, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { label = true } = uiOptions;
   let displayLabel = !!label;
   const schemaType = getSchemaType(schema);
 
   if (schemaType === "array") {
     displayLabel =
-      isMultiSelect<T>(validator, schema, rootSchema) ||
-      isFilesArray<T, F>(validator, schema, uiSchema, rootSchema) ||
+      isMultiSelect<T, S>(validator, schema, rootSchema) ||
+      isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema) ||
       isCustomWidget(uiSchema);
   }
 
