@@ -346,7 +346,7 @@ export default class AJV8Validator<
   /** Takes a `node` object list and transforms any contained `$ref` node variables with a prefix, recursively calling
    * `withIdRefPrefix` for any other elements.
    *
-   * @param node- The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+   * @param node - The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
    * @private
    */
   private withIdRefPrefixArray(node: S[]): S[] {
