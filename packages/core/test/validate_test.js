@@ -22,6 +22,73 @@ describe("Validation", () => {
     });
 
     describe("JSONSchema validation", () => {
+      describe("ShowErrorList prop top", () => {
+        const schema = {
+          type: "object",
+          required: ["foo"],
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+
+        let onError, node;
+        const compInfo = createFormComponent({
+          schema,
+          formData: {
+            foo: undefined,
+          },
+        });
+        onError = compInfo.onError;
+        node = compInfo.node;
+        submitForm(node);
+
+        it("should render errors at the top", () => {
+          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelector(".errors li").textContent).eql(
+            ".foo is a required property"
+          );
+          expect(node.childNodes[0].className).to.eql(
+            "panel panel-danger errors"
+          );
+        });
+      });
+
+      describe("ShowErrorList prop bottom", () => {
+        const schema = {
+          type: "object",
+          required: ["foo"],
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+
+        let onError, node;
+        const compInfo = createFormComponent({
+          showErrorList: "bottom",
+          schema,
+          formData: {
+            foo: undefined,
+          },
+        });
+        onError = compInfo.onError;
+        node = compInfo.node;
+        submitForm(node);
+
+        it("should render errors at the bottom", () => {
+          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelector(".errors li").textContent).eql(
+            ".foo is a required property"
+          );
+
+          // The last child node is the submit button so the one before it will be the error list
+          expect(node.childNodes[2].className).to.eql(
+            "panel panel-danger errors"
+          );
+        });
+      });
+
       describe("Required fields", () => {
         const schema = {
           type: "object",
@@ -62,6 +129,9 @@ describe("Validation", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
             ".foo is a required property"
+          );
+          expect(node.childNodes[0].className).to.eql(
+            "panel panel-danger errors"
           );
         });
       });
