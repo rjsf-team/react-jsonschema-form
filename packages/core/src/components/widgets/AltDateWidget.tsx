@@ -184,7 +184,7 @@ function AltDateWidget<
         time,
         options.yearsRange as [number, number] | undefined
       ).map((elemProps, i) => (
-        <li key={i}>
+        <li className="list-inline-item" key={i}>
           <DateElement
             rootId={id}
             select={handleChange}
@@ -201,7 +201,7 @@ function AltDateWidget<
       {(options.hideNowButton !== "undefined"
         ? !options.hideNowButton
         : true) && (
-        <li>
+        <li className="list-inline-item">
           <a href="#" className="btn btn-info btn-now" onClick={handleSetNow}>
             Now
           </a>
@@ -210,7 +210,7 @@ function AltDateWidget<
       {(options.hideClearButton !== "undefined"
         ? !options.hideClearButton
         : true) && (
-        <li>
+        <li className="list-inline-item">
           <a
             href="#"
             className="btn btn-warning btn-clear"
