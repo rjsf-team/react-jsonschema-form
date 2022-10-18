@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 function selectValue(value: any, selected: any[], all: any[]) {
   const at = all.indexOf(value);
@@ -18,7 +18,11 @@ function deselectValue(value: any, selected: any[]) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxesWidget<T = any, F = any>({
+function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>({
   id,
   disabled,
   options: { inline = false, enumOptions, enumDisabled },
@@ -26,7 +30,7 @@ function CheckboxesWidget<T = any, F = any>({
   autofocus = false,
   readonly,
   onChange,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   return (
     <div className="checkboxes" id={id}>
       {Array.isArray(enumOptions) &&

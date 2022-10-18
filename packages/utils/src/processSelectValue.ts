@@ -1,6 +1,6 @@
 import get from "lodash/get";
 
-import { RJSFSchema, UIOptionsType } from "./types";
+import { RJSFSchema, StrictRJSFSchema, UIOptionsType } from "./types";
 import asNumber from "./asNumber";
 import guessType from "./guessType";
 
@@ -15,11 +15,11 @@ const nums = new Set<any>(["number", "integer"]);
  * @param [options] - The UIOptionsType from which to potentially extract the emptyValue
  * @returns - The `value` converted to the proper type
  */
-export default function processSelectValue<T = any, F = any>(
-  schema: RJSFSchema,
-  value?: any,
-  options?: UIOptionsType<T, F>
-) {
+export default function processSelectValue<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(schema: S, value?: any, options?: UIOptionsType<T, S, F>) {
   const { enum: schemaEnum, type, items } = schema;
   if (value === "") {
     return options && options.emptyValue !== undefined

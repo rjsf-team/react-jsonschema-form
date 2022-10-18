@@ -1,4 +1,4 @@
-import { RJSFSchema, ValidatorType } from "../types";
+import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
 
 import isSelect from "./isSelect";
 
@@ -9,11 +9,10 @@ import isSelect from "./isSelect";
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @returns - True if schema contains a multi-select, otherwise false
  */
-export default function isMultiSelect<T = any>(
-  validator: ValidatorType,
-  schema: RJSFSchema,
-  rootSchema?: RJSFSchema
-) {
+export default function isMultiSelect<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema
+>(validator: ValidatorType<T, S>, schema: S, rootSchema?: S) {
   if (
     !schema.uniqueItems ||
     !schema.items ||
@@ -21,5 +20,5 @@ export default function isMultiSelect<T = any>(
   ) {
     return false;
   }
-  return isSelect<T>(validator, schema.items as RJSFSchema, rootSchema);
+  return isSelect<T, S>(validator, schema.items as S, rootSchema);
 }

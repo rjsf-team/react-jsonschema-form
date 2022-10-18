@@ -3,7 +3,6 @@ import {
   RJSFSchema,
   createSchemaUtils,
   ADDITIONAL_PROPERTY_FLAG,
-  RJSFSchemaDefinition,
 } from "../../src";
 import {
   resolveSchema,
@@ -1433,7 +1432,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {
           type: "integer",
         };
-        const oneOf: RJSFSchemaDefinition[] = [
+        const oneOf: RJSFSchema["oneOf"] = [
           true,
           { properties: undefined },
           { properties: { foo: { type: "string" } } },

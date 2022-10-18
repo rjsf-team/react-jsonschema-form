@@ -1,5 +1,5 @@
 import isConstant from "../isConstant";
-import { RJSFSchema, ValidatorType } from "../types";
+import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
 import retrieveSchema from "./retrieveSchema";
 
 /** Checks to see if the `schema` combination represents a select
@@ -9,12 +9,16 @@ import retrieveSchema from "./retrieveSchema";
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @returns - True if schema contains a select, otherwise false
  */
-export default function isSelect<T = any>(
-  validator: ValidatorType,
-  theSchema: RJSFSchema,
-  rootSchema: RJSFSchema = {}
-) {
-  const schema = retrieveSchema<T>(validator, theSchema, rootSchema, undefined);
+export default function isSelect<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema
+>(validator: ValidatorType<T, S>, theSchema: S, rootSchema: S = {} as S) {
+  const schema = retrieveSchema<T, S>(
+    validator,
+    theSchema,
+    rootSchema,
+    undefined
+  );
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
     return true;

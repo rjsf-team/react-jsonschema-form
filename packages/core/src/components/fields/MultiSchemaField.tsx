@@ -6,6 +6,7 @@ import {
   deepEquals,
   FieldProps,
   RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 import unset from "lodash/unset";
 
@@ -20,15 +21,16 @@ type AnyOfFieldState = {
  *
  * @param props - The `FieldProps` for this template
  */
-class AnyOfField<T = any, F = any> extends Component<
-  FieldProps<T, F>,
-  AnyOfFieldState
-> {
+class AnyOfField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> extends Component<FieldProps<T, S, F>, AnyOfFieldState> {
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
    */
-  constructor(props: FieldProps<T, F>) {
+  constructor(props: FieldProps<T, S, F>) {
     super(props);
 
     const { formData, options } = this.props;
@@ -45,7 +47,7 @@ class AnyOfField<T = any, F = any> extends Component<
    * @param prevState - The previous `AnyOfFieldState` for this template
    */
   componentDidUpdate(
-    prevProps: Readonly<FieldProps<T, F>>,
+    prevProps: Readonly<FieldProps<T, S, F>>,
     prevState: Readonly<AnyOfFieldState>
   ) {
     const { formData, options, idSchema } = this.props;
@@ -76,11 +78,7 @@ class AnyOfField<T = any, F = any> extends Component<
    * @param options - The list of options to choose from
    * @return - The index of the `option` that best matches the `formData`
    */
-  getMatchingOption(
-    selectedOption: number,
-    formData: T,
-    options: RJSFSchema[]
-  ) {
+  getMatchingOption(selectedOption: number, formData: T, options: S[]) {
     const { schemaUtils } = this.props.registry;
 
     const option = schemaUtils.getMatchingOption(formData, options);
@@ -178,8 +176,8 @@ class AnyOfField<T = any, F = any> extends Component<
     const { widgets, fields } = registry;
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption } = this.state;
-    const { widget = "select", ...uiOptions } = getUiOptions<T, F>(uiSchema);
-    const Widget = getWidget<T, F>({ type: "number" }, widget, widgets);
+    const { widget = "select", ...uiOptions } = getUiOptions<T, S, F>(uiSchema);
+    const Widget = getWidget<T, S, F>({ type: "number" }, widget, widgets);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -202,7 +200,7 @@ class AnyOfField<T = any, F = any> extends Component<
         <div className="form-group">
           <Widget
             id={this.getFieldId()}
-            schema={{ type: "number", default: 0 }}
+            schema={{ type: "number", default: 0 } as S}
             onChange={this.onOptionChange}
             onBlur={onBlur}
             onFocus={onFocus}

@@ -2,7 +2,7 @@ import jsonpointer from "jsonpointer";
 import omit from "lodash/omit";
 
 import { REF_KEY } from "./constants";
-import { GenericObjectType, RJSFSchema } from "./types";
+import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from "./types";
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
  * location, the `object` minus the `key: value` and in the second location the `value`.
@@ -30,10 +30,9 @@ export function splitKeyElementFromObject(
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference exists
  */
-export default function findSchemaDefinition(
-  $ref?: string,
-  rootSchema: RJSFSchema = {}
-): RJSFSchema {
+export default function findSchemaDefinition<
+  S extends StrictRJSFSchema = RJSFSchema
+>($ref?: string, rootSchema: S = {} as S): S {
   let ref = $ref || "";
   if (ref.startsWith("#")) {
     // Decode URI fragment representation.
@@ -41,13 +40,13 @@ export default function findSchemaDefinition(
   } else {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  const current: RJSFSchema = jsonpointer.get(rootSchema, ref);
+  const current: S = jsonpointer.get(rootSchema, ref);
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
   if (current[REF_KEY]) {
     const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinition(theRef, rootSchema);
+    const subSchema = findSchemaDefinition<S>(theRef, rootSchema);
     if (Object.keys(remaining).length > 0) {
       return { ...remaining, ...subSchema };
     }

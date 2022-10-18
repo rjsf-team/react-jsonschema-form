@@ -1,8 +1,8 @@
 import React from "react";
 import { WrapIfAdditionalTemplateProps } from "@rjsf/utils";
 
-export default function WrapIfAdditionalTemplate<T = any, F = any>(
-  props: WrapIfAdditionalTemplateProps<T, F>
+export default function WrapIfAdditionalTemplate(
+  props: WrapIfAdditionalTemplateProps
 ) {
   const { children } = props;
   // TODO Implement WrapIfAdditionalTemplate features in FluentUI (#2777)

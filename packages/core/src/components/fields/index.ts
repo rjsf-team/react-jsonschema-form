@@ -1,4 +1,9 @@
-import { RegistryFieldsType } from "@rjsf/utils";
+import {
+  Field,
+  RegistryFieldsType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 import ArrayField from "./ArrayField";
 import BooleanField from "./BooleanField";
@@ -9,17 +14,23 @@ import SchemaField from "./SchemaField";
 import StringField from "./StringField";
 import NullField from "./NullField";
 
-const fields: RegistryFieldsType = {
-  AnyOfField: MultiSchemaField,
-  ArrayField,
-  // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
-  BooleanField,
-  NumberField,
-  ObjectField,
-  OneOfField: MultiSchemaField,
-  SchemaField,
-  StringField,
-  NullField,
-};
+function fields<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(): RegistryFieldsType<T, S, F> {
+  return {
+    AnyOfField: MultiSchemaField,
+    ArrayField: ArrayField as unknown as Field<T, S, F>,
+    // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
+    BooleanField,
+    NumberField,
+    ObjectField,
+    OneOfField: MultiSchemaField,
+    SchemaField,
+    StringField,
+    NullField,
+  };
+}
 
 export default fields;

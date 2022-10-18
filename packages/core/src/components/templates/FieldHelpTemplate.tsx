@@ -1,13 +1,15 @@
 import React from "react";
-import { FieldHelpProps } from "@rjsf/utils";
+import { FieldHelpProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
  * @param props - The `FieldHelpProps` to be rendered
  */
-export default function FieldHelpTemplate<T = any, F = any>(
-  props: FieldHelpProps<T, F>
-) {
+export default function FieldHelpTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: FieldHelpProps<T, S, F>) {
   const { idSchema, help } = props;
   if (!help) {
     return null;

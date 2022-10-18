@@ -1,13 +1,19 @@
 import React, { CSSProperties } from "react";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
  */
-export default function ArrayFieldItemTemplate<T = any, F = any>(
-  props: ArrayFieldTemplateItemType<T, F>
-) {
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     className,
