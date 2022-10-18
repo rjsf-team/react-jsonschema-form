@@ -1,5 +1,10 @@
 import getWidget from "./getWidget";
-import { RegistryWidgetsType, RJSFSchema, Widget } from "./types";
+import {
+  RegistryWidgetsType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  Widget,
+} from "./types";
 
 /** Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it
  * does, or false if it doesn't.
@@ -9,10 +14,14 @@ import { RegistryWidgetsType, RJSFSchema, Widget } from "./types";
  * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
  * @returns - True if the widget exists, false otherwise
  */
-export default function hasWidget<T = any, F = any>(
+export default function hasWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(
   schema: RJSFSchema,
-  widget: Widget<T, F> | string,
-  registeredWidgets: RegistryWidgetsType<T, F> = {}
+  widget: Widget<T, S, F> | string,
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {}
 ) {
   try {
     getWidget(schema, widget, registeredWidgets);

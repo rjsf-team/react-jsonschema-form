@@ -9,7 +9,12 @@ import {
   REF_KEY,
 } from "../constants";
 import isObject from "../isObject";
-import { IdSchema, RJSFSchema, ValidatorType } from "../types";
+import {
+  IdSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "../types";
 import retrieveSchema from "./retrieveSchema";
 
 /** Generates an `IdSchema` object for the `schema`, recursively
@@ -23,17 +28,25 @@ import retrieveSchema from "./retrieveSchema";
  * @param [idSeparator='_'] - The separator to use for the path segments in the id
  * @returns - The `IdSchema` object for the `schema`
  */
-export default function toIdSchema<T = any>(
-  validator: ValidatorType,
-  schema: RJSFSchema,
+export default function toIdSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema
+>(
+  validator: ValidatorType<T, S>,
+  schema: S,
   id?: string | null,
-  rootSchema?: RJSFSchema,
+  rootSchema?: S,
   formData?: T,
   idPrefix = "root",
   idSeparator = "_"
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T>(validator, schema, rootSchema, formData);
+    const _schema = retrieveSchema<T, S>(
+      validator,
+      schema,
+      rootSchema,
+      formData
+    );
     return toIdSchema<T>(
       validator,
       _schema,
@@ -45,9 +58,9 @@ export default function toIdSchema<T = any>(
     );
   }
   if (ITEMS_KEY in schema && !get(schema, [ITEMS_KEY, REF_KEY])) {
-    return toIdSchema<T>(
+    return toIdSchema<T, S>(
       validator,
-      get(schema, ITEMS_KEY) as RJSFSchema,
+      get(schema, ITEMS_KEY) as S,
       id,
       rootSchema,
       formData,
@@ -61,7 +74,7 @@ export default function toIdSchema<T = any>(
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema[ID_KEY] + idSeparator + name;
-      idSchema[name] = toIdSchema<T>(
+      idSchema[name] = toIdSchema<T, S>(
         validator,
         isObject(field) ? field : {},
         fieldId,

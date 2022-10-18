@@ -229,7 +229,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    */
   validateFormData(
-    formData: T,
+    formData: T | undefined,
     schema: RJSFSchema,
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer
@@ -324,7 +324,7 @@ export default class AJV6Validator<T = any> implements ValidatorType<T> {
   /** Takes a `node` object list and transforms any contained `$ref` node variables with a prefix, recursively calling
    * `withIdRefPrefix` for any other elements.
    *
-   * @param nodeThe - list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+   * @param node - The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
    * @private
    */
   private withIdRefPrefixArray(node: object[]): RJSFSchema {

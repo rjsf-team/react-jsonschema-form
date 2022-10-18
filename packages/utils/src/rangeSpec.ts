@@ -1,4 +1,4 @@
-import { RangeSpecType } from "./types";
+import { RangeSpecType, StrictRJSFSchema } from "./types";
 import { RJSFSchema } from "./types";
 
 /** Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML
@@ -7,7 +7,9 @@ import { RJSFSchema } from "./types";
  * @param schema - The schema from which to extract the range spec
  * @returns - A range specification from the schema
  */
-export default function rangeSpec(schema: RJSFSchema) {
+export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S
+) {
   const spec: RangeSpecType = {};
   if (schema.multipleOf) {
     spec.step = schema.multipleOf;

@@ -1,4 +1,4 @@
-import { RegistryWidgetsType } from "@rjsf/utils";
+import { RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 import AltDateWidget from "./AltDateWidget";
 import AltDateTimeWidget from "./AltDateTimeWidget";
@@ -19,25 +19,31 @@ import TextWidget from "./TextWidget";
 import URLWidget from "./URLWidget";
 import UpDownWidget from "./UpDownWidget";
 
-const widgets: RegistryWidgetsType = {
-  PasswordWidget,
-  RadioWidget,
-  UpDownWidget,
-  RangeWidget,
-  SelectWidget,
-  TextWidget,
-  DateWidget,
-  DateTimeWidget,
-  AltDateWidget,
-  AltDateTimeWidget,
-  EmailWidget,
-  URLWidget,
-  TextareaWidget,
-  HiddenWidget,
-  ColorWidget,
-  FileWidget,
-  CheckboxWidget,
-  CheckboxesWidget,
-};
+function widgets<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(): RegistryWidgetsType<T, S, F> {
+  return {
+    PasswordWidget,
+    RadioWidget,
+    UpDownWidget,
+    RangeWidget,
+    SelectWidget,
+    TextWidget,
+    DateWidget,
+    DateTimeWidget,
+    AltDateWidget,
+    AltDateTimeWidget,
+    EmailWidget,
+    URLWidget,
+    TextareaWidget,
+    HiddenWidget,
+    ColorWidget,
+    FileWidget,
+    CheckboxWidget,
+    CheckboxesWidget,
+  };
+}
 
 export default widgets;

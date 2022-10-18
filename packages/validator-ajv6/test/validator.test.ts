@@ -47,7 +47,7 @@ describe("AJV6Validator", () => {
         expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
       });
       it("should return false if the schema is invalid", () => {
-        const schema: RJSFSchema = "foobarbaz" as RJSFSchema;
+        const schema: RJSFSchema = "foobarbaz" as unknown as RJSFSchema;
 
         expect(validator.isValid(schema, { foo: "bar" }, schema)).toBe(false);
       });

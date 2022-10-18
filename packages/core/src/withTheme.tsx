@@ -1,23 +1,30 @@
 import React, { ForwardedRef, forwardRef } from "react";
 
 import Form, { FormProps } from "./components/Form";
+import { RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
  */
-export type ThemeProps<T = any, F = any> = Pick<
-  FormProps<T, F>,
+export type ThemeProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+> = Pick<
+  FormProps<T, S, F>,
   "fields" | "templates" | "widgets" | "_internalFormWrapper"
 >;
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
-export default function withTheme<T = any, F = any>(
-  themeProps: ThemeProps<T, F>
-) {
+export default function withTheme<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F = any
+>(themeProps: ThemeProps<T, S, F>) {
   return forwardRef(
     (
-      { fields, widgets, templates, ...directProps }: FormProps<T, F>,
-      ref: ForwardedRef<Form<T, F>>
+      { fields, widgets, templates, ...directProps }: FormProps<T, S, F>,
+      ref: ForwardedRef<Form<T, S, F>>
     ) => {
       fields = { ...themeProps.fields, ...fields };
       widgets = { ...themeProps.widgets, ...widgets };
@@ -31,7 +38,7 @@ export default function withTheme<T = any, F = any>(
       };
 
       return (
-        <Form<T, F>
+        <Form<T, S, F>
           {...themeProps}
           {...directProps}
           fields={fields}
