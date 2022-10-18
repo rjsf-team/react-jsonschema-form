@@ -32,14 +32,13 @@ describe("Validation", () => {
           },
         };
 
-        let onError, node;
+        let  node;
         const compInfo = createFormComponent({
           schema,
           formData: {
             foo: undefined,
           },
         });
-        onError = compInfo.onError;
         node = compInfo.node;
         submitForm(node);
 
@@ -64,7 +63,7 @@ describe("Validation", () => {
           },
         };
 
-        let onError, node;
+        let node;
         const compInfo = createFormComponent({
           showErrorList: "bottom",
           schema,
@@ -72,7 +71,6 @@ describe("Validation", () => {
             foo: undefined,
           },
         });
-        onError = compInfo.onError;
         node = compInfo.node;
         submitForm(node);
 
