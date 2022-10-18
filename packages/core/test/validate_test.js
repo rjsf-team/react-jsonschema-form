@@ -32,7 +32,7 @@ describe("Validation", () => {
           },
         };
 
-        let  node;
+        let node;
         const compInfo = createFormComponent({
           schema,
           formData: {
