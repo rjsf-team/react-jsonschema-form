@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 - Automatically close single-choice Select widget on selection
 ## @rjsf/core
-- ShowErrorList prop changed to support `top` or `bottom` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
+- BREAKING CHANGE: ShowErrorList prop changed to support `false`, `top` or `bottom`; `true` is no longer a valid value as the default changed from `true` to `top` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
 # 5.0.0-beta.11
 
 ## @rjsf/antd
