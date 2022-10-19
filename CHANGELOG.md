@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Added the new generic, `S extends StrictRJSFSchema = RJSFSchema`, for `schema`/`rootSchema` to every component that needed it.
+- Fix omitExtraData with field names with dots #2643
 
 ## @rjsf/utils
 - Beta-only potentially BREAKING CHANGE: Changed all types that directly or indirectly defined `schema`/`rootSchema` to add the generic `S extends StrictRJSFSchema = RJSFSchema` and use `S` as the type for them.
