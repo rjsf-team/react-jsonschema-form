@@ -39,6 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Updated the `5.x upgrade guide` to document the new `StrictRJSFSchema` and `S` generic
 - Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType`
+- Updated the playground to add support for using the AJV 8 validator with the `draft-2019-09` and `draft-2020-12` schemas
 
 # 5.0.0-beta.11
 
