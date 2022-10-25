@@ -7,18 +7,24 @@ import { Theme as SuiTheme } from "@rjsf/semantic-ui";
 import { Theme as AntdTheme } from "@rjsf/antd";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
-import v6Validator from "@rjsf/validator-ajv6";
 import v8Validator, { customizeValidator } from "@rjsf/validator-ajv8";
+import v6Validator from "@rjsf/validator-ajv6";
 import localize_es from "ajv-i18n/localize/es";
+import Ajv2019 from "ajv/dist/2019.js";
+import Ajv2020 from "ajv/dist/2020.js";
 
 import Playground from "./app";
 
 const esV8Validator = customizeValidator({}, localize_es);
+const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
+const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 
 const validators = {
-  AJV6: v6Validator,
   AJV8: v8Validator,
   AJV8_es: esV8Validator,
+  AJV8_2019,
+  AJV8_2020,
+  AJV6: v6Validator,
 };
 
 const themes = {
