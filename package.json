@@ -23,24 +23,24 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.2",
+    "@babel/eslint-parser": "^7.19.1",
     "@nrwl/nx-cloud": "latest",
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
     "dts-cli": "^1.6.0",
-    "eslint": "^8.23.0",
+    "eslint": "^8.26.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.1",
     "jest-environment-jsdom": "^27.5.1",
-    "lerna": "^5.4.3",
+    "lerna": "^6.0.1",
     "lint-staged": "^13.0.3",
-    "nx": "^14.5.10",
+    "nx": "^15.0.2",
     "prettier": "^2.7.1",
     "ts-jest": "^27.1.5",
     "tslib": "^2.4.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.4"
   }
 }

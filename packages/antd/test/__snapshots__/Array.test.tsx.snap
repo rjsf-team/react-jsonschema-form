@@ -182,7 +182,7 @@ exports[`array fields array icons 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -372,7 +372,7 @@ exports[`array fields array icons 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -775,7 +775,7 @@ exports[`array fields empty errors array 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -896,7 +896,7 @@ exports[`array fields fixed array 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -1244,7 +1244,7 @@ exports[`array fields has errors 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-status-error ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -1381,7 +1381,7 @@ exports[`array fields no errors 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
