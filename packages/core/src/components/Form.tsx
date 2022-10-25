@@ -427,8 +427,8 @@ export default class Form<
   renderErrors(registry: Registry<T, S, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const { formContext } = this.props;
-    const options = getUiOptions<T, F>(uiSchema);
-    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, F>(
+    const options = getUiOptions<T, S, F>(uiSchema);
+    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, S, F>(
       "ErrorListTemplate",
       registry,
       options
