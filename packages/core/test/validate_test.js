@@ -77,7 +77,7 @@ describe("Validation", () => {
         it("should render errors at the bottom", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
-            "must have required property 'foo'git sta"
+            "must have required property 'foo'"
           );
 
           // The last child node is the submit button so the one before it will be the error list
