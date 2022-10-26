@@ -24,7 +24,7 @@ const BaseInputTemplate = ({
   const inputProps = getInputProps(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext;
 
-  const handleNumberChange = (nextValue: number) => onChange(nextValue);
+  const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 
   const handleTextChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
     onChange(target.value === "" ? options.emptyValue : target.value);

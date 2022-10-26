@@ -338,7 +338,7 @@ exports[`single fields field with description 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -460,7 +460,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -1182,10 +1182,9 @@ exports[`single fields password field 1`] = `
   >
     <span
       className="ant-input-affix-wrapper ant-input-password"
-      onMouseDown={[Function]}
+      onClick={[Function]}
     >
       <input
-        action="click"
         className="ant-input"
         hidden={null}
         id="root"
@@ -1898,7 +1897,7 @@ exports[`single fields title field 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",

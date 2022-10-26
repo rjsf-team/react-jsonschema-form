@@ -55,12 +55,14 @@ export default class AJV8Validator<
       customFormats,
       ajvOptionsOverrides,
       ajvFormatOptions,
+      AjvClass,
     } = options;
     this.ajv = createAjvInstance(
       additionalMetaSchemas,
       customFormats,
       ajvOptionsOverrides,
-      ajvFormatOptions
+      ajvFormatOptions,
+      AjvClass
     );
     this.localizer = localizer;
   }
