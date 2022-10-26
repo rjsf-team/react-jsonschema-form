@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Automatically close single-choice Select widget on selection
 
 ## @rjsf/core
+- BREAKING CHANGE: ShowErrorList prop changed to support `false`, `top` or `bottom`; `true` is no longer a valid value as the default changed from `true` to `top` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
 - Added the new generic, `S extends StrictRJSFSchema = RJSFSchema`, for `schema`/`rootSchema` to every component that needed it.
 
 ## @rjsf/utils

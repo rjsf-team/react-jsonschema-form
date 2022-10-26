@@ -246,7 +246,7 @@ render((
 
 ## showErrorList
 
-When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `true` by default. See [Validation](../usage/validation.md) for more information.
+When this prop is set to `top` or `bottom`, a list of errors (or the custom error list defined in the `ErrorList`) will also show at the `bottom` or `top` of the form. When set to false, only inline input validation errors will be shown. Set to `top` by default. See [Validation](../usage/validation.md) for more information.
 
 ## tagName
 
@@ -288,7 +288,7 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## validator
 
-**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work. 
+**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.
 `@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
 
 ## widgets
