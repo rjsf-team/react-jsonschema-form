@@ -87,7 +87,7 @@ exports[`object fields additionalProperties 1`] = `
                           >
                             <span
                               className="ant-input-affix-wrapper form-control ant-input-affix-wrapper-has-feedback"
-                              onMouseDown={[Function]}
+                              onClick={[Function]}
                               style={
                                 Object {
                                   "width": "100%",
@@ -159,7 +159,7 @@ exports[`object fields additionalProperties 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -368,7 +368,7 @@ exports[`object fields object 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
