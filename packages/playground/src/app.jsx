@@ -21,6 +21,7 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
     noValidate: { type: "boolean", title: "Disable validation" },
+    showErrorList:{ type: "string", "default":"top", title: "Show Error List", enum:[false,"top","bottom"] }
   },
 };
 
