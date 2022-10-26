@@ -459,9 +459,11 @@ export default class Form<
       return formData;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
-    const data: GenericObjectType = _pick(formData, fields);
+    // _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
+    const data: GenericObjectType = _pick(
+      formData,
+      fields as unknown as string[]
+    );
     if (Array.isArray(formData)) {
       return Object.keys(data).map((key: string) => data[key]) as unknown as T;
     }
