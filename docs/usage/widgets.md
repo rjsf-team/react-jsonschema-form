@@ -4,10 +4,11 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 
 Example:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     done: {
@@ -16,7 +17,7 @@ const schema = {
   }
 };
 
-const uiSchema =  {
+const uiSchema: UiSchema = {
   done: {
     "ui:widget": "radio" // could also be "select"
   }
@@ -92,14 +93,15 @@ Please note that, even though they are standardized, `datetime-local` and `date`
 
 You can customize the list of years displayed in the `year` dropdown by providing a ``yearsRange`` property to ``ui:options`` in your uiSchema. Its also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:widget": "alt-datetime",
   "ui:options": {
     yearsRange: [1980, 2030],
@@ -127,17 +129,18 @@ render((
 
 It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     foo: {type: "boolean"}
   }
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   foo: {"ui:widget": "hidden"}
 };
 
@@ -158,10 +161,11 @@ This library supports a limited form of `input[type=file]` widgets, in the sense
 There are two ways to use file widgets.
 
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   format: "data-url",
 };
@@ -172,12 +176,14 @@ render((
 ```
 
 2. By specifying a `ui:widget` field uiSchema directive as `file`:
-```js
-const schema = {
+```ts
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {
   type: "string",
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:widget": "file",
 };
 ```
@@ -186,8 +192,10 @@ const uiSchema = {
 
 Multiple files selectors are supported by defining an array of strings having `data-url` as a format:
 
-```js
-const schema = {
+```ts
+import { RJSFSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string",
@@ -208,13 +216,15 @@ This allows you to programmatically trigger the browser's file selector, which c
 
 You can use the accept attribute to specify a filter for what file types the user can upload:
 
-```jsx
-const schema = {
+```ts
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {
   type: "string",
   format: "data-url"
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:options": { accept: ".pdf" }
 };
 ```

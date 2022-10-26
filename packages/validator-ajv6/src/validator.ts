@@ -24,6 +24,8 @@ import createAjvInstance from "./createAjvInstance";
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
 /** `ValidatorType` implementation that uses the AJV 6 validation mechanism.
+ *
+ * @deprecated in favor of the `@rjsf/validator-ajv8
  */
 export default class AJV6Validator<T = any> implements ValidatorType<T> {
   /** The AJV instance to use for all validations

@@ -51,10 +51,10 @@ If you only want to customize how the array's title, description or how the arra
 You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets). 
 
 ```tsx
-import { ArrayFieldTemplateProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { ArrayFieldTemplateProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string"
@@ -77,8 +77,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:ArrayFieldTemplate": ArrayFieldTemplate
 }
 ```
@@ -131,10 +133,10 @@ If you want different behavior for the rendering of the description of an array 
 If you want a different behavior for the rendering of ALL descriptions in the `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
 
 ```tsx
-import { ArrayFieldDescriptionProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { ArrayFieldDescriptionProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string"
@@ -159,8 +161,10 @@ render((
 
 You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:ArrayFieldDescriptionTemplate": ArrayFieldDescriptionTemplate
 }
 ```
@@ -181,10 +185,10 @@ Each theme has an implementation of the `ArrayFieldItemTemplate` to render an ar
 If you want to change how an array field item is rendered you can customize this template (for instance to remove the move up/down and remove buttons).
 
 ```tsx
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { ArrayFieldTemplateItemType, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string"
@@ -228,10 +232,10 @@ If you want a different behavior for the rendering of the title of an array fiel
 If you want a different behavior for the rendering of ALL titles in the `Form`, see [TitleFieldTemplate](#titlefieldtemplate) 
 
 ```tsx
-import { ArrayFieldTitleTemplateProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { ArrayFieldTitleTemplateProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string"
@@ -255,8 +259,10 @@ render((
 
 You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:ArrayFieldTitleTemplate": ArrayFieldTitleTemplate
 }
 ```
@@ -281,12 +287,12 @@ If you desire a different implementation for the `<input>` based widgets, you ca
 For instance, say you have a `CustomTextInput` component that you want to integrate:
 
 ```tsx
-import { getInputProps, WidgetProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { getInputProps, RJSFSchema, WidgetProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -379,10 +385,10 @@ Each theme implements a `DescriptionFieldTemplate` used to render the descriptio
 If you want to customize how descriptions are rendered you can.
 
 ```tsx
-import { DescriptionFieldProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { DescriptionFieldProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -418,10 +424,10 @@ Each theme implements a `ErrorListTemplate` used to render its errors using comp
 If you want to customize how all the errors are rendered you can.
 
 ```tsx
-import { ErrorListProps, RJSFValidationError } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { ErrorListProps, RJSFValidationError, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -463,10 +469,10 @@ The `FieldErrorTemplate` is the template that renders all the errors associated 
 If you want to customize how the errors are rendered you can.
 
 ```tsx
-import { FieldErrorProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { FieldErrorProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -509,10 +515,10 @@ The `FieldHelpTemplate` is the template that renders the help associated a singl
 If you want to customize how the help is rendered you can.
 
 ```tsx
-import { FieldHelpProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { FieldHelpProps, RJSFSchema } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -544,10 +550,10 @@ To take control over the inner organization of each field (each form row), you c
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
 ```tsx
-import { FieldTemplateProps } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import { FieldTemplateProps, RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -571,8 +577,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:FieldTemplate": CustomFieldTemplate
 }
 ```
@@ -610,10 +618,10 @@ The following props are passed to a custom field template component:
 ## ObjectFieldTemplate
 
 ```tsx
-import { ObjectFieldTemplateProps } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import { ObjectFieldTemplateProps, RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   title: "Object title",
   description: "Object description",
@@ -644,8 +652,10 @@ render((
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:ObjectFieldTemplate": ObjectFieldTemplate
 };
 ```
@@ -685,10 +695,10 @@ Each theme implements a `TitleFieldTemplate` used to render the title of a field
 If you want to customize how titles are rendered you can.
 
 ```tsx
-import { TitleFieldProps } from "@rjsf/utils";
-import validator from '@rjsf/validator-ajv6';
+import { RJSFSchema, TitleFieldProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   title: "My input",
   description: "input description"
@@ -724,11 +734,11 @@ The `UnsupportedField` component is used to render a field in the schema is one 
 If you want to customize how an unsupported field is rendered (perhaps for localization purposes) you can.
 
 ```tsx
-import { UnsupportedFieldProps } from "@rjsf/utils";
+import { RJSFSchema, UnsupportedFieldProps } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "invalid"
 };
 
@@ -760,10 +770,16 @@ The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally r
 You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties`.
 
 ```tsx
-import { WrapIfAdditionalTemplateProps } from "@rjsf/utils";
+import { RJSFSchema, WrapIfAdditionalTemplateProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-function WrapIfAdditionalTemplate<T = any, F = any>(
-  props: WrapIfAdditionalTemplateProps<T, F>
+const schema: RJSFSchema = {
+  type: "object",
+  additionalProperties: true
+};
+
+function WrapIfAdditionalTemplate(
+  props: WrapIfAdditionalTemplateProps
 ) {
   const {
     id,
@@ -840,11 +856,11 @@ You can customize the `AddButton` to render something other than the icon button
 
 ```tsx
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
+import { IconButtonProps, RJSFSchema } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -869,11 +885,11 @@ You can customize the `MoveDownButton` to render something other than the icon b
 
 ```tsx
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
+import { IconButtonProps, RJSFSchema } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -898,11 +914,11 @@ You can customize the `MoveUpButton` to render something other than the icon but
 
 ```tsx
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
+import { IconButtonProps, RJSFSchema } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -927,11 +943,11 @@ You can customize the `RemoveButton` to render something other than the icon but
 
 ```tsx
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
+import { IconButtonProps, RJSFSchema } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -957,11 +973,11 @@ The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOpt
 
 ```tsx
 import React from "react";
-import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
+import { getSubmitButtonOptions, RJSFSchema, SubmitButtonProps } from "@rjsf/utils";
 import { FormattedMessage } from "react-intl";
-import validator from '@rjsf/validator-ajv6';
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 

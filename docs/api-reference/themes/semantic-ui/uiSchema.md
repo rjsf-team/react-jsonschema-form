@@ -49,8 +49,10 @@ pointing: determines the direction of the arrow on the error message dialog
 ```
 
 Below are the current defaults
-```jsx
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:options": {
     "semantic" : {
       "errorOptions": {
@@ -72,17 +74,18 @@ wrapItem: wrap each array item in a Segment
 horizontalButtons: horizontal buttons instead of the default vertical
 ```
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "array",
   items: {
     type: "string"
   }
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
    "ui:options": {
       "semantic": {
         "wrapItem": true,

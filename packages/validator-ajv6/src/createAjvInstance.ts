@@ -24,6 +24,7 @@ export const DATA_URL_FORMAT_REGEX =
  * @param [additionalMetaSchemas] - The list of additional meta schemas that the validator can access
  * @param [customFormats] - The set of additional custom formats that the validator will support
  * @param [ajvOptionsOverrides={}] - The set of validator config override options
+ * @deprecated in favor of the `@rjsf/validator-ajv8
  */
 export default function createAjvInstance(
   additionalMetaSchemas?: CustomValidatorOptionsType["additionalMetaSchemas"],

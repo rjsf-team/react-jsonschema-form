@@ -22,16 +22,16 @@ First install the dependencies from npm:
 $ npm install @rjsf/core @rjsf/utils --save
 ```
 
-As of version 5, you will also need to select and install a validator implementation (such as `@rjsf/validator-ajv6`):
+As of version 5, you will also need to select and install a validator implementation (such as `@rjsf/validator-ajv8`):
 
 ```bash
-$ npm install @rjsf/validator-ajv6 --save
+$ npm install @rjsf/validator-ajv8 --save
 ````
 
 Then import the dependency as follows:
 
 ```js
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/core";
 ```
 
@@ -57,10 +57,11 @@ const {default: Form} = JSONSchemaForm;
 
 ## Usage
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "Todo",
   type: "object",
   required: ["title"],

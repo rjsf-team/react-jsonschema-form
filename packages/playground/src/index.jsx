@@ -24,7 +24,7 @@ const validators = {
   AJV8_es: esV8Validator,
   AJV8_2019,
   AJV8_2020,
-  AJV6: v6Validator,
+  'AJV6 (deprecated)': v6Validator,
 };
 
 const themes = {

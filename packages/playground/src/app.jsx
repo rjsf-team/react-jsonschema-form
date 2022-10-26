@@ -291,7 +291,7 @@ class Playground extends Component {
 
     // set default theme
     const theme = "default";
-    const validator = "AJV6";
+    const validator = "AJV8";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.playGroundForm = React.createRef();

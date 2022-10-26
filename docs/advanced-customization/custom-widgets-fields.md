@@ -9,19 +9,20 @@ The API allows to specify your own custom *widget* and *field* components:
 
 You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "boolean",
   default: true
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:widget": "checkbox"
 };
 
-const CustomCheckbox = function(props) {
+const CustomCheckbox = function(props: WidgetProps) {
   return (
     <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
     	{String(props.value)}
@@ -29,7 +30,7 @@ const CustomCheckbox = function(props) {
   );
 };
 
-const widgets = {
+const widgets: RegistryWidgetsType = {
   CheckboxWidget: CustomCheckbox
 };
 
@@ -40,11 +41,14 @@ render((
 
 This allows you to create a reusable customized form class with your custom fields and widgets:
 
-```jsx
-const customFields = {StringField: CustomString};
-const customWidgets = {CheckboxWidget: CustomCheckbox};
+```tsx
+import { RegistryFieldsType, RegistryWidgetsType } from "@rjsf/utils";
+import { FormProps } from "@rjsf/core";
 
-function MyForm(props) {
+const customFields: RegistryWidgetsType = {StringField: CustomString};
+const customWidgets: RegistryFieldsType = {CheckboxWidget: CustomCheckbox};
+
+function MyForm(props: FormProps) {
   return <Form fields={customFields} widgets={customWidgets} {...props} />;
 }
 ```
@@ -97,15 +101,16 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `boolean`
 - `array`
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: Schema = {
   type: "string"
 };
 
-const uiSchema = {
-  "ui:widget": (props) => {
+const uiSchema: UiSchema = {
+  "ui:widget": (props: WidgetProps) => {
     return (
       <input type="text"
         className="custom"
@@ -148,10 +153,11 @@ The following props are passed to custom widget components:
 
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const MyCustomWidget = (props) => {
+const MyCustomWidget = (props: WidgetProps) => {
   return (
     <input type="text"
       className="custom"
@@ -161,15 +167,15 @@ const MyCustomWidget = (props) => {
   );
 };
 
-const widgets = {
+const widgets: RegistryWidgetsType = {
   myCustomWidget: MyCustomWidget
 };
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:widget": "myCustomWidget"
 }
 
@@ -184,14 +190,15 @@ This is useful if you expose the `uiSchema` as pure JSON, which can't carry func
 
 If you need to pass options to your custom widget, you can add a `ui:options` object containing those properties. If the widget has `defaultProps`, the options will be merged with the (optional) options object from `defaultProps`:
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
-function MyCustomWidget(props) {
+function MyCustomWidget(props: WidgetProps) {
   const {options} = props;
   const {color, backgroundColor} = options;
   return <input style={{color, backgroundColor}} />;
@@ -203,7 +210,7 @@ MyCustomWidget.defaultProps = {
   }
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:widget": MyCustomWidget,
   "ui:options": {
     backgroundColor: "yellow"
@@ -230,10 +237,11 @@ You can provide your own field components to a uiSchema for basically any json s
 
 For example, let's create and register a dumb `geo` component handling a *latitude* and a *longitude*:
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   required: ["lat", "lon"],
   properties: {
@@ -243,8 +251,8 @@ const schema = {
 };
 
 // Define a custom component for handling the root position object
-class GeoPosition extends React.Component {
-  constructor(props) {
+class GeoPosition extends React.Component<FieldProps> {
+  constructor(props: FieldProps) {
     super(props);
     this.state = {...props.formData};
   }
@@ -269,11 +277,11 @@ class GeoPosition extends React.Component {
 }
 
 // Define the custom field component to use for the root object
-const uiSchema = {"ui:field": "geo"};
+const uiSchema: UiSchema = {"ui:field": "geo"};
 
 // Define the custom field components to register; here our "geo"
 // custom field component
-const fields = {geo: GeoPosition};
+const fields: RegistryFieldsType = {geo: GeoPosition};
 
 // Render the form with all the properties we just defined passed
 // as props
@@ -324,10 +332,11 @@ You can provide your own implementation of the `SchemaField` base React componen
 
 To proceed so, pass a `fields` object having a `SchemaField` property to your `Form` component; here's an example:
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, FieldProps, RegistryFieldsType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const CustomSchemaField = function(props) {
+const CustomSchemaField = function(props: FieldProps) {
   return (
     <div id="custom">
       <p>Yeah, I'm pretty dumb.</p>
@@ -336,11 +345,11 @@ const CustomSchemaField = function(props) {
   );
 };
 
-const fields = {
+const fields: RegistryFieldsType = {
   SchemaField: CustomSchemaField
 };
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -359,21 +368,22 @@ Everything that was mentioned above for a `Custom SchemaField` applies, but this
 By default, `ArraySchemaField` is not actually implemented in the `fields` list since `ArrayField` falls back to `SchemaField` if `ArraySchemaField` is not provided.
 If you want to customize how the individual items for an array are rendered, provide your implementation of `ArraySchemaField` as a `fields` override.
 
-```jsx
-import validator from '@rjsf/validator-ajv6';
+```tsx
+import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from "@rjsf/utils";
+import validator from '@rjsf/validator-ajv8';
 
-const CustomArraySchemaField = function(props) {
+const CustomArraySchemaField = function(props: FieldProps) {
   const { index, registry } = props;
   const { SchemaField } = registry.fields;
   const name = `Index ${index}`;
   return <SchemaField {...props} name={name} />;
 };
 
-const fields = {
+const fields: RegistryFieldsType = {
   ArraySchemaField: CustomArraySchemaField
 };
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 

@@ -1,16 +1,17 @@
 # Quickstart
 
 Let's walk through setup of a form after installing the dependency properly.
-NOTE: As of version 5, the `Form` now requires you to provide a `validator` implementation. We recommend the one from `@rjsf/validator-ajv6`.
+NOTE: As of version 5, the `Form` now requires you to provide a `validator` implementation. We recommend the one from `@rjsf/validator-ajv8`.
 
 ## Form schema
 
 First, specify a schema using the [JSON Schema specification](https://json-schema.org/). The below schema renders a single string field:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "Test form",
   type: "string"
 };
@@ -22,10 +23,11 @@ render((
 
 You can also render an object with multiple fields with the below schema:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "Test form",
   type: "object",
   properties: {
@@ -51,15 +53,16 @@ The uiSchema is used to add more customization to the form's look and feel. Use 
 attribute of the uiSchema to add a custom CSS class name to the form:
 
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "Test form",
   type: "string"
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   classNames: "custom-css-class"
 };
 
@@ -72,10 +75,11 @@ To customize object fields in the uiSchema, the structure of the
 uiSchema should be `{key: value}`, where `key` is the property key and `value` is an
 object with the uiSchema configuration for that particular property. For example:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "Test form",
   type: "object",
   properties: {
@@ -88,7 +92,7 @@ const schema = {
   }
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   name: {
     classNames: "custom-class-name"
   },
@@ -106,10 +110,11 @@ render((
 
 Often you'll want to prefill a form with existing data; this is done by passing a `formData` prop object matching the schema:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     title: {
@@ -144,8 +149,8 @@ You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`,
 By default, `<Form />` is an [uncontrolled component](https://reactjs.org/docs/uncontrolled-components.html). To make it a controlled component, use the
 `onChange` and `formData` props as in the below example:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import validator from "@rjsf/validator-ajv8";
 
 const App = () => {
   const [formData, setFormData] = React.useState(null);

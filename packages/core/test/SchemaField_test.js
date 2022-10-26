@@ -2,7 +2,7 @@ import React from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import { createSchemaUtils } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import SchemaField from "../src/components/fields/SchemaField";
 

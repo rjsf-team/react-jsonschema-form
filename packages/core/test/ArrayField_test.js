@@ -317,9 +317,7 @@ describe("ArrayField", () => {
 
       const matches = node.querySelectorAll("#custom");
       expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql(
-        "should NOT have fewer than 2 items"
-      );
+      expect(matches[0].textContent).to.eql("must NOT have fewer than 2 items");
     });
 
     it("should contain no field in the list by default", () => {
@@ -883,15 +881,15 @@ describe("ArrayField", () => {
       sinon.assert.calledWithMatch(
         onChange.lastCall,
         {
-          errorSchema: { 1: { __errors: ["should be integer"] } },
+          errorSchema: { 1: { __errors: ["must be integer"] } },
           errors: [
             {
-              message: "should be integer",
+              message: "must be integer",
               name: "type",
               params: { type: "integer" },
-              property: "[1]",
+              property: ".1",
               schemaPath: "#/items/type",
-              stack: "[1] should be integer",
+              stack: ".1 must be integer",
             },
           ],
           formData: [1, null, 3],
@@ -902,12 +900,12 @@ describe("ArrayField", () => {
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: "should be integer",
+          message: "must be integer",
           name: "type",
           params: { type: "integer" },
-          property: "[1]",
+          property: ".1",
           schemaPath: "#/items/type",
-          stack: "[1] should be integer",
+          stack: ".1 must be integer",
         },
       ]);
     });
@@ -1103,12 +1101,12 @@ describe("ArrayField", () => {
 
       sinon.assert.calledWithMatch(form.onError.lastCall, [
         {
-          message: "should NOT have fewer than 3 items",
+          message: "must NOT have fewer than 3 items",
           name: "minItems",
           params: { limit: 3 },
           property: ".multipleChoicesList",
           schemaPath: "#/properties/multipleChoicesList/minItems",
-          stack: ".multipleChoicesList should NOT have fewer than 3 items",
+          stack: ".multipleChoicesList must NOT have fewer than 3 items",
         },
       ]);
     });
@@ -1273,7 +1271,7 @@ describe("ArrayField", () => {
         const matches = node.querySelectorAll("#custom");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have duplicate items (items ## 1 and 0 are identical)"
+          "must NOT have duplicate items (items ## 1 and 0 are identical)"
         );
       });
 
@@ -1405,7 +1403,7 @@ describe("ArrayField", () => {
         const matches = node.querySelectorAll("#custom");
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.eql(
-          "should NOT have fewer than 3 items"
+          "must NOT have fewer than 3 items"
         );
       });
 
@@ -1562,9 +1560,7 @@ describe("ArrayField", () => {
 
       const matches = node.querySelectorAll("#custom");
       expect(matches).to.have.length.of(1);
-      expect(matches[0].textContent).to.eql(
-        "should NOT have fewer than 5 items"
-      );
+      expect(matches[0].textContent).to.eql("must NOT have fewer than 5 items");
     });
   });
 
@@ -1640,12 +1636,8 @@ describe("ArrayField", () => {
 
       const matches = node.querySelectorAll("#custom-error");
       expect(matches).to.have.length.of(2);
-      expect(matches[0].textContent).to.eql(
-        "should NOT have fewer than 3 items"
-      );
-      expect(matches[1].textContent).to.eql(
-        "should NOT have fewer than 2 items"
-      );
+      expect(matches[0].textContent).to.eql("must NOT have fewer than 3 items");
+      expect(matches[1].textContent).to.eql("must NOT have fewer than 2 items");
     });
   });
 
@@ -2223,7 +2215,7 @@ describe("ArrayField", () => {
       expect(inputs[0].id).eql("root_foo_0_bar");
       expect(inputs[1].id).eql("root_foo_1_bar");
     });
-    it("should NOT render nested error decorated input widgets", () => {
+    it("must NOT render nested error decorated input widgets", () => {
       const { node } = createFormComponent({
         schema: complexSchema,
         uiSchema: {

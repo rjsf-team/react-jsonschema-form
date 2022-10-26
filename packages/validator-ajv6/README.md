@@ -58,6 +58,8 @@ Exports `validator-ajv6` plugin for `react-jsonschema-form`.
 
 ## Getting Started
 
+> NOTE: This package is deprecated in favor of the `@rjsf/validator-ajv8` and is provided primarily for people upgrading to version 5 who initially want to minimize the validator differences.
+
 ### Prerequisites
 
 #### React JsonSchema Form Utils

@@ -17,13 +17,33 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta.12
 
+## @rjsf/antd
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/bootstrap
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
 ## @rjsf/chakra-ui
 - Automatically close single-choice Select widget on selection
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
 
 ## @rjsf/core
 - BREAKING CHANGE: ShowErrorList prop changed to support `false`, `top` or `bottom`; `true` is no longer a valid value as the default changed from `true` to `top` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
 - Added the new generic, `S extends StrictRJSFSchema = RJSFSchema`, for `schema`/`rootSchema` to every component that needed it.
 - Fix omitExtraData with field names with dots #2643
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/fluent-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/material-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/mui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/semantic-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
 
 ## @rjsf/utils
 - Beta-only potentially BREAKING CHANGE: Changed all types that directly or indirectly defined `schema`/`rootSchema` to add the generic `S extends StrictRJSFSchema = RJSFSchema` and use `S` as the type for them.
@@ -33,15 +53,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv6
 - Fixed a few type casts given the new expanded definition of the `RJSFSchema` type change
+- Deprecated this library in favor of the `@rjsf/validator-ajv8`
 
 ## @rjsf/validator-ajv8
 - Updated the typing to add the new `S extends StrictRJSFSchema = RJSFSchema` generic and fixed up type casts
 - Added the `AjvClass` prop to the `CustomValidatorOptionsType` to support using the `Ajv2019` or `Ajv2020` class implementation instead of the default `Ajv` class; fixing [#3189](https://github.com/rjsf-team/react-jsonschema-form/issues/3189)
 
 ## Dev / docs / playground
-- Updated the `5.x upgrade guide` to document the new `StrictRJSFSchema` and `S` generic
-- Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType`
-- Updated the playground to add support for using the AJV 8 validator with the `draft-2019-09` and `draft-2020-12` schemas
+- Updated the `5.x upgrade guide` and `utility-functions.md` to document the new `StrictRJSFSchema` and `S` generic
+- Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType` and mentioning the deprecation of `@rjsf/validator-ajv6`
+- Updated the playground to add support for using the AJV 8 validator with the `draft-2019-09` and `draft-2020-12` schemas and to make the `AJV8` validator the default validator, marking `AJV6` as deprecated
+- Updated all the documentation to switch to Typescript notation where missing along with switching to using the `@rjsf/validator-ajv8` validator as the default
 
 # 5.0.0-beta.11
 

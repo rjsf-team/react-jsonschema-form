@@ -4,10 +4,11 @@
 
 Objects are defined with a type equal to `object` and properties specified in the `properties` keyword.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   "title": "My title",
   "description": "My description",
   "type": "object",
@@ -30,10 +31,11 @@ render((
 
 You can specify which properties are required using the `required` attribute:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   "title": "My title",
   "description": "My description",
   "type": "object",
@@ -57,10 +59,11 @@ render((
 
 Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     foo: {type: "string"},
@@ -68,7 +71,7 @@ const schema = {
   }
 };
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   "ui:order": ["bar", "foo"]
 };
 
@@ -79,8 +82,10 @@ render((
 
 If a guaranteed fixed order is only important for some fields, you can insert a wildcard `"*"` item in your `ui:order` definition. All fields that are not referenced explicitly anywhere in the list will be rendered at that point:
 
-```js
-const uiSchema = {
+```ts
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:order": ["bar", "*"]
 };
 ```
@@ -89,10 +94,11 @@ const uiSchema = {
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   "type": "object",
   "properties": {
     "name": {
@@ -118,8 +124,10 @@ You can also define `uiSchema` options for `additionalProperties` by setting the
 
 You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
 
-```js
-const uiSchema = {
+```ts
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:options":  {
     expandable: false
   }
