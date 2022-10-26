@@ -3073,10 +3073,10 @@ describe("Form omitExtraData and liveOmit", () => {
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
-          "level1a",
-          "level1.level2",
-          "level1.anotherThing.anotherThingNested",
-          "level1.anotherThing.anotherThingNested2",
+          ["level1", "anotherThing", "anotherThingNested"],
+          ["level1", "anotherThing", "anotherThingNested2"],
+          ["level1", "level2"],
+          ["level1a"],
         ].sort()
       );
     });
@@ -3124,7 +3124,7 @@ describe("Form omitExtraData and liveOmit", () => {
 
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
-        ["level1a", "level1.level2", "level1.mixedMap"].sort()
+        [["level1", "level2"], "level1.mixedMap", ["level1a"]].sort()
       );
     });
 
@@ -3186,12 +3186,12 @@ describe("Form omitExtraData and liveOmit", () => {
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
-          "address_list.0.city",
-          "address_list.0.state",
-          "address_list.0.street_address",
-          "address_list.1.city",
-          "address_list.1.state",
-          "address_list.1.street_address",
+          ["address_list", "0", "city"],
+          ["address_list", "0", "state"],
+          ["address_list", "0", "street_address"],
+          ["address_list", "1", "city"],
+          ["address_list", "1", "state"],
+          ["address_list", "1", "street_address"],
         ].sort()
       );
     });

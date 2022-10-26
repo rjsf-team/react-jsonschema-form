@@ -453,13 +453,17 @@ export default class Form<
    * @param formData - The data for the `Form`
    * @param fields - The fields to keep while filtering
    */
-  getUsedFormData = (formData: T, fields: string[]): T => {
+  getUsedFormData = (formData: T, fields: string[][]): T => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
       return formData;
     }
 
-    const data: GenericObjectType = _pick(formData, fields);
+    // _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
+    const data: GenericObjectType = _pick(
+      formData,
+      fields as unknown as string[]
+    );
     if (Array.isArray(formData)) {
       return Object.keys(data).map((key: string) => data[key]) as unknown as T;
     }
@@ -472,15 +476,15 @@ export default class Form<
    * @param pathSchema - The `PathSchema` object for the form
    * @param formData - The form data to use while checking for empty objects/arrays
    */
-  getFieldNames = (pathSchema: PathSchema<T>, formData: T) => {
+  getFieldNames = (pathSchema: PathSchema<T>, formData: T): string[][] => {
     const getAllPaths = (
       _obj: GenericObjectType,
-      acc: string[] = [],
-      paths = [""]
+      acc: string[][] = [],
+      paths: string[][] = [[]]
     ) => {
       Object.keys(_obj).forEach((key: string) => {
         if (typeof _obj[key] === "object") {
-          const newPaths = paths.map((path) => `${path}.${key}`);
+          const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
           if (
             _obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] &&
@@ -492,7 +496,6 @@ export default class Form<
           }
         } else if (key === NAME_KEY && _obj[key] !== "") {
           paths.forEach((path) => {
-            path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
             // adds path to fieldNames if it points to a value
             // or an empty object/array
