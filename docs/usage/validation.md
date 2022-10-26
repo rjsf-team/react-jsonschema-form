@@ -242,7 +242,7 @@ For example:
 }
 ```
 
-Note that react-jsonschema-form supports the latest version of JSON Schema, draft-07, by default.
+Note that react-jsonschema-form supports JSON Schema draft-07 by default.
 To support additional meta schemas, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`:
 
 ### additionalMetaSchemas
