@@ -821,8 +821,8 @@ describe("oneOf", () => {
 
   it("should correctly infer the selected option based on value", () => {
     const schema = {
-      $ref: "#/defs/any",
-      defs: {
+      $ref: "#/definitions/any",
+      definitions: {
         chain: {
           type: "object",
           title: "Chain",
@@ -832,7 +832,7 @@ describe("oneOf", () => {
             },
             components: {
               type: "array",
-              items: { $ref: "#/defs/any" },
+              items: { $ref: "#/definitions/any" },
             },
           },
         },
@@ -842,7 +842,7 @@ describe("oneOf", () => {
           title: "Map",
           properties: {
             id: { enum: ["map"] },
-            fn: { $ref: "#/defs/any" },
+            fn: { $ref: "#/definitions/any" },
           },
         },
 
@@ -861,15 +861,15 @@ describe("oneOf", () => {
           properties: {
             id: { enum: ["transform"] },
             property_key: { type: "string" },
-            transformer: { $ref: "#/defs/any" },
+            transformer: { $ref: "#/definitions/any" },
           },
         },
         any: {
           oneOf: [
-            { $ref: "#/defs/chain" },
-            { $ref: "#/defs/map" },
-            { $ref: "#/defs/to_absolute" },
-            { $ref: "#/defs/transform" },
+            { $ref: "#/definitions/chain" },
+            { $ref: "#/definitions/map" },
+            { $ref: "#/definitions/to_absolute" },
+            { $ref: "#/definitions/transform" },
           ],
         },
       },

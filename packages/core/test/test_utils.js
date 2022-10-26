@@ -4,7 +4,7 @@ import React from "react";
 import sinon from "sinon";
 import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { findDOMNode, render } from "react-dom";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import Form from "../src";
 

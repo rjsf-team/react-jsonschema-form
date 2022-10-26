@@ -54,8 +54,10 @@ There are 3 properties that exist in a `UiSchema` that will not be found in an i
 By default, this library will generate ids unique to the form for all rendered widgets.
 If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:
 
-```js
-const uiSchema = {
+```ts
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
   "ui:rootFieldId": "myform"
 };
 ```
@@ -90,7 +92,9 @@ See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/
 
 The uiSchema object accepts a `classNames` property for each field of the schema:
 
-```jsx
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
 const uiSchema = {
   title: {
     "ui:classNames": "task-title foo-bar"
@@ -113,9 +117,11 @@ Will result in:
 
 If you want to mark a text input, select or textarea input to use the HTML autocomplete feature, set the `ui:autocomplete` uiSchema directive to a valid [HTML autocomplete value](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#values).
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:widget": "textarea",
   "ui:autocomplete": "on"
 }
@@ -125,9 +131,11 @@ const uiSchema = {
 
 If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:widget": "textarea",
   "ui:autofocus": true
 }
@@ -137,9 +145,11 @@ const uiSchema = {
 
 Sometimes it's convenient to change the description of a field. This is the purpose of the `ui:description` uiSchema directive:
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:widget": "password",
   "ui:description": "The best password"
 };
@@ -159,13 +169,15 @@ The `ui:emptyValue` uiSchema directive provides the default value to use when an
 
 To disable an option, use the `enumDisabled` property in uiSchema.
 
-```js
-const schema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {
   type: "string",
   enum: ["one", "two", "three"],
 };
 
-const uiSchema={
+const uiSchema: UiSchema = {
   "ui:enumDisabled": ['two'],
 }
 ```
@@ -174,9 +186,11 @@ const uiSchema={
 
 Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:widget": "password",
   "ui:help": "Hint: Make it strong!"
 };
@@ -198,9 +212,11 @@ This is useful when you have a custom field or widget that utilizes either the `
 
 To change the input type (for example, `tel` or `email`) you can specify the `inputType` in the `ui:options` uiSchema directive.
 
-```jsx
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:options": {
     inputType: 'tel'
   }
@@ -211,11 +227,12 @@ const uiSchema = {
 
 Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {type: "string"};
-const uiSchema = {
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:options": {
     label: false
   }
@@ -234,11 +251,12 @@ This property allows you to reorder the properties that are shown for a particul
 
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {type: "string", format: "uri"};
-const uiSchema = {
+const schema: RJSFSchema = {type: "string", format: "uri"};
+const uiSchema: UiSchema = {
   "ui:placeholder": "http://"
 };
 
@@ -249,11 +267,12 @@ render((
 
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {type: "string", enum: ["First", "Second"]};
-const uiSchema = {
+const schema: RJSFSchema = {type: "string", enum: ["First", "Second"]};
+const uiSchema: UiSchema = {
   "ui:placeholder": "Choose an option"
 };
 
@@ -272,11 +291,12 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 
 You can set the initial height of a textarea widget by specifying `rows` option.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {type: "string"};
-const uiSchema = {
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:options": {
     widget: "textarea",
     rows: 15
@@ -292,9 +312,11 @@ render((
 
 Sometimes it's convenient to change a field's title. This is the purpose of the `ui:title` uiSchema directive:
 
-```js
-const schema = {type: "string"};
-const uiSchema = {
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {type: "string"};
+const uiSchema: UiSchema = {
   "ui:widget": "password",
   "ui:title": "Your password"
 };
@@ -326,8 +348,10 @@ You can use this option to disable the submit button.
 
 You can use this option to specify a class name for the submit button.
 
-```js
-const uiSchema = {
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema: UiSchema = {
  "ui:submitButtonOptions": {
    "props": {
       "disabled": false,

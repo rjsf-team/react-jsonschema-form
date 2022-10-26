@@ -7,6 +7,7 @@ import AJV6Validator from "./validator";
  * provided.
  *
  * @param [options={}] - The `CustomValidatorOptionsType` options that are used to create the `ValidatorType` instance
+ * @deprecated in favor of the `@rjsf/validator-ajv8
  */
 export default function customizeValidator<T = any>(
   options: CustomValidatorOptionsType = {}

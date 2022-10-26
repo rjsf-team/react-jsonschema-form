@@ -26,10 +26,11 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 
 You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -55,10 +56,11 @@ See [Validation](../usage/validation.md) for more information.
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -73,10 +75,11 @@ If you just want to disable some fields, see the `ui:disabled` parameter in `uiS
 
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -120,10 +123,11 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -138,10 +142,11 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     first: {
@@ -202,10 +207,11 @@ In the case of adding/removing of new fields in arrays or objects with `addition
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
@@ -225,10 +231,11 @@ You can pass a function as the `onSubmit` prop of your `Form` component to liste
 It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after.
 The original event will also be passed as a second parameter:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
@@ -288,8 +295,8 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## validator
 
-**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.
-`@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
+**Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work. 
+`@rjsf/validator-ajv8` exports the implementation of this interface from RJSF version 4.
 
 ## widgets
 

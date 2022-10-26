@@ -1,6 +1,6 @@
 import React from "react";
 import { RJSFSchema, UiSchema, ErrorSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 import renderer from "react-test-renderer";
 
 import Form from "../src";

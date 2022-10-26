@@ -14,10 +14,11 @@ The base field types in JSON Schema include:
 
 Here is an example of a string field:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -30,10 +31,11 @@ render((
 
 Fields can have titles and descriptions specified by the `title` keyword in the schema and `description` keyword in the schema, respectively. These two can also be overriden by the `ui:title` and `ui:description` keywords in the uiSchema.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   title: "My form",
   description: "My description",
   type: "string"
@@ -48,10 +50,11 @@ render((
 
 All base schema types support the `enum` attribute, which restricts the user to select among a list of options. For example:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string",
   enum: ["one", "two", "three"]
 };
@@ -65,10 +68,11 @@ render((
 
 JSON Schema supports the following approaches to enumerations using `oneOf`/`anyOf`; react-jsonschema-form supports it as well.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   "type": "number",
   "anyOf": [
     {
@@ -100,8 +104,10 @@ render((
 ), document.getElementById("app"));
 ```
 
-```jsx
-const schema = {
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+
+const schema: RJSFSchema = {
   "type": "number",
   "oneOf": [
     {"const": 1, "title": "one"},
@@ -117,9 +123,11 @@ render((
 
 In your JSON Schema, you may also specify `enumNames`, a non-standard field which RJSF can use to label an enumeration. **This behavior is deprecated and may be removed in a future major release of RJSF.**
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
-const schema = {
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
+
+const schema: RJSFSchema = {
   type: "number",
   enum: [1, 2, 3],
   enumNames: ["one", "two", "three"]
@@ -133,15 +141,16 @@ render((
 
 To disable an option, use the `ui:enumDisabled` property in the uiSchema.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "boolean",
   enum: [true, false]
 };
 
-const uiSchema={
+const uiSchema: UiSchema = {
   "ui:enumDisabled": [true],
 };
 
@@ -155,10 +164,11 @@ render((
 
 JSON Schema supports specifying multiple types in an array; however, react-jsonschema-form only supports a restricted subset of this -- nullable types, in which an element is either a given type or equal to null.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: ["string", "null"]
 };
 
