@@ -290,7 +290,7 @@ function RawValidatorTest({ validator, schema, formData }) {
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
-  let displayErrors;
+  let displayErrors = "Validation not run";
   if (rawValidation) {
     displayErrors =
       rawValidation.errors || rawValidation.validationError ?
