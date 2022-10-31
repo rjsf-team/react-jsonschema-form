@@ -285,17 +285,17 @@ class CopyLink extends Component {
   }
 }
 
-const EMPTY_RAW_VALIDATION = { errors: undefined, validationError: undefined };
-
 function RawValidatorTest({ validator, schema, formData }) {
   const [rawValidation, setRawValidation] = React.useState();
-  const { errors, validationError } = rawValidation || EMPTY_RAW_VALIDATION;
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
   let displayErrors;
   if (rawValidation) {
-    displayErrors = errors ? JSON.stringify(errors, null, 2) : "No AJV errors encountered";
+    displayErrors =
+      rawValidation.errors || rawValidation.validationError ?
+        JSON.stringify(rawValidation, null, 2) :
+        "No AJV errors encountered";
   }
   return (
     <div>

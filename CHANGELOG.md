@@ -50,20 +50,24 @@ should change the heading of the (upcoming) version to include a major version b
   - `StrictRJSFSchema` was added as the alias to `JSON7Schema` and `RJSFSchema` was modified to be `StrictRJSFSchema & GenericObjectType`
   - This new generic was added BEFORE the newly added `F = any` generic because it is assumed that more people will want to change the schema than the formContext types
   - This provides future support for the newer draft versions of the schema
+- Updated the `ValidatorType` interface to add a new `rawValidation()` method for use by the playground
 
 ## @rjsf/validator-ajv6
 - Fixed a few type casts given the new expanded definition of the `RJSFSchema` type change
 - Deprecated this library in favor of the `@rjsf/validator-ajv8`
+- Refactored out the `rawValidation()` function for use by the playground
 
 ## @rjsf/validator-ajv8
 - Updated the typing to add the new `S extends StrictRJSFSchema = RJSFSchema` generic and fixed up type casts
 - Added the `AjvClass` prop to the `CustomValidatorOptionsType` to support using the `Ajv2019` or `Ajv2020` class implementation instead of the default `Ajv` class; fixing [#3189](https://github.com/rjsf-team/react-jsonschema-form/issues/3189)
+- Refactored out the `rawValidation()` function for use by the playground
 
 ## Dev / docs / playground
 - Updated the `5.x upgrade guide` and `utility-functions.md` to document the new `StrictRJSFSchema` and `S` generic
 - Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType` and mentioning the deprecation of `@rjsf/validator-ajv6`
 - Updated the playground to add support for using the AJV 8 validator with the `draft-2019-09` and `draft-2020-12` schemas and to make the `AJV8` validator the default validator, marking `AJV6` as deprecated
 - Updated all the documentation to switch to Typescript notation where missing along with switching to using the `@rjsf/validator-ajv8` validator as the default
+- Added a way of doing a raw Ajv validation in the playground to determine whether an issue is with RJSF or Ajv
 
 # 5.0.0-beta.11
 

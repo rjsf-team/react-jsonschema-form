@@ -37,6 +37,12 @@ export default function getTestValidator<T = any>(
     isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);
     },
+    rawValidation<Result = any>(
+      schema: RJSFSchema,
+      formData?: T
+    ): { errors?: Result[]; validationError?: Error } {
+      return validator.rawValidation(schema, formData);
+    },
     // This is intentionally a no-op as we are using the real validator here
     setReturnValues() {},
   };
