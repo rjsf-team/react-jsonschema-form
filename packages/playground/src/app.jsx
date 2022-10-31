@@ -21,7 +21,7 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
     noValidate: { type: "boolean", title: "Disable validation" },
-    showErrorList:{ type: "string", "default":"top", title: "Show Error List", enum:[false,"top","bottom"] }
+    showErrorList:{ type: "string", "default": "top", title: "Show Error List", enum:[false,"top","bottom"] }
   },
 };
 
@@ -305,6 +305,7 @@ class Playground extends Component {
       validator,
       subtheme: null,
       liveSettings: {
+        showErrorList:'top',
         validate: false,
         disable: false,
         readonly: false,
@@ -590,6 +591,7 @@ class Playground extends Component {
                   omitExtraData={liveSettings.omitExtraData}
                   liveOmit={liveSettings.liveOmit}
                   noValidate={liveSettings.noValidate}
+                  showErrorList={liveSettings.showErrorList}
                   schema={schema}
                   uiSchema={uiSchema}
                   formData={formData}
