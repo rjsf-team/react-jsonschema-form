@@ -1,6 +1,11 @@
 import get from "lodash/get";
 
-import { RJSFSchema, StrictRJSFSchema, UIOptionsType } from "./types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+} from "./types";
 import asNumber from "./asNumber";
 import guessType from "./guessType";
 
@@ -18,7 +23,7 @@ const nums = new Set<any>(["number", "integer"]);
 export default function processSelectValue<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(schema: S, value?: any, options?: UIOptionsType<T, S, F>) {
   const { enum: schemaEnum, type, items } = schema;
   if (value === "") {

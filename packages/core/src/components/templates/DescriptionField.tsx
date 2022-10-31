@@ -1,6 +1,7 @@
 import React from "react";
 import {
   DescriptionFieldProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -12,7 +13,7 @@ import {
 export default function DescriptionField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description } = props;
   if (!description) {

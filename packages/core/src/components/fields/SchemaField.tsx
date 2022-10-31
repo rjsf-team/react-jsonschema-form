@@ -8,6 +8,7 @@ import {
   ErrorSchema,
   FieldProps,
   FieldTemplateProps,
+  FormContextType,
   IdSchema,
   Registry,
   RJSFSchema,
@@ -43,7 +44,7 @@ const COMPONENT_TYPES: { [key: string]: string } = {
 function getFieldComponent<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
@@ -101,7 +102,7 @@ function getFieldComponent<
 function SchemaFieldRender<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: FieldProps<T, S, F>) {
   const {
     schema: _schema,
@@ -384,7 +385,7 @@ function SchemaFieldRender<
 class SchemaField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends React.Component<FieldProps<T, S, F>> {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     return !deepEquals(this.props, nextProps);

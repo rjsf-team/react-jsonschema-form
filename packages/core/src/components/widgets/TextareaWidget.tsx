@@ -1,5 +1,10 @@
 import React, { FocusEvent, useCallback } from "react";
-import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -8,7 +13,7 @@ import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
 function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   id,
   options = {},

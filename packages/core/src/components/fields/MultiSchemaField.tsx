@@ -5,6 +5,7 @@ import {
   guessType,
   deepEquals,
   FieldProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -24,7 +25,7 @@ type AnyOfFieldState = {
 class AnyOfField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Component<FieldProps<T, S, F>, AnyOfFieldState> {
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *

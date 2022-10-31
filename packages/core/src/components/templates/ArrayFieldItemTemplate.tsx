@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 import {
   ArrayFieldTemplateItemType,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -12,7 +13,7 @@ import {
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,

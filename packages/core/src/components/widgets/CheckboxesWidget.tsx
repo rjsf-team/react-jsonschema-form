@@ -1,5 +1,10 @@
 import React, { ChangeEvent } from "react";
-import { WidgetProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 function selectValue(value: any, selected: any[], all: any[]) {
   const at = all.indexOf(value);
@@ -21,7 +26,7 @@ function deselectValue(value: any, selected: any[]) {
 function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   id,
   disabled,

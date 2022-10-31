@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  FormContextType,
   ObjectFieldTemplatePropertyType,
   ObjectFieldTemplateProps,
   RJSFSchema,
@@ -18,7 +19,7 @@ import {
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,

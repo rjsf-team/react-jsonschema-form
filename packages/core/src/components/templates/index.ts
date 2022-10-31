@@ -1,4 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, TemplatesType } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TemplatesType,
+} from "@rjsf/utils";
 
 import ArrayFieldDescriptionTemplate from "./ArrayFieldDescriptionTemplate";
 import ArrayFieldItemTemplate from "./ArrayFieldItemTemplate";
@@ -19,7 +24,7 @@ import WrapIfAdditionalTemplate from "./WrapIfAdditionalTemplate";
 function templates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(): TemplatesType<T, S, F> {
   return {
     ArrayFieldDescriptionTemplate,

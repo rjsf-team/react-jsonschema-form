@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
   processSelectValue,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -27,7 +28,7 @@ function getValue(
 function SelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   schema,
   id,

@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ErrorListProps,
+  FormContextType,
   RJSFValidationError,
   RJSFSchema,
   StrictRJSFSchema,
@@ -13,7 +14,7 @@ import {
 export default function ErrorList<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({ errors }: ErrorListProps<T, S, F>) {
   return (
     <div className="panel panel-danger errors">

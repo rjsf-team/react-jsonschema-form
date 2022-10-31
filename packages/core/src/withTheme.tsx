@@ -1,7 +1,7 @@
 import React, { ForwardedRef, forwardRef } from "react";
 
 import Form, { FormProps } from "./components/Form";
-import { RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
@@ -9,7 +9,7 @@ import { RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 export type ThemeProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Pick<
   FormProps<T, S, F>,
   "fields" | "templates" | "widgets" | "_internalFormWrapper"
@@ -19,7 +19,7 @@ export type ThemeProps<
 export default function withTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(themeProps: ThemeProps<T, S, F>) {
   return forwardRef(
     (

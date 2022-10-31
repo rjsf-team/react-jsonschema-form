@@ -43,7 +43,7 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 #### Returns
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
 
-### canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
 The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
@@ -76,7 +76,8 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 #### Returns
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
-### findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>()
+### findSchemaDefinition\<S extends StrictRJSFSchema = RJSFSchema>()
+
 Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
 If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
 Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
@@ -91,8 +92,8 @@ Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schem
 #### Throws
 - Error indicating that no schema for that reference exists
 
-### getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
-Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
+### getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
 
 #### Parameters
 - schema: S - The schema for the field provided by the widget
@@ -117,7 +118,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 #### Returns
 - string | string[] | undefined: The type of the schema
 
-### getSubmitButtonOptions<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### getSubmitButtonOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`
 
 #### Parameters
@@ -126,7 +127,7 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 #### Returns
 - UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones
 
-### getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:` stripped off.
 
 #### Parameters
@@ -135,7 +136,7 @@ Get all passed options from ui:options, and ui:<optionName>, returning them in a
 #### Returns
 - UIOptionsType<T, S, F> An object containing all of the `ui:xxx` options with the stripped off
 
-### getTemplate<Name extends keyof TemplatesType<T, S, F>, T = any, F = any>()
+### getTemplate<Name extends keyof TemplatesType<T, S, F>, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
 otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
 
@@ -147,7 +148,7 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 #### Returns
 - TemplatesType<T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
 
-### getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, then it is wrapped
 with a `MergedWidget`. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based
@@ -174,7 +175,7 @@ create a schema, it is useful to know what type to use based on the data we are 
 #### Returns
 - string: The best guess for the object type
 
-### hasWidget<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### hasWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it does, or false if it doesn't.
 
 #### Parameters
@@ -185,7 +186,7 @@ Detects whether the `widget` exists for the `schema` with the associated `regist
 #### Returns
 - boolean: True if the widget exists, false otherwise
 
-### isConstant<S extends StrictRJSFSchema = RJSFSchema>()
+### isConstant\<S extends StrictRJSFSchema = RJSFSchema>()
 This function checks if the given `schema` matches a single constant value.
 This happens when either the schema has an `enum` array with a single value or there is a `const` defined.
 
@@ -195,7 +196,7 @@ This happens when either the schema has an `enum` array with a single value or t
 #### Returns
 - boolean: True if the `schema` has a single constant value, false otherwise
 
-### isCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### isCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
 
 #### Parameters
@@ -204,7 +205,7 @@ Checks to see if the `uiSchema` contains the `widget` field and that the widget 
 #### Returns
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
 
-### isFixedItems<S extends StrictRJSFSchema = RJSFSchema>()
+### isFixedItems\<S extends StrictRJSFSchema = RJSFSchema>()
 Detects whether the given `schema` contains fixed items.
 This is the case when `schema.items` is a non-empty array that only contains objects.
 
@@ -272,7 +273,7 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 #### Returns
 - GenericObjectType: The merged schema object
 
-### optionsList<S extends StrictRJSFSchema = RJSFSchema>()
+### optionsList\<S extends StrictRJSFSchema = RJSFSchema>()
 Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from the non-standard `enumNames` if it exists otherwise will be the same as the `value`.
 If the schema has a `oneOf` or `anyOf`, then the value is the list of `const` values from the schema and the label is either the `schema.title` or the value.
@@ -324,7 +325,7 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 - Error when the date cannot be parsed from the string
 
-### processSelectValue<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### processSelectValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Returns the real value for a select widget due to a silly limitation in the DOM which causes option change event values to always be retrieved as strings.
 Uses the `schema` to help determine the value's true type.
 If the value is an empty string, then the `emptyValue` from the `options` is returned, falling back to undefined.
@@ -337,7 +338,7 @@ If the value is an empty string, then the `emptyValue` from the `options` is ret
 #### Returns
 - string | boolean | number | string[] | boolean[] | number[] | undefined: The `value` converted to the proper type
 
-### rangeSpec<S extends StrictRJSFSchema = RJSFSchema>()
+### rangeSpec\<S extends StrictRJSFSchema = RJSFSchema>()
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
 
 #### Parameters
@@ -371,7 +372,7 @@ If either of those two sets are not the same, then the component should be reren
 #### Returns
 - True if boolean: the component should be re-rendered, false otherwise
 
-### toConstant<S extends StrictRJSFSchema = RJSFSchema>()
+### toConstant\<S extends StrictRJSFSchema = RJSFSchema>()
 Returns the constant value from the schema when it is either a single value enum or has a const key.
 Otherwise throws an error.
 
@@ -419,7 +420,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 #### Returns
 - T: The resulting `formData` with all the defaults provided
 
-### getDisplayLabel<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### getDisplayLabel<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
 
 #### Parameters
@@ -443,7 +444,7 @@ Given the `formData` and list of `options`, attempts to find the index of the op
 #### Returns
 - number: The index of the matched option or 0 if none is available
 
-### isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema,, F = any>()
+### isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Checks to see if the `schema` and `uiSchema` combination represents an array of files
 
 #### Parameters
@@ -533,7 +534,7 @@ Generates an `PathSchema` object for the `schema`, recursively
 
 ## Schema utils creation function
 
-### createSchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>()
+### createSchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Creates a `SchemaUtilsType` interface that is based around the given `validator` and `rootSchema` parameters.
 The resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
 

@@ -5,6 +5,7 @@ import {
   toDateString,
   pad,
   DateObject,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -50,7 +51,7 @@ function dateElementProps(
 type DateElementProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Pick<
   WidgetProps<T, S, F>,
   | "value"
@@ -70,7 +71,7 @@ type DateElementProps<
 function DateElement<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   type,
   range,
@@ -112,7 +113,7 @@ function DateElement<
 function AltDateWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   time = false,
   disabled = false,

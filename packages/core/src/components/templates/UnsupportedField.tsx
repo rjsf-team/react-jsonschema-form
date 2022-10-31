@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  FormContextType,
   UnsupportedFieldProps,
   RJSFSchema,
   StrictRJSFSchema,
@@ -13,7 +14,7 @@ import {
 function UnsupportedField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: UnsupportedFieldProps<T, S, F>) {
   const { schema, idSchema, reason } = props;
   return (

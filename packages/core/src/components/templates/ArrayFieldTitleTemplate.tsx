@@ -3,9 +3,10 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTitleProps,
-  TemplatesType,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TemplatesType,
 } from "@rjsf/utils";
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
@@ -16,7 +17,7 @@ import {
 export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldTitleProps<T, S, F>) {
   const { idSchema, title, schema, uiSchema, required, registry } = props;
   const options = getUiOptions<T, S, F>(uiSchema);

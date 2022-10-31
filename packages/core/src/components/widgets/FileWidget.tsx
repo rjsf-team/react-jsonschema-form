@@ -2,6 +2,7 @@ import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 
 import {
   dataURItoBlob,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -90,7 +91,11 @@ function extractFileInfo(dataURLs: string[]) {
  *  The `FileWidget` is a widget for rendering file upload fields.
  *  It is typically used with a string property with data-url format.
  */
-function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>({
+function FileWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   multiple,
   id,
   readonly,
