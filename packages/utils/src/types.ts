@@ -902,10 +902,20 @@ export interface ValidatorType<
    * false.
    *
    * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData- - The form data to validate
+   * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T, rootSchema: S): boolean;
+  /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
+   * by the playground. Returns the `errors` from the validation
+   *
+   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param formData - The form data to validate
+   */
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: T
+  ): { errors?: Result[]; validationError?: Error };
 }
 
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`

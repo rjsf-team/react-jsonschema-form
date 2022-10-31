@@ -217,12 +217,8 @@ export default class AJV8Validator<
    * @private
    */
   private transformRJSFValidationErrors(
-    errors: Ajv["errors"] = []
+    errors: ErrorObject[] = []
   ): RJSFValidationError[] {
-    if (errors === null) {
-      return [];
-    }
-
     return errors.map((e: ErrorObject) => {
       const { instancePath, keyword, message, params, schemaPath } = e;
       const property = instancePath.replace(/\//g, ".");
@@ -237,6 +233,34 @@ export default class AJV8Validator<
         schemaPath,
       };
     });
+  }
+
+  /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
+   * by the playground. Returns the `errors` from the validation
+   *
+   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param formData - The form data to validate
+   */
+  rawValidation<Result = any>(
+    schema: RJSFSchema,
+    formData?: T
+  ): { errors?: Result[]; validationError?: Error } {
+    let validationError: Error | undefined = undefined;
+    try {
+      this.ajv.validate(schema, formData);
+    } catch (err) {
+      validationError = err as Error;
+    }
+
+    if (typeof this.localizer === "function") {
+      this.localizer(this.ajv.errors);
+    }
+    const errors = this.ajv.errors || undefined;
+
+    // Clear errors to prevent persistent errors, see #1104
+    this.ajv.errors = null;
+
+    return { errors: errors as unknown as Result[], validationError };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -265,25 +289,13 @@ export default class AJV8Validator<
       true
     ) as T;
 
-    let validationError: Error | null = null;
-    try {
-      this.ajv.validate(schema, newFormData);
-    } catch (err) {
-      validationError = err as Error;
-    }
-
-    if (typeof this.localizer === "function") {
-      this.localizer(this.ajv.errors);
-    }
-    let errors = this.transformRJSFValidationErrors(this.ajv.errors);
-    // Clear errors to prevent persistent errors, see #1104
-
-    this.ajv.errors = null;
+    const rawErrors = this.rawValidation<ErrorObject>(schema, newFormData);
+    const { validationError } = rawErrors;
+    let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
     const noProperMetaSchema =
       validationError &&
       validationError.message &&
-      typeof validationError.message === "string" &&
       validationError.message.includes("no schema with key or ref ");
 
     if (noProperMetaSchema) {
