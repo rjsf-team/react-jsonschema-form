@@ -1,6 +1,7 @@
 import React from "react";
 import {
   getSubmitButtonOptions,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
@@ -11,7 +12,7 @@ import {
 export default function SubmitButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,

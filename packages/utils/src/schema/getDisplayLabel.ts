@@ -3,6 +3,7 @@ import getSchemaType from "../getSchemaType";
 import getUiOptions from "../getUiOptions";
 import isCustomWidget from "../isCustomWidget";
 import {
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -23,7 +24,7 @@ import isMultiSelect from "./isMultiSelect";
 export default function getDisplayLabel<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   validator: ValidatorType<T, S>,
   schema: S,

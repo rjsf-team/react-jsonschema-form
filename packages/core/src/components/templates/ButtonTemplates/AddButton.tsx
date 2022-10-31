@@ -1,5 +1,10 @@
 import React from "react";
-import { IconButtonProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 import IconButton from "./IconButton";
 
@@ -8,7 +13,7 @@ import IconButton from "./IconButton";
 export default function AddButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({ className, onClick, disabled }: IconButtonProps<T, S, F>) {
   return (
     <div className="row">

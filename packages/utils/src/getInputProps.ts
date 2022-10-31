@@ -1,5 +1,6 @@
 import rangeSpec from "./rangeSpec";
 import {
+  FormContextType,
   InputPropsType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -17,7 +18,7 @@ import {
 export default function getInputProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   schema: RJSFSchema,
   defaultType?: string,

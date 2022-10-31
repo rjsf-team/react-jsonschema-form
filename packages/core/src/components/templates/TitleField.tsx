@@ -1,5 +1,10 @@
 import React from "react";
-import { TitleFieldProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  TitleFieldProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
@@ -10,7 +15,7 @@ const REQUIRED_FIELD_SYMBOL = "*";
 export default function TitleField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: TitleFieldProps<T, S, F>) {
   const { id, title, required } = props;
   return (

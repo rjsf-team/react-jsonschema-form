@@ -1,6 +1,7 @@
 import deepEquals from "./deepEquals";
 import {
   ErrorSchema,
+  FormContextType,
   IdSchema,
   PathSchema,
   RJSFSchema,
@@ -28,8 +29,11 @@ import {
  * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
-class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
-  implements SchemaUtilsType<T, S>
+class SchemaUtils<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> implements SchemaUtilsType<T, S>
 {
   rootSchema: S;
   validator: ValidatorType<T, S>;
@@ -250,7 +254,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(validator: ValidatorType<T, S>, rootSchema: S): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(validator, rootSchema);
 }

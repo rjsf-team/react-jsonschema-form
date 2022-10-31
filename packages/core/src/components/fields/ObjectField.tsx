@@ -5,6 +5,7 @@ import {
   orderProperties,
   ErrorSchema,
   FieldProps,
+  FormContextType,
   GenericObjectType,
   IdSchema,
   RJSFSchema,
@@ -35,7 +36,7 @@ type ObjectFieldState = {
 class ObjectField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Component<FieldProps<T, S, F>, ObjectFieldState> {
   /** Set up the initial state */
   state = {

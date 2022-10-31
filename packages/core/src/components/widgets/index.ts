@@ -1,4 +1,9 @@
-import { RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  RegistryWidgetsType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 import AltDateWidget from "./AltDateWidget";
 import AltDateTimeWidget from "./AltDateTimeWidget";
@@ -22,7 +27,7 @@ import UpDownWidget from "./UpDownWidget";
 function widgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(): RegistryWidgetsType<T, S, F> {
   return {
     PasswordWidget,

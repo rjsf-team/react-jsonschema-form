@@ -4,6 +4,7 @@ import {
   getUiOptions,
   optionsList,
   FieldProps,
+  FormContextType,
   EnumOptionsType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -18,7 +19,7 @@ import isObject from "lodash/isObject";
 function BooleanField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: FieldProps<T, S, F>) {
   const {
     schema,

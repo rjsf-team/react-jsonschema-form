@@ -1,6 +1,7 @@
 import React from "react";
 import {
   getTemplate,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -14,7 +15,7 @@ import {
 export default function ColorWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { disabled, readonly, options, registry } = props;
   const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(

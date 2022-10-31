@@ -1,5 +1,6 @@
 import { UI_WIDGET_KEY } from "../constants";
 import {
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -18,7 +19,7 @@ import retrieveSchema from "./retrieveSchema";
 export default function isFilesArray<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   validator: ValidatorType<T, S>,
   schema: S,

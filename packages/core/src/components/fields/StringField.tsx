@@ -5,6 +5,7 @@ import {
   optionsList,
   hasWidget,
   FieldProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -13,9 +14,11 @@ import {
  *
  * @param props - The `FieldProps` for this template
  */
-function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>(
-  props: FieldProps<T, S, F>
-) {
+function StringField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldProps<T, S, F>) {
   const {
     schema,
     name,

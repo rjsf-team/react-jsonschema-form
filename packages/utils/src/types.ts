@@ -8,14 +8,18 @@ export type GenericObjectType = {
   [name: string]: any;
 };
 
-/** Map the JSONSchema7 to our own type so that we can easily bump to JSONSchema8 at some future date and only have to
- * update this one type.
+/** Map the JSONSchema7 to our own type so that we can easily bump to a more recent version at some future date and only
+ * have to update this one type.
  */
 export type StrictRJSFSchema = JSONSchema7;
 
 /** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7
  */
 export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
+
+/** Alias GenericObjectType as FormContextType to allow us to remap this at some future date
+ */
+export type FormContextType = GenericObjectType;
 
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
@@ -131,7 +135,7 @@ export type FormValidation<T = any> = FieldValidation & {
 export type ErrorListProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The errorSchema constructed by `Form` */
   errorSchema: ErrorSchema<T>;
@@ -149,7 +153,7 @@ export type ErrorListProps<
 export type FieldErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
@@ -169,7 +173,7 @@ export type FieldErrorProps<
 export type FieldHelpProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The help information to be rendered */
   help?: string | React.ReactElement;
@@ -189,7 +193,7 @@ export type FieldHelpProps<
 export type RegistryFieldsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A `Field` indexed by `name` */
   [name: string]: Field<T, S, F>;
@@ -199,7 +203,7 @@ export type RegistryFieldsType<
 export type RegistryWidgetsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A `Widget` indexed by `name` */
   [name: string]: Widget<T, S, F>;
@@ -209,7 +213,7 @@ export type RegistryWidgetsType<
 export interface TemplatesType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate: React.ComponentType<ArrayFieldTemplateProps<T, S, F>>;
@@ -266,7 +270,7 @@ export interface TemplatesType<
 export interface Registry<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any custom
    * registered fields
@@ -294,7 +298,7 @@ export interface Registry<
 export interface FieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
       React.HTMLAttributes<HTMLElement>,
@@ -341,14 +345,14 @@ export interface FieldProps<
 export type Field<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ComponentType<FieldProps<T, S, F>>;
 
 /** The properties that are passed to a FieldTemplate implementation */
 export type FieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget */
   id: string;
@@ -410,7 +414,7 @@ export type FieldTemplateProps<
 export type UnsupportedFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The schema object for this field */
   schema: S;
@@ -426,7 +430,7 @@ export type UnsupportedFieldProps<
 export type TitleFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field title in the hierarchy */
   id: string;
@@ -446,7 +450,7 @@ export type TitleFieldProps<
 export type DescriptionFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field description in the hierarchy */
   id: string;
@@ -464,7 +468,7 @@ export type DescriptionFieldProps<
 export type ArrayFieldTitleProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Omit<TitleFieldProps<T, S, F>, "id" | "title"> & {
   /** The title for the field being rendered */
   title?: string;
@@ -476,7 +480,7 @@ export type ArrayFieldTitleProps<
 export type ArrayFieldDescriptionProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Omit<DescriptionFieldProps<T, S, F>, "id" | "description"> & {
   /** The description of the field being rendered */
   description?: string | React.ReactElement;
@@ -488,7 +492,7 @@ export type ArrayFieldDescriptionProps<
 export type ArrayFieldTemplateItemType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The html for the item's content */
   children: React.ReactElement;
@@ -526,7 +530,7 @@ export type ArrayFieldTemplateItemType<
 export type ArrayFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A boolean value stating whether new elements can be added to the array */
   canAdd?: boolean;
@@ -580,7 +584,7 @@ export type ObjectFieldTemplatePropertyType = {
 export type ObjectFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A string value containing the title for the object */
   title: string;
@@ -616,7 +620,7 @@ export type ObjectFieldTemplateProps<
 export type WrapIfAdditionalTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The field or widget component instance for this field row */
   children: React.ReactNode;
@@ -639,7 +643,7 @@ export type WrapIfAdditionalTemplateProps<
 export interface WidgetProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
       React.HTMLAttributes<HTMLElement>,
@@ -694,14 +698,14 @@ export interface WidgetProps<
 export type Widget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ComponentType<WidgetProps<T, S, F>>;
 
 /** The type that defines the props used by the Submit button */
 export type SubmitButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
@@ -711,7 +715,7 @@ export type SubmitButtonProps<
 export type IconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** An alternative specification for the type of the icon button */
   iconType?: string;
@@ -757,7 +761,7 @@ type MakeUIType<Type> = {
 type UIOptionsBaseType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
@@ -817,7 +821,7 @@ type UIOptionsBaseType<
 export type UIOptionsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = UIOptionsBaseType<T, S, F> & {
   /** Anything else will be one of these types */
   [key: string]: boolean | number | string | object | any[] | null | undefined;
@@ -829,7 +833,7 @@ export type UIOptionsType<
 export type UiSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = GenericObjectType &
   MakeUIType<UIOptionsBaseType<T, S, F>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
@@ -926,7 +930,7 @@ export interface ValidatorType<
 export interface SchemaUtilsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *

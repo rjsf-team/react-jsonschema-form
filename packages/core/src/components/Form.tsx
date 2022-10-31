@@ -5,6 +5,7 @@ import {
   deepEquals,
   ErrorSchema,
   ErrorTransformer,
+  FormContextType,
   GenericObjectType,
   getTemplate,
   getUiOptions,
@@ -37,7 +38,7 @@ import getDefaultRegistry from "../getDefaultRegistry";
 export interface FormProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The JSON schema object for the form */
   schema: S;
@@ -192,7 +193,7 @@ export interface FormProps<
 export interface FormState<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The JSON schema object for the form */
   schema: S;
@@ -226,7 +227,7 @@ export interface FormState<
 export interface IChangeEvent<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Omit<
     FormState<T, S, F>,
     "schemaValidationErrors" | "schemaValidationErrorSchema"
@@ -239,7 +240,7 @@ export interface IChangeEvent<
 export default class Form<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
    * provide any possible type here

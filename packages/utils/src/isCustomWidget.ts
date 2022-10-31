@@ -1,5 +1,10 @@
 import getUiOptions from "./getUiOptions";
-import { RJSFSchema, StrictRJSFSchema, UiSchema } from "./types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from "./types";
 
 /** Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
  *
@@ -9,7 +14,7 @@ import { RJSFSchema, StrictRJSFSchema, UiSchema } from "./types";
 export default function isCustomWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(uiSchema: UiSchema<T, S, F> = {}) {
   return (
     // TODO: Remove the `&& uiSchema['ui:widget'] !== 'hidden'` once we support hidden widgets for arrays.

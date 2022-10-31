@@ -10,6 +10,7 @@ import {
   ArrayFieldTemplateProps,
   ErrorSchema,
   FieldProps,
+  FormContextType,
   IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -73,7 +74,7 @@ function keyedToPlainFormData<T>(
 class ArrayField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Component<FieldProps<T[], S, F>, ArrayFieldState<T>> {
   /** Constructs an `ArrayField` from the `props`, generating the initial keyed data from the `formData`
    *
@@ -98,7 +99,7 @@ class ArrayField<
   static getDerivedStateFromProps<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
-    F = any
+    F extends FormContextType = any
   >(
     nextProps: Readonly<FieldProps<T[], S, F>>,
     prevState: Readonly<ArrayFieldState<T>>

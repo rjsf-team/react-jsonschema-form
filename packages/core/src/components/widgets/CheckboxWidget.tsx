@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import {
   getTemplate,
   schemaRequiresTrueValue,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -15,7 +16,7 @@ import {
 function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   schema,
   uiSchema,

@@ -3,6 +3,7 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldDescriptionProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -15,7 +16,7 @@ import {
 export default function ArrayFieldDescriptionTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { idSchema, description, registry, schema, uiSchema } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
