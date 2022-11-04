@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.13
+
+## @rjsf/playground
+- Fix Vite development server [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228)
+
 # 5.0.0-beta.12
 
 ## @rjsf/antd

@@ -35,7 +35,8 @@ export default function createAjvInstance(
   AjvClass: typeof Ajv = Ajv
 ) {
   const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
-  if (typeof ajvFormatOptions !== "boolean") {
+  if (ajvFormatOptions && typeof ajvFormatOptions !== "boolean") {
+    console.log(ajvFormatOptions);
     addFormats(ajv, ajvFormatOptions);
   }
 
