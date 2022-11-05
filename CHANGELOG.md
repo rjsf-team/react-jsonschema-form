@@ -15,6 +15,17 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.13
+
+## @rjsf/playground
+- Fix Vite development server [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228)
+
+## @rjsf/validator-ajv8
+- Fix additionalProperties validation [#3213](https://github.com/rjsf-team/react-jsonschema-form/issues/3213)
+- Report all schema errors thrown by Ajv. Previously, we would only report errors thrown for a missing meta-schema. This behavior is unchanged for @rjsf/validator-ajv6.
+- Disable Ajv strict mode by default.
+- Add RJSF-specific additional properties keywords to Ajv to prevent errors from being reported in strict mode.
+
 # 5.0.0-beta.12
 
 ## @rjsf/antd

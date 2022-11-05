@@ -1,23 +1,23 @@
-import Ajv, { ErrorObject } from "ajv";
+import Ajv, { ErrorObject } from "ajv8";
 import toPath from "lodash/toPath";
 import isObject from "lodash/isObject";
 import clone from "lodash/clone";
 import {
   CustomValidator,
+  ERRORS_KEY,
   ErrorSchema,
   ErrorTransformer,
   FieldValidation,
   FormValidation,
   GenericObjectType,
+  getDefaultFormState,
+  mergeValidationData,
+  REF_KEY,
   RJSFSchema,
   RJSFValidationError,
   StrictRJSFSchema,
   ValidationData,
   ValidatorType,
-  getDefaultFormState,
-  mergeValidationData,
-  ERRORS_KEY,
-  REF_KEY,
 } from "@rjsf/utils";
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
@@ -280,26 +280,20 @@ export default class AJV8Validator<
     transformErrors?: ErrorTransformer
   ): ValidationData<T> {
     // Include form data with undefined values, which is required for validation.
-    const rootSchema = schema;
     const newFormData = getDefaultFormState<T>(
       this,
       schema,
       formData,
-      rootSchema,
+      schema,
       true
     ) as T;
 
     const rawErrors = this.rawValidation<ErrorObject>(schema, newFormData);
-    const { validationError } = rawErrors;
+    const { validationError: invalidSchemaError } = rawErrors;
     let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
-    const noProperMetaSchema =
-      validationError &&
-      validationError.message &&
-      validationError.message.includes("no schema with key or ref ");
-
-    if (noProperMetaSchema) {
-      errors = [...errors, { stack: validationError!.message }];
+    if (invalidSchemaError) {
+      errors = [...errors, { stack: invalidSchemaError!.message }];
     }
     if (typeof transformErrors === "function") {
       errors = transformErrors(errors);
@@ -307,13 +301,11 @@ export default class AJV8Validator<
 
     let errorSchema = this.toErrorSchema(errors);
 
-    if (noProperMetaSchema) {
+    if (invalidSchemaError) {
       errorSchema = {
         ...errorSchema,
-        ...{
-          $schema: {
-            __errors: [validationError!.message],
-          },
+        $schema: {
+          __errors: [invalidSchemaError!.message],
         },
       };
     }
