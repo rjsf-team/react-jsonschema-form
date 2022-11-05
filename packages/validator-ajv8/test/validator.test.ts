@@ -72,6 +72,34 @@ describe("AJV8Validator", () => {
 
         expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
       });
+      it("Only compiles the schema once", () => {
+        const schema: RJSFSchema = {
+          $id: "schema-id",
+        };
+
+        const rootSchema: RJSFSchema = {
+          $id: "root-schema-id",
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        };
+        const formData = {
+          name: "John Doe",
+        };
+
+        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+        const compileSpy = jest.spyOn(validator.ajv, "compile");
+        compileSpy.mockClear();
+
+        // Call isValid twice with the same schema
+        validator.isValid(schema, formData, rootSchema);
+        validator.isValid(schema, formData, rootSchema);
+
+        expect(compileSpy).toHaveBeenCalledTimes(1);
+      });
     });
     describe("validator.withIdRefPrefix()", () => {
       it("should recursively add id prefix to all refs", () => {
@@ -250,6 +278,29 @@ describe("AJV8Validator", () => {
           expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
         });
       });
+      describe("Doesn't recompile a schema with a specified ID", () => {
+        it("Only compiles the schema once", () => {
+          const schema: RJSFSchema = {
+            $id: "this-schema-has-an-id",
+            type: "object",
+            properties: {
+              string: {
+                type: "string",
+              },
+            },
+          };
+
+          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+          const compileSpy = jest.spyOn(validator.ajv, "compile");
+          compileSpy.mockClear();
+
+          // Call validateFormData twice with the same schema
+          validator.validateFormData({ string: "a" }, schema);
+          validator.validateFormData({ string: "b" }, schema);
+
+          expect(compileSpy).toHaveBeenCalledTimes(1);
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -401,26 +452,19 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(2);
-          expect(errors[0].name).toEqual("type");
-          expect(errors[0].property).toEqual(".properties.foo.required");
-          // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/ajv-validator/ajv/issues/512 is fixed.
-          expect(errors[0].schemaPath).toEqual(
-            "#/definitions/stringArray/type"
-          );
-          expect(errors[0].message).toEqual("must be array");
-
-          expect(errors[1].stack).toEqual(
+          expect(errors).toHaveLength(1);
+          expect(errors[0].stack).toEqual(
             "schema is invalid: data/properties/foo/required must be array"
           );
         });
         it("should return an errorSchema", () => {
-          expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
-            1
-          );
-          expect(errorSchema.properties!.foo!.required!.__errors![0]).toEqual(
-            "must be array"
-          );
+          expect(errorSchema).toEqual({
+            $schema: {
+              __errors: [
+                "schema is invalid: data/properties/foo/required must be array",
+              ],
+            },
+          });
         });
       });
     });
@@ -476,6 +520,34 @@ describe("AJV8Validator", () => {
 
         expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
       });
+      it("Only compiles the schema once", () => {
+        const schema: RJSFSchema = {
+          $id: "schema-id",
+        };
+
+        const rootSchema: RJSFSchema = {
+          $id: "root-schema-id",
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        };
+        const formData = {
+          name: "John Doe",
+        };
+
+        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+        const compileSpy = jest.spyOn(validator.ajv, "compile");
+        compileSpy.mockClear();
+
+        // Call isValid twice with the same schema
+        validator.isValid(schema, formData, rootSchema);
+        validator.isValid(schema, formData, rootSchema);
+
+        expect(compileSpy).toHaveBeenCalledTimes(1);
+      });
     });
     describe("validator.withIdRefPrefix()", () => {
       it("should recursively add id prefix to all refs", () => {
@@ -654,6 +726,30 @@ describe("AJV8Validator", () => {
           expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
         });
       });
+      describe("Doesn't recompile a schema with a specified ID", () => {
+        it("Only compiles the schema once", () => {
+          const schema: RJSFSchema = {
+            $id: "this-schema-has-an-id",
+            type: "object",
+            properties: {
+              string: {
+                title: "String field",
+                type: "string",
+              },
+            },
+          };
+
+          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+          const compileSpy = jest.spyOn(validator.ajv, "compile");
+          compileSpy.mockClear();
+
+          // Call validateFormData twice with the same schema
+          validator.validateFormData({ string: "a" }, schema);
+          validator.validateFormData({ string: "b" }, schema);
+
+          expect(compileSpy).toHaveBeenCalledTimes(1);
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -805,24 +901,19 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(2);
-          expect(errors[0].name).toEqual("type");
-          expect(errors[0].property).toEqual(".properties.foo.required");
-          // Ajv2019 uses $defs rather than definitions
-          expect(errors[0].schemaPath).toEqual("#/$defs/stringArray/type");
-          expect(errors[0].message).toEqual("must be array");
-
-          expect(errors[1].stack).toEqual(
+          expect(errors).toHaveLength(1);
+          expect(errors[0].stack).toEqual(
             "schema is invalid: data/properties/foo/required must be array"
           );
         });
         it("should return an errorSchema", () => {
-          expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
-            1
-          );
-          expect(errorSchema.properties!.foo!.required!.__errors![0]).toEqual(
-            "must be array"
-          );
+          expect(errorSchema).toEqual({
+            $schema: {
+              __errors: [
+                "schema is invalid: data/properties/foo/required must be array",
+              ],
+            },
+          });
         });
       });
     });
@@ -878,6 +969,34 @@ describe("AJV8Validator", () => {
 
         expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
       });
+      it("Only compiles the schema once", () => {
+        const schema: RJSFSchema = {
+          $id: "schema-id",
+        };
+
+        const rootSchema: RJSFSchema = {
+          $id: "root-schema-id",
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        };
+        const formData = {
+          name: "John Doe",
+        };
+
+        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+        const compileSpy = jest.spyOn(validator.ajv, "compile");
+        compileSpy.mockClear();
+
+        // Call isValid twice with the same schema
+        validator.isValid(schema, formData, rootSchema);
+        validator.isValid(schema, formData, rootSchema);
+
+        expect(compileSpy).toHaveBeenCalledTimes(1);
+      });
     });
     describe("validator.withIdRefPrefix()", () => {
       it("should recursively add id prefix to all refs", () => {
@@ -1056,6 +1175,30 @@ describe("AJV8Validator", () => {
           expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
         });
       });
+      describe("Doesn't recompile a schema with a specified ID", () => {
+        it("Only compiles the schema once", () => {
+          const schema: RJSFSchema = {
+            $id: "this-schema-has-an-id",
+            type: "object",
+            properties: {
+              string: {
+                title: "String field",
+                type: "string",
+              },
+            },
+          };
+
+          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+          const compileSpy = jest.spyOn(validator.ajv, "compile");
+          compileSpy.mockClear();
+
+          // Call validateFormData twice with the same schema
+          validator.validateFormData({ string: "a" }, schema);
+          validator.validateFormData({ string: "b" }, schema);
+
+          expect(compileSpy).toHaveBeenCalledTimes(1);
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -1207,24 +1350,19 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(2);
-          expect(errors[0].name).toEqual("type");
-          expect(errors[0].property).toEqual(".properties.foo.required");
-          // Ajv2019 uses $defs rather than definitions
-          expect(errors[0].schemaPath).toEqual("#/$defs/stringArray/type");
-          expect(errors[0].message).toEqual("must be array");
-
-          expect(errors[1].stack).toEqual(
+          expect(errors).toHaveLength(1);
+          expect(errors[0].stack).toEqual(
             "schema is invalid: data/properties/foo/required must be array"
           );
         });
         it("should return an errorSchema", () => {
-          expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
-            1
-          );
-          expect(errorSchema.properties!.foo!.required!.__errors![0]).toEqual(
-            "must be array"
-          );
+          expect(errorSchema).toEqual({
+            $schema: {
+              __errors: [
+                "schema is invalid: data/properties/foo/required must be array",
+              ],
+            },
+          });
         });
       });
     });
@@ -1264,7 +1402,7 @@ describe("AJV8Validator", () => {
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
       });
-      expect(localizer).toHaveBeenCalledWith(undefined);
+      expect(localizer).not.toHaveBeenCalled();
     });
     describe("validating using single custom meta schema", () => {
       let errors: RJSFValidationError[];
@@ -1430,7 +1568,7 @@ describe("AJV8Validator", () => {
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
       });
-      expect(localizer).toHaveBeenCalledWith(undefined);
+      expect(localizer).not.toHaveBeenCalled();
     });
     describe("validating using single custom meta schema", () => {
       let errors: RJSFValidationError[];
@@ -1598,7 +1736,7 @@ describe("AJV8Validator", () => {
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
       });
-      expect(localizer).toHaveBeenCalledWith(undefined);
+      expect(localizer).not.toHaveBeenCalled();
     });
     describe("validating using single custom meta schema", () => {
       let errors: RJSFValidationError[];
