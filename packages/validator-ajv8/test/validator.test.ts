@@ -225,6 +225,31 @@ describe("AJV8Validator", () => {
           ]);
         });
       });
+      describe("No custom validate function, single additionalProperties value", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+
+        beforeAll(() => {
+          const schema: RJSFSchema = {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          };
+          const result = validator.validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+          errorSchema = result.errorSchema;
+        });
+
+        it("should return an error list", () => {
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual("must be string");
+        });
+        it("should return an errorSchema", () => {
+          expect(errorSchema.foo!.__errors).toHaveLength(1);
+          expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -376,7 +401,7 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(1);
+          expect(errors).toHaveLength(2);
           expect(errors[0].name).toEqual("type");
           expect(errors[0].property).toEqual(".properties.foo.required");
           // TODO: This schema path is wrong due to a bug in ajv; change this test when https://github.com/ajv-validator/ajv/issues/512 is fixed.
@@ -384,6 +409,10 @@ describe("AJV8Validator", () => {
             "#/definitions/stringArray/type"
           );
           expect(errors[0].message).toEqual("must be array");
+
+          expect(errors[1].stack).toEqual(
+            "schema is invalid: data/properties/foo/required must be array"
+          );
         });
         it("should return an errorSchema", () => {
           expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
@@ -600,6 +629,31 @@ describe("AJV8Validator", () => {
           ]);
         });
       });
+      describe("No custom validate function, single additionalProperties value", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+
+        beforeAll(() => {
+          const schema: RJSFSchema = {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          };
+          const result = validator.validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+          errorSchema = result.errorSchema;
+        });
+
+        it("should return an error list", () => {
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual("must be string");
+        });
+        it("should return an errorSchema", () => {
+          expect(errorSchema.foo!.__errors).toHaveLength(1);
+          expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -751,12 +805,16 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(1);
+          expect(errors).toHaveLength(2);
           expect(errors[0].name).toEqual("type");
           expect(errors[0].property).toEqual(".properties.foo.required");
           // Ajv2019 uses $defs rather than definitions
           expect(errors[0].schemaPath).toEqual("#/$defs/stringArray/type");
           expect(errors[0].message).toEqual("must be array");
+
+          expect(errors[1].stack).toEqual(
+            "schema is invalid: data/properties/foo/required must be array"
+          );
         });
         it("should return an errorSchema", () => {
           expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
@@ -973,6 +1031,31 @@ describe("AJV8Validator", () => {
           ]);
         });
       });
+      describe("No custom validate function, single additionalProperties value", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+
+        beforeAll(() => {
+          const schema: RJSFSchema = {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          };
+          const result = validator.validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+          errorSchema = result.errorSchema;
+        });
+
+        it("should return an error list", () => {
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual("must be string");
+        });
+        it("should return an errorSchema", () => {
+          expect(errorSchema.foo!.__errors).toHaveLength(1);
+          expect(errorSchema.foo!.__errors![0]).toEqual("must be string");
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
@@ -1124,12 +1207,16 @@ describe("AJV8Validator", () => {
           errorSchema = result.errorSchema;
         });
         it("should return an error list", () => {
-          expect(errors).toHaveLength(1);
+          expect(errors).toHaveLength(2);
           expect(errors[0].name).toEqual("type");
           expect(errors[0].property).toEqual(".properties.foo.required");
           // Ajv2019 uses $defs rather than definitions
           expect(errors[0].schemaPath).toEqual("#/$defs/stringArray/type");
           expect(errors[0].message).toEqual("must be array");
+
+          expect(errors[1].stack).toEqual(
+            "schema is invalid: data/properties/foo/required must be array"
+          );
         });
         it("should return an errorSchema", () => {
           expect(errorSchema.properties!.foo!.required!.__errors).toHaveLength(
@@ -1253,7 +1340,7 @@ describe("AJV8Validator", () => {
           { phone: "800.555.2368" },
           schema
         );
-        expect(result.errors.length).toEqual(0);
+        expect(result.errors).toHaveLength(0);
       });
       describe("validating using a custom formats", () => {
         let errors: RJSFValidationError[];
@@ -1421,7 +1508,7 @@ describe("AJV8Validator", () => {
           { phone: "800.555.2368" },
           schema
         );
-        expect(result.errors.length).toEqual(0);
+        expect(result.errors).toHaveLength(0);
       });
       describe("validating using a custom formats", () => {
         let errors: RJSFValidationError[];
@@ -1589,7 +1676,7 @@ describe("AJV8Validator", () => {
           { phone: "800.555.2368" },
           schema
         );
-        expect(result.errors.length).toEqual(0);
+        expect(result.errors).toHaveLength(0);
       });
       describe("validating using a custom formats", () => {
         let errors: RJSFValidationError[];

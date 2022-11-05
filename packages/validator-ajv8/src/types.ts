@@ -1,4 +1,4 @@
-import Ajv, { Options, ErrorObject } from "ajv";
+import Ajv, { Options, ErrorObject } from "ajv8";
 import { FormatsPluginOptions } from "ajv-formats";
 
 /** The type describing how to customize the AJV6 validator

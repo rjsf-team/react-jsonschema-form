@@ -4,7 +4,7 @@ import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
-import localValidator from "@rjsf/validator-ajv6";
+import localValidator from "@rjsf/validator-ajv8";
 
 import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
@@ -326,7 +326,7 @@ function RawValidatorTest({ validator, schema, formData }) {
           </>
         )}
       </div>
-      <textarea rows={4} readOnly disabled={!rawValidation} defaultValue="Validation not run" value={displayErrors} />
+      <textarea rows={4} readOnly disabled={!rawValidation} value={displayErrors} />
     </div>
   );
 }

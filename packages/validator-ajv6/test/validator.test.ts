@@ -223,6 +223,31 @@ describe("AJV6Validator", () => {
           ]);
         });
       });
+      describe("No custom validate function, single additionalProperties value", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+
+        beforeAll(() => {
+          const schema: RJSFSchema = {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          };
+          const result = validator.validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+          errorSchema = result.errorSchema;
+        });
+
+        it("should return an error list", () => {
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual("should be string");
+        });
+        it("should return an errorSchema", () => {
+          expect(errorSchema.foo!.__errors).toHaveLength(1);
+          expect(errorSchema.foo!.__errors![0]).toEqual("should be string");
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;

@@ -91,7 +91,7 @@
     "@material-ui/icons": "^4.11.3",
     "@monaco-editor/react": "^4.4.6",
     "@mui/icons-material": "^5.10.9",
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^2.2.0",
     "atob": "^2.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.26.0",
@@ -114,7 +114,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.55.0",
     "source-map-loader": "^4.0.1",
-    "vite": "^3.1.8"
+    "vite": "^3.2.2"
   },
   "directories": {
     "test": "test"
