@@ -4545,8 +4545,11 @@ exports[`single fields slider field 1`] = `
             className="chakra-slider__thumb emotion-0"
             id="slider-thumb-root"
             onBlur={[Function]}
+            onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
             role="slider"
             style={
               Object {

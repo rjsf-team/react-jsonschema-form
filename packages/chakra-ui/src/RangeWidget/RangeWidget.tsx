@@ -6,6 +6,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { rangeSpec, WidgetProps } from "@rjsf/utils";
 import { getChakra } from "../utils";
@@ -58,7 +59,9 @@ const RangeWidget = ({
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
-        <SliderThumb />
+        <Tooltip hasArrow placement="top" label={`${value}`}>
+          <SliderThumb />
+        </Tooltip>
       </Slider>
     </FormControl>
   );
