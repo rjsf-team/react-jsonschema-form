@@ -116,7 +116,7 @@ export type FieldErrors = {
 /** Type describing a recursive structure of `FieldErrors`s for an object with a non-empty set of keys */
 export type ErrorSchema<T = any> = FieldErrors & {
   /** The set of errors for fields in the recursive object structure */
-  [key in keyof T]?: ErrorSchema<T[key]>;
+  [key in keyof T]?: ErrorSchema<T[key]> | FieldErrors;
 };
 
 /** Type that describes the list of errors for a field being actively validated by a custom validator */
