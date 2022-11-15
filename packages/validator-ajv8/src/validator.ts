@@ -1,4 +1,4 @@
-import Ajv, { ErrorObject } from "ajv8";
+import Ajv, { ErrorObject, ValidateFunction } from "ajv8";
 import toPath from "lodash/toPath";
 import isObject from "lodash/isObject";
 import clone from "lodash/clone";
@@ -245,22 +245,35 @@ export default class AJV8Validator<
     schema: RJSFSchema,
     formData?: T
   ): { errors?: Result[]; validationError?: Error } {
-    let validationError: Error | undefined = undefined;
+    let compilationError: Error | undefined = undefined;
+    let compiledValidator: ValidateFunction | undefined;
+    if (schema["$id"]) {
+      compiledValidator = this.ajv.getSchema(schema["$id"]);
+    }
     try {
-      this.ajv.validate(schema, formData);
+      if (compiledValidator === undefined) {
+        compiledValidator = this.ajv.compile(schema);
+      }
+      compiledValidator(formData);
     } catch (err) {
-      validationError = err as Error;
+      compilationError = err as Error;
     }
 
-    if (typeof this.localizer === "function") {
-      this.localizer(this.ajv.errors);
+    let errors;
+    if (compiledValidator) {
+      if (typeof this.localizer === "function") {
+        this.localizer(compiledValidator.errors);
+      }
+      errors = compiledValidator.errors || undefined;
+
+      // Clear errors to prevent persistent errors, see #1104
+      compiledValidator.errors = null;
     }
-    const errors = this.ajv.errors || undefined;
 
-    // Clear errors to prevent persistent errors, see #1104
-    this.ajv.errors = null;
-
-    return { errors: errors as unknown as Result[], validationError };
+    return {
+      errors: errors as unknown as Result[],
+      validationError: compilationError,
+    };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -366,25 +379,37 @@ export default class AJV8Validator<
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData- - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T, rootSchema: S) {
+    const rootSchemaId = rootSchema["$id"] ?? ROOT_SCHEMA_PREFIX;
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      const result = this.ajv
-        .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
-        .validate(this.withIdRefPrefix(schema), formData);
+      if (this.ajv.getSchema(rootSchemaId) === undefined) {
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      }
+      const schemaWithIdRefPrefix = this.withIdRefPrefix(schema) as S;
+      let compiledValidator: ValidateFunction | undefined;
+      if (schemaWithIdRefPrefix["$id"]) {
+        compiledValidator = this.ajv.getSchema(schemaWithIdRefPrefix["$id"]);
+      }
+      if (compiledValidator === undefined) {
+        compiledValidator = this.ajv.compile(schemaWithIdRefPrefix);
+      }
+      const result = compiledValidator(formData);
       return result as boolean;
     } catch (e) {
+      console.warn("Error encountered compiling schema:", e);
       return false;
     } finally {
+      // TODO: A function should be called if the root schema changes so we don't have to remove and recompile the schema every run.
       // make sure we remove the rootSchema from the global ajv instance
-      this.ajv.removeSchema(ROOT_SCHEMA_PREFIX);
+      this.ajv.removeSchema(rootSchemaId);
     }
   }
 

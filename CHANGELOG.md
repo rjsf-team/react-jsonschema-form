@@ -21,10 +21,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix Vite development server [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228)
 
 ## @rjsf/validator-ajv8
+- BREAKING CHANGE: Disable form data validation for invalid JSON Schemas. Use @rjsf/validator-ajv6 if you need to validate against invalid schemas.
 - Fix additionalProperties validation [#3213](https://github.com/rjsf-team/react-jsonschema-form/issues/3213)
 - Report all schema errors thrown by Ajv. Previously, we would only report errors thrown for a missing meta-schema. This behavior is unchanged for @rjsf/validator-ajv6.
 - Disable Ajv strict mode by default.
 - Add RJSF-specific additional properties keywords to Ajv to prevent errors from being reported in strict mode.
+- For JSON Schemas with `$id`s, use a pre-compiled Ajv validation function when available.
+- No longer fail to validate inner schemas with `$id`s, fixing [#2821](https://github.com/rjsf-team/react-jsonschema-form/issues/2181).
 
 # 5.0.0-beta.12
 
