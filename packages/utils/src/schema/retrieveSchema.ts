@@ -245,7 +245,9 @@ export default function retrieveSchema<
 
   if (ALL_OF_KEY in schema) {
     try {
-      resolvedSchema = mergeAllOf( resolvedSchema, { deep: false } as Options) as S;
+      resolvedSchema = mergeAllOf(resolvedSchema, {
+        deep: false,
+      } as Options) as S;
     } catch (e) {
       console.warn("could not merge subschemas in allOf:\n" + e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
