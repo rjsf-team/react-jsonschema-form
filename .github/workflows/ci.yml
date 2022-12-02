@@ -87,7 +87,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.6
+        python-version: "3.10"
     - run: pip install -r requirements.docs.txt
     - run: mkdocs build --clean
   # deploy_canary:
