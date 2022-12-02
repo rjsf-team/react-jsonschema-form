@@ -29,6 +29,9 @@ should change the heading of the (upcoming) version to include a major version b
 - For JSON Schemas with `$id`s, use a pre-compiled Ajv validation function when available.
 - No longer fail to validate inner schemas with `$id`s, fixing [#2821](https://github.com/rjsf-team/react-jsonschema-form/issues/2181).
 
+## @rjsf/antd
+- No longer render extra 0 for array without errors, fixing [#3233](https://github.com/rjsf-team/react-jsonschema-form/issues/3233)
+
 # 5.0.0-beta.12
 
 ## @rjsf/antd
