@@ -13,7 +13,9 @@ export type ThemeProps<
 > = Pick<
   FormProps<T, S, F>,
   "fields" | "templates" | "widgets" | "_internalFormWrapper"
->;
+> & {
+  ref?: React.Ref<Form<T, S, F>>;
+};
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
 export default function withTheme<
