@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta.14
+
+## @rjsf/core
+- Added `ref` definition to `ThemeProps` fixing [#2135](https://github.com/rjsf-team/react-jsonschema-form/issues/2135)
+
 # 5.0.0-beta.13
 
 ## @rjsf/playground
