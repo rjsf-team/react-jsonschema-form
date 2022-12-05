@@ -22,7 +22,7 @@ exports[`array fields array 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24 row array-item-list"
           style={
@@ -131,7 +131,7 @@ exports[`array fields array icons 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24 row array-item-list"
           style={
@@ -685,7 +685,7 @@ exports[`array fields checkboxes 1`] = `
                 aria-hidden={true}
                 className="ant-select-selection-search-mirror"
               >
-
+                
                  
               </span>
             </div>
@@ -731,7 +731,7 @@ exports[`array fields empty errors array 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24"
           style={
@@ -845,7 +845,7 @@ exports[`array fields fixed array 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24 row array-item-list"
           style={
@@ -1200,7 +1200,7 @@ exports[`array fields has errors 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24"
           style={
@@ -1337,7 +1337,7 @@ exports[`array fields no errors 1`] = `
           }
         }
       >
-
+        
         <div
           className="ant-col ant-col-24"
           style={
