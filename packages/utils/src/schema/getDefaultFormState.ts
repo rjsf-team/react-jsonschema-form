@@ -98,7 +98,7 @@ export function computeDefaults<
   parentDefaults?: T,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  includeUndefinedValues = false
+  includeUndefinedValues: boolean | "once" = false
 ): T | T[] | undefined {
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
@@ -187,9 +187,17 @@ export function computeDefaults<
             get(defaults, [key]),
             rootSchema,
             get(formData, [key]),
-            includeUndefinedValues
+            includeUndefinedValues === "once" ? false : includeUndefinedValues
           );
-          if (includeUndefinedValues || computedDefault !== undefined) {
+          if (includeUndefinedValues) {
+            acc[key] = computedDefault;
+          } else if (isObject(computedDefault)) {
+            // Store computedDefault if it's a non-empty object (e.g. not {})
+            if (!isEmpty(computedDefault)) {
+              acc[key] = computedDefault;
+            }
+          } else if (computedDefault !== undefined) {
+            // Store computedDefault if it's a defined primitive (e.g. true)
             acc[key] = computedDefault;
           }
           return acc;
@@ -272,7 +280,7 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  includeUndefinedValues = false
+  includeUndefinedValues: boolean | "once" = false
 ) {
   if (!isObject(theSchema)) {
     throw new Error("Invalid schema: " + theSchema);

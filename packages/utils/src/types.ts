@@ -957,7 +957,7 @@ export interface SchemaUtilsType<
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues?: boolean
+    includeUndefinedValues?: boolean | "once"
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.

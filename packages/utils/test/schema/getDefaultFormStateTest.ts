@@ -43,6 +43,114 @@ export default function getDefaultFormStateTest(
           foo: 42,
         });
       });
+      it("test computeDefaults that is passed an object with an optional object property that has a nested required property", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            optionalProperty: {
+              type: "object",
+              properties: {
+                nestedRequiredProperty: {
+                  type: "string",
+                },
+              },
+              required: ["nestedRequiredProperty"],
+            },
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
+          },
+          required: ["requiredProperty"],
+        };
+        expect(
+          computeDefaults(testValidator, schema, undefined, schema)
+        ).toEqual({ requiredProperty: "foo" });
+      });
+      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            optionalProperty: {
+              type: "object",
+              properties: {
+                nestedRequiredProperty: {
+                  type: "object",
+                  properties: {
+                    undefinedProperty: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              required: ["nestedRequiredProperty"],
+            },
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
+          },
+          required: ["requiredProperty"],
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            true
+          )
+        ).toEqual({
+          optionalProperty: {
+            nestedRequiredProperty: {
+              undefinedProperty: undefined,
+            },
+          },
+          requiredProperty: "foo",
+        });
+      });
+      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'once'", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            optionalProperty: {
+              type: "object",
+              properties: {
+                nestedRequiredProperty: {
+                  type: "object",
+                  properties: {
+                    undefinedProperty: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              required: ["nestedRequiredProperty"],
+            },
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
+          },
+          required: ["requiredProperty"],
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            "once"
+          )
+        ).toEqual({
+          optionalProperty: {
+            nestedRequiredProperty: undefined,
+          },
+          requiredProperty: "foo",
+        });
+      });
     });
     describe("root default", () => {
       it("should map root schema default to form state, if any", () => {

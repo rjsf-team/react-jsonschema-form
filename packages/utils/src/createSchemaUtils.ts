@@ -87,7 +87,7 @@ class SchemaUtils<
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues = false
+    includeUndefinedValues: boolean | "once" = false
   ): T | T[] | undefined {
     return getDefaultFormState<T, S>(
       this.validator,

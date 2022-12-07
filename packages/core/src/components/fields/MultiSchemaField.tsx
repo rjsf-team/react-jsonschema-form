@@ -133,7 +133,8 @@ class AnyOfField<
     onChange(
       schemaUtils.getDefaultFormState(
         options[selectedOption],
-        newFormData
+        newFormData,
+        "once"
       ) as T,
       undefined,
       this.getFieldId()

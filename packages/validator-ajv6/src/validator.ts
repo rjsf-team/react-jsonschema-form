@@ -259,17 +259,9 @@ export default class AJV6Validator<T = any>
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer
   ): ValidationData<T> {
-    // Include form data with undefined values, which is required for validation.
     const rootSchema = schema;
-    const newFormData = getDefaultFormState<T, RJSFSchema>(
-      this,
-      schema,
-      formData,
-      rootSchema,
-      true
-    ) as T;
 
-    const rawErrors = this.rawValidation<ErrorObject>(schema, newFormData);
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError } = rawErrors;
     let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
@@ -301,6 +293,15 @@ export default class AJV6Validator<T = any>
     if (typeof customValidate !== "function") {
       return { errors, errorSchema };
     }
+
+    // Include form data with undefined values, which is required for validation.
+    const newFormData = getDefaultFormState<T, RJSFSchema>(
+      this,
+      schema,
+      formData,
+      rootSchema,
+      true
+    ) as T;
 
     const errorHandler = customValidate(
       newFormData,
