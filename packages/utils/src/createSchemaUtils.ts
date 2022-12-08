@@ -81,13 +81,15 @@ class SchemaUtils<
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+   *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+   *          object properties.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | "once" = false
+    includeUndefinedValues: boolean | "excludeObjectChildren" = false
   ): T | T[] | undefined {
     return getDefaultFormState<T, S>(
       this.validator,

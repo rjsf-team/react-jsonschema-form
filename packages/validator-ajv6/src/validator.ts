@@ -294,7 +294,7 @@ export default class AJV6Validator<T = any>
       return { errors, errorSchema };
     }
 
-    // Include form data with undefined values, which is required for validation.
+    // Include form data with undefined values, which is required for custom validation.
     const newFormData = getDefaultFormState<T, RJSFSchema>(
       this,
       schema,

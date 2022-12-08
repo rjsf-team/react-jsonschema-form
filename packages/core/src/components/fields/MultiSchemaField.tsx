@@ -134,7 +134,7 @@ class AnyOfField<
       schemaUtils.getDefaultFormState(
         options[selectedOption],
         newFormData,
-        "once"
+        "excludeObjectChildren"
       ) as T,
       undefined,
       this.getFieldId()

@@ -17,8 +17,15 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta.14
 
+## @rjsf/antd
+- No longer render extra 0 for array without errors, fixing [#3233](https://github.com/rjsf-team/react-jsonschema-form/issues/3233)
+
 ## @rjsf/core
 - Added `ref` definition to `ThemeProps` fixing [#2135](https://github.com/rjsf-team/react-jsonschema-form/issues/2135)
+
+## @rjsf/utils
+- Updated `computedDefaults` (used by `getDefaultFormState`) to skip saving the computed default if it's an empty object unless `includeUndefinedValues` is truthy, fixing [#2150](https://github.com/rjsf-team/react-jsonschema-form/issues/2150) and [#2708](https://github.com/rjsf-team/react-jsonschema-form/issues/2708)
+- Expanded the `getDefaultFormState` util's `includeUndefinedValues` prop to accept a boolean or `"excludeObjectChildren"` if it does not want to include undefined values in nested objects
 
 # 5.0.0-beta.13
 
@@ -33,9 +40,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Add RJSF-specific additional properties keywords to Ajv to prevent errors from being reported in strict mode.
 - For JSON Schemas with `$id`s, use a pre-compiled Ajv validation function when available.
 - No longer fail to validate inner schemas with `$id`s, fixing [#2821](https://github.com/rjsf-team/react-jsonschema-form/issues/2181).
-
-## @rjsf/antd
-- No longer render extra 0 for array without errors, fixing [#3233](https://github.com/rjsf-team/react-jsonschema-form/issues/3233)
 
 # 5.0.0-beta.12
 

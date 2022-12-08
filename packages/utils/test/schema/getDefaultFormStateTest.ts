@@ -110,7 +110,7 @@ export default function getDefaultFormStateTest(
           requiredProperty: "foo",
         });
       });
-      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'once'", () => {
+      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
         const schema: RJSFSchema = {
           type: "object",
           properties: {
@@ -142,7 +142,7 @@ export default function getDefaultFormStateTest(
             undefined,
             schema,
             undefined,
-            "once"
+            "excludeObjectChildren"
           )
         ).toEqual({
           optionalProperty: {
