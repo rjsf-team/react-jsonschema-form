@@ -745,7 +745,7 @@ exports[`array fields empty errors array 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"

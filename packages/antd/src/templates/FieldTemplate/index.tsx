@@ -69,7 +69,7 @@ const FieldTemplate = ({
           colon={colon}
           extra={rawDescription && description}
           hasFeedback={schema.type !== "array" && schema.type !== "object"}
-          help={(!!rawHelp && help) || (rawErrors?.length && errors)}
+          help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
