@@ -292,16 +292,7 @@ export default class AJV8Validator<
     customValidate?: CustomValidator<T>,
     transformErrors?: ErrorTransformer
   ): ValidationData<T> {
-    // Include form data with undefined values, which is required for validation.
-    const newFormData = getDefaultFormState<T>(
-      this,
-      schema,
-      formData,
-      schema,
-      true
-    ) as T;
-
-    const rawErrors = this.rawValidation<ErrorObject>(schema, newFormData);
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
     let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
@@ -326,6 +317,15 @@ export default class AJV8Validator<
     if (typeof customValidate !== "function") {
       return { errors, errorSchema };
     }
+
+    // Include form data with undefined values, which is required for custom validation.
+    const newFormData = getDefaultFormState<T>(
+      this,
+      schema,
+      formData,
+      schema,
+      true
+    ) as T;
 
     const errorHandler = customValidate(
       newFormData,

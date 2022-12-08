@@ -659,7 +659,7 @@ describe("oneOf", () => {
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
-        formData: { lorem: undefined, ipsum: {} },
+        formData: { ipsum: {} },
       },
       "root__oneof_select"
     );

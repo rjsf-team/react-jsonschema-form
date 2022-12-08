@@ -86,7 +86,9 @@ export function getInnerSchemaForArrayItem<
  * @param [parentDefaults] - Any defaults provided by the parent field in the schema
  * @param [rootSchema] - The options root schema, used to primarily to look up `$ref`s
  * @param [rawFormData] - The current formData, if any, onto which to provide any missing defaults
- * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+ * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+ *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+ *          object properties.
  * @returns - The resulting `formData` with all the defaults provided
  */
 export function computeDefaults<
@@ -98,7 +100,7 @@ export function computeDefaults<
   parentDefaults?: T,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  includeUndefinedValues = false
+  includeUndefinedValues: boolean | "excludeObjectChildren" = false
 ): T | T[] | undefined {
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes.
@@ -187,9 +189,19 @@ export function computeDefaults<
             get(defaults, [key]),
             rootSchema,
             get(formData, [key]),
-            includeUndefinedValues
+            includeUndefinedValues === "excludeObjectChildren"
+              ? false
+              : includeUndefinedValues
           );
-          if (includeUndefinedValues || computedDefault !== undefined) {
+          if (includeUndefinedValues) {
+            acc[key] = computedDefault;
+          } else if (isObject(computedDefault)) {
+            // Store computedDefault if it's a non-empty object (e.g. not {})
+            if (!isEmpty(computedDefault)) {
+              acc[key] = computedDefault;
+            }
+          } else if (computedDefault !== undefined) {
+            // Store computedDefault if it's a defined primitive (e.g. true)
             acc[key] = computedDefault;
           }
           return acc;
@@ -261,7 +273,9 @@ export function computeDefaults<
  * @param theSchema - The schema for which the default state is desired
  * @param [formData] - The current formData, if any, onto which to provide any missing defaults
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
- * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+ * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+ *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+ *          object properties.
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -272,7 +286,7 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  includeUndefinedValues = false
+  includeUndefinedValues: boolean | "excludeObjectChildren" = false
 ) {
   if (!isObject(theSchema)) {
     throw new Error("Invalid schema: " + theSchema);

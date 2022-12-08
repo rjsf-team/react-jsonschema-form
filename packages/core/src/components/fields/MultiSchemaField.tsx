@@ -129,11 +129,13 @@ class AnyOfField<
         }
       }
     }
-    // Call getDefaultFormState to make sure defaults are populated on change.
+    // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
+    // so that only the root objects themselves are created without adding undefined children properties
     onChange(
       schemaUtils.getDefaultFormState(
         options[selectedOption],
-        newFormData
+        newFormData,
+        "excludeObjectChildren"
       ) as T,
       undefined,
       this.getFieldId()
