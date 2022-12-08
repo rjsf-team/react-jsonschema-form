@@ -581,7 +581,11 @@ export default class Form<
       };
     } else if (!noValidate && newErrorSchema) {
       const errorSchema = extraErrors
-        ? (mergeObjects(newErrorSchema, extraErrors, true) as ErrorSchema<T>)
+        ? (mergeObjects(
+            newErrorSchema,
+            extraErrors,
+            "preventDuplicates"
+          ) as ErrorSchema<T>)
         : newErrorSchema;
       state = {
         formData: newFormData,

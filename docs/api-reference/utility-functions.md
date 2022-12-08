@@ -257,7 +257,7 @@ Recursively merge deeply nested objects.
 #### Parameters
 - obj1: GenericObjectType - The first object to merge
 - obj2: GenericObjectType - The second object to merge
-- [concatArrays=false]: boolean - Optional flag that, when true, will cause arrays to be concatenated
+- [concatArrays=false]: boolean | "preventDuplicates" - Optional flag that, when true, will cause arrays to be concatenated. Use "preventDuplicates" to merge arrays in a manner that prevents any duplicate entries from being merged.
 
 #### Returns
 @returns - A new object that is the merge of the two given objects
