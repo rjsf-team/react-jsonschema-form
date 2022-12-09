@@ -45,7 +45,7 @@ Our latest version requires React 16+. You can also install `react-jsonschema-fo
 
 Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/core.cjs.production.min.js.map).
 
-> Note: The CDN version **does not** embed `react` or `react-dom`. If you want other distributions (i.e. umd, esm), look [here](https://unpkg.com/@rjsf/core/dist) for all releases
+> Note: The CDN version **does not** embed `react` or `react-dom`. If you want other distributions (i.e. umd, esm), look [here](https://unpkg.com/@rjsf/core/dist/) for all releases
 
 You'll also need to alias the default export property to use the Form component:
 
