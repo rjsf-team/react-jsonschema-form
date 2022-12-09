@@ -257,14 +257,14 @@ Recursively merge deeply nested objects.
 #### Parameters
 - obj1: GenericObjectType - The first object to merge
 - obj2: GenericObjectType - The second object to merge
-- [concatArrays=false]: boolean - Optional flag that, when true, will cause arrays to be concatenated
+- [concatArrays=false]: boolean | "preventDuplicates" - Optional flag that, when true, will cause arrays to be concatenated. Use "preventDuplicates" to merge arrays in a manner that prevents any duplicate entries from being merged.
 
 #### Returns
 @returns - A new object that is the merge of the two given objects
 
 ### mergeSchemas()
 Recursively merge deeply nested schemas.
-The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values.
+The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
 
 #### Parameters
 - obj1: GenericObjectType - The first object to merge

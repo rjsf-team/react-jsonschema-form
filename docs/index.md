@@ -40,12 +40,12 @@ Our latest version requires React 16+. You can also install `react-jsonschema-fo
 ### As a script served from a CDN
 
 ```html
-  <script src="https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js"></script>
+  <script src="https://unpkg.com/@rjsf/core/dist/core.cjs.production.min.js"></script>
 ```
 
-Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js.map).
+Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/core.cjs.production.min.js.map).
 
-> Note: The CDN version **does not** embed `react` or `react-dom`.
+> Note: The CDN version **does not** embed `react` or `react-dom`. If you want other distributions (i.e. umd, esm), look [here](https://unpkg.com/@rjsf/core/dist/) for all releases
 
 You'll also need to alias the default export property to use the Form component:
 

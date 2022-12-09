@@ -496,7 +496,7 @@ NOTE: The `ajv-i18n` validators implement the `Localizer` interface.
 
 Using a specific locale while including all of `ajv-i18n`:
 
- ```tsx
+```tsx
 import { RJSFSchema } from "@rjsf/utils";
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import localizer from "ajv-i18n";
@@ -514,7 +514,7 @@ render((
 
 Using a specific locale minimizing the bundle size
 
- ```tsx
+```tsx
 import { RJSFSchema } from "@rjsf/utils";
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import spanishLocalizer from "ajv-i18n/localize/es";
