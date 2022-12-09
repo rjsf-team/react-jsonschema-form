@@ -264,7 +264,7 @@ Recursively merge deeply nested objects.
 
 ### mergeSchemas()
 Recursively merge deeply nested schemas.
-The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values.
+The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
 
 #### Parameters
 - obj1: GenericObjectType - The first object to merge
