@@ -29,8 +29,8 @@ const RangeWidget = ({
 
   return (
     <>
-      <FormLabel required={required} id={id}>
-        {label}
+      <FormLabel required={required} htmlFor={id}>
+        {label || schema.title}
       </FormLabel>
       <Slider
         disabled={disabled || readonly}

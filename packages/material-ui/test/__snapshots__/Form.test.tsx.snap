@@ -1821,10 +1821,8 @@ exports[`single fields slider field 1`] = `
     >
       <label
         className="MuiFormLabel-root"
-        id="root"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <span
         className="MuiSlider-root MuiSlider-colorPrimary"
         id="root"
