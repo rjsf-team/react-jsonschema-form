@@ -34,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 - Added `ref` definition to `ThemeProps` fixing [#2135](https://github.com/rjsf-team/react-jsonschema-form/issues/2135)
 - Updated the `onChange` handler in `Form` to use the new `preventDuplicates` mode of `mergeObjects()` when merging `extraErrors` when live validation is off, fixing [#3169](https://github.com/rjsf-team/react-jsonschema-form/issues/3169)
+- Fix isObject to correctly identify 'Date' as not mergable with Object default value.
 
 ## @rjsf/material-ui
 - Fix RangeWidget missing htmlFor and schema.title [#3281](https://github.com/rjsf-team/react-jsonschema-form/pull/3281)

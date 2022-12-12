@@ -25,6 +25,10 @@ describe('isObject()', () => {
     const file = new File(["test"], "test.txt");
     expect(isObject(file)).toBe(false);
   });
+  it('returns false when a Date is provided', () => {
+    const date = new Date();
+    expect(isObject(date)).toBe(false);
+  });
   it('returns false when an array is provided', () => {
     expect(isObject(['foo'])).toBe(false);
   });
