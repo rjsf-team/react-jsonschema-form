@@ -63,7 +63,7 @@ const schema: RJSFSchema = {
 };
 
 const uiSchema: UiSchema = {
-  classNames: "custom-css-class"
+  "ui:classNames": "custom-css-class"
 };
 
 render((
@@ -94,10 +94,10 @@ const schema: RJSFSchema = {
 
 const uiSchema: UiSchema = {
   name: {
-    classNames: "custom-class-name"
+    "ui:classNames": "custom-class-name"
   },
   age: {
-    classNames: "custom-class-age"
+    "ui:classNames": "custom-class-age"
   }
 }
 
