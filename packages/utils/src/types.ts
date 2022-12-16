@@ -520,7 +520,9 @@ export type ArrayFieldTemplateItemType<
   readonly: boolean;
   /** A stable, unique key for the array item */
   key: string;
-  /** The uiSchema object for this field */
+  /** The schema object for this array item */
+  schema: S;
+  /** The uiSchema object for this array item */
   uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   registry: Registry<T, S, F>;

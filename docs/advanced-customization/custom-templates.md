@@ -222,6 +222,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
+- `schema`: The schema object for this array item.
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
