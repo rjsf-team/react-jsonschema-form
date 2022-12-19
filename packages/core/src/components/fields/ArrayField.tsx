@@ -862,6 +862,7 @@ class ArrayField<
       onReorderClick: this.onReorderClick,
       readonly,
       registry,
+      schema: itemSchema,
       uiSchema: itemUiSchema,
     };
   }
