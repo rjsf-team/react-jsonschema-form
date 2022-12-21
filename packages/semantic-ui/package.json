@@ -50,7 +50,7 @@
     "@types/react-test-renderer": "^17.0.2",
     "atob": "^2.0.3",
     "dts-cli": "^1.6.0",
-    "eslint": "^8.26.0",
+    "eslint": "^8.23.0",
     "nanoid": "^3.3.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -17,9 +17,7 @@ function CheckboxWidget(props: WidgetProps) {
     options,
     onFocus,
     formContext,
-    schema,
     uiSchema,
-    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
@@ -30,8 +28,6 @@ function CheckboxWidget(props: WidgetProps) {
       inverted: false,
     },
   });
-  const { schemaUtils } = registry;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const _onChange = (
     _: React.FormEvent<HTMLInputElement>,
     data: CheckboxProps
@@ -52,7 +48,7 @@ function CheckboxWidget(props: WidgetProps) {
       onBlur={_onBlur}
       onFocus={_onFocus}
       required={required}
-      label={displayLabel ? label || schema.title : false}
+      label={label || ""}
     />
   );
 }
