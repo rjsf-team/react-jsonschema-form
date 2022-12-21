@@ -151,6 +151,24 @@ export default function getDefaultFormStateTest(
           requiredProperty: "foo",
         });
       });
+      it("test computeDefaults handles an invalid property schema", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            invalidProperty: "not a valid property value",
+          },
+        } as RJSFSchema;
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            "excludeObjectChildren"
+          )
+        ).toEqual({});
+      });
     });
     describe("root default", () => {
       it("should map root schema default to form state, if any", () => {
