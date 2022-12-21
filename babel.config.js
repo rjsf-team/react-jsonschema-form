@@ -1,7 +1,7 @@
 const BABEL_ENV = process.env.BABEL_ENV;
 const IS_TEST = BABEL_ENV === "test"
 const ignore = IS_TEST ? [] : ['test/**/*.js']
-const targets = IS_TEST ? { node: "current" } : { browsers: "defaults" }
+const targets = IS_TEST ? { node: "current" } : {}
 
 module.exports = {
   presets: [
