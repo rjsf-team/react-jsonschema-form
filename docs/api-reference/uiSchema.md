@@ -90,7 +90,7 @@ See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/
 
 ### classNames
 
-The uiSchema object accepts a `classNames` property for each field of the schema:
+The uiSchema object accepts a `ui:classNames` property for each field of the schema:
 
 ```tsx
 import { UiSchema } from "@rjsf/utils";
