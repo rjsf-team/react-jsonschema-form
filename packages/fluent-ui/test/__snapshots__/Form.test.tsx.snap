@@ -76,7 +76,7 @@ exports[`single fields checkbox field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__103"
+              id="id__106"
             >
               Submit
             </span>
@@ -88,7 +88,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -110,6 +110,7 @@ exports[`single fields checkbox field 2`] = `
       <input
         aria-checked="false"
         aria-disabled={false}
+        aria-label="test"
         checked={false}
         className="input-127"
         disabled={false}
@@ -135,6 +136,12 @@ exports[`single fields checkbox field 2`] = `
             
           </i>
         </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-131"
+        >
+          test
+        </span>
       </label>
     </div>
     
@@ -164,7 +171,7 @@ exports[`single fields checkbox field 2`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__106"
+              id="id__103"
             >
               Submit
             </span>

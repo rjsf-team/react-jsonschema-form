@@ -57,6 +57,9 @@ exports[`single fields checkbox field 1`] = `
               />
             </svg>
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
@@ -67,7 +70,7 @@ exports[`single fields checkbox field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-21"
+    className="MuiBox-root MuiBox-root-22"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -91,12 +94,15 @@ exports[`single fields checkbox field 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -153,20 +159,17 @@ exports[`single fields checkbox field 2`] = `
               />
             </svg>
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
         >
-          
+          test
         </span>
       </label>
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-22"
+    className="MuiBox-root MuiBox-root-21"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -190,9 +193,6 @@ exports[`single fields checkbox field 2`] = `
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>

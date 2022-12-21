@@ -46,7 +46,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -67,7 +67,7 @@ exports[`single fields checkbox field 2`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="form-check-input position-static"
+            className="form-check-input"
             disabled={false}
             id="root"
             name="root"
@@ -76,6 +76,13 @@ exports[`single fields checkbox field 2`] = `
             onFocus={[Function]}
             type="checkbox"
           />
+          <label
+            className="form-check-label"
+            htmlFor="root"
+            title=""
+          >
+            test
+          </label>
         </div>
       </div>
     </div>
