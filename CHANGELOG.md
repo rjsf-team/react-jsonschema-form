@@ -18,6 +18,7 @@ should change the heading of the (upcoming) version to include a major version b
 # 5.0.0-beta-15
 ## @rjsf/semantic-ui
 - Fix CheckboxWidget missing label [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+
 # @rjsf/core
 - Pass the `schema` along to the `ArrayFieldItemTemplate` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)
 
