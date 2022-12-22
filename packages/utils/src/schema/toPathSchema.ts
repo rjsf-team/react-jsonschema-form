@@ -54,7 +54,7 @@ export default function toPathSchema<
 
   if (
     ADDITIONAL_PROPERTIES_KEY in schema &&
-    schema[ADDITIONAL_PROPERTIES_KEY] === true
+    schema[ADDITIONAL_PROPERTIES_KEY] !== false
   ) {
     set(pathSchema, RJSF_ADDITONAL_PROPERTIES_FLAG, true);
   }

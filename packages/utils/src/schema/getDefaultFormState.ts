@@ -96,13 +96,14 @@ export function computeDefaults<
   S extends StrictRJSFSchema = RJSFSchema
 >(
   validator: ValidatorType<T, S>,
-  schema: S,
+  rawSchema: S,
   parentDefaults?: T,
   rootSchema: S = {} as S,
   rawFormData?: T,
   includeUndefinedValues: boolean | "excludeObjectChildren" = false
 ): T | T[] | undefined {
   const formData = isObject(rawFormData) ? rawFormData : {};
+  let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults: T | T[] | undefined = parentDefaults;
   if (isObject(defaults) && isObject(schema.default)) {
