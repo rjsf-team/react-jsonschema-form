@@ -1,4 +1,4 @@
-// yarn r [package-short-name] [command]
+// npm run r [package-short-name] [command]
 const { exec } = require('child_process');
 
 const companyDir = '@rjsf/';
