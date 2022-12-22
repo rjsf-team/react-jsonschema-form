@@ -224,6 +224,71 @@ describe("AJV6Validator", () => {
           ]);
         });
       });
+      describe("Validating required fields", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+        describe("formData is not provided at top level", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              required: ["pass1", "pass2"],
+              properties: {
+                pass1: { type: "string" },
+                pass2: { type: "string" },
+              },
+            };
+
+            const formData = { pass1: "a" };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(".pass2 is a required property");
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.pass2!.__errors![0]).toEqual(
+              "is a required property"
+            );
+          });
+        });
+        describe("formData is not provided for nested child", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              properties: {
+                nested: {
+                  type: "object",
+                  required: ["pass1", "pass2"],
+                  properties: {
+                    pass1: { type: "string" },
+                    pass2: { type: "string" },
+                  },
+                },
+              },
+            };
+
+            const formData = { nested: { pass1: "a" } };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(
+              ".nested.pass2 is a required property"
+            );
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual(
+              "is a required property"
+            );
+          });
+        });
+      });
       describe("No custom validate function, single additionalProperties value", () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;

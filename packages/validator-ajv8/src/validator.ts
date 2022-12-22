@@ -203,7 +203,14 @@ export default class AJV8Validator<
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
       const { instancePath, keyword, message, params, schemaPath } = e;
-      const property = instancePath.replace(/\//g, ".");
+      let property = instancePath.replace(/\//g, ".");
+      let stack = `${property} ${message}`.trim();
+      if ("missingProperty" in params) {
+        property = property
+          ? `${property}.${params.missingProperty}`
+          : params.missingProperty;
+        stack = message!;
+      }
 
       // put data in expected format
       return {
@@ -211,7 +218,7 @@ export default class AJV8Validator<
         property,
         message,
         params, // specific to ajv
-        stack: `${property} ${message}`.trim(),
+        stack,
         schemaPath,
       };
     });

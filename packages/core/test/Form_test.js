@@ -2220,7 +2220,9 @@ describeRepeated("Form common", (createFormComponent) => {
               field1: {
                 __errors: ["must be number"],
               },
-              __errors: ["must have required property 'field2'"],
+              field2: {
+                __errors: ["must have required property 'field2'"],
+              },
             },
           },
           "root_field1"
