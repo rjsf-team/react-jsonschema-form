@@ -37,6 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv8
 - Updated the validator to use the `ErrorSchemaBuilder` in the `toErrorSchema()` function to simplify the implementation
+- Updated the validator to properly map missing required field errors in the `ErrorSchema`, fixing [#3260](https://github.com/rjsf-team/react-jsonschema-form/issues/3260)
 
 ## Dev / docs / playground
 - Fixed the documentation for `ArrayFieldItemTemplate` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)
