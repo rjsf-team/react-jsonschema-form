@@ -6,6 +6,7 @@ import {
   CustomValidator,
   ERRORS_KEY,
   ErrorSchema,
+  ErrorSchemaBuilder,
   ErrorTransformer,
   FieldValidation,
   FormValidation,
@@ -87,42 +88,23 @@ export default class AJV8Validator<
    * @private
    */
   private toErrorSchema(errors: RJSFValidationError[]): ErrorSchema<T> {
-    if (!errors.length) {
-      return {} as ErrorSchema<T>;
-    }
-    return errors.reduce(
-      (errorSchema: ErrorSchema<T>, error): ErrorSchema<T> => {
+    const builder = new ErrorSchemaBuilder<T>();
+    if (errors.length) {
+      errors.forEach((error) => {
         const { property, message } = error;
         const path = toPath(property);
-        let parent: GenericObjectType = errorSchema;
 
         // If the property is at the root (.level1) then toPath creates
         // an empty array element at the first index. Remove it.
         if (path.length > 0 && path[0] === "") {
           path.splice(0, 1);
         }
-
-        for (const segment of path.slice(0)) {
-          if (!(segment in parent)) {
-            parent[segment] = {};
-          }
-          parent = parent[segment];
+        if (message) {
+          builder.addErrors(message, path);
         }
-
-        if (Array.isArray(parent.__errors)) {
-          // We store the list of errors for this node in a property named __errors
-          // to avoid name collision with a possible sub schema field named
-          // 'errors' (see `validate.createErrorHandler`).
-          parent.__errors = parent.__errors.concat(message!);
-        } else {
-          if (message) {
-            parent.__errors = [message];
-          }
-        }
-        return errorSchema;
-      },
-      {} as ErrorSchema<T>
-    );
+      });
+    }
+    return builder.ErrorSchema;
   }
 
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
@@ -137,7 +119,7 @@ export default class AJV8Validator<
     let errorList: RJSFValidationError[] = [];
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
-        errorSchema.__errors!.map((message: string) => {
+        errorSchema[ERRORS_KEY]!.map((message: string) => {
           const property = `.${fieldPath.join(".")}`;
           return {
             property,

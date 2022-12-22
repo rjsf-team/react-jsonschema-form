@@ -1,5 +1,6 @@
 import {
   ErrorSchema,
+  ErrorSchemaBuilder,
   FormValidation,
   RJSFSchema,
   RJSFValidationError,
@@ -19,6 +20,13 @@ const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
 const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
 
 describe("AJV6Validator", () => {
+  let builder: ErrorSchemaBuilder;
+  beforeAll(() => {
+    builder = new ErrorSchemaBuilder();
+  });
+  afterEach(() => {
+    builder.resetAllErrors();
+  });
   describe("default options", () => {
     // Use the TestValidator to access the `withIdRefPrefix` function
     let validator: TestValidator;
@@ -111,17 +119,10 @@ describe("AJV6Validator", () => {
         expect(validator.toErrorList()).toEqual([]);
       });
       it("should convert an errorSchema into a flat list", () => {
-        const errorSchema: ErrorSchema = {
-          __errors: ["err1", "err2"],
-          a: {
-            b: {
-              __errors: ["err3", "err4"],
-            } as ErrorSchema,
-          },
-          c: {
-            __errors: ["err5"],
-          } as ErrorSchema,
-        } as unknown as ErrorSchema;
+        const errorSchema = builder
+          .addErrors(["err1", "err2"])
+          .addErrors(["err3", "err4"], "a.b")
+          .addErrors(["err5"], "c").ErrorSchema;
         expect(validator.toErrorList(errorSchema)).toEqual([
           { property: ".", message: "err1", stack: ". err1" },
           { property: ".", message: "err2", stack: ". err2" },
