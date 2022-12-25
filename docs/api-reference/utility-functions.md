@@ -544,3 +544,73 @@ The resulting interface implementation will forward the `validator` and `rootSch
 
 #### Returns
 - SchemaUtilsType<T, S, F> - An implementation of a `SchemaUtilsType` interface
+
+## ErrorSchema builder class
+
+### ErrorSchemaBuilder<T = any>(initialSchema?: ErrorSchema<T>) constructor
+The `ErrorSchemaBuilder<T>` is used to build an `ErrorSchema<T>` since the definition of the `ErrorSchema` type is designed for reading information rather than writing it.
+Use this class to add, replace or clear errors in an error schema by using either dotted path or an array of path names.
+Once you are done building the `ErrorSchema`, you can get the result and/or reset all the errors back to an initial set and start again.
+
+#### Parameters
+- [initialSchema]: ErrorSchema<T> - The optional set of initial errors, that will be cloned into the class
+
+#### Returns
+- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+
+### ErrorSchema getter function
+Returns the `ErrorSchema` that has been updated by the methods of the `ErrorSchemaBuilder`
+
+Usage:
+
+```ts
+import { ErrorSchemaBuilder, ErrorSchema } from "@rjsf/utils";
+
+const builder = new ErrorSchemaBuilder();
+
+// Do some work using the builder
+...
+
+const errorSchema: ErrorSchema = builder.ErrorSchema;
+```
+
+###  resetAllErrors()
+Resets all errors in the `ErrorSchemaBuilder` back to the `initialSchema` if provided, otherwise an empty set.
+
+#### Parameters
+- [initialSchema]: ErrorSchema<T> - The optional set of initial errors, that will be cloned into the class
+
+#### Returns
+- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+
+### addErrors()
+Adds the `errorOrList` to the list of errors in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
+For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+
+#### Parameters
+- errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
+- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+
+#### Returns
+- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+
+### setErrors()
+Sets/replaces the `errorOrList` as the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
+For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+
+#### Parameters
+- errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
+- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+
+#### Returns
+- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+
+### clearErrors()
+Clears the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
+For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
+
+#### Parameters
+- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+
+#### Returns
+- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
