@@ -1,13 +1,12 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, schemaRequiresTrueValue } from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
 
 const CheckboxWidget = (props: WidgetProps) => {
   const {
     id,
     value,
-    required,
     disabled,
     readonly,
     label,
@@ -17,6 +16,10 @@ const CheckboxWidget = (props: WidgetProps) => {
     onBlur,
     onFocus,
   } = props;
+  // Because an unchecked checkbox will cause html5 validation to fail, only add
+  // the "required" attribute if the field value must be "true", due to the
+  // "const" or "enum" keywords
+  const required = schemaRequiresTrueValue(schema);
 
   const _onChange = ({
     target: { checked },

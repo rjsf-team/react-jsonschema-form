@@ -5,6 +5,7 @@ import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
 
 const AddButton: React.ComponentType<IconButtonProps> = ({
   uiSchema,
+  registry,
   ...props
 }) => (
   <Button

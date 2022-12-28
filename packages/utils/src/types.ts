@@ -510,6 +510,8 @@ export type ArrayFieldTemplateItemType<
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
+  /** A number stating the total number `items` in the array */
+  totalItems: number;
   /** Returns a function that adds a new item at `index` */
   onAddIndexClick: (index: number) => (event?: any) => void;
   /** Returns a function that removes the item at `index` */
@@ -711,6 +713,8 @@ export type SubmitButtonProps<
 > = {
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
 };
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
@@ -725,6 +729,8 @@ export type IconButtonProps<
   icon?: string | React.ReactElement;
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
 };
 
 /** The type that defines how to change the behavior of the submit button for the form */

@@ -1,5 +1,5 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import { WidgetProps, schemaRequiresTrueValue } from "@rjsf/utils";
 import { Form, CheckboxProps } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
@@ -7,7 +7,6 @@ function CheckboxWidget(props: WidgetProps) {
   const {
     id,
     value,
-    required,
     disabled,
     readonly,
     label,
@@ -19,7 +18,6 @@ function CheckboxWidget(props: WidgetProps) {
     formContext,
     schema,
     uiSchema,
-    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps({
@@ -30,8 +28,10 @@ function CheckboxWidget(props: WidgetProps) {
       inverted: false,
     },
   });
-  const { schemaUtils } = registry;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+  // Because an unchecked checkbox will cause html5 validation to fail, only add
+  // the "required" attribute if the field value must be "true", due to the
+  // "const" or "enum" keywords
+  const required = schemaRequiresTrueValue(schema);
   const _onChange = (
     _: React.FormEvent<HTMLInputElement>,
     data: CheckboxProps
@@ -52,7 +52,7 @@ function CheckboxWidget(props: WidgetProps) {
       onBlur={_onBlur}
       onFocus={_onFocus}
       required={required}
-      label={displayLabel ? label || schema.title : false}
+      label={label || ""}
     />
   );
 }

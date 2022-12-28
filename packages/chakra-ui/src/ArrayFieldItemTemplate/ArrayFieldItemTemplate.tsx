@@ -45,6 +45,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onArrowUpClick}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -52,6 +53,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onArrowDownClick}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {hasRemove && (
@@ -59,6 +61,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly}
                 onClick={onRemoveClick}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
           </ButtonGroup>

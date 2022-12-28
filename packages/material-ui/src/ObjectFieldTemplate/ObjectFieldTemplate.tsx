@@ -82,6 +82,7 @@ const ObjectFieldTemplate = ({
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </Grid>
           </Grid>

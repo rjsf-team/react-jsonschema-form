@@ -79,6 +79,7 @@ const ObjectFieldTemplate = ({
                 disabled={disabled || readonly}
                 className="object-property-expand"
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </Col>
           </Row>

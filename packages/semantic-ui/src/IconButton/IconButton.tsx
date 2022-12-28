@@ -3,7 +3,15 @@ import { IconButtonProps } from "@rjsf/utils";
 import { Button, ButtonProps } from "semantic-ui-react";
 
 function IconButton(props: IconButtonProps) {
-  const { icon, iconType, color, className, uiSchema, ...otherProps } = props;
+  const {
+    icon,
+    iconType,
+    color,
+    className,
+    uiSchema,
+    registry,
+    ...otherProps
+  } = props;
   return (
     <Button
       icon={icon}

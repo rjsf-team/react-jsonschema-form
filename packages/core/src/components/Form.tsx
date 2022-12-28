@@ -834,7 +834,11 @@ export default class Form<
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? children : <SubmitButton uiSchema={uiSchema} />}
+        {children ? (
+          children
+        ) : (
+          <SubmitButton uiSchema={uiSchema} registry={registry} />
+        )}
         {showErrorList === "bottom" && this.renderErrors(registry)}
       </FormTag>
     );

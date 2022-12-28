@@ -14,7 +14,7 @@ export default function AddButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ className, onClick, disabled }: IconButtonProps<T, S, F>) {
+>({ className, onClick, disabled, registry }: IconButtonProps<T, S, F>) {
   return (
     <div className="row">
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
@@ -25,6 +25,7 @@ export default function AddButton<
           title="Add"
           onClick={onClick}
           disabled={disabled}
+          registry={registry}
         />
       </p>
     </div>

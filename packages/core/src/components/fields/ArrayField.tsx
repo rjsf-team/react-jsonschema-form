@@ -192,13 +192,14 @@ class ArrayField<
     return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
   };
 
-  /** Callback handler for when the user clicks on the add button. Creates a new row of keyed form data at the end of
-   * the list, adding it into the state, and then returning `onChange()` with the plain form data converted from the
-   * keyed data
+  /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
+   * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
+   * the state, and then returning `onChange()` with the plain form data converted from the keyed data
    *
    * @param event - The event for the click
+   * @param [index] - The optional index at which to add the new data
    */
-  onAddClick = (event: MouseEvent) => {
+  _handleAddClick(event: MouseEvent, index?: number) {
     if (event) {
       event.preventDefault();
     }
@@ -209,7 +210,12 @@ class ArrayField<
       key: generateRowId(),
       item: this._getNewFormDataRow(),
     };
-    const newKeyedFormData = [...keyedFormData, newKeyedFormDataRow];
+    const newKeyedFormData = [...keyedFormData];
+    if (index !== undefined) {
+      newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
+    } else {
+      newKeyedFormData.push(newKeyedFormDataRow);
+    }
     this.setState(
       {
         keyedFormData: newKeyedFormData,
@@ -217,6 +223,16 @@ class ArrayField<
       },
       () => onChange(keyedToPlainFormData(newKeyedFormData))
     );
+  }
+
+  /** Callback handler for when the user clicks on the add button. Creates a new row of keyed form data at the end of
+   * the list, adding it into the state, and then returning `onChange()` with the plain form data converted from the
+   * keyed data
+   *
+   * @param event - The event for the click
+   */
+  onAddClick = (event: MouseEvent) => {
+    this._handleAddClick(event);
   };
 
   /** Callback handler for when the user clicks on the add button on an existing array element. Creates a new row of
@@ -227,25 +243,7 @@ class ArrayField<
    */
   onAddIndexClick = (index: number) => {
     return (event: MouseEvent) => {
-      if (event) {
-        event.preventDefault();
-      }
-      const { onChange } = this.props;
-      const { keyedFormData } = this.state;
-      const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
-        item: this._getNewFormDataRow(),
-      };
-      const newKeyedFormData = [...keyedFormData];
-      newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
-
-      this.setState(
-        {
-          keyedFormData: newKeyedFormData,
-          updatedKeyedFormData: true,
-        },
-        () => onChange(keyedToPlainFormData(newKeyedFormData))
-      );
+      this._handleAddClick(event, index);
     };
   };
 
@@ -478,6 +476,7 @@ class ArrayField<
           onBlur,
           onFocus,
           rawErrors,
+          totalItems: keyedFormData.length,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -739,6 +738,7 @@ class ArrayField<
           onBlur,
           onFocus,
           rawErrors,
+          totalItems: keyedFormData.length,
         });
       }),
       onAddClick: this.onAddClick,
@@ -781,6 +781,7 @@ class ArrayField<
     onBlur: FieldProps<T[], S, F>["onBlur"];
     onFocus: FieldProps<T[], S, F>["onFocus"];
     rawErrors?: string[];
+    totalItems: number;
   }) {
     const {
       key,
@@ -798,6 +799,7 @@ class ArrayField<
       onBlur,
       onFocus,
       rawErrors,
+      totalItems,
     } = props;
     const {
       disabled,
@@ -856,6 +858,7 @@ class ArrayField<
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
       index,
+      totalItems,
       key,
       onAddIndexClick: this.onAddIndexClick,
       onDropIndexClick: this.onDropIndexClick,

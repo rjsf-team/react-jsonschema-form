@@ -66,6 +66,7 @@ const WrapIfAdditionalTemplate = ({
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
               uiSchema={uiSchema}
+              registry={registry}
             />
           </Grid.Column>
         </Grid.Row>

@@ -217,6 +217,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `hasRemove`: A boolean value stating whether the array item can be removed.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
+- `totalItems`: A number stating the total number `items` in the array.
 - `key`: A stable, unique key for the array item.
 - `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
@@ -849,6 +850,7 @@ Each button template (except for the `SubmitButton`) accepts, as props, the stan
 - `iconType`: An alternative specification for the type of the icon button.
 - `icon`: The name representation or actual react element implementation for the icon.
 - `uiSchema`: The uiSchema object for this field.
+- `registry`: The `registry` object.
 
 ### AddButton
 
@@ -1003,3 +1005,4 @@ render((
 The following prop is passed to a `SubmitButton`:
 
 - `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
+- `registry`: The `registry` object.

@@ -10,7 +10,13 @@ import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
 export type AntdIconButtonProps = Omit<IconButtonProps, "type">;
 
 export default function IconButton(props: AntdIconButtonProps & ButtonProps) {
-  const { iconType = "default", icon, uiSchema, ...otherProps } = props;
+  const {
+    iconType = "default",
+    icon,
+    uiSchema,
+    registry,
+    ...otherProps
+  } = props;
   return <Button type={iconType as ButtonType} icon={icon} {...otherProps} />;
 }
 

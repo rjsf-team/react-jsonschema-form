@@ -43,6 +43,7 @@ const ArrayFieldItemTemplate = ({
                 onClick={onReorderClick(index, index - 1)}
                 style={BTN_STYLE}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -51,6 +52,7 @@ const ArrayFieldItemTemplate = ({
                 onClick={onReorderClick(index, index + 1)}
                 style={BTN_STYLE}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {hasRemove && (
@@ -59,6 +61,7 @@ const ArrayFieldItemTemplate = ({
                 onClick={onDropIndexClick(index)}
                 style={BTN_STYLE}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
           </Button.Group>

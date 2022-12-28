@@ -157,6 +157,7 @@ const ObjectFieldTemplate = ({
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </Col>
           </Row>

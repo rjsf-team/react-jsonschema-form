@@ -97,6 +97,7 @@ const WrapIfAdditionalTemplate = ({
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={buttonUiOptions}
+            registry={registry}
           />
         </Col>
       </Row>

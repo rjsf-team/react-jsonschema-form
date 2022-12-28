@@ -70,6 +70,7 @@ function ObjectFieldTemplate({
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </div>
           </Grid.Row>

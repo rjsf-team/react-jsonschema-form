@@ -74,6 +74,7 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                 onClick={onAddClick}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </Box>
           </GridItem>
