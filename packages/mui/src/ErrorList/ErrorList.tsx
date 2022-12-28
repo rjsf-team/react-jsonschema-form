@@ -7,9 +7,22 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { ErrorListProps } from "@rjsf/utils";
+import {
+  ErrorListProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ErrorList = ({ errors }: ErrorListProps) => {
+/** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
+ *
+ * @param props - The `ErrorListProps` for this component
+ */
+export default function ErrorList<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ errors }: ErrorListProps<T, S, F>) {
   return (
     <Paper elevation={2}>
       <Box mb={2} p={2}>
@@ -29,6 +42,4 @@ const ErrorList = ({ errors }: ErrorListProps) => {
       </Box>
     </Paper>
   );
-};
-
-export default ErrorList;
+}

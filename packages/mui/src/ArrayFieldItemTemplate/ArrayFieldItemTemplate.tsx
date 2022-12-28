@@ -2,9 +2,22 @@ import React, { CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     disabled,
@@ -70,6 +83,4 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
       )}
     </Grid>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}
