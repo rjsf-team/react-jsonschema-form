@@ -2,7 +2,7 @@ import React from "react";
 import { IconButtonProps } from "@rjsf/utils";
 import { Button, Icon, ButtonProps } from "semantic-ui-react";
 
-function AddButton({ uiSchema, color, ...props }: IconButtonProps) {
+function AddButton({ uiSchema, registry, color, ...props }: IconButtonProps) {
   return (
     <Button
       title="Add Item"

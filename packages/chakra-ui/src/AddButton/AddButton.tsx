@@ -5,6 +5,7 @@ import { AddIcon } from "@chakra-ui/icons";
 
 const AddButton: React.ComponentType<IconButtonProps> = ({
   uiSchema,
+  registry,
   ...props
 }) => (
   <Button leftIcon={<AddIcon />} {...props}>

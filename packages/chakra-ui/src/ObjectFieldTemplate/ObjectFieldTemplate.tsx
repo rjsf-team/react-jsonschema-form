@@ -76,6 +76,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
               uiSchema={uiSchema}
+              registry={registry}
             />
           </GridItem>
         )}

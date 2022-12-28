@@ -34,6 +34,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -41,6 +42,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {hasRemove && (
@@ -48,6 +50,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
           </div>

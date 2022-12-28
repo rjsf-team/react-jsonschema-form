@@ -5,6 +5,7 @@ import { IconButtonProps } from "@rjsf/utils";
 
 const AddButton: React.ComponentType<IconButtonProps> = ({
   uiSchema,
+  registry,
   ...props
 }) => {
   return (

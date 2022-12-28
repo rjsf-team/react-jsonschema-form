@@ -53,7 +53,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -89,7 +89,7 @@ exports[`single fields checkbox field 2`] = `
         />
       </span>
       <span>
-        
+        test
       </span>
     </label>
   </div>

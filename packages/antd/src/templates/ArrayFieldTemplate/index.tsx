@@ -105,6 +105,7 @@ const ArrayFieldTemplate = ({
                   disabled={disabled || readonly}
                   onClick={onAddClick}
                   uiSchema={uiSchema}
+                  registry={registry}
                 />
               </Col>
             </Row>

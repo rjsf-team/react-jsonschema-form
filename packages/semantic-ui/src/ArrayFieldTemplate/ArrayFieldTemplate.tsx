@@ -109,6 +109,7 @@ function ArrayFieldTemplate({
               onClick={onAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}
+              registry={registry}
             />
           </div>
         )}

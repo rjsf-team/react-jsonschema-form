@@ -65,6 +65,7 @@ export default function WrapIfAdditionalTemplate<
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={uiSchema}
+            registry={registry}
           />
         </div>
       </div>
