@@ -21,10 +21,12 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
+  PROPERTIES_KEY,
 } from "@rjsf/utils";
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
+import { get } from "lodash";
 
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
@@ -202,16 +204,35 @@ export default class AJV8Validator<
    * @private
    */
   private transformRJSFValidationErrors(
+    schema: S,
     errors: ErrorObject[] = []
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
-      const { instancePath, keyword, message, params, schemaPath } = e;
+      const { instancePath, keyword, params, schemaPath, ...rest } = e;
+      let { message } = rest;
+
       let property = instancePath.replace(/\//g, ".");
       let stack = `${property} ${message}`.trim();
+
       if ("missingProperty" in params) {
         property = property
           ? `${property}.${params.missingProperty}`
           : params.missingProperty;
+
+        const paths = property.replace(/^\./, "").split(".");
+        const titlePath = paths
+          .map((p, i) =>
+            i !== paths.length - 1 ? `${p}.${PROPERTIES_KEY}.` : `${p}.title`
+          )
+          .join("");
+
+        const title = get(schema, `${PROPERTIES_KEY}.${titlePath}`);
+
+        if (title) {
+          const existing = property.split(".").slice(-1)[0];
+          message = message?.replace(existing, title);
+        }
+
         stack = message!;
       }
 
@@ -288,7 +309,7 @@ export default class AJV8Validator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
-    let errors = this.transformRJSFValidationErrors(rawErrors.errors);
+    let errors = this.transformRJSFValidationErrors(schema, rawErrors.errors);
 
     if (invalidSchemaError) {
       errors = [...errors, { stack: invalidSchemaError!.message }];
