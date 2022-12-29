@@ -1,8 +1,17 @@
 import React, { useMemo } from "react";
 import { Box, ButtonGroup, HStack } from "@chakra-ui/react";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     disabled,
@@ -69,6 +78,4 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
       )}
     </HStack>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}

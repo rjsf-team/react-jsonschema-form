@@ -1,2 +1,2 @@
-export { default } from "./IconButton";
+export { default } from "./ChakraIconButton";
 export * from "./IconButton";

@@ -1,9 +1,19 @@
 import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const BaseInputTemplate = (props: WidgetProps) => {
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     type,
@@ -23,7 +33,7 @@ const BaseInputTemplate = (props: WidgetProps) => {
     disabled,
     registry,
   } = props;
-  const inputProps = getInputProps(schema, type, options);
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
 
@@ -78,6 +88,4 @@ const BaseInputTemplate = (props: WidgetProps) => {
       ) : null}
     </FormControl>
   );
-};
-
-export default BaseInputTemplate;
+}

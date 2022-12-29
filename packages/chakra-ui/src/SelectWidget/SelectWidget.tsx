@@ -1,10 +1,20 @@
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  processSelectValue,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 import { GroupBase, OptionsOrGroups, Select } from "chakra-react-select";
 
-const SelectWidget = (props: WidgetProps) => {
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -28,7 +38,7 @@ const SelectWidget = (props: WidgetProps) => {
 
   const _onMultiChange = (e: any) => {
     return onChange(
-      processSelectValue(
+      processSelectValue<T, S, F>(
         schema,
         e.map((v: { label: any; value: any }) => {
           return v.value;
@@ -39,16 +49,16 @@ const SelectWidget = (props: WidgetProps) => {
   };
 
   const _onChange = (e: any) => {
-    return onChange(processSelectValue(schema, e.value, options));
+    return onChange(processSelectValue<T, S, F>(schema, e.value, options));
   };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, processSelectValue(schema, value, options));
+    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
 
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, processSelectValue(schema, value, options));
+    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
 
   const _valueLabelMap: any = {};
   (enumOptions as any).map((option: any) => {
@@ -99,6 +109,4 @@ const SelectWidget = (props: WidgetProps) => {
       />
     </FormControl>
   );
-};
-
-export default SelectWidget;
+}
