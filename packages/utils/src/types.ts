@@ -500,6 +500,8 @@ export type ArrayFieldTemplateItemType<
   className: string;
   /** A boolean value stating if the array item is disabled */
   disabled: boolean;
+  /** A boolean value stating whether new items can be added to the array */
+  canAdd: boolean;
   /** A boolean value stating whether the array item can be moved down */
   hasMoveDown: boolean;
   /** A boolean value stating whether the array item can be moved up */
