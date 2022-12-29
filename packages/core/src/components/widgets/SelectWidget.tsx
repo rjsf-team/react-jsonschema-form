@@ -50,7 +50,10 @@ function SelectWidget<
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onFocus(id, processSelectValue(schema, newValue, options));
+      return onFocus(
+        id,
+        processSelectValue<T, S, F>(schema, newValue, options)
+      );
     },
     [onFocus, id, schema, multiple, options]
   );
@@ -58,7 +61,7 @@ function SelectWidget<
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onBlur(id, processSelectValue(schema, newValue, options));
+      return onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
     },
     [onBlur, id, schema, multiple, options]
   );
@@ -66,7 +69,7 @@ function SelectWidget<
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onChange(processSelectValue(schema, newValue, options));
+      return onChange(processSelectValue<T, S, F>(schema, newValue, options));
     },
     [onChange, schema, multiple, options]
   );

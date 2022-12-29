@@ -73,7 +73,7 @@ export default function ObjectFieldTemplate<
         />
       )}
       {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
-      {canExpand(schema, uiSchema, formData) && (
+      {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
           className="object-property-expand"
           onClick={onAddClick(schema)}
