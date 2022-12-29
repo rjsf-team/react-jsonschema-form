@@ -1,9 +1,18 @@
 import React from "react";
-
-import { WidgetProps, schemaRequiresTrueValue } from "@rjsf/utils";
+import {
+  WidgetProps,
+  schemaRequiresTrueValue,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
 
-const CheckboxWidget = (props: WidgetProps) => {
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -51,6 +60,4 @@ const CheckboxWidget = (props: WidgetProps) => {
       />
     </Form.Group>
   );
-};
-
-export default CheckboxWidget;
+}

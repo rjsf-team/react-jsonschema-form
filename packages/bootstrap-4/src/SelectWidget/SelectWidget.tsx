@@ -2,9 +2,19 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  processSelectValue,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const SelectWidget = ({
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -19,7 +29,7 @@ const SelectWidget = ({
   onFocus,
   placeholder,
   rawErrors = [],
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : "";
@@ -84,6 +94,4 @@ const SelectWidget = ({
       })}
     </Form.Control>
   );
-};
-
-export default SelectWidget;
+}

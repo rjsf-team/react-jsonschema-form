@@ -1,7 +1,16 @@
 import React from "react";
-import { DescriptionFieldProps } from "@rjsf/utils";
+import {
+  DescriptionFieldProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const DescriptionField = ({ id, description }: DescriptionFieldProps) => {
+export default function DescriptionField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ id, description }: DescriptionFieldProps<T, S, F>) {
   if (description) {
     return (
       <div>
@@ -13,6 +22,4 @@ const DescriptionField = ({ id, description }: DescriptionFieldProps) => {
   }
 
   return null;
-};
-
-export default DescriptionField;
+}

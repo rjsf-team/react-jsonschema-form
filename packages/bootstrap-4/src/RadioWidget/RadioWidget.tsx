@@ -2,9 +2,18 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const RadioWidget = ({
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   schema,
   options,
@@ -15,7 +24,7 @@ const RadioWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const _onChange = ({
@@ -60,6 +69,4 @@ const RadioWidget = ({
         })}
     </Form.Group>
   );
-};
-
-export default RadioWidget;
+}
