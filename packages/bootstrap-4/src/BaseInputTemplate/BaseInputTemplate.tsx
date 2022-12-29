@@ -30,7 +30,10 @@ export default function BaseInputTemplate<
   children,
   extraProps,
 }: WidgetProps<T, S, F>) {
-  const inputProps = { ...extraProps, ...getInputProps(schema, type, options) };
+  const inputProps = {
+    ...extraProps,
+    ...getInputProps<T, S, F>(schema, type, options),
+  };
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>

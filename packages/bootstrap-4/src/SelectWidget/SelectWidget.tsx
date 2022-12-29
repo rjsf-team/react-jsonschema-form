@@ -64,19 +64,19 @@ export default function SelectWidget<
         onBlur &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, processSelectValue(schema, newValue, options));
+          onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
         })
       }
       onFocus={
         onFocus &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(id, processSelectValue(schema, newValue, options));
+          onFocus(id, processSelectValue<T, S, F>(schema, newValue, options));
         })
       }
       onChange={(event: React.ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(processSelectValue(schema, newValue, options));
+        onChange(processSelectValue<T, S, F>(schema, newValue, options));
       }}
     >
       {!multiple && schema.default === undefined && (
