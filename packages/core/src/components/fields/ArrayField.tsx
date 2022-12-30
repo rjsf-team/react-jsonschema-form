@@ -443,8 +443,9 @@ class ArrayField<
       : ({} as S);
     const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
+    const canAdd = this.canAddItem(formData);
     const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
-      canAdd: this.canAddItem(formData),
+      canAdd,
       items: keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
         // While we are actually dealing with a single item of type T, the types require a T[], so cast
@@ -465,6 +466,7 @@ class ArrayField<
           key,
           index,
           name: name && `${name}-${index}`,
+          canAdd,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
           itemSchema,
@@ -690,8 +692,9 @@ class ArrayField<
     }
 
     // These are the props passed into the render function
+    const canAdd = this.canAddItem(items) && !!additionalSchema;
     const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
-      canAdd: this.canAddItem(items) && !!additionalSchema,
+      canAdd,
       className: "field field-array field-array-fixed-items",
       disabled,
       idSchema,
@@ -726,6 +729,7 @@ class ArrayField<
           key,
           index,
           name: name && `${name}-${index}`,
+          canAdd,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
           canMoveDown: additional && index < items.length - 1,
@@ -769,6 +773,7 @@ class ArrayField<
     key: string;
     index: number;
     name: string;
+    canAdd: boolean;
     canRemove?: boolean;
     canMoveUp?: boolean;
     canMoveDown?: boolean;
@@ -787,6 +792,7 @@ class ArrayField<
       key,
       index,
       name,
+      canAdd,
       canRemove = true,
       canMoveUp = true,
       canMoveDown = true,
@@ -853,6 +859,7 @@ class ArrayField<
       ),
       className: "array-item",
       disabled,
+      canAdd,
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
