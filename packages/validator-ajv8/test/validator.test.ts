@@ -1382,6 +1382,69 @@ describe("AJV8Validator", () => {
             );
           });
         });
+        describe("title is in validation messages at the top level", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              required: ["firstName", "lastName"],
+              properties: {
+                firstName: { title: "First Name", type: "string" },
+                lastName: { title: "Last Name", type: "string" },
+              },
+            };
+
+            const formData = { firstName: "a" };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(
+              "must have required property 'Last Name'"
+            );
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.lastName!.__errors![0]).toEqual(
+              "must have required property 'Last Name'"
+            );
+          });
+        });
+        describe("title is in validation message with a nested child", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              properties: {
+                nested: {
+                  type: "object",
+                  required: ["firstName", "lastName"],
+                  properties: {
+                    firstName: { type: "string", title: "First Name" },
+                    lastName: { type: "string", title: "Last Name" },
+                  },
+                },
+              },
+            };
+
+            const formData = { nested: { firstName: "a" } };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(
+              "must have required property 'Last Name'"
+            );
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.nested!.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.lastName!.__errors![0]).toEqual(
+              "must have required property 'Last Name'"
+            );
+          });
+        });
       });
       describe("No custom validate function, single additionalProperties value", () => {
         let errors: RJSFValidationError[];
