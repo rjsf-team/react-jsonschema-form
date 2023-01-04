@@ -77,7 +77,7 @@ export default function ObjectFieldTemplate<
             </GridItem>
           )
         )}
-        {canExpand(schema, uiSchema, formData) && (
+        {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <GridItem justifySelf="flex-end">
             <AddButton
               className="object-property-expand"

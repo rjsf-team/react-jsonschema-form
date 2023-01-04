@@ -37,7 +37,7 @@ export default function RangeWidget<
   const { schemaUtils } = registry;
   const chakraProps = getChakra({ uiSchema });
 
-  const sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const displayLabel =
     schemaUtils.getDisplayLabel(schema, uiSchema) &&
