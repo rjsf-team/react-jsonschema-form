@@ -5,23 +5,36 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 
-const WrapIfAdditionalTemplate = ({
-  children,
-  classNames,
-  disabled,
-  id,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: WrapIfAdditionalTemplateProps) => {
+/** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
+ * part of an `additionalProperties` part of a schema.
+ *
+ * @param props - The `WrapIfAdditionalProps` for this component
+ */
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const {
+    children,
+    classNames,
+    disabled,
+    id,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
@@ -76,6 +89,4 @@ const WrapIfAdditionalTemplate = ({
       </Grid>
     </Grid>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

@@ -1,22 +1,38 @@
 import React from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import Slider from "@material-ui/core/Slider";
-import { WidgetProps, rangeSpec } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  rangeSpec,
+} from "@rjsf/utils";
 
-const RangeWidget = ({
-  value,
-  readonly,
-  disabled,
-  onBlur,
-  onFocus,
-  options,
-  schema,
-  onChange,
-  required,
-  label,
-  id,
-}: WidgetProps) => {
-  const sliderProps = { value, label, id, name: id, ...rangeSpec(schema) };
+/** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
+ * in a div, with the value along side it.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    value,
+    readonly,
+    disabled,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    onChange,
+    required,
+    label,
+    id,
+  } = props;
+  const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
   const _onChange = (_: any, value?: number | number[]) => {
     onChange(value ? value : options.emptyValue);
@@ -42,6 +58,4 @@ const RangeWidget = ({
       />
     </>
   );
-};
-
-export default RangeWidget;
+}
