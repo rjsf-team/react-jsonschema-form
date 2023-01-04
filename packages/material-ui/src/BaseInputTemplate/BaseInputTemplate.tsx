@@ -1,29 +1,46 @@
 import React from "react";
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const BaseInputTemplate = ({
-  id,
-  placeholder,
-  required,
-  readonly,
-  disabled,
-  type,
-  label,
-  value,
-  onChange,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  uiSchema,
-  rawErrors = [],
-  formContext,
-  registry,
-  ...textFieldProps
-}: WidgetProps) => {
-  const inputProps = getInputProps(schema, type, options);
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    placeholder,
+    required,
+    readonly,
+    disabled,
+    type,
+    label,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    schema,
+    uiSchema,
+    rawErrors = [],
+    formContext,
+    registry,
+    ...textFieldProps
+  } = props;
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, ...rest } = inputProps;
   const otherProps = {
@@ -77,6 +94,4 @@ const BaseInputTemplate = ({
       )}
     </>
   );
-};
-
-export default BaseInputTemplate;
+}
