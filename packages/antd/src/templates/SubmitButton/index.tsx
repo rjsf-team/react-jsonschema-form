@@ -1,8 +1,20 @@
-import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
 import React from "react";
 import Button, { ButtonType } from "antd/lib/button";
+import {
+  getSubmitButtonOptions,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  SubmitButtonProps,
+} from "@rjsf/utils";
 
-export default ({ uiSchema }: SubmitButtonProps) => {
+/** The `SubmitButton` renders a button that represent the `Submit` action on a form
+ */
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,
     norender,
@@ -20,4 +32,4 @@ export default ({ uiSchema }: SubmitButtonProps) => {
       {submitText}
     </Button>
   );
-};
+}

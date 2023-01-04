@@ -1,20 +1,35 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  GenericObjectType,
+} from "@rjsf/utils";
 
-const PasswordWidget = ({
-  disabled,
-  formContext,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  placeholder,
-  readonly,
-  value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+/** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function PasswordWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    disabled,
+    formContext,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    value,
+  } = props;
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const emptyValue = options.emptyValue || "";
 
@@ -39,6 +54,4 @@ const PasswordWidget = ({
       value={value || ""}
     />
   );
-};
-
-export default PasswordWidget;
+}

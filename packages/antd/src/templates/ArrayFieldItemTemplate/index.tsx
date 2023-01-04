@@ -1,8 +1,13 @@
 import React from "react";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 const BTN_GRP_STYLE = {
   width: "100%",
@@ -12,20 +17,29 @@ const BTN_STYLE = {
   width: "calc(100% / 3)",
 };
 
-const ArrayFieldItemTemplate = ({
-  children,
-  disabled,
-  hasMoveDown,
-  hasMoveUp,
-  hasRemove,
-  hasToolbar,
-  index,
-  onDropIndexClick,
-  onReorderClick,
-  readonly,
-  registry,
-  uiSchema,
-}: ArrayFieldTemplateItemType) => {
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
+  const {
+    children,
+    disabled,
+    hasMoveDown,
+    hasMoveUp,
+    hasRemove,
+    hasToolbar,
+    index,
+    onDropIndexClick,
+    onReorderClick,
+    readonly,
+    registry,
+    uiSchema,
+  } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
   const { rowGutter = 24, toolbarAlign = "top" } = registry.formContext;
@@ -69,6 +83,4 @@ const ArrayFieldItemTemplate = ({
       )}
     </Row>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}
