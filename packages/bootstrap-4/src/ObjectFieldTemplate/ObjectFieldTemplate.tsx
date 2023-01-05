@@ -6,12 +6,19 @@ import Container from "react-bootstrap/Container";
 
 import {
   canExpand,
+  FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 
-const ObjectFieldTemplate = ({
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   description,
   title,
   properties,
@@ -24,18 +31,19 @@ const ObjectFieldTemplate = ({
   disabled,
   readonly,
   registry,
-}: ObjectFieldTemplateProps) => {
-  const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+}: ObjectFieldTemplateProps<T, S, F>) {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -87,6 +95,4 @@ const ObjectFieldTemplate = ({
       </Container>
     </>
   );
-};
-
-export default ObjectFieldTemplate;
+}

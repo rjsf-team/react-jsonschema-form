@@ -1,14 +1,22 @@
 import React from "react";
-import { getTemplate, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getTemplate,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const FileWidget = (props: WidgetProps) => {
+export default function FileWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options
   );
   return <BaseInputTemplate {...props} type="file" />;
-};
-
-export default FileWidget;
+}

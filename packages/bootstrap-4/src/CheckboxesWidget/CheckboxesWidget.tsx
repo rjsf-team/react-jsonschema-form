@@ -1,6 +1,11 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -15,7 +20,11 @@ const deselectValue = (value: any, selected: any) => {
   return selected.filter((v: any) => v !== value);
 };
 
-const CheckboxesWidget = ({
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   disabled,
   options,
@@ -26,7 +35,7 @@ const CheckboxesWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline } = options;
 
   const _onChange =
@@ -78,6 +87,4 @@ const CheckboxesWidget = ({
         })}
     </Form.Group>
   );
-};
-
-export default CheckboxesWidget;
+}
