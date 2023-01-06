@@ -26,7 +26,7 @@ import {
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
-import { get } from "lodash";
+import get from "lodash/get";
 
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
