@@ -5,9 +5,16 @@ import {
   getUiOptions,
   ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
 } from "@rjsf/utils";
 
-const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+export default function ArrayFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     disabled,
@@ -21,23 +28,24 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     schema,
     title,
   } = props;
-  const uiOptions = getUiOptions(uiSchema);
-  const ArrayFieldDescriptionTemplate =
-    getTemplate<"ArrayFieldDescriptionTemplate">(
-      "ArrayFieldDescriptionTemplate",
-      registry,
-      uiOptions
-    );
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate">(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldDescriptionTemplate = getTemplate<
+    "ArrayFieldDescriptionTemplate",
+    T,
+    S,
+    F
+  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
     "ArrayFieldItemTemplate",
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate<"ArrayFieldTitleTemplate">(
+  const ArrayFieldTitleTemplate = getTemplate<
     "ArrayFieldTitleTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("ArrayFieldTitleTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -62,9 +70,11 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       <Grid key={`array-item-list-${idSchema.$id}`}>
         <GridItem>
           {items.length > 0 &&
-            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            ))}
+            items.map(
+              ({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                <ArrayFieldItemTemplate key={key} {...itemProps} />
+              )
+            )}
         </GridItem>
         {canAdd && (
           <GridItem justifySelf={"flex-end"}>
@@ -82,6 +92,4 @@ const ArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
       </Grid>
     </Box>
   );
-};
-
-export default ArrayFieldTemplate;
+}

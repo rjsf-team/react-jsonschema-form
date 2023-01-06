@@ -1,6 +1,9 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import {
@@ -11,7 +14,11 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
     classNames,
@@ -66,6 +73,4 @@ const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
       </GridItem>
     </Grid>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

@@ -1,8 +1,18 @@
 import React from "react";
 import { Box, Button } from "@chakra-ui/react";
-import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getSubmitButtonOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+  SubmitButtonProps,
+} from "@rjsf/utils";
 
-const SubmitButton = ({ uiSchema }: SubmitButtonProps) => {
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,
     norender,
@@ -19,5 +29,4 @@ const SubmitButton = ({ uiSchema }: SubmitButtonProps) => {
       </Button>
     </Box>
   );
-};
-export default SubmitButton;
+}

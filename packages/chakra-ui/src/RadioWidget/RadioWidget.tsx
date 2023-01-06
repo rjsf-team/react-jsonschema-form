@@ -8,10 +8,19 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const RadioWidget = ({
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   schema,
   options,
@@ -24,7 +33,7 @@ const RadioWidget = ({
   onBlur,
   onFocus,
   uiSchema,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
@@ -76,6 +85,4 @@ const RadioWidget = ({
       </RadioGroup>
     </FormControl>
   );
-};
-
-export default RadioWidget;
+}

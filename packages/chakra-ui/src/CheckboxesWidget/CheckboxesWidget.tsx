@@ -7,23 +7,19 @@ import {
   Text,
   Stack,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-// const selectValue = (value, selected, all) => {
-//   const at = all.indexOf(value);
-//   const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-//   // As inserting values at predefined index positions doesn't work with empty
-//   // arrays, we need to reorder the updated selection to match the initial order
-//   return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
-// };
-
-// const deselectValue = (value, selected) => {
-//   return selected.filter((v) => v !== value);
-// };
-
-const CheckboxesWidget = (props: WidgetProps) => {
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     disabled,
@@ -41,15 +37,6 @@ const CheckboxesWidget = (props: WidgetProps) => {
   } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
-  // const _onChange = option => ({ target: { checked } }) => {
-  //   const all = enumOptions.map(({ value }) => value)
-
-  //   if (checked) {
-  //     onChange(selectValue(option.value, value, all))
-  //   } else {
-  //     onChange(deselectValue(option.value, value))
-  //   }
-  // }
 
   const _onBlur = ({
     target: { value },
@@ -102,6 +89,4 @@ const CheckboxesWidget = (props: WidgetProps) => {
       </CheckboxGroup>
     </FormControl>
   );
-};
-
-export default CheckboxesWidget;
+}

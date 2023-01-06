@@ -1,8 +1,11 @@
 import React, { MouseEvent, useEffect, useState } from "react";
 import {
   DateObject,
+  FormContextType,
   pad,
   parseDateString,
+  RJSFSchema,
+  StrictRJSFSchema,
   toDateString,
   WidgetProps,
 } from "@rjsf/utils";
@@ -16,6 +19,31 @@ const rangeOptions = (start: number, stop: number) => {
   return options;
 };
 
+function DateElement<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const { SelectWidget } = props.registry.widgets;
+  const value = props.value ? props.value : undefined;
+  return (
+    <SelectWidget
+      {...props}
+      label={""}
+      className="form-control"
+      onChange={(elemValue: WidgetProps<T, S, F>) =>
+        props.select(props.type, elemValue)
+      }
+      options={{
+        enumOptions: rangeOptions(props.range[0], props.range[1]),
+      }}
+      placeholder={props.type}
+      schema={{ type: "integer" } as S}
+      value={value}
+    />
+  );
+}
+
 interface AltDateStateType extends DateObject {
   [x: string]: number | undefined;
 }
@@ -26,7 +54,11 @@ const readyForChange = (state: AltDateStateType) => {
   );
 };
 
-const AltDateWidget = (props: any) => {
+function AltDateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     autofocus,
     disabled,
@@ -40,7 +72,6 @@ const AltDateWidget = (props: any) => {
     showTime,
     value,
   } = props;
-  const { SelectWidget } = registry.widgets;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
     setState(parseDateString(value, showTime));
@@ -96,26 +127,6 @@ const AltDateWidget = (props: any) => {
     return data;
   };
 
-  const renderDateElement = (elemProps: WidgetProps) => {
-    const value = elemProps.value ? elemProps.value : undefined;
-    return (
-      <SelectWidget
-        {...elemProps}
-        label={undefined}
-        className="form-control"
-        onChange={(elemValue: WidgetProps) =>
-          elemProps.select(elemProps.type, elemValue)
-        }
-        options={{
-          enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
-        }}
-        placeholder={elemProps.type}
-        schema={{ type: "integer" }}
-        value={value}
-      />
-    );
-  };
-
   return (
     <Box>
       <Box display="flex" flexWrap="wrap" alignItems="center" justify="center">
@@ -123,20 +134,20 @@ const AltDateWidget = (props: any) => {
           const elemId = id + "_" + elemProps.type;
           return (
             <Box key={elemId} mr="2" mb="2">
-              {renderDateElement({
-                ...props,
-                ...elemProps,
-                autofocus: autofocus && i === 0,
-                disabled,
-                id: elemId,
-                name: id,
-                onBlur,
-                onFocus,
-                readonly,
-                registry,
-                select: handleChange,
-                value: elemProps.value < 0 ? "" : elemProps.value,
-              })}
+              <DateElement<T, S, F>
+                {...props}
+                {...elemProps}
+                autofocus={autofocus && i === 0}
+                disabled={disabled}
+                id={elemId}
+                name={id}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                readonly={readonly}
+                registry={registry}
+                select={handleChange}
+                value={elemProps.value < 0 ? "" : elemProps.value}
+              />
             </Box>
           );
         })}
@@ -160,7 +171,7 @@ const AltDateWidget = (props: any) => {
       </Box>
     </Box>
   );
-};
+}
 
 AltDateWidget.defaultProps = {
   autofocus: false,
