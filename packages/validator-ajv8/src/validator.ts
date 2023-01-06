@@ -208,11 +208,24 @@ export default class AJV8Validator<
     errors: ErrorObject[] = []
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
-      const { instancePath, keyword, params, schemaPath, ...rest } = e;
+      const {
+        instancePath,
+        keyword,
+        params,
+        schemaPath,
+        parentSchema,
+        ...rest
+      } = e;
       let { message } = rest;
 
       let property = instancePath.replace(/\//g, ".");
-      let stack = `${property} ${message}`.trim();
+
+      const stackProperty =
+        typeof parentSchema?.title !== "undefined"
+          ? `'${parentSchema.title}'`
+          : property;
+
+      let stack = `${stackProperty} ${message}`.trim();
 
       if ("missingProperty" in params) {
         property = property

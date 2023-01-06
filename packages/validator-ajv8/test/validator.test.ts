@@ -1390,24 +1390,38 @@ describe("AJV8Validator", () => {
               properties: {
                 firstName: { title: "First Name", type: "string" },
                 lastName: { title: "Last Name", type: "string" },
+                numberOfChildren: {
+                  title: "Number of children",
+                  type: "string",
+                  pattern: "\\d+",
+                },
               },
             };
 
-            const formData = { firstName: "a" };
+            const formData = { firstName: "a", numberOfChildren: "aa" };
             const result = validator.validateFormData(formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
           it("should return an error list", () => {
-            expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'Last Name'"
-            );
+            expect(errors).toHaveLength(2);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'Last Name'",
+              "'Number of children' must match pattern \"\\d+\"",
+            ]);
           });
           it("should return an errorSchema", () => {
             expect(errorSchema.lastName!.__errors).toHaveLength(1);
             expect(errorSchema.lastName!.__errors![0]).toEqual(
               "must have required property 'Last Name'"
+            );
+
+            expect(errorSchema.numberOfChildren!.__errors).toHaveLength(1);
+            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual(
+              'must match pattern "\\d+"'
             );
           });
         });
@@ -1422,26 +1436,43 @@ describe("AJV8Validator", () => {
                   properties: {
                     firstName: { type: "string", title: "First Name" },
                     lastName: { type: "string", title: "Last Name" },
+                    numberOfChildren: {
+                      title: "Number of children",
+                      type: "string",
+                      pattern: "\\d+",
+                    },
                   },
                 },
               },
             };
 
-            const formData = { nested: { firstName: "a" } };
+            const formData = {
+              nested: { firstName: "a", numberOfChildren: "aa" },
+            };
             const result = validator.validateFormData(formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
           it("should return an error list", () => {
-            expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'Last Name'"
-            );
+            expect(errors).toHaveLength(2);
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'Last Name'",
+              "'Number of children' must match pattern \"\\d+\"",
+            ]);
           });
           it("should return an errorSchema", () => {
             expect(errorSchema.nested!.lastName!.__errors).toHaveLength(1);
             expect(errorSchema.nested!.lastName!.__errors![0]).toEqual(
               "must have required property 'Last Name'"
+            );
+
+            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(
+              1
+            );
+            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual(
+              'must match pattern "\\d+"'
             );
           });
         });
@@ -1747,16 +1778,22 @@ describe("AJV8Validator", () => {
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
           {
+            data: "some kind of text",
             instancePath: "/datasetId",
             keyword: "pattern",
             message: 'must match pattern "\\d+"',
             params: { pattern: "\\d+" },
+            parentSchema: {
+              pattern: "\\d+",
+              type: "string",
+            },
+            schema: "\\d+",
             schemaPath: "#/definitions/Dataset/properties/datasetId/pattern",
           },
         ]);
       });
     });
-    describe("validating using several custom meta schemas", () => {
+    describe("validating using several custom met©©a schemas", () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
@@ -1914,10 +1951,16 @@ describe("AJV8Validator", () => {
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
           {
+            data: "some kind of text",
             instancePath: "/datasetId",
             keyword: "pattern",
             message: 'must match pattern "\\d+"',
             params: { pattern: "\\d+" },
+            parentSchema: {
+              pattern: "\\d+",
+              type: "string",
+            },
+            schema: "\\d+",
             schemaPath: "#/definitions/Dataset/properties/datasetId/pattern",
           },
         ]);
@@ -2082,10 +2125,16 @@ describe("AJV8Validator", () => {
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
           {
+            data: "some kind of text",
             instancePath: "/datasetId",
             keyword: "pattern",
             message: 'must match pattern "\\d+"',
             params: { pattern: "\\d+" },
+            parentSchema: {
+              pattern: "\\d+",
+              type: "string",
+            },
+            schema: "\\d+",
             schemaPath: "#/definitions/Dataset/properties/datasetId/pattern",
           },
         ]);
