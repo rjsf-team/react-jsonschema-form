@@ -1,9 +1,19 @@
 import React from "react";
-import { getTemplate, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getTemplate,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const RangeWidget = (props: WidgetProps) => {
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const { value, label, options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options
@@ -13,6 +23,4 @@ const RangeWidget = (props: WidgetProps) => {
       <span className="range-view">{value}</span>
     </BaseInputTemplate>
   );
-};
-
-export default RangeWidget;
+}

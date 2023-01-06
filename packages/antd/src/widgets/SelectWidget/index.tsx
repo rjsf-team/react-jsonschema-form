@@ -1,15 +1,31 @@
 import React from "react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
 import Select from "antd/lib/select";
+import {
+  processSelectValue,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 const SELECT_STYLE = {
   width: "100%",
 };
 
-const SelectWidget = ({
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   autofocus,
   disabled,
-  formContext,
+  formContext = {} as F,
   id,
   multiple,
   onBlur,
@@ -20,19 +36,19 @@ const SelectWidget = ({
   readonly,
   schema,
   value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+}: WidgetProps<T, S, F>) {
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled } = options;
 
   const handleChange = (nextValue: any) =>
-    onChange(processSelectValue(schema, nextValue, options));
+    onChange(processSelectValue<T, S, F>(schema, nextValue, options));
 
   const handleBlur = () =>
-    onBlur(id, processSelectValue(schema, value, options));
+    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
 
   const handleFocus = () =>
-    onFocus(id, processSelectValue(schema, value, options));
+    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
 
   const getPopupContainer = (node: any) => node.parentNode;
 
@@ -74,10 +90,4 @@ const SelectWidget = ({
         ))}
     </Select>
   );
-};
-
-SelectWidget.defaultProps = {
-  formContext: {},
-};
-
-export default SelectWidget;
+}

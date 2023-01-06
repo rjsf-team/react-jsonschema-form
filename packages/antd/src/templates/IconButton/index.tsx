@@ -1,15 +1,29 @@
 import React from "react";
-import { IconButtonProps, getUiOptions } from "@rjsf/utils";
 import Button, { ButtonProps, ButtonType } from "antd/lib/button";
 import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
 import ArrowUpOutlined from "@ant-design/icons/ArrowUpOutlined";
 import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
 import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
+import {
+  getUiOptions,
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 // The `type` for IconButtonProps collides with the `type` for `ButtonProps` so omit it to avoid Typescript issue
-export type AntdIconButtonProps = Omit<IconButtonProps, "type">;
+export type AntdIconButtonProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = Omit<IconButtonProps<T, S, F>, "type">;
 
-export default function IconButton(props: AntdIconButtonProps & ButtonProps) {
+export default function IconButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: AntdIconButtonProps<T, S, F> & ButtonProps) {
   const {
     iconType = "default",
     icon,
@@ -20,7 +34,11 @@ export default function IconButton(props: AntdIconButtonProps & ButtonProps) {
   return <Button type={iconType as ButtonType} icon={icon} {...otherProps} />;
 }
 
-export function AddButton(props: AntdIconButtonProps) {
+export function AddButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: AntdIconButtonProps<T, S, F>) {
   return (
     <IconButton
       title="Add Item"
@@ -32,19 +50,31 @@ export function AddButton(props: AntdIconButtonProps) {
   );
 }
 
-export function MoveDownButton(props: AntdIconButtonProps) {
+export function MoveDownButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: AntdIconButtonProps<T, S, F>) {
   return (
     <IconButton title="Move down" {...props} icon={<ArrowDownOutlined />} />
   );
 }
 
-export function MoveUpButton(props: AntdIconButtonProps) {
+export function MoveUpButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: AntdIconButtonProps<T, S, F>) {
   return <IconButton title="Move up" {...props} icon={<ArrowUpOutlined />} />;
 }
 
-export function RemoveButton(props: AntdIconButtonProps) {
+export function RemoveButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: AntdIconButtonProps<T, S, F>) {
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so get it from the uiSchema instead
-  const options = getUiOptions(props.uiSchema);
+  const options = getUiOptions<T, S, F>(props.uiSchema);
   return (
     <IconButton
       title="Remove"

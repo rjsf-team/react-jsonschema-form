@@ -1,8 +1,19 @@
 import React from "react";
-import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
 
-const FieldTemplate = ({
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   children,
   displayLabel,
@@ -21,13 +32,14 @@ const FieldTemplate = ({
   schema,
   uiSchema,
   registry,
-}: FieldTemplateProps) => {
+}: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+  const WrapIfAdditionalTemplate = getTemplate<
     "WrapIfAdditionalTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
   if (hidden) {
     return <div className="hidden">{children}</div>;
   }
@@ -68,6 +80,4 @@ const FieldTemplate = ({
       </Form.Group>
     </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

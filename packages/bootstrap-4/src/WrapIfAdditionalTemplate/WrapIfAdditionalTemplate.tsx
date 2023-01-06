@@ -2,6 +2,9 @@ import React from "react";
 
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 
@@ -9,7 +12,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-const WrapIfAdditionalTemplate = ({
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   classNames,
   children,
   disabled,
@@ -22,7 +29,7 @@ const WrapIfAdditionalTemplate = ({
   schema,
   uiSchema,
   registry,
-}: WrapIfAdditionalTemplateProps) => {
+}: WrapIfAdditionalTemplateProps<T, S, F>) {
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
@@ -65,6 +72,4 @@ const WrapIfAdditionalTemplate = ({
       </Col>
     </Row>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

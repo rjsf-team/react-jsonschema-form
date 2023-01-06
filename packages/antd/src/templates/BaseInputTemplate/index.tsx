@@ -1,28 +1,46 @@
 import React from "react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
+import {
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  GenericObjectType,
+} from "@rjsf/utils";
 
 const INPUT_STYLE = {
   width: "100%",
 };
 
-const BaseInputTemplate = ({
-  disabled,
-  formContext,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  placeholder,
-  readonly,
-  schema,
-  value,
-  type,
-}: WidgetProps) => {
-  const inputProps = getInputProps(schema, type, options, false);
-  const { readonlyAsDisabled = true } = formContext;
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    disabled,
+    formContext,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    schema,
+    value,
+    type,
+  } = props;
+  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 
@@ -80,6 +98,4 @@ const BaseInputTemplate = ({
       )}
     </>
   );
-};
-
-export default BaseInputTemplate;
+}

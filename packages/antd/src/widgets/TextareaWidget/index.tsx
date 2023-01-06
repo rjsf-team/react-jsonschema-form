@@ -1,12 +1,26 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Input from "antd/lib/input";
+import {
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 const INPUT_STYLE = {
   width: "100%",
 };
 
-const TextareaWidget = ({
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   disabled,
   formContext,
   id,
@@ -17,8 +31,8 @@ const TextareaWidget = ({
   placeholder,
   readonly,
   value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+}: WidgetProps<T, S, F>) {
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLTextAreaElement>) =>
     onChange(target.value === "" ? options.emptyValue : target.value);
@@ -50,6 +64,4 @@ const TextareaWidget = ({
       {...extraProps}
     />
   );
-};
-
-export default TextareaWidget;
+}
