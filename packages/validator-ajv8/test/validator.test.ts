@@ -1773,7 +1773,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
@@ -1810,7 +1810,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
     });
     describe("validating using custom string formats", () => {
@@ -1855,9 +1855,7 @@ describe("AJV8Validator", () => {
           expect(errors).toHaveLength(1);
         });
         it("should return a validation error about formData", () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('phone must match format "phone-us"');
         });
         describe("prop updates with new custom formats are accepted", () => {
           beforeAll(() => {
@@ -1881,7 +1879,7 @@ describe("AJV8Validator", () => {
           });
           it("should return a validation error about formData", () => {
             expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
+              'phone must match format "area-code"'
             );
           });
         });
@@ -1946,7 +1944,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
@@ -1984,7 +1982,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
     });
     describe("validating using custom string formats", () => {
@@ -2029,9 +2027,7 @@ describe("AJV8Validator", () => {
           expect(errors).toHaveLength(1);
         });
         it("should return a validation error about formData", () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('phone must match format "phone-us"');
         });
         describe("prop updates with new custom formats are accepted", () => {
           beforeAll(() => {
@@ -2055,7 +2051,7 @@ describe("AJV8Validator", () => {
           });
           it("should return a validation error about formData", () => {
             expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
+              'phone must match format "area-code"'
             );
           });
         });
@@ -2120,7 +2116,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
       it("localizer was called with the errors", () => {
         expect(localizer).toHaveBeenCalledWith([
@@ -2158,7 +2154,7 @@ describe("AJV8Validator", () => {
         expect(errors).toHaveLength(1);
       });
       it("has a pattern match validation error about formData", () => {
-        expect(errors[0].stack).toEqual('.datasetId must match pattern "\\d+"');
+        expect(errors[0].stack).toEqual('datasetId must match pattern "\\d+"');
       });
     });
     describe("validating using custom string formats", () => {
@@ -2203,9 +2199,7 @@ describe("AJV8Validator", () => {
           expect(errors).toHaveLength(1);
         });
         it("should return a validation error about formData", () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('phone must match format "phone-us"');
         });
         describe("prop updates with new custom formats are accepted", () => {
           beforeAll(() => {
@@ -2229,7 +2223,7 @@ describe("AJV8Validator", () => {
           });
           it("should return a validation error about formData", () => {
             expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
+              'phone must match format "area-code"'
             );
           });
         });
