@@ -225,7 +225,7 @@ export default class AJV8Validator<
           ? `${property}.${params.missingProperty}`
           : params.missingProperty;
 
-        const currentProperty = property.split(".").slice(-1)[0];
+        const currentProperty: string = params.missingProperty;
 
         const parentSchemaTitle =
           parentSchema?.[PROPERTIES_KEY]?.[currentProperty]?.title;
