@@ -1793,7 +1793,7 @@ describe("AJV8Validator", () => {
         ]);
       });
     });
-    describe("validating using several custom met©©a schemas", () => {
+    describe("validating using several custom meta schemas", () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
