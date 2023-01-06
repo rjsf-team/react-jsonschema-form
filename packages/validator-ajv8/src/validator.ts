@@ -231,8 +231,7 @@ export default class AJV8Validator<
           parentSchema?.[PROPERTIES_KEY]?.[currentProperty]?.title;
 
         if (parentSchemaTitle) {
-          const existing = property.split(".").slice(-1)[0];
-          message = message?.replace(existing, parentSchemaTitle);
+          message = message?.replace(currentProperty, parentSchemaTitle);
         }
 
         stack = message!;
