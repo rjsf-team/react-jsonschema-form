@@ -26,7 +26,7 @@ import {
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
-import get from "lodash/get";
+// import get from "lodash/get";
 
 const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
 
@@ -204,7 +204,6 @@ export default class AJV8Validator<
    * @private
    */
   private transformRJSFValidationErrors(
-    schema: S,
     errors: ErrorObject[] = []
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
@@ -220,33 +219,34 @@ export default class AJV8Validator<
 
       let property = instancePath.replace(/\//g, ".");
 
-      const stackProperty =
-        typeof parentSchema?.title !== "undefined"
-          ? `'${parentSchema.title}'`
-          : property;
-
-      let stack = `${stackProperty} ${message}`.trim();
+      let stack: string | undefined = undefined;
 
       if ("missingProperty" in params) {
         property = property
           ? `${property}.${params.missingProperty}`
           : params.missingProperty;
 
-        const paths = property.replace(/^\./, "").split(".");
-        const titlePath = paths
-          .map((p, i) =>
-            i !== paths.length - 1 ? `${p}.${PROPERTIES_KEY}.` : `${p}.title`
-          )
-          .join("");
+        const current = property.split(".").slice(-1)[0];
 
-        const title = get(schema, `${PROPERTIES_KEY}.${titlePath}`);
+        const parentSchemaTitle =
+          parentSchema?.[PROPERTIES_KEY]?.[current]?.title;
 
-        if (title) {
+        if (parentSchemaTitle) {
           const existing = property.split(".").slice(-1)[0];
-          message = message?.replace(existing, title);
+          message = message?.replace(existing, parentSchemaTitle);
         }
 
         stack = message!;
+      } else {
+        let title = property.split(".").pop() as string;
+
+        const parentSchemaTitle = parentSchema?.title;
+
+        if (parentSchemaTitle) {
+          title = `'${parentSchemaTitle}'`;
+        }
+
+        stack = `${title} ${message}`.trim();
       }
 
       // put data in expected format
@@ -322,7 +322,7 @@ export default class AJV8Validator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
-    let errors = this.transformRJSFValidationErrors(schema, rawErrors.errors);
+    let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
     if (invalidSchemaError) {
       errors = [...errors, { stack: invalidSchemaError!.message }];
