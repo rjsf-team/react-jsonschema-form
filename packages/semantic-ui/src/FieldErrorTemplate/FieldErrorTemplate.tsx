@@ -1,5 +1,10 @@
 import React from "react";
-import { FieldErrorProps } from "@rjsf/utils";
+import {
+  FieldErrorProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import { nanoid } from "nanoid";
 import { Label, List } from "semantic-ui-react";
 
@@ -12,22 +17,17 @@ const DEFAULT_OPTIONS = {
   },
 };
 
-/**
+/** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
- * @param errors
- * @param displayError
- * @returns {*}
- * @constructor
- * @return {null}
+ * @param props - The `FieldErrorProps` for the errors being rendered
  */
-function FieldErrorTemplate({
-  errors,
-  idSchema,
-  uiSchema,
-  registry,
-}: FieldErrorProps) {
+export default function FieldErrorTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ errors, idSchema, uiSchema, registry }: FieldErrorProps<T, S, F>) {
   const { formContext } = registry;
-  const options = getSemanticErrorProps({
+  const options = getSemanticErrorProps<T, S, F>({
     formContext,
     uiSchema,
     defaultProps: DEFAULT_OPTIONS,
@@ -53,5 +53,3 @@ function FieldErrorTemplate({
   }
   return null;
 }
-
-export default FieldErrorTemplate;

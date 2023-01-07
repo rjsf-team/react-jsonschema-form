@@ -1,7 +1,10 @@
 import React from "react";
 import {
   ArrayFieldTemplateItemType,
+  FormContextType,
   GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
   getUiOptions,
 } from "@rjsf/utils";
 import { Button, Grid, Segment } from "semantic-ui-react";
@@ -13,7 +16,15 @@ const gridStyle = (vertical: boolean) => ({
   gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
 });
 
-const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     disabled,
@@ -30,7 +41,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
   } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
-  const uiOptions = getUiOptions(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
   const { horizontalButtons = false, wrapItem = false } =
     uiOptions.semantic as GenericObjectType;
@@ -86,6 +97,4 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
       </MaybeWrap>
     </div>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}
