@@ -3,21 +3,32 @@ import {
   UiSchema,
   GenericObjectType,
   getUiOptions,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   UIOptionsType,
 } from "@rjsf/utils";
 
-export type SemanticPropsTypes = {
-  formContext?: GenericObjectType;
-  uiSchema?: UiSchema;
-  options?: UIOptionsType;
+export type SemanticPropsTypes<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = {
+  formContext?: F;
+  uiSchema?: UiSchema<T, S, F>;
+  options?: UIOptionsType<T, S, F>;
   defaultSchemaProps?: GenericObjectType;
   defaultContextProps?: GenericObjectType;
 };
 
-export type SemanticErrorPropsType = {
-  formContext?: GenericObjectType;
-  uiSchema?: UiSchema;
-  options?: UIOptionsType;
+export type SemanticErrorPropsType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = {
+  formContext?: F;
+  uiSchema?: UiSchema<T, S, F>;
+  options?: UIOptionsType<T, S, F>;
   defaultProps?: GenericObjectType;
 };
 
@@ -37,15 +48,19 @@ export type WrapProps = GenericObjectType & {
  * @param {Object?} params.defaultContextProps
  * @returns {any}
  */
-export function getSemanticProps({
-  formContext = {},
+export function getSemanticProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
+  formContext = {} as F,
   uiSchema = {},
   options = {},
   defaultSchemaProps = { fluid: true, inverted: false },
   defaultContextProps = {},
-}: SemanticPropsTypes) {
+}: SemanticPropsTypes<T, S, F>) {
   const formContextProps = formContext.semantic;
-  const schemaProps = getUiOptions(uiSchema).semantic;
+  const schemaProps = getUiOptions<T, S, F>(uiSchema).semantic;
   const optionProps = options.semantic;
   // formContext props should overide other props
   return Object.assign(
@@ -67,15 +82,19 @@ export function getSemanticProps({
  * @param {Object?} params.defaultProps
  * @returns {any}
  */
-export function getSemanticErrorProps({
-  formContext = {},
+export function getSemanticErrorProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
+  formContext = {} as F,
   uiSchema = {},
   options = {},
   defaultProps = { size: "small", pointing: "above" },
-}: SemanticErrorPropsType) {
+}: SemanticErrorPropsType<T, S, F>) {
   const formContextProps =
     formContext.semantic && formContext.semantic.errorOptions;
-  const semanticOptions: GenericObjectType = getUiOptions(uiSchema)
+  const semanticOptions: GenericObjectType = getUiOptions<T, S, F>(uiSchema)
     .semantic as GenericObjectType;
   const schemaProps = semanticOptions && semanticOptions.errorOptions;
   const optionProps =

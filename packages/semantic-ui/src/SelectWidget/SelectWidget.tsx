@@ -2,6 +2,9 @@ import React from "react";
 import {
   EnumOptionsType,
   processSelectValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WidgetProps,
   UIOptionsType,
 } from "@rjsf/utils";
@@ -10,13 +13,15 @@ import { Form, DropdownProps } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 /**
- * * Returns and creates an array format required for semantic drop down
+ * Returns and creates an array format required for semantic drop down
  * @param {array} enumOptions- array of items for the dropdown
  * @param {array} enumDisabled - array of enum option values to disable
  * @returns {*}
  */
-function createDefaultValueOptionsForDropDown(
-  enumOptions?: EnumOptionsType[],
+function createDefaultValueOptionsForDropDown<
+  S extends StrictRJSFSchema = RJSFSchema
+>(
+  enumOptions?: EnumOptionsType<S>[],
   enumDisabled?: UIOptionsType["enumDisabled"]
 ) {
   const disabledOptions = enumDisabled || [];
@@ -29,7 +34,16 @@ function createDefaultValueOptionsForDropDown(
   return options;
 }
 
-function SelectWidget(props: WidgetProps) {
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     uiSchema,
@@ -49,7 +63,7 @@ function SelectWidget(props: WidgetProps) {
     onFocus,
     rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({
+  const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     formContext,
     options,
@@ -63,7 +77,7 @@ function SelectWidget(props: WidgetProps) {
   });
   const { enumDisabled, enumOptions } = options;
   const emptyValue = multiple ? [] : "";
-  const dropdownOptions = createDefaultValueOptionsForDropDown(
+  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled
   );
@@ -106,4 +120,3 @@ function SelectWidget(props: WidgetProps) {
     />
   );
 }
-export default SelectWidget;

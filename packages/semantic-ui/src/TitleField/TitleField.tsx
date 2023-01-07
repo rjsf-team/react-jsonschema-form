@@ -1,5 +1,10 @@
 import React from "react";
-import { TitleFieldProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  TitleFieldProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import { Header } from "semantic-ui-react";
 
 import { getSemanticProps } from "../util";
@@ -9,8 +14,16 @@ const DEFAULT_OPTIONS = {
   dividing: true,
 };
 
-function TitleField({ id, title, uiSchema }: TitleFieldProps) {
-  const semanticProps = getSemanticProps({
+/** The `TitleField` is the template to use to render the title of a field
+ *
+ * @param props - The `TitleFieldProps` for this component
+ */
+export default function TitleField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ id, title, uiSchema }: TitleFieldProps<T, S, F>) {
+  const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     defaultSchemaProps: DEFAULT_OPTIONS,
   });
@@ -23,5 +36,3 @@ function TitleField({ id, title, uiSchema }: TitleFieldProps) {
     </Header>
   );
 }
-
-export default TitleField;
