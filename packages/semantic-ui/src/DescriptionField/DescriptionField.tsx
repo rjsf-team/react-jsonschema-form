@@ -1,7 +1,21 @@
 import React from "react";
-import { DescriptionFieldProps } from "@rjsf/utils";
+import {
+  DescriptionFieldProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-function DescriptionField({ description, id }: DescriptionFieldProps) {
+/** The `DescriptionField` is the template to use to render the description of a field
+ *
+ * @param props - The `DescriptionFieldProps` for this component
+ */
+export default function DescriptionField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: DescriptionFieldProps<T, S, F>) {
+  const { id, description } = props;
   if (!description) {
     return null;
   }
@@ -11,5 +25,3 @@ function DescriptionField({ description, id }: DescriptionFieldProps) {
     </p>
   );
 }
-
-export default DescriptionField;

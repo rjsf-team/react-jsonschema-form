@@ -1,10 +1,17 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
-import { getTemplate, WidgetProps, EnumOptionsType } from "@rjsf/utils";
+import {
+  getTemplate,
+  EnumOptionsType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getSemanticProps } from "../util";
 
-function selectValue(
-  value: EnumOptionsType["value"],
+function selectValue<S extends StrictRJSFSchema = RJSFSchema>(
+  value: EnumOptionsType<S>["value"],
   selected: any,
   all: any[]
 ) {
@@ -15,11 +22,23 @@ function selectValue(
   return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
 }
 
-function deselectValue(value: EnumOptionsType["value"], selected: any) {
+function deselectValue<S extends StrictRJSFSchema = RJSFSchema>(
+  value: EnumOptionsType<S>["value"],
+  selected: any
+) {
   return selected.filter((v: any) => v !== value);
 }
 
-function CheckboxesWidget(props: WidgetProps) {
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     disabled,
@@ -36,14 +55,14 @@ function CheckboxesWidget(props: WidgetProps) {
     rawErrors = [],
     registry,
   } = props;
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     options
   );
   const { enumOptions, enumDisabled, inline } = options;
   const { title } = schema;
-  const semanticProps = getSemanticProps({
+  const semanticProps = getSemanticProps<T, S, F>({
     options,
     formContext,
     uiSchema,
@@ -57,9 +76,9 @@ function CheckboxesWidget(props: WidgetProps) {
       // eslint-disable-next-line no-shadow
       const all = enumOptions ? enumOptions.map(({ value }) => value) : [];
       if (checked) {
-        onChange(selectValue(option.value, value, all));
+        onChange(selectValue<S>(option.value, value, all));
       } else {
-        onChange(deselectValue(option.value, value));
+        onChange(deselectValue<S>(option.value, value));
       }
     };
 
@@ -67,7 +86,7 @@ function CheckboxesWidget(props: WidgetProps) {
   const _onFocus = () => onFocus && onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
-    <React.Fragment>
+    <>
       {title && (
         <TitleFieldTemplate
           id={`${id}-title`}
@@ -102,7 +121,6 @@ function CheckboxesWidget(props: WidgetProps) {
             );
           })}
       </Form.Group>
-    </React.Fragment>
+    </>
   );
 }
-export default CheckboxesWidget;

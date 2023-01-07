@@ -680,7 +680,7 @@ export interface WidgetProps<
    */
   options: NonNullable<UIOptionsType<T, S, F>> & {
     /** The enum options list for a type that supports them */
-    enumOptions?: EnumOptionsType[];
+    enumOptions?: EnumOptionsType<S>[];
   };
   /** The `formContext` object that you passed to `Form` */
   formContext?: F;

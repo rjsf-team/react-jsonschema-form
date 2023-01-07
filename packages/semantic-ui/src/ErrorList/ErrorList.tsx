@@ -1,14 +1,21 @@
 import React from "react";
-import { ErrorListProps } from "@rjsf/utils";
 import { Message } from "semantic-ui-react";
+import {
+  ErrorListProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-/**
+/** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
- * @param errors
- * @returns {*}
- * @constructor
+ * @param props - The `ErrorListProps` for this component
  */
-function ErrorList({ errors }: ErrorListProps) {
+export default function ErrorList<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ errors }: ErrorListProps<T, S, F>) {
   return (
     <Message negative>
       <Message.Header>Errors</Message.Header>
@@ -20,5 +27,3 @@ function ErrorList({ errors }: ErrorListProps) {
     </Message>
   );
 }
-
-export default ErrorList;
