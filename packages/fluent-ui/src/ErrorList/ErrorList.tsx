@@ -1,22 +1,31 @@
 import React from "react";
 import { MessageBar, MessageBarType } from "@fluentui/react";
-import { ErrorListProps } from "@rjsf/utils";
+import {
+  ErrorListProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ErrorList = ({ errors }: ErrorListProps) => (
-  <>
-    {errors.map((error, i) => {
-      return (
-        <MessageBar
-          key={i}
-          messageBarType={MessageBarType.error}
-          isMultiline={false}
-          dismissButtonAriaLabel="Close"
-        >
-          {error.stack}
-        </MessageBar>
-      );
-    })}
-  </>
-);
-
-export default ErrorList;
+export default function ErrorList<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ errors }: ErrorListProps<T, S, F>) {
+  return (
+    <>
+      {errors.map((error, i) => {
+        return (
+          <MessageBar
+            key={i}
+            messageBarType={MessageBarType.error}
+            isMultiline={false}
+            dismissButtonAriaLabel="Close"
+          >
+            {error.stack}
+          </MessageBar>
+        );
+      })}
+    </>
+  );
+}

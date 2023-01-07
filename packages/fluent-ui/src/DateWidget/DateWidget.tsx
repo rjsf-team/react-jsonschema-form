@@ -1,5 +1,11 @@
 import React from "react";
-import { WidgetProps, pad } from "@rjsf/utils";
+import {
+  WidgetProps,
+  pad,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";
 
@@ -75,7 +81,11 @@ const parseDate = (dateStr?: string) => {
   return dt;
 };
 
-const DateWidget = ({
+export default function DateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   required,
   label,
@@ -85,7 +95,7 @@ const DateWidget = ({
   onFocus,
   options,
   placeholder,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const _onSelectDate = (date: Date | null | undefined) => {
     if (date) {
       const formatted = formatDate(date);
@@ -115,6 +125,4 @@ const DateWidget = ({
       {...uiProps}
     />
   );
-};
-
-export default DateWidget;
+}

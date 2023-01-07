@@ -1,16 +1,25 @@
 import React from "react";
-import { getTemplate, getUiOptions, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const TextareaWidget = (props: WidgetProps) => {
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const { uiSchema, registry } = props;
-  const options = getUiOptions(uiSchema);
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+  const options = getUiOptions<T, S, F>(uiSchema);
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options
   );
   // TODO: rows and columns.
   return <BaseInputTemplate {...props} multiline />;
-};
-
-export default TextareaWidget;
+}

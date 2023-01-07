@@ -1,7 +1,12 @@
 import React from "react";
-import { Label } from "@fluentui/react";
-import { SpinButton } from "@fluentui/react";
-import { WidgetProps, rangeSpec } from "@rjsf/utils";
+import { Label, SpinButton } from "@fluentui/react";
+import {
+  FormContextType,
+  rangeSpec,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of ISpinButtonProps from @fluentui/react
@@ -44,7 +49,11 @@ const allowedProps = [
   "value",
 ];
 
-const UpDownWidget = ({
+export default function UpDownWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   required,
   readonly,
@@ -57,7 +66,7 @@ const UpDownWidget = ({
   options,
   schema,
 }: // autofocus,
-WidgetProps) => {
+WidgetProps<T, S, F>) {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
@@ -117,6 +126,4 @@ WidgetProps) => {
       />
     </>
   );
-};
-
-export default UpDownWidget;
+}
