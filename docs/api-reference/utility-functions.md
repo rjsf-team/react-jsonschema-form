@@ -347,7 +347,7 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 - RangeSpecType: A range specification from the schema
 
-### schemaRequiresTrueValue()
+### schemaRequiresTrueValue\<S extends StrictRJSFSchema = RJSFSchema>()
 Check to see if a `schema` specifies that a value must be true. This happens when:
 - `schema.const` is truthy
 - `schema.enum` == `[true]`
@@ -407,11 +407,11 @@ Converts a UTC date string into a local Date format
 
 ## Validator-based utility functions
 
-### getDefaultFormState<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### getDefaultFormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Returns the superset of `formData` that includes the given set updated to include any missing fields that have computed to have defaults provided in the `schema`.
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which the default state is desired
 - [formData]: T - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
@@ -424,7 +424,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
@@ -432,11 +432,11 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 #### Returns
 - boolean: True if the label should be displayed or false if it should not
 
-### getMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### getMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - formData: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
@@ -448,7 +448,7 @@ Given the `formData` and list of `options`, attempts to find the index of the op
 Checks to see if the `schema` and `uiSchema` combination represents an array of files
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for array of files flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to check the widget
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
@@ -456,47 +456,47 @@ Checks to see if the `schema` and `uiSchema` combination represents an array of 
 #### Returns
 - boolean: True if schema/uiSchema contains an array of files, otherwise false
 
-### isMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### isMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Checks to see if the `schema` combination represents a multi-select
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if schema contains a multi-select, otherwise false
 
-### isSelect<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### isSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Checks to see if the `schema` combination represents a select
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if schema contains a select, otherwise false
 
-### mergeValidationData<T = any, S extends StrictRJSFSchema = RJSFSchema>()
+### mergeValidationData<T = any, S extends StrictRJSFSchema = RJSFSchema,  F extends FormContextType = any>()
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `validator.toErrorList()` onto the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
 - validationData: ValidationData<T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema<T> - The additional set of errors in an `ErrorSchema`
 
 #### Returns
 - ValidationData<T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
 
-### retrieveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### retrieveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
 resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
 potentially recursive resolution.
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T - The current formData, if any, to assist retrieving a schema
@@ -504,11 +504,11 @@ potentially recursive resolution.
 #### Returns
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
-### toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Generates an `IdSchema` object for the `schema`, recursively
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `IdSchema` is desired
 - [id]: string | null - The base id for the schema
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
@@ -519,11 +519,11 @@ Generates an `IdSchema` object for the `schema`, recursively
 #### Returns
 - IDSchema<T>: The `IdSchema` object for the `schema`
 
-### toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Generates an `PathSchema` object for the `schema`, recursively
 
 #### Parameters
-- validator: ValidatorType<T, S> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `PathSchema` is desired
 - [name='']: string - The base name for the schema
 - [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
@@ -539,7 +539,7 @@ Creates a `SchemaUtilsType` interface that is based around the given `validator`
 The resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
 
 #### Parameters
-- validator: ValidatorType<T, S> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType<T, S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 
 #### Returns
