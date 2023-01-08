@@ -1,5 +1,5 @@
-import Ajv from "ajv8";
-import Ajv2019 from "ajv8/dist/2019";
+import Ajv from "ajv";
+import Ajv2019 from "ajv/dist/2019";
 import addFormats from "ajv-formats";
 
 import createAjvInstance, {
