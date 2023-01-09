@@ -5,13 +5,27 @@ import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
 import FileWidget from "../FileWidget/FileWidget";
+import {
+  FormContextType,
+  RegistryWidgetsType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-export default {
-  CheckboxWidget,
-  CheckboxesWidget,
-  RadioWidget,
-  RangeWidget,
-  SelectWidget,
-  TextareaWidget,
-  FileWidget,
-};
+export function generateWidgets<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(): RegistryWidgetsType<T, S, F> {
+  return {
+    CheckboxWidget,
+    CheckboxesWidget,
+    RadioWidget,
+    RangeWidget,
+    SelectWidget,
+    TextareaWidget,
+    FileWidget,
+  };
+}
+
+export default generateWidgets();

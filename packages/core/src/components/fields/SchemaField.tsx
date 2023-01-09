@@ -5,14 +5,17 @@ import {
   getUiOptions,
   getSchemaType,
   getTemplate,
+  ErrorSchema,
   FieldProps,
   FieldTemplateProps,
+  FormContextType,
   IdSchema,
   Registry,
   RJSFSchema,
-  RJSFSchemaDefinition,
+  StrictRJSFSchema,
   UIOptionsType,
   ID_KEY,
+  ADDITIONAL_PROPERTY_FLAG,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
@@ -38,11 +41,15 @@ const COMPONENT_TYPES: { [key: string]: string } = {
  * @param registry - The registry from which fields and templates are obtained
  * @returns - The `Field` component that is used to render the actual field data
  */
-function getFieldComponent<T, F>(
-  schema: RJSFSchema,
-  uiOptions: UIOptionsType<T, F>,
+function getFieldComponent<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
+  schema: S,
+  uiOptions: UIOptionsType<T, S, F>,
   idSchema: IdSchema<T>,
-  registry: Registry<T, F>
+  registry: Registry<T, S, F>
 ) {
   const field = uiOptions.field;
   const { fields } = registry;
@@ -71,6 +78,7 @@ function getFieldComponent<T, F>(
         const UnsupportedFieldTemplate = getTemplate<
           "UnsupportedFieldTemplate",
           T,
+          S,
           F
         >("UnsupportedFieldTemplate", registry, uiOptions);
 
@@ -85,63 +93,17 @@ function getFieldComponent<T, F>(
       };
 }
 
-/** The `Help` component renders any help desired for a field
- *
- * @param props - The id and help information to be rendered
- */
-function Help(props: { id: string; help?: string | React.ReactElement }) {
-  const { id, help } = props;
-  if (!help) {
-    return null;
-  }
-  if (typeof help === "string") {
-    return (
-      <p id={id} className="help-block">
-        {help}
-      </p>
-    );
-  }
-  return (
-    <div id={id} className="help-block">
-      {help}
-    </div>
-  );
-}
-
-/** The `ErrorList` component renders the errors local to the particular field
- *
- * @param props - The list of errors to show
- */
-function ErrorList(props: { errors?: string[] }) {
-  const { errors = [] } = props;
-  if (errors.length === 0) {
-    return null;
-  }
-
-  return (
-    <div>
-      <ul className="error-detail bs-callout bs-callout-info">
-        {errors
-          .filter((elem) => !!elem)
-          .map((error, index) => {
-            return (
-              <li className="text-danger" key={index}>
-                {error}
-              </li>
-            );
-          })}
-      </ul>
-    </div>
-  );
-}
-
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
  * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
  * `oneOf` fields.
  *
  * @param props - The `FieldProps` for this component
  */
-function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
+function SchemaFieldRender<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldProps<T, S, F>) {
   const {
     schema: _schema,
     idSchema: _idSchema,
@@ -159,8 +121,8 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     wasPropertyKeyModified = false,
   } = props;
   const { formContext, schemaUtils } = registry;
-  const uiOptions = getUiOptions<T, F>(uiSchema);
-  const FieldTemplate = getTemplate<"FieldTemplate", T, F>(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const FieldTemplate = getTemplate<"FieldTemplate", T, S, F>(
     "FieldTemplate",
     registry,
     uiOptions
@@ -168,20 +130,38 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
     T,
+    S,
     F
   >("DescriptionFieldTemplate", registry, uiOptions);
+  const FieldHelpTemplate = getTemplate<"FieldHelpTemplate", T, S, F>(
+    "FieldHelpTemplate",
+    registry,
+    uiOptions
+  );
+  const FieldErrorTemplate = getTemplate<"FieldErrorTemplate", T, S, F>(
+    "FieldErrorTemplate",
+    registry,
+    uiOptions
+  );
   const schema = schemaUtils.retrieveSchema(_schema, formData);
+  const fieldId = _idSchema[ID_KEY];
   const idSchema = mergeObjects(
-    schemaUtils.toIdSchema(
-      schema,
-      _idSchema.$id,
-      formData,
-      idPrefix,
-      idSeparator
-    ),
+    schemaUtils.toIdSchema(schema, fieldId, formData, idPrefix, idSeparator),
     _idSchema
   ) as IdSchema<T>;
-  const FieldComponent = getFieldComponent(
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
+   */
+  const handleFieldComponentChange = React.useCallback(
+    (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      const theId = id || fieldId;
+      return onChange(formData, newErrorSchema, theId);
+    },
+    [fieldId, onChange]
+  );
+
+  const FieldComponent = getFieldComponent<T, S, F>(
     schema,
     uiOptions,
     idSchema,
@@ -219,6 +199,7 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   const field = (
     <FieldComponent
       {...props}
+      onChange={handleFieldComponentChange}
       idSchema={idSchema}
       schema={schema}
       uiSchema={fieldUiSchema}
@@ -239,7 +220,10 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = uiOptions.title || props.schema.title || schema.title || name;
+    label =
+      ADDITIONAL_PROPERTY_FLAG in schema
+        ? name
+        : uiOptions.title || props.schema.title || schema.title || name;
   }
 
   const description =
@@ -247,12 +231,11 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     props.schema.description ||
     schema.description ||
     "";
-  const errors = __errors;
   const help = uiOptions.help;
   const hidden = uiOptions.widget === "hidden";
 
   const classNames = ["form-group", "field", `field-${schema.type}`];
-  if (!hideError && errors && errors.length > 0) {
+  if (!hideError && __errors && __errors.length > 0) {
     classNames.push("field-error has-error has-danger");
   }
   if (uiSchema?.classNames) {
@@ -267,19 +250,41 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
     classNames.push(uiOptions.classNames);
   }
 
-  const fieldProps: Omit<FieldTemplateProps<T, F>, "children"> = {
+  const helpComponent = (
+    <FieldHelpTemplate
+      help={help}
+      idSchema={idSchema}
+      schema={schema}
+      uiSchema={uiSchema}
+      hasErrors={!hideError && __errors && __errors.length > 0}
+      registry={registry}
+    />
+  );
+  const errorsComponent = hideError ? undefined : (
+    <FieldErrorTemplate
+      errors={__errors}
+      errorSchema={errorSchema}
+      idSchema={idSchema}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
+  const fieldProps: Omit<FieldTemplateProps<T, S, F>, "children"> = {
     description: (
       <DescriptionFieldTemplate
         id={`${id}__description`}
         description={description}
+        schema={schema}
+        uiSchema={uiSchema}
         registry={registry}
       />
     ),
     rawDescription: description,
-    help: <Help id={`${id}__help`} help={help} />,
+    help: helpComponent,
     rawHelp: typeof help === "string" ? help : undefined,
-    errors: hideError ? undefined : <ErrorList errors={errors} />,
-    rawErrors: hideError ? undefined : errors,
+    errors: errorsComponent,
+    rawErrors: hideError ? undefined : __errors,
     id,
     label,
     hidden,
@@ -328,9 +333,9 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               onBlur={props.onBlur}
               onChange={props.onChange}
               onFocus={props.onFocus}
-              options={schema.anyOf.map((_schema: RJSFSchemaDefinition) =>
+              options={schema.anyOf.map((_schema) =>
                 schemaUtils.retrieveSchema(
-                  isObject(_schema) ? _schema : {},
+                  isObject(_schema) ? (_schema as S) : ({} as S),
                   formData
                 )
               )}
@@ -357,9 +362,9 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
               onBlur={props.onBlur}
               onChange={props.onChange}
               onFocus={props.onFocus}
-              options={schema.oneOf.map((_schema: RJSFSchemaDefinition) =>
+              options={schema.oneOf.map((_schema) =>
                 schemaUtils.retrieveSchema(
-                  isObject(_schema) ? _schema : {},
+                  isObject(_schema) ? (_schema as S) : ({} as S),
                   formData
                 )
               )}
@@ -377,13 +382,17 @@ function SchemaFieldRender<T, F>(props: FieldProps<T, F>) {
 /** The `SchemaField` component determines whether it is necessary to rerender the component based on any props changes
  * and if so, calls the `SchemaFieldRender` component with the props.
  */
-class SchemaField<T = any, F = any> extends React.Component<FieldProps<T, F>> {
-  shouldComponentUpdate(nextProps: Readonly<FieldProps<T, F>>) {
+class SchemaField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> extends React.Component<FieldProps<T, S, F>> {
+  shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     return !deepEquals(this.props, nextProps);
   }
 
   render() {
-    return <SchemaFieldRender<T, F> {...this.props} />;
+    return <SchemaFieldRender<T, S, F> {...this.props} />;
   }
 }
 

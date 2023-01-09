@@ -12,7 +12,7 @@
   <p align="center">
     A simple <a href="http://facebook.github.io/react/">React</a> component capable of using <a href="http://json-schema.org/">JSON Schema</a> to declaratively build and customize web forms.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/latest/"><strong>Explore the docs »</strong></a>
+    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -27,14 +27,14 @@
 
 ## Supported Themes
 
-- [Ant Design](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/antd)
-- [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/core)
-- [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/bootstrap-4)
-- [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/fluent-ui)
-- [Material UI 4](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
-- [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/material-ui)
-- [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/semantic-ui)
-- [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/master/packages/chakra-ui)
+- [Ant Design](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
+- [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
+- [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/bootstrap-4)
+- [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluent-ui)
+- [Material UI 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/material-ui)
+- [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/material-ui)
+- [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
+- [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
 
 ## Documentation
 

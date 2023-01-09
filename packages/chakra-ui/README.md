@@ -38,6 +38,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Optional Chakra UI Theme properties](#optional-chakra-ui-theme-properties)
+    - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -63,6 +65,7 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 - `@chakra-ui/react >= 1.7.0`
+- `chakra-react-select >= 3.3.8`
 - `react >= 17.0.0`
 - `framer-motion >= 5.0.0`
 - `@rjsf/core >= 2.0.0`

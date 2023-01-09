@@ -1,8 +1,8 @@
 import MuiForm from "./MuiForm/MuiForm";
 
-export { default as Form } from "./MuiForm";
-export { default as Templates } from "./Templates";
-export { default as Theme } from "./Theme";
-export { default as Widgets } from "./Widgets";
+export { default as Form, generateForm } from "./MuiForm";
+export { default as Templates, generateTemplates } from "./Templates";
+export { default as Theme, generateTheme } from "./Theme";
+export { default as Widgets, generateWidgets } from "./Widgets";
 
 export default MuiForm;

@@ -1,36 +1,58 @@
 import React from "react";
 import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-import { FieldTemplateProps } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 
-import WrapIfAdditional from "./WrapIfAdditional";
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
+  const {
+    id,
+    children,
+    classNames,
+    disabled,
+    displayLabel,
+    hidden,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    rawErrors = [],
+    errors,
+    help,
+    rawDescription,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
+    "WrapIfAdditionalTemplate",
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
 
-const FieldTemplate = ({
-  id,
-  children,
-  classNames,
-  disabled,
-  displayLabel,
-  hidden,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  readonly,
-  required,
-  rawErrors = [],
-  rawHelp,
-  rawDescription,
-  schema,
-  registry,
-}: FieldTemplateProps) => {
   if (hidden) {
     return <div style={{ display: "none" }}>{children}</div>;
   }
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -40,6 +62,7 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <FormControl
@@ -53,21 +76,9 @@ const FieldTemplate = ({
             {rawDescription}
           </Typography>
         ) : null}
-        {rawErrors.length > 0 && (
-          <List dense={true} disablePadding={true}>
-            {rawErrors.map((error, i: number) => {
-              return (
-                <ListItem key={i} disableGutters={true}>
-                  <FormHelperText id={id}>{error}</FormHelperText>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-        {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+        {errors}
+        {help}
       </FormControl>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

@@ -3,7 +3,7 @@ import React from "react";
 import sinon from "sinon";
 import { render } from "react-dom";
 import { Simulate } from "react-dom/test-utils";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
@@ -1160,9 +1160,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 6.28 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 6.28 },
+          },
+          "root_foo"
+        );
       });
 
       describe("Constraint attributes", () => {
@@ -1243,9 +1247,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 6.28 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 6.28 },
+          },
+          "root_foo"
+        );
       });
 
       describe("Constraint attributes", () => {
@@ -1336,9 +1344,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 1.4142 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 1.4142 },
+          },
+          "root_foo"
+        );
       });
     });
 
@@ -1435,9 +1447,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 6 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 6 },
+          },
+          "root_foo"
+        );
       });
     });
 
@@ -1481,9 +1497,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 6 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 6 },
+          },
+          "root_foo"
+        );
       });
     });
 
@@ -1537,9 +1557,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: 2 },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: 2 },
+          },
+          "root_foo"
+        );
       });
     });
 
@@ -1648,9 +1672,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: false },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: false },
+          },
+          "root_foo"
+        );
       });
 
       it("should call onChange handler when true is checked", () => {
@@ -1668,9 +1696,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: true },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: true },
+          },
+          "root_foo"
+        );
       });
     });
 
@@ -1710,9 +1742,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: true },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: true },
+          },
+          "root_foo"
+        );
       });
 
       it("should call onChange handler when false is selected", () => {
@@ -1731,9 +1767,13 @@ describe("uiSchema", () => {
           },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          formData: { foo: false },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: { foo: false },
+          },
+          "root_foo"
+        );
       });
     });
 

@@ -1,11 +1,18 @@
-import { WithThemeProps } from "@rjsf/core";
+import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import { ThemeProps } from "@rjsf/core";
 
-import Templates from "../Templates";
-import Widgets from "../Widgets";
+import { generateTemplates } from "../Templates";
+import { generateWidgets } from "../Widgets";
 
-const Theme: WithThemeProps = {
-  templates: Templates,
-  widgets: Widgets,
-};
+export function generateTheme<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(): ThemeProps<T, S, F> {
+  return {
+    templates: generateTemplates<T, S, F>(),
+    widgets: generateWidgets<T, S, F>(),
+  };
+}
 
-export default Theme;
+export default generateTheme();

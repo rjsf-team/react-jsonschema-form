@@ -144,9 +144,13 @@ describe("StringField", () => {
         });
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "yo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "yo",
+        },
+        "root"
+      );
     });
 
     it("should handle a blur event", () => {
@@ -191,7 +195,11 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, { formData: undefined });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        { formData: undefined },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with custom ui:emptyValue", () => {
@@ -205,9 +213,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "default",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "default",
+        },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with defaults set", () => {
@@ -222,9 +234,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should fill field with data", () => {
@@ -363,9 +379,13 @@ describe("StringField", () => {
           target: { value: "foo" },
         });
       });
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "foo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "foo",
+        },
+        "root"
+      );
     });
 
     it("should reflect undefined in change event if empty option selected", () => {
@@ -380,9 +400,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should reflect the change into the dom", () => {
@@ -531,9 +555,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: undefined,
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: undefined,
+        },
+        "root"
+      );
     });
 
     it("should handle an empty string change event with custom ui:emptyValue", () => {
@@ -550,9 +578,13 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "default",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "default",
+        },
+        "root"
+      );
     });
 
     it("should render a textarea field with rows", () => {
@@ -657,15 +689,15 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { __errors: ["should be string"] },
+        errorSchema: { __errors: ["must be string"] },
         errors: [
           {
-            message: "should be string",
+            message: "must be string",
             name: "type",
             params: { type: "string" },
             property: "",
             schemaPath: "#/type",
-            stack: "should be string",
+            stack: "must be string",
           },
         ],
       });
@@ -816,15 +848,15 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { __errors: ['should match format "date"'] },
+        errorSchema: { __errors: ['must match format "date"'] },
         errors: [
           {
-            message: 'should match format "date"',
+            message: 'must match format "date"',
             name: "format",
             params: { format: "date" },
             property: "",
             schemaPath: "#/format",
-            stack: 'should match format "date"',
+            stack: 'must match format "date"',
           },
         ],
       });
@@ -1548,15 +1580,15 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { __errors: ['should match format "email"'] },
+        errorSchema: { __errors: ['must match format "email"'] },
         errors: [
           {
-            message: 'should match format "email"',
+            message: 'must match format "email"',
             name: "format",
             params: { format: "email" },
             property: "",
             schemaPath: "#/format",
-            stack: 'should match format "email"',
+            stack: 'must match format "email"',
           },
         ],
       });
@@ -1688,15 +1720,15 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { __errors: ['should match format "uri"'] },
+        errorSchema: { __errors: ['must match format "uri"'] },
         errors: [
           {
-            message: 'should match format "uri"',
+            message: 'must match format "uri"',
             name: "format",
             params: { format: "uri" },
             property: "",
             schemaPath: "#/format",
-            stack: 'should match format "uri"',
+            stack: 'must match format "uri"',
           },
         ],
       });
@@ -1805,15 +1837,15 @@ describe("StringField", () => {
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
-        errorSchema: { __errors: ['should match format "color"'] },
+        errorSchema: { __errors: ['must match format "color"'] },
         errors: [
           {
-            message: 'should match format "color"',
+            message: 'must match format "color"',
             name: "format",
             params: { format: "color" },
             property: "",
             schemaPath: "#/format",
-            stack: 'should match format "color"',
+            stack: 'must match format "color"',
           },
         ],
       });

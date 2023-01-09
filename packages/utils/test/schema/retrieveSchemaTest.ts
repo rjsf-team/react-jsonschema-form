@@ -3,7 +3,6 @@ import {
   RJSFSchema,
   createSchemaUtils,
   ADDITIONAL_PROPERTY_FLAG,
-  RJSFSchemaDefinition,
 } from "../../src";
 import {
   resolveSchema,
@@ -1206,14 +1205,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                   title: "Breed name",
                   type: "string",
                 },
-                Spots: {
-                  default: "small",
-                  enum: ["large", "small"],
-                  title: "Spots",
-                  type: "string",
-                },
               },
-              required: ["BreedName", "Spots"],
+              allOf: [
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Alsatian",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Fur: {
+                        default: "brown",
+                        enum: ["black", "brown"],
+                        title: "Fur",
+                        type: "string",
+                      },
+                    },
+                    required: ["Fur"],
+                  },
+                },
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Dalmation",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Spots: {
+                        default: "small",
+                        enum: ["large", "small"],
+                        title: "Spots",
+                        type: "string",
+                      },
+                    },
+                    required: ["Spots"],
+                  },
+                },
+              ],
+              required: ["BreedName"],
               title: "Breed",
             },
           },
@@ -1433,7 +1470,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {
           type: "integer",
         };
-        const oneOf: RJSFSchemaDefinition[] = [
+        const oneOf: RJSFSchema["oneOf"] = [
           true,
           { properties: undefined },
           { properties: { foo: { type: "string" } } },

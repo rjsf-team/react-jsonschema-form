@@ -1,18 +1,19 @@
 import React from "react";
-
-import { FieldTemplateProps } from "@rjsf/utils";
-
 import {
-  Text,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-} from "@chakra-ui/react";
-import { List, ListItem } from "@chakra-ui/react";
+  FieldTemplateProps,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
+import { Text, FormControl } from "@chakra-ui/react";
 
-import WrapIfAdditional from "./WrapIfAdditional";
-
-const FieldTemplate = (props: FieldTemplateProps) => {
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
     children,
@@ -27,17 +28,26 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     registry,
     required,
     rawErrors = [],
-    rawHelp,
+    errors,
+    help,
     rawDescription,
     schema,
+    uiSchema,
   } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
+    "WrapIfAdditionalTemplate",
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: "none" }}>{children}</div>;
   }
 
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -47,6 +57,7 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <FormControl
@@ -57,21 +68,9 @@ const FieldTemplate = (props: FieldTemplateProps) => {
         {displayLabel && rawDescription ? (
           <Text mt={2}>{rawDescription}</Text>
         ) : null}
-        {rawErrors && rawErrors.length > 0 && (
-          <List>
-            {rawErrors.map((error, i: number) => {
-              return (
-                <ListItem key={i}>
-                  <FormErrorMessage id={id}>{error}</FormErrorMessage>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-        {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+        {errors}
+        {help}
       </FormControl>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

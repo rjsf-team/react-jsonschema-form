@@ -25,7 +25,7 @@ describe("customizeValidator()", () => {
     it("custom validator was created", () => {
       expect(custom).toBeInstanceOf(AJV6Validator);
     });
-    it("defaultValidator was constructed with empty object", () => {
+    it("defaultValidator was constructed with custom options object", () => {
       expect(AJV6Validator).toHaveBeenCalledWith(CUSTOM_OPTIONS);
     });
   });

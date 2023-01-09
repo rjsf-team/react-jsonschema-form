@@ -1,31 +1,39 @@
 import React from "react";
 
-import { getUiOptions, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 
-type CustomWidgetProps = WidgetProps & {
+type CustomWidgetProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = WidgetProps<T, S, F> & {
   options: any;
 };
 
-const TextareaWidget = ({
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   value,
   required,
   disabled,
   autofocus,
-  label,
   readonly,
   onBlur,
   onFocus,
   onChange,
   options,
-  schema,
-  rawErrors = [],
-  uiSchema,
-}: CustomWidgetProps) => {
-  const uiOptions = getUiOptions(uiSchema);
+}: CustomWidgetProps<T, S, F>) {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -38,36 +46,22 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
-    <>
-      <label htmlFor={id}>
-        {uiOptions.title || schema.title || label}
-        {required && (
-          <span
-            aria-hidden
-            className={rawErrors.length > 0 ? "text-danger ml-1" : "ml-1"}
-          >
-            &thinsp;{"*"}
-          </span>
-        )}
-      </label>
-      <InputGroup>
-        <FormControl
-          id={id}
-          as="textarea"
-          placeholder={placeholder}
-          disabled={disabled}
-          readOnly={readonly}
-          value={value}
-          required={required}
-          autoFocus={autofocus}
-          rows={options.rows || 5}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-      </InputGroup>
-    </>
+    <InputGroup>
+      <FormControl
+        id={id}
+        name={id}
+        as="textarea"
+        placeholder={placeholder}
+        disabled={disabled}
+        readOnly={readonly}
+        value={value}
+        required={required}
+        autoFocus={autofocus}
+        rows={options.rows || 5}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+    </InputGroup>
   );
-};
-
-export default TextareaWidget;
+}

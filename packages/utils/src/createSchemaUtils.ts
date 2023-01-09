@@ -1,10 +1,12 @@
 import deepEquals from "./deepEquals";
 import {
   ErrorSchema,
+  FormContextType,
   IdSchema,
   PathSchema,
   RJSFSchema,
   SchemaUtilsType,
+  StrictRJSFSchema,
   UiSchema,
   ValidationData,
   ValidatorType,
@@ -27,16 +29,21 @@ import {
  * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
-class SchemaUtils<T = any> implements SchemaUtilsType<T> {
-  rootSchema: RJSFSchema;
-  validator: ValidatorType;
+class SchemaUtils<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> implements SchemaUtilsType<T, S>
+{
+  rootSchema: S;
+  validator: ValidatorType<T, S>;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
-  constructor(validator: ValidatorType, rootSchema: RJSFSchema) {
+  constructor(validator: ValidatorType<T, S>, rootSchema: S) {
     this.rootSchema = rootSchema;
     this.validator = validator;
   }
@@ -58,8 +65,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
-    validator: ValidatorType,
-    rootSchema: RJSFSchema
+    validator: ValidatorType<T, S>,
+    rootSchema: S
   ): boolean {
     if (!validator || !rootSchema) {
       return false;
@@ -74,15 +81,17 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+   *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+   *          object properties.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
-    schema: RJSFSchema,
+    schema: S,
     formData?: T,
-    includeUndefinedValues = false
+    includeUndefinedValues: boolean | "excludeObjectChildren" = false
   ): T | T[] | undefined {
-    return getDefaultFormState<T>(
+    return getDefaultFormState<T, S>(
       this.validator,
       schema,
       formData,
@@ -98,8 +107,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
    * @returns - True if the label should be displayed or false if it should not
    */
-  getDisplayLabel<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
-    return getDisplayLabel<T, F>(
+  getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>) {
+    return getDisplayLabel<T, S, F>(
       this.validator,
       schema,
       uiSchema,
@@ -113,8 +122,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param options - The list of options to find a matching options from
    * @returns - The index of the matched option or 0 if none is available
    */
-  getMatchingOption(formData: T, options: RJSFSchema[]) {
-    return getMatchingOption<T>(
+  getMatchingOption(formData: T, options: S[]) {
+    return getMatchingOption<T, S>(
       this.validator,
       formData,
       options,
@@ -128,8 +137,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [uiSchema] - The UI schema from which to check the widget
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
-  isFilesArray<F = any>(schema: RJSFSchema, uiSchema?: UiSchema<T, F>) {
-    return isFilesArray<T, F>(
+  isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
+    return isFilesArray<T, S, F>(
       this.validator,
       schema,
       uiSchema,
@@ -142,8 +151,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param schema - The schema for which check for a multi-select flag is desired
    * @returns - True if schema contains a multi-select, otherwise false
    */
-  isMultiSelect(schema: RJSFSchema) {
-    return isMultiSelect<T>(this.validator, schema, this.rootSchema);
+  isMultiSelect(schema: S) {
+    return isMultiSelect<T, S>(this.validator, schema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -151,8 +160,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param schema - The schema for which check for a select flag is desired
    * @returns - True if schema contains a select, otherwise false
    */
-  isSelect(schema: RJSFSchema) {
-    return isSelect<T>(this.validator, schema, this.rootSchema);
+  isSelect(schema: S) {
+    return isSelect<T, S>(this.validator, schema, this.rootSchema);
   }
 
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
@@ -168,7 +177,7 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
     validationData: ValidationData<T>,
     additionalErrorSchema?: ErrorSchema<T>
   ): ValidationData<T> {
-    return mergeValidationData<T>(
+    return mergeValidationData<T, S>(
       this.validator,
       validationData,
       additionalErrorSchema
@@ -183,8 +192,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: RJSFSchema, rawFormData: T) {
-    return retrieveSchema<T>(
+  retrieveSchema(schema: S, rawFormData: T) {
+    return retrieveSchema<T, S>(
       this.validator,
       schema,
       this.rootSchema,
@@ -202,13 +211,13 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @returns - The `IdSchema` object for the `schema`
    */
   toIdSchema(
-    schema: RJSFSchema,
+    schema: S,
     id?: string | null,
     formData?: T,
     idPrefix = "root",
     idSeparator = "_"
   ): IdSchema<T> {
-    return toIdSchema<T>(
+    return toIdSchema<T, S>(
       this.validator,
       schema,
       id,
@@ -226,8 +235,8 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @returns - The `PathSchema` object for the `schema`
    */
-  toPathSchema(schema: RJSFSchema, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T>(
+  toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
+    return toPathSchema<T, S>(
       this.validator,
       schema,
       name,
@@ -244,9 +253,10 @@ class SchemaUtils<T = any> implements SchemaUtilsType<T> {
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
-export default function createSchemaUtils<T = any>(
-  validator: ValidatorType,
-  rootSchema: RJSFSchema
-): SchemaUtilsType<T> {
-  return new SchemaUtils<T>(validator, rootSchema);
+export default function createSchemaUtils<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(validator: ValidatorType<T, S>, rootSchema: S): SchemaUtilsType<T, S, F> {
+  return new SchemaUtils<T, S, F>(validator, rootSchema);
 }

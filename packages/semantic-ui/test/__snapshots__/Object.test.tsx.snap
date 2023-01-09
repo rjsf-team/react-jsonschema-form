@@ -1,0 +1,250 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_foo"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_foo"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo"
+                      name="root_foo"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <label
+                    htmlFor="root_foo"
+                  >
+                    foo
+                  </label>
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby={null}
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_foo"
+                      name="root_foo"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button array-item-remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_a"
+            >
+              A
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div
+        className="form-group field field-number"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_b"
+            >
+              B
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

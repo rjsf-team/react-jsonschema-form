@@ -61,30 +61,27 @@ exports[`object fields additionalProperties 1`] = `
                 <div
                   className="form-group"
                 >
-                  <div
-                    className="mb-0 form-group"
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo"
                   >
-                    <label
-                      className="form-label"
-                      htmlFor="root_foo"
-                    >
-                      foo
-                    </label>
-                    <input
-                      autoFocus={false}
-                      className="form-control"
-                      disabled={false}
-                      id="root_foo"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value="foo"
-                    />
-                  </div>
+                    foo
+                  </label>
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
                   
                 </div>
               </div>
@@ -154,7 +151,14 @@ exports[`object fields additionalProperties 1`] = `
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
                 />
               </svg>
             </button>
@@ -209,30 +213,27 @@ exports[`object fields object 1`] = `
               <div
                 className="form-group"
               >
-                <div
-                  className="mb-0 form-group"
+                <label
+                  className="form-label"
+                  htmlFor="root_a"
                 >
-                  <label
-                    className="form-label"
-                    htmlFor="root_a"
-                  >
-                    A
-                  </label>
-                  <input
-                    autoFocus={false}
-                    className="form-control"
-                    disabled={false}
-                    id="root_a"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
-                    required={false}
-                    type="text"
-                    value=""
-                  />
-                </div>
+                  A
+                </label>
+                <input
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
                 
               </div>
             </div>
@@ -256,31 +257,28 @@ exports[`object fields object 1`] = `
               <div
                 className="form-group"
               >
-                <div
-                  className="mb-0 form-group"
+                <label
+                  className="form-label"
+                  htmlFor="root_b"
                 >
-                  <label
-                    className="form-label"
-                    htmlFor="root_b"
-                  >
-                    B
-                  </label>
-                  <input
-                    autoFocus={false}
-                    className="form-control"
-                    disabled={false}
-                    id="root_b"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    placeholder=""
-                    readOnly={false}
-                    required={false}
-                    step="any"
-                    type="number"
-                    value=""
-                  />
-                </div>
+                  B
+                </label>
+                <input
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
                 
               </div>
             </div>

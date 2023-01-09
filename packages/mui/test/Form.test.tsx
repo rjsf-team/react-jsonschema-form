@@ -1,6 +1,6 @@
 import React from "react";
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import { RJSFSchema, UiSchema, ErrorSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 import renderer from "react-test-renderer";
 
 import Form from "../src";
@@ -221,9 +221,10 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test("checkbox field with label", () => {
     const schema: RJSFSchema = {
       type: "boolean",
+      title: "test",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -405,6 +406,36 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("schema examples", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("help and error display", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+    };
+    const uiSchema: UiSchema = {
+      "ui:help": "help me!",
+    };
+    const extraErrors: ErrorSchema = { __errors: ["an error"] } as ErrorSchema;
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          extraErrors={extraErrors}
+        />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

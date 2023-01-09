@@ -1,0 +1,75 @@
+{
+  "name": "@rjsf/validator-ajv8",
+  "version": "5.0.0-beta.15",
+  "main": "dist/index.js",
+  "module": "dist/validator-ajv8.esm.js",
+  "typings": "dist/index.d.ts",
+  "description": "The ajv-8 based validator for @rjsf/core",
+  "files": [
+    "dist"
+  ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "dts test"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts?(x)": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "ajv-formats": "^2.1.1",
+    "ajv8": "npm:ajv@^8.11.0",
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15"
+  },
+  "peerDependencies": {
+    "@rjsf/utils": "^5.0.0-beta.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.19.6",
+    "@babel/plugin-transform-react-jsx": "^7.19.0",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-react": "^7.18.6",
+    "@rjsf/utils": "^5.0.0-beta.15",
+    "@types/jest-expect-message": "^1.1.0",
+    "@types/json-schema": "^7.0.9",
+    "@types/lodash": "^4.14.186",
+    "dts-cli": "^1.6.0",
+    "eslint": "^8.26.0",
+    "jest-expect-message": "^1.1.3",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Heath Chiavettone <heath.chiavettone@freenome.com",
+  "contributors": [],
+  "keywords": [
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "ajv-8",
+    "rjsf-validator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
+}

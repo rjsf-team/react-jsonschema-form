@@ -8,6 +8,7 @@ exports[`object fields additionalProperties 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -25,6 +26,7 @@ exports[`object fields additionalProperties 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_foo"
           style={
             Object {
               "display": undefined,
@@ -55,6 +57,7 @@ exports[`object fields additionalProperties 1`] = `
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_foo"
+                  name="root_foo"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -119,6 +122,7 @@ exports[`object fields object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -136,6 +140,7 @@ exports[`object fields object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_a"
           style={
             Object {
               "display": undefined,
@@ -166,6 +171,7 @@ exports[`object fields object 1`] = `
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_a"
+                  name="root_a"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -183,6 +189,7 @@ exports[`object fields object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
+          id="root_b"
           style={
             Object {
               "display": undefined,
@@ -213,6 +220,7 @@ exports[`object fields object 1`] = `
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_b"
+                  name="root_b"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}

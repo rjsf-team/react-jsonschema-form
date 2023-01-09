@@ -1,85 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CheckboxesWidget inline 1`] = `
-Array [
-  <label
-    className="form-label"
-    htmlFor="_id"
-  >
-    Some simple label
-  </label>,
+<div
+  className="form-group"
+>
   <div
-    className="form-group"
+    className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
   >
-    <form
-      className=""
+    <input
+      autoFocus={true}
+      checked={true}
+      className="custom-control-input"
+      disabled={true}
+      id="_id-a"
+      name="_id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <label
+      className="custom-control-label"
+      htmlFor="_id-a"
+      title=""
     >
-      <div
-        className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
-      >
-        <input
-          autoFocus={true}
-          checked={true}
-          className="custom-control-input"
-          disabled={true}
-          id="_id_0"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={true}
-          type="checkbox"
-        />
-        <label
-          className="custom-control-label"
-          htmlFor="_id_0"
-          title=""
-        >
-          
-        </label>
-      </div>
-    </form>
-  </div>,
-]
+      A
+    </label>
+  </div>
+</div>
 `;
 
 exports[`CheckboxesWidget simple 1`] = `
-Array [
-  <label
-    className="form-label"
-    htmlFor="_id"
-  >
-    Some simple label
-  </label>,
+<div
+  className="form-group"
+>
   <div
-    className="form-group"
+    className="bg-transparent border-0 custom-control custom-checkbox"
   >
-    <form
-      className=""
+    <input
+      autoFocus={true}
+      checked={true}
+      className="custom-control-input"
+      disabled={true}
+      id="_id-a"
+      name="_id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <label
+      className="custom-control-label"
+      htmlFor="_id-a"
+      title=""
     >
-      <div
-        className="bg-transparent border-0 custom-control custom-checkbox"
-      >
-        <input
-          autoFocus={true}
-          checked={true}
-          className="custom-control-input"
-          disabled={true}
-          id="_id_0"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={true}
-          type="checkbox"
-        />
-        <label
-          className="custom-control-label"
-          htmlFor="_id_0"
-          title=""
-        >
-          
-        </label>
-      </div>
-    </form>
-  </div>,
-]
+      A
+    </label>
+  </div>
+</div>
 `;

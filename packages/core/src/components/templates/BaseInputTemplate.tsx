@@ -1,5 +1,11 @@
 import React, { useCallback } from "react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -7,9 +13,11 @@ import { getInputProps, WidgetProps } from "@rjsf/utils";
  *
  * @param props - The `WidgetProps` for this template
  */
-export default function BaseInputTemplate<T = any, F = any>(
-  props: WidgetProps<T, F>
-) {
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -35,7 +43,10 @@ export default function BaseInputTemplate<T = any, F = any>(
     console.log("No id for", props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const inputProps = { ...rest, ...getInputProps<T, F>(schema, type, options) };
+  const inputProps = {
+    ...rest,
+    ...getInputProps<T, S, F>(schema, type, options),
+  };
 
   let inputValue;
   if (inputProps.type === "number" || inputProps.type === "integer") {
@@ -63,8 +74,8 @@ export default function BaseInputTemplate<T = any, F = any>(
   return (
     <>
       <input
-        key={id}
         id={id}
+        name={id}
         className="form-control"
         readOnly={readonly}
         disabled={disabled}

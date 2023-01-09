@@ -5,7 +5,9 @@ import {
   guessType,
   deepEquals,
   FieldProps,
+  FormContextType,
   RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 import unset from "lodash/unset";
 
@@ -20,15 +22,16 @@ type AnyOfFieldState = {
  *
  * @param props - The `FieldProps` for this template
  */
-class AnyOfField<T = any, F = any> extends Component<
-  FieldProps<T, F>,
-  AnyOfFieldState
-> {
+class AnyOfField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> extends Component<FieldProps<T, S, F>, AnyOfFieldState> {
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
    */
-  constructor(props: FieldProps<T, F>) {
+  constructor(props: FieldProps<T, S, F>) {
     super(props);
 
     const { formData, options } = this.props;
@@ -45,7 +48,7 @@ class AnyOfField<T = any, F = any> extends Component<
    * @param prevState - The previous `AnyOfFieldState` for this template
    */
   componentDidUpdate(
-    prevProps: Readonly<FieldProps<T, F>>,
+    prevProps: Readonly<FieldProps<T, S, F>>,
     prevState: Readonly<AnyOfFieldState>
   ) {
     const { formData, options, idSchema } = this.props;
@@ -76,11 +79,7 @@ class AnyOfField<T = any, F = any> extends Component<
    * @param options - The list of options to choose from
    * @return - The index of the `option` that best matches the `formData`
    */
-  getMatchingOption(
-    selectedOption: number,
-    formData: T,
-    options: RJSFSchema[]
-  ) {
+  getMatchingOption(selectedOption: number, formData: T, options: S[]) {
     const { schemaUtils } = this.props.registry;
 
     const option = schemaUtils.getMatchingOption(formData, options);
@@ -130,15 +129,29 @@ class AnyOfField<T = any, F = any> extends Component<
         }
       }
     }
-    // Call getDefaultFormState to make sure defaults are populated on change.
+    // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
+    // so that only the root objects themselves are created without adding undefined children properties
     onChange(
-      schemaUtils.getDefaultFormState(options[selectedOption], newFormData) as T
+      schemaUtils.getDefaultFormState(
+        options[selectedOption],
+        newFormData,
+        "excludeObjectChildren"
+      ) as T,
+      undefined,
+      this.getFieldId()
     );
 
     this.setState({
       selectedOption: parseInt(option, 10),
     });
   };
+
+  getFieldId() {
+    const { idSchema, schema } = this.props;
+    return `${idSchema.$id}${
+      schema.oneOf ? "__oneof_select" : "__anyof_select"
+    }`;
+  }
 
   /** Renders the `AnyOfField` selector along with a `SchemaField` for the value of the `formData`
    */
@@ -161,14 +174,13 @@ class AnyOfField<T = any, F = any> extends Component<
       options,
       registry,
       uiSchema,
-      schema,
     } = this.props;
 
     const { widgets, fields } = registry;
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption } = this.state;
-    const { widget = "select", ...uiOptions } = getUiOptions<T, F>(uiSchema);
-    const Widget = getWidget<T, F>({ type: "number" }, widget, widgets);
+    const { widget = "select", ...uiOptions } = getUiOptions<T, S, F>(uiSchema);
+    const Widget = getWidget<T, S, F>({ type: "number" }, widget, widgets);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -190,10 +202,8 @@ class AnyOfField<T = any, F = any> extends Component<
       <div className="panel panel-default panel-body">
         <div className="form-group">
           <Widget
-            id={`${idSchema.$id}${
-              schema.oneOf ? "__oneof_select" : "__anyof_select"
-            }`}
-            schema={{ type: "number", default: 0 }}
+            id={this.getFieldId()}
+            schema={{ type: "number", default: 0 } as S}
             onChange={this.onOptionChange}
             onBlur={onBlur}
             onFocus={onFocus}

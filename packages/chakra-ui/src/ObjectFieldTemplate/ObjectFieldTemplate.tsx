@@ -2,12 +2,19 @@ import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import {
   canExpand,
+  FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 
-const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
     title,
@@ -22,17 +29,18 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     onAddClick,
     registry,
   } = props;
-  const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -45,6 +53,7 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
           id={`${idSchema.$id}-title`}
           title={uiOptions.title || title}
           required={required}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -53,6 +62,8 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={uiOptions.description || description!}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}
@@ -66,18 +77,18 @@ const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
             </GridItem>
           )
         )}
-        {canExpand(schema, uiSchema, formData) && (
+        {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <GridItem justifySelf="flex-end">
             <AddButton
               className="object-property-expand"
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
             />
           </GridItem>
         )}
       </Grid>
     </React.Fragment>
   );
-};
-
-export default ObjectFieldTemplate;
+}

@@ -8,10 +8,10 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/material-ui/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/7ebc86621d8df8c21f0c39bcca6d476f6f7a2051/packages/mui/logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/material-ui</h3>
+  <h3 align="center">@rjsf/mui</h3>
 
   <p align="center">
   Material UI 5 theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
@@ -30,12 +30,14 @@
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
-
+- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+  - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Material UI version 5](#material-ui-version-5)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -44,7 +46,7 @@
 
 ## About The Project
 
-[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/material-ui)
+[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
 
 Exports `material-ui` version 4 and 5 themes, fields and widgets for `react-jsonschema-form`.
 

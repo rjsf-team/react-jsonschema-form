@@ -1,9 +1,24 @@
 import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import { WidgetProps, processSelectValue } from "@rjsf/utils";
+import {
+  processSelectValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const SelectWidget = ({
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -18,7 +33,7 @@ const SelectWidget = ({
   onBlur,
   onFocus,
   rawErrors = [],
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : "";
@@ -26,17 +41,18 @@ const SelectWidget = ({
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue(schema, value, options));
+    onChange(processSelectValue<T, S, F>(schema, value, options));
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, processSelectValue(schema, value, options));
+    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, processSelectValue(schema, value, options));
+    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
 
   return (
     <TextField
       id={id}
+      name={id}
       label={label || schema.title}
       select
       value={typeof value === "undefined" ? emptyValue : value}
@@ -65,6 +81,4 @@ const SelectWidget = ({
       })}
     </TextField>
   );
-};
-
-export default SelectWidget;
+}

@@ -1,9 +1,23 @@
 import React from "react";
-import { getTemplate, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  getTemplate,
+} from "@rjsf/utils";
 
-const TextareaWidget = (props: WidgetProps) => {
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options
@@ -15,6 +29,4 @@ const TextareaWidget = (props: WidgetProps) => {
   }
 
   return <BaseInputTemplate {...props} multiline rows={rows} />;
-};
-
-export default TextareaWidget;
+}

@@ -1,6 +1,12 @@
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 
-import { dataURItoBlob, WidgetProps } from "@rjsf/utils";
+import {
+  dataURItoBlob,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 function addNameToDataURL(dataURL: string, name: string) {
   if (dataURL === null) {
@@ -85,7 +91,11 @@ function extractFileInfo(dataURLs: string[]) {
  *  The `FileWidget` is a widget for rendering file upload fields.
  *  It is typically used with a string property with data-url format.
  */
-function FileWidget<T, F>({
+function FileWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   multiple,
   id,
   readonly,
@@ -94,7 +104,7 @@ function FileWidget<T, F>({
   value,
   autofocus = false,
   options,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   const extractedFilesInfo = useMemo(
     () =>
       Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value]),
@@ -126,6 +136,7 @@ function FileWidget<T, F>({
       <p>
         <input
           id={id}
+          name={id}
           type="file"
           disabled={readonly || disabled}
           onChange={handleChange}

@@ -4,7 +4,7 @@ import React, { createRef } from "react";
 import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";
-import validator, { customizeValidator } from "@rjsf/validator-ajv6";
+import validator, { customizeValidator } from "@rjsf/validator-ajv8";
 
 import Form from "../src";
 import {
@@ -28,6 +28,15 @@ describeRepeated("Form common", (createFormComponent) => {
   });
 
   describe("Empty schema", () => {
+    it("Should throw error when Form is missing validator", () => {
+      expect(() =>
+        createFormComponent({ schema: {}, validator: undefined })
+      ).to.Throw(
+        Error,
+        "A validator is required for Form functionality to work"
+      );
+    });
+
     it("should render a form tag", () => {
       const { node } = createFormComponent({ schema: {} });
 
@@ -1004,13 +1013,17 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "new" },
       });
 
-      sinon.assert.calledWithMatch(onChange, {
-        formData: {
-          foo: "new",
+      sinon.assert.calledWithMatch(
+        onChange,
+        {
+          formData: {
+            foo: "new",
+          },
+          schema,
+          uiSchema,
         },
-        schema,
-        uiSchema,
-      });
+        "root_foo"
+      );
     });
     it("should call last provided change handler", async () => {
       const schema = {
@@ -1319,12 +1332,12 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should be number",
+            message: "must be number",
             name: "type",
             params: { type: "number" },
             property: "",
             schemaPath: "#/type",
-            stack: "should be number",
+            stack: "must be number",
           },
         ]);
       });
@@ -1382,9 +1395,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: "yo",
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: "yo",
+        },
+        "root"
+      );
     });
     it("object", () => {
       const { node, onChange } = createFormComponent({
@@ -1402,9 +1419,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { foo: "yo" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { foo: "yo" },
+        },
+        "root_foo"
+      );
     });
     it("array of strings", () => {
       const schema = {
@@ -1420,9 +1441,13 @@ describeRepeated("Form common", (createFormComponent) => {
       Simulate.change(node.querySelector("input[type=text]"), {
         target: { value: "yo" },
       });
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: ["yo"],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ["yo"],
+        },
+        "root_0"
+      );
     });
     it("array of objects", () => {
       const schema = {
@@ -1442,9 +1467,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: [{ name: "yo" }],
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: [{ name: "yo" }],
+        },
+        "root_0"
+      );
     });
     it("dependency with array of objects", () => {
       const schema = {
@@ -1492,12 +1521,16 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "yo" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: {
-          show: true,
-          participants: [{ name: "yo" }],
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            show: true,
+            participants: [{ name: "yo" }],
+          },
         },
-      });
+        "root_participants_0_name"
+      );
     });
   });
 
@@ -1515,9 +1548,13 @@ describeRepeated("Form common", (createFormComponent) => {
           Simulate.change(node.querySelector("input[type=text]"), {
             target: { value: "short" },
           });
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {},
-          });
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {},
+            },
+            "root"
+          );
         });
 
         it("should not denote an error in the field", () => {
@@ -1580,11 +1617,15 @@ describeRepeated("Form common", (createFormComponent) => {
             target: { value: "short" },
           });
 
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {
-              __errors: ["should NOT be shorter than 8 characters"],
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {
+                __errors: ["must NOT have fewer than 8 characters"],
+              },
             },
-          });
+            "root"
+          );
         });
 
         it("should denote the new error in the field", () => {
@@ -1600,7 +1641,7 @@ describeRepeated("Form common", (createFormComponent) => {
           expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
           expect(
             node.querySelector(".field-string .error-detail").textContent
-          ).eql("should NOT be shorter than 8 characters");
+          ).eql("must NOT have fewer than 8 characters");
         });
       });
 
@@ -1616,9 +1657,13 @@ describeRepeated("Form common", (createFormComponent) => {
             target: { value: "short" },
           });
 
-          sinon.assert.calledWithMatch(onChange.lastCall, {
-            errorSchema: {},
-          });
+          sinon.assert.calledWithMatch(
+            onChange.lastCall,
+            {
+              errorSchema: {},
+            },
+            "root"
+          );
         });
       });
 
@@ -1661,7 +1706,7 @@ describeRepeated("Form common", (createFormComponent) => {
           sinon.match((value) => {
             return (
               value.length === 1 &&
-              value[0].message === "should NOT be shorter than 8 characters"
+              value[0].message === "must NOT have fewer than 8 characters"
             );
           })
         );
@@ -1679,12 +1724,12 @@ describeRepeated("Form common", (createFormComponent) => {
 
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "must NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "must NOT have fewer than 8 characters",
           },
         ]);
         sinon.assert.calledOnce(onError);
@@ -1712,7 +1757,7 @@ describeRepeated("Form common", (createFormComponent) => {
         Simulate.submit(node);
 
         const errorListHTML =
-          '<li class="text-danger">should NOT be shorter than 8 characters</li>';
+          '<li class="text-danger">must NOT have fewer than 8 characters</li>';
         const errors = node.querySelectorAll(".error-detail");
         // Check for errors attached to the field
         expect(errors).to.have.lengthOf(1);
@@ -1742,12 +1787,12 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "must NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "must NOT have fewer than 8 characters",
           },
         ]);
       });
@@ -1758,7 +1803,7 @@ describeRepeated("Form common", (createFormComponent) => {
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(
           node.querySelector(".field-string .error-detail").textContent
-        ).eql("should NOT be shorter than 8 characters");
+        ).eql("must NOT have fewer than 8 characters");
       });
     });
 
@@ -1778,20 +1823,20 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "must NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: "",
             schemaPath: "#/minLength",
-            stack: "should NOT be shorter than 8 characters",
+            stack: "must NOT have fewer than 8 characters",
           },
           {
-            message: 'should match pattern "d+"',
+            message: 'must match pattern "d+"',
             name: "pattern",
             params: { pattern: "d+" },
             property: "",
             schemaPath: "#/pattern",
-            stack: 'should match pattern "d+"',
+            stack: 'must match pattern "d+"',
           },
         ]);
       });
@@ -1803,8 +1848,8 @@ describeRepeated("Form common", (createFormComponent) => {
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql([
-          "should NOT be shorter than 8 characters",
-          'should match pattern "d+"',
+          "must NOT have fewer than 8 characters",
+          'must match pattern "d+"',
         ]);
       });
     });
@@ -1841,12 +1886,12 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 8 characters",
+            message: "must NOT have fewer than 8 characters",
             name: "minLength",
             params: { limit: 8 },
             property: ".level1.level2",
             schemaPath: "#/properties/level1/properties/level2/minLength",
-            stack: ".level1.level2 should NOT be shorter than 8 characters",
+            stack: ".level1.level2 must NOT have fewer than 8 characters",
           },
         ]);
       });
@@ -1859,7 +1904,7 @@ describeRepeated("Form common", (createFormComponent) => {
 
         expect(node.querySelectorAll(".field-error")).to.have.length.of(1);
         expect(errorDetail.textContent).eql(
-          "should NOT be shorter than 8 characters"
+          "must NOT have fewer than 8 characters"
         );
       });
     });
@@ -1885,12 +1930,12 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: "[1]",
+            property: ".1",
             schemaPath: "#/items/minLength",
-            stack: "[1] should NOT be shorter than 4 characters",
+            stack: ".1 must NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1905,7 +1950,7 @@ describeRepeated("Form common", (createFormComponent) => {
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["must NOT have fewer than 4 characters"]);
       });
 
       it("should not denote errors on non impacted fields", () => {
@@ -1943,20 +1988,20 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".level1[1]",
+            property: ".level1.1",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[1] should NOT be shorter than 4 characters",
+            stack: ".level1.1 must NOT have fewer than 4 characters",
           },
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".level1[3]",
+            property: ".level1.3",
             schemaPath: "#/properties/level1/items/minLength",
-            stack: ".level1[3] should NOT be shorter than 4 characters",
+            stack: ".level1.3 must NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -1972,7 +2017,7 @@ describeRepeated("Form common", (createFormComponent) => {
         const liNodes = node.querySelectorAll(".field-string .error-detail li");
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["must NOT have fewer than 4 characters"]);
       });
     });
 
@@ -2008,20 +2053,20 @@ describeRepeated("Form common", (createFormComponent) => {
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".outer[0][1]",
+            property: ".outer.0.1",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[0][1] should NOT be shorter than 4 characters",
+            stack: ".outer.0.1 must NOT have fewer than 4 characters",
           },
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: ".outer[1][0]",
+            property: ".outer.1.0",
             schemaPath: "#/properties/outer/items/items/minLength",
-            stack: ".outer[1][0] should NOT be shorter than 4 characters",
+            stack: ".outer.1.0 must NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -2036,8 +2081,8 @@ describeRepeated("Form common", (createFormComponent) => {
 
         expect(errors).eql([
           null,
-          "should NOT be shorter than 4 characters",
-          "should NOT be shorter than 4 characters",
+          "must NOT have fewer than 4 characters",
+          "must NOT have fewer than 4 characters",
           null,
         ]);
       });
@@ -2067,14 +2112,15 @@ describeRepeated("Form common", (createFormComponent) => {
         const { node, onError } = createFormComponent(formProps);
 
         submitForm(node);
+        console.log(onError.lastCall);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
-            message: "should NOT be shorter than 4 characters",
+            message: "must NOT have fewer than 4 characters",
             name: "minLength",
             params: { limit: 4 },
-            property: "[1].foo",
+            property: ".1.foo",
             schemaPath: "#/items/properties/foo/minLength",
-            stack: "[1].foo should NOT be shorter than 4 characters",
+            stack: ".1.foo must NOT have fewer than 4 characters",
           },
         ]);
       });
@@ -2089,7 +2135,7 @@ describeRepeated("Form common", (createFormComponent) => {
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(fieldNodes[1].classList.contains("field-error")).eql(true);
-        expect(errors).eql(["should NOT be shorter than 4 characters"]);
+        expect(errors).eql(["must NOT have fewer than 4 characters"]);
       });
     });
 
@@ -2147,9 +2193,13 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: "not a number" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: { field1: { __errors: ["should be number"] } },
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: { field1: { __errors: ["must be number"] } },
+          },
+          "root"
+        );
       });
 
       it("should only show errors for properties in selected branch", () => {
@@ -2163,16 +2213,20 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: "not a number" },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: {
-            field1: {
-              __errors: ["should be number"],
-            },
-            field2: {
-              __errors: ["is a required property"],
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {
+              field1: {
+                __errors: ["must be number"],
+              },
+              field2: {
+                __errors: ["must have required property 'field2'"],
+              },
             },
           },
-        });
+          "root_field1"
+        );
       });
 
       it("should not show any errors when branch is empty", () => {
@@ -2186,9 +2240,13 @@ describeRepeated("Form common", (createFormComponent) => {
           target: { value: 3 },
         });
 
-        sinon.assert.calledWithMatch(onChange.lastCall, {
-          errorSchema: {},
-        });
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {},
+          },
+          "root_branch"
+        );
       });
     });
   });
@@ -2225,9 +2283,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "baz" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { bar: "baz" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { bar: "baz" },
+        },
+        "root_bar"
+      );
     });
 
     it("should replace state when props change formData keys", () => {
@@ -2253,9 +2315,13 @@ describeRepeated("Form common", (createFormComponent) => {
         target: { value: "baz" },
       });
 
-      sinon.assert.calledWithMatch(onChange.lastCall, {
-        formData: { foo: "foo", baz: "baz" },
-      });
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { foo: "foo", baz: "baz" },
+        },
+        "root_baz"
+      );
     });
   });
 
@@ -2528,12 +2594,12 @@ describeRepeated("Form common", (createFormComponent) => {
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: 'should match format "area-code"',
+          message: 'must match format "area-code"',
           name: "format",
           params: { format: "area-code" },
           property: ".areaCode",
           schemaPath: "#/properties/areaCode/format",
-          stack: '.areaCode should match format "area-code"',
+          stack: '.areaCode must match format "area-code"',
         },
       ]);
     });
@@ -2542,9 +2608,8 @@ describeRepeated("Form common", (createFormComponent) => {
   describe("Meta schema updates", () => {
     it("Should update allowed meta schemas when additionalMetaSchemas is changed", () => {
       const formProps = {
-        liveValidate: true,
         schema: {
-          $schema: "http://json-schema.org/draft-04/schema#",
+          $schema: "http://json-schema.org/draft-06/schema#",
           type: "string",
           minLength: 8,
           pattern: "d+",
@@ -2557,13 +2622,13 @@ describeRepeated("Form common", (createFormComponent) => {
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
           stack:
-            'no schema with key or ref "http://json-schema.org/draft-04/schema#"',
+            'no schema with key or ref "http://json-schema.org/draft-06/schema#"',
         },
       ]);
 
       const customValidator = customizeValidator({
         additionalMetaSchemas: [
-          require("ajv/lib/refs/json-schema-draft-04.json"),
+          require("ajv/lib/refs/json-schema-draft-06.json"),
         ],
       });
 
@@ -2576,20 +2641,20 @@ describeRepeated("Form common", (createFormComponent) => {
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
         {
-          message: "should NOT be shorter than 8 characters",
+          message: "must NOT have fewer than 8 characters",
           name: "minLength",
           params: { limit: 8 },
           property: "",
           schemaPath: "#/minLength",
-          stack: "should NOT be shorter than 8 characters",
+          stack: "must NOT have fewer than 8 characters",
         },
         {
-          message: 'should match pattern "d+"',
+          message: 'must match pattern "d+"',
           name: "pattern",
           params: { pattern: "d+" },
           property: "",
           schemaPath: "#/pattern",
-          stack: 'should match pattern "d+"',
+          stack: 'must match pattern "d+"',
         },
       ]);
     });
@@ -3008,10 +3073,10 @@ describe("Form omitExtraData and liveOmit", () => {
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
-          "level1a",
-          "level1.level2",
-          "level1.anotherThing.anotherThingNested",
-          "level1.anotherThing.anotherThingNested2",
+          ["level1", "anotherThing", "anotherThingNested"],
+          ["level1", "anotherThing", "anotherThingNested2"],
+          ["level1", "level2"],
+          ["level1a"],
         ].sort()
       );
     });
@@ -3059,7 +3124,7 @@ describe("Form omitExtraData and liveOmit", () => {
 
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
-        ["level1a", "level1.level2", "level1.mixedMap"].sort()
+        [["level1", "level2"], "level1.mixedMap", ["level1a"]].sort()
       );
     });
 
@@ -3121,12 +3186,12 @@ describe("Form omitExtraData and liveOmit", () => {
       const fieldNames = comp.getFieldNames(pathSchema, formData);
       expect(fieldNames.sort()).eql(
         [
-          "address_list.0.city",
-          "address_list.0.state",
-          "address_list.0.street_address",
-          "address_list.1.city",
-          "address_list.1.state",
-          "address_list.1.street_address",
+          ["address_list", "0", "city"],
+          ["address_list", "0", "state"],
+          ["address_list", "0", "street_address"],
+          ["address_list", "1", "city"],
+          ["address_list", "1", "state"],
+          ["address_list", "1", "street_address"],
         ].sort()
       );
     });
@@ -3154,9 +3219,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit data on change with omitExtraData=true and liveOmit=false", () => {
@@ -3181,9 +3250,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit data on change with omitExtraData=false and liveOmit=true", () => {
@@ -3208,9 +3281,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", baz: "baz" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", baz: "baz" },
+      },
+      "root_foo"
+    );
   });
 
   it("should omit data on change with omitExtraData=true and liveOmit=true", () => {
@@ -3235,9 +3312,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar" },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar" },
+      },
+      "root_foo"
+    );
   });
 
   it("should not omit additionalProperties on change with omitExtraData=true and liveOmit=true", () => {
@@ -3266,9 +3347,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "foobar" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { foo: "foobar", add: { prop: 123 } },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { foo: "foobar", add: { prop: 123 } },
+      },
+      "root_foo"
+    );
   });
 
   it("should rename formData key if key input is renamed in a nested object with omitExtraData=true and liveOmit=true", () => {
@@ -3292,9 +3377,13 @@ describe("Form omitExtraData and liveOmit", () => {
       target: { value: "key1new" },
     });
 
-    sinon.assert.calledWithMatch(onChange.lastCall, {
-      formData: { nested: { key1new: "value" } },
-    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { nested: { key1new: "value" } },
+      },
+      "root_nested"
+    );
   });
 
   describe("Async errors", () => {
@@ -3478,6 +3567,7 @@ describe("Form omitExtraData and liveOmit", () => {
     const props = {
       schema,
       uiSchema,
+      validator,
     };
 
     class Container extends React.Component {

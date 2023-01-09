@@ -45,6 +45,7 @@ export default function getTestValidator<T = any>({
         }
         return [];
       }),
+      rawValidation: jest.fn().mockImplementation(() => {}),
       setReturnValues({ isValid, data, errorList }: TestValidatorParams) {
         if (isValid !== undefined) {
           testValidator._isValid = isValid;

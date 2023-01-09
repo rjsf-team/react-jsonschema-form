@@ -3,7 +3,13 @@ import ReactIs from "react-is";
 import get from "lodash/get";
 import set from "lodash/set";
 
-import { RJSFSchema, Widget, RegistryWidgetsType } from "./types";
+import {
+  FormContextType,
+  RJSFSchema,
+  Widget,
+  RegistryWidgetsType,
+  StrictRJSFSchema,
+} from "./types";
 import getSchemaType from "./getSchemaType";
 
 /** The map of schema types to widget type to widget name
@@ -67,8 +73,12 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
  * @param AWidget - A widget that will be wrapped or one that is already wrapped
  * @returns - The wrapper widget
  */
-function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
-  let MergedWidget: Widget<T, F> = get(AWidget, "MergedWidget");
+function mergeWidgetOptions<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(AWidget: Widget<T, S, F>) {
+  let MergedWidget: Widget<T, S, F> = get(AWidget, "MergedWidget");
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
     const defaultOptions =
@@ -92,11 +102,15 @@ function mergeWidgetOptions<T = any, F = any>(AWidget: Widget<T, F>) {
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */
-export default function getWidget<T = any, F = any>(
+export default function getWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
   schema: RJSFSchema,
-  widget?: Widget<T, F> | string,
-  registeredWidgets: RegistryWidgetsType<T, F> = {}
-): Widget<T, F> {
+  widget?: Widget<T, S, F> | string,
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {}
+): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
   if (
@@ -104,7 +118,7 @@ export default function getWidget<T = any, F = any>(
     (widget && ReactIs.isForwardRef(React.createElement(widget))) ||
     ReactIs.isMemo(widget)
   ) {
-    return mergeWidgetOptions<T, F>(widget as Widget<T, F>);
+    return mergeWidgetOptions<T, S, F>(widget as Widget<T, S, F>);
   }
 
   if (typeof widget !== "string") {
@@ -113,7 +127,7 @@ export default function getWidget<T = any, F = any>(
 
   if (widget in registeredWidgets) {
     const registeredWidget = registeredWidgets[widget];
-    return getWidget<T, F>(schema, registeredWidget, registeredWidgets);
+    return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
   }
 
   if (typeof type === "string") {
@@ -123,7 +137,7 @@ export default function getWidget<T = any, F = any>(
 
     if (widget in widgetMap[type]) {
       const registeredWidget = registeredWidgets[widgetMap[type][widget]];
-      return getWidget<T, F>(schema, registeredWidget, registeredWidgets);
+      return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
     }
   }
 

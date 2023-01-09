@@ -3,9 +3,7 @@ description: File a bug/issue
 title: "<title>"
 labels: [bug, needs triage]
 assignees: 
-  - epicfaace
-  - jacqueswho
-  - heath-freenome
+  - rjsf-team/reviewers
 body:
 - type: checkboxes
   attributes:
@@ -30,7 +28,12 @@ body:
       - chakra-ui
       - fluent-ui
       - material-ui
+      - mui
       - semantic-ui
+      - utils
+      - validator-ajv6
+      - validator-ajv8
+      - other
   validations:
     required: true
 - type: input
@@ -38,7 +41,7 @@ body:
   attributes:
     label: Version
     description: You can usually get this information in your `package.json` or in the file URL if you're using the unpkg one.
-    value: 4.1.1
+    value: 5.x
   validations:
     required: true
 - type: textarea

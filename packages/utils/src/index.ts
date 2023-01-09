@@ -4,6 +4,7 @@ import canExpand from "./canExpand";
 import createSchemaUtils from "./createSchemaUtils";
 import dataURItoBlob from "./dataURItoBlob";
 import deepEquals from "./deepEquals";
+import ErrorSchemaBuilder from "./ErrorSchemaBuilder";
 import findSchemaDefinition from "./findSchemaDefinition";
 import getInputProps from "./getInputProps";
 import getSchemaType from "./getSchemaType";
@@ -45,6 +46,7 @@ export {
   createSchemaUtils,
   dataURItoBlob,
   deepEquals,
+  ErrorSchemaBuilder,
   findSchemaDefinition,
   getInputProps,
   getSchemaType,

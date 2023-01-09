@@ -1,13 +1,20 @@
 import React, { CSSProperties } from "react";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
  */
-export default function ArrayFieldItemTemplate<T = any, F = any>(
-  props: ArrayFieldTemplateItemType<T, F>
-) {
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     className,
@@ -21,6 +28,7 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
     onReorderClick,
     readonly,
     registry,
+    uiSchema,
   } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
@@ -47,6 +55,8 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
+                uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -54,6 +64,8 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
+                uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {hasRemove && (
@@ -61,6 +73,8 @@ export default function ArrayFieldItemTemplate<T = any, F = any>(
                 style={btnStyle}
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
+                uiSchema={uiSchema}
+                registry={registry}
               />
             )}
           </div>

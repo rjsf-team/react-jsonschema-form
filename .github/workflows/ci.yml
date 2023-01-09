@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -24,44 +24,45 @@ jobs:
     - run: npm run cs-check
 
     - name: Build with Netlify badge
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       run: npm run build
       env:
-        SHOW_NETLIFY_BADGE: true
+        VITE_SHOW_NETLIFY_BADGE: true
+        NODE_OPTIONS: --max_old_space_size=4096
     - name: Build
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       run: npm run build
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
 
     - if: matrix.node-version == '16.x'
       uses: actions/upload-artifact@v3
       with:
         name: dist
-        path: packages/playground/build
+        path: packages/playground/dist
     - run: npm test
 
-  deploy_preview:
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/master'
-    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-    needs: [build]
-    steps:
-      - name: Download built files
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: dist
-      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir=dist --alias="deploy-preview-${PR_NUMBER}"
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+#  deploy_preview:
+#    runs-on: ubuntu-latest
+#    if: github.ref != 'refs/heads/main'
+#    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#    needs: [build]
+#    steps:
+#      - name: Download built files
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: dist
+#          path: dist
+#      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
+#        run: npx netlify-cli deploy --build --prod --dir=dist --alias="deploy-preview-${PR_NUMBER}"
+#        env:
+#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#          PR_NUMBER: ${{ github.event.pull_request.number }}
 
   deploy_playground:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     name: Deploy playground to GitHub Pages
     needs: [build]
     steps:
@@ -71,7 +72,7 @@ jobs:
           name: dist
           path: dist
       - name: Deploy playground
-        uses: crazy-max/ghaction-github-pages@v3.0.0
+        uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           keep_history: true
           target_branch: gh-pages
@@ -79,9 +80,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - run: pip install -r requirements.docs.txt
+    - run: mkdocs build --clean
   # deploy_canary:
   #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/master'
+  #   if: github.ref == 'refs/heads/main'
   #   name: Deploy canary version of packages to npm
   #   needs: [build]
   #   steps:
@@ -97,14 +108,3 @@ jobs:
   #     - run: npx lerna publish from-package --yes --no-verify-access --canary
   #     - if: always()
   #       run: rm .npmrc
-
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.6
-    - run: pip install -r requirements.docs.txt
-    - run: mkdocs build --clean

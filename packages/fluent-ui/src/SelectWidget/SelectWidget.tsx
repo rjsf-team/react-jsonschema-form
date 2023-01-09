@@ -102,6 +102,7 @@ const SelectWidget = ({
     <>
       <Label>{label || schema.title}</Label>
       <Dropdown
+        id={id}
         multiSelect={multiple}
         defaultSelectedKey={multiple ? undefined : value}
         defaultSelectedKeys={multiple ? value : undefined}

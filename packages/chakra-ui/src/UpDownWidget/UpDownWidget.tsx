@@ -8,10 +8,19 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const UpDownWidget = (props: WidgetProps) => {
+export default function UpDownWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     schema,
@@ -69,6 +78,4 @@ const UpDownWidget = (props: WidgetProps) => {
       </NumberInput>
     </FormControl>
   );
-};
-
-export default UpDownWidget;
+}

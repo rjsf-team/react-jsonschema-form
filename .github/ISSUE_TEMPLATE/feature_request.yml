@@ -3,9 +3,7 @@ description: File a Feature
 title: "<title>"
 labels: [feature, needs triage]
 assignees: 
-  - epicfaace
-  - jacqueswho
-  - heath-freenome
+  - rjsf-team/reviewers
 body:
 - type: checkboxes
   attributes:
@@ -24,7 +22,12 @@ body:
       - chakra-ui
       - fluent-ui
       - material-ui
+      - mui
       - semantic-ui
+      - utils
+      - validator-ajv6
+      - validator-ajv8
+      - other
   validations:
     required: true
 - type: textarea

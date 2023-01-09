@@ -1,14 +1,20 @@
 import React from "react";
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
-import { getChakra } from "../utils";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import {
-  GroupBase,
-  OptionsOrGroups,
-  Select as ChakraMultiSelect,
-} from "chakra-react-select";
+  FormContextType,
+  processSelectValue,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
+import { getChakra } from "../utils";
+import { GroupBase, OptionsOrGroups, Select } from "chakra-react-select";
 
-const SelectWidget = (props: WidgetProps) => {
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -30,13 +36,9 @@ const SelectWidget = (props: WidgetProps) => {
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
-  // TODO: Default emptyValue should be string when multi select is implemented
-  // const emptyValue = multiple ? [] : "";
-  const emptyValue = "";
-
   const _onMultiChange = (e: any) => {
     return onChange(
-      processSelectValue(
+      processSelectValue<T, S, F>(
         schema,
         e.map((v: { label: any; value: any }) => {
           return v.value;
@@ -46,19 +48,38 @@ const SelectWidget = (props: WidgetProps) => {
     );
   };
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue(schema, value, options));
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, processSelectValue(schema, value, options));
+  const _onChange = (e: any) => {
+    return onChange(processSelectValue<T, S, F>(schema, e.value, options));
+  };
+
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
+
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, processSelectValue(schema, value, options));
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
 
+  const _valueLabelMap: any = {};
+  (enumOptions as any).map((option: any) => {
+    const { value, label }: any = option;
+    _valueLabelMap[value] = label;
+    option["isDisabled"] =
+      enumDisabled && (enumDisabled as any).indexOf(value) != -1;
+  });
+
+  const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
+  const formValue: any = isMultiple
+    ? (value || []).map((v: any) => {
+        return {
+          label: _valueLabelMap[v] || v,
+          value: v,
+        };
+      })
+    : {
+        label: _valueLabelMap[value] || value || "",
+        value: value || "",
+      };
   return (
     <FormControl
       mb={1}
@@ -69,54 +90,23 @@ const SelectWidget = (props: WidgetProps) => {
       isInvalid={rawErrors && rawErrors.length > 0}
     >
       {(label || schema.title) && (
-        <FormLabel
-          htmlFor={
-            typeof multiple !== "undefined" && enumOptions ? undefined : id
-          }
-        >
+        <FormLabel htmlFor={isMultiple ? undefined : id}>
           {label || schema.title}
         </FormLabel>
       )}
-      {typeof multiple !== "undefined" && enumOptions ? (
-        <ChakraMultiSelect
-          inputId={id}
-          name={id}
-          isMulti
-          options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
-          placeholder={placeholder}
-          closeMenuOnSelect={false}
-          onChange={_onMultiChange}
-          value={value.map((v: any) => {
-            return {
-              label: v,
-              value: v,
-            };
-          })}
-        />
-      ) : (
-        <Select
-          id={id}
-          name={id}
-          placeholder={placeholder !== "" ? placeholder : " "}
-          value={typeof value === "undefined" ? emptyValue : value.toString()}
-          autoFocus={autofocus}
-          onBlur={_onBlur}
-          onChange={_onChange}
-          onFocus={_onFocus}
-        >
-          {(enumOptions as any).map(({ value, label }: any, i: number) => {
-            const disabled: any =
-              enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-            return (
-              <option key={i} value={value} disabled={disabled}>
-                {label}
-              </option>
-            );
-          })}
-        </Select>
-      )}
+      <Select
+        inputId={id}
+        name={id}
+        isMulti={isMultiple}
+        options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
+        placeholder={placeholder}
+        closeMenuOnSelect={!isMultiple}
+        onBlur={_onBlur}
+        onChange={isMultiple ? _onMultiChange : _onChange}
+        onFocus={_onFocus}
+        autoFocus={autofocus}
+        value={formValue}
+      />
     </FormControl>
   );
-};
-
-export default SelectWidget;
+}

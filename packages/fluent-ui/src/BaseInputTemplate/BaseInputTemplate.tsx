@@ -76,25 +76,38 @@ const BaseInputTemplate = ({
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
-    <TextField
-      id={id}
-      placeholder={placeholder}
-      label={label || schema.title}
-      autoFocus={autofocus}
-      required={required}
-      disabled={disabled}
-      readOnly={readonly}
-      multiline={multiline}
-      // TODO: once fluent-ui supports the name prop, we can add it back in here.
-      // name={name}
-      {...inputProps}
-      value={value || value === 0 ? value : ""}
-      onChange={_onChange as any}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      errorMessage={(rawErrors || []).join("\n")}
-      {...uiProps}
-    />
+    <>
+      <TextField
+        id={id}
+        name={id}
+        placeholder={placeholder}
+        label={label || schema.title}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled}
+        readOnly={readonly}
+        multiline={multiline}
+        // TODO: once fluent-ui supports the name prop, we can add it back in here.
+        // name={name}
+        {...inputProps}
+        value={value || value === 0 ? value : ""}
+        onChange={_onChange as any}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        errorMessage={(rawErrors || []).join("\n")}
+        list={schema.examples ? `examples_${id}` : undefined}
+        {...uiProps}
+      />
+      {schema.examples && (
+        <datalist id={`examples_${id}`}>
+          {(schema.examples as string[])
+            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      )}
+    </>
   );
 };
 

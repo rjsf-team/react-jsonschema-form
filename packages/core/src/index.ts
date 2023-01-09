@@ -1,8 +1,8 @@
 import Form, { FormProps, FormState, IChangeEvent } from "./components/Form";
-import withTheme, { WithThemeProps } from "./withTheme";
+import withTheme, { ThemeProps } from "./withTheme";
 import getDefaultRegistry from "./getDefaultRegistry";
 
-export type { FormProps, FormState, IChangeEvent, WithThemeProps };
+export type { FormProps, FormState, IChangeEvent, ThemeProps };
 
 export { withTheme, getDefaultRegistry };
 export default Form;

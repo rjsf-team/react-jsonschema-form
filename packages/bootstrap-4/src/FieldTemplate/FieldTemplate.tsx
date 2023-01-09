@@ -1,31 +1,50 @@
 import React from "react";
-
-import { FieldTemplateProps } from "@rjsf/utils";
-
+import {
+  FieldTemplateProps,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
-import ListGroup from "react-bootstrap/ListGroup";
 
-import WrapIfAdditional from "./WrapIfAdditional";
-
-const FieldTemplate = ({
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   children,
   displayLabel,
   rawErrors = [],
-  rawHelp,
+  errors,
+  help,
   rawDescription,
   classNames,
   disabled,
   label,
+  hidden,
   onDropPropertyClick,
   onKeyChange,
   readonly,
   required,
   schema,
+  uiSchema,
   registry,
-}: FieldTemplateProps) => {
+}: FieldTemplateProps<T, S, F>) {
+  const uiOptions = getUiOptions(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
+    "WrapIfAdditionalTemplate",
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  if (hidden) {
+    return <div className="hidden">{children}</div>;
+  }
   return (
-    <WrapIfAdditional
+    <WrapIfAdditionalTemplate
       classNames={classNames}
       disabled={disabled}
       id={id}
@@ -35,9 +54,19 @@ const FieldTemplate = ({
       readonly={readonly}
       required={required}
       schema={schema}
+      uiSchema={uiSchema}
       registry={registry}
     >
       <Form.Group>
+        {displayLabel && (
+          <Form.Label
+            htmlFor={id}
+            className={rawErrors.length > 0 ? "text-danger" : ""}
+          >
+            {label}
+            {required ? "*" : null}
+          </Form.Label>
+        )}
         {children}
         {displayLabel && rawDescription && (
           <Form.Text
@@ -46,32 +75,9 @@ const FieldTemplate = ({
             {rawDescription}
           </Form.Text>
         )}
-        {rawErrors.length > 0 && (
-          <ListGroup as="ul">
-            {rawErrors.map((error: string) => {
-              return (
-                <ListGroup.Item
-                  as="li"
-                  key={error}
-                  className="border-0 m-0 p-0"
-                >
-                  <small className="m-0 text-danger">{error}</small>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
-        )}
-        {rawHelp && (
-          <Form.Text
-            className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
-            id={id}
-          >
-            {rawHelp}
-          </Form.Text>
-        )}
+        {errors}
+        {help}
       </Form.Group>
-    </WrapIfAdditional>
+    </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

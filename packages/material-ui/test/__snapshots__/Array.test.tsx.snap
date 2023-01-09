@@ -162,6 +162,7 @@ exports[`array fields array icons 1`] = `
                                 className="MuiInputBase-input MuiInput-input"
                                 disabled={false}
                                 id="root_0"
+                                name="root_0"
                                 onAnimationStart={[Function]}
                                 onBlur={[Function]}
                                 onChange={[Function]}
@@ -358,6 +359,7 @@ exports[`array fields array icons 1`] = `
                                 className="MuiInputBase-input MuiInput-input"
                                 disabled={false}
                                 id="root_1"
+                                name="root_1"
                                 onAnimationStart={[Function]}
                                 onBlur={[Function]}
                                 onChange={[Function]}
@@ -645,6 +647,7 @@ exports[`array fields checkboxes 1`] = `
             aria-hidden={true}
             autoFocus={false}
             className="MuiSelect-nativeInput"
+            name="root"
             onAnimationStart={[Function]}
             onChange={[Function]}
             required={false}
@@ -690,6 +693,113 @@ exports[`array fields checkboxes 1`] = `
       >
         Submit
       </span>
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields empty errors array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="MuiFormControl-root MuiFormControl-fullWidth"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                  data-shrink={false}
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    disabled={false}
+                    id="root_name"
+                    name="root_name"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-19"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -755,6 +865,7 @@ exports[`array fields fixed array 1`] = `
                                 className="MuiInputBase-input MuiInput-input"
                                 disabled={false}
                                 id="root_0"
+                                name="root_0"
                                 onAnimationStart={[Function]}
                                 onBlur={[Function]}
                                 onChange={[Function]}
@@ -812,6 +923,7 @@ exports[`array fields fixed array 1`] = `
                                 className="MuiInputBase-input MuiInput-input"
                                 disabled={false}
                                 id="root_1"
+                                name="root_1"
                                 onAnimationStart={[Function]}
                                 onBlur={[Function]}
                                 onChange={[Function]}
@@ -864,6 +976,110 @@ exports[`array fields fixed array 1`] = `
       <span
         className="MuiTouchRipple-root"
       />
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="MuiFormControl-root MuiFormControl-fullWidth"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                  data-shrink={false}
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    disabled={false}
+                    id="root_name"
+                    name="root_name"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-18"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>

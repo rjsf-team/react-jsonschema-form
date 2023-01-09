@@ -24,12 +24,15 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 
 ## children
 
-You can provide custom buttons to your form via the `Form` component's `children`. Otherwise a default submit button will be rendered.
+You can provide custom buttons to your form via the `Form` component's `children`. If no children are provided, by default a `Submit` button will be rendered.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+For other ways to modify the default `Submit` button, see both the [Submit Button Options](../uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../../advanced-customization/custom-templates.md#submitbutton) documentation.
 
-const schema = {
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
+
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -55,10 +58,11 @@ See [Validation](../usage/validation.md) for more information.
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -73,10 +77,11 @@ If you just want to disable some fields, see the `ui:disabled` parameter in `uiS
 
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -120,10 +125,11 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 
@@ -138,10 +144,11 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "object",
   properties: {
     first: {
@@ -193,16 +200,20 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same args as `onSubmit` any time a value is updated in the form.
+If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same first argument as `onSubmit` any time a value is updated in the form.
+It will also receive, as the second argument, the `id` of the field which experienced the change.
+Generally, this will be the `id` of the field for which input data is modified.
+In the case of adding/removing of new fields in arrays or objects with `additionalProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
 
 ## onError
 
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 const onError = (errors) => console.log("I have", errors.length, "errors to fix");
@@ -218,12 +229,15 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onSubmit
 
-You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after. The original event will also be passed as a second parameter:
+You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted and its data are valid.
+It will be passed a result object having a `formData` attribute, which is the valid form data you're usually after.
+The original event will also be passed as a second parameter:
 
-```jsx
-import validator from "@rjsf/validator-ajv6";
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
-const schema = {
+const schema: RJSFSchema = {
   type: "string"
 };
 const onSubmit = ({formData}, e) => console.log("Data submitted: ",  formData);
@@ -241,7 +255,7 @@ render((
 
 ## showErrorList
 
-When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `true` by default. See [Validation](../usage/validation.md) for more information.
+When this prop is set to `top` or `bottom`, a list of errors (or the custom error list defined in the `ErrorList`) will also show at the `bottom` or `top` of the form. When set to false, only inline input validation errors will be shown. Set to `top` by default. See [Validation](../usage/validation.md) for more information.
 
 ## tagName
 
@@ -284,7 +298,7 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 ## validator
 
 **Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work. 
-`@rjsf/validator-ajv6` exports the implementation of this interface from RJSF version 4.
+`@rjsf/validator-ajv8` exports the implementation of this interface from RJSF version 4.
 
 ## widgets
 

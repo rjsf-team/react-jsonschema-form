@@ -4,9 +4,10 @@ import {
   getUiOptions,
   optionsList,
   FieldProps,
-  RJSFSchemaDefinition,
+  FormContextType,
   EnumOptionsType,
   RJSFSchema,
+  StrictRJSFSchema,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 
@@ -15,7 +16,11 @@ import isObject from "lodash/isObject";
  *
  * @param props - The `FieldProps` for this template
  */
-function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
+function BooleanField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldProps<T, S, F>) {
   const {
     schema,
     name,
@@ -34,15 +39,15 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
   } = props;
   const { title } = schema;
   const { widgets, formContext } = registry;
-  const { widget = "checkbox", ...options } = getUiOptions<T, F>(uiSchema);
+  const { widget = "checkbox", ...options } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
 
-  let enumOptions: EnumOptionsType[] | undefined;
+  let enumOptions: EnumOptionsType<S>[] | undefined;
 
   if (Array.isArray(schema.oneOf)) {
-    enumOptions = optionsList({
+    enumOptions = optionsList<S>({
       oneOf: schema.oneOf
-        .map((option: RJSFSchemaDefinition) => {
+        .map((option) => {
           if (isObject(option)) {
             return {
               ...option,
@@ -51,34 +56,33 @@ function BooleanField<T = any, F = any>(props: FieldProps<T, F>) {
           }
           return undefined;
         })
-        .filter((o) => o) as RJSFSchemaDefinition[], // cast away the error that typescript can't grok is fixed
-    });
+        .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
+    } as unknown as S);
   } else {
     // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
-    const schemaWithEnumNames = schema as RJSFSchema & { enumNames?: string[] };
-    schema.enum = schema.enum ?? [true, false];
+    const schemaWithEnumNames = schema as S & { enumNames?: string[] };
+    const enums = schema.enum ?? [true, false];
     if (
       !schemaWithEnumNames.enumNames &&
-      schema.enum &&
-      schema.enum.length === 2 &&
-      schema.enum.every((v) => typeof v === "boolean")
+      enums.length === 2 &&
+      enums.every((v: any) => typeof v === "boolean")
     ) {
       enumOptions = [
         {
-          value: schema.enum[0],
-          label: schema.enum[0] ? "Yes" : "No",
+          value: enums[0],
+          label: enums[0] ? "Yes" : "No",
         },
         {
-          value: schema.enum[1],
-          label: schema.enum[1] ? "Yes" : "No",
+          value: enums[1],
+          label: enums[1] ? "Yes" : "No",
         },
       ];
     } else {
-      enumOptions = optionsList({
-        enum: schema.enum,
+      enumOptions = optionsList<S>({
+        enum: enums,
         // NOTE: enumNames is deprecated, but still supported for now.
         enumNames: schemaWithEnumNames.enumNames,
-      } as RJSFSchema);
+      } as unknown as S);
     }
   }
 

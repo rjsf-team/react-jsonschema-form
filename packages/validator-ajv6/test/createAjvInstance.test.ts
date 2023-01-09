@@ -22,7 +22,7 @@ export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
 };
 
 describe("createAjvInstance()", () => {
-  describe("no additional meta schemas or custom formats", () => {
+  describe("no additional meta schemas, custom formats or ajv options overrides", () => {
     let ajv: AjvType;
     beforeAll(() => {
       ajv = createAjvInstance();
@@ -54,7 +54,7 @@ describe("createAjvInstance()", () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
     });
   });
-  describe("no additional meta schemas or custom formats", () => {
+  describe("has additional meta schemas, custom formats and ajv options overrides", () => {
     let ajv: AjvType;
     beforeAll(() => {
       ajv = createAjvInstance(
@@ -89,7 +89,7 @@ describe("createAjvInstance()", () => {
         COLOR_FORMAT_REGEX
       );
     });
-    it("the remaining addForma() calls were for custom formats", () => {
+    it("the remaining addFormat() calls were for custom formats", () => {
       Object.keys(CUSTOM_OPTIONS.customFormats!).forEach(
         (key: string, i: number) => {
           expect(ajv.addFormat).toHaveBeenNthCalledWith(

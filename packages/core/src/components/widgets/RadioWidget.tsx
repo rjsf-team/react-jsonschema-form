@@ -1,12 +1,21 @@
 import React, { FocusEvent, useCallback } from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<T = any, F = any>({
+function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   options,
   value,
   required,
@@ -17,7 +26,7 @@ function RadioWidget<T = any, F = any>({
   onFocus,
   onChange,
   id,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
   const { enumOptions, enumDisabled, inline } = options;
@@ -40,7 +49,8 @@ function RadioWidget<T = any, F = any>({
         enumOptions.map((option, i) => {
           const checked = option.value === value;
           const itemDisabled =
-            enumDisabled && enumDisabled.indexOf(option.value) != -1;
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
@@ -50,7 +60,7 @@ function RadioWidget<T = any, F = any>({
             <span>
               <input
                 type="radio"
-                id={`${id}_${i}`}
+                id={`${id}-${option.value}`}
                 checked={checked}
                 name={name}
                 required={required}
@@ -66,11 +76,11 @@ function RadioWidget<T = any, F = any>({
           );
 
           return inline ? (
-            <label key={i} className={`radio-inline ${disabledCls}`}>
+            <label key={option.value} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={i} className={`radio ${disabledCls}`}>
+            <div key={option.value} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

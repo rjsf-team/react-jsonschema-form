@@ -1,0 +1,2153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <label
+      className="ant-checkbox-wrapper"
+    >
+      <span
+        className="ant-checkbox"
+        style={Object {}}
+      >
+        <input
+          autoFocus={false}
+          checked={false}
+          className="ant-checkbox-input"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyPress={[Function]}
+          onKeyUp={[Function]}
+          type="checkbox"
+        />
+        <span
+          className="ant-checkbox-inner"
+        />
+      </span>
+      <span>
+        
+      </span>
+    </label>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <label
+      className="ant-checkbox-wrapper"
+    >
+      <span
+        className="ant-checkbox"
+        style={Object {}}
+      >
+        <input
+          autoFocus={false}
+          checked={false}
+          className="ant-checkbox-input"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyPress={[Function]}
+          onKeyUp={[Function]}
+          type="checkbox"
+        />
+        <span
+          className="ant-checkbox-inner"
+        />
+      </span>
+      <span>
+        test
+      </span>
+    </label>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="ant-checkbox-group"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    >
+      <span>
+        <label
+          className="ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="ant-checkbox-input"
+              disabled={false}
+              id="root-foo"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+              value="foo"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            foo
+          </span>
+        </label>
+        <br />
+      </span>
+      <span>
+        <label
+          className="ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="ant-checkbox-input"
+              disabled={false}
+              id="root-bar"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+              value="bar"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            bar
+          </span>
+        </label>
+        <br />
+      </span>
+      <span>
+        <label
+          className="ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="ant-checkbox-input"
+              disabled={false}
+              id="root-fuzz"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+              value="fuzz"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            fuzz
+          </span>
+        </label>
+        <br />
+      </span>
+      <span>
+        <label
+          className="ant-checkbox-wrapper"
+        >
+          <span
+            className="ant-checkbox"
+            style={Object {}}
+          >
+            <input
+              autoFocus={false}
+              checked={false}
+              className="ant-checkbox-input"
+              disabled={false}
+              id="root-qux"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyPress={[Function]}
+              onKeyUp={[Function]}
+              type="checkbox"
+              value="qux"
+            />
+            <span
+              className="ant-checkbox-inner"
+            />
+          </span>
+          <span>
+            qux
+          </span>
+        </label>
+        <br />
+      </span>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-form-item"
+            >
+              <div
+                className="ant-row ant-form-item-row"
+                style={Object {}}
+              >
+                <div
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
+                >
+                  <label
+                    className=""
+                    htmlFor="root_my-field"
+                    title="my-field"
+                  >
+                    my-field
+                  </label>
+                </div>
+                <div
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-form-item-control-input"
+                  >
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_my-field"
+                          name="root_my-field"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-form-item-extra"
+                  >
+                    <span
+                      id="root_my-field__description"
+                    >
+                      some description
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-form-item"
+            >
+              <div
+                className="ant-row ant-form-item-row"
+                style={Object {}}
+              >
+                <div
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
+                >
+                  <label
+                    className=""
+                    htmlFor="root_my-field"
+                    title="my-field"
+                  >
+                    my-field
+                  </label>
+                </div>
+                <div
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-form-item-control-input"
+                  >
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_my-field"
+                          name="root_my-field"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-form-item-extra"
+                  >
+                    <span
+                      id="root_my-field__description"
+                    >
+                      some other description
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="color"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="ant-picker"
+      onMouseUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-picker-input"
+      >
+        <input
+          autoComplete="off"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          placeholder=""
+          readOnly={true}
+          size={12}
+          title=""
+          value=""
+        />
+        <span
+          className="ant-picker-suffix"
+        >
+          <span
+            aria-label="calendar"
+            className="anticon anticon-calendar"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="calendar"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="ant-picker"
+      onMouseUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-picker-input"
+      >
+        <input
+          autoComplete="off"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          placeholder=""
+          readOnly={true}
+          size={21}
+          title=""
+          value=""
+        />
+        <span
+          className="ant-picker-suffix"
+        >
+          <span
+            aria-label="calendar"
+            className="anticon anticon-calendar"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="calendar"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors"
+    data-show={true}
+    role="alert"
+    style={Object {}}
+  >
+    <div
+      className="ant-alert-content"
+    >
+      <div
+        className="ant-alert-message"
+      >
+        Errors
+      </div>
+      <div
+        className="ant-alert-description"
+      >
+        <div
+          className="ant-list ant-list-sm ant-list-split list-group"
+        >
+          <div
+            className="ant-spin-nested-loading"
+          >
+            <div
+              className="ant-spin-container"
+            >
+              <li
+                className="ant-list-item"
+              >
+                <div
+                  className="ant-space ant-space-horizontal ant-space-align-center"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-space-item"
+                    style={
+                      Object {
+                        "marginRight": 8,
+                      }
+                    }
+                  >
+                    <span
+                      aria-label="exclamation-circle"
+                      className="anticon anticon-exclamation-circle"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="exclamation-circle"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                        />
+                        <path
+                          d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    className="ant-space-item"
+                    style={Object {}}
+                  >
+                    . an error
+                  </div>
+                </div>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        
+      </div>
+    </fieldset>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-null"
+  />
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="ant-input-number"
+      onBlur={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-input-number-handler-wrap"
+      >
+        <span
+          aria-disabled={false}
+          aria-label="Increase Value"
+          className="ant-input-number-handler ant-input-number-handler-up"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="up"
+            className="anticon anticon-up ant-input-number-handler-up-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="up"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+        <span
+          aria-disabled={false}
+          aria-label="Decrease Value"
+          className="ant-input-number-handler ant-input-number-handler-down"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="down"
+            className="anticon anticon-down ant-input-number-handler-down-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="down"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+      <div
+        className="ant-input-number-input-wrap"
+      >
+        <input
+          aria-valuenow="0"
+          autoComplete="off"
+          className="ant-input-number-input"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          role="spinbutton"
+          step={1}
+          type="number"
+          value="0"
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="ant-input-number"
+      onBlur={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-input-number-handler-wrap"
+      >
+        <span
+          aria-disabled={false}
+          aria-label="Increase Value"
+          className="ant-input-number-handler ant-input-number-handler-up"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="up"
+            className="anticon anticon-up ant-input-number-handler-up-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="up"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+        <span
+          aria-disabled={false}
+          aria-label="Decrease Value"
+          className="ant-input-number-handler ant-input-number-handler-down"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="down"
+            className="anticon anticon-down ant-input-number-handler-down-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="down"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+      <div
+        className="ant-input-number-input-wrap"
+      >
+        <input
+          aria-valuenow={null}
+          autoComplete="off"
+          className="ant-input-number-input"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          role="spinbutton"
+          step={1}
+          type="number"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <span
+      className="ant-input-affix-wrapper ant-input-password"
+      onClick={[Function]}
+    >
+      <input
+        className="ant-input"
+        hidden={null}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder=""
+        style={null}
+        type="password"
+        value=""
+      />
+      <span
+        className="ant-input-suffix"
+      >
+        <span
+          aria-label="eye-invisible"
+          className="anticon anticon-eye-invisible ant-input-password-icon"
+          onClick={[Function]}
+          onMouseDown={[Function]}
+          onMouseUp={[Function]}
+          role="img"
+          tabIndex={-1}
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="eye-invisible"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z"
+            />
+            <path
+              d="M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z"
+            />
+          </svg>
+        </span>
+      </span>
+    </span>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="ant-radio-group ant-radio-group-outline"
+      id="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    >
+      <label
+        className="ant-radio-wrapper"
+      >
+        <span
+          className="ant-radio"
+          style={Object {}}
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="ant-radio-input"
+            disabled={false}
+            id="root-true"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            type="radio"
+            value="true"
+          />
+          <span
+            className="ant-radio-inner"
+          />
+        </span>
+        <span>
+          Yes
+        </span>
+      </label>
+      <label
+        className="ant-radio-wrapper"
+      >
+        <span
+          className="ant-radio"
+          style={Object {}}
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="ant-radio-input"
+            disabled={false}
+            id="root-false"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            type="radio"
+            value="false"
+          />
+          <span
+            className="ant-radio-inner"
+          />
+        </span>
+        <span>
+          No
+        </span>
+      </label>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      list="examples_root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+    <datalist
+      id="examples_root"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="ant-select ant-select-single ant-select-show-arrow"
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-select-selector"
+        onClick={[Function]}
+        onMouseDown={[Function]}
+      >
+        <span
+          className="ant-select-selection-search"
+        >
+          <input
+            aria-activedescendant="root_list_0"
+            aria-autocomplete="list"
+            aria-controls="root_list"
+            aria-haspopup="listbox"
+            aria-owns="root_list"
+            autoComplete="off"
+            autoFocus={false}
+            className="ant-select-selection-search-input"
+            disabled={false}
+            id="root"
+            onChange={[Function]}
+            onCompositionEnd={[Function]}
+            onCompositionStart={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            onPaste={[Function]}
+            readOnly={true}
+            role="combobox"
+            style={
+              Object {
+                "opacity": 0,
+              }
+            }
+            type="search"
+            unselectable="on"
+            value=""
+          />
+        </span>
+        <span
+          className="ant-select-selection-placeholder"
+        >
+          
+        </span>
+      </div>
+      <span
+        aria-hidden={true}
+        className="ant-select-arrow"
+        onMouseDown={[Function]}
+        style={
+          Object {
+            "WebkitUserSelect": "none",
+            "userSelect": "none",
+          }
+        }
+        unselectable="on"
+      >
+        <span
+          aria-label="down"
+          className="anticon anticon-down ant-select-suffix"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="down"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+            />
+          </svg>
+        </span>
+      </span>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-integer"
+  >
+    <div
+      className="ant-slider ant-slider-horizontal"
+      onMouseDown={[Function]}
+    >
+      <div
+        className="ant-slider-rail"
+      />
+      <div
+        className="ant-slider-track"
+        onMouseDown={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "left": "0%",
+            "width": "56.896551724137936%",
+          }
+        }
+      />
+      <div
+        className="ant-slider-step"
+      />
+      <div
+        aria-disabled={false}
+        aria-valuemax={100}
+        aria-valuemin={42}
+        aria-valuenow={75}
+        className="ant-slider-handle"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onMouseDown={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onTouchStart={[Function]}
+        role="slider"
+        style={
+          Object {
+            "left": "56.896551724137936%",
+            "transform": "translateX(-50%)",
+          }
+        }
+        tabIndex={0}
+      />
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div>
+      <p>
+        <input
+          autoFocus={false}
+          defaultValue=""
+          disabled={false}
+          id="root"
+          name="root"
+          onChange={[Function]}
+          type="file"
+        />
+      </p>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="email"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="url"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder="placeholder"
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <textarea
+      className="ant-input"
+      disabled={false}
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      rows={4}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="textarea"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="ant-row"
+        style={
+          Object {
+            "marginLeft": -12,
+            "marginRight": -12,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-label"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <label
+            className=""
+            htmlFor="root-title"
+            onClick={[Function]}
+            title="Titre 1"
+          >
+            Titre 1
+          </label>
+        </div>
+        <div
+          className="ant-col ant-col-24"
+          style={
+            Object {
+              "paddingLeft": 12,
+              "paddingRight": 12,
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="ant-form-item"
+            >
+              <div
+                className="ant-row ant-form-item-row"
+                style={Object {}}
+              >
+                <div
+                  className="ant-col ant-col-24 ant-form-item-label"
+                  style={Object {}}
+                >
+                  <label
+                    className=""
+                    htmlFor="root_title"
+                    title="Titre 2"
+                  >
+                    Titre 2
+                  </label>
+                </div>
+                <div
+                  className="ant-col ant-col-24 ant-form-item-control"
+                  style={Object {}}
+                >
+                  <div
+                    className="ant-form-item-control-input"
+                  >
+                    <div
+                      className="ant-form-item-control-input-content"
+                    >
+                      <span
+                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                      >
+                        <input
+                          className="ant-input"
+                          hidden={null}
+                          id="root_title"
+                          name="root_title"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder=""
+                          style={null}
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          className="ant-input-suffix"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="unsupported-field"
+    >
+      <p>
+        Unsupported field schema
+        <span>
+           for
+           field 
+          <code>
+            root
+          </code>
+        </span>
+        <em>
+          : 
+          Unknown field type undefined
+        </em>
+        .
+      </p>
+      <pre>
+        {}
+      </pre>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="ant-input-number"
+      onBlur={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+    >
+      <div
+        className="ant-input-number-handler-wrap"
+      >
+        <span
+          aria-disabled={false}
+          aria-label="Increase Value"
+          className="ant-input-number-handler ant-input-number-handler-up"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="up"
+            className="anticon anticon-up ant-input-number-handler-up-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="up"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+        <span
+          aria-disabled={false}
+          aria-label="Decrease Value"
+          className="ant-input-number-handler ant-input-number-handler-down"
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          role="button"
+          unselectable="on"
+        >
+          <span
+            aria-label="down"
+            className="anticon anticon-down ant-input-number-handler-down-inner"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="down"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+      <div
+        className="ant-input-number-input-wrap"
+      >
+        <input
+          aria-valuenow={null}
+          autoComplete="off"
+          className="ant-input-number-input"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          role="spinbutton"
+          step={1}
+          type="number"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="text"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</div>
+`;

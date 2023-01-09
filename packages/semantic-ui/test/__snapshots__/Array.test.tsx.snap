@@ -1,0 +1,668 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field field-array field-array-of-string sortable-form-fields"
+      >
+        <div>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field field-array field-array-of-string sortable-form-fields"
+      >
+        <div>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="array-item"
+            >
+              <div
+                className="ui grid"
+                style={
+                  Object {
+                    "display": "grid",
+                    "gridTemplateColumns": "1fr 65px",
+                  }
+                }
+              >
+                <div
+                  className="middle aligned sixteen wide column"
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      className="grouped equal width fields"
+                    >
+                      <div
+                        className="required field"
+                      >
+                        <div
+                          className="ui fluid input"
+                        >
+                          <input
+                            aria-describedby={null}
+                            autoFocus={false}
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="a"
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="column"
+                >
+                  <div
+                    className="ui mini vertical buttons"
+                  >
+                    <button
+                      className="ui icon disabled button array-item-move-up"
+                      disabled={true}
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Move up"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="angle up icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon button array-item-move-down"
+                      onClick={[Function]}
+                      title="Move down"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="angle down icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon button array-item-remove"
+                      onClick={[Function]}
+                      title="Remove"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="trash icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="array-item"
+            >
+              <div
+                className="ui grid"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "display": "grid",
+                    "gridTemplateColumns": "1fr 65px",
+                  }
+                }
+              >
+                <div
+                  className="middle aligned sixteen wide column"
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      className="grouped equal width fields"
+                    >
+                      <div
+                        className="required field"
+                      >
+                        <div
+                          className="ui fluid input"
+                        >
+                          <input
+                            aria-describedby={null}
+                            autoFocus={false}
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="b"
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="column"
+                >
+                  <div
+                    className="ui mini vertical buttons"
+                  >
+                    <button
+                      className="ui icon button array-item-move-up"
+                      onClick={[Function]}
+                      title="Move up"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="angle up icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon disabled button array-item-move-down"
+                      disabled={true}
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Move down"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="angle down icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon button array-item-remove"
+                      onClick={[Function]}
+                      title="Remove"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="trash icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field"
+      >
+        <div
+          aria-describedby={null}
+          aria-disabled={false}
+          aria-expanded={false}
+          aria-multiselectable={true}
+          autoFocus={false}
+          className="ui fluid multiple selection scrolling dropdown"
+          id="root"
+          inverted="false"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          readOnly={false}
+          required={false}
+          role="listbox"
+          tabIndex={0}
+        >
+          <i
+            aria-hidden="true"
+            className="dropdown icon"
+            onClick={[Function]}
+          />
+          <div
+            className="menu transition"
+          >
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={true}
+              className="selected item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                a
+              </span>
+            </div>
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={false}
+              className="item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                b
+              </span>
+            </div>
+            <div
+              aria-checked={false}
+              aria-disabled={false}
+              aria-selected={false}
+              className="item"
+              onClick={[Function]}
+              role="option"
+              style={
+                Object {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              >
+                c
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields empty errors array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root_name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field field-array field-array-fixed-items"
+      >
+        <div>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="array-item"
+            >
+              <div
+                className="ui grid"
+                style={
+                  Object {
+                    "display": "grid",
+                    "gridTemplateColumns": "1fr 65px",
+                  }
+                }
+              >
+                <div
+                  className="middle aligned sixteen wide column"
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      className="grouped equal width fields"
+                    >
+                      <div
+                        className="required field"
+                      >
+                        <div
+                          className="ui fluid input"
+                        >
+                          <input
+                            aria-describedby={null}
+                            autoFocus={false}
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="array-item"
+            >
+              <div
+                className="ui grid"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "display": "grid",
+                    "gridTemplateColumns": "1fr 65px",
+                  }
+                }
+              >
+                <div
+                  className="middle aligned sixteen wide column"
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      className="grouped equal width fields"
+                    >
+                      <div
+                        className="required field"
+                      >
+                        <div
+                          className="ui fluid input"
+                        >
+                          <input
+                            aria-describedby={null}
+                            autoFocus={false}
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby={null}
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root_name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

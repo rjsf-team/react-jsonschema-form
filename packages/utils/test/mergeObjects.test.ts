@@ -87,5 +87,23 @@ describe("mergeObjects()", () => {
         a: { b: [1, 2] },
       });
     });
+
+    it("should not concat duplicate values in arrays when concatArrays is 'preventDuplicates'", () => {
+      const obj1 = { a: [1] };
+      const obj2 = { a: [1, 2] };
+
+      expect(mergeObjects(obj1, obj2, "preventDuplicates")).toEqual({
+        a: [1, 2],
+      });
+    });
+
+    it("should not concat duplicate values in nested arrays when concatArrays is 'preventDuplicates'", () => {
+      const obj1 = { a: { b: [1] } };
+      const obj2 = { a: { b: [1, 2] } };
+
+      expect(mergeObjects(obj1, obj2, "preventDuplicates")).toEqual({
+        a: { b: [1, 2] },
+      });
+    });
   });
 });

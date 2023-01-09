@@ -8,6 +8,7 @@ exports[`single fields checkbox field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -25,6 +26,7 @@ exports[`single fields checkbox field 1`] = `
         className="input-127"
         disabled={false}
         id="root"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -74,7 +76,7 @@ exports[`single fields checkbox field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__105"
+              id="id__103"
             >
               Submit
             </span>
@@ -86,7 +88,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -94,6 +96,7 @@ exports[`single fields checkbox field 2`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -107,10 +110,12 @@ exports[`single fields checkbox field 2`] = `
       <input
         aria-checked="false"
         aria-disabled={false}
+        aria-label="test"
         checked={false}
         className="input-127"
         disabled={false}
         id="root"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -131,6 +136,12 @@ exports[`single fields checkbox field 2`] = `
             
           </i>
         </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-131"
+        >
+          test
+        </span>
       </label>
     </div>
     
@@ -160,7 +171,7 @@ exports[`single fields checkbox field 2`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__108"
+              id="id__106"
             >
               Submit
             </span>
@@ -180,6 +191,7 @@ exports[`single fields checkboxes field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -200,7 +212,8 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_0"
+        id="root-foo"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -208,7 +221,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_0"
+        htmlFor="root-foo"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -239,7 +252,8 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_1"
+        id="root-bar"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -247,7 +261,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_1"
+        htmlFor="root-bar"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -278,7 +292,8 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_2"
+        id="root-fuzz"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -286,7 +301,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_2"
+        htmlFor="root-fuzz"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -317,7 +332,8 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root_3"
+        id="root-qux"
+        name="root"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -325,7 +341,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root_3"
+        htmlFor="root-qux"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -385,7 +401,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__111"
+              id="id__109"
             >
               Submit
             </span>
@@ -405,6 +421,7 @@ exports[`single fields field with description 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -422,6 +439,7 @@ exports[`single fields field with description 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": undefined,
@@ -438,7 +456,7 @@ exports[`single fields field with description 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_my-field"
-                id="TextFieldLabel128"
+                id="TextFieldLabel126"
               >
                 my-field
               </label>
@@ -447,11 +465,12 @@ exports[`single fields field with description 1`] = `
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel128"
+                  aria-labelledby="TextFieldLabel126"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_my-field"
+                  name="root_my-field"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -500,7 +519,7 @@ exports[`single fields field with description 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__129"
+              id="id__127"
             >
               Submit
             </span>
@@ -520,6 +539,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -537,6 +557,7 @@ exports[`single fields field with description in uiSchema 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": undefined,
@@ -553,7 +574,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_my-field"
-                id="TextFieldLabel134"
+                id="TextFieldLabel132"
               >
                 my-field
               </label>
@@ -562,11 +583,12 @@ exports[`single fields field with description in uiSchema 1`] = `
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel134"
+                  aria-labelledby="TextFieldLabel132"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_my-field"
+                  name="root_my-field"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -615,7 +637,7 @@ exports[`single fields field with description in uiSchema 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__135"
+              id="id__133"
             >
               Submit
             </span>
@@ -635,6 +657,7 @@ exports[`single fields format color 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -996,6 +1019,7 @@ exports[`single fields format date 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1005,6 +1029,7 @@ exports[`single fields format date 1`] = `
   >
     <div
       className="ms-DatePicker control-82"
+      id="root"
       onBlur={[Function]}
       onFocus={[Function]}
     >
@@ -1025,7 +1050,7 @@ exports[`single fields format date 1`] = `
                 aria-invalid={false}
                 aria-label="Select a date"
                 className="ms-TextField-field field-89 readOnlyTextField-86"
-                id="DatePicker64-label"
+                id="root-label"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onClick={[Function]}
@@ -1081,7 +1106,7 @@ exports[`single fields format date 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__69"
+              id="id__68"
             >
               Submit
             </span>
@@ -1101,6 +1126,7 @@ exports[`single fields format datetime 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1123,6 +1149,7 @@ exports[`single fields format datetime 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1162,7 +1189,159 @@ exports[`single fields format datetime 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__75"
+              id="id__74"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-155"
+  >
+    <div
+      className="ms-MessageBar-content content-156"
+    >
+      <div
+        aria-hidden={true}
+        className="ms-MessageBar-icon iconContainer-157"
+      >
+        <i
+          aria-hidden={true}
+          className="icon-164"
+          data-icon-name="ErrorBadge"
+        >
+          
+        </i>
+      </div>
+      <div
+        aria-live="assertive"
+        className="ms-MessageBar-text text-159"
+        id="MessageBar160"
+        role="status"
+      >
+        <span
+          className="ms-MessageBar-innerText innerText-160"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
+    id="root"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-TextField root-42"
+    >
+      <div
+        className="ms-TextField-wrapper"
+      >
+        <div
+          className="ms-TextField-fieldGroup fieldGroup-165"
+        >
+          <input
+            aria-describedby="TextFieldDescription162"
+            aria-invalid={true}
+            autoFocus={false}
+            className="ms-TextField-field field-44"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <span
+        id="TextFieldDescription162"
+      >
+        <div
+          role="alert"
+        />
+      </span>
+    </div>
+    
+    <div
+      className="ms-List"
+      id="root__error"
+      role="list"
+    >
+      <div
+        className="ms-List-surface"
+        role="presentation"
+      >
+        <div
+          className="ms-List-page"
+          role="presentation"
+          style={Object {}}
+        >
+          <div
+            className="ms-List-cell"
+            data-automationid="ListCell"
+            data-list-index={0}
+            role="listitem"
+          >
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      className="css-153"
+      id="root__help"
+    >
+      help me!
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-53"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-54"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-55"
+          >
+            <span
+              className="ms-Button-label label-57"
+              id="id__164"
             >
               Submit
             </span>
@@ -1182,6 +1361,7 @@ exports[`single fields hidden field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1199,6 +1379,7 @@ exports[`single fields hidden field 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
           style={
             Object {
               "display": "none",
@@ -1208,6 +1389,7 @@ exports[`single fields hidden field 1`] = `
         >
           <input
             id="root_my-field"
+            name="root_my-field"
             type="hidden"
             value=""
           />
@@ -1242,7 +1424,7 @@ exports[`single fields hidden field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__123"
+              id="id__121"
             >
               Submit
             </span>
@@ -1262,6 +1444,7 @@ exports[`single fields hidden label 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1284,6 +1467,7 @@ exports[`single fields hidden label 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1323,7 +1507,7 @@ exports[`single fields hidden label 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__147"
+              id="id__145"
             >
               Submit
             </span>
@@ -1343,6 +1527,7 @@ exports[`single fields null field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-null"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1397,6 +1582,7 @@ exports[`single fields number field 0 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1419,6 +1605,7 @@ exports[`single fields number field 0 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1479,6 +1666,7 @@ exports[`single fields number field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1501,6 +1689,7 @@ exports[`single fields number field 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1561,6 +1750,7 @@ exports[`single fields password field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1583,6 +1773,7 @@ exports[`single fields password field 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -1622,7 +1813,7 @@ exports[`single fields password field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__81"
+              id="id__80"
             >
               Submit
             </span>
@@ -1642,6 +1833,7 @@ exports[`single fields radio field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1651,6 +1843,8 @@ exports[`single fields radio field 1`] = `
   >
     <div
       className=""
+      id="root"
+      name="root"
       onBlur={[Function]}
       onFocus={[Function]}
     >
@@ -1670,8 +1864,9 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
-                id="ChoiceGroup114-true"
-                name="ChoiceGroup114"
+                disabled={false}
+                id="root-true"
+                name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -1679,11 +1874,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="ChoiceGroup114-true"
+                htmlFor="root-true"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel115-true"
+                  id="ChoiceGroupLabel113-true"
                 >
                   Yes
                 </span>
@@ -1699,8 +1894,9 @@ exports[`single fields radio field 1`] = `
               <input
                 checked={false}
                 className="ms-ChoiceField-input input-135"
-                id="ChoiceGroup114-false"
-                name="ChoiceGroup114"
+                disabled={false}
+                id="root-false"
+                name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -1708,11 +1904,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="ChoiceGroup114-false"
+                htmlFor="root-false"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel115-false"
+                  id="ChoiceGroupLabel113-false"
                 >
                   No
                 </span>
@@ -1749,7 +1945,110 @@ exports[`single fields radio field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__116"
+              id="id__114"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-TextField root-42"
+    >
+      <div
+        className="ms-TextField-wrapper"
+      >
+        <div
+          className="ms-TextField-fieldGroup fieldGroup-43"
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-44"
+            disabled={false}
+            id="root"
+            list="examples_root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <datalist
+      id="examples_root"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+    
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-53"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-54"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-55"
+          >
+            <span
+              className="ms-Button-label label-57"
+              id="id__157"
             >
               Submit
             </span>
@@ -1769,6 +2068,7 @@ exports[`single fields select field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1788,7 +2088,7 @@ exports[`single fields select field 1`] = `
         aria-haspopup="listbox"
         className="ms-Dropdown dropdown-109"
         data-is-focusable={true}
-        id="Dropdown101"
+        id="root"
         onBlur={[Function]}
         onChange={[Function]}
         onClick={[Function]}
@@ -1801,7 +2101,7 @@ exports[`single fields select field 1`] = `
       >
         <span
           className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-110"
-          id="Dropdown101-option"
+          id="root-option"
         />
         <span
           className="ms-Dropdown-caretDownWrapper caretDownWrapper-111"
@@ -1843,7 +2143,7 @@ exports[`single fields select field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__102"
+              id="id__100"
             >
               Submit
             </span>
@@ -1863,6 +2163,7 @@ exports[`single fields slider field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-integer"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1887,7 +2188,7 @@ exports[`single fields slider field 1`] = `
           aria-valuetext="42"
           className="ms-Slider-slideBox ms-Slider-showValue ms-Slider-showTransitions slideBox-144"
           data-is-focusable={true}
-          id="Slider119"
+          id="Slider117"
           onKeyDown={[Function]}
           onMouseDown={[Function]}
           onTouchStart={[Function]}
@@ -1957,7 +2258,7 @@ exports[`single fields slider field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__120"
+              id="id__118"
             >
               Submit
             </span>
@@ -1977,6 +2278,7 @@ exports[`single fields string field format data-url 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -1991,6 +2293,7 @@ exports[`single fields string field format data-url 1`] = `
           defaultValue=""
           disabled={false}
           id="root"
+          name="root"
           onChange={[Function]}
           type="file"
         />
@@ -2043,6 +2346,7 @@ exports[`single fields string field format email 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2065,6 +2369,7 @@ exports[`single fields string field format email 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2124,6 +2429,7 @@ exports[`single fields string field format uri 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2146,6 +2452,7 @@ exports[`single fields string field format uri 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2205,6 +2512,7 @@ exports[`single fields string field regular 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2227,6 +2535,7 @@ exports[`single fields string field regular 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2286,6 +2595,7 @@ exports[`single fields string field with placeholder 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2308,6 +2618,7 @@ exports[`single fields string field with placeholder 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2367,6 +2678,7 @@ exports[`single fields textarea field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2389,6 +2701,7 @@ exports[`single fields textarea field 1`] = `
             className="ms-TextField-field field-107"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2428,7 +2741,7 @@ exports[`single fields textarea field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__98"
+              id="id__97"
             >
               Submit
             </span>
@@ -2448,6 +2761,7 @@ exports[`single fields title field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2470,6 +2784,7 @@ exports[`single fields title field 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
+          id="root_title"
           style={
             Object {
               "display": undefined,
@@ -2486,7 +2801,7 @@ exports[`single fields title field 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_title"
-                id="TextFieldLabel140"
+                id="TextFieldLabel138"
               >
                 title
               </label>
@@ -2495,11 +2810,12 @@ exports[`single fields title field 1`] = `
               >
                 <input
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel140"
+                  aria-labelledby="TextFieldLabel138"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
                   id="root_title"
+                  name="root_title"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -2544,7 +2860,7 @@ exports[`single fields title field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__141"
+              id="id__139"
             >
               Submit
             </span>
@@ -2564,6 +2880,7 @@ exports[`single fields unsupported field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-undefined"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2640,6 +2957,7 @@ exports[`single fields up/down field 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2672,7 +2990,7 @@ exports[`single fields up/down field 1`] = `
           className="ms-spinButton-input css-99"
           data-lpignore={true}
           disabled={false}
-          id="input85"
+          id="input84"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -2780,7 +3098,7 @@ exports[`single fields up/down field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__92"
+              id="id__91"
             >
               Submit
             </span>
@@ -2800,6 +3118,7 @@ exports[`single fields using custom tagName 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
     style={
       Object {
         "display": undefined,
@@ -2822,6 +3141,7 @@ exports[`single fields using custom tagName 1`] = `
             className="ms-TextField-field field-44"
             disabled={false}
             id="root"
+            name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -2861,7 +3181,7 @@ exports[`single fields using custom tagName 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__153"
+              id="id__151"
             >
               Submit
             </span>

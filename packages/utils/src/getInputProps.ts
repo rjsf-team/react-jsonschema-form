@@ -1,5 +1,11 @@
 import rangeSpec from "./rangeSpec";
-import { InputPropsType, RJSFSchema, UIOptionsType } from "./types";
+import {
+  FormContextType,
+  InputPropsType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+} from "./types";
 
 /** Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
  *
@@ -9,10 +15,14 @@ import { InputPropsType, RJSFSchema, UIOptionsType } from "./types";
  * @param [autoDefaultStepAny=true] - Determines whether to auto-default step=any when the type is number and no step
  * @returns - The extracted `InputPropsType` object
  */
-export default function getInputProps<T = any, F = any>(
+export default function getInputProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
   schema: RJSFSchema,
   defaultType?: string,
-  options: UIOptionsType<T, F> = {},
+  options: UIOptionsType<T, S, F> = {},
   autoDefaultStepAny = true
 ): InputPropsType {
   const inputProps: InputPropsType = {

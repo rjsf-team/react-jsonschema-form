@@ -1,5 +1,11 @@
 import React, { ChangeEvent, FocusEvent, useCallback } from "react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  processSelectValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 function getValue(
   event: React.SyntheticEvent<HTMLSelectElement>,
@@ -19,7 +25,11 @@ function getValue(
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, F = any>({
+function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -33,14 +43,17 @@ function SelectWidget<T = any, F = any>({
   onBlur,
   onFocus,
   placeholder,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onFocus(id, processSelectValue(schema, newValue, options));
+      return onFocus(
+        id,
+        processSelectValue<T, S, F>(schema, newValue, options)
+      );
     },
     [onFocus, id, schema, multiple, options]
   );
@@ -48,7 +61,7 @@ function SelectWidget<T = any, F = any>({
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onBlur(id, processSelectValue(schema, newValue, options));
+      return onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
     },
     [onBlur, id, schema, multiple, options]
   );
@@ -56,7 +69,7 @@ function SelectWidget<T = any, F = any>({
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onChange(processSelectValue(schema, newValue, options));
+      return onChange(processSelectValue<T, S, F>(schema, newValue, options));
     },
     [onChange, schema, multiple, options]
   );
@@ -64,6 +77,7 @@ function SelectWidget<T = any, F = any>({
   return (
     <select
       id={id}
+      name={id}
       multiple={multiple}
       className="form-control"
       value={typeof value === "undefined" ? emptyValue : value}

@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
 import renderer from "react-test-renderer";
-import { UiSchema, RJSFSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import { UiSchema, RJSFSchema, ErrorSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
 import Form from "../src/index";
 
@@ -183,6 +183,111 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test("select field multiple choice", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field multiple choice with labels", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "number",
+        anyOf: [
+          {
+            enum: [1],
+            title: "Blue",
+          },
+          {
+            enum: [2],
+            title: "Red",
+          },
+          {
+            enum: [3],
+            title: "Green",
+          },
+        ],
+      },
+      uniqueItems: true,
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field single choice enumDisabled", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      enum: ["foo", "bar"],
+    };
+    const uiSchema = {
+      "ui:enumDisabled": ["bar"],
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field multiple choice enumDisabled", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const uiSchema = {
+      "ui:enumDisabled": ["bar"],
+    };
+    const tree = renderer
+      .create(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field single choice formData", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      enum: ["foo", "bar"],
+    };
+    const formData = "bar";
+    const tree = renderer
+      .create(
+        <Form schema={schema} formData={formData} validator={validator} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("select field multiple choice formData", () => {
+    const schema: RJSFSchema = {
+      type: "array",
+      items: {
+        type: "string",
+        enum: ["foo", "bar", "fuzz", "qux"],
+      },
+      uniqueItems: true,
+    };
+    const formData = ["foo", "bar"];
+    const tree = renderer
+      .create(
+        <Form schema={schema} formData={formData} validator={validator} />
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test("checkbox field", () => {
     const schema: RJSFSchema = {
       type: "boolean",
@@ -192,9 +297,10 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test("checkbox field with label", () => {
     const schema: RJSFSchema = {
       type: "boolean",
+      title: "test",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)
@@ -357,6 +463,36 @@ describe("single fields", () => {
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} tagName="div" />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("schema examples", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+      examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("help and error display", () => {
+    const schema: RJSFSchema = {
+      type: "string",
+    };
+    const uiSchema: UiSchema = {
+      "ui:help": "help me!",
+    };
+    const extraErrors: ErrorSchema = { __errors: ["an error"] } as ErrorSchema;
+    const tree = renderer
+      .create(
+        <Form
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          extraErrors={extraErrors}
+        />
+      )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

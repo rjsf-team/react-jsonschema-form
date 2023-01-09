@@ -8,10 +8,19 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const RadioWidget = ({
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   schema,
   options,
@@ -24,7 +33,7 @@ const RadioWidget = ({
   onBlur,
   onFocus,
   uiSchema,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
 
@@ -55,26 +64,25 @@ const RadioWidget = ({
         name={id}
       >
         <Stack direction={row ? "row" : "column"}>
-          {(enumOptions as any).map((option: any, i: number) => {
-            const itemDisabled = Boolean(
-              enumDisabled && (enumDisabled as any).indexOf(option.value) != -1
-            );
+          {Array.isArray(enumOptions) &&
+            enumOptions.map((option) => {
+              const itemDisabled =
+                Array.isArray(enumDisabled) &&
+                enumDisabled.indexOf(option.value) !== -1;
 
-            return (
-              <Radio
-                value={`${option.value}`}
-                key={i}
-                id={`${id}-radio-${option.value}`}
-                disabled={disabled || itemDisabled || readonly}
-              >
-                {`${option.label}`}
-              </Radio>
-            );
-          })}
+              return (
+                <Radio
+                  value={`${option.value}`}
+                  key={option.value}
+                  id={`${id}-${option.value}`}
+                  disabled={disabled || itemDisabled || readonly}
+                >
+                  {`${option.label}`}
+                </Radio>
+              );
+            })}
         </Stack>
       </RadioGroup>
     </FormControl>
   );
-};
-
-export default RadioWidget;
+}

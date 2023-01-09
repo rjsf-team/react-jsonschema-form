@@ -5,10 +5,19 @@ import IconButton, {
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { IconButtonProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-export default function MuiIconButton(props: IconButtonProps) {
-  const { icon, color, ...otherProps } = props;
+export default function MuiIconButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  const { icon, color, uiSchema, registry, ...otherProps } = props;
   return (
     <IconButton
       {...otherProps}
@@ -20,7 +29,11 @@ export default function MuiIconButton(props: IconButtonProps) {
   );
 }
 
-export function MoveDownButton(props: IconButtonProps) {
+export function MoveDownButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return (
     <MuiIconButton
       title="Move down"
@@ -30,7 +43,11 @@ export function MoveDownButton(props: IconButtonProps) {
   );
 }
 
-export function MoveUpButton(props: IconButtonProps) {
+export function MoveUpButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return (
     <MuiIconButton
       title="Move up"
@@ -40,7 +57,11 @@ export function MoveUpButton(props: IconButtonProps) {
   );
 }
 
-export function RemoveButton(props: IconButtonProps) {
+export function RemoveButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   const { iconType, ...otherProps } = props;
   return (
     <MuiIconButton

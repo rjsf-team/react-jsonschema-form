@@ -7,10 +7,20 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
-import { rangeSpec, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  rangeSpec,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const RangeWidget = ({
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   value,
   readonly,
   disabled,
@@ -23,11 +33,11 @@ const RangeWidget = ({
   label,
   id,
   registry,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { schemaUtils } = registry;
   const chakraProps = getChakra({ uiSchema });
 
-  const sliderWidgetProps = { value, label, id, ...rangeSpec(schema) };
+  const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const displayLabel =
     schemaUtils.getDisplayLabel(schema, uiSchema) &&
@@ -62,6 +72,4 @@ const RangeWidget = ({
       </Slider>
     </FormControl>
   );
-};
-
-export default RangeWidget;
+}

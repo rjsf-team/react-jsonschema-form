@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/validator-ajv6/logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/7ebc86621d8df8c21f0c39bcca6d476f6f7a2051/packages/validator-ajv6/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">@rjsf/validator-ajv6</h3>
@@ -31,7 +31,9 @@
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+  - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -56,6 +58,8 @@ Exports `validator-ajv6` plugin for `react-jsonschema-form`.
 
 ## Getting Started
 
+> NOTE: This package is deprecated in favor of the `@rjsf/validator-ajv8` and is provided primarily for people upgrading to version 5 who initially want to minimize the validator differences.
+
 ### Prerequisites
 
 #### React JsonSchema Form Utils
@@ -76,11 +80,12 @@ yarn add @rjsf/validator-ajv6
 
 ## Usage
 
-```jsx
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv6';
 
-const schema = {
+const schema: RJSFSchema = {
   type: 'string',
 };
 
@@ -89,7 +94,8 @@ const schema = {
 
 or, using a more complex example using custom validator with custom formats
 
-```jsx
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
@@ -101,7 +107,7 @@ const validator = customizeValidator({
   customFormats,
 });
 
-const schema = {
+const schema: RJSFSchema = {
   type: 'string',
   format: 'phone-us'
 };
@@ -111,7 +117,8 @@ const schema = {
 
 or, using a more complex example using a custom with additional meta schema
 
-```jsx
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
@@ -121,7 +128,7 @@ const validator = customizeValidator({
   additionalMetaSchemas: [metaSchemaDraft04],
 });
 
-const schema = {
+const schema: RJSFSchema = {
   "$schema": "http://json-schema.org/draft-04/schema#",
   type: 'string',
 };
@@ -129,9 +136,31 @@ const schema = {
 <Form schema={schema} validator={validator} />
 ```
 
-Finally, you can combine both additional meta schemas and custom formats.
+or, using a more complex example using custom validator config override options
 
-```jsx
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
+import Form from '@rjsf/core';
+import { customizeValidator } from '@rjsf/validator-ajv6';
+
+const validator = customizeValidator({
+  ajvOptionsOverrides: {
+    $data: true,
+    verbose: true,
+  }
+});
+
+const schema: RJSFSchema = {
+  type: 'string',
+};
+
+<Form schema={schema} validator={validator} />
+```
+
+Finally, you can combine both additional meta schemas, custom formats and custom validator config override options.
+
+```tsx
+import { RJSFSchema } from "@rjsf/utils";
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
@@ -144,9 +173,13 @@ const customFormats = {
 const validator = customizeValidator({
   additionalMetaSchemas: [metaSchemaDraft04],
   customFormats,
+  ajvOptionsOverrides: {
+    $data: true,
+    verbose: true,
+  }
 });
 
-const schema = {
+const schema: RJSFSchema = {
   "$schema": "http://json-schema.org/draft-04/schema#",
   type: 'string',
   format: 'phone-us'
@@ -184,8 +217,7 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/material-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/material-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/material-ui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/e2e1181d1020f18cad0c80c661ddae28edb9794e/packages/material-ui/screenshot5.png
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/validator-ajv6/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/validator-ajv6
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/validator-ajv6.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/validator-ajv6

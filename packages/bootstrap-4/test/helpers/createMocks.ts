@@ -1,6 +1,6 @@
 import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
 import { getDefaultRegistry } from "@rjsf/core";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import Templates from "../../src/Templates";
 import BaseInputTemplate from "../../src/BaseInputTemplate";

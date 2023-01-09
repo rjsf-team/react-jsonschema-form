@@ -1,45 +1,53 @@
 import React, { Component } from "react";
 import {
+  createSchemaUtils,
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
+  FormContextType,
   GenericObjectType,
+  getTemplate,
+  getUiOptions,
   IdSchema,
+  isObject,
+  mergeObjects,
+  NAME_KEY,
   PathSchema,
+  StrictRJSFSchema,
+  Registry,
+  RegistryFieldsType,
+  RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  Registry,
-  RegistryWidgetsType,
-  RegistryFieldsType,
+  RJSF_ADDITONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
+  shouldRender,
   TemplatesType,
   UiSchema,
   ValidationData,
   ValidatorType,
-  createSchemaUtils,
-  deepEquals,
-  getTemplate,
-  getUiOptions,
-  isObject,
-  mergeObjects,
-  shouldRender,
-  NAME_KEY,
-  RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from "@rjsf/utils";
-import _pick from "lodash/pick";
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
+import _pick from "lodash/pick";
 
 import getDefaultRegistry from "../getDefaultRegistry";
 
 /** The properties that are passed to the `Form` */
-export interface FormProps<T = any, F = any> {
+export interface FormProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> {
   /** The JSON schema object for the form */
-  schema: RJSFSchema;
+  schema: S;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
-  validator: ValidatorType<T>;
+  validator: ValidatorType<T, S>;
+  /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
+  children?: React.ReactNode;
   /** The uiSchema for the form */
-  uiSchema?: UiSchema<T, F>;
+  uiSchema?: UiSchema<T, S, F>;
   /** The data for the form, used to prefill a form with existing data */
   formData?: T;
   // Form presentation and behavior modifiers
@@ -69,18 +77,19 @@ export interface FormProps<T = any, F = any> {
   readonly?: boolean;
   // Form registry
   /** The dictionary of registered fields in the form */
-  fields?: RegistryFieldsType<T, F>;
+  fields?: RegistryFieldsType<T, S, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<T, F>, "ButtonTemplates">> & {
-    ButtonTemplates?: Partial<TemplatesType<T, F>["ButtonTemplates"]>;
+  templates?: Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
+    ButtonTemplates?: Partial<TemplatesType<T, S, F>["ButtonTemplates"]>;
   };
   /** The dictionary of registered widgets in the form */
-  widgets?: RegistryWidgetsType<T, F>;
+  widgets?: RegistryWidgetsType<T, S, F>;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
-   * receive the same args as `onSubmit` any time a value is updated in the form
+   * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field
+   * that caused the change
    */
-  onChange?: (data: IChangeEvent<T, F>) => void;
+  onChange?: (data: IChangeEvent<T, S, F>, id?: string) => void;
   /** To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of
    * encountered errors
    */
@@ -89,7 +98,7 @@ export interface FormProps<T = any, F = any> {
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, F>, event: React.FormEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: React.FormEvent<any>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -153,10 +162,10 @@ export interface FormProps<T = any, F = any> {
    * called. Set to `false` by default.
    */
   omitExtraData?: boolean;
-  /** When this prop is set to true, a list of errors (or the custom error list defined in the `ErrorList`) will also
-   * show. When set to false, only inline input validation errors will be shown. Set to `true` by default
+  /** When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also
+   * show. When set to false, only inline input validation errors will be shown. Set to `top` by default
    */
-  showErrorList?: boolean;
+  showErrorList?: false | "top" | "bottom";
   /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
    * Schema validation
    */
@@ -181,17 +190,21 @@ export interface FormProps<T = any, F = any> {
 }
 
 /** The data that is contained within the state for the `Form` */
-export interface FormState<T = any, F = any> {
+export interface FormState<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> {
   /** The JSON schema object for the form */
-  schema: RJSFSchema;
+  schema: S;
   /** The uiSchema for the form */
-  uiSchema: UiSchema<T, F>;
+  uiSchema: UiSchema<T, S, F>;
   /** The `IdSchema` for the form, computed from the `schema`, the `rootFieldId`, the `formData` and the `idPrefix` and
    * `idSeparator` props.
    */
   idSchema: IdSchema<T>;
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
-  schemaUtils: SchemaUtilsType<T>;
+  schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
   formData: T;
   /** Flag indicating whether the form is in edit mode, true when `formData` is passed to the form, otherwise false */
@@ -211,9 +224,12 @@ export interface FormState<T = any, F = any> {
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
-export interface IChangeEvent<T = any, F = any>
-  extends Omit<
-    FormState<T, F>,
+export interface IChangeEvent<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> extends Omit<
+    FormState<T, S, F>,
     "schemaValidationErrors" | "schemaValidationErrorSchema"
   > {
   /** The status of the form when submitted */
@@ -221,10 +237,11 @@ export interface IChangeEvent<T = any, F = any>
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
-export default class Form<T = any, F = any> extends Component<
-  FormProps<T, F>,
-  FormState<T, F>
-> {
+export default class Form<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
    * provide any possible type here
    */
@@ -236,8 +253,12 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param props - The initial props for the `Form`
    */
-  constructor(props: FormProps<T, F>) {
+  constructor(props: FormProps<T, S, F>) {
     super(props);
+
+    if (!props.validator) {
+      throw new Error("A validator is required for Form functionality to work");
+    }
 
     this.state = this.getStateFromProps(props, props.formData);
     if (
@@ -255,7 +276,7 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param nextProps - The new set of props about to be applied to the `Form`
    */
-  UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, F>) {
+  UNSAFE_componentWillReceiveProps(nextProps: FormProps<T, S, F>) {
     const nextState = this.getStateFromProps(nextProps, nextProps.formData);
     if (
       !deepEquals(nextState.formData, nextProps.formData) &&
@@ -276,24 +297,24 @@ export default class Form<T = any, F = any> extends Component<
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
-    props: FormProps<T, F>,
+    props: FormProps<T, S, F>,
     inputFormData?: T
-  ): FormState<T, F> {
-    const state: FormState<T, F> = this.state || {};
+  ): FormState<T, S, F> {
+    const state: FormState<T, S, F> = this.state || {};
     const schema = "schema" in props ? props.schema : this.props.schema;
-    const uiSchema: UiSchema<T, F> =
+    const uiSchema: UiSchema<T, S, F> =
       ("uiSchema" in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== "undefined";
     const liveValidate =
       "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
-    let schemaUtils: SchemaUtilsType<T> = state.schemaUtils;
+    let schemaUtils: SchemaUtilsType<T, S> = state.schemaUtils;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)
     ) {
-      schemaUtils = createSchemaUtils<T>(props.validator, rootSchema);
+      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema);
     }
     const formData: T = schemaUtils.getDefaultFormState(
       schema,
@@ -323,7 +344,7 @@ export default class Form<T = any, F = any> extends Component<
     let schemaValidationErrorSchema: ErrorSchema<T> =
       state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(schemaUtils, formData, schema);
+      const schemaValidation = this.validate(formData, schema, schemaUtils);
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
       schemaValidationErrors = errors;
@@ -348,7 +369,7 @@ export default class Form<T = any, F = any> extends Component<
       props.idPrefix,
       props.idSeparator
     );
-    const nextState: FormState<T, F> = {
+    const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema,
       uiSchema,
@@ -370,23 +391,27 @@ export default class Form<T = any, F = any> extends Component<
    * @returns - True if the component should be updated, false otherwise
    */
   shouldComponentUpdate(
-    nextProps: FormProps<T, F>,
-    nextState: FormState<T, F>
+    nextProps: FormProps<T, S, F>,
+    nextState: FormState<T, S, F>
   ): boolean {
     return shouldRender(this, nextProps, nextState);
   }
 
-  /** Validates the `formData` against the `schema` using the `schemaUtils`, returning the results.
+  /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
+   * `schemaUtils` in the state), returning the results.
    *
-   * @param schemaUtils - The schemaUtils to use for validation
    * @param formData - The new form data to validate
    * @param schema - The schema used to validate against
+   * @param altSchemaUtils - The alternate schemaUtils to use for validation
    */
   validate(
-    schemaUtils: SchemaUtilsType<T>,
     formData: T,
-    schema = this.props.schema
+    schema = this.props.schema,
+    altSchemaUtils?: SchemaUtilsType<T, S>
   ): ValidationData<T> {
+    const schemaUtils = altSchemaUtils
+      ? altSchemaUtils
+      : this.state.schemaUtils;
     const { customValidate, transformErrors } = this.props;
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
@@ -400,17 +425,17 @@ export default class Form<T = any, F = any> extends Component<
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
-  renderErrors(registry: Registry<T, F>) {
+  renderErrors(registry: Registry<T, S, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { showErrorList, formContext } = this.props;
-    const options = getUiOptions<T, F>(uiSchema);
-    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, F>(
+    const { formContext } = this.props;
+    const options = getUiOptions<T, S, F>(uiSchema);
+    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, S, F>(
       "ErrorListTemplate",
       registry,
       options
     );
 
-    if (errors && errors.length && showErrorList != false) {
+    if (errors && errors.length) {
       return (
         <ErrorListTemplate
           errors={errors}
@@ -429,13 +454,17 @@ export default class Form<T = any, F = any> extends Component<
    * @param formData - The data for the `Form`
    * @param fields - The fields to keep while filtering
    */
-  getUsedFormData = (formData: T, fields: string[]): T => {
+  getUsedFormData = (formData: T, fields: string[][]): T => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
       return formData;
     }
 
-    const data: GenericObjectType = _pick(formData, fields);
+    // _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
+    const data: GenericObjectType = _pick(
+      formData,
+      fields as unknown as string[]
+    );
     if (Array.isArray(formData)) {
       return Object.keys(data).map((key: string) => data[key]) as unknown as T;
     }
@@ -448,15 +477,15 @@ export default class Form<T = any, F = any> extends Component<
    * @param pathSchema - The `PathSchema` object for the form
    * @param formData - The form data to use while checking for empty objects/arrays
    */
-  getFieldNames = (pathSchema: PathSchema<T>, formData: T) => {
+  getFieldNames = (pathSchema: PathSchema<T>, formData: T): string[][] => {
     const getAllPaths = (
       _obj: GenericObjectType,
-      acc: string[] = [],
-      paths = [""]
+      acc: string[][] = [],
+      paths: string[][] = [[]]
     ) => {
       Object.keys(_obj).forEach((key: string) => {
         if (typeof _obj[key] === "object") {
-          const newPaths = paths.map((path) => `${path}.${key}`);
+          const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
           if (
             _obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] &&
@@ -468,7 +497,6 @@ export default class Form<T = any, F = any> extends Component<
           }
         } else if (key === NAME_KEY && _obj[key] !== "") {
           paths.forEach((path) => {
-            path = path.replace(/^\./, "");
             const formValue = _get(formData, path);
             // adds path to fieldNames if it points to a value
             // or an empty object/array
@@ -493,8 +521,9 @@ export default class Form<T = any, F = any> extends Component<
    *
    * @param formData - The new form data from a change to a field
    * @param newErrorSchema - The new `ErrorSchema` based on the field change
+   * @param id - The id of the field that caused the change
    */
-  onChange = (formData: T, newErrorSchema?: ErrorSchema<T>) => {
+  onChange = (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const {
       extraErrors,
       omitExtraData,
@@ -510,7 +539,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     const mustValidate = !noValidate && liveValidate;
-    let state: Partial<FormState<T, F>> = { formData, schema };
+    let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
     if (omitExtraData === true && liveOmit === true) {
@@ -530,7 +559,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     if (mustValidate) {
-      const schemaValidation = this.validate(schemaUtils, newFormData);
+      const schemaValidation = this.validate(newFormData);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;
       const schemaValidationErrors = errors;
@@ -552,7 +581,11 @@ export default class Form<T = any, F = any> extends Component<
       };
     } else if (!noValidate && newErrorSchema) {
       const errorSchema = extraErrors
-        ? (mergeObjects(newErrorSchema, extraErrors, true) as ErrorSchema<T>)
+        ? (mergeObjects(
+            newErrorSchema,
+            extraErrors,
+            "preventDuplicates"
+          ) as ErrorSchema<T>)
         : newErrorSchema;
       state = {
         formData: newFormData,
@@ -561,8 +594,8 @@ export default class Form<T = any, F = any> extends Component<
       };
     }
     this.setState(
-      state as FormState<T, F>,
-      () => onChange && onChange({ ...this.state, ...state })
+      state as FormState<T, S, F>,
+      () => onChange && onChange({ ...this.state, ...state }, id)
     );
   };
 
@@ -607,8 +640,7 @@ export default class Form<T = any, F = any> extends Component<
     }
 
     event.persist();
-    const { omitExtraData, extraErrors, noValidate, onSubmit, onError } =
-      this.props;
+    const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
     const { schema, schemaUtils } = this.state;
 
@@ -625,69 +657,41 @@ export default class Form<T = any, F = any> extends Component<
       newFormData = this.getUsedFormData(newFormData, fieldNames);
     }
 
-    if (!noValidate) {
-      const schemaValidation = this.validate(schemaUtils, newFormData);
-      let errors = schemaValidation.errors;
-      let errorSchema = schemaValidation.errorSchema;
-      const schemaValidationErrors = errors;
-      const schemaValidationErrorSchema = errorSchema;
-      if (errors.length > 0) {
-        if (extraErrors) {
-          const merged = schemaUtils.mergeValidationData(
-            schemaValidation,
-            extraErrors
-          );
-          errorSchema = merged.errorSchema;
-          errors = merged.errors;
-        }
-        this.setState(
-          {
-            errors,
-            errorSchema,
-            schemaValidationErrors,
-            schemaValidationErrorSchema,
-          },
-          () => {
-            if (onError) {
-              onError(errors);
-            } else {
-              console.error("Form validation failed", errors);
-            }
+    if (noValidate || this.validateForm()) {
+      // There are no errors generated through schema validation.
+      // Check for user provided errors and update state accordingly.
+      const errorSchema = extraErrors || {};
+      const errors = extraErrors
+        ? schemaUtils.getValidator().toErrorList(extraErrors)
+        : [];
+      this.setState(
+        {
+          formData: newFormData,
+          errors,
+          errorSchema,
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+        },
+        () => {
+          if (onSubmit) {
+            onSubmit(
+              { ...this.state, formData: newFormData, status: "submitted" },
+              event
+            );
           }
-        );
-        return;
-      }
-    }
-
-    // There are no errors generated through schema validation.
-    // Check for user provided errors and update state accordingly.
-    const errorSchema = extraErrors || {};
-    const errors = extraErrors
-      ? schemaUtils.getValidator().toErrorList(extraErrors)
-      : [];
-    this.setState(
-      {
-        formData: newFormData,
-        errors,
-        errorSchema,
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-      },
-      () => {
-        if (onSubmit) {
-          onSubmit(
-            { ...this.state, formData: newFormData, status: "submitted" },
-            event
-          );
         }
-      }
-    );
+      );
+    }
   };
 
   /** Returns the registry for the form */
-  getRegistry(): Registry<T, F> {
+  getRegistry(): Registry<T, S, F> {
     const { schemaUtils } = this.state;
-    const { fields, templates, widgets, formContext } = getDefaultRegistry();
+    const { fields, templates, widgets, formContext } = getDefaultRegistry<
+      T,
+      S,
+      F
+    >();
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -713,7 +717,51 @@ export default class Form<T = any, F = any> extends Component<
           cancelable: true,
         })
       );
+      this.formElement.current.requestSubmit();
     }
+  }
+
+  /** Programmatically validate the form. If `onError` is provided, then it will be called with the list of errors the
+   * same way as would happen on form submission.
+   *
+   * @returns - True if the form is valid, false otherwise.
+   */
+  validateForm() {
+    const { extraErrors, onError } = this.props;
+    const { formData } = this.state;
+    const { schemaUtils } = this.state;
+    const schemaValidation = this.validate(formData);
+    let errors = schemaValidation.errors;
+    let errorSchema = schemaValidation.errorSchema;
+    const schemaValidationErrors = errors;
+    const schemaValidationErrorSchema = errorSchema;
+    if (errors.length > 0) {
+      if (extraErrors) {
+        const merged = schemaUtils.mergeValidationData(
+          schemaValidation,
+          extraErrors
+        );
+        errorSchema = merged.errorSchema;
+        errors = merged.errors;
+      }
+      this.setState(
+        {
+          errors,
+          errorSchema,
+          schemaValidationErrors,
+          schemaValidationErrorSchema,
+        },
+        () => {
+          if (onError) {
+            onError(errors);
+          } else {
+            console.error("Form validation failed", errors);
+          }
+        }
+      );
+      return false;
+    }
+    return true;
   }
 
   /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
@@ -738,6 +786,7 @@ export default class Form<T = any, F = any> extends Component<
       disabled = false,
       readonly = false,
       formContext,
+      showErrorList = "top",
       _internalFormWrapper,
     } = this.props;
 
@@ -746,7 +795,7 @@ export default class Form<T = any, F = any> extends Component<
     const { SchemaField: _SchemaField } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
-    // PropTypes.elementType to use for the inner tag so we'll need to pass `tagName` along if it is provided.
+    // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || "form";
@@ -767,7 +816,7 @@ export default class Form<T = any, F = any> extends Component<
         as={as}
         ref={this.formElement}
       >
-        {this.renderErrors(registry)}
+        {showErrorList === "top" && this.renderErrors(registry)}
         <_SchemaField
           name=""
           schema={schema}
@@ -785,7 +834,12 @@ export default class Form<T = any, F = any> extends Component<
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? children : <SubmitButton uiSchema={uiSchema} />}
+        {children ? (
+          children
+        ) : (
+          <SubmitButton uiSchema={uiSchema} registry={registry} />
+        )}
+        {showErrorList === "bottom" && this.renderErrors(registry)}
       </FormTag>
     );
   }

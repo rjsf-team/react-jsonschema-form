@@ -1,15 +1,24 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { getInputProps, getUiOptions, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const BaseInputTemplate = ({
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   required,
   readonly,
   disabled,
   type,
-  label,
   value,
   onChange,
   onBlur,
@@ -18,12 +27,13 @@ const BaseInputTemplate = ({
   options,
   schema,
   rawErrors = [],
-  uiSchema,
   children,
   extraProps,
-}: WidgetProps) => {
-  const inputProps = { ...extraProps, ...getInputProps(schema, type, options) };
-  const uiOptions = getUiOptions(uiSchema);
+}: WidgetProps<T, S, F>) {
+  const inputProps = {
+    ...extraProps,
+    ...getInputProps<T, S, F>(schema, type, options),
+  };
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -36,16 +46,10 @@ const BaseInputTemplate = ({
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
-    <Form.Group className="mb-0">
-      <Form.Label
-        htmlFor={id}
-        className={rawErrors.length > 0 ? "text-danger" : ""}
-      >
-        {uiOptions.title || label || schema.title}
-        {(label || uiOptions.title) && required ? "*" : null}
-      </Form.Label>
+    <>
       <Form.Control
         id={id}
+        name={id}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
@@ -69,8 +73,6 @@ const BaseInputTemplate = ({
             })}
         </datalist>
       ) : null}
-    </Form.Group>
+    </>
   );
-};
-
-export default BaseInputTemplate;
+}

@@ -1,11 +1,20 @@
 import React, { FocusEvent, useCallback } from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
  * @param props - The `WidgetProps` for this component
  */
-function TextareaWidget<T = any, F = any>({
+function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   options = {},
   placeholder,
@@ -17,7 +26,7 @@ function TextareaWidget<T = any, F = any>({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
     ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) =>
       onChange(value === "" ? options.emptyValue : value),
@@ -39,6 +48,7 @@ function TextareaWidget<T = any, F = any>({
   return (
     <textarea
       id={id}
+      name={id}
       className="form-control"
       value={value ? value : ""}
       placeholder={placeholder}

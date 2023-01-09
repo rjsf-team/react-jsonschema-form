@@ -1,7 +1,10 @@
 import React from "react";
 import {
+  FormContextType,
   ObjectFieldTemplatePropertyType,
   ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
   canExpand,
   getTemplate,
   getUiOptions,
@@ -13,9 +16,11 @@ import {
  *
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
-export default function ObjectFieldTemplate<T = any, F = any>(
-  props: ObjectFieldTemplateProps<T, F>
-) {
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
     disabled,
@@ -30,8 +35,8 @@ export default function ObjectFieldTemplate<T = any, F = any>(
     title,
     uiSchema,
   } = props;
-  const options = getUiOptions<T, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, F>(
+  const options = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     options
@@ -39,6 +44,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
   const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
     T,
+    S,
     F
   >("DescriptionFieldTemplate", registry, options);
   // Button templates are not overridden in the uiSchema
@@ -52,6 +58,7 @@ export default function ObjectFieldTemplate<T = any, F = any>(
           id={`${idSchema.$id}__title`}
           title={options.title || title}
           required={required}
+          schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -60,15 +67,19 @@ export default function ObjectFieldTemplate<T = any, F = any>(
         <DescriptionFieldTemplate
           id={`${idSchema.$id}__description`}
           description={options.description || description!}
+          schema={schema}
+          uiSchema={uiSchema}
           registry={registry}
         />
       )}
       {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
-      {canExpand(schema, uiSchema, formData) && (
+      {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
           className="object-property-expand"
           onClick={onAddClick(schema)}
           disabled={disabled || readonly}
+          uiSchema={uiSchema}
+          registry={registry}
         />
       )}
     </fieldset>

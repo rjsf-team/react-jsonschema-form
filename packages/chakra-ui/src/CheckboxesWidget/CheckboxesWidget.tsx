@@ -7,23 +7,19 @@ import {
   Text,
   Stack,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-// const selectValue = (value, selected, all) => {
-//   const at = all.indexOf(value);
-//   const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-//   // As inserting values at predefined index positions doesn't work with empty
-//   // arrays, we need to reorder the updated selection to match the initial order
-//   return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
-// };
-
-// const deselectValue = (value, selected) => {
-//   return selected.filter((v) => v !== value);
-// };
-
-const CheckboxesWidget = (props: WidgetProps) => {
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     disabled,
@@ -41,15 +37,6 @@ const CheckboxesWidget = (props: WidgetProps) => {
   } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
-  // const _onChange = option => ({ target: { checked } }) => {
-  //   const all = enumOptions.map(({ value }) => value)
-
-  //   if (checked) {
-  //     onChange(selectValue(option.value, value, all))
-  //   } else {
-  //     onChange(deselectValue(option.value, value))
-  //   }
-  // }
 
   const _onBlur = ({
     target: { value },
@@ -77,16 +64,17 @@ const CheckboxesWidget = (props: WidgetProps) => {
         defaultValue={value}
       >
         <Stack direction={row ? "row" : "column"}>
-          {(enumOptions as any).map(
-            (option: { value: any; label: any }, index: any) => {
+          {Array.isArray(enumOptions) &&
+            enumOptions.map((option) => {
               const checked = value.indexOf(option.value) !== -1;
               const itemDisabled =
-                enumDisabled &&
-                (enumDisabled as string[]).indexOf(option.value) !== -1;
+                Array.isArray(enumDisabled) &&
+                enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
-                  key={`${id}_${index}`}
-                  id={`${id}_${index}`}
+                  key={option.value}
+                  id={`${id}-${option.value}`}
+                  name={id}
                   value={option.value}
                   isChecked={checked}
                   isDisabled={disabled || itemDisabled || readonly}
@@ -96,12 +84,9 @@ const CheckboxesWidget = (props: WidgetProps) => {
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>
               );
-            }
-          )}
+            })}
         </Stack>
       </CheckboxGroup>
     </FormControl>
   );
-};
-
-export default CheckboxesWidget;
+}

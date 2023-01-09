@@ -41,6 +41,7 @@ exports[`single fields checkbox field 1`] = `
               data-indeterminate={false}
               disabled={false}
               id="root"
+              name="root"
               onChange={[Function]}
               required={false}
               type="checkbox"
@@ -95,7 +96,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -136,6 +137,7 @@ exports[`single fields checkbox field 2`] = `
               data-indeterminate={false}
               disabled={false}
               id="root"
+              name="root"
               onChange={[Function]}
               required={false}
               type="checkbox"
@@ -158,7 +160,7 @@ exports[`single fields checkbox field 2`] = `
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
         >
-          
+          test
         </span>
       </label>
     </div>
@@ -244,7 +246,8 @@ exports[`single fields checkboxes field 1`] = `
                 className="PrivateSwitchBase-input-20"
                 data-indeterminate={false}
                 disabled={false}
-                id="root_0"
+                id="root-foo"
+                name="root"
                 onChange={[Function]}
                 type="checkbox"
               />
@@ -294,7 +297,8 @@ exports[`single fields checkboxes field 1`] = `
                 className="PrivateSwitchBase-input-20"
                 data-indeterminate={false}
                 disabled={false}
-                id="root_1"
+                id="root-bar"
+                name="root"
                 onChange={[Function]}
                 type="checkbox"
               />
@@ -344,7 +348,8 @@ exports[`single fields checkboxes field 1`] = `
                 className="PrivateSwitchBase-input-20"
                 data-indeterminate={false}
                 disabled={false}
-                id="root_2"
+                id="root-fuzz"
+                name="root"
                 onChange={[Function]}
                 type="checkbox"
               />
@@ -394,7 +399,8 @@ exports[`single fields checkboxes field 1`] = `
                 className="PrivateSwitchBase-input-20"
                 data-indeterminate={false}
                 disabled={false}
-                id="root_3"
+                id="root-qux"
+                name="root"
                 onChange={[Function]}
                 type="checkbox"
               />
@@ -505,6 +511,7 @@ exports[`single fields field with description 1`] = `
                     className="MuiInputBase-input MuiInput-input"
                     disabled={false}
                     id="root_my-field"
+                    name="root_my-field"
                     onAnimationStart={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -613,6 +620,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                     className="MuiInputBase-input MuiInput-input"
                     disabled={false}
                     id="root_my-field"
+                    name="root_my-field"
                     onAnimationStart={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -693,6 +701,7 @@ exports[`single fields format color 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -764,6 +773,7 @@ exports[`single fields format date 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -832,6 +842,7 @@ exports[`single fields format datetime 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -878,6 +889,141 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+  >
+    <div
+      className="MuiBox-root MuiBox-root-42"
+    >
+      <h6
+        className="MuiTypography-root MuiTypography-h6"
+      >
+        Errors
+      </h6>
+      <ul
+        className="MuiList-root MuiList-dense MuiList-padding"
+      >
+        <li
+          className="MuiListItem-root MuiListItem-dense MuiListItem-gutters"
+          disabled={false}
+        >
+          <div
+            className="MuiListItemIcon-root"
+          >
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-colorError"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+              />
+            </svg>
+          </div>
+          <div
+            className="MuiListItemText-root MuiListItemText-dense"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
+            >
+              . an error
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+      >
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={true}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="root"
+            name="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <ul
+        className="MuiList-root MuiList-dense"
+      >
+        <li
+          className="MuiListItem-root MuiListItem-dense"
+          disabled={false}
+        >
+          <p
+            className="MuiFormHelperText-root Mui-error"
+            id="root__error"
+          >
+            an error
+          </p>
+        </li>
+      </ul>
+      <p
+        className="MuiFormHelperText-root Mui-error"
+        id="root__help"
+      >
+        help me!
+      </p>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-43"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 <form
   className="rjsf"
@@ -908,6 +1054,7 @@ exports[`single fields hidden field 1`] = `
         >
           <input
             id="root_my-field"
+            name="root_my-field"
             type="hidden"
             value=""
           />
@@ -973,6 +1120,7 @@ exports[`single fields hidden label 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1090,6 +1238,7 @@ exports[`single fields number field 0 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1159,6 +1308,7 @@ exports[`single fields number field 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1231,6 +1381,7 @@ exports[`single fields password field 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1323,7 +1474,8 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="PrivateSwitchBase-input-20"
                 disabled={false}
-                name="root-0"
+                id="root-true"
+                name="root"
                 onChange={[Function]}
                 type="radio"
                 value="true"
@@ -1389,7 +1541,8 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="PrivateSwitchBase-input-20"
                 disabled={false}
-                name="root-1"
+                id="root-false"
+                name="root"
                 onChange={[Function]}
                 type="radio"
                 value="false"
@@ -1465,6 +1618,98 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+      >
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="root"
+            list="examples_root"
+            name="root"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <datalist
+        id="examples_root"
+      >
+        <option
+          value="Firefox"
+        />
+        <option
+          value="Chrome"
+        />
+        <option
+          value="Opera"
+        />
+        <option
+          value="Vivaldi"
+        />
+        <option
+          value="Safari"
+        />
+      </datalist>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-41"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field 1`] = `
 <form
   className="rjsf"
@@ -1508,6 +1753,7 @@ exports[`single fields select field 1`] = `
             aria-hidden={true}
             autoFocus={false}
             className="MuiSelect-nativeInput"
+            name="root"
             onAnimationStart={[Function]}
             onChange={[Function]}
             required={false}
@@ -1575,10 +1821,8 @@ exports[`single fields slider field 1`] = `
     >
       <label
         className="MuiFormLabel-root"
-        id="root"
-      >
-        
-      </label>
+        htmlFor="root"
+      />
       <span
         className="MuiSlider-root MuiSlider-colorPrimary"
         id="root"
@@ -1600,6 +1844,7 @@ exports[`single fields slider field 1`] = `
           }
         />
         <input
+          name="root"
           type="hidden"
           value="75"
         />
@@ -1689,6 +1934,7 @@ exports[`single fields string field format data-url 1`] = `
             defaultValue=""
             disabled={false}
             id="root"
+            name="root"
             onChange={[Function]}
             type="file"
           />
@@ -1754,6 +2000,7 @@ exports[`single fields string field format email 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1825,6 +2072,7 @@ exports[`single fields string field format uri 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1893,6 +2141,7 @@ exports[`single fields string field regular 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -1961,6 +2210,7 @@ exports[`single fields string field with placeholder 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -2029,6 +2279,7 @@ exports[`single fields textarea field 1`] = `
             className="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -2140,6 +2391,7 @@ exports[`single fields title field 1`] = `
                     className="MuiInputBase-input MuiInput-input"
                     disabled={false}
                     id="root_title"
+                    name="root_title"
                     onAnimationStart={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -2278,6 +2530,7 @@ exports[`single fields up/down field 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
@@ -2349,6 +2602,7 @@ exports[`single fields using custom tagName 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
+            name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}

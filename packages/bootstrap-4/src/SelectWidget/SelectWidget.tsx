@@ -2,13 +2,22 @@ import React from "react";
 
 import Form from "react-bootstrap/Form";
 
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  processSelectValue,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const SelectWidget = ({
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
-  label,
   required,
   disabled,
   readonly,
@@ -20,7 +29,7 @@ const SelectWidget = ({
   onFocus,
   placeholder,
   rawErrors = [],
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const emptyValue = multiple ? [] : "";
@@ -40,59 +49,49 @@ const SelectWidget = ({
   }
 
   return (
-    <Form.Group>
-      <Form.Label
-        className={rawErrors.length > 0 ? "text-danger" : ""}
-        htmlFor={id}
-      >
-        {label || schema.title}
-        {(label || schema.title) && required ? "*" : null}
-      </Form.Label>
-      <Form.Control
-        as="select"
-        custom
-        id={id}
-        value={typeof value === "undefined" ? emptyValue : value}
-        required={required}
-        multiple={multiple}
-        disabled={disabled || readonly}
-        autoFocus={autofocus}
-        className={rawErrors.length > 0 ? "is-invalid" : ""}
-        onBlur={
-          onBlur &&
-          ((event: React.FocusEvent) => {
-            const newValue = getValue(event, multiple);
-            onBlur(id, processSelectValue(schema, newValue, options));
-          })
-        }
-        onFocus={
-          onFocus &&
-          ((event: React.FocusEvent) => {
-            const newValue = getValue(event, multiple);
-            onFocus(id, processSelectValue(schema, newValue, options));
-          })
-        }
-        onChange={(event: React.ChangeEvent) => {
+    <Form.Control
+      as="select"
+      bsPrefix="custom-select"
+      id={id}
+      name={id}
+      value={typeof value === "undefined" ? emptyValue : value}
+      required={required}
+      multiple={multiple}
+      disabled={disabled || readonly}
+      autoFocus={autofocus}
+      className={rawErrors.length > 0 ? "is-invalid" : ""}
+      onBlur={
+        onBlur &&
+        ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onChange(processSelectValue(schema, newValue, options));
-        }}
-      >
-        {!multiple && schema.default === undefined && (
-          <option value="">{placeholder}</option>
-        )}
-        {(enumOptions as any).map(({ value, label }: any, i: number) => {
-          const disabled: any =
-            Array.isArray(enumDisabled) &&
-            (enumDisabled as any).indexOf(value) != -1;
-          return (
-            <option key={i} id={label} value={value} disabled={disabled}>
-              {label}
-            </option>
-          );
-        })}
-      </Form.Control>
-    </Form.Group>
+          onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
+        })
+      }
+      onFocus={
+        onFocus &&
+        ((event: React.FocusEvent) => {
+          const newValue = getValue(event, multiple);
+          onFocus(id, processSelectValue<T, S, F>(schema, newValue, options));
+        })
+      }
+      onChange={(event: React.ChangeEvent) => {
+        const newValue = getValue(event, multiple);
+        onChange(processSelectValue<T, S, F>(schema, newValue, options));
+      }}
+    >
+      {!multiple && schema.default === undefined && (
+        <option value="">{placeholder}</option>
+      )}
+      {(enumOptions as any).map(({ value, label }: any, i: number) => {
+        const disabled: any =
+          Array.isArray(enumDisabled) &&
+          (enumDisabled as any).indexOf(value) != -1;
+        return (
+          <option key={i} id={label} value={value} disabled={disabled}>
+            {label}
+          </option>
+        );
+      })}
+    </Form.Control>
   );
-};
-
-export default SelectWidget;
+}

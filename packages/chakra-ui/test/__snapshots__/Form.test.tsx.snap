@@ -155,7 +155,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 .emotion-1 {
   margin-bottom: 1px;
 }
@@ -204,10 +204,15 @@ exports[`single fields checkbox field 2`] = `
 }
 
 .emotion-4 {
+  -webkit-margin-start: 0.5rem;
+  margin-inline-start: 0.5rem;
+}
+
+.emotion-6 {
   margin-top: 3px;
 }
 
-.emotion-5 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -291,16 +296,26 @@ exports[`single fields checkbox field 2`] = `
             onMouseLeave={[Function]}
             onMouseUp={[Function]}
           />
-          
+          <span
+            className="chakra-checkbox__label emotion-4"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          >
+            <p
+              className="chakra-text emotion-0"
+            >
+              test
+            </p>
+          </span>
         </label>
       </div>
     </div>
   </div>
   <div
-    className="emotion-4"
+    className="emotion-6"
   >
     <button
-      className="chakra-button emotion-5"
+      className="chakra-button emotion-7"
       disabled={false}
       type="submit"
     >
@@ -453,7 +468,8 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root_0"
+              id="root-foo"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -504,7 +520,8 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root_1"
+              id="root-bar"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -555,7 +572,8 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root_2"
+              id="root-fuzz"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -606,7 +624,8 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root_3"
+              id="root-qux"
+              name="root"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -1186,6 +1205,199 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields help and error display 1`] = `
+.emotion-0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.emotion-2 {
+  list-style-type: none;
+}
+
+.emotion-4 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: red.500;
+}
+
+.emotion-6 {
+  margin-bottom: 1px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-12 {
+  margin-top: 3px;
+}
+
+.emotion-13 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="chakra-alert emotion-0"
+    role="alert"
+  >
+    <div
+      className="chakra-alert__title emotion-1"
+    >
+      Errors
+    </div>
+    <ul
+      className="emotion-2"
+      role="list"
+    >
+      <li
+        className="emotion-1"
+      >
+        <svg
+          className="chakra-icon chakra-icon emotion-4"
+          focusable={false}
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"
+            fill="currentColor"
+          />
+        </svg>
+        . an error
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <div
+      className="chakra-form-control emotion-1"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-6"
+        role="group"
+      >
+        <input
+          aria-invalid={true}
+          autoFocus={false}
+          className="chakra-input emotion-1"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+      <ul
+        className="emotion-2"
+        role="list"
+      >
+        <li
+          className="emotion-1"
+        >
+          <div
+            aria-live="polite"
+            className="chakra-form__error-message emotion-10"
+            id="root__error"
+          >
+            an error
+          </div>
+        </li>
+      </ul>
+      <div
+        className="chakra-form__helper-text emotion-1"
+        id="root__help"
+      >
+        help me!
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-12"
+  >
+    <button
+      className="chakra-button emotion-13"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields hidden field 1`] = `
 .emotion-1 {
   display: grid;
@@ -1251,6 +1463,7 @@ exports[`single fields hidden field 1`] = `
         >
           <input
             id="root_my-field"
+            name="root_my-field"
             type="hidden"
             value=""
           />
@@ -1818,7 +2031,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-radio-true"
+                id="root-true"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1867,7 +2080,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-radio-false"
+                id="root-false"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1928,35 +2141,24 @@ exports[`single fields radio field 1`] = `
 </form>
 `;
 
-exports[`single fields select field 1`] = `
+exports[`single fields schema examples 1`] = `
 .emotion-1 {
   margin-bottom: 1px;
 }
 
-.emotion-2 {
-  width: 100%;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-  position: relative;
-}
-
 .emotion-3 {
-  -webkit-padding-end: 2rem;
-  padding-inline-end: 2rem;
-}
-
-.emotion-3:focus,
-.emotion-3[data-focus] {
-  z-index: unset;
+  margin-top: 3px;
 }
 
 .emotion-4 {
-  position: absolute;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1965,7 +2167,151 @@ exports[`single fields select field 1`] = `
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <input
+          autoFocus={false}
+          className="chakra-input emotion-0"
+          disabled={false}
+          id="root"
+          list="examples_root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+        <datalist
+          id="examples_root"
+        >
+          <option
+            value="Firefox"
+          />
+          <option
+            value="Chrome"
+          />
+          <option
+            value="Opera"
+          />
+          <option
+            value="Vivaldi"
+          />
+          <option
+            value="Safari"
+          />
+        </datalist>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-3"
+  >
+    <button
+      className="chakra-button emotion-4"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  max-width: calc(100% - 0.5rem);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
@@ -1973,11 +2319,107 @@ exports[`single fields select field 1`] = `
   transform: translateY(-50%);
 }
 
-.emotion-5 {
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
   margin-top: 3px;
 }
 
-.emotion-6 {
+.emotion-15 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2023,69 +2465,2142 @@ exports[`single fields select field 1`] = `
         role="group"
       >
         <div
-          className="chakra-select__wrapper emotion-2"
+          className=" emotion-2"
+          onKeyDown={[Function]}
         >
-          <select
-            autoFocus={false}
-            className="chakra-select emotion-3"
-            disabled={false}
-            id="root"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            readOnly={false}
-            required={false}
-            value=""
-          >
-            <option
-              value=""
-            >
-               
-            </option>
-            <option
-              value="foo"
-            >
-              foo
-            </option>
-            <option
-              value="bar"
-            >
-              bar
-            </option>
-          </select>
+          <span
+            className="emotion-3"
+            id="react-select-2-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
           <div
-            className="chakra-select__icon-wrapper emotion-4"
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
           >
-            <svg
-              aria-hidden={true}
-              className="chakra-select__icon"
-              focusable={false}
-              role="presentation"
-              style={
-                Object {
-                  "color": "currentColor",
-                  "height": "1em",
-                  "width": "1em",
-                }
-              }
-              viewBox="0 0 24 24"
+            <div
+              className=" emotion-6"
             >
-              <path
-                d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                fill="currentColor"
+              <div
+                className=" emotion-7"
+              >
+                
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
               />
-            </svg>
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <input
+            name="root"
+            type="hidden"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-14"
+  >
+    <button
+      className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  color: gray.400;
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
+  margin-top: 3px;
+}
+
+.emotion-15 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-3-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <div
+                className=" emotion-7"
+                id="react-select-3-placeholder"
+              >
+                Select...
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-describedby="react-select-3-placeholder"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div>
+            <input
+              name="root"
+              type="hidden"
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
   <div
-    className="emotion-5"
+    className="emotion-14"
   >
     <button
-      className="chakra-button emotion-6"
+      className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  color: gray.400;
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
+  margin-top: 3px;
+}
+
+.emotion-15 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-6-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <div
+                className=" emotion-7"
+                id="react-select-6-placeholder"
+              >
+                Select...
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-describedby="react-select-6-placeholder"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div>
+            <input
+              name="root"
+              type="hidden"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-14"
+  >
+    <button
+      className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  margin: 0.125rem;
+}
+
+.emotion-9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.emotion-10 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: inherit;
+}
+
+.emotion-15 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-15::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-16 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-18 {
+  -webkit-margin-start: 1px;
+  margin-inline-start: 1px;
+  -webkit-margin-end: 1px;
+  margin-inline-end: 1px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.emotion-19 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-20 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-23 {
+  margin-top: 3px;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-8-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <span
+                className=" emotion-7"
+              >
+                <span
+                  className=" emotion-0"
+                >
+                  foo
+                </span>
+                <div
+                  aria-label="Remove foo"
+                  className=" emotion-9"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                  onTouchEnd={[Function]}
+                  role="button"
+                >
+                  <svg
+                    className="chakra-icon emotion-10"
+                    focusable={false}
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <span
+                className=" emotion-7"
+              >
+                <span
+                  className=" emotion-0"
+                >
+                  bar
+                </span>
+                <div
+                  aria-label="Remove bar"
+                  className=" emotion-9"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                  onTouchEnd={[Function]}
+                  role="button"
+                >
+                  <svg
+                    className="chakra-icon emotion-10"
+                    focusable={false}
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <div
+                className=" emotion-15"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-16"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-17"
+            >
+              <div
+                aria-hidden="true"
+                aria-label="Clear selected options"
+                className=" emotion-18"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+                role="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="chakra-icon emotion-19"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M.439,21.44a1.5,1.5,0,0,0,2.122,2.121L11.823,14.3a.25.25,0,0,1,.354,0l9.262,9.263a1.5,1.5,0,1,0,2.122-2.121L14.3,12.177a.25.25,0,0,1,0-.354l9.263-9.262A1.5,1.5,0,0,0,21.439.44L12.177,9.7a.25.25,0,0,1-.354,0L2.561.44A1.5,1.5,0,0,0,.439,2.561L9.7,11.823a.25.25,0,0,1,0,.354Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-20"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-21"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-19"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div>
+            <input
+              name="root"
+              type="hidden"
+              value="foo"
+            />
+            <input
+              name="root"
+              type="hidden"
+              value="bar"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-23"
+  >
+    <button
+      className="chakra-button emotion-24"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  color: gray.400;
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
+  margin-top: 3px;
+}
+
+.emotion-15 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-4-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <div
+                className=" emotion-7"
+                id="react-select-4-placeholder"
+              >
+                Select...
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-describedby="react-select-4-placeholder"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div>
+            <input
+              name="root"
+              type="hidden"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-14"
+  >
+    <button
+      className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  max-width: calc(100% - 0.5rem);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
+  margin-top: 3px;
+}
+
+.emotion-15 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-5-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <div
+                className=" emotion-7"
+              >
+                
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <input
+            name="root"
+            type="hidden"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-14"
+  >
+    <button
+      className="chakra-button emotion-15"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  position: relative;
+  pointer-events: auto;
+}
+
+.emotion-3 {
+  z-index: 9999;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  overflow: hidden;
+  height: auto;
+  min-height: 10px;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.125rem 1rem;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-7 {
+  -webkit-margin-start: 0.125rem;
+  margin-inline-start: 0.125rem;
+  -webkit-margin-end: 0.125rem;
+  margin-inline-end: 0.125rem;
+  max-width: calc(100% - 0.5rem);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.emotion-8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1/1/2/3;
+  grid-template-columns: 0 min-content;
+  color: inherit;
+}
+
+.emotion-8::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre;
+  padding: 0px;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-9 {
+  color: inherit;
+  background: 0;
+  opacity: 1;
+  width: 100%;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  grid-area: 1/2;
+  font: inherit;
+  min-width: 2px;
+  border: 0;
+  margin: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-11 {
+  border: 0;
+  border-left-width: 1px;
+  height: 100%;
+  opacity: 1;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 0px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.emotion-13 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-14 {
+  margin-top: 3px;
+}
+
+.emotion-15 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <div
+          className=" emotion-2"
+          onKeyDown={[Function]}
+        >
+          <span
+            className="emotion-3"
+            id="react-select-7-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            className="emotion-3"
+          />
+          <div
+            className=" emotion-5"
+            onMouseDown={[Function]}
+            onTouchEnd={[Function]}
+          >
+            <div
+              className=" emotion-6"
+            >
+              <div
+                className=" emotion-7"
+              >
+                bar
+              </div>
+              <div
+                className=" emotion-8"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-expanded={false}
+                  aria-haspopup={true}
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  className=" emotion-9"
+                  disabled={false}
+                  id="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  role="combobox"
+                  spellCheck="false"
+                  tabIndex={0}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className=" emotion-10"
+            >
+              <hr
+                aria-orientation="vertical"
+                className="chakra-divider emotion-11"
+              />
+              <div
+                aria-hidden="true"
+                className=" emotion-12"
+                onMouseDown={[Function]}
+                onTouchEnd={[Function]}
+              >
+                <svg
+                  className="chakra-icon emotion-13"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <input
+            name="root"
+            type="hidden"
+            value="bar"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-14"
+  >
+    <button
+      className="chakra-button emotion-15"
       disabled={false}
       type="submit"
     >
@@ -2292,6 +4807,7 @@ exports[`single fields string field format data-url 1`] = `
             defaultValue=""
             disabled={false}
             id="root"
+            name="root"
             onChange={[Function]}
             type="file"
           />

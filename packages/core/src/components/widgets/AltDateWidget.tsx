@@ -4,8 +4,11 @@ import {
   parseDateString,
   toDateString,
   pad,
-  WidgetProps,
   DateObject,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
 } from "@rjsf/utils";
 
 function rangeOptions(start: number, stop: number) {
@@ -45,8 +48,12 @@ function dateElementProps(
   return data;
 }
 
-type DateElementProps<T, F> = Pick<
-  WidgetProps<T, F>,
+type DateElementProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = Pick<
+  WidgetProps<T, S, F>,
   | "value"
   | "disabled"
   | "readonly"
@@ -61,7 +68,11 @@ type DateElementProps<T, F> = Pick<
   range: [number, number];
 };
 
-function DateElement<T, F>({
+function DateElement<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   type,
   range,
   value,
@@ -73,12 +84,12 @@ function DateElement<T, F>({
   registry,
   onBlur,
   onFocus,
-}: DateElementProps<T, F>) {
+}: DateElementProps<T, S, F>) {
   const id = rootId + "_" + type;
   const { SelectWidget } = registry.widgets;
   return (
     <SelectWidget
-      schema={{ type: "integer" }}
+      schema={{ type: "integer" } as S}
       id={id}
       className="form-control"
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
@@ -99,7 +110,11 @@ function DateElement<T, F>({
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<T = any, F = any>({
+function AltDateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   time = false,
   disabled = false,
   readonly = false,
@@ -111,7 +126,7 @@ function AltDateWidget<T = any, F = any>({
   onFocus,
   onChange,
   value,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   const [state, setState] = useReducer(
     (state: DateObject, action: Partial<DateObject>) => {
       return { ...state, ...action };

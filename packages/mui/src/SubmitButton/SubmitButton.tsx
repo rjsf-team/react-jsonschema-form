@@ -1,14 +1,26 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { SubmitButtonProps, getSubmitButtonOptions } from "@rjsf/utils";
+import {
+  getSubmitButtonOptions,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  SubmitButtonProps,
+} from "@rjsf/utils";
 
-const SubmitButton: React.ComponentType<SubmitButtonProps> = (props) => {
+/** The `SubmitButton` renders a button that represent the `Submit` action on a form
+ */
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,
     norender,
-    props: submitButtonProps,
-  } = getSubmitButtonOptions(props.uiSchema);
+    props: submitButtonProps = {},
+  } = getSubmitButtonOptions<T, S, F>(uiSchema);
   if (norender) {
     return null;
   }
@@ -24,6 +36,4 @@ const SubmitButton: React.ComponentType<SubmitButtonProps> = (props) => {
       </Button>
     </Box>
   );
-};
-
-export default SubmitButton;
+}

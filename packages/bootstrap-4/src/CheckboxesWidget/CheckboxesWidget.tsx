@@ -1,6 +1,11 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -15,9 +20,11 @@ const deselectValue = (value: any, selected: any) => {
   return selected.filter((v: any) => v !== value);
 };
 
-const CheckboxesWidget = ({
-  schema,
-  label,
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   disabled,
   options,
@@ -28,7 +35,7 @@ const CheckboxesWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline } = options;
 
   const _onChange =
@@ -50,54 +57,34 @@ const CheckboxesWidget = ({
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
-      <Form.Label htmlFor={id}>{label || schema.title}</Form.Label>
-      <Form.Group>
-        {(enumOptions as any).map((option: any, index: number) => {
+    <Form.Group>
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, index: number) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1;
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) !== -1;
 
-          return inline ? (
-            <Form key={index}>
-              <Form.Check
-                required={required}
-                inline
-                className="bg-transparent border-0"
-                custom
-                checked={checked}
-                type={"checkbox"}
-                id={`${id}_${index}`}
-                label={option.label}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                disabled={disabled || itemDisabled || readonly}
-              />
-            </Form>
-          ) : (
-            <Form key={index}>
-              <Form.Check
-                custom
-                required={required}
-                checked={checked}
-                className="bg-transparent border-0"
-                type={"checkbox"}
-                id={`${id}_${index}`}
-                label={option.label}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                disabled={disabled || itemDisabled || readonly}
-              />
-            </Form>
+          return (
+            <Form.Check
+              key={option.value}
+              inline={inline}
+              custom
+              required={required}
+              checked={checked}
+              className="bg-transparent border-0"
+              type={"checkbox"}
+              id={`${id}-${option.value}`}
+              name={id}
+              label={option.label}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange(option)}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+              disabled={disabled || itemDisabled || readonly}
+            />
           );
         })}
-      </Form.Group>
-    </>
+    </Form.Group>
   );
-};
-
-export default CheckboxesWidget;
+}

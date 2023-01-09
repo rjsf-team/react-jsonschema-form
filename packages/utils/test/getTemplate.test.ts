@@ -1,6 +1,7 @@
 import {
   createSchemaUtils,
   getTemplate,
+  RJSFSchema,
   Registry,
   TemplatesType,
   UIOptionsType,
@@ -13,7 +14,7 @@ const CustomTemplate = () => undefined;
 
 const registry: Registry = {
   formContext: {},
-  rootSchema: {},
+  rootSchema: {} as RJSFSchema,
   schemaUtils: createSchemaUtils(getTestValidator({}), {}),
   templates: {
     ArrayFieldDescriptionTemplate: FakeTemplate,
@@ -30,10 +31,13 @@ const registry: Registry = {
     },
     DescriptionFieldTemplate: FakeTemplate,
     ErrorListTemplate: FakeTemplate,
+    FieldErrorTemplate: FakeTemplate,
+    FieldHelpTemplate: FakeTemplate,
     FieldTemplate: FakeTemplate,
     ObjectFieldTemplate: FakeTemplate,
     TitleFieldTemplate: FakeTemplate,
     UnsupportedFieldTemplate: FakeTemplate,
+    WrapIfAdditionalTemplate: FakeTemplate,
   },
   fields: {},
   widgets: {},
@@ -54,6 +58,10 @@ const uiOptions: UIOptionsType = {
     CustomTemplate as unknown as UIOptionsType["DescriptionFieldTemplate"],
   ErrorListTemplate:
     CustomTemplate as unknown as UIOptionsType["ErrorListTemplate"],
+  FieldErrorTemplate:
+    CustomTemplate as unknown as UIOptionsType["FieldErrorTemplate"],
+  FieldHelpTemplate:
+    CustomTemplate as unknown as UIOptionsType["FieldHelpTemplate"],
   FieldTemplate: CustomTemplate as unknown as UIOptionsType["FieldTemplate"],
   ObjectFieldTemplate:
     CustomTemplate as unknown as UIOptionsType["ObjectFieldTemplate"],
@@ -61,6 +69,8 @@ const uiOptions: UIOptionsType = {
     CustomTemplate as unknown as UIOptionsType["TitleFieldTemplate"],
   UnsupportedFieldTemplate:
     CustomTemplate as unknown as UIOptionsType["UnsupportedFieldTemplate"],
+  WrapIfAdditionalTemplate:
+    CustomTemplate as unknown as UIOptionsType["WrapIfAdditionalTemplate"],
 };
 
 const KEYS = Object.keys(registry.templates).filter(

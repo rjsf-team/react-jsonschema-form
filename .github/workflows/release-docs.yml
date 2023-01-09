@@ -1,0 +1,35 @@
+name: Release Latest Documentation
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  create-tag:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Run find-and-replace to remove v
+          uses: mad9000/actions-find-and-replace-string@2
+          id: tag_without_v
+          with:
+            source: ${{ github.event.release.tag_name }}
+            find: 'v'
+            replace: ''
+        - uses: actions/checkout@v3
+        - uses: rickstaa/action-create-tag@v1
+          with:
+            tag: ${{ steps.tag_without_v.outputs.value }}
+            message: "Tagged documentation release"
+  deploy_docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: main
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - run: pip install -r requirements.docs.txt
+    - run: mkdocs build --clean

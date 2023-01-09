@@ -1,5 +1,10 @@
 import React, { ChangeEvent } from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 function selectValue(value: any, selected: any[], all: any[]) {
   const at = all.indexOf(value);
@@ -18,7 +23,11 @@ function deselectValue(value: any, selected: any[]) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxesWidget<T = any, F = any>({
+function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   disabled,
   options: { inline = false, enumOptions, enumDisabled },
@@ -26,14 +35,15 @@ function CheckboxesWidget<T = any, F = any>({
   autofocus = false,
   readonly,
   onChange,
-}: WidgetProps<T, F>) {
+}: WidgetProps<T, S, F>) {
   return (
     <div className="checkboxes" id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = value.indexOf(option.value) !== -1;
           const itemDisabled =
-            enumDisabled && enumDisabled.indexOf(option.value) != -1;
+            Array.isArray(enumDisabled) &&
+            enumDisabled.indexOf(option.value) != -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
@@ -50,7 +60,8 @@ function CheckboxesWidget<T = any, F = any>({
             <span>
               <input
                 type="checkbox"
-                id={`${id}_${index}`}
+                id={`${id}-${option.value}`}
+                name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
@@ -60,11 +71,14 @@ function CheckboxesWidget<T = any, F = any>({
             </span>
           );
           return inline ? (
-            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            <label
+              key={option.value}
+              className={`checkbox-inline ${disabledCls}`}
+            >
               {checkbox}
             </label>
           ) : (
-            <div key={index} className={`checkbox ${disabledCls}`}>
+            <div key={option.value} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );
