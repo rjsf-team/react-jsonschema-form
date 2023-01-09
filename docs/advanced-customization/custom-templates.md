@@ -811,11 +811,10 @@ function WrapIfAdditionalTemplate(
           onBlur={function (event) { onKeyChange(event.target.value) } }
           defaultValue={label} />
       <div>{children}</div>
-        <RemoveButton
-          onClick={onDropPropertyClick(label)}
-          uiSchema={uiSchema}
-        />
-      </div>
+      <RemoveButton
+        onClick={onDropPropertyClick(label)}
+        uiSchema={uiSchema}
+      />
     </div>
   );
 }

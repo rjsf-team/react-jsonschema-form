@@ -1,8 +1,19 @@
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
 import { Button, Icon, ButtonProps } from "semantic-ui-react";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-function AddButton({ uiSchema, registry, color, ...props }: IconButtonProps) {
+/** The `AddButton` renders a button that represent the `Add` action on a form
+ */
+export default function AddButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema, registry, color, ...props }: IconButtonProps<T, S, F>) {
   return (
     <Button
       title="Add Item"
@@ -15,5 +26,3 @@ function AddButton({ uiSchema, registry, color, ...props }: IconButtonProps) {
     </Button>
   );
 }
-
-export default AddButton;

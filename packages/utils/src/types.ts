@@ -680,7 +680,7 @@ export interface WidgetProps<
    */
   options: NonNullable<UIOptionsType<T, S, F>> & {
     /** The enum options list for a type that supports them */
-    enumOptions?: EnumOptionsType[];
+    enumOptions?: EnumOptionsType<S>[];
   };
   /** The `formContext` object that you passed to `Form` */
   formContext?: F;
@@ -856,19 +856,29 @@ export type UiSchema<
     "ui:options"?: UIOptionsType<T, S, F>;
   };
 
-/** A `CustomValidator` function takes in a `formData` and `errors` object and returns the given `errors` object back,
- * while potentially adding additional messages to the `errors`
+/** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`
+ * object back, while potentially adding additional messages to the `errors`
  */
-export type CustomValidator<T = any> = (
+export type CustomValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = (
   formData: T,
-  errors: FormValidation<T>
+  errors: FormValidation<T>,
+  uiSchema?: UiSchema<T, S, F>
 ) => FormValidation<T>;
 
-/** An `ErrorTransformer` function will take in a list of `errors` and potentially return a transformation of those
- * errors in what ever way it deems necessary
+/** An `ErrorTransformer` function will take in a list of `errors` & a `uiSchema` and potentially return a
+ * transformation of those errors in what ever way it deems necessary
  */
-export type ErrorTransformer = (
-  errors: RJSFValidationError[]
+export type ErrorTransformer<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = (
+  errors: RJSFValidationError[],
+  uiSchema?: UiSchema<T, S, F>
 ) => RJSFValidationError[];
 
 /** The type that describes the data that is returned from the `ValidatorType.validateFormData()` function */
@@ -884,7 +894,8 @@ export type ValidationData<T> = {
  */
 export interface ValidatorType<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 > {
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
    * the form data and a `errorHandler` function that will be used to add custom validation errors for each field. Also
@@ -895,12 +906,14 @@ export interface ValidatorType<
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
     formData: T | undefined,
     schema: S,
-    customValidate?: CustomValidator<T>,
-    transformErrors?: ErrorTransformer
+    customValidate?: CustomValidator<T, S, F>,
+    transformErrors?: ErrorTransformer<T, S, F>,
+    uiSchema?: UiSchema<T, S, F>
   ): ValidationData<T>;
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
@@ -946,7 +959,7 @@ export interface SchemaUtilsType<
    *
    * @returns - The `ValidatorType`
    */
-  getValidator(): ValidatorType<T, S>;
+  getValidator(): ValidatorType<T, S, F>;
   /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
    * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
    * of a new `SchemaUtilsType` with incomplete properties.
@@ -955,7 +968,10 @@ export interface SchemaUtilsType<
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S>, rootSchema: S): boolean;
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S
+  ): boolean;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *
