@@ -1,9 +1,18 @@
 import React from "react";
 import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const TextareaWidget = ({
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   value,
@@ -20,7 +29,7 @@ const TextareaWidget = ({
   required,
   rawErrors,
   registry,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
   const displayLabel =
@@ -62,6 +71,4 @@ const TextareaWidget = ({
       />
     </FormControl>
   );
-};
-
-export default TextareaWidget;
+}

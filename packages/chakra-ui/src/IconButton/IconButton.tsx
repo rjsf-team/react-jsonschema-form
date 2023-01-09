@@ -1,41 +1,53 @@
-import React, { memo } from "react";
+import React from "react";
+
 import {
-  IconButton,
-  IconButtonProps as ChakraIconButtonProps,
-} from "@chakra-ui/react";
-import { IconButtonProps } from "@rjsf/utils";
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from "@chakra-ui/icons";
+import ChakraIconButton from "./ChakraIconButton";
 
-/**
- * props used in Template:
- * icon, tabIndex, disabled, onClick
- */
-const ChakraIconButton = memo((props: IconButtonProps) => {
-  const { icon, iconType, uiSchema, ...otherProps } = props;
+export function MoveDownButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return (
-    <IconButton
-      aria-label={props.title!}
-      {...otherProps}
-      icon={icon as ChakraIconButtonProps["icon"]}
+    <ChakraIconButton<T, S, F>
+      title="Move down"
+      {...props}
+      icon={<ArrowDownIcon />}
     />
   );
-});
+}
 
-ChakraIconButton.displayName = "ChakraIconButton";
-
-export default ChakraIconButton;
-
-export function MoveDownButton(props: IconButtonProps) {
+export function MoveUpButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return (
-    <ChakraIconButton title="Move down" {...props} icon={<ArrowDownIcon />} />
+    <ChakraIconButton<T, S, F>
+      title="Move up"
+      {...props}
+      icon={<ArrowUpIcon />}
+    />
   );
 }
 
-export function MoveUpButton(props: IconButtonProps) {
-  return <ChakraIconButton title="Move up" {...props} icon={<ArrowUpIcon />} />;
-}
-
-export function RemoveButton(props: IconButtonProps) {
-  return <ChakraIconButton title="Remove" {...props} icon={<DeleteIcon />} />;
+export function RemoveButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  return (
+    <ChakraIconButton<T, S, F>
+      title="Remove"
+      {...props}
+      icon={<DeleteIcon />}
+    />
+  );
 }

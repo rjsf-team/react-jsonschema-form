@@ -1,9 +1,26 @@
 import React from "react";
-import { IconButtonProps } from "@rjsf/utils";
 import { Button, ButtonProps } from "semantic-ui-react";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-function IconButton(props: IconButtonProps) {
-  const { icon, iconType, color, className, uiSchema, ...otherProps } = props;
+function IconButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  const {
+    icon,
+    iconType,
+    color,
+    className,
+    uiSchema,
+    registry,
+    ...otherProps
+  } = props;
   return (
     <Button
       icon={icon}
@@ -17,14 +34,26 @@ function IconButton(props: IconButtonProps) {
 
 export default IconButton;
 
-export function MoveDownButton(props: IconButtonProps) {
+export function MoveDownButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return <IconButton title="Move down" {...props} icon="angle down" />;
 }
 
-export function MoveUpButton(props: IconButtonProps) {
+export function MoveUpButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return <IconButton title="Move up" {...props} icon="angle up" />;
 }
 
-export function RemoveButton(props: IconButtonProps) {
+export function RemoveButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   return <IconButton title="Remove" {...props} icon="trash" />;
 }

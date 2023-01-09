@@ -1,9 +1,25 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-function BaseInputTemplate(props: WidgetProps) {
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     placeholder,
@@ -24,8 +40,8 @@ function BaseInputTemplate(props: WidgetProps) {
     registry,
     rawErrors = [],
   } = props;
-  const inputProps = getInputProps(schema, type, options);
-  const semanticProps = getSemanticProps({
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     formContext,
     options,
@@ -71,4 +87,3 @@ function BaseInputTemplate(props: WidgetProps) {
     </>
   );
 }
-export default BaseInputTemplate;

@@ -26,7 +26,7 @@ export default function getDisplayLabel<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S
@@ -34,11 +34,11 @@ export default function getDisplayLabel<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { label = true } = uiOptions;
   let displayLabel = !!label;
-  const schemaType = getSchemaType(schema);
+  const schemaType = getSchemaType<S>(schema);
 
   if (schemaType === "array") {
     displayLabel =
-      isMultiSelect<T, S>(validator, schema, rootSchema) ||
+      isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
       isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema) ||
       isCustomWidget(uiSchema);
   }

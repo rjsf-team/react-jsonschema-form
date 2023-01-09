@@ -34,12 +34,15 @@ exports[`single fields checkbox field 1`] = `
             id="root"
             name="root"
             readOnly={true}
+            required={false}
             tabIndex={0}
             type="checkbox"
           />
           <label
             htmlFor="root"
-          />
+          >
+            
+          </label>
         </div>
       </div>
     </div>
@@ -54,7 +57,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="ui form rjsf"
   noValidate={false}
@@ -88,12 +91,15 @@ exports[`single fields checkbox field 2`] = `
             id="root"
             name="root"
             readOnly={true}
+            required={false}
             tabIndex={0}
             type="checkbox"
           />
           <label
             htmlFor="root"
-          />
+          >
+            test
+          </label>
         </div>
       </div>
     </div>

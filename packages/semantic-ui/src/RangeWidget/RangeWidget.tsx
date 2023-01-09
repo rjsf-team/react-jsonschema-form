@@ -1,9 +1,24 @@
 import React from "react";
 import { Input } from "semantic-ui-react";
-import { rangeSpec, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  rangeSpec,
+} from "@rjsf/utils";
 import { getSemanticProps } from "../util";
 
-function RangeWidget(props: WidgetProps) {
+/** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
+ * in a div, with the value along side it.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -19,7 +34,7 @@ function RangeWidget(props: WidgetProps) {
     formContext,
     rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({
+  const semanticProps = getSemanticProps<T, S, F>({
     formContext,
     options,
     uiSchema,
@@ -37,7 +52,7 @@ function RangeWidget(props: WidgetProps) {
   const _onFocus = () => onFocus && onFocus(id, value);
 
   return (
-    <React.Fragment>
+    <>
       <Input
         id={id}
         key={id}
@@ -45,7 +60,7 @@ function RangeWidget(props: WidgetProps) {
         type="range"
         required={required}
         disabled={disabled || readonly}
-        {...rangeSpec(schema)}
+        {...rangeSpec<S>(schema)}
         {...semanticProps}
         value={value || ""}
         error={rawErrors.length > 0}
@@ -54,7 +69,6 @@ function RangeWidget(props: WidgetProps) {
         onFocus={_onFocus}
       />
       <span>{value}</span>
-    </React.Fragment>
+    </>
   );
 }
-export default RangeWidget;

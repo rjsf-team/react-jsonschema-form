@@ -1,9 +1,18 @@
 import React, { CSSProperties } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     disabled,
@@ -43,6 +52,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                     disabled={disabled || readonly || !hasMoveUp}
                     onClick={onReorderClick(index, index - 1)}
                     uiSchema={uiSchema}
+                    registry={registry}
                   />
                 </div>
               )}
@@ -53,6 +63,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                     disabled={disabled || readonly || !hasMoveDown}
                     onClick={onReorderClick(index, index + 1)}
                     uiSchema={uiSchema}
+                    registry={registry}
                   />
                 </div>
               )}
@@ -63,6 +74,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
                     disabled={disabled || readonly}
                     onClick={onDropIndexClick(index)}
                     uiSchema={uiSchema}
+                    registry={registry}
                   />
                 </div>
               )}
@@ -72,6 +84,4 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
       </Row>
     </div>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}

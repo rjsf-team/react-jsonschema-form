@@ -3,7 +3,12 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 const selectValue = (value: any, selected: any, all: any) => {
   const at = all.indexOf(value);
@@ -18,7 +23,16 @@ const deselectValue = (value: any, selected: any) => {
   return selected.filter((v: any) => v !== value);
 };
 
-const CheckboxesWidget = ({
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   label,
   id,
@@ -31,7 +45,7 @@ const CheckboxesWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline } = options;
 
   const _onChange =
@@ -88,6 +102,4 @@ const CheckboxesWidget = ({
       </FormGroup>
     </>
   );
-};
-
-export default CheckboxesWidget;
+}

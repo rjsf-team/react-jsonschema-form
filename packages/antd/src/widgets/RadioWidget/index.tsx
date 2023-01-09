@@ -1,8 +1,23 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
+import {
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const RadioWidget = ({
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   autofocus,
   disabled,
   formContext,
@@ -14,8 +29,8 @@ const RadioWidget = ({
   readonly,
   schema,
   value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+}: WidgetProps<T, S, F>) {
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled } = options;
 
@@ -55,6 +70,4 @@ const RadioWidget = ({
         ))}
     </Radio.Group>
   );
-};
-
-export default RadioWidget;
+}

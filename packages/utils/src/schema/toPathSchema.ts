@@ -12,6 +12,7 @@ import {
   RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from "../constants";
 import {
+  FormContextType,
   PathSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -30,22 +31,29 @@ import retrieveSchema from "./retrieveSchema";
  */
 export default function toPathSchema<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   schema: S,
   name = "",
   rootSchema?: S,
   formData?: T
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S>(
+    const _schema = retrieveSchema<T, S, F>(
       validator,
       schema,
       rootSchema,
       formData
     );
-    return toPathSchema<T, S>(validator, _schema, name, rootSchema, formData);
+    return toPathSchema<T, S, F>(
+      validator,
+      _schema,
+      name,
+      rootSchema,
+      formData
+    );
   }
 
   const pathSchema: PathSchema = {
@@ -61,9 +69,9 @@ export default function toPathSchema<
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {
     formData.forEach((element, i: number) => {
-      pathSchema[i] = toPathSchema<T>(
+      pathSchema[i] = toPathSchema<T, S, F>(
         validator,
-        schema.items as RJSFSchema,
+        schema.items as S,
         `${name}.${i}`,
         rootSchema,
         element
@@ -72,7 +80,7 @@ export default function toPathSchema<
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, property]);
-      pathSchema[property] = toPathSchema<T, S>(
+      pathSchema[property] = toPathSchema<T, S, F>(
         validator,
         field,
         `${name}.${property}`,

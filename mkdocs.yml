@@ -7,6 +7,7 @@ extra_javascript: [main.js]
 nav:
   - Introduction: index.md
   - Quickstart: quickstart.md
+  - Contributing: contributing.md
   - JSON schema:
       - Single fields: usage/single.md
       - Objects: usage/objects.md
@@ -23,18 +24,18 @@ nav:
       - Custom Templates: advanced-customization/custom-templates.md
       - Custom Themes: advanced-customization/custom-themes.md
       - Other Internals: advanced-customization/internals.md
-      - Contributing: contributing.md
+      - Typescript Support: advanced-customization/typescript.md
   - API Reference:
       - General uiSchema Reference: api-reference/uiSchema.md
       - semantic-ui uiSchema Reference: api-reference/themes/semantic-ui/uiSchema.md
       - chakra-ui uiSchema Reference: api-reference/themes/chakra-ui/uiSchema.md
       - "&lt;Form /&gt; props": api-reference/form-props.md
       - Utility functions: api-reference/utility-functions.md
-  - 5.x Migration: 5.x upgrade guide.md
-  - 4.x Migration: 4.x upgrade guide.md
-  - 3.x Migration: 3.x upgrade guide.md
-  - 2.x Migration: 2.x upgrade guide.md
-  - Contributing: contributing.md
+  - Migration Guides:
+      - 5.x Migration: 5.x upgrade guide.md
+      - 4.x Migration: 4.x upgrade guide.md
+      - 3.x Migration: 3.x upgrade guide.md
+      - 2.x Migration: 2.x upgrade guide.md
 
 markdown_extensions:
   - toc:

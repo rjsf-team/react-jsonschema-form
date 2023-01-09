@@ -1,48 +1,65 @@
 import React from "react";
-import { FieldTemplateProps } from "@rjsf/utils";
 import Form from "antd/lib/form";
-
-import { getUiOptions, getTemplate } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getTemplate,
+  getUiOptions,
+  GenericObjectType,
+} from "@rjsf/utils";
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
-const FieldTemplate = ({
-  children,
-  classNames,
-  description,
-  disabled,
-  displayLabel,
-  errors,
-  formContext,
-  help,
-  hidden,
-  id,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  rawErrors,
-  rawDescription,
-  rawHelp,
-  readonly,
-  registry,
-  required,
-  schema,
-  uiSchema,
-}: FieldTemplateProps) => {
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
+  const {
+    children,
+    classNames,
+    description,
+    disabled,
+    displayLabel,
+    errors,
+    formContext,
+    help,
+    hidden,
+    id,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    rawErrors,
+    rawDescription,
+    rawHelp,
+    readonly,
+    registry,
+    required,
+    schema,
+    uiSchema,
+  } = props;
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
-  } = formContext;
+  } = formContext as GenericObjectType;
 
-  const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
     "WrapIfAdditionalTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
 
   if (hidden) {
     return <div className="field-hidden">{children}</div>;
@@ -83,6 +100,4 @@ const FieldTemplate = ({
       )}
     </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

@@ -1,9 +1,23 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { CheckboxProps, Form, Radio } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
-function RadioWidget(props: WidgetProps) {
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -20,7 +34,11 @@ function RadioWidget(props: WidgetProps) {
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled } = options;
-  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
+  const semanticProps = getSemanticProps<T, S, F>({
+    formContext,
+    options,
+    uiSchema,
+  });
   // eslint-disable-next-line no-shadow
   const _onChange = (
     _: React.FormEvent<HTMLInputElement>,
@@ -63,4 +81,3 @@ function RadioWidget(props: WidgetProps) {
     </Form.Group>
   );
 }
-export default RadioWidget;

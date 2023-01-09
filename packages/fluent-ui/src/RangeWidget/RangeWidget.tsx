@@ -1,7 +1,13 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
 
-import { rangeSpec, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  rangeSpec,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const styles_red = {
@@ -36,21 +42,22 @@ const allowedProps = [
   "originFromZero",
 ];
 
-const RangeWidget = ({
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   value,
   readonly,
   disabled,
   options,
   schema,
-  //formContext,
-  //registry,
-  //rawErrors,
   onChange,
   required,
   label,
   id,
-}: WidgetProps) => {
-  const sliderProps = { value, label, id, ...rangeSpec(schema) };
+}: WidgetProps<T, S, F>) {
+  const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const _onChange = (value: number) => onChange(value);
 
@@ -72,6 +79,4 @@ const RangeWidget = ({
       />
     </>
   );
-};
-
-export default RangeWidget;
+}

@@ -9,6 +9,7 @@ import {
   ErrorSchemaBuilder,
   ErrorTransformer,
   FieldValidation,
+  FormContextType,
   FormValidation,
   GenericObjectType,
   getDefaultFormState,
@@ -17,6 +18,7 @@ import {
   RJSFSchema,
   RJSFValidationError,
   StrictRJSFSchema,
+  UiSchema,
   ValidationData,
   ValidatorType,
 } from "@rjsf/utils";
@@ -30,8 +32,9 @@ const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
  */
 export default class AJV8Validator<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
-> implements ValidatorType<T>
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> implements ValidatorType<T, S, F>
 {
   /** The AJV instance to use for all validations
    *
@@ -274,12 +277,14 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
     formData: T | undefined,
     schema: S,
-    customValidate?: CustomValidator<T>,
-    transformErrors?: ErrorTransformer
+    customValidate?: CustomValidator<T, S, F>,
+    transformErrors?: ErrorTransformer<T, S, F>,
+    uiSchema?: UiSchema<T, S, F>
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
@@ -289,7 +294,7 @@ export default class AJV8Validator<
       errors = [...errors, { stack: invalidSchemaError!.message }];
     }
     if (typeof transformErrors === "function") {
-      errors = transformErrors(errors);
+      errors = transformErrors(errors, uiSchema);
     }
 
     let errorSchema = this.toErrorSchema(errors);
@@ -308,7 +313,7 @@ export default class AJV8Validator<
     }
 
     // Include form data with undefined values, which is required for custom validation.
-    const newFormData = getDefaultFormState<T>(
+    const newFormData = getDefaultFormState<T, S, F>(
       this,
       schema,
       formData,
@@ -318,10 +323,11 @@ export default class AJV8Validator<
 
     const errorHandler = customValidate(
       newFormData,
-      this.createErrorHandler(newFormData)
+      this.createErrorHandler(newFormData),
+      uiSchema
     );
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    return mergeValidationData<T>(
+    return mergeValidationData<T, S, F>(
       this,
       { errors, errorSchema },
       userErrorSchema

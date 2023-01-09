@@ -1,16 +1,25 @@
 import React from "react";
-import { FieldHelpProps } from "@rjsf/utils";
 import { Message } from "semantic-ui-react";
+import {
+  FieldHelpProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-/**
- * @return {null}
+/** The `FieldHelpTemplate` component renders any help desired for a field
+ *
+ * @param props - The `FieldHelpProps` to be rendered
  */
-function FieldHelpTemplate({ help, idSchema }: FieldHelpProps) {
+export default function FieldHelpTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldHelpProps<T, S, F>) {
+  const { idSchema, help } = props;
   if (help) {
     const id = `${idSchema.$id}__help`;
     return <Message size="mini" info id={id} content={help} />;
   }
   return null;
 }
-
-export default FieldHelpTemplate;

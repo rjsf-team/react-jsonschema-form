@@ -357,7 +357,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 .emotion-0 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -664,7 +664,7 @@ exports[`single fields checkbox field 2`] = `
         <span
           className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-5"
         >
-          
+          test
         </span>
       </label>
     </div>

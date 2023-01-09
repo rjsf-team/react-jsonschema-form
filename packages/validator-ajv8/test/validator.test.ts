@@ -6,6 +6,7 @@ import {
   FormValidation,
   RJSFSchema,
   RJSFValidationError,
+  UiSchema,
   ValidatorType,
 } from "@rjsf/utils";
 
@@ -372,6 +373,8 @@ describe("AJV8Validator", () => {
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
+        let transformErrors: jest.Mock;
+        let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
             type: "object",
@@ -380,15 +383,19 @@ describe("AJV8Validator", () => {
               [illFormedKey]: { type: "string" },
             },
           };
-          newErrorMessage = "Better error message";
-          const transformErrors = (errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          uiSchema = {
+            foo: { "ui:label": false },
           };
+          newErrorMessage = "Better error message";
+          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          });
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
-            transformErrors
+            transformErrors,
+            uiSchema
           );
           errors = result.errors;
         });
@@ -397,10 +404,30 @@ describe("AJV8Validator", () => {
           expect(errors).not.toHaveLength(0);
           expect(errors[0].message).toEqual(newErrorMessage);
         });
+        it("transformErrors function was called with uiSchema", () => {
+          expect(transformErrors).toHaveBeenCalledWith(
+            expect.any(Array),
+            uiSchema
+          );
+        });
       });
       describe("Custom validate function", () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        let validate: jest.Mock;
+        let uiSchema: UiSchema;
+        beforeAll(() => {
+          uiSchema = {
+            foo: { "ui:label": false },
+          };
+
+          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+            if (formData.pass1 !== formData.pass2) {
+              errors.pass2!.addError("passwords don`t match.");
+            }
+            return errors;
+          });
+        });
         describe("formData is provided", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
@@ -412,18 +439,13 @@ describe("AJV8Validator", () => {
                 foo: { type: "array", items: { type: "string" } }, // Adding an array for test coverage
               },
             };
-
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
-            };
             const formData = { pass1: "a", pass2: "b", foo: ["a"] };
             const result = validator.validateFormData(
               formData,
               schema,
-              validate
+              validate,
+              undefined,
+              uiSchema
             );
             errors = result.errors;
             errorSchema = result.errorSchema;
@@ -438,6 +460,13 @@ describe("AJV8Validator", () => {
               "passwords don`t match."
             );
           });
+          it("validate function was called with uiSchema", () => {
+            expect(validate).toHaveBeenCalledWith(
+              expect.any(Object),
+              expect.any(Object),
+              uiSchema
+            );
+          });
         });
         describe("formData is missing data", () => {
           beforeAll(() => {
@@ -447,12 +476,6 @@ describe("AJV8Validator", () => {
                 pass1: { type: "string" },
                 pass2: { type: "string" },
               },
-            };
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
             };
             const formData = { pass1: "a" };
             const result = validator.validateFormData(
@@ -881,6 +904,8 @@ describe("AJV8Validator", () => {
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
+        let transformErrors: jest.Mock;
+        let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
             type: "object",
@@ -889,15 +914,19 @@ describe("AJV8Validator", () => {
               [illFormedKey]: { type: "string" },
             },
           };
-          newErrorMessage = "Better error message";
-          const transformErrors = (errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          uiSchema = {
+            foo: { "ui:label": false },
           };
+          newErrorMessage = "Better error message";
+          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          });
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
-            transformErrors
+            transformErrors,
+            uiSchema
           );
           errors = result.errors;
         });
@@ -906,10 +935,30 @@ describe("AJV8Validator", () => {
           expect(errors).not.toHaveLength(0);
           expect(errors[0].message).toEqual(newErrorMessage);
         });
+        it("transformErrors function was called with uiSchema", () => {
+          expect(transformErrors).toHaveBeenCalledWith(
+            expect.any(Array),
+            uiSchema
+          );
+        });
       });
       describe("Custom validate function", () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        let validate: jest.Mock;
+        let uiSchema: UiSchema;
+        beforeAll(() => {
+          uiSchema = {
+            foo: { "ui:label": false },
+          };
+
+          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+            if (formData.pass1 !== formData.pass2) {
+              errors.pass2!.addError("passwords don`t match.");
+            }
+            return errors;
+          });
+        });
         describe("formData is provided", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
@@ -921,18 +970,13 @@ describe("AJV8Validator", () => {
                 foo: { type: "array", items: { type: "string" } }, // Adding an array for test coverage
               },
             };
-
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
-            };
             const formData = { pass1: "a", pass2: "b", foo: ["a"] };
             const result = validator.validateFormData(
               formData,
               schema,
-              validate
+              validate,
+              undefined,
+              uiSchema
             );
             errors = result.errors;
             errorSchema = result.errorSchema;
@@ -947,6 +991,13 @@ describe("AJV8Validator", () => {
               "passwords don`t match."
             );
           });
+          it("validate function was called with uiSchema", () => {
+            expect(validate).toHaveBeenCalledWith(
+              expect.any(Object),
+              expect.any(Object),
+              uiSchema
+            );
+          });
         });
         describe("formData is missing data", () => {
           beforeAll(() => {
@@ -956,12 +1007,6 @@ describe("AJV8Validator", () => {
                 pass1: { type: "string" },
                 pass2: { type: "string" },
               },
-            };
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
             };
             const formData = { pass1: "a" };
             const result = validator.validateFormData(
@@ -1390,6 +1435,8 @@ describe("AJV8Validator", () => {
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
+        let transformErrors: jest.Mock;
+        let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
             type: "object",
@@ -1398,15 +1445,19 @@ describe("AJV8Validator", () => {
               [illFormedKey]: { type: "string" },
             },
           };
-          newErrorMessage = "Better error message";
-          const transformErrors = (errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          uiSchema = {
+            foo: { "ui:label": false },
           };
+          newErrorMessage = "Better error message";
+          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          });
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
-            transformErrors
+            transformErrors,
+            uiSchema
           );
           errors = result.errors;
         });
@@ -1415,10 +1466,30 @@ describe("AJV8Validator", () => {
           expect(errors).not.toHaveLength(0);
           expect(errors[0].message).toEqual(newErrorMessage);
         });
+        it("transformErrors function was called with uiSchema", () => {
+          expect(transformErrors).toHaveBeenCalledWith(
+            expect.any(Array),
+            uiSchema
+          );
+        });
       });
       describe("Custom validate function", () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        let validate: jest.Mock;
+        let uiSchema: UiSchema;
+        beforeAll(() => {
+          uiSchema = {
+            foo: { "ui:label": false },
+          };
+
+          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+            if (formData.pass1 !== formData.pass2) {
+              errors.pass2!.addError("passwords don`t match.");
+            }
+            return errors;
+          });
+        });
         describe("formData is provided", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
@@ -1430,18 +1501,13 @@ describe("AJV8Validator", () => {
                 foo: { type: "array", items: { type: "string" } }, // Adding an array for test coverage
               },
             };
-
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
-            };
             const formData = { pass1: "a", pass2: "b", foo: ["a"] };
             const result = validator.validateFormData(
               formData,
               schema,
-              validate
+              validate,
+              undefined,
+              uiSchema
             );
             errors = result.errors;
             errorSchema = result.errorSchema;
@@ -1456,6 +1522,13 @@ describe("AJV8Validator", () => {
               "passwords don`t match."
             );
           });
+          it("validate function was called with uiSchema", () => {
+            expect(validate).toHaveBeenCalledWith(
+              expect.any(Object),
+              expect.any(Object),
+              uiSchema
+            );
+          });
         });
         describe("formData is missing data", () => {
           beforeAll(() => {
@@ -1465,12 +1538,6 @@ describe("AJV8Validator", () => {
                 pass1: { type: "string" },
                 pass2: { type: "string" },
               },
-            };
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
             };
             const formData = { pass1: "a" };
             const result = validator.validateFormData(

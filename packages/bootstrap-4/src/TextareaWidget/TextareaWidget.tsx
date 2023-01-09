@@ -1,14 +1,27 @@
 import React from "react";
 
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 
-type CustomWidgetProps = WidgetProps & {
+type CustomWidgetProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = WidgetProps<T, S, F> & {
   options: any;
 };
 
-const TextareaWidget = ({
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   value,
@@ -20,7 +33,7 @@ const TextareaWidget = ({
   onFocus,
   onChange,
   options,
-}: CustomWidgetProps) => {
+}: CustomWidgetProps<T, S, F>) {
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -51,6 +64,4 @@ const TextareaWidget = ({
       />
     </InputGroup>
   );
-};
-
-export default TextareaWidget;
+}

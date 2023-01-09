@@ -16,19 +16,13 @@ react-jsonschema-form also comes with tools such as `uiSchema` and other form pr
 
 ## Installation
 
-First install the dependencies from npm:
+First install the dependencies from npm, along with a validator implementation (such as `@rjsf/validator-ajv8`):
 
 ```bash
-$ npm install @rjsf/core @rjsf/utils --save
+$ npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8 --save
 ```
 
-As of version 5, you will also need to select and install a validator implementation (such as `@rjsf/validator-ajv8`):
-
-```bash
-$ npm install @rjsf/validator-ajv8 --save
-````
-
-Then import the dependency as follows:
+Then import the dependencies as follows:
 
 ```js
 import validator from "@rjsf/validator-ajv8";

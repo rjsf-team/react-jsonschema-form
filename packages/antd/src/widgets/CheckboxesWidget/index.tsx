@@ -1,8 +1,23 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Checkbox from "antd/lib/checkbox";
+import {
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  GenericObjectType,
+} from "@rjsf/utils";
 
-const CheckboxesWidget = ({
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   autofocus,
   disabled,
   formContext,
@@ -13,8 +28,8 @@ const CheckboxesWidget = ({
   options,
   readonly,
   value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+}: WidgetProps<T, S, F>) {
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, inline } = options;
 
@@ -62,6 +77,4 @@ const CheckboxesWidget = ({
         ))}
     </Checkbox.Group>
   ) : null;
-};
-
-export default CheckboxesWidget;
+}

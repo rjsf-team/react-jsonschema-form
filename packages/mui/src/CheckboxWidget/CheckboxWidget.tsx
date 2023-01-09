@@ -1,9 +1,24 @@
 import React from "react";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";
+import {
+  schemaRequiresTrueValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const CheckboxWidget = (props: WidgetProps) => {
+/** The `CheckBoxWidget` is a widget for rendering boolean properties.
+ *  It is typically used to represent a boolean.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -19,7 +34,7 @@ const CheckboxWidget = (props: WidgetProps) => {
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue(schema);
+  const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = (_: any, checked: boolean) => onChange(checked);
   const _onBlur = ({
@@ -47,6 +62,4 @@ const CheckboxWidget = (props: WidgetProps) => {
       label={label || ""}
     />
   );
-};
-
-export default CheckboxWidget;
+}

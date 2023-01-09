@@ -1,5 +1,10 @@
 import React from "react";
-import { TitleFieldProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TitleFieldProps,
+} from "@rjsf/utils";
 import { Label } from "@fluentui/react";
 
 const styles = {
@@ -12,10 +17,14 @@ const styles = {
   ],
 };
 
-const TitleField = ({ id, title }: TitleFieldProps) => (
-  <Label id={id} styles={styles}>
-    {title}
-  </Label>
-);
-
-export default TitleField;
+export default function TitleField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ id, title }: TitleFieldProps<T, S, F>) {
+  return (
+    <Label id={id} styles={styles}>
+      {title}
+    </Label>
+  );
+}

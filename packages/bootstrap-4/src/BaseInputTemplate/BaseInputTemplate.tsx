@@ -1,8 +1,18 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const BaseInputTemplate = ({
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   required,
@@ -19,8 +29,11 @@ const BaseInputTemplate = ({
   rawErrors = [],
   children,
   extraProps,
-}: WidgetProps) => {
-  const inputProps = { ...extraProps, ...getInputProps(schema, type, options) };
+}: WidgetProps<T, S, F>) {
+  const inputProps = {
+    ...extraProps,
+    ...getInputProps<T, S, F>(schema, type, options),
+  };
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -62,6 +75,4 @@ const BaseInputTemplate = ({
       ) : null}
     </>
   );
-};
-
-export default BaseInputTemplate;
+}

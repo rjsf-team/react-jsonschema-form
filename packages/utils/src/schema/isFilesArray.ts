@@ -21,7 +21,7 @@ export default function isFilesArray<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S
@@ -30,7 +30,7 @@ export default function isFilesArray<
     return true;
   }
   if (schema.items) {
-    const itemsSchema = retrieveSchema<T, S>(
+    const itemsSchema = retrieveSchema<T, S, F>(
       validator,
       schema.items as S,
       rootSchema

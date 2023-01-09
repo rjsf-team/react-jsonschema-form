@@ -1,6 +1,11 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { allowedProps } from "../CheckboxWidget";
 import _pick from "lodash/pick";
 
@@ -25,7 +30,11 @@ const deselectValue = (value: any, selected: any) => {
   return selected.filter((v: any) => v !== value);
 };
 
-const CheckboxesWidget = ({
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   label,
   id,
@@ -39,7 +48,7 @@ const CheckboxesWidget = ({
   onBlur,
   onFocus,
   rawErrors = [],
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const _onChange =
@@ -95,6 +104,4 @@ const CheckboxesWidget = ({
       <span style={styles_red}>{(rawErrors || []).join("\n")}</span>
     </>
   );
-};
-
-export default CheckboxesWidget;
+}

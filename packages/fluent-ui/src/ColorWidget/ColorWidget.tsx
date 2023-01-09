@@ -6,7 +6,12 @@ import {
   getColorFromString,
   Label,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const styles_red = {
@@ -35,14 +40,11 @@ const allowedProps: (keyof IColorPickerProps)[] = [
   "showPreview",
 ];
 
-const ColorWidget = ({
-  schema,
-  options,
-  value,
-  required,
-  label,
-  onChange,
-}: WidgetProps) => {
+export default function ColorWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ schema, options, value, required, label, onChange }: WidgetProps<T, S, F>) {
   const updateColor = (_ev: any, colorObj: IColor) => {
     onChange(colorObj.hex);
   };
@@ -64,5 +66,4 @@ const ColorWidget = ({
       />
     </>
   );
-};
-export default ColorWidget;
+}
