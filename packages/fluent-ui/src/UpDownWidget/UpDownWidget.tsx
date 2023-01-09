@@ -71,7 +71,7 @@ WidgetProps<T, S, F>) {
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
 
-  let { min, max, step } = rangeSpec(schema);
+  let { min, max, step } = rangeSpec<S>(schema);
   if (min === undefined) {
     min = -1 * Infinity;
   }
