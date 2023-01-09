@@ -1,8 +1,20 @@
 import React from "react";
 
-import { WidgetProps, getTemplate, localToUTC, utcToLocal } from "@rjsf/utils";
+import {
+  WidgetProps,
+  getTemplate,
+  localToUTC,
+  utcToLocal,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 
-const DateTimeWidget = (props: WidgetProps) => {
+export default function DateTimeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const { registry } = props;
   const uiProps: any = props.options["props"] || {};
   const options = {
@@ -12,7 +24,7 @@ const DateTimeWidget = (props: WidgetProps) => {
       ...uiProps,
     },
   };
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate">(
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
     "BaseInputTemplate",
     registry,
     options
@@ -31,6 +43,4 @@ const DateTimeWidget = (props: WidgetProps) => {
       onChange={onChange}
     />
   );
-};
-
-export default DateTimeWidget;
+}
