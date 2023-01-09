@@ -1,6 +1,12 @@
 import React from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps, processSelectValue } from "@rjsf/utils";
+import {
+  WidgetProps,
+  processSelectValue,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of IDropdownProps from @fluentui/react
@@ -49,7 +55,11 @@ const allowedProps = [
   "openOnKeyboardFocus",
 ];
 
-const SelectWidget = ({
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -62,7 +72,7 @@ const SelectWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   const _onChange = (
@@ -80,14 +90,14 @@ const SelectWidget = ({
         onChange(valueOrDefault.filter((key: any) => key !== item.key));
       }
     } else {
-      onChange(processSelectValue(schema, item.key, options));
+      onChange(processSelectValue<T, S, F>(schema, item.key, options));
     }
   };
   const _onBlur = (e: any) =>
-    onBlur(id, processSelectValue(schema, e.target.value, options));
+    onBlur(id, processSelectValue<T, S, F>(schema, e.target.value, options));
 
   const _onFocus = (e: any) =>
-    onFocus(id, processSelectValue(schema, e.target.value, options));
+    onFocus(id, processSelectValue<T, S, F>(schema, e.target.value, options));
 
   const newOptions = (enumOptions as { value: any; label: any }[]).map(
     (option) => ({
@@ -116,6 +126,4 @@ const SelectWidget = ({
       />
     </>
   );
-};
-
-export default SelectWidget;
+}

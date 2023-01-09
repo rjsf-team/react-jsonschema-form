@@ -1,8 +1,19 @@
 import React from "react";
-import { FieldTemplateProps, getTemplate, getUiOptions } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import { Text } from "@fluentui/react";
 
-const FieldTemplate = (props: FieldTemplateProps) => {
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
     children,
@@ -13,12 +24,13 @@ const FieldTemplate = (props: FieldTemplateProps) => {
     uiSchema,
     registry,
   } = props;
-  const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
     "WrapIfAdditionalTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
   // TODO: do this better by not returning the form-group class from master.
   let { classNames = "" } = props;
   classNames = "ms-Grid-col ms-sm12 " + classNames.replace("form-group", "");
@@ -36,6 +48,4 @@ const FieldTemplate = (props: FieldTemplateProps) => {
       </div>
     </WrapIfAdditionalTemplate>
   );
-};
-
-export default FieldTemplate;
+}

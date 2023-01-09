@@ -1,8 +1,17 @@
 import React from "react";
 import { IconButton, IIconProps } from "@fluentui/react";
-import { IconButtonProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-export default function FluentIconButton(props: IconButtonProps) {
+export default function FluentIconButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
   const iconProps: IIconProps = {
     iconName: props.icon as string,
   };
@@ -17,14 +26,26 @@ export default function FluentIconButton(props: IconButtonProps) {
   );
 }
 
-export function MoveDownButton(props: IconButtonProps) {
-  return <FluentIconButton title="Move down" {...props} icon="Down" />;
+export function MoveDownButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  return <FluentIconButton<T, S, F> title="Move down" {...props} icon="Down" />;
 }
 
-export function MoveUpButton(props: IconButtonProps) {
-  return <FluentIconButton title="Move up" {...props} icon="Up" />;
+export function MoveUpButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  return <FluentIconButton<T, S, F> title="Move up" {...props} icon="Up" />;
 }
 
-export function RemoveButton(props: IconButtonProps) {
-  return <FluentIconButton title="Remove" {...props} icon="Delete" />;
+export function RemoveButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: IconButtonProps<T, S, F>) {
+  return <FluentIconButton<T, S, F> title="Remove" {...props} icon="Delete" />;
 }

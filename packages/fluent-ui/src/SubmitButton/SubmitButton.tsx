@@ -1,8 +1,18 @@
 import React from "react";
-import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getSubmitButtonOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+  SubmitButtonProps,
+} from "@rjsf/utils";
 import { PrimaryButton } from "@fluentui/react";
 
-export default ({ uiSchema }: SubmitButtonProps) => {
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,
     norender,
@@ -19,4 +29,4 @@ export default ({ uiSchema }: SubmitButtonProps) => {
       </div>
     </div>
   );
-};
+}

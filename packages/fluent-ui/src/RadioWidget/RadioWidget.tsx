@@ -4,7 +4,12 @@ import {
   IChoiceGroupOption,
   IChoiceGroupProps,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [
@@ -20,7 +25,11 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
   "ariaLabelledBy",
 ];
 
-const RadioWidget = ({
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   schema,
   options,
@@ -32,7 +41,7 @@ const RadioWidget = ({
   onFocus,
   disabled,
   readonly,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
   function _onChange(
@@ -78,6 +87,4 @@ const RadioWidget = ({
       {...uiProps}
     />
   );
-};
-
-export default RadioWidget;
+}

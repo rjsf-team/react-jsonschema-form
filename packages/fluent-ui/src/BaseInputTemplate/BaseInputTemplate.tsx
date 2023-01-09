@@ -1,6 +1,12 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of ITextFieldProps from @fluentui/react
@@ -44,7 +50,11 @@ const allowedProps = [
   "list",
 ];
 
-const BaseInputTemplate = ({
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   required,
@@ -61,8 +71,8 @@ const BaseInputTemplate = ({
   type,
   rawErrors,
   multiline,
-}: WidgetProps) => {
-  const inputProps = getInputProps(schema, type, options);
+}: WidgetProps<T, S, F>) {
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -109,6 +119,4 @@ const BaseInputTemplate = ({
       )}
     </>
   );
-};
-
-export default BaseInputTemplate;
+}

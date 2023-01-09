@@ -1,4 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "../types";
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
  *
@@ -10,9 +15,10 @@ import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
  */
 export default function getMatchingOption<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   formData: T | undefined,
   options: S[],
   rootSchema: S
