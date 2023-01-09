@@ -9,6 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
+import has from "lodash/has";
 import unset from "lodash/unset";
 
 /** Type used for the state of the `AnyOfField` component */
@@ -122,7 +123,7 @@ class AnyOfField<
       for (const option of optionsToDiscard) {
         if (option.properties) {
           for (const key in option.properties) {
-            if (key in newFormData) {
+            if (has(newFormData, key)) {
               unset(newFormData, key);
             }
           }

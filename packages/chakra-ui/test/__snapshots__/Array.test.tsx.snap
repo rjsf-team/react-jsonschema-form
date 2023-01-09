@@ -857,6 +857,7 @@ exports[`array fields checkboxes 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -899,6 +900,7 @@ exports[`array fields checkboxes 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>

@@ -2504,6 +2504,7 @@ exports[`single fields select field 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -2825,6 +2826,7 @@ exports[`single fields select field multiple choice 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -2867,6 +2869,7 @@ exports[`single fields select field multiple choice 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -3147,6 +3150,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3189,6 +3193,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -3564,6 +3569,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                   autoCorrect="off"
                   className=" emotion-16"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3912,6 +3918,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3954,6 +3961,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -4231,6 +4239,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -4549,6 +4558,7 @@ exports[`single fields select field single choice formData 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}

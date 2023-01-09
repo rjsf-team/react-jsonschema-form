@@ -121,7 +121,7 @@ class ObjectField<
 
     let index = 0;
     let newKey = preferredKey;
-    while (newKey in formData) {
+    while (has(formData, newKey)) {
       newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
     }
     return newKey;
