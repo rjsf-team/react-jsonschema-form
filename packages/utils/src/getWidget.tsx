@@ -78,7 +78,7 @@ function mergeWidgetOptions<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(AWidget: Widget<T, S, F>) {
-  let MergedWidget: Widget<T, S, F> = get(AWidget, "MergedWidget");
+  let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, "MergedWidget");
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
     const defaultOptions =
