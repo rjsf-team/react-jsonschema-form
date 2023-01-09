@@ -10,6 +10,7 @@ import {
 } from "../constants";
 import isObject from "../isObject";
 import {
+  FormContextType,
   IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -30,9 +31,10 @@ import retrieveSchema from "./retrieveSchema";
  */
 export default function toIdSchema<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   schema: S,
   id?: string | null,
   rootSchema?: S,
@@ -41,13 +43,13 @@ export default function toIdSchema<
   idSeparator = "_"
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S>(
+    const _schema = retrieveSchema<T, S, F>(
       validator,
       schema,
       rootSchema,
       formData
     );
-    return toIdSchema<T>(
+    return toIdSchema<T, S, F>(
       validator,
       _schema,
       id,
@@ -58,7 +60,7 @@ export default function toIdSchema<
     );
   }
   if (ITEMS_KEY in schema && !get(schema, [ITEMS_KEY, REF_KEY])) {
-    return toIdSchema<T, S>(
+    return toIdSchema<T, S, F>(
       validator,
       get(schema, ITEMS_KEY) as S,
       id,
@@ -74,7 +76,7 @@ export default function toIdSchema<
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema[ID_KEY] + idSeparator + name;
-      idSchema[name] = toIdSchema<T, S>(
+      idSchema[name] = toIdSchema<T, S, F>(
         validator,
         isObject(field) ? field : {},
         fieldId,

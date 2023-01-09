@@ -47,7 +47,7 @@ If you are working with a simple, unchanging JSON Schema and you have defined a 
 
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
-import { validator } from "@rjsf/validator-ajv8";
+import { customizeValidator } from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/core";
 
 interface FormData {
@@ -65,6 +65,8 @@ const schema: RJSFSchema = {
 
 const formData: FormData = {};
 
+const validator = customizeValidator<FormData>();
+
 render((
   <Form<FormData> schema={schema} validator={validator} formData={formData} />
 ), document.getElementById("app"));
@@ -78,7 +80,7 @@ If you are using something like the [Ajv utility types for schemas](https://ajv.
 ```tsx
 import { JSONSchemaType } from "ajv";
 import { RJSFSchema } from "@rjsf/utils";
-import { validator } from "@rjsf/validator-ajv8";
+import { customizeValidator } from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/core";
 
 interface FormData {
@@ -96,11 +98,14 @@ const schema: MySchema = {
   }
 };
 
+const validator = customizeValidator<any, MySchema>();
+
 render((
   <Form<any, MySchema> schema={schema} validator={validator} />
 ), document.getElementById("app"));
 
 // Alternatively since you have the type, you could also use this
+// const validator = customizeValidator<FormData, MySchema>();
 // render((
 //  <Form<FormData, MySchema> schema={schema} validator={validator} />
 //), document.getElementById("app"));
@@ -115,7 +120,7 @@ If you have a type for this data, you can override this generic as follows:
 
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
-import { validator } from "@rjsf/validator-ajv8";
+import { customizeValidator } from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/core";
 
 interface FormContext {
@@ -136,6 +141,8 @@ const formContext: FormContext = {
   }
 };
 
+const validator = customizeValidator<any, RJSFSchema, FormContext>();
+
 render((
   <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />
 ), document.getElementById("app"));
@@ -147,7 +154,7 @@ Using the `withTheme()` function is just as easy:
 
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
-import { validator } from "@rjsf/validator-ajv8";
+import { customizeValidator } from "@rjsf/validator-ajv8";
 import { withTheme, ThemeProps } from '@rjsf/core';
 
 interface FormData {
@@ -173,6 +180,8 @@ const theme: ThemeProps<FormData, MySchema, FormContext> = { widgets: {test: () 
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(theme);
 
+const validator = customizeValidator<FormData, MySchema, FormContext>();
+
 const Demo = () => (
   <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
 );
@@ -190,7 +199,7 @@ If you are doing something like the following to create a new theme based on `@r
 import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 import { ThemeProps, withTheme } from "@rjsf/core";
-import { validator } from "@rjsf/validator-ajv8";
+import validator from "@rjsf/validator-ajv8";
 import { Theme } from "@rjsf/mui";
 
 const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
@@ -221,7 +230,7 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 import React from "react";
 import { WidgetProps } from "@rjsf/utils";
 import { ThemeProps, withTheme } from "@rjsf/core";
-import { validator } from "@rjsf/validator-ajv8";
+import { customizeValidator } from "@rjsf/validator-ajv8";
 import { generateTheme } from "@rjsf/mui";
 
 interface FormData {
@@ -261,6 +270,8 @@ const myTheme: ThemeProps<FormData, MySchema, FormContext> = {
 };
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(myTheme);
+
+const validator = customizeValidator<FormData, MySchema, FormContext>();
 
 // You could also do since they are effectively the same:
 // const ThemedForm = generateForm<FormData, MySchema, FormContext>(myTheme);

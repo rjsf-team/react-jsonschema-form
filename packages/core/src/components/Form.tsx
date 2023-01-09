@@ -43,7 +43,7 @@ export interface FormProps<
   /** The JSON schema object for the form */
   schema: S;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
-  validator: ValidatorType<T, S>;
+  validator: ValidatorType<T, S, F>;
   /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
   children?: React.ReactNode;
   /** The uiSchema for the form */
@@ -138,7 +138,7 @@ export interface FormProps<
   target?: string;
   // Errors and validation
   /** Formerly the `validate` prop; Takes a function that specifies custom validation rules for the form */
-  customValidate?: CustomValidator<T>;
+  customValidate?: CustomValidator<T, S, F>;
   /** This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it
    * can be used to implement asynchronous validation
    */
@@ -169,7 +169,7 @@ export interface FormProps<
   /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
    * Schema validation
    */
-  transformErrors?: ErrorTransformer;
+  transformErrors?: ErrorTransformer<T, S, F>;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -309,7 +309,7 @@ export default class Form<
       "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
-    let schemaUtils: SchemaUtilsType<T, S> = state.schemaUtils;
+    let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)
@@ -407,12 +407,12 @@ export default class Form<
   validate(
     formData: T,
     schema = this.props.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S>
+    altSchemaUtils?: SchemaUtilsType<T, S, F>
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils
       ? altSchemaUtils
       : this.state.schemaUtils;
-    const { customValidate, transformErrors } = this.props;
+    const { customValidate, transformErrors, uiSchema } = this.props;
     const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
@@ -420,7 +420,8 @@ export default class Form<
         formData,
         resolvedSchema,
         customValidate,
-        transformErrors
+        transformErrors,
+        uiSchema
       );
   }
 

@@ -33,17 +33,17 @@ class SchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> implements SchemaUtilsType<T, S>
+> implements SchemaUtilsType<T, S, F>
 {
   rootSchema: S;
-  validator: ValidatorType<T, S>;
+  validator: ValidatorType<T, S, F>;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
-  constructor(validator: ValidatorType<T, S>, rootSchema: S) {
+  constructor(validator: ValidatorType<T, S, F>, rootSchema: S) {
     this.rootSchema = rootSchema;
     this.validator = validator;
   }
@@ -65,7 +65,7 @@ class SchemaUtils<
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
-    validator: ValidatorType<T, S>,
+    validator: ValidatorType<T, S, F>,
     rootSchema: S
   ): boolean {
     if (!validator || !rootSchema) {
@@ -91,7 +91,7 @@ class SchemaUtils<
     formData?: T,
     includeUndefinedValues: boolean | "excludeObjectChildren" = false
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S>(
+    return getDefaultFormState<T, S, F>(
       this.validator,
       schema,
       formData,
@@ -123,7 +123,7 @@ class SchemaUtils<
    * @returns - The index of the matched option or 0 if none is available
    */
   getMatchingOption(formData: T, options: S[]) {
-    return getMatchingOption<T, S>(
+    return getMatchingOption<T, S, F>(
       this.validator,
       formData,
       options,
@@ -152,7 +152,7 @@ class SchemaUtils<
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S>(this.validator, schema, this.rootSchema);
+    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -161,7 +161,7 @@ class SchemaUtils<
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S>(this.validator, schema, this.rootSchema);
+    return isSelect<T, S, F>(this.validator, schema, this.rootSchema);
   }
 
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
@@ -177,7 +177,7 @@ class SchemaUtils<
     validationData: ValidationData<T>,
     additionalErrorSchema?: ErrorSchema<T>
   ): ValidationData<T> {
-    return mergeValidationData<T, S>(
+    return mergeValidationData<T, S, F>(
       this.validator,
       validationData,
       additionalErrorSchema
@@ -193,7 +193,7 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData: T) {
-    return retrieveSchema<T, S>(
+    return retrieveSchema<T, S, F>(
       this.validator,
       schema,
       this.rootSchema,
@@ -217,7 +217,7 @@ class SchemaUtils<
     idPrefix = "root",
     idSeparator = "_"
   ): IdSchema<T> {
-    return toIdSchema<T, S>(
+    return toIdSchema<T, S, F>(
       this.validator,
       schema,
       id,
@@ -236,7 +236,7 @@ class SchemaUtils<
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T, S>(
+    return toPathSchema<T, S, F>(
       this.validator,
       schema,
       name,
@@ -257,6 +257,6 @@ export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S>, rootSchema: S): SchemaUtilsType<T, S, F> {
+>(validator: ValidatorType<T, S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(validator, rootSchema);
 }

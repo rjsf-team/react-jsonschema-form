@@ -1,5 +1,10 @@
 import isConstant from "../isConstant";
-import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "../types";
 import retrieveSchema from "./retrieveSchema";
 
 /** Checks to see if the `schema` combination represents a select
@@ -11,9 +16,10 @@ import retrieveSchema from "./retrieveSchema";
  */
 export default function isSelect<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
->(validator: ValidatorType<T, S>, theSchema: S, rootSchema: S = {} as S) {
-  const schema = retrieveSchema<T, S>(
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema: S = {} as S) {
+  const schema = retrieveSchema<T, S, F>(
     validator,
     theSchema,
     rootSchema,
