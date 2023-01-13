@@ -248,10 +248,7 @@ export default class AJV8Validator<
       } else {
         let title = property.split(".").pop() as string;
 
-        const uiSchemaTitle = get(
-          uiSchema,
-          `${property.replace(/^\./, "")}.['ui:title']`
-        );
+        const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema,`${property.replace(/^\./, "")}`)).title;
 
         if (uiSchemaTitle) {
           title = `'${uiSchemaTitle}'`;
