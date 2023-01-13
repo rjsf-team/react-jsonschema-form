@@ -229,7 +229,9 @@ export default class AJV8Validator<
 
         const currentProperty: string = params.missingProperty;
 
-        const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema,`${property.replace(/^\./, "")}`)).title;
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
 
         if (uiSchemaTitle) {
           message = message?.replace(currentProperty, uiSchemaTitle);
@@ -246,7 +248,9 @@ export default class AJV8Validator<
       } else {
         let title = property.split(".").pop() as string;
 
-        const uiSchemaTitle = getUiOptions<T, S, F>(get(uiSchema,`${property.replace(/^\./, "")}`)).title;
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
 
         if (uiSchemaTitle) {
           title = `'${uiSchemaTitle}'`;
