@@ -22,6 +22,7 @@ import {
   ValidationData,
   ValidatorType,
   PROPERTIES_KEY,
+  getUiOptions,
 } from "@rjsf/utils";
 import get from "lodash/get";
 
