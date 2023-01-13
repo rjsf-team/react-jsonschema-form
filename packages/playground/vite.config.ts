@@ -11,6 +11,7 @@ export default defineConfig({
     open: process.env.NODE_ENV !== "production",
   }, // maintain the old webpack behavior in dev
   plugins: [react()],
+  mode: "production", // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
   resolve: {
     alias: {
       // The following is needed to allow the material ui v4 and v5 themes to properly load the css

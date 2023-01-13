@@ -1,4 +1,4 @@
-import Ajv, { ErrorObject, ValidateFunction } from "ajv8";
+import Ajv, { ErrorObject, ValidateFunction } from "ajv";
 import toPath from "lodash/toPath";
 import isObject from "lodash/isObject";
 import clone from "lodash/clone";
