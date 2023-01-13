@@ -23,6 +23,7 @@ import {
   ValidatorType,
   PROPERTIES_KEY,
 } from "@rjsf/utils";
+import get from "lodash/get";
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
@@ -203,7 +204,8 @@ export default class AJV8Validator<
    * @private
    */
   private transformRJSFValidationErrors(
-    errors: ErrorObject[] = []
+    errors: ErrorObject[] = [],
+    uiSchema?: UiSchema<T, S, F>
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
       const {
@@ -215,7 +217,6 @@ export default class AJV8Validator<
         ...rest
       } = e;
       let { message } = rest;
-
       let property = instancePath.replace(/\//g, ".");
 
       let stack: string | undefined = undefined;
@@ -227,21 +228,39 @@ export default class AJV8Validator<
 
         const currentProperty: string = params.missingProperty;
 
-        const parentSchemaTitle =
-          parentSchema?.[PROPERTIES_KEY]?.[currentProperty]?.title;
+        const uiSchemaTitle = get(
+          uiSchema,
+          `${property.replace(/^\./, "")}.['ui:title']`
+        );
 
-        if (parentSchemaTitle) {
-          message = message?.replace(currentProperty, parentSchemaTitle);
+        if (uiSchemaTitle) {
+          message = message?.replace(currentProperty, uiSchemaTitle);
+        } else {
+          const parentSchemaTitle =
+            parentSchema?.[PROPERTIES_KEY]?.[currentProperty]?.title;
+
+          if (parentSchemaTitle) {
+            message = message?.replace(currentProperty, parentSchemaTitle);
+          }
         }
 
         stack = message!;
       } else {
         let title = property.split(".").pop() as string;
 
-        const parentSchemaTitle = parentSchema?.title;
+        const uiSchemaTitle = get(
+          uiSchema,
+          `${property.replace(/^\./, "")}.['ui:title']`
+        );
 
-        if (parentSchemaTitle) {
-          title = `'${parentSchemaTitle}'`;
+        if (uiSchemaTitle) {
+          title = `'${uiSchemaTitle}'`;
+        } else {
+          const parentSchemaTitle = parentSchema?.title;
+
+          if (parentSchemaTitle) {
+            title = `'${parentSchemaTitle}'`;
+          }
         }
 
         stack = `${title} ${message}`.trim();
@@ -320,7 +339,7 @@ export default class AJV8Validator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
-    let errors = this.transformRJSFValidationErrors(rawErrors.errors);
+    let errors = this.transformRJSFValidationErrors(rawErrors.errors, uiSchema);
 
     if (invalidSchemaError) {
       errors = [...errors, { stack: invalidSchemaError!.message }];

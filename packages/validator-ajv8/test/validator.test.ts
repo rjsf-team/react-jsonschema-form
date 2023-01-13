@@ -1476,6 +1476,130 @@ describe("AJV8Validator", () => {
             );
           });
         });
+        describe("title is in validation message when it is in the uiSchema ui:title field", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              required: ["firstName", "lastName"],
+              properties: {
+                firstName: { title: "First Name", type: "string" },
+                lastName: { title: "Last Name", type: "string" },
+                numberOfChildren: {
+                  title: "Number of children",
+                  type: "string",
+                  pattern: "\\d+",
+                },
+              },
+            };
+            const uiSchema: UiSchema = {
+              lastName: {
+                "ui:title": "uiSchema Last Name",
+              },
+              numberOfChildren: {
+                "ui:title": "uiSchema Number of children",
+              },
+            };
+
+            const formData = { firstName: "a", numberOfChildren: "aa" };
+            const result = validator.validateFormData(
+              formData,
+              schema,
+              undefined,
+              undefined,
+              uiSchema
+            );
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(2);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'uiSchema Last Name'",
+              "'uiSchema Number of children' must match pattern \"\\d+\"",
+            ]);
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.lastName!.__errors![0]).toEqual(
+              "must have required property 'uiSchema Last Name'"
+            );
+
+            expect(errorSchema.numberOfChildren!.__errors).toHaveLength(1);
+            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual(
+              'must match pattern "\\d+"'
+            );
+          });
+        });
+        describe("uiSchema title in validation when defined in nested field", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              properties: {
+                nested: {
+                  type: "object",
+                  required: ["firstName", "lastName"],
+                  properties: {
+                    firstName: { type: "string", title: "First Name" },
+                    lastName: { type: "string", title: "Last Name" },
+                    numberOfChildren: {
+                      title: "Number of children",
+                      type: "string",
+                      pattern: "\\d+",
+                    },
+                  },
+                },
+              },
+            };
+            const uiSchema: UiSchema = {
+              nested: {
+                lastName: {
+                  "ui:title": "uiSchema Last Name",
+                },
+                numberOfChildren: {
+                  "ui:title": "uiSchema Number of children",
+                },
+              },
+            };
+
+            const formData = {
+              nested: { firstName: "a", numberOfChildren: "aa" },
+            };
+            const result = validator.validateFormData(
+              formData,
+              schema,
+              undefined,
+              undefined,
+              uiSchema
+            );
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(2);
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'uiSchema Last Name'",
+              "'uiSchema Number of children' must match pattern \"\\d+\"",
+            ]);
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.nested!.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.lastName!.__errors![0]).toEqual(
+              "must have required property 'uiSchema Last Name'"
+            );
+
+            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(
+              1
+            );
+            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual(
+              'must match pattern "\\d+"'
+            );
+          });
+        });
       });
       describe("No custom validate function, single additionalProperties value", () => {
         let errors: RJSFValidationError[];
