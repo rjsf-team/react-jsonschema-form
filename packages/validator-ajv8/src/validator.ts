@@ -220,7 +220,7 @@ export default class AJV8Validator<
       let { message } = rest;
       let property = instancePath.replace(/\//g, ".");
 
-      let stack: string | undefined = undefined;
+      let stack = `${property} ${message}`.trim();
 
       if ("missingProperty" in params) {
         property = property
@@ -246,23 +246,19 @@ export default class AJV8Validator<
 
         stack = message!;
       } else {
-        let title = property.split(".").pop() as string;
-
         const uiSchemaTitle = getUiOptions(
           get(uiSchema, `${property.replace(/^\./, "")}`)
         ).title;
 
         if (uiSchemaTitle) {
-          title = `'${uiSchemaTitle}'`;
+          stack = `'${uiSchemaTitle}' ${message}`.trim();
         } else {
           const parentSchemaTitle = parentSchema?.title;
 
           if (parentSchemaTitle) {
-            title = `'${parentSchemaTitle}'`;
+            stack = `'${parentSchemaTitle}' ${message}`.trim();
           }
         }
-
-        stack = `${title} ${message}`.trim();
       }
 
       // put data in expected format
