@@ -225,9 +225,7 @@ export default class AJV8Validator<
         property = property
           ? `${property}.${params.missingProperty}`
           : params.missingProperty;
-
         const currentProperty: string = params.missingProperty;
-
         const uiSchemaTitle = getUiOptions(
           get(uiSchema, `${property.replace(/^\./, "")}`)
         ).title;
