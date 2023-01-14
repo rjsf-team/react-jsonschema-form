@@ -218,9 +218,7 @@ export default class AJV8Validator<
         ...rest
       } = e;
       let { message = "" } = rest;
-
       let property = instancePath.replace(/\//g, ".");
-
       let stack = `${property} ${message}`.trim();
 
       if ("missingProperty" in params) {
