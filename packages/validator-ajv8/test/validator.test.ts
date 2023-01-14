@@ -12,10 +12,18 @@ import {
 
 import AJV8Validator from "../src/validator";
 import { Localizer } from "../src";
+import { type ErrorObject } from "ajv8";
 
 class TestValidator extends AJV8Validator {
   withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
     return super.withIdRefPrefix(schemaNode);
+  }
+
+  transformRJSFValidationErrors(
+    errors: ErrorObject[] = [],
+    uiSchema?: UiSchema
+  ): RJSFValidationError[] {
+    return super.transformRJSFValidationErrors(errors, uiSchema);
   }
 }
 
@@ -1599,6 +1607,22 @@ describe("AJV8Validator", () => {
               'must match pattern "\\d+"'
             );
           });
+        });
+      });
+      describe("passing optional error fields to transformRJSFValidationErrors", () => {
+        it("should transform errors without an error message or parentSchema field", () => {
+          const error = {
+            instancePath: "/numberOfChildren",
+            schemaPath: "#/properties/numberOfChildren/pattern",
+            keyword: "pattern",
+            params: { pattern: "\\d+" },
+            schema: "\\d+",
+            data: "aa",
+          };
+
+          const errors = validator.transformRJSFValidationErrors([error]);
+
+          expect(errors).toHaveLength(1);
         });
       });
       describe("No custom validate function, single additionalProperties value", () => {

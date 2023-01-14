@@ -202,9 +202,9 @@ export default class AJV8Validator<
    * At some point, components should be updated to support ajv.
    *
    * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
-   * @private
+   * @protected
    */
-  private transformRJSFValidationErrors(
+  protected transformRJSFValidationErrors(
     errors: ErrorObject[] = [],
     uiSchema?: UiSchema<T, S, F>
   ): RJSFValidationError[] {
@@ -217,7 +217,8 @@ export default class AJV8Validator<
         parentSchema,
         ...rest
       } = e;
-      let { message } = rest;
+      let { message = "" } = rest;
+
       let property = instancePath.replace(/\//g, ".");
 
       let stack = `${property} ${message}`.trim();
@@ -234,17 +235,19 @@ export default class AJV8Validator<
         ).title;
 
         if (uiSchemaTitle) {
-          message = message?.replace(currentProperty, uiSchemaTitle);
+          message = message.replace(currentProperty, uiSchemaTitle);
         } else {
-          const parentSchemaTitle =
-            parentSchema?.[PROPERTIES_KEY]?.[currentProperty]?.title;
+          const parentSchemaTitle = get(
+            parentSchema,
+            `${PROPERTIES_KEY}.${currentProperty}.title`
+          );
 
           if (parentSchemaTitle) {
-            message = message?.replace(currentProperty, parentSchemaTitle);
+            message = message.replace(currentProperty, parentSchemaTitle);
           }
         }
 
-        stack = message!;
+        stack = message;
       } else {
         const uiSchemaTitle = getUiOptions(
           get(uiSchema, `${property.replace(/^\./, "")}`)

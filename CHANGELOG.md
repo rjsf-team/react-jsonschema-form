@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta-17
 
+## @rjsf/validator-ajv8
+- Updated `AJV8Validator#transformRJSFValidationErrors` to return more human readable error messages.  The ajv8 `ErrorObject` message is enhanced by replacing the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists.
+
 ## @rjsf/playground
 - Change Vite `preserveSymlinks` to `true`, which provides an alternative fix for [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228) since the prior fix caused [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).
 
