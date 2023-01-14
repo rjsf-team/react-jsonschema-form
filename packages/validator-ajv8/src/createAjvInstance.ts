@@ -1,4 +1,4 @@
-import Ajv, { Options } from "ajv8";
+import Ajv, { Options } from "ajv";
 import addFormats, { FormatsPluginOptions } from "ajv-formats";
 import isObject from "lodash/isObject";
 

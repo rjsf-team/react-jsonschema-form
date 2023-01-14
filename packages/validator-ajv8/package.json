@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "ajv-formats": "^2.1.1",
-    "ajv8": "npm:ajv@^8.11.0",
+    "ajv": "^8.11.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15"
   },
