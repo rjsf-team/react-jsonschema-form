@@ -237,10 +237,11 @@ export default class AJV8Validator<
         if (uiSchemaTitle) {
           message = message.replace(currentProperty, uiSchemaTitle);
         } else {
-          const parentSchemaTitle = get(
-            parentSchema,
-            `${PROPERTIES_KEY}.${currentProperty}.title`
-          );
+          const parentSchemaTitle = get(parentSchema, [
+            PROPERTIES_KEY,
+            currentProperty,
+            "title",
+          ]);
 
           if (parentSchemaTitle) {
             message = message.replace(currentProperty, parentSchemaTitle);

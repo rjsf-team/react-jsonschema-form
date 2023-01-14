@@ -12,7 +12,7 @@ import {
 
 import AJV8Validator from "../src/validator";
 import { Localizer } from "../src";
-import { type ErrorObject } from "ajv8";
+import { type ErrorObject } from "ajv";
 
 class TestValidator extends AJV8Validator {
   withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
