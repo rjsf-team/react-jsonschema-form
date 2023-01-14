@@ -25,6 +25,7 @@ export default function SelectWidget<
   label,
   required,
   disabled,
+  placeholder,
   readonly,
   value,
   multiple,
@@ -33,6 +34,10 @@ export default function SelectWidget<
   onBlur,
   onFocus,
   rawErrors = [],
+  registry,
+  uiSchema,
+  hideError,
+  formContext,
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
@@ -59,6 +64,7 @@ export default function SelectWidget<
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
+      placeholder={placeholder}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}

@@ -7718,6 +7718,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             name="root"
             onAnimationStart={[Function]}
             onChange={[Function]}
+            placeholder=""
             required={false}
             tabIndex={-1}
             value=""

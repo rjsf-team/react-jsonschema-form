@@ -1756,6 +1756,7 @@ exports[`single fields select field 1`] = `
             name="root"
             onAnimationStart={[Function]}
             onChange={[Function]}
+            placeholder=""
             required={false}
             tabIndex={-1}
             value=""
