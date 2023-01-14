@@ -1,6 +1,6 @@
 import React from "react";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import {
   processSelectValue,
   FormContextType,
@@ -33,6 +33,7 @@ export default function SelectWidget<
   onBlur,
   onFocus,
   rawErrors = [],
+  ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
@@ -54,7 +55,6 @@ export default function SelectWidget<
       id={id}
       name={id}
       label={label || schema.title}
-      select
       value={typeof value === "undefined" ? emptyValue : value}
       required={required}
       disabled={disabled || readonly}
@@ -63,10 +63,14 @@ export default function SelectWidget<
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      {...(textFieldProps as TextFieldProps)}
+      select // Apply this and the following props after the potential overrides defined in textFieldProps
       InputLabelProps={{
+        ...textFieldProps.InputLabelProps,
         shrink: true,
       }}
       SelectProps={{
+        ...textFieldProps.SelectProps,
         multiple: typeof multiple === "undefined" ? false : multiple,
       }}
     >
