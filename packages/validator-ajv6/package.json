@@ -48,7 +48,7 @@
     "dts-cli": "^1.6.3",
     "eslint": "^8.31.0",
     "jest-expect-message": "^1.1.3",
-    "rimraf": "^3.0.2"
+    "rimraf": "^4.0.4"
   },
   "publishConfig": {
     "access": "public"
