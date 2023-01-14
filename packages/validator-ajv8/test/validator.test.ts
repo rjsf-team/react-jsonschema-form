@@ -1,4 +1,5 @@
 import Ajv2019 from "ajv/dist/2019";
+import { ErrorObject } from "ajv";
 import Ajv2020 from "ajv/dist/2020";
 import {
   ErrorSchema,
@@ -12,7 +13,6 @@ import {
 
 import AJV8Validator from "../src/validator";
 import { Localizer } from "../src";
-import { type ErrorObject } from "ajv";
 
 class TestValidator extends AJV8Validator {
   withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
