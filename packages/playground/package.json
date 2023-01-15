@@ -39,7 +39,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
     "@babel/runtime": "^7.20.7",
-    "@chakra-ui/icons": "^1.1.1",
+    "@chakra-ui/icons": "^2.0.16",
     "@chakra-ui/react": "^1.7.3",
     "@fluentui/react": "^7.190.3",
     "@material-ui/core": "^4.12.4",

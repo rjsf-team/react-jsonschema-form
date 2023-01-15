@@ -55,7 +55,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.20.11",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
-    "@chakra-ui/icons": "^1.1.1",
+    "@chakra-ui/icons": "^2.0.16",
     "@chakra-ui/react": "^1.7.3",
     "@emotion/jest": "^11.10.0",
     "@emotion/react": "^11.10.5",
