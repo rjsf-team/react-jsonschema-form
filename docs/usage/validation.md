@@ -99,7 +99,7 @@ This is especially useful when the validation depends on several interdependent 
 import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 
-function customValidate(formData, errors) {
+function customValidate(formData, errors, uiSchema) {
   if (formData.pass1 !== formData.pass2) {
     errors.pass2.addError("Passwords don't match");
   }
@@ -123,6 +123,7 @@ render((
 > - The `customValidate()` function must implement the `CustomValidator` interface found in `@rjsf/utils`.
 > - The `customValidate()` function must **always** return the `errors` object received as second argument.
 > - The `customValidate()` function is called **after** the JSON schema validation.
+> - The `customValidate()` function is passed the `uiSchema` as the third argument. This allows the `customValidate()` function to be able to derive additional information from it for generating errors.
 
 ## Custom error messages
 
@@ -133,7 +134,7 @@ If you need to change these messages or make any other modifications to the erro
 import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 
-function transformErrors(errors) {
+function transformErrors(errors, uiSchema) {
   return errors.map(error => {
     if (error.name === "pattern") {
       error.message = "Only digits are allowed"
@@ -157,6 +158,7 @@ render((
 > Notes:
 > - The `transformErrors()` function must implement the `ErrorTransformer` interface found in `@rjsf/utils`.
 > - The `transformErrors()` function must return the list of errors. Modifying the list in place without returning it will result in an error.
+> - The `transformErrors()` function is passed the `uiSchema` as the second argument. This allows the `transformErrors()` function to be able to derive additional information from it for transforming errors.
 
 Each element in the `errors` list passed to `transformErrors` is a `RJSFValidationError` interface (in `@rjsf/utils`) and has the following properties:
 

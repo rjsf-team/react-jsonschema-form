@@ -112,6 +112,30 @@ Will result in:
   </label>
 </div>
 ```
+### style
+
+The uiSchema object accepts a `ui:style` property for each field of the schema:
+
+```tsx
+import { UiSchema } from "@rjsf/utils";
+
+const uiSchema = {
+  title: {
+    "ui:style": { color: "red" }
+  }
+};
+```
+
+Will result in:
+
+```html
+<div class="field field-string task-title" style={{ color: "red" }}>
+  <label>
+    <span>Title*</span>
+    <input value="My task" required="" type="text">
+  </label>
+</div>
+```
 
 ### autocomplete
 

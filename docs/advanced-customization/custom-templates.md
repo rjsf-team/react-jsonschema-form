@@ -561,9 +561,9 @@ const schema: RJSFSchema = {
 };
 
 function CustomFieldTemplate(props: FieldTemplateProps) {
-  const {id, classNames, label, help, required, description, errors, children} = props;
+  const {id, classNames, style, label, help, required, description, errors, children} = props;
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       <label htmlFor={id}>{label}{required ? "*" : null}</label>
       {description}
       {children}
@@ -594,6 +594,7 @@ The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
@@ -793,6 +794,8 @@ function WrapIfAdditionalTemplate(
     children,
     uiSchema,
     registry,
+    classNames,
+    style,
   } = props;
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
@@ -802,7 +805,7 @@ function WrapIfAdditionalTemplate(
   }
 
   return (
-    <div>
+    <div className={classNames} style={style}>
       <label label={keyLabel} id={`${id}-key`}>Custom Field Key</label>
       <input 
           className="form-control"
@@ -830,6 +833,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.

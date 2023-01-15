@@ -32,6 +32,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
+    style,
     disabled,
     id,
     label,
@@ -59,7 +60,11 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
@@ -73,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
   };
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       <Row align={toolbarAlign} gutter={rowGutter}>
         <Col className="form-additional" flex="1">
           <div className="form-group">
