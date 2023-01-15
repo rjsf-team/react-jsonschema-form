@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv8
 - Remove alias for ajv -> ajv8 in package.json. This fixes [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).
+- Updated `AJV8Validator#transformRJSFValidationErrors` to return more human readable error messages.  The ajv8 `ErrorObject` message is enhanced by replacing the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#3246](https://github.com/rjsf-team/react-jsonschema-form/issues/3246)
 
 # 5.0.0-beta-16
 

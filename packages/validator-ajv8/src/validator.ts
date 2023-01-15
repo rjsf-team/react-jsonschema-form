@@ -21,7 +21,10 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
+  PROPERTIES_KEY,
+  getUiOptions,
 } from "@rjsf/utils";
+import get from "lodash/get";
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
@@ -199,20 +202,63 @@ export default class AJV8Validator<
    * At some point, components should be updated to support ajv.
    *
    * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
-   * @private
+   * @protected
    */
-  private transformRJSFValidationErrors(
-    errors: ErrorObject[] = []
+  protected transformRJSFValidationErrors(
+    errors: ErrorObject[] = [],
+    uiSchema?: UiSchema<T, S, F>
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
-      const { instancePath, keyword, message, params, schemaPath } = e;
+      const {
+        instancePath,
+        keyword,
+        params,
+        schemaPath,
+        parentSchema,
+        ...rest
+      } = e;
+      let { message = "" } = rest;
       let property = instancePath.replace(/\//g, ".");
       let stack = `${property} ${message}`.trim();
+
       if ("missingProperty" in params) {
         property = property
           ? `${property}.${params.missingProperty}`
           : params.missingProperty;
-        stack = message!;
+        const currentProperty: string = params.missingProperty;
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
+
+        if (uiSchemaTitle) {
+          message = message.replace(currentProperty, uiSchemaTitle);
+        } else {
+          const parentSchemaTitle = get(parentSchema, [
+            PROPERTIES_KEY,
+            currentProperty,
+            "title",
+          ]);
+
+          if (parentSchemaTitle) {
+            message = message.replace(currentProperty, parentSchemaTitle);
+          }
+        }
+
+        stack = message;
+      } else {
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
+
+        if (uiSchemaTitle) {
+          stack = `'${uiSchemaTitle}' ${message}`.trim();
+        } else {
+          const parentSchemaTitle = parentSchema?.title;
+
+          if (parentSchemaTitle) {
+            stack = `'${parentSchemaTitle}' ${message}`.trim();
+          }
+        }
       }
 
       // put data in expected format
@@ -288,7 +334,7 @@ export default class AJV8Validator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     const { validationError: invalidSchemaError } = rawErrors;
-    let errors = this.transformRJSFValidationErrors(rawErrors.errors);
+    let errors = this.transformRJSFValidationErrors(rawErrors.errors, uiSchema);
 
     if (invalidSchemaError) {
       errors = [...errors, { stack: invalidSchemaError!.message }];
