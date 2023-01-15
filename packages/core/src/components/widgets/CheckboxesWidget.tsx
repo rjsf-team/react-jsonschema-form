@@ -36,11 +36,12 @@ function CheckboxesWidget<
   readonly,
   onChange,
 }: WidgetProps<T, S, F>) {
+  const checkboxesValues = Array.isArray(value) ? value : [value];
   return (
     <div className="checkboxes" id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const checked = value.indexOf(option.value) !== -1;
+          const checked = checkboxesValues.includes(option.value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) != -1;
@@ -50,9 +51,9 @@ function CheckboxesWidget<
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
             const all = enumOptions.map(({ value }) => value);
             if (event.target.checked) {
-              onChange(selectValue(option.value, value, all));
+              onChange(selectValue(option.value, checkboxesValues, all));
             } else {
-              onChange(deselectValue(option.value, value));
+              onChange(deselectValue(option.value, checkboxesValues));
             }
           };
 

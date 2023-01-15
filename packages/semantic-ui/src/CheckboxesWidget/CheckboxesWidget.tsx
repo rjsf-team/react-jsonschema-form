@@ -12,19 +12,19 @@ import { getSemanticProps } from "../util";
 
 function selectValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>["value"],
-  selected: any,
+  selected: any[],
   all: any[]
 ) {
   const at = all.indexOf(value);
   const updated = selected.slice(0, at).concat(value, selected.slice(at));
   // As inserting values at predefined index positions doesn't work with empty
   // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
+  return updated.sort((a, b) => Number(all.indexOf(a) > all.indexOf(b)));
 }
 
 function deselectValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>["value"],
-  selected: any
+  selected: any[]
 ) {
   return selected.filter((v: any) => v !== value);
 }
@@ -61,6 +61,7 @@ export default function CheckboxesWidget<
     options
   );
   const { enumOptions, enumDisabled, inline } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
   const { title } = schema;
   const semanticProps = getSemanticProps<T, S, F>({
     options,
@@ -74,11 +75,13 @@ export default function CheckboxesWidget<
     (option: EnumOptionsType) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       // eslint-disable-next-line no-shadow
-      const all = enumOptions ? enumOptions.map(({ value }) => value) : [];
+      const all = enumOptions
+        ? enumOptions.map(({ value }: EnumOptionsType<S>) => value)
+        : [];
       if (checked) {
-        onChange(selectValue<S>(option.value, value, all));
+        onChange(selectValue<S>(option.value, checkboxesValues, all));
       } else {
-        onChange(deselectValue<S>(option.value, value));
+        onChange(deselectValue<S>(option.value, checkboxesValues));
       }
     };
 
@@ -99,7 +102,7 @@ export default function CheckboxesWidget<
       <Form.Group id={id} name={id} {...inlineOption}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const checked = value.indexOf(option.value) !== -1;
+            const checked = checkboxesValues.includes(option.value);
             const itemDisabled =
               Array.isArray(enumDisabled) &&
               enumDisabled.indexOf(option.value) !== -1;

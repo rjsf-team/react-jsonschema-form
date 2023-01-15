@@ -37,6 +37,7 @@ export default function CheckboxesWidget<
   } = props;
   const { enumOptions, enumDisabled } = options;
   const chakraProps = getChakra({ uiSchema });
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({
     target: { value },
@@ -66,7 +67,7 @@ export default function CheckboxesWidget<
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option) => {
-              const checked = value.indexOf(option.value) !== -1;
+              const checked = checkboxesValues.includes(option.value);
               const itemDisabled =
                 Array.isArray(enumDisabled) &&
                 enumDisabled.indexOf(option.value) !== -1;

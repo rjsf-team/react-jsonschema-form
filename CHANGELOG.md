@@ -23,28 +23,35 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/bootstrap-4
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/chakra-ui
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/core
 - Updated `SchemaField` to handle the new `style` prop in the `uiSchema` similarly to `classNames`, passing it to the `FieldTemplate` and removing it from being passed down to children.
   - Also, added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper
   - This partially fixes [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/fluent-ui
 - Added support for new `style` prop on `FieldTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/material-ui
 - Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/mui
 - Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/semantic-ui
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 
 ## @rjsf/utils
 - Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200) 
