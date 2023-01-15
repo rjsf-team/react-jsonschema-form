@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   FormContextType,
@@ -88,6 +89,7 @@ export default function CheckboxesWidget<
               onFocus={_onFocus}
               key={option.value}
               {...uiProps}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}

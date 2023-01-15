@@ -1,6 +1,7 @@
 import React from "react";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import {
+  helpId,
   FieldHelpProps,
   FormContextType,
   RJSFSchema,
@@ -20,6 +21,6 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  const id = `${idSchema.$id}__help`;
+  const id = helpId<T>(idSchema);
   return <FormHelperText id={id}>{help}</FormHelperText>;
 }

@@ -1,8 +1,7 @@
 import React from "react";
-
 import Form from "react-bootstrap/Form";
-
 import {
+  ariaDescribedByIds,
   FormContextType,
   processSelectValue,
   RJSFSchema,
@@ -78,6 +77,7 @@ export default function SelectWidget<
         const newValue = getValue(event, multiple);
         onChange(processSelectValue<T, S, F>(schema, newValue, options));
       }}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>

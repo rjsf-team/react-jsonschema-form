@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {
+  ariaDescribedByIds,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -62,6 +63,7 @@ export default function BaseInputTemplate<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
       {children}
       {schema.examples ? (

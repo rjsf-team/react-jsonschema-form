@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
 import {
+  ariaDescribedByIds,
+  descriptionId,
   getTemplate,
   schemaRequiresTrueValue,
   FormContextType,
@@ -65,7 +67,7 @@ function CheckboxWidget<
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
         <DescriptionFieldTemplate
-          id={id + "__description"}
+          id={descriptionId<T>(id)}
           description={schema.description}
           schema={schema}
           uiSchema={uiSchema}
@@ -84,6 +86,7 @@ function CheckboxWidget<
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
+          aria-describedby={ariaDescribedByIds<T>(id)}
         />
         <span>{label}</span>
       </label>

@@ -1,6 +1,7 @@
 import React from "react";
 import Input from "antd/lib/input";
 import {
+  ariaDescribedByIds,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -62,6 +63,7 @@ export default function TextareaWidget<
       style={INPUT_STYLE}
       value={value}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

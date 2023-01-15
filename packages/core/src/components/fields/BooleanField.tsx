@@ -91,7 +91,7 @@ function BooleanField<
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={idSchema && idSchema.$id}
+      id={idSchema.$id}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

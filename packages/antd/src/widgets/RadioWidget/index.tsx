@@ -1,6 +1,7 @@
 import React from "react";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
 import {
+  ariaDescribedByIds,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -52,6 +53,7 @@ export default function RadioWidget<
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       value={`${value}`}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (

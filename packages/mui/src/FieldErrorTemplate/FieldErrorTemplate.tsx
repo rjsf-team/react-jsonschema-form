@@ -3,6 +3,7 @@ import ListItem from "@mui/material/ListItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import List from "@mui/material/List";
 import {
+  errorId,
   FieldErrorProps,
   FormContextType,
   RJSFSchema,
@@ -22,7 +23,7 @@ export default function FieldErrorTemplate<
   if (errors.length === 0) {
     return null;
   }
-  const id = `${idSchema.$id}__error`;
+  const id = errorId<T>(idSchema);
 
   return (
     <List dense={true} disablePadding={true}>

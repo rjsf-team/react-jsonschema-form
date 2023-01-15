@@ -1,5 +1,6 @@
 import React, { MouseEvent, useEffect, useState } from "react";
 import {
+  ariaDescribedByIds,
   DateObject,
   FormContextType,
   pad,
@@ -40,6 +41,7 @@ function DateElement<
       placeholder={props.type}
       schema={{ type: "integer" } as S}
       value={value}
+      aria-describedby={ariaDescribedByIds<T>(props.name)}
     />
   );
 }

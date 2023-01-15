@@ -3,6 +3,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -63,6 +64,7 @@ export default function RadioWidget<
               onChange={_onChange}
               onBlur={_onBlur}
               onFocus={_onFocus}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
           return radio;

@@ -1,6 +1,7 @@
 import React from "react";
 import Checkbox from "antd/lib/checkbox";
 import {
+  ariaDescribedByIds,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -56,6 +57,7 @@ export default function CheckboxesWidget<
       onChange={!readonly ? handleChange : undefined}
       value={value}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (

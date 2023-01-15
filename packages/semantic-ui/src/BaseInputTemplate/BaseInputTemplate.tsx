@@ -2,6 +2,7 @@ import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 import {
+  ariaDescribedByIds,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -74,6 +75,7 @@ export default function BaseInputTemplate<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
       {schema.examples && (
         <datalist id={`examples_${id}`}>

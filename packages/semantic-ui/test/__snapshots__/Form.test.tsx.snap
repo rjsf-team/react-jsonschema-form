@@ -26,7 +26,7 @@ exports[`single fields checkbox field 1`] = `
           onMouseUp={[Function]}
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="hidden"
@@ -83,7 +83,7 @@ exports[`single fields checkbox field with label 1`] = `
           onMouseUp={[Function]}
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="hidden"
@@ -145,7 +145,7 @@ exports[`single fields checkboxes field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               autoFocus={false}
               checked={false}
               className="hidden"
@@ -177,7 +177,7 @@ exports[`single fields checkboxes field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               autoFocus={false}
               checked={false}
               className="hidden"
@@ -209,7 +209,7 @@ exports[`single fields checkboxes field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               autoFocus={false}
               checked={false}
               className="hidden"
@@ -241,7 +241,7 @@ exports[`single fields checkboxes field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               autoFocus={false}
               checked={false}
               className="hidden"
@@ -304,7 +304,7 @@ exports[`single fields field with description 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_my-field"
@@ -370,7 +370,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_my-field"
@@ -419,13 +419,13 @@ exports[`single fields field with special semantic options 1`] = `
     >
       <h5
         className="ui dividing header"
-        id="root-title"
+        id="root__title"
       >
         A registration form
       </h5>
       <p
         className="sui-description"
-        id="root-description"
+        id="root__description"
       >
         A simple test theme form example.
       </p>
@@ -444,7 +444,7 @@ exports[`single fields field with special semantic options 1`] = `
               test
             </label>
             <div
-              aria-describedby={null}
+              aria-describedby="root_test__error root_test__description root_test__help"
               aria-disabled={false}
               aria-expanded={false}
               aria-multiselectable={false}
@@ -574,7 +574,7 @@ exports[`single fields format color 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -620,7 +620,7 @@ exports[`single fields format date 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -666,7 +666,7 @@ exports[`single fields format datetime 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -730,7 +730,7 @@ exports[`single fields help and error display 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby="root-error-message"
+            aria-describedby="root__error root__description root__help"
             aria-invalid={true}
             autoFocus={false}
             disabled={false}
@@ -846,7 +846,7 @@ exports[`single fields hidden label 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -916,7 +916,7 @@ exports[`single fields number field 0 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -963,7 +963,7 @@ exports[`single fields number field 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1010,7 +1010,7 @@ exports[`single fields password field 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1067,7 +1067,7 @@ exports[`single fields radio field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               checked={false}
               className="hidden"
               disabled={false}
@@ -1100,7 +1100,7 @@ exports[`single fields radio field 1`] = `
             onMouseUp={[Function]}
           >
             <input
-              aria-describedby={null}
+              aria-describedby="root__error root__description root__help"
               checked={false}
               className="hidden"
               disabled={false}
@@ -1151,7 +1151,7 @@ exports[`single fields schema examples 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1214,7 +1214,7 @@ exports[`single fields select field 1`] = `
         className="field"
       >
         <div
-          aria-describedby={null}
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           aria-expanded={false}
           aria-multiselectable={false}
@@ -1319,6 +1319,7 @@ exports[`single fields slider field 1`] = `
         className="ui fluid input"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           disabled={false}
           id="root"
           max={100}
@@ -1362,6 +1363,7 @@ exports[`single fields string field format data-url 1`] = `
       <div>
         <p>
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             defaultValue=""
             disabled={false}
@@ -1404,7 +1406,7 @@ exports[`single fields string field format email 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1450,7 +1452,7 @@ exports[`single fields string field format uri 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1496,7 +1498,7 @@ exports[`single fields string field regular 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1542,7 +1544,7 @@ exports[`single fields string field with placeholder 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1585,7 +1587,7 @@ exports[`single fields textarea field 1`] = `
         className="field"
       >
         <textarea
-          aria-describedby={null}
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           disabled={false}
           id="root"
@@ -1627,7 +1629,7 @@ exports[`single fields title field 1`] = `
     >
       <h5
         className="ui dividing header"
-        id="root-title"
+        id="root__title"
       >
         Titre 1
       </h5>
@@ -1649,7 +1651,7 @@ exports[`single fields title field 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_title__error root_title__description root_title__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_title"
@@ -1745,7 +1747,7 @@ exports[`single fields up/down field 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"
@@ -1791,7 +1793,7 @@ exports[`single fields using custom tagName 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby={null}
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             disabled={false}
             id="root"

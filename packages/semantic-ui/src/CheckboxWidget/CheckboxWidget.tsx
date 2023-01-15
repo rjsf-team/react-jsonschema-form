@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ariaDescribedByIds,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -68,6 +69,7 @@ export default function CheckboxWidget<
       onFocus={_onFocus}
       required={required}
       label={label || ""}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

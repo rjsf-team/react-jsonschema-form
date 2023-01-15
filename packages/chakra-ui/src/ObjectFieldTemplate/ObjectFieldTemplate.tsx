@@ -2,12 +2,14 @@ import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import {
   canExpand,
+  descriptionId,
   FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
+  titleId,
 } from "@rjsf/utils";
 
 export default function ObjectFieldTemplate<
@@ -50,7 +52,7 @@ export default function ObjectFieldTemplate<
     <React.Fragment>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={uiOptions.title || title}
           required={required}
           schema={schema}
@@ -60,7 +62,7 @@ export default function ObjectFieldTemplate<
       )}
       {(uiOptions.description || description) && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           description={uiOptions.description || description!}
           schema={schema}
           uiSchema={uiSchema}

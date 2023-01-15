@@ -531,7 +531,7 @@ class ArrayField<
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
-        id={idSchema && idSchema.$id}
+        id={idSchema.$id}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -581,7 +581,7 @@ class ArrayField<
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
-        id={idSchema && idSchema.$id}
+        id={idSchema.$id}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -628,7 +628,7 @@ class ArrayField<
     return (
       <Widget
         options={options}
-        id={idSchema && idSchema.$id}
+        id={idSchema.$id}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Slider, Label } from "@fluentui/react";
-
 import {
+  ariaDescribedByIds,
   FormContextType,
   rangeSpec,
   RJSFSchema,
@@ -76,6 +76,7 @@ export default function RangeWidget<
         onChange={_onChange}
         snapToStep
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

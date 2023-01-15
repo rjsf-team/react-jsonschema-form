@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
-
 import {
+  ariaDescribedByIds,
   dataURItoBlob,
   FormContextType,
   RJSFSchema,
@@ -144,6 +144,7 @@ function FileWidget<
           autoFocus={autofocus}
           multiple={multiple}
           accept={options.accept ? String(options.accept) : undefined}
+          aria-describedby={ariaDescribedByIds<T>(id)}
         />
       </p>
       <FilesInfo filesInfo={filesInfo} />

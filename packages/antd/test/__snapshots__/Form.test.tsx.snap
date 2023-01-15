@@ -17,6 +17,7 @@ exports[`single fields checkbox field 1`] = `
         style={Object {}}
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           checked={false}
           className="ant-checkbox-input"
@@ -70,6 +71,7 @@ exports[`single fields checkbox field with label 1`] = `
         style={Object {}}
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           checked={false}
           className="ant-checkbox-input"
@@ -116,6 +118,7 @@ exports[`single fields checkboxes field 1`] = `
     className="form-group field field-array"
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className="ant-checkbox-group"
       id="root"
       name="root"
@@ -346,6 +349,7 @@ exports[`single fields field with description 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                           className="ant-input"
                           hidden={null}
                           id="root_my-field"
@@ -468,6 +472,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                           className="ant-input"
                           hidden={null}
                           id="root_my-field"
@@ -527,6 +532,7 @@ exports[`single fields format color 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -579,6 +585,7 @@ exports[`single fields format date 1`] = `
         className="ant-picker-input"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoComplete="off"
           disabled={false}
           id="root"
@@ -655,6 +662,7 @@ exports[`single fields format datetime 1`] = `
         className="ant-picker-input"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoComplete="off"
           disabled={false}
           id="root"
@@ -797,6 +805,7 @@ exports[`single fields help and error display 1`] = `
     className="form-group field field-string field-error has-error has-danger"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -875,6 +884,7 @@ exports[`single fields hidden label 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -1018,6 +1028,7 @@ exports[`single fields number field 0 1`] = `
         className="ant-input-number-input-wrap"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           aria-valuenow="0"
           autoComplete="off"
           className="ant-input-number-input"
@@ -1140,6 +1151,7 @@ exports[`single fields number field 1`] = `
         className="ant-input-number-input-wrap"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           aria-valuenow={null}
           autoComplete="off"
           className="ant-input-number-input"
@@ -1185,6 +1197,7 @@ exports[`single fields password field 1`] = `
       onClick={[Function]}
     >
       <input
+        aria-describedby="root__error root__description root__help"
         className="ant-input"
         hidden={null}
         id="root"
@@ -1253,6 +1266,7 @@ exports[`single fields radio field 1`] = `
     className="form-group field field-boolean"
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className="ant-radio-group ant-radio-group-outline"
       id="root"
       onBlur={[Function]}
@@ -1345,6 +1359,7 @@ exports[`single fields schema examples 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       list="examples_root"
@@ -1405,6 +1420,7 @@ exports[`single fields select field 1`] = `
     className="form-group field field-string"
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className="ant-select ant-select-single ant-select-show-arrow"
       name="root"
       onBlur={[Function]}
@@ -1430,6 +1446,7 @@ exports[`single fields select field 1`] = `
             aria-activedescendant="root_list_0"
             aria-autocomplete="list"
             aria-controls="root_list"
+            aria-describedby="root__error root__description root__help"
             aria-haspopup="listbox"
             aria-owns="root_list"
             autoComplete="off"
@@ -1587,6 +1604,7 @@ exports[`single fields string field format data-url 1`] = `
     <div>
       <p>
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           defaultValue=""
           disabled={false}
@@ -1621,6 +1639,7 @@ exports[`single fields string field format email 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -1661,6 +1680,7 @@ exports[`single fields string field format uri 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -1701,6 +1721,7 @@ exports[`single fields string field regular 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -1741,6 +1762,7 @@ exports[`single fields string field with placeholder 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"
@@ -1781,6 +1803,7 @@ exports[`single fields textarea field 1`] = `
     className="form-group field field-string"
   >
     <textarea
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       disabled={false}
       id="root"
@@ -1847,7 +1870,7 @@ exports[`single fields title field 1`] = `
         >
           <label
             className=""
-            htmlFor="root-title"
+            htmlFor="root__title"
             onClick={[Function]}
             title="Titre 1"
           >
@@ -1905,6 +1928,7 @@ exports[`single fields title field 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_title__error root_title__description root_title__help"
                           className="ant-input"
                           hidden={null}
                           id="root_title"
@@ -2081,6 +2105,7 @@ exports[`single fields up/down field 1`] = `
         className="ant-input-number-input-wrap"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           aria-valuenow={null}
           autoComplete="off"
           className="ant-input-number-input"
@@ -2122,6 +2147,7 @@ exports[`single fields using custom tagName 1`] = `
     className="form-group field field-string"
   >
     <input
+      aria-describedby="root__error root__description root__help"
       className="ant-input"
       id="root"
       name="root"

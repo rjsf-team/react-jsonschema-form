@@ -156,6 +156,7 @@ exports[`array fields array icons 1`] = `
                     className="ms-TextField-fieldGroup fieldGroup-56"
                   >
                     <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
                       className="ms-TextField-field field-57"
@@ -312,6 +313,7 @@ exports[`array fields array icons 1`] = `
                     className="ms-TextField-fieldGroup fieldGroup-56"
                   >
                     <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
                       className="ms-TextField-field field-57"
@@ -549,6 +551,7 @@ exports[`array fields checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
@@ -673,6 +676,7 @@ exports[`array fields empty errors array 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-90"
               >
                 <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel56"
                   autoFocus={false}
@@ -785,6 +789,7 @@ exports[`array fields fixed array 1`] = `
                     className="ms-TextField-fieldGroup fieldGroup-56"
                   >
                     <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
                       className="ms-TextField-field field-57"
@@ -843,6 +848,7 @@ exports[`array fields fixed array 1`] = `
                     className="ms-TextField-fieldGroup fieldGroup-56"
                   >
                     <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
                       className="ms-TextField-field field-57"
@@ -959,6 +965,7 @@ exports[`array fields no errors 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-90"
               >
                 <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel50"
                   autoFocus={false}

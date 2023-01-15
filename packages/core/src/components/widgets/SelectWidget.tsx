@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
+  ariaDescribedByIds,
   processSelectValue,
   FormContextType,
   RJSFSchema,
@@ -87,6 +88,7 @@ function SelectWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       onChange={handleChange}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>

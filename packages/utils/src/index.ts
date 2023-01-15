@@ -16,6 +16,13 @@ import getUiOptions from "./getUiOptions";
 import getWidget from "./getWidget";
 import guessType from "./guessType";
 import hasWidget from "./hasWidget";
+import {
+  ariaDescribedByIds,
+  descriptionId,
+  errorId,
+  helpId,
+  titleId,
+} from "./idGenerators";
 import isConstant from "./isConstant";
 import isCustomWidget from "./isCustomWidget";
 import isFixedItems from "./isFixedItems";
@@ -43,13 +50,16 @@ export * from "./schema";
 
 export {
   allowAdditionalItems,
+  ariaDescribedByIds,
   asNumber,
   canExpand,
   createSchemaUtils,
   dataURItoBlob,
   deepEquals,
+  descriptionId,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  errorId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
   getInputProps,
@@ -60,6 +70,7 @@ export {
   getWidget,
   guessType,
   hasWidget,
+  helpId,
   isConstant,
   isCustomWidget,
   isFixedItems,
@@ -76,6 +87,7 @@ export {
   rangeSpec,
   schemaRequiresTrueValue,
   shouldRender,
+  titleId,
   toConstant,
   toDateString,
   utcToLocal,

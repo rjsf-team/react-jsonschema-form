@@ -464,6 +464,7 @@ exports[`single fields field with description 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel126"
                   autoFocus={false}
@@ -582,6 +583,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel132"
                   autoFocus={false}
@@ -1028,6 +1030,7 @@ exports[`single fields format date 1`] = `
     }
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className="ms-DatePicker control-82"
       id="root"
       onBlur={[Function]}
@@ -1144,6 +1147,7 @@ exports[`single fields format datetime 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1462,6 +1466,7 @@ exports[`single fields hidden label 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1600,6 +1605,7 @@ exports[`single fields number field 0 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1684,6 +1690,7 @@ exports[`single fields number field 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1768,6 +1775,7 @@ exports[`single fields password field 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1842,6 +1850,7 @@ exports[`single fields radio field 1`] = `
     }
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className=""
       id="root"
       name="root"
@@ -1983,6 +1992,7 @@ exports[`single fields schema examples 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -2083,6 +2093,7 @@ exports[`single fields select field 1`] = `
       className="ms-Dropdown-container"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
@@ -2289,6 +2300,7 @@ exports[`single fields string field format data-url 1`] = `
     <div>
       <p>
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           defaultValue=""
           disabled={false}
@@ -2364,6 +2376,7 @@ exports[`single fields string field format email 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -2447,6 +2460,7 @@ exports[`single fields string field format uri 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -2530,6 +2544,7 @@ exports[`single fields string field regular 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -2613,6 +2628,7 @@ exports[`single fields string field with placeholder 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -2696,6 +2712,7 @@ exports[`single fields textarea field 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-106"
         >
           <textarea
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-107"
@@ -2771,7 +2788,7 @@ exports[`single fields title field 1`] = `
   >
     <label
       className="ms-Label root-154"
-      id="root-title"
+      id="root__title"
     >
       Titre 1
     </label>
@@ -2809,6 +2826,7 @@ exports[`single fields title field 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_title__error root_title__description root_title__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel138"
                   autoFocus={false}
@@ -2976,6 +2994,7 @@ exports[`single fields up/down field 1`] = `
     >
       
       <div
+        aria-describedby="root__error root__description root__help"
         className="css-98"
         id="root"
         onChange={[Function]}
@@ -3136,6 +3155,7 @@ exports[`single fields using custom tagName 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-43"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
             className="ms-TextField-field field-44"

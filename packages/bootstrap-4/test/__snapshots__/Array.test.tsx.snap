@@ -136,6 +136,7 @@ exports[`array fields array icons 1`] = `
                           *
                         </label>
                         <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
                           autoFocus={false}
                           className="form-control"
                           disabled={false}
@@ -299,6 +300,7 @@ exports[`array fields array icons 1`] = `
                           *
                         </label>
                         <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
                           autoFocus={false}
                           className="form-control"
                           disabled={false}
@@ -531,6 +533,7 @@ exports[`array fields checkboxes 1`] = `
         
       </label>
       <select
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="custom-select"
         disabled={false}
@@ -621,6 +624,7 @@ exports[`array fields empty errors array 1`] = `
                   name
                 </label>
                 <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
                   autoFocus={false}
                   className="form-control"
                   disabled={false}
@@ -698,6 +702,7 @@ exports[`array fields fixed array 1`] = `
                           *
                         </label>
                         <input
+                          aria-describedby="root_0__error root_0__description root_0__help"
                           autoFocus={false}
                           className="form-control"
                           disabled={false}
@@ -742,6 +747,7 @@ exports[`array fields fixed array 1`] = `
                           *
                         </label>
                         <input
+                          aria-describedby="root_1__error root_1__description root_1__help"
                           autoFocus={false}
                           className="form-control"
                           disabled={false}
@@ -825,6 +831,7 @@ exports[`array fields no errors 1`] = `
                   name
                 </label>
                 <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
                   autoFocus={false}
                   className="form-control"
                   disabled={false}

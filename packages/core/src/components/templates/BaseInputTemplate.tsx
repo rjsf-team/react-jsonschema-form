@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import {
+  ariaDescribedByIds,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -86,6 +87,7 @@ export default function BaseInputTemplate<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={`examples_${id}`}>

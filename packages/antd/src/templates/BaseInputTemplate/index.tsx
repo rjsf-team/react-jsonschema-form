@@ -2,6 +2,7 @@ import React from "react";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import {
+  ariaDescribedByIds,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -67,6 +68,7 @@ export default function BaseInputTemplate<
         list={schema.examples ? `examples_${id}` : undefined}
         {...inputProps}
         value={value}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     ) : (
       <Input
@@ -81,6 +83,7 @@ export default function BaseInputTemplate<
         list={schema.examples ? `examples_${id}` : undefined}
         {...inputProps}
         value={value}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     );
 

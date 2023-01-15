@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
   WidgetProps,
   schemaRequiresTrueValue,
   StrictRJSFSchema,
@@ -52,6 +53,7 @@ export default function CheckboxWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         {label && <Text>{label}</Text>}
       </Checkbox>

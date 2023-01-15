@@ -1,12 +1,13 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import {
-  EnumOptionsType,
-  FormContextType,
-  getTemplate,
-  RJSFSchema,
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  getTemplate,
+  EnumOptionsType,
+  FormContextType,
+  RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
@@ -102,6 +103,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
           })}

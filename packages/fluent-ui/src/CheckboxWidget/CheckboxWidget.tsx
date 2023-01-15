@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -81,6 +82,7 @@ export default function CheckboxWidget<
         checked={typeof value === "undefined" ? false : value}
         onChange={_onChange}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

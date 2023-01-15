@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  errorId,
 } from "@rjsf/utils";
 import ListGroup from "react-bootstrap/ListGroup";
 
@@ -20,7 +21,7 @@ export default function FieldErrorTemplate<
   if (errors.length === 0) {
     return null;
   }
-  const id = `${idSchema.$id}__error`;
+  const id = errorId<T>(idSchema);
 
   return (
     <ListGroup as="ul" id={id}>

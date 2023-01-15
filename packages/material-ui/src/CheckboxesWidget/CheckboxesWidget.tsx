@@ -4,6 +4,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   FormContextType,
@@ -79,6 +80,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
             return (

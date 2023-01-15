@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from "react";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   FormContextType,
@@ -64,6 +65,7 @@ function CheckboxesWidget<
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
               <span>{option.label}</span>
             </span>

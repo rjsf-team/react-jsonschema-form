@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   FormContextType,
@@ -72,6 +73,7 @@ export default function CheckboxesWidget<
               onBlur={_onBlur}
               onFocus={_onFocus}
               disabled={disabled || itemDisabled || readonly}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}

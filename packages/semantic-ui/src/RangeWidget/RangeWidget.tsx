@@ -1,6 +1,7 @@
 import React from "react";
 import { Input } from "semantic-ui-react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -67,6 +68,7 @@ export default function RangeWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
       <span>{value}</span>
     </>

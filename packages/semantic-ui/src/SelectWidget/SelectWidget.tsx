@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ariaDescribedByIds,
   EnumOptionsType,
   processSelectValue,
   FormContextType,
@@ -117,6 +118,7 @@ export default function SelectWidget<
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

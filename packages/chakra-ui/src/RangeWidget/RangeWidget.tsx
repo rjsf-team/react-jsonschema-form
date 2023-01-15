@@ -8,6 +8,7 @@ import {
   SliderTrack,
 } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   rangeSpec,
   RJSFSchema,
@@ -64,6 +65,7 @@ export default function RangeWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <SliderTrack>
           <SliderFilledTrack />

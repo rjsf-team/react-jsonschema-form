@@ -1,5 +1,6 @@
 import React, { FocusEvent, useCallback } from "react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -70,6 +71,7 @@ function RadioWidget<
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
               <span>{option.label}</span>
             </span>

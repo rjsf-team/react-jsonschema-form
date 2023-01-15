@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   processSelectValue,
   RJSFSchema,
@@ -106,6 +107,7 @@ export default function SelectWidget<
         onFocus={_onFocus}
         autoFocus={autofocus}
         value={formValue}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </FormControl>
   );

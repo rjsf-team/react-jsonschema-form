@@ -2,6 +2,7 @@ import React from "react";
 import {
   getTemplate,
   getUiOptions,
+  titleId,
   ArrayFieldTitleProps,
   FormContextType,
   RJSFSchema,
@@ -31,10 +32,9 @@ export default function ArrayFieldTitleTemplate<
       registry,
       options
     );
-  const id = `${idSchema.$id}__title`;
   return (
     <TitleFieldTemplate
-      id={id}
+      id={titleId<T>(idSchema)}
       title={title}
       required={required}
       schema={schema}

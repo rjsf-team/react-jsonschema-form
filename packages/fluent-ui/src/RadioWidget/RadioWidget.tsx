@@ -5,6 +5,7 @@ import {
   IChoiceGroupProps,
 } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -68,6 +69,7 @@ export default function RadioWidget<
         disabled:
           Array.isArray(enumDisabled) &&
           enumDisabled.indexOf(option.value) !== -1,
+        "aria-describedby": ariaDescribedByIds<T>(id),
       }))
     : [];
 

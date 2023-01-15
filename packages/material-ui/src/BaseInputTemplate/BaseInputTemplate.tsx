@@ -1,6 +1,7 @@
 import React from "react";
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import {
+  ariaDescribedByIds,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -82,6 +83,7 @@ export default function BaseInputTemplate<
         onBlur={_onBlur}
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
       {schema.examples && (
         <datalist id={`examples_${id}`}>
