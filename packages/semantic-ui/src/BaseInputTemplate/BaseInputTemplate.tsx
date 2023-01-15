@@ -3,6 +3,7 @@ import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 import {
   ariaDescribedByIds,
+  examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -68,17 +69,17 @@ export default function BaseInputTemplate<
         required={required}
         autoFocus={autofocus}
         disabled={disabled || readonly}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...semanticProps}
         value={value || value === 0 ? value : ""}
         error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {schema.examples && (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example) => {

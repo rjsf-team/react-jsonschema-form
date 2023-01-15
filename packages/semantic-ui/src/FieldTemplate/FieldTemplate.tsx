@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  descriptionId,
   getTemplate,
   getUiOptions,
 } from "@rjsf/utils";
@@ -74,7 +75,7 @@ export default function FieldTemplate<
             <MaybeWrap wrap={wrapLabel} className="sui-field-label">
               {rawDescription && (
                 <DescriptionFieldTemplate
-                  id={`${id}-description`}
+                  id={descriptionId<T>(id)}
                   description={rawDescription}
                   schema={schema}
                   uiSchema={uiSchema}

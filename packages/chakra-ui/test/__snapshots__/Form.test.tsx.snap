@@ -2209,12 +2209,12 @@ exports[`single fields schema examples 1`] = `
         role="group"
       >
         <input
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__error root__description root__help root__examples"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
           id="root"
-          list="examples_root"
+          list="root__examples"
           name="root"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2226,7 +2226,7 @@ exports[`single fields schema examples 1`] = `
           value=""
         />
         <datalist
-          id="examples_root"
+          id="root__examples"
         >
           <option
             value="Firefox"

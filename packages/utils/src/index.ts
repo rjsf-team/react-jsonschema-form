@@ -20,7 +20,9 @@ import {
   ariaDescribedByIds,
   descriptionId,
   errorId,
+  examplesId,
   helpId,
+  optionId,
   titleId,
 } from "./idGenerators";
 import isConstant from "./isConstant";
@@ -60,6 +62,7 @@ export {
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   errorId,
+  examplesId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
   getInputProps,
@@ -79,6 +82,7 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  optionId,
   optionsList,
   orderProperties,
   pad,

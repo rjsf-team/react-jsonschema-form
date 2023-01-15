@@ -321,7 +321,7 @@ exports[`single fields field with description 1`] = `
           </div>
           <p
             className="sui-description"
-            id="root_my-field-description"
+            id="root_my-field__description"
           >
             some description
           </p>
@@ -387,7 +387,7 @@ exports[`single fields field with description in uiSchema 1`] = `
           </div>
           <p
             className="sui-description"
-            id="root_my-field-description"
+            id="root_my-field__description"
           >
             some other description
           </p>
@@ -1151,11 +1151,11 @@ exports[`single fields schema examples 1`] = `
           className="ui fluid input"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__error root__description root__help root__examples"
             autoFocus={false}
             disabled={false}
             id="root"
-            list="examples_root"
+            list="root__examples"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -1167,7 +1167,7 @@ exports[`single fields schema examples 1`] = `
         </div>
       </div>
       <datalist
-        id="examples_root"
+        id="root__examples"
       >
         <option
           value="Firefox"

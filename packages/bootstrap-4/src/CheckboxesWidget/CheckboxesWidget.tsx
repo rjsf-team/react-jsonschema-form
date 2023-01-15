@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -65,7 +66,7 @@ export default function CheckboxesWidget<
               checked={checked}
               className="bg-transparent border-0"
               type={"checkbox"}
-              id={`${id}-${option.value}`}
+              id={optionId<S>(id, option)}
               name={id}
               label={option.label}
               autoFocus={autofocus && index === 0}

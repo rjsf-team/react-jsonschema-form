@@ -1,6 +1,7 @@
 import React, { FocusEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -61,7 +62,7 @@ function RadioWidget<
             <span>
               <input
                 type="radio"
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 checked={checked}
                 name={name}
                 required={required}

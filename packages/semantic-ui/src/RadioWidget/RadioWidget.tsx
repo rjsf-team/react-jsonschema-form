@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -64,7 +65,7 @@ export default function RadioWidget<
             <Form.Field
               required={required}
               control={Radio}
-              id={`${id}-${option.value}`}
+              id={optionId<S>(id, option)}
               name={id}
               {...semanticProps}
               onFocus={_onFocus}

@@ -1,6 +1,11 @@
 import isString from "lodash/isString";
 
-import { IdSchema } from "./types";
+import {
+  EnumOptionsType,
+  IdSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "./types";
 import { ID_KEY } from "./constants";
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
@@ -30,6 +35,15 @@ export function errorId<T = any>(id: IdSchema<T> | string) {
   return idGenerator<T>(id, "error");
 }
 
+/** Return a consistent `id` for the field examples element
+ *
+ * @param id - Either simple string id or an IdSchema from which to extract it
+ * @returns - The consistent id for the field examples element from the given `id`
+ */
+export function examplesId<T = any>(id: IdSchema<T> | string) {
+  return idGenerator<T>(id, "examples");
+}
+
 /** Return a consistent `id` for the field help element
  *
  * @param id - Either simple string id or an IdSchema from which to extract it
@@ -49,11 +63,32 @@ export function titleId<T = any>(id: IdSchema<T> | string) {
 }
 
 /** Return a list of element ids that contain additional information about the field that can be used to as the aria
- * description of the field
+ * description of the field. This is correctly omitting `titleId` which would be "labeling" rather than "describing" the
+ * element.
  *
  * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds<T = any>(id: IdSchema<T> | string) {
-  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}`;
+export function ariaDescribedByIds<T = any>(
+  id: IdSchema<T> | string,
+  includeExamples = false
+) {
+  const examples = includeExamples ? ` ${examplesId<T>(id)}` : "";
+  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(
+    id
+  )}${examples}`;
+}
+
+/** Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
+ *
+ * @param id - The id of the parent component for the option
+ * @param option - The option for which the id is desired
+ * @returns - An id for the option based on the parent `id`
+ */
+export function optionId<S extends StrictRJSFSchema = RJSFSchema>(
+  id: string,
+  option: EnumOptionsType<S>
+) {
+  return `${id}-${option.value}`;
 }

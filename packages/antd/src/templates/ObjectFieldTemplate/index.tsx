@@ -142,8 +142,8 @@ export default function ObjectFieldTemplate<
                 <Col className={labelColClassName} span={24}>
                   <TitleFieldTemplate
                     id={titleId<T>(idSchema)}
-                    required={required}
                     title={uiOptions.title || title}
+                    required={required}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
@@ -153,8 +153,8 @@ export default function ObjectFieldTemplate<
               {(uiOptions.description || description) && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <DescriptionFieldTemplate
-                    description={uiOptions.description || description!}
                     id={descriptionId<T>(idSchema)}
+                    description={uiOptions.description || description!}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}

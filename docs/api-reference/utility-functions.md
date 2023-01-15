@@ -34,7 +34,8 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
 
 #### Parameters
-- id: string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- [includeExamples=false]: boolean - Optional flag, if true, will add the `examplesId` into the list
 
 #### Returns
 - string: The string containing the list of ids for use in an `aria-describedBy` attribute
@@ -89,7 +90,7 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 Return a consistent `id` for the field description element.
 
 #### Parameters
-- id: string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field description element from the given `id`
@@ -119,10 +120,19 @@ Add the `value` to the list of `selected` values in the proper order as defined 
 Return a consistent `id` for the field error element.
 
 #### Parameters
-- id: string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field error element from the given `id`
+
+### examplesId<T = any>()
+Return a consistent `id` for the field examples element.
+
+#### Parameters
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+
+#### Returns
+- string: The consistent id for the field examples element from the given `id`
 
 ### findSchemaDefinition\<S extends StrictRJSFSchema = RJSFSchema>()
 Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
@@ -237,7 +247,7 @@ Detects whether the `widget` exists for the `schema` with the associated `regist
 Return a consistent `id` for the field help element.
 
 #### Parameters
-- id: string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field help element from the given `id`
@@ -328,6 +338,16 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 #### Returns
 - GenericObjectType: The merged schema object
+
+### optionId\<S extends StrictRJSFSchema = RJSFSchema>()
+Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
+
+#### Parameters
+- id: string - The id of the parent component for the option
+- option: EnumOptionsType<S> - The option for which the id is desired
+
+#### Returns
+- string: An id for the option based on the parent `id`
 
 ### optionsList\<S extends StrictRJSFSchema = RJSFSchema>()
 Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
@@ -432,7 +452,7 @@ If either of those two sets are not the same, then the component should be reren
 Return a consistent `id` for the field title element.
 
 #### Parameters
-- id: string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field title element from the given `id`

@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -74,7 +75,7 @@ export default function RadioWidget<
                 <Radio
                   value={`${option.value}`}
                   key={option.value}
-                  id={`${id}-${option.value}`}
+                  id={optionId<S>(id, option)}
                   disabled={disabled || itemDisabled || readonly}
                 >
                   {`${option.label}`}

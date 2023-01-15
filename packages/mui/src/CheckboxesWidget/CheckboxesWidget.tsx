@@ -7,6 +7,7 @@ import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -72,7 +73,7 @@ export default function CheckboxesWidget<
               enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}

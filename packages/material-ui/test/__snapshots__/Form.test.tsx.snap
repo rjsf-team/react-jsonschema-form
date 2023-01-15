@@ -1648,7 +1648,7 @@ exports[`single fields schema examples 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        aria-describedby="root__error root__description root__help"
+        aria-describedby="root__error root__description root__help root__examples"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1661,7 +1661,7 @@ exports[`single fields schema examples 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            list="examples_root"
+            list="root__examples"
             name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -1675,7 +1675,7 @@ exports[`single fields schema examples 1`] = `
         </div>
       </div>
       <datalist
-        id="examples_root"
+        id="root__examples"
       >
         <option
           value="Firefox"

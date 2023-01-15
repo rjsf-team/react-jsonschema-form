@@ -5,6 +5,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -70,7 +71,7 @@ export default function RadioWidget<
                 control={
                   <Radio
                     name={id}
-                    id={`${id}-${option.value}`}
+                    id={optionId<S>(id, option)}
                     color="primary"
                   />
                 }

@@ -2,6 +2,7 @@ import React from "react";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -56,18 +57,18 @@ export default function RadioWidget<
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
+        enumOptions.map((option, i) => (
           <Radio
-            id={`${id}-${optionValue}`}
+            id={optionId<S>(id, option)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
             disabled={
               Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1
             }
-            key={optionValue}
-            value={`${optionValue}`}
+            key={option.value}
+            value={`${option.value}`}
           >
-            {optionLabel}
+            {option.label}
           </Radio>
         ))}
     </Radio.Group>

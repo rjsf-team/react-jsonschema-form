@@ -21,19 +21,19 @@ should change the heading of the (upcoming) version to include a major version b
 - Enable searching in the `SelectWidget` by the label that the user sees rather than by the value
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200) 
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/bootstrap-4
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/chakra-ui
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/core
 - Updated `SchemaField` to handle the new `style` prop in the `uiSchema` similarly to `classNames`, passing it to the `FieldTemplate` and removing it from being passed down to children.
@@ -41,43 +41,43 @@ should change the heading of the (upcoming) version to include a major version b
   - This partially fixes [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/fluent-ui
 - Added support for new `style` prop on `FieldTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/material-ui
 - Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/mui
 - Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/semantic-ui
 - Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
-  - Also updated the generation of ids for the title, description, error, examples and help blocks using the associated new id generation utilty functions
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
 ## @rjsf/utils
 - Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Added `enumOptionsDeselectValue()` and `enumOptionsSelectValue()` as a loose refactor of the duplicated functions in the various `CheckboxesWidget` implementations
-- Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200) 
-- Added new `ariaDescribedByIds()`, `descriptionId()`, `errorId()`, `helpId()` and `titleId()` id generator functions
+- Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Added new `ariaDescribedByIds()`, `descriptionId()`, `errorId()`, `examplesId()`, `helpId()` `optionId()` and `titleId()` id generator functions
 
 ## @rjsf/validator-ajv8
 - Remove alias for ajv -> ajv8 in package.json. This fixes [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).
-- Updated `AJV8Validator#transformRJSFValidationErrors` to return more human readable error messages.  The ajv8 `ErrorObject` message is enhanced by replacing the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#3246](https://github.com/rjsf-team/react-jsonschema-form/issues/3246)
+- Updated `AJV8Validator#transformRJSFValidationErrors` to return more human-readable error messages.  The ajv8 `ErrorObject` message is enhanced by replacing the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#3246](https://github.com/rjsf-team/react-jsonschema-form/issues/3246)
 
 ## Dev / docs / playground
 - In the playground, change Vite `preserveSymlinks` to `true`, which provides an alternative fix for [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228) since the prior fix caused [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).

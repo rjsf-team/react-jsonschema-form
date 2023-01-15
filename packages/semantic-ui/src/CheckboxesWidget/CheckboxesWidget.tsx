@@ -5,6 +5,8 @@ import {
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
   getTemplate,
+  optionId,
+  titleId,
   EnumOptionsType,
   FormContextType,
   RJSFSchema,
@@ -75,7 +77,7 @@ export default function CheckboxesWidget<
     <>
       {title && (
         <TitleFieldTemplate
-          id={`${id}-title`}
+          id={titleId<T>(id)}
           title={title}
           schema={schema}
           uiSchema={uiSchema}
@@ -91,7 +93,7 @@ export default function CheckboxesWidget<
               enumDisabled.indexOf(option.value) !== -1;
             return (
               <Form.Checkbox
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 key={option.value}
                 label={option.label}

@@ -2,6 +2,7 @@ import React from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import {
   ariaDescribedByIds,
+  examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -49,7 +50,7 @@ export default function BaseInputTemplate<
       step,
       min,
       max,
-      ...(schema.examples ? { list: `examples_${id}` } : undefined),
+      ...(schema.examples ? { list: examplesId<T>(id) } : undefined),
     },
     ...rest,
   };
@@ -83,10 +84,10 @@ export default function BaseInputTemplate<
         onBlur={_onBlur}
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {schema.examples && (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {

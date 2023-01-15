@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -76,7 +77,7 @@ export default function CheckboxesWidget<
               return (
                 <Checkbox
                   key={option.value}
-                  id={`${id}-${option.value}`}
+                  id={optionId<S>(id, option)}
                   name={id}
                   value={option.value}
                   isChecked={checked}

@@ -3,6 +3,7 @@ import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -59,7 +60,7 @@ function CheckboxesWidget<
             <span>
               <input
                 type="checkbox"
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}

@@ -7209,7 +7209,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        aria-describedby="root__error root__description root__help"
+        aria-describedby="root__error root__description root__help root__examples"
         className="MuiFormControl-root MuiTextField-root emotion-1"
       >
         <div
@@ -7222,7 +7222,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
             disabled={false}
             id="root"
-            list="examples_root"
+            list="root__examples"
             name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -7250,7 +7250,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         </div>
       </div>
       <datalist
-        id="examples_root"
+        id="root__examples"
       >
         <option
           value="Firefox"
