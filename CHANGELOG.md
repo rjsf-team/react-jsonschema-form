@@ -17,6 +17,9 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta-17
 
+## @rjsf/antd
+- Enable searching in the `SelectWidget` by the label that the user sees rather than by the value
+
 ## @rjsf/material-ui
 - Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
 

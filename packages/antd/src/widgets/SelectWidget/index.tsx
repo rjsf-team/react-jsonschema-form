@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "antd/lib/select";
+import Select, { DefaultOptionType } from "antd/lib/select";
 import {
   processSelectValue,
   FormContextType,
@@ -8,6 +8,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
+import isString from "lodash/isString";
 
 const SELECT_STYLE = {
   width: "100%",
@@ -50,6 +51,14 @@ export default function SelectWidget<
   const handleFocus = () =>
     onFocus(id, processSelectValue<T, S, F>(schema, value, options));
 
+  const filterOption = (input: string, option?: DefaultOptionType) => {
+    if (option && isString(option.label)) {
+      // labels are strings in this context
+      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    }
+    return false;
+  };
+
   const getPopupContainer = (node: any) => node.parentNode;
 
   const stringify = (currentValue: any) =>
@@ -74,6 +83,7 @@ export default function SelectWidget<
       style={SELECT_STYLE}
       value={typeof value !== "undefined" ? stringify(value) : undefined}
       {...extraProps}
+      filterOption={filterOption}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }) => (
