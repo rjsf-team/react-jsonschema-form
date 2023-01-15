@@ -4,6 +4,8 @@ import canExpand from "./canExpand";
 import createSchemaUtils from "./createSchemaUtils";
 import dataURItoBlob from "./dataURItoBlob";
 import deepEquals from "./deepEquals";
+import enumOptionsDeselectValue from "./enumOptionsDeselectValue";
+import enumOptionsSelectValue from "./enumOptionsSelectValue";
 import ErrorSchemaBuilder from "./ErrorSchemaBuilder";
 import findSchemaDefinition from "./findSchemaDefinition";
 import getInputProps from "./getInputProps";
@@ -46,6 +48,8 @@ export {
   createSchemaUtils,
   dataURItoBlob,
   deepEquals,
+  enumOptionsDeselectValue,
+  enumOptionsSelectValue,
   ErrorSchemaBuilder,
   findSchemaDefinition,
   getInputProps,

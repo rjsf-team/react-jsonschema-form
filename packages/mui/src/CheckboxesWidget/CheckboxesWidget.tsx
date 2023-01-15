@@ -4,24 +4,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import {
+  enumOptionsDeselectValue,
+  enumOptionsSelectValue,
   FormContextType,
   WidgetProps,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
-
-const selectValue = (value: any, selected: any[], all: any) => {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a, b) => Number(all.indexOf(a) > all.indexOf(b)));
-};
-
-const deselectValue = (value: any, selected: any[]) => {
-  return selected.filter((v: any) => v !== value);
-};
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -52,12 +41,12 @@ export default function CheckboxesWidget<
   const _onChange =
     (option: any) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      const all = (enumOptions as any).map(({ value }: any) => value);
-
       if (checked) {
-        onChange(selectValue(option.value, checkboxesValues, all));
+        onChange(
+          enumOptionsSelectValue(option.value, checkboxesValues, enumOptions)
+        );
       } else {
-        onChange(deselectValue(option.value, checkboxesValues));
+        onChange(enumOptionsDeselectValue(option.value, checkboxesValues));
       }
     };
 

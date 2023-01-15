@@ -1,33 +1,16 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import {
-  getTemplate,
   EnumOptionsType,
   FormContextType,
+  getTemplate,
   RJSFSchema,
+  enumOptionsDeselectValue,
+  enumOptionsSelectValue,
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
 import { getSemanticProps } from "../util";
-
-function selectValue<S extends StrictRJSFSchema = RJSFSchema>(
-  value: EnumOptionsType<S>["value"],
-  selected: any[],
-  all: any[]
-) {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a, b) => Number(all.indexOf(a) > all.indexOf(b)));
-}
-
-function deselectValue<S extends StrictRJSFSchema = RJSFSchema>(
-  value: EnumOptionsType<S>["value"],
-  selected: any[]
-) {
-  return selected.filter((v: any) => v !== value);
-}
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -75,13 +58,12 @@ export default function CheckboxesWidget<
     (option: EnumOptionsType) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       // eslint-disable-next-line no-shadow
-      const all = enumOptions
-        ? enumOptions.map(({ value }: EnumOptionsType<S>) => value)
-        : [];
       if (checked) {
-        onChange(selectValue<S>(option.value, checkboxesValues, all));
+        onChange(
+          enumOptionsSelectValue<S>(option.value, checkboxesValues, enumOptions)
+        );
       } else {
-        onChange(deselectValue<S>(option.value, checkboxesValues));
+        onChange(enumOptionsDeselectValue<S>(option.value, checkboxesValues));
       }
     };
 
