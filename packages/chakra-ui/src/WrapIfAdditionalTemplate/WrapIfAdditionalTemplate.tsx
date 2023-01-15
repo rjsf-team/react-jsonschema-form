@@ -22,6 +22,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
+    styles,
     disabled,
     id,
     label,
@@ -37,7 +38,11 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={styles}>
+        {children}
+      </div>
+    );
   }
   const keyLabel = `${label} Key`;
 
@@ -45,7 +50,13 @@ export default function WrapIfAdditionalTemplate<
     onKeyChange(target.value);
 
   return (
-    <Grid key={`${id}-key`} className={classNames} alignItems="center" gap={2}>
+    <Grid
+      key={`${id}-key`}
+      className={classNames}
+      style={styles}
+      alignItems="center"
+      gap={2}
+    >
       <GridItem>
         <FormControl isRequired={required}>
           <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>

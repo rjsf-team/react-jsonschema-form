@@ -21,6 +21,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
+    styles,
     disabled,
     id,
     label,
@@ -40,14 +41,18 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={styles}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
 
   return (
-    <div className={classNames} key={`${id}-key`}>
+    <div className={classNames} style={styles} key={`${id}-key`}>
       <Grid columns="equal">
         <Grid.Row>
           <Grid.Column className="form-additional">

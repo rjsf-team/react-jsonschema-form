@@ -203,7 +203,7 @@ describe("SchemaField", () => {
       expect(node.querySelectorAll("#custom")).to.have.length.of(1);
     });
 
-    it("should not pass ui:classNames to child component", () => {
+    it("should not pass ui:classNames or ui:styles to child component", () => {
       const CustomSchemaField = function (props) {
         return (
           <SchemaField
@@ -219,14 +219,16 @@ describe("SchemaField", () => {
       const uiSchema = {
         "ui:field": "customSchemaField",
         "ui:classNames": "foo",
+        "ui:styles": { color: "red" },
       };
       const fields = { customSchemaField: CustomSchemaField };
 
       const { node } = createFormComponent({ schema, uiSchema, fields });
 
       expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("[style*='red']")).to.have.length.of(1);
     });
-    it("should not pass ui:options.classNames to child component", () => {
+    it("should not pass ui:options { classNames or styles } to child component", () => {
       const CustomSchemaField = function (props) {
         return (
           <SchemaField
@@ -243,6 +245,7 @@ describe("SchemaField", () => {
         "ui:field": "customSchemaField",
         "ui:options": {
           classNames: "foo",
+          styles: { color: "red" },
         },
       };
       const fields = { customSchemaField: CustomSchemaField };
@@ -250,6 +253,7 @@ describe("SchemaField", () => {
       const { node } = createFormComponent({ schema, uiSchema, fields });
 
       expect(node.querySelectorAll(".foo")).to.have.length.of(1);
+      expect(node.querySelectorAll("[style*='red']")).to.have.length.of(1);
     });
   });
 

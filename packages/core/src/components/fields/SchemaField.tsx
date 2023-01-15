@@ -16,6 +16,7 @@ import {
   UIOptionsType,
   ID_KEY,
   ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
@@ -188,11 +189,16 @@ function SchemaFieldRender<
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
-  // See #439: uiSchema: Don't pass consumed class names to child components
-  const fieldUiSchema = omit(uiSchema, ["ui:classNames", "classNames"]);
-  if ("ui:options" in fieldUiSchema) {
-    fieldUiSchema["ui:options"] = omit(fieldUiSchema["ui:options"], [
+  // See #439: uiSchema: Don't pass consumed class names or styles to child components
+  const fieldUiSchema = omit(uiSchema, [
+    "ui:classNames",
+    "classNames",
+    "ui:styles",
+  ]);
+  if (UI_OPTIONS_KEY in fieldUiSchema) {
+    fieldUiSchema[UI_OPTIONS_KEY] = omit(fieldUiSchema[UI_OPTIONS_KEY], [
       "classNames",
+      "styles",
     ]);
   }
 
@@ -297,6 +303,7 @@ function SchemaFieldRender<
     hideError,
     displayLabel,
     classNames: classNames.join(" ").trim(),
+    styles: uiOptions.styles,
     formContext,
     formData,
     schema,

@@ -18,6 +18,7 @@ export default function WrapIfAdditionalTemplate<
   F extends FormContextType = any
 >({
   classNames,
+  styles,
   children,
   disabled,
   id,
@@ -36,7 +37,11 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={styles}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
@@ -44,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const keyId = `${id}-key`;
 
   return (
-    <Row className={classNames} key={keyId}>
+    <Row className={classNames} style={styles} key={keyId}>
       <Col xs={5}>
         <Form.Group>
           <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>

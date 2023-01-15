@@ -24,6 +24,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
+    styles,
     disabled,
     id,
     label,
@@ -47,7 +48,11 @@ export default function WrapIfAdditionalTemplate<
   };
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={styles}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
@@ -60,6 +65,7 @@ export default function WrapIfAdditionalTemplate<
       alignItems="center"
       spacing={2}
       className={classNames}
+      style={styles}
     >
       <Grid item xs>
         <FormControl fullWidth={true} required={required}>
