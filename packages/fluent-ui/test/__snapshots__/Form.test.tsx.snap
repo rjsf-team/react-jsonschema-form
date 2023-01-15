@@ -1850,7 +1850,6 @@ exports[`single fields radio field 1`] = `
     }
   >
     <div
-      aria-describedby="root__error root__description root__help"
       className=""
       id="root"
       name="root"
@@ -1871,6 +1870,7 @@ exports[`single fields radio field 1`] = `
               className="ms-ChoiceField-wrapper"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 checked={false}
                 className="ms-ChoiceField-input input-135"
                 disabled={false}
@@ -1901,6 +1901,7 @@ exports[`single fields radio field 1`] = `
               className="ms-ChoiceField-wrapper"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 checked={false}
                 className="ms-ChoiceField-input input-135"
                 disabled={false}
