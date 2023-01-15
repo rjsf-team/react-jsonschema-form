@@ -22,7 +22,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
-    styles,
+    style,
     disabled,
     id,
     label,
@@ -39,7 +39,7 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
     return (
-      <div className={classNames} style={styles}>
+      <div className={classNames} style={style}>
         {children}
       </div>
     );
@@ -53,7 +53,7 @@ export default function WrapIfAdditionalTemplate<
     <Grid
       key={`${id}-key`}
       className={classNames}
-      style={styles}
+      style={style}
       alignItems="center"
       gap={2}
     >

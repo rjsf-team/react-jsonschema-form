@@ -18,7 +18,7 @@ export default function FieldTemplate<
     id,
     children,
     classNames,
-    styles,
+    style,
     disabled,
     displayLabel,
     hidden,
@@ -50,7 +50,7 @@ export default function FieldTemplate<
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
-      styles={styles}
+      style={style}
       disabled={disabled}
       id={id}
       label={label}

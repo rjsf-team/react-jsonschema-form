@@ -22,7 +22,7 @@ export default function FieldTemplate<
   help,
   rawDescription,
   classNames,
-  styles,
+  style,
   disabled,
   label,
   hidden,
@@ -47,7 +47,7 @@ export default function FieldTemplate<
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
-      styles={styles}
+      style={style}
       disabled={disabled}
       id={id}
       label={label}

@@ -32,7 +32,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
-    styles,
+    style,
     disabled,
     id,
     label,
@@ -61,7 +61,7 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={styles}>
+      <div className={classNames} style={style}>
         {children}
       </div>
     );
@@ -78,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
   };
 
   return (
-    <div className={classNames} style={styles}>
+    <div className={classNames} style={style}>
       <Row align={toolbarAlign} gutter={rowGutter}>
         <Col className="form-additional" flex="1">
           <div className="form-group">

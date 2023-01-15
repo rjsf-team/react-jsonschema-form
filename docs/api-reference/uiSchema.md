@@ -112,16 +112,16 @@ Will result in:
   </label>
 </div>
 ```
-### styles
+### style
 
-The uiSchema object accepts a `ui:styles` property for each field of the schema:
+The uiSchema object accepts a `ui:style` property for each field of the schema:
 
 ```tsx
 import { UiSchema } from "@rjsf/utils";
 
 const uiSchema = {
   title: {
-    "ui:styles": { color: "red" }
+    "ui:style": { color: "red" }
   }
 };
 ```

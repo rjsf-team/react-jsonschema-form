@@ -358,8 +358,8 @@ export type FieldTemplateProps<
   id: string;
   /** A string containing the base CSS classes, merged with any custom ones defined in your uiSchema */
   classNames?: string;
-  /** An object containing the styles as defined in the `uiSchema` */
-  styles?: StyleHTMLAttributes<any>;
+  /** An object containing the style as defined in the `uiSchema` */
+  style?: StyleHTMLAttributes<any>;
   /** The computed label for this field, as a string */
   label: string;
   /** A component instance rendering the field description, if one is defined (this will use any custom
@@ -636,7 +636,7 @@ export type WrapIfAdditionalTemplateProps<
   FieldTemplateProps<T, S, F>,
   | "id"
   | "classNames"
-  | "styles"
+  | "style"
   | "label"
   | "required"
   | "readonly"
@@ -778,8 +778,8 @@ type UIOptionsBaseType<
 > = Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
-  /** Any custom styles that the user wants to apply to a field in the ui, applied on the same element as classNames */
-  styles?: StyleHTMLAttributes<any>;
+  /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
+  style?: StyleHTMLAttributes<any>;
   /** We know that for title, it will be a string, if it is provided */
   title?: string;
   /** We know that for description, it will be a string, if it is provided */

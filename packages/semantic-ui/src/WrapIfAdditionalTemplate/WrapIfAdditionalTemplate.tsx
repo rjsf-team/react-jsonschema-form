@@ -21,7 +21,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
-    styles,
+    style,
     disabled,
     id,
     label,
@@ -42,7 +42,7 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={styles}>
+      <div className={classNames} style={style}>
         {children}
       </div>
     );
@@ -52,7 +52,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyChange(target.value);
 
   return (
-    <div className={classNames} style={styles} key={`${id}-key`}>
+    <div className={classNames} style={style} key={`${id}-key`}>
       <Grid columns="equal">
         <Grid.Row>
           <Grid.Column className="form-additional">

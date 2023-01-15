@@ -18,7 +18,7 @@ export default function WrapIfAdditionalTemplate<
   F extends FormContextType = any
 >({
   classNames,
-  styles,
+  style,
   children,
   disabled,
   id,
@@ -38,7 +38,7 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={styles}>
+      <div className={classNames} style={style}>
         {children}
       </div>
     );
@@ -49,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const keyId = `${id}-key`;
 
   return (
-    <Row className={classNames} style={styles} key={keyId}>
+    <Row className={classNames} style={style} key={keyId}>
       <Col xs={5}>
         <Form.Group>
           <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>

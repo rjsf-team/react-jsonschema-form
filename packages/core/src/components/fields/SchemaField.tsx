@@ -189,16 +189,16 @@ function SchemaFieldRender<
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
-  // See #439: uiSchema: Don't pass consumed class names or styles to child components
+  // See #439: uiSchema: Don't pass consumed class names or style to child components
   const fieldUiSchema = omit(uiSchema, [
     "ui:classNames",
     "classNames",
-    "ui:styles",
+    "ui:style",
   ]);
   if (UI_OPTIONS_KEY in fieldUiSchema) {
     fieldUiSchema[UI_OPTIONS_KEY] = omit(fieldUiSchema[UI_OPTIONS_KEY], [
       "classNames",
-      "styles",
+      "style",
     ]);
   }
 
@@ -303,7 +303,7 @@ function SchemaFieldRender<
     hideError,
     displayLabel,
     classNames: classNames.join(" ").trim(),
-    styles: uiOptions.styles,
+    style: uiOptions.style,
     formContext,
     formData,
     schema,

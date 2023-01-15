@@ -22,7 +22,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     id,
     classNames,
-    styles,
+    style,
     disabled,
     label,
     onKeyChange,
@@ -41,14 +41,14 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={styles}>
+      <div className={classNames} style={style}>
         {children}
       </div>
     );
   }
 
   return (
-    <div className={classNames} style={styles}>
+    <div className={classNames} style={style}>
       <div className="row">
         <div className="col-xs-5 form-additional">
           <div className="form-group">

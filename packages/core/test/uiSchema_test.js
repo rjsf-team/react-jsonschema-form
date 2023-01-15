@@ -82,19 +82,19 @@ describe("uiSchema", () => {
 
     const uiSchema = {
       foo: {
-        "ui:styles": {
+        "ui:style": {
           paddingRight: "1em",
         },
       },
       bar: {
-        "ui:styles": {
+        "ui:style": {
           paddingLeft: "1.5em",
           color: "orange",
         },
       },
     };
 
-    it("should apply custom styles to target widgets", () => {
+    it("should apply custom style to target widgets", () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const [foo, bar] = node.querySelectorAll(".field-string");
 
