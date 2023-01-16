@@ -1344,7 +1344,38 @@ describe("ArrayField", () => {
         );
       });
 
-      it("should fill field with data", () => {
+      it("should fill properly field with data that is not an array and handle change event", () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema,
+          formData: "foo",
+        });
+
+        let labels = [].map.call(
+          node.querySelectorAll("[type=checkbox]"),
+          (node) => node.checked
+        );
+        expect(labels).eql([true, false, false]);
+
+        Simulate.change(node.querySelectorAll("[type=checkbox]")[2], {
+          target: { checked: true },
+        });
+
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: ["foo", "fuzz"],
+          },
+          "root"
+        );
+        labels = [].map.call(
+          node.querySelectorAll("[type=checkbox]"),
+          (node) => node.checked
+        );
+        expect(labels).eql([true, false, true]);
+      });
+
+      it("should fill field with array of data", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,

@@ -76,8 +76,28 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 #### Returns
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
-### findSchemaDefinition\<S extends StrictRJSFSchema = RJSFSchema>()
+### enumOptionsDeselectValue\<S extends StrictRJSFSchema = RJSFSchema>()
+Removes the `value` from the currently `selected` list of values.
 
+#### Parameters
+- value: EnumOptionsType<S>["value"] - The value that should be selected
+- selected: EnumOptionsType<S>["value"][] - The current list of selected values
+
+#### Returns
+- EnumOptionsType<S>["value"][]: The updated `selected` list with the `value` removed from it
+
+### enumOptionsSelectValue\<S extends StrictRJSFSchema = RJSFSchema>()
+Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
+
+#### Parameters
+- value: EnumOptionsType<S>["value"] - The value that should be selected
+- selected: EnumOptionsType<S>["value"][] - The current list of selected values
+- allEnumOptions: EnumOptionsType<S>[] - The list of all the known enumOptions
+
+#### Returns
+- EnumOptionsType<S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
+
+### findSchemaDefinition\<S extends StrictRJSFSchema = RJSFSchema>()
 Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
 If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
 Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schema.

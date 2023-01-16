@@ -1,6 +1,8 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import {
+  enumOptionsDeselectValue,
+  enumOptionsSelectValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -15,19 +17,6 @@ const styles_red = {
   fontSize: 12,
   fontWeight: "normal" as any,
   fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
-};
-
-const selectValue = (value: any, selected: any, all: any) => {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
-};
-
-const deselectValue = (value: any, selected: any) => {
-  return selected.filter((v: any) => v !== value);
 };
 
 export default function CheckboxesWidget<
@@ -50,16 +39,17 @@ export default function CheckboxesWidget<
   rawErrors = [],
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
     (option: any) =>
     (_ev?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-      const all = (enumOptions as any).map(({ value }: any) => value);
-
       if (checked) {
-        onChange(selectValue(option.value, value, all));
+        onChange(
+          enumOptionsSelectValue(option.value, checkboxesValues, enumOptions)
+        );
       } else {
-        onChange(deselectValue(option.value, value));
+        onChange(enumOptionsDeselectValue(option.value, checkboxesValues));
       }
     };
 
@@ -81,7 +71,7 @@ export default function CheckboxesWidget<
       </Label>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = value.indexOf(option.value) !== -1;
+          const checked = checkboxesValues.includes(option.value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;

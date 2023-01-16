@@ -1,24 +1,13 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {
+  enumOptionsDeselectValue,
+  enumOptionsSelectValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
-
-const selectValue = (value: any, selected: any, all: any) => {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
-};
-
-const deselectValue = (value: any, selected: any) => {
-  return selected.filter((v: any) => v !== value);
-};
 
 export default function CheckboxesWidget<
   T = any,
@@ -37,16 +26,17 @@ export default function CheckboxesWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
     (option: any) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      const all = (enumOptions as any).map(({ value }: any) => value);
-
       if (checked) {
-        onChange(selectValue(option.value, value, all));
+        onChange(
+          enumOptionsSelectValue(option.value, checkboxesValues, enumOptions)
+        );
       } else {
-        onChange(deselectValue(option.value, value));
+        onChange(enumOptionsDeselectValue(option.value, checkboxesValues));
       }
     };
 
@@ -60,7 +50,7 @@ export default function CheckboxesWidget<
     <Form.Group>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = value.indexOf(option.value) !== -1;
+          const checked = checkboxesValues.includes(option.value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;

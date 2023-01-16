@@ -9,7 +9,7 @@ exports[`CheckboxesWidget inline 1`] = `
   >
     <input
       autoFocus={true}
-      checked={true}
+      checked={false}
       className="custom-control-input"
       disabled={true}
       id="_id-a"
@@ -40,7 +40,7 @@ exports[`CheckboxesWidget simple 1`] = `
   >
     <input
       autoFocus={true}
-      checked={true}
+      checked={false}
       className="custom-control-input"
       disabled={true}
       id="_id-a"
