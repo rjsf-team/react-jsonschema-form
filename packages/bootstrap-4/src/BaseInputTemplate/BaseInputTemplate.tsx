@@ -1,6 +1,8 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {
+  ariaDescribedByIds,
+  examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -56,16 +58,17 @@ export default function BaseInputTemplate<
         disabled={disabled}
         readOnly={readonly}
         className={rawErrors.length > 0 ? "is-invalid" : ""}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ""}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {children}
       {schema.examples ? (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {

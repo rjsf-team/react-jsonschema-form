@@ -4,6 +4,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import {
+  ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -57,6 +59,7 @@ export default function RadioWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option) => {
@@ -68,7 +71,7 @@ export default function RadioWidget<
                 control={
                   <Radio
                     name={id}
-                    id={`${id}-${option.value}`}
+                    id={optionId<S>(id, option)}
                     color="primary"
                   />
                 }

@@ -2,6 +2,7 @@ import React from "react";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {
+  ariaDescribedByIds,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -57,6 +58,7 @@ export default function CheckboxWidget<
           onChange={_onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
+          aria-describedby={ariaDescribedByIds<T>(id)}
         />
       }
       label={label || ""}

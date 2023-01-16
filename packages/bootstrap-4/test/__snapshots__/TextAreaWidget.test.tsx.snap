@@ -5,6 +5,7 @@ exports[`TextareaWidget simple with errors 1`] = `
   className="input-group"
 >
   <textarea
+    aria-describedby="_id__error _id__description _id__help"
     autoFocus={true}
     className="form-control"
     disabled={false}
@@ -27,6 +28,7 @@ exports[`TextareaWidget simple without errors 1`] = `
   className="input-group"
 >
   <textarea
+    aria-describedby="_id__error _id__description _id__help"
     autoFocus={true}
     className="form-control"
     disabled={false}
@@ -49,6 +51,7 @@ exports[`TextareaWidget simple without required 1`] = `
   className="input-group"
 >
   <textarea
+    aria-describedby="_id__error _id__description _id__help"
     autoFocus={true}
     className="form-control"
     disabled={false}

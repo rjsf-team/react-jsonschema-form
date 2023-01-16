@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  descriptionId,
   getTemplate,
   getUiOptions,
   ArrayFieldDescriptionProps,
@@ -30,10 +31,9 @@ export default function ArrayFieldDescriptionTemplate<
     S,
     F
   >("DescriptionFieldTemplate", registry, options);
-  const id = `${idSchema.$id}__description`;
   return (
     <DescriptionFieldTemplate
-      id={id}
+      id={descriptionId<T>(idSchema)}
       description={description}
       schema={schema}
       uiSchema={uiSchema}

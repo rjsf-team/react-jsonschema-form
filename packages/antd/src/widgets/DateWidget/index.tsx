@@ -1,6 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -59,6 +60,7 @@ export default function DateWidget<
       showTime={false}
       style={DATE_PICKER_STYLE}
       value={value && dayjs(value)}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

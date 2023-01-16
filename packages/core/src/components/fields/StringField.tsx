@@ -55,7 +55,7 @@ function StringField<
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={idSchema && idSchema.$id}
+      id={idSchema.$id}
       label={title === undefined ? name : title}
       value={formData}
       onChange={onChange}

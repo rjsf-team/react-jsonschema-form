@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  errorId,
 } from "@rjsf/utils";
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
@@ -19,7 +20,7 @@ export default function FieldErrorTemplate<
   if (errors.length === 0) {
     return null;
   }
-  const id = `${idSchema.$id}__error`;
+  const id = errorId<T>(idSchema);
 
   return (
     <div id={id}>

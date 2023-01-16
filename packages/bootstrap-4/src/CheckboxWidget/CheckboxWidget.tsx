@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ariaDescribedByIds,
   WidgetProps,
   schemaRequiresTrueValue,
   StrictRJSFSchema,
@@ -44,6 +45,7 @@ export default function CheckboxWidget<
   return (
     <Form.Group
       className={`checkbox ${disabled || readonly ? "disabled" : ""}`}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       <Form.Check
         id={id}

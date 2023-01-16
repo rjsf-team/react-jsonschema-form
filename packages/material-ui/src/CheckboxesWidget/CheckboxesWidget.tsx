@@ -4,8 +4,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -71,7 +73,7 @@ export default function CheckboxesWidget<
               enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
@@ -79,6 +81,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
             return (

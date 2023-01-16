@@ -16,6 +16,7 @@ exports[`single fields checkbox field 1`] = `
         className="MuiFormControlLabel-root"
       >
         <span
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
@@ -112,6 +113,7 @@ exports[`single fields checkbox field with label 1`] = `
         className="MuiFormControlLabel-root"
       >
         <span
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           onBlur={[Function]}
@@ -222,6 +224,7 @@ exports[`single fields checkboxes field 1`] = `
           className="MuiFormControlLabel-root"
         >
           <span
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
             onBlur={[Function]}
@@ -273,6 +276,7 @@ exports[`single fields checkboxes field 1`] = `
           className="MuiFormControlLabel-root"
         >
           <span
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
             onBlur={[Function]}
@@ -324,6 +328,7 @@ exports[`single fields checkboxes field 1`] = `
           className="MuiFormControlLabel-root"
         >
           <span
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
             onBlur={[Function]}
@@ -375,6 +380,7 @@ exports[`single fields checkboxes field 1`] = `
           className="MuiFormControlLabel-root"
         >
           <span
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-17 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
             onBlur={[Function]}
@@ -491,6 +497,7 @@ exports[`single fields field with description 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
@@ -600,6 +607,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
@@ -689,6 +697,7 @@ exports[`single fields format color 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -761,6 +770,7 @@ exports[`single fields format date 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -830,6 +840,7 @@ exports[`single fields format datetime 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -947,6 +958,7 @@ exports[`single fields help and error display 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1108,6 +1120,7 @@ exports[`single fields hidden label 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1226,6 +1239,7 @@ exports[`single fields number field 0 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1296,6 +1310,7 @@ exports[`single fields number field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1369,6 +1384,7 @@ exports[`single fields password field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1442,6 +1458,7 @@ exports[`single fields radio field 1`] = `
         htmlFor="root"
       />
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormGroup-root"
         id="root"
         onBlur={[Function]}
@@ -1631,6 +1648,7 @@ exports[`single fields schema examples 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help root__examples"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1643,7 +1661,7 @@ exports[`single fields schema examples 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="root"
-            list="examples_root"
+            list="root__examples"
             name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -1657,7 +1675,7 @@ exports[`single fields schema examples 1`] = `
         </div>
       </div>
       <datalist
-        id="examples_root"
+        id="root__examples"
       >
         <option
           value="Firefox"
@@ -1723,6 +1741,7 @@ exports[`single fields select field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -1825,6 +1844,7 @@ exports[`single fields slider field 1`] = `
         htmlFor="root"
       />
       <span
+        aria-describedby="root__error root__description root__help"
         className="MuiSlider-root MuiSlider-colorPrimary"
         id="root"
         label=""
@@ -1931,6 +1951,7 @@ exports[`single fields string field format data-url 1`] = `
       <div>
         <p>
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             defaultValue=""
             disabled={false}
@@ -1989,6 +2010,7 @@ exports[`single fields string field format email 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2061,6 +2083,7 @@ exports[`single fields string field format uri 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2130,6 +2153,7 @@ exports[`single fields string field regular 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2199,6 +2223,7 @@ exports[`single fields string field with placeholder 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2268,6 +2293,7 @@ exports[`single fields textarea field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2338,7 +2364,7 @@ exports[`single fields title field 1`] = `
     >
       <div
         className="MuiBox-root MuiBox-root-37"
-        id="root-title"
+        id="root__title"
       >
         <h5
           className="MuiTypography-root MuiTypography-h5"
@@ -2372,6 +2398,7 @@ exports[`single fields title field 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_title__error root_title__description root_title__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
@@ -2519,6 +2546,7 @@ exports[`single fields up/down field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -2591,6 +2619,7 @@ exports[`single fields using custom tagName 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div

@@ -7,6 +7,7 @@ import {
   Label,
 } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -44,7 +45,15 @@ export default function ColorWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ schema, options, value, required, label, onChange }: WidgetProps<T, S, F>) {
+>({
+  id,
+  schema,
+  options,
+  value,
+  required,
+  label,
+  onChange,
+}: WidgetProps<T, S, F>) {
   const updateColor = (_ev: any, colorObj: IColor) => {
     onChange(colorObj.hex);
   };
@@ -63,6 +72,7 @@ export default function ColorWidget<
         alphaType={"alpha"}
         showPreview={true}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

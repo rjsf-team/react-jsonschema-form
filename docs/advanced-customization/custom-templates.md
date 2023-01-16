@@ -133,7 +133,7 @@ If you want different behavior for the rendering of the description of an array 
 If you want a different behavior for the rendering of ALL descriptions in the `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
 
 ```tsx
-import { ArrayFieldDescriptionProps, RJSFSchema } from "@rjsf/utils";
+import { ArrayFieldDescriptionProps, RJSFSchema, descriptionId } from "@rjsf/utils";
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -145,7 +145,7 @@ const schema: RJSFSchema = {
 
 function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
   const { description, idSchema } = props;
-  const id = `${idSchema.$id}__description`;
+  const id = descriptionId(idSchema);
   return (
     <details id={id}>
       <summary>Description</summary>
@@ -235,7 +235,7 @@ If you want a different behavior for the rendering of the title of an array fiel
 If you want a different behavior for the rendering of ALL titles in the `Form`, see [TitleFieldTemplate](#titlefieldtemplate) 
 
 ```tsx
-import { ArrayFieldTitleTemplateProps, RJSFSchema } from "@rjsf/utils";
+import { ArrayFieldTitleTemplateProps, RJSFSchema, titleId } from "@rjsf/utils";
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -247,7 +247,7 @@ const schema: RJSFSchema = {
 
 function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
   const { description, idSchema } = props;
-  const id = `${idSchema.$id}__title`;
+  const id = titleId(idSchema);
   return (
     <h1 id={id}>
       {title}
@@ -518,7 +518,7 @@ The `FieldHelpTemplate` is the template that renders the help associated a singl
 If you want to customize how the help is rendered you can.
 
 ```tsx
-import { FieldHelpProps, RJSFSchema } from "@rjsf/utils";
+import { FieldHelpProps, RJSFSchema, helpId } from "@rjsf/utils";
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -529,7 +529,7 @@ const schema: RJSFSchema = {
 
 function FieldHelpTemplate(props: FieldHelpProps) {
   const { help, idSchema } = props;
-  const id = `${idSchema.$id}__help`;
+  const id = helpId(idSchema);
   return <aside id={id}>{help}</aside>;
 }
 

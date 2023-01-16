@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ariaDescribedByIds,
   WidgetProps,
   pad,
   StrictRJSFSchema,
@@ -123,6 +124,7 @@ export default function DateWidget<
       onFocus={_onFocus}
       value={parseDate(value)}
       {...uiProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

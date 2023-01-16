@@ -1,11 +1,13 @@
 import React from "react";
 import {
+  descriptionId,
   FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
+  titleId,
 } from "@rjsf/utils";
 
 export default function ObjectFieldTemplate<
@@ -38,7 +40,7 @@ export default function ObjectFieldTemplate<
     <>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={title}
           required={required}
           schema={schema}
@@ -48,7 +50,7 @@ export default function ObjectFieldTemplate<
       )}
       {(uiOptions.description || description) && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           schema={schema}
           uiSchema={uiSchema}
           description={uiOptions.description || description!}

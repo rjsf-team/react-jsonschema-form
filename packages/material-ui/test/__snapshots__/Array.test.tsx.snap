@@ -150,6 +150,7 @@ exports[`array fields array icons 1`] = `
                           className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
                           <div
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             className="MuiFormControl-root MuiTextField-root"
                           >
                             <div
@@ -347,6 +348,7 @@ exports[`array fields array icons 1`] = `
                           className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
                           <div
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             className="MuiFormControl-root MuiTextField-root"
                           >
                             <div
@@ -617,6 +619,7 @@ exports[`array fields checkboxes 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root"
       >
         <div
@@ -734,6 +737,7 @@ exports[`array fields empty errors array 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_name__error root_name__description root_name__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
@@ -853,6 +857,7 @@ exports[`array fields fixed array 1`] = `
                           className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
                           <div
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             className="MuiFormControl-root MuiTextField-root"
                           >
                             <div
@@ -911,6 +916,7 @@ exports[`array fields fixed array 1`] = `
                           className="MuiFormControl-root MuiFormControl-fullWidth"
                         >
                           <div
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             className="MuiFormControl-root MuiTextField-root"
                           >
                             <div
@@ -1017,6 +1023,7 @@ exports[`array fields no errors 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_name__error root_name__description root_name__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label

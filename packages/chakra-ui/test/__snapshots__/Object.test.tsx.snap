@@ -188,6 +188,7 @@ exports[`object fields additionalProperties 1`] = `
                     foo
                   </label>
                   <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
                     className="chakra-input emotion-0"
                     disabled={false}
@@ -365,6 +366,7 @@ exports[`object fields object 1`] = `
                   A
                 </label>
                 <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -405,6 +407,7 @@ exports[`object fields object 1`] = `
                   B
                 </label>
                 <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}

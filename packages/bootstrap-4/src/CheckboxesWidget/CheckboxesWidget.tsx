@@ -1,8 +1,10 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -64,7 +66,7 @@ export default function CheckboxesWidget<
               checked={checked}
               className="bg-transparent border-0"
               type={"checkbox"}
-              id={`${id}-${option.value}`}
+              id={optionId<S>(id, option)}
               name={id}
               label={option.label}
               autoFocus={autofocus && index === 0}
@@ -72,6 +74,7 @@ export default function CheckboxesWidget<
               onBlur={_onBlur}
               onFocus={_onFocus}
               disabled={disabled || itemDisabled || readonly}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}

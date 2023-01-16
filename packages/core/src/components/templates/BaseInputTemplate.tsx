@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
 import {
+  ariaDescribedByIds,
+  examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -82,13 +84,14 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         value={inputValue}
         {...inputProps}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {Array.isArray(schema.examples) && (
-        <datalist key={`datalist_${id}`} id={`examples_${id}`}>
+        <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
           {[
             ...new Set(
               schema.examples.concat(schema.default ? [schema.default] : [])

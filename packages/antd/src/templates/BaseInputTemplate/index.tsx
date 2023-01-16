@@ -2,6 +2,8 @@ import React from "react";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import {
+  ariaDescribedByIds,
+  examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
@@ -64,9 +66,10 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         style={INPUT_STYLE}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
     ) : (
       <Input
@@ -78,9 +81,10 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         style={INPUT_STYLE}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
     );
 
@@ -88,7 +92,7 @@ export default function BaseInputTemplate<
     <>
       {input}
       {schema.examples && (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example) => {

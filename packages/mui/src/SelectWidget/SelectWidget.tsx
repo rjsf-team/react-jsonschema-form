@@ -2,6 +2,7 @@ import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import {
+  ariaDescribedByIds,
   processSelectValue,
   FormContextType,
   RJSFSchema,
@@ -79,6 +80,7 @@ export default function SelectWidget<
         ...textFieldProps.SelectProps,
         multiple: typeof multiple === "undefined" ? false : multiple,
       }}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =

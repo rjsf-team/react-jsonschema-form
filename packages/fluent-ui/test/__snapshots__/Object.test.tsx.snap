@@ -51,6 +51,7 @@ exports[`object fields additionalProperties 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_foo__error root_foo__description root_foo__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel11"
                   autoFocus={false}
@@ -165,6 +166,7 @@ exports[`object fields object 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel2"
                   autoFocus={false}
@@ -214,6 +216,7 @@ exports[`object fields object 1`] = `
                 className="ms-TextField-fieldGroup fieldGroup-43"
               >
                 <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel5"
                   autoFocus={false}

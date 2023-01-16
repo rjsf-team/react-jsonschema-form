@@ -8,6 +8,7 @@ exports[`CheckboxesWidget inline 1`] = `
     className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
   >
     <input
+      aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
       checked={false}
       className="custom-control-input"
@@ -39,6 +40,7 @@ exports[`CheckboxesWidget simple 1`] = `
     className="bg-transparent border-0 custom-control custom-checkbox"
   >
     <input
+      aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
       checked={false}
       className="custom-control-input"

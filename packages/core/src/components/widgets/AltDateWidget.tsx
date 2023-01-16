@@ -1,6 +1,6 @@
 import React, { MouseEvent, useCallback, useEffect, useReducer } from "react";
-
 import {
+  ariaDescribedByIds,
   parseDateString,
   toDateString,
   pad,
@@ -103,6 +103,7 @@ function DateElement<
       onFocus={onFocus}
       registry={registry}
       label=""
+      aria-describedby={ariaDescribedByIds<T>(rootId)}
     />
   );
 }

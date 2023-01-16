@@ -102,6 +102,7 @@ exports[`single fields checkbox field 1`] = `
           onClick={[Function]}
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             checked={false}
             className="chakra-checkbox__input"
@@ -262,6 +263,7 @@ exports[`single fields checkbox field with label 1`] = `
           onClick={[Function]}
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             checked={false}
             className="chakra-checkbox__input"
@@ -776,6 +778,7 @@ exports[`single fields field with description 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -907,6 +910,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -1002,6 +1006,7 @@ exports[`single fields format color 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1088,6 +1093,7 @@ exports[`single fields format date 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1174,6 +1180,7 @@ exports[`single fields format datetime 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1344,6 +1351,7 @@ exports[`single fields help and error display 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           aria-invalid={true}
           autoFocus={false}
           className="chakra-input emotion-1"
@@ -1540,6 +1548,7 @@ exports[`single fields hidden label 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1687,6 +1696,7 @@ exports[`single fields number field 0 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1774,6 +1784,7 @@ exports[`single fields number field 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1861,6 +1872,7 @@ exports[`single fields password field 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -2016,6 +2028,7 @@ exports[`single fields radio field 1`] = `
           id="root-label"
         />
         <div
+          aria-describedby="root__error root__description root__help"
           className="chakra-radio-group emotion-0"
           onBlur={[Function]}
           onFocus={[Function]}
@@ -2196,11 +2209,12 @@ exports[`single fields schema examples 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help root__examples"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
           id="root"
-          list="examples_root"
+          list="root__examples"
           name="root"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2212,7 +2226,7 @@ exports[`single fields schema examples 1`] = `
           value=""
         />
         <datalist
-          id="examples_root"
+          id="root__examples"
         >
           <option
             value="Firefox"
@@ -4675,6 +4689,7 @@ exports[`single fields slider field 1`] = `
         role="group"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           className="chakra-slider emotion-0"
           label=""
           onBlur={[Function]}
@@ -4813,6 +4828,7 @@ exports[`single fields string field format data-url 1`] = `
       <div>
         <p>
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             defaultValue=""
             disabled={false}
@@ -4894,6 +4910,7 @@ exports[`single fields string field format email 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -4980,6 +4997,7 @@ exports[`single fields string field format uri 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -5066,6 +5084,7 @@ exports[`single fields string field regular 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -5152,6 +5171,7 @@ exports[`single fields string field with placeholder 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -5238,6 +5258,7 @@ exports[`single fields textarea field 1`] = `
         role="group"
       >
         <textarea
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-textarea emotion-0"
           disabled={false}
@@ -5342,7 +5363,7 @@ exports[`single fields title field 1`] = `
     >
       <div
         className="emotion-1"
-        id="root-title"
+        id="root__title"
       >
         <h5
           className="chakra-heading emotion-0"
@@ -5379,6 +5400,7 @@ exports[`single fields title field 1`] = `
                   title
                 </label>
                 <input
+                  aria-describedby="root_title__error root_title__description root_title__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -5620,6 +5642,7 @@ exports[`single fields up/down field 1`] = `
           value=""
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-readonly={false}
             aria-required={false}
             aria-valuemax={9007199254740991}
@@ -5762,6 +5785,7 @@ exports[`single fields using custom tagName 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}

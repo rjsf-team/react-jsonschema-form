@@ -101,7 +101,7 @@ exports[`array fields array icons 1`] = `
                           className="ui fluid input"
                         >
                           <input
-                            aria-describedby={null}
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             autoFocus={false}
                             disabled={false}
                             id="root_0"
@@ -194,7 +194,7 @@ exports[`array fields array icons 1`] = `
                           className="ui fluid input"
                         >
                           <input
-                            aria-describedby={null}
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             autoFocus={false}
                             disabled={false}
                             id="root_1"
@@ -310,7 +310,7 @@ exports[`array fields checkboxes 1`] = `
         className="field"
       >
         <div
-          aria-describedby={null}
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           aria-expanded={false}
           aria-multiselectable={true}
@@ -442,7 +442,7 @@ exports[`array fields empty errors array 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_name__error root_name__description root_name__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_name"
@@ -519,7 +519,7 @@ exports[`array fields fixed array 1`] = `
                           className="ui fluid input"
                         >
                           <input
-                            aria-describedby={null}
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             autoFocus={false}
                             disabled={false}
                             id="root_0"
@@ -569,7 +569,7 @@ exports[`array fields fixed array 1`] = `
                           className="ui fluid input"
                         >
                           <input
-                            aria-describedby={null}
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             autoFocus={false}
                             disabled={false}
                             id="root_1"
@@ -637,7 +637,7 @@ exports[`array fields no errors 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_name__error root_name__description root_name__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_name"

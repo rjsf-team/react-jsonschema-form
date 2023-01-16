@@ -3,6 +3,7 @@ import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
 import {
+  ariaDescribedByIds,
   pad,
   parseDateString,
   toDateString,
@@ -151,6 +152,7 @@ export default function AltDateWidget<
       value={elemProps.value}
       registry={registry}
       label=""
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 

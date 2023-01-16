@@ -1,6 +1,7 @@
 import React from "react";
 import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -57,6 +58,7 @@ export default function CheckboxWidget<
       name={id}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {label}
     </Checkbox>

@@ -2,6 +2,7 @@ import React from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import Slider from "@material-ui/core/Slider";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -55,6 +56,7 @@ export default function RangeWidget<
         onFocus={_onFocus}
         valueLabelDisplay="auto"
         {...sliderProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

@@ -8,6 +8,8 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -63,6 +65,7 @@ export default function CheckboxesWidget<
       <CheckboxGroup
         onChange={(option) => onChange(option)}
         defaultValue={value}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
@@ -74,7 +77,7 @@ export default function CheckboxesWidget<
               return (
                 <Checkbox
                   key={option.value}
-                  id={`${id}-${option.value}`}
+                  id={optionId<S>(id, option)}
                   name={id}
                   value={option.value}
                   isChecked={checked}

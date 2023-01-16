@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  helpId,
   FieldHelpProps,
   FormContextType,
   RJSFSchema,
@@ -20,6 +21,6 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  const id = `${idSchema.$id}__help`;
+  const id = helpId<T>(idSchema);
   return <Text id={id}>{help}</Text>;
 }

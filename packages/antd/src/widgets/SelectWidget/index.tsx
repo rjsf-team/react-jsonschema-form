@@ -1,6 +1,7 @@
 import React from "react";
 import Select, { DefaultOptionType } from "antd/lib/select";
 import {
+  ariaDescribedByIds,
   processSelectValue,
   FormContextType,
   GenericObjectType,
@@ -84,6 +85,7 @@ export default function SelectWidget<
       value={typeof value !== "undefined" ? stringify(value) : undefined}
       {...extraProps}
       filterOption={filterOption}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }) => (

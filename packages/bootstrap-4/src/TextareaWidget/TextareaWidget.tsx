@@ -1,6 +1,6 @@
 import React from "react";
-
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -61,6 +61,7 @@ export default function TextareaWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </InputGroup>
   );

@@ -6,8 +6,10 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   canExpand,
+  descriptionId,
   getTemplate,
   getUiOptions,
+  titleId,
 } from "@rjsf/utils";
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -57,7 +59,7 @@ export default function ObjectFieldTemplate<
     <>
       {fieldTitle && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={fieldTitle}
           required={required}
           schema={schema}
@@ -67,7 +69,7 @@ export default function ObjectFieldTemplate<
       )}
       {fieldDescription && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           description={fieldDescription}
           schema={schema}
           uiSchema={uiSchema}

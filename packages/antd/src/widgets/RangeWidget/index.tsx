@@ -1,6 +1,7 @@
 import React from "react";
 import Slider from "antd/lib/slider";
 import {
+  ariaDescribedByIds,
   rangeSpec,
   FormContextType,
   RJSFSchema,
@@ -66,6 +67,7 @@ export default function RangeWidget<
       step={step}
       value={value}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

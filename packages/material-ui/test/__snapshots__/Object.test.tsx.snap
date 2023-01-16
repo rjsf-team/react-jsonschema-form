@@ -72,6 +72,7 @@ exports[`object fields additionalProperties 1`] = `
                 className="MuiFormControl-root MuiFormControl-fullWidth"
               >
                 <div
+                  aria-describedby="root_foo__error root_foo__description root_foo__help"
                   className="MuiFormControl-root MuiTextField-root"
                 >
                   <label
@@ -274,6 +275,7 @@ exports[`object fields object 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_a__error root_a__description root_a__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label
@@ -324,6 +326,7 @@ exports[`object fields object 1`] = `
               className="MuiFormControl-root MuiFormControl-fullWidth"
             >
               <div
+                aria-describedby="root_b__error root_b__description root_b__help"
                 className="MuiFormControl-root MuiTextField-root"
               >
                 <label

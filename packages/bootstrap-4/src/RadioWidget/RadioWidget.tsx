@@ -1,8 +1,8 @@
 import React from "react";
-
 import Form from "react-bootstrap/Form";
-
 import {
+  ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -52,7 +52,7 @@ export default function RadioWidget<
             <Form.Check
               inline={inline}
               label={option.label}
-              id={`${id}-${option.value}`}
+              id={optionId<S>(id, option)}
               key={option.value}
               name={id}
               type="radio"
@@ -63,6 +63,7 @@ export default function RadioWidget<
               onChange={_onChange}
               onBlur={_onBlur}
               onFocus={_onFocus}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
           return radio;

@@ -1,5 +1,6 @@
 import React, { FocusEvent, useCallback } from "react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -60,6 +61,7 @@ function TextareaWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       onChange={handleChange}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

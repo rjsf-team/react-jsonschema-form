@@ -12,8 +12,10 @@ import {
   StrictRJSFSchema,
   UiSchema,
   canExpand,
+  descriptionId,
   getTemplate,
   getUiOptions,
+  titleId,
 } from "@rjsf/utils";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -139,9 +141,9 @@ export default function ObjectFieldTemplate<
               {(uiOptions.title || title) && (
                 <Col className={labelColClassName} span={24}>
                   <TitleFieldTemplate
-                    id={`${idSchema.$id}-title`}
-                    required={required}
+                    id={titleId<T>(idSchema)}
                     title={uiOptions.title || title}
+                    required={required}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
@@ -151,8 +153,8 @@ export default function ObjectFieldTemplate<
               {(uiOptions.description || description) && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <DescriptionFieldTemplate
+                    id={descriptionId<T>(idSchema)}
                     description={uiOptions.description || description!}
-                    id={`${idSchema.$id}-description`}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}

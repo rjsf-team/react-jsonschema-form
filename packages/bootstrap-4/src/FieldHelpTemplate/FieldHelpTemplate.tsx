@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  helpId,
 } from "@rjsf/utils";
 import Form from "react-bootstrap/Form";
 
@@ -20,7 +21,7 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  const id = `${idSchema.$id}__help`;
+  const id = helpId<T>(idSchema);
   return (
     <Form.Text className={hasErrors ? "text-danger" : "text-muted"} id={id}>
       {help}

@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   FormControl,
   FormLabel,
@@ -7,8 +6,9 @@ import {
   RadioGroup,
   Stack,
 } from "@chakra-ui/react";
-
 import {
+  ariaDescribedByIds,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -62,6 +62,7 @@ export default function RadioWidget<
         onFocus={_onFocus}
         value={`${value}`}
         name={id}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
@@ -74,7 +75,7 @@ export default function RadioWidget<
                 <Radio
                   value={`${option.value}`}
                   key={option.value}
-                  id={`${id}-${option.value}`}
+                  id={optionId<S>(id, option)}
                   disabled={disabled || itemDisabled || readonly}
                 >
                   {`${option.label}`}

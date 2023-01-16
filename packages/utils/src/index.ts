@@ -16,6 +16,15 @@ import getUiOptions from "./getUiOptions";
 import getWidget from "./getWidget";
 import guessType from "./guessType";
 import hasWidget from "./hasWidget";
+import {
+  ariaDescribedByIds,
+  descriptionId,
+  errorId,
+  examplesId,
+  helpId,
+  optionId,
+  titleId,
+} from "./idGenerators";
 import isConstant from "./isConstant";
 import isCustomWidget from "./isCustomWidget";
 import isFixedItems from "./isFixedItems";
@@ -43,13 +52,17 @@ export * from "./schema";
 
 export {
   allowAdditionalItems,
+  ariaDescribedByIds,
   asNumber,
   canExpand,
   createSchemaUtils,
   dataURItoBlob,
   deepEquals,
+  descriptionId,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  errorId,
+  examplesId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
   getInputProps,
@@ -60,6 +73,7 @@ export {
   getWidget,
   guessType,
   hasWidget,
+  helpId,
   isConstant,
   isCustomWidget,
   isFixedItems,
@@ -68,6 +82,7 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  optionId,
   optionsList,
   orderProperties,
   pad,
@@ -76,6 +91,7 @@ export {
   rangeSpec,
   schemaRequiresTrueValue,
   shouldRender,
+  titleId,
   toConstant,
   toDateString,
   utcToLocal,

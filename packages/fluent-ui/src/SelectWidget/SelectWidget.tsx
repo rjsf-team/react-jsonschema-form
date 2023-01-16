@@ -1,6 +1,7 @@
 import React from "react";
 import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   WidgetProps,
   processSelectValue,
   StrictRJSFSchema,
@@ -123,6 +124,7 @@ export default function SelectWidget<
         onBlur={_onBlur}
         onFocus={_onFocus}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

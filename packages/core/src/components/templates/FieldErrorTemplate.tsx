@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  errorId,
   FieldErrorProps,
   FormContextType,
   RJSFSchema,
@@ -19,7 +20,7 @@ export default function FieldErrorTemplate<
   if (errors.length === 0) {
     return null;
   }
-  const id = `${idSchema.$id}__error`;
+  const id = errorId<T>(idSchema);
 
   return (
     <div>

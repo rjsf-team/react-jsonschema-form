@@ -1,6 +1,7 @@
 import React from "react";
 import { Label, SpinButton } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   rangeSpec,
   RJSFSchema,
@@ -123,6 +124,7 @@ WidgetProps<T, S, F>) {
         onIncrement={_onIncrement}
         onDecrement={_onDecrement}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );

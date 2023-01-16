@@ -9,6 +9,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -69,6 +70,7 @@ export default function UpDownWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <NumberInputField id={id} name={id} />
         <NumberInputStepper>

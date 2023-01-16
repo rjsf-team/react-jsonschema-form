@@ -1,12 +1,15 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import {
-  EnumOptionsType,
-  FormContextType,
-  getTemplate,
-  RJSFSchema,
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  getTemplate,
+  optionId,
+  titleId,
+  EnumOptionsType,
+  FormContextType,
+  RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
@@ -74,7 +77,7 @@ export default function CheckboxesWidget<
     <>
       {title && (
         <TitleFieldTemplate
-          id={`${id}-title`}
+          id={titleId<T>(id)}
           title={title}
           schema={schema}
           uiSchema={uiSchema}
@@ -90,7 +93,7 @@ export default function CheckboxesWidget<
               enumDisabled.indexOf(option.value) !== -1;
             return (
               <Form.Checkbox
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 key={option.value}
                 label={option.label}
@@ -102,6 +105,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(option)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
           })}

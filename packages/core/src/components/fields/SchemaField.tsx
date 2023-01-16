@@ -2,6 +2,7 @@ import React from "react";
 import {
   mergeObjects,
   deepEquals,
+  descriptionId,
   getUiOptions,
   getSchemaType,
   getTemplate,
@@ -279,7 +280,7 @@ function SchemaFieldRender<
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, "children"> = {
     description: (
       <DescriptionFieldTemplate
-        id={`${id}__description`}
+        id={descriptionId<T>(id)}
         description={description}
         schema={schema}
         uiSchema={uiSchema}

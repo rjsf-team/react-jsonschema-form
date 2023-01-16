@@ -1,6 +1,8 @@
 import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import {
+  ariaDescribedByIds,
+  examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -75,10 +77,11 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         placeholder={placeholder}
         {...inputProps}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {schema.examples ? (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {

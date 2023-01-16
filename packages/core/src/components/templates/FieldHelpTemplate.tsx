@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  helpId,
   FieldHelpProps,
   FormContextType,
   RJSFSchema,
@@ -19,7 +20,7 @@ export default function FieldHelpTemplate<
   if (!help) {
     return null;
   }
-  const id = `${idSchema.$id}__help`;
+  const id = helpId<T>(idSchema);
   if (typeof help === "string") {
     return (
       <p id={id} className="help-block">

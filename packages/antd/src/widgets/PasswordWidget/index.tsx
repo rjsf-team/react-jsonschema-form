@@ -1,6 +1,7 @@
 import React from "react";
 import Input from "antd/lib/input";
 import {
+  ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -52,6 +53,7 @@ export default function PasswordWidget<
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       value={value || ""}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }

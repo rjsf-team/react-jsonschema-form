@@ -1,6 +1,8 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
+  examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -105,11 +107,12 @@ export default function BaseInputTemplate<
         onBlur={_onBlur}
         onFocus={_onFocus}
         errorMessage={(rawErrors || []).join("\n")}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {schema.examples && (
-        <datalist id={`examples_${id}`}>
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {

@@ -1,15 +1,17 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from "@rjsf/utils";
-import { allowedProps } from "../CheckboxWidget";
 import _pick from "lodash/pick";
+import { allowedProps } from "../CheckboxWidget";
 
 const styles_red = {
   // TODO: get this color from theme.
@@ -77,7 +79,7 @@ export default function CheckboxesWidget<
             enumDisabled.indexOf(option.value) !== -1;
           return (
             <Checkbox
-              id={`${id}-${option.value}`}
+              id={optionId<S>(id, option)}
               name={id}
               checked={checked}
               label={option.label}
@@ -88,6 +90,7 @@ export default function CheckboxesWidget<
               onFocus={_onFocus}
               key={option.value}
               {...uiProps}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}

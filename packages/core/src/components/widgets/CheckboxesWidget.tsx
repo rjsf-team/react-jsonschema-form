@@ -1,7 +1,9 @@
 import React, { ChangeEvent } from "react";
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsSelectValue,
+  optionId,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -58,12 +60,13 @@ function CheckboxesWidget<
             <span>
               <input
                 type="checkbox"
-                id={`${id}-${option.value}`}
+                id={optionId<S>(id, option)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
               <span>{option.label}</span>
             </span>
