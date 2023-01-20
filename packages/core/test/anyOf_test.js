@@ -56,6 +56,33 @@ describe("anyOf", () => {
     expect(node.querySelector("select").id).eql("root__anyof_select");
   });
 
+  it("should render a root select element with default value", () => {
+    const formData = { foo: "b" };
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          title: "foo1",
+          properties: {
+            foo: { type: "string", enum: ["a", "b"], default: "a" },
+          },
+        },
+        {
+          title: "foo2",
+          properties: {
+            foo: { type: "string", enum: ["a", "b"], default: "b" },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData,
+    });
+    expect(node.querySelector("select").value).eql("1");
+  });
+
   it("should assign a default value and set defaults on option change", () => {
     const { node, onChange } = createFormComponent({
       schema: {

@@ -15,6 +15,20 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0-beta-18
+
+# @rjsf/core
+- Updated `MultiSchemaField` to utilize the new `getClosestMatchingOption()` and `sanitizeDataForNewSchema()` functions, fixing [#2944](https://github.com/rjsf-team/react-jsonschema-form/issues/2944), [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236), [#2978](https://github.com/rjsf-team/react-jsonschema-form/issues/2978), and probably others
+
+# @rjsf/utils
+- Added new `getClosestMatchingOption()`, `getFirstMatchingOption()` and `sanitizeDataForNewSchema()` schema-based utility functions
+  - Deprecated `getMatchingOption()` and updated all calls to it in other utility functions to use `getFirstMatchingOption()`
+
+## Dev / docs / playground
+- Updated the playground to `onFormDataEdited()` to only change the formData in the state if the `JSON.stringify()` of the old and new values are different, partially fixing [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236)
+- Updated the playground `npm start` command to always use the `--force` option to avoid issues where changes made to other packages weren't getting picked up due to `vite` caching
+- Updated the documentation for `utility-functions` and the `5.x upgrade guide` to add the new utility functions and to document the deprecation of `getMatchingOption()`
+
 # 5.0.0-beta-17
 
 ## @rjsf/antd

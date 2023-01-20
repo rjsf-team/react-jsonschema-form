@@ -22,7 +22,7 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from "../types";
-import getMatchingOption from "./getMatchingOption";
+import getFirstMatchingOption from "./getFirstMatchingOption";
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema
@@ -310,7 +310,7 @@ export function resolveDependencies<
   let resolvedSchema: S = remainingSchema as S;
   if (Array.isArray(resolvedSchema.oneOf)) {
     resolvedSchema = resolvedSchema.oneOf[
-      getMatchingOption<T, S, F>(
+      getFirstMatchingOption<T, S, F>(
         validator,
         formData,
         resolvedSchema.oneOf as S[],
@@ -319,7 +319,7 @@ export function resolveDependencies<
     ] as S;
   } else if (Array.isArray(resolvedSchema.anyOf)) {
     resolvedSchema = resolvedSchema.anyOf[
-      getMatchingOption<T, S, F>(
+      getFirstMatchingOption<T, S, F>(
         validator,
         formData,
         resolvedSchema.anyOf as S[],

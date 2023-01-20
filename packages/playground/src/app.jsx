@@ -5,6 +5,7 @@ import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
 import localValidator from "@rjsf/validator-ajv8";
+import isEqualWith from "lodash/isEqualWith";
 
 import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
@@ -413,7 +414,16 @@ class Playground extends Component {
 
   onUISchemaEdited = (uiSchema) => this.setState({ uiSchema, shareURL: null });
 
-  onFormDataEdited = (formData) => this.setState({ formData, shareURL: null });
+  onFormDataEdited = (formData) => {
+    if (!isEqualWith(formData, this.state.formData, (newValue, oldValue) => {
+      // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+      // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+      // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+      return JSON.stringify(oldValue) === JSON.stringify(newValue);
+    })) {
+      this.setState({ formData, shareURL: null });
+    }
+  };
 
   onExtraErrorsEdited = (extraErrors) =>
     this.setState({ extraErrors, shareURL: null });

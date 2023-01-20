@@ -10,7 +10,7 @@ import {
   REF_KEY,
 } from "../constants";
 import findSchemaDefinition from "../findSchemaDefinition";
-import getMatchingOption from "./getMatchingOption";
+import getFirstMatchingOption from "./getFirstMatchingOption";
 import getSchemaType from "../getSchemaType";
 import isObject from "../isObject";
 import isFixedItems from "../isFixedItems";
@@ -156,7 +156,7 @@ export function computeDefaults<
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
     schema = schema.oneOf![
-      getMatchingOption<T, S, F>(
+      getFirstMatchingOption<T, S, F>(
         validator,
         isEmpty(formData) ? undefined : formData,
         schema.oneOf as S[],
@@ -165,7 +165,7 @@ export function computeDefaults<
     ] as S;
   } else if (ANY_OF_KEY in schema) {
     schema = schema.anyOf![
-      getMatchingOption<T, S, F>(
+      getFirstMatchingOption<T, S, F>(
         validator,
         isEmpty(formData) ? undefined : formData,
         schema.anyOf as S[],
