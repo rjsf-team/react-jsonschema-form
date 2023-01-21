@@ -539,7 +539,7 @@ class Playground extends Component {
                 theme={theme}
                 select={this.onThemeSelected}
               />
-              {themes[theme].subthemes && (
+              {themes[theme] && themes[theme].subthemes && (
                 <SubthemeSelector
                   subthemes={themes[theme].subthemes}
                   subtheme={subtheme}

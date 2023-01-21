@@ -28,10 +28,10 @@ export default function withTheme<
       { fields, widgets, templates, ...directProps }: FormProps<T, S, F>,
       ref: ForwardedRef<Form<T, S, F>>
     ) => {
-      fields = { ...themeProps.fields, ...fields };
-      widgets = { ...themeProps.widgets, ...widgets };
+      fields = { ...themeProps?.fields, ...fields };
+      widgets = { ...themeProps?.widgets, ...widgets };
       templates = {
-        ...themeProps.templates,
+        ...themeProps?.templates,
         ...templates,
         ButtonTemplates: {
           ...themeProps?.templates?.ButtonTemplates,
