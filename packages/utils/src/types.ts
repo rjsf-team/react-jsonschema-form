@@ -1019,7 +1019,7 @@ export interface SchemaUtilsType<
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
   getClosestMatchingOption(
-    formData: T,
+    formData: T | undefined,
     options: S[],
     selectedOption?: number
   ): number;

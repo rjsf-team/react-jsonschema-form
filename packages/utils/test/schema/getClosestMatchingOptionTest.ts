@@ -110,11 +110,28 @@ export default function getClosestMatchingOptionTest(
     });
   });
   describe("oneOfMatchingOption", () => {
-    it("oneOfSchema, oneOfData, no options, returns -1", () => {
+    it("oneOfSchema, oneOfData data, no options, returns -1", () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [])).toEqual(-1);
+    });
+    it("oneOfSchema, no data, 2 options, returns -1", () => {
+      expect(
+        schemaUtils.getClosestMatchingOption(undefined, [
+          { type: "string" },
+          { type: "number" },
+        ])
+      ).toEqual(-1);
     });
     it("oneOfSchema, oneOfData, no options, selectedOption 2, returns 2", () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [], 2)).toEqual(2);
+    });
+    it("oneOfSchema, no data, 2 options, returns -1", () => {
+      expect(
+        schemaUtils.getClosestMatchingOption(
+          undefined,
+          [{ type: "string" }, { type: "number" }],
+          2
+        )
+      ).toEqual(2);
     });
     it("returns the first option, which kind of matches the data", () => {
       expect(

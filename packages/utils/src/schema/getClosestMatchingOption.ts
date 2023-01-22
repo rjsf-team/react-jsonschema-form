@@ -160,7 +160,7 @@ export default function getClosestMatchingOption<
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
-  formData: T,
+  formData: T | undefined,
   options: S[],
   selectedOption = -1
 ): number {
