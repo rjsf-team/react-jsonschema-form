@@ -28,10 +28,12 @@ should change the heading of the (upcoming) version to include a major version b
   - [#2069](https://github.com/rjsf-team/react-jsonschema-form/issues/2069)
   - [#1661](https://github.com/rjsf-team/react-jsonschema-form/issues/1661)
   - And probably others
+- Updated `ObjectField` to deal with additionalProperties with anyOf/oneOf, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
 
 # @rjsf/utils
 - Added new `getClosestMatchingOption()`, `getFirstMatchingOption()` and `sanitizeDataForNewSchema()` schema-based utility functions
   - Deprecated `getMatchingOption()` and updated all calls to it in other utility functions to use `getFirstMatchingOption()`
+- Updated `stubExistingAdditionalProperties` to deal with additionalProperties with anyOf/oneOf, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
 
 ## Dev / docs / playground
 - Updated the playground to `onFormDataEdited()` to only change the formData in the state if the `JSON.stringify()` of the old and new values are different, partially fixing [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236)

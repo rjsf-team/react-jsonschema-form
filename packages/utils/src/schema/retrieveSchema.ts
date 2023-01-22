@@ -6,7 +6,9 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
+  ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  ONE_OF_KEY,
   REF_KEY,
 } from "../constants";
 import findSchemaDefinition, {
@@ -205,6 +207,14 @@ export function stubExistingAdditionalProperties<
         );
       } else if ("type" in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
+      } else if (
+        ANY_OF_KEY in schema.additionalProperties! ||
+        ONE_OF_KEY in schema.additionalProperties!
+      ) {
+        additionalProperties = {
+          type: "object",
+          ...schema.additionalProperties,
+        };
       } else {
         additionalProperties = { type: guessType(get(formData, [key])) };
       }

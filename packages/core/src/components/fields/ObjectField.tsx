@@ -13,6 +13,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   PROPERTIES_KEY,
   REF_KEY,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
 } from "@rjsf/utils";
 import get from "lodash/get";
 import has from "lodash/has";
@@ -203,13 +205,17 @@ class ObjectField<
     let type: RJSFSchema["type"] = undefined;
     if (isObject(schema.additionalProperties)) {
       type = schema.additionalProperties.type;
-      if (REF_KEY in schema.additionalProperties) {
+      let apSchema = schema.additionalProperties;
+      if (REF_KEY in apSchema) {
         const { schemaUtils } = registry;
-        const refSchema = schemaUtils.retrieveSchema(
-          { $ref: schema.additionalProperties[REF_KEY] } as S,
+        apSchema = schemaUtils.retrieveSchema(
+          { $ref: apSchema[REF_KEY] } as S,
           formData
         );
-        type = refSchema.type;
+        type = apSchema.type;
+      }
+      if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
+        type = "object";
       }
     }
 
