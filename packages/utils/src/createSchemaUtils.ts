@@ -119,18 +119,11 @@ class SchemaUtils<
     );
   }
 
-  /** Determines which of the given `options` provided most closely matches the `formData`. Using
-   * `getFirstMatchingOption()` to match two schemas that differ only by the readOnly, default or const value of a field
-   * based on the `formData` and returns 0 when there is no match. Rather than passing in all the `options` at once to
-   * this utility, instead an array of valid option indexes is created by iterating over the list of options, call
-   * `getFirstMatchingOptions` with a list of one junk option and one good option, seeing if the good option is
-   * considered matched.
+  /** Determines which of the given `options` provided most closely matches the `formData`.
+   * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *
-   * Once the list of valid indexes is created, if there is only one valid index, just return it. Otherwise, if there
-   * are no valid indexes, then fill the valid indexes array with the indexes of all the options. Next, the index of the
-   * option with the highest score is determined by iterating over the list of valid options, calling
-   * `calculateIndexScore()` on each, comparing it against the current best score, and returning the index of the one
-   * that eventually has the best score.
+   * The closest match is determined using the number of matching properties, and more heavily favors options with
+   * matching readOnly, default, or const values.
    *
    * @param formData - The form data associated with the schema
    * @param options - The list of options that can be selected from

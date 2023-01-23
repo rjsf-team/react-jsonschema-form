@@ -11,6 +11,8 @@ import {
 import { PROPERTIES_KEY, REF_KEY } from "../constants";
 import retrieveSchema from "./retrieveSchema";
 
+const NO_VALUE = Symbol("no Value");
+
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
  * of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the old schema
@@ -19,7 +21,7 @@ import retrieveSchema from "./retrieveSchema";
  * - If the new schema is an object that contains a `properties` object then:
  *   - Create a `removeOldSchemaData` object, setting each key in the `oldSchema.properties` having `data` to undefined
  *   - Create an empty `nestedData` object for use in the key filtering below:
- *   - Filter each key in the `newSchema.properties` storing the filtered keys in `keysToKeep` as follows:
+ *   - Iterate over each key in the `newSchema.properties` as follows:
  *     - Get the `formValue` of the key from the `data`
  *     - Get the `oldKeySchema` and `newKeyedSchema` for the key, defaulting to `{}` when it doesn't exist
  *     - Retrieve the schema for any refs within each `oldKeySchema` and/or `newKeySchema`
@@ -27,13 +29,27 @@ import retrieveSchema from "./retrieveSchema";
  *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
  *       - If type of the key in the new schema is `object`:
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
- *       - Otherwise, return true if the new schema and its associated data passes all of these conditions:
- *         - The schema has a falsey `readOnly` property value OR
- *         - The schema has a falsey `default` property OR
- *         - The `default` property value is the same as the `formValue`
- *     - Unless true was returned above, return `false` to not return the current key in the filter
+ *       - Otherwise, check for default or const values:
+ *         - Get the old and new `default` values from the schema and check:
+ *           - If the new `default` value does not match the form value:
+ *             - If the old `default` value DOES match the form value, then:
+ *               - Replace `removeOldSchemaData[key]` with the new `default`
+ *               - Otherwise, if the new schema is `readOnly` then replace `removeOldSchemaData[key]` with undefined
+ *         - Get the old and new `const` values from the schema and check:
+ *           - If the new `const` value does not match the form value:
+ *           - If the old `const` value DOES match the form value, then:
+ *             - Replace `removeOldSchemaData[key]` with the new `const`
+ *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...removeOldSchemaData, ...nestedData, ...pick(data, keysToKeep) }`
+ * - If the new and old schema types are array and the `data` is an array then:
+ *   - If the type of the old and new schema `items` are a non-array objects:
+ *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
+ *     - If the `type`s of both items are the same (or the old does not have a type):
+ *       - If the type is "object", then:
+ *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
+ *       - Otherwise, just return the `data` removing any values after `maxItems` if it is set
+ *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
  * - Otherwise return `undefined`
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -123,13 +139,24 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = get(newKeyedSchema, ["default"]);
-          const newOptionConst = get(newKeyedSchema, ["const"]);
-          if (
-            (newOptionDefault && newOptionDefault !== formValue) ||
-            (newOptionConst && newOptionConst !== formValue)
-          ) {
-            removeOldSchemaData[key] = newOptionDefault;
+          const newOptionDefault = get(newKeyedSchema, "default", NO_VALUE);
+          const oldOptionDefault = get(oldKeyedSchema, "default", NO_VALUE);
+          if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
+            if (oldOptionDefault === formValue) {
+              // If the old default matches the formValue, we'll update the new value to match the new default
+              removeOldSchemaData[key] = newOptionDefault;
+            } else if (get(newKeyedSchema, "readOnly") === true) {
+              // If the new schema has the default set to read-only, treat it like a const and remove the value
+              removeOldSchemaData[key] = undefined;
+            }
+          }
+
+          const newOptionConst = get(newKeyedSchema, "const", NO_VALUE);
+          const oldOptionConst = get(oldKeyedSchema, "const", NO_VALUE);
+          if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
+            // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
+            removeOldSchemaData[key] =
+              oldOptionConst === formValue ? newOptionConst : undefined;
           }
         }
       }
@@ -204,10 +231,11 @@ export default function sanitizeDataForNewSchema<
       }
     } else if (
       typeof oldSchemaItems === "boolean" &&
-      typeof newSchemaItems === "boolean"
+      typeof newSchemaItems === "boolean" &&
+      oldSchemaItems === newSchemaItems
     ) {
-      // If they are both booleans and have the same value just return the data as is otherwise return undefined
-      newFormData = oldSchemaItems === newSchemaItems ? data : undefined;
+      // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined
+      newFormData = data;
     }
     // Also probably want to deal with `prefixItems` as tuples with the latest 2020 draft
   }

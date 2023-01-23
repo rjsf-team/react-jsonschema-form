@@ -65,6 +65,136 @@ export default function sanitizeDataForNewSchemaTest(
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, oneOfData)
       ).toEqual(expected);
     });
+    it("returns input formData when the new schema and old schema match on a default", () => {
+      const oldSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "myData",
+          },
+          anotherField: {
+            type: "boolean",
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "myData",
+          },
+          anotherField: {
+            type: "string",
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
+          notInEitherSchema: "keep",
+          defaultField: "myData",
+          anotherField: true,
+        })
+      ).toEqual({ notInEitherSchema: "keep", defaultField: "myData" });
+    });
+    it("returns new schema const in formData when the old schema default matches in the formData", () => {
+      const oldSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "myData",
+          },
+          anotherField: {
+            type: "boolean",
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "yourData",
+          },
+          anotherField: {
+            type: "string",
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
+          defaultField: "myData",
+          anotherField: true,
+        })
+      ).toEqual({ defaultField: "yourData" });
+    });
+    it("returns input formData when the old schema default does not match in the formData", () => {
+      const oldSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "myData",
+          },
+          anotherField: {
+            type: "boolean",
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "yourData",
+          },
+          anotherField: {
+            type: "string",
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
+          defaultField: "fooData",
+          anotherField: true,
+        })
+      ).toEqual({ defaultField: "fooData" });
+    });
+    it("returns empty formData when the old schema default does not match in the formData, and new schema default is readOnly", () => {
+      const oldSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "myData",
+          },
+          anotherField: {
+            type: "boolean",
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          defaultField: {
+            type: "string",
+            default: "yourData",
+            readOnly: true,
+          },
+          anotherField: {
+            type: "string",
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
+          defaultField: "fooData",
+          anotherField: true,
+        })
+      ).toEqual({});
+    });
     it("returns input formData when the new schema and old schema match on a const", () => {
       const oldSchema: RJSFSchema = {
         type: "object",
@@ -98,7 +228,7 @@ export default function sanitizeDataForNewSchemaTest(
         })
       ).toEqual({ notInEitherSchema: "keep", constField: "myData" });
     });
-    it("returns empty formData when the new schema and old schema don't match on a const", () => {
+    it("returns new schema const in formData when the old schema const matches in the formData", () => {
       const oldSchema: RJSFSchema = {
         type: "object",
         properties: {
@@ -126,6 +256,38 @@ export default function sanitizeDataForNewSchemaTest(
       expect(
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           constField: "myData",
+          anotherField: true,
+        })
+      ).toEqual({ constField: "yourData" });
+    });
+    it("returns empty formData when the old schema const does not match in the formData", () => {
+      const oldSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          constField: {
+            type: "string",
+            const: "myData",
+          },
+          anotherField: {
+            type: "boolean",
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: "object",
+        properties: {
+          constField: {
+            type: "string",
+            const: "yourData",
+          },
+          anotherField: {
+            type: "string",
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
+          constField: "fooData",
           anotherField: true,
         })
       ).toEqual({});
