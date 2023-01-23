@@ -43,7 +43,13 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled } = options;
 
+  multiple = typeof multiple === "undefined" ? false : !!multiple;
+
   const emptyValue = multiple ? [] : "";
+  const isEmpty =
+    typeof value === "undefined" ||
+    (multiple && value.length < 1) ||
+    (!multiple && value === emptyValue);
 
   const _onChange = ({
     target: { value },
@@ -61,7 +67,7 @@ export default function SelectWidget<
       id={id}
       name={id}
       label={label || schema.title}
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={isEmpty ? emptyValue : value}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -74,11 +80,11 @@ export default function SelectWidget<
       select // Apply this and the following props after the potential overrides defined in textFieldProps
       InputLabelProps={{
         ...textFieldProps.InputLabelProps,
-        shrink: true,
+        shrink: !isEmpty,
       }}
       SelectProps={{
         ...textFieldProps.SelectProps,
-        multiple: typeof multiple === "undefined" ? false : multiple,
+        multiple,
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
