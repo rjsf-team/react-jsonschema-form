@@ -121,7 +121,8 @@ export default function sanitizeDataForNewSchema<
           }
         } else {
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
-          // with the new default or const
+          // with the new default or const. This allows the case where two schemas differ that only by the default/const
+          // value to be properly selected
           const newOptionDefault = get(newKeyedSchema, ["default"]);
           const newOptionConst = get(newKeyedSchema, ["const"]);
           if (

@@ -896,7 +896,7 @@ export default function getDefaultFormStateTest(
           },
         };
         // Mock errors so that getMatchingOption works as expected
-        testValidator.setReturnValues({ isValid: [false, true] });
+        testValidator.setReturnValues({ isValid: [false, false, false, true] });
         expect(
           getDefaultFormState(testValidator, schema, { test: { b: "b" } })
         ).toEqual({
@@ -996,7 +996,7 @@ export default function getDefaultFormStateTest(
           },
         };
         // Mock errors so that getMatchingOption works as expected
-        testValidator.setReturnValues({ isValid: [false, true] });
+        testValidator.setReturnValues({ isValid: [false, false, false, true] });
         expect(
           getDefaultFormState(testValidator, schema, { test: { b: "b" } })
         ).toEqual({

@@ -98,7 +98,7 @@ export default function sanitizeDataForNewSchemaTest(
         })
       ).toEqual({ notInEitherSchema: "keep", constField: "myData" });
     });
-    it("returns input formData when the new schema and old schema don't match on a const", () => {
+    it("returns empty formData when the new schema and old schema don't match on a const", () => {
       const oldSchema: RJSFSchema = {
         type: "object",
         properties: {

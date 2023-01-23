@@ -17,7 +17,7 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.0-beta-18
 
-# @rjsf/core
+## @rjsf/core
 - Updated `MultiSchemaField` to utilize the new `getClosestMatchingOption()` and `sanitizeDataForNewSchema()` functions, fixing the following issues:
   - [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236)
   - [#2978](https://github.com/rjsf-team/react-jsonschema-form/issues/2978)
@@ -30,7 +30,13 @@ should change the heading of the (upcoming) version to include a major version b
   - And probably others
 - Updated `ObjectField` to deal with `additionalProperties` with `oneOf`/`anyOf`, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
 
-# @rjsf/utils
+## @rjsf/material-ui
+- Fix shrinking of `SelectWidget` label only if value is not empty, fixing [#3369](https://github.com/rjsf-team/react-jsonschema-form/issues/3369)
+
+## @rjsf/mui
+- Fix shrinking of `SelectWidget` label only if value is not empty, fixing [#3369](https://github.com/rjsf-team/react-jsonschema-form/issues/3369)
+
+## @rjsf/utils
 - Added new `getClosestMatchingOption()`, `getFirstMatchingOption()` and `sanitizeDataForNewSchema()` schema-based utility functions
   - Deprecated `getMatchingOption()` and updated all calls to it in other utility functions to use `getFirstMatchingOption()`
 - Updated `stubExistingAdditionalProperties()` to deal with `additionalProperties` with `oneOf`/`anyOf`, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
