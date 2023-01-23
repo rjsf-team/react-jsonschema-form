@@ -148,11 +148,11 @@ export default function sanitizeDataForNewSchema<
   ) {
     let oldSchemaItems = get(oldSchema, "items");
     let newSchemaItems = get(newSchema, "items");
-    // If any of the array types `items` are either booleans or arrays then we'll just drop the data
+    // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
     // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
     if (
-      typeof oldSchemaItems !== "boolean" &&
-      typeof newSchemaItems !== "boolean" &&
+      typeof oldSchemaItems === "object" &&
+      typeof newSchemaItems === "object" &&
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
@@ -202,6 +202,12 @@ export default function sanitizeDataForNewSchema<
               : data;
         }
       }
+    } else if (
+      typeof oldSchemaItems === "boolean" &&
+      typeof newSchemaItems === "boolean"
+    ) {
+      // If they are both booleans and have the same value just return the data as is otherwise return undefined
+      newFormData = oldSchemaItems === newSchemaItems ? data : undefined;
     }
     // Also probably want to deal with `prefixItems` as tuples with the latest 2020 draft
   }

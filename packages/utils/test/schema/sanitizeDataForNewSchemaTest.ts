@@ -130,7 +130,20 @@ export default function sanitizeDataForNewSchemaTest(
         })
       ).toEqual({});
     });
-    it("returns undefined when two arrays have boolean items", () => {
+    it("returns data when two arrays have same boolean items", () => {
+      const oldSchema: RJSFSchema = {
+        type: "array",
+        items: true,
+      };
+      const newSchema: RJSFSchema = {
+        type: "array",
+        items: true,
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [1])
+      ).toEqual([1]);
+    });
+    it("returns undefined when two arrays have differing boolean items", () => {
       const oldSchema: RJSFSchema = {
         type: "array",
         items: false,
@@ -143,7 +156,7 @@ export default function sanitizeDataForNewSchemaTest(
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [1])
       ).toBeUndefined();
     });
-    it("returns undefined when one arrays ha boolean items", () => {
+    it("returns undefined when one array has boolean items", () => {
       const oldSchema: RJSFSchema = {
         type: "array",
         items: false,
