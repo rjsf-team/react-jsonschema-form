@@ -156,7 +156,7 @@ function SchemaFieldRender<
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = React.useCallback(
-    (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
       return onChange(formData, newErrorSchema, theId);
     },

@@ -206,7 +206,7 @@ export interface FormState<
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
   schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
-  formData: T;
+  formData?: T;
   /** Flag indicating whether the form is in edit mode, true when `formData` is passed to the form, otherwise false */
   edit: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
@@ -405,7 +405,7 @@ export default class Form<
    * @param altSchemaUtils - The alternate schemaUtils to use for validation
    */
   validate(
-    formData: T,
+    formData: T | undefined,
     schema = this.props.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>
   ): ValidationData<T> {
@@ -455,7 +455,10 @@ export default class Form<
    * @param formData - The data for the `Form`
    * @param fields - The fields to keep while filtering
    */
-  getUsedFormData = (formData: T, fields: string[][]): T => {
+  getUsedFormData = (
+    formData: T | undefined,
+    fields: string[][]
+  ): T | undefined => {
     // For the case of a single input form
     if (fields.length === 0 && typeof formData !== "object") {
       return formData;
@@ -476,9 +479,9 @@ export default class Form<
   /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
    *
    * @param pathSchema - The `PathSchema` object for the form
-   * @param formData - The form data to use while checking for empty objects/arrays
+   * @param [formData] - The form data to use while checking for empty objects/arrays
    */
-  getFieldNames = (pathSchema: PathSchema<T>, formData: T): string[][] => {
+  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
     const getAllPaths = (
       _obj: GenericObjectType,
       acc: string[][] = [],
@@ -524,7 +527,11 @@ export default class Form<
    * @param newErrorSchema - The new `ErrorSchema` based on the field change
    * @param id - The id of the field that caused the change
    */
-  onChange = (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+  onChange = (
+    formData: T | undefined,
+    newErrorSchema?: ErrorSchema<T>,
+    id?: string
+  ) => {
     const {
       extraErrors,
       omitExtraData,

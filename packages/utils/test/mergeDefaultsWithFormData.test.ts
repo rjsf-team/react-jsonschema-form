@@ -87,6 +87,6 @@ describe("mergeDefaultsWithFormData()", () => {
     const obj2 = {
       a: file,
     };
-    expect(mergeDefaultsWithFormData(obj1, obj2).a).toBeInstanceOf(File);
+    expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
   });
 });

@@ -314,11 +314,15 @@ export interface FieldProps<
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The data for this field */
-  formData: T;
+  formData?: T;
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated form data and an optional `ErrorSchema` */
-  onChange: (newFormData: T, es?: ErrorSchema<T>, id?: string) => any;
+  onChange: (
+    newFormData: T | undefined,
+    es?: ErrorSchema<T>,
+    id?: string
+  ) => any;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -401,7 +405,7 @@ export type FieldTemplateProps<
   /** The `formContext` object that was passed to `Form` */
   formContext?: F;
   /** The formData for this field */
-  formData: T;
+  formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps["onChange"];
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
@@ -567,7 +571,7 @@ export type ArrayFieldTemplateProps<
   /** The `formContext` object that was passed to Form */
   formContext?: F;
   /** The formData for this array */
-  formData: T;
+  formData?: T;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
   /** The `registry` object */
@@ -617,7 +621,7 @@ export type ObjectFieldTemplateProps<
   /** An object containing the id for this object & ids for its properties */
   idSchema: IdSchema<T>;
   /** The form data for the object */
-  formData: T;
+  formData?: T;
   /** The `formContext` object that was passed to Form */
   formContext?: F;
   /** The `registry` object */
@@ -869,7 +873,7 @@ export type CustomValidator<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 > = (
-  formData: T,
+  formData: T | undefined,
   errors: FormValidation<T>,
   uiSchema?: UiSchema<T, S, F>
 ) => FormValidation<T>;
@@ -937,7 +941,7 @@ export interface ValidatorType<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T, rootSchema: S): boolean;
+  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
@@ -1032,7 +1036,7 @@ export interface SchemaUtilsType<
    * @returns - The index of the matched option or 0 if none is available
    * @deprecated
    */
-  getMatchingOption(formData: T, options: S[]): number;
+  getMatchingOption(formData: T | undefined, options: S[]): number;
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired

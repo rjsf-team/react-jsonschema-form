@@ -16,7 +16,7 @@ export default function getTestValidator<T = any>(
   const validator = customizeValidator<T>(options);
   return {
     validateFormData(
-      formData: T,
+      formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
       transformErrors?: ErrorTransformer
@@ -34,7 +34,11 @@ export default function getTestValidator<T = any>(
     ): RJSFValidationError[] {
       return validator.toErrorList(errorSchema, fieldPath);
     },
-    isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema): boolean {
+    isValid(
+      schema: RJSFSchema,
+      formData: T | undefined,
+      rootSchema: RJSFSchema
+    ): boolean {
       return validator.isValid(schema, formData, rootSchema);
     },
     rawValidation<Result = any>(

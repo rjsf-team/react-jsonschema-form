@@ -350,7 +350,7 @@ export default class AJV6Validator<
    * @param formData- - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: RJSFSchema, formData: T, rootSchema: RJSFSchema) {
+  isValid(schema: RJSFSchema, formData: T | undefined, rootSchema: RJSFSchema) {
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.
       // then rewrite the schema ref's to point to the rootSchema

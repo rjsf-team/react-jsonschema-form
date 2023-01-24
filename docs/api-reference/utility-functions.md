@@ -61,7 +61,7 @@ The UI for the field can expand if it has additional properties, is not forced a
 #### Parameters
 - schema: S - The schema for the field that is being checked
 - [uiSchema={}]: UiSchema<T, S, F> - The uiSchema for the field
-- [formData]: T - The formData for the field
+- [formData]: T | undefined - The formData for the field
 
 #### Returns
 - boolean: True if the schema element has additionalProperties, is expandable, and not at the maxProperties limit
@@ -154,7 +154,7 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 #### Parameters
 - schema: S - The schema for the field provided by the widget
-- [defaultType]: string - The default type, if any, for the field provided by the widget
+- [defaultType]: string | undefined - The default type, if any, for the field provided by the widget
 - [options={}]: UIOptionsType<T, S, F> - The UI Options for the field provided by the widget
 - [autoDefaultStepAny=true]: boolean - Determines whether to auto-default step=any when the type is number and no step
 #### Returns
@@ -311,11 +311,11 @@ When merging defaults and form data, we want to merge in this specific way:
 - scalars are overwritten/set by form data
 
 #### Parameters
-- defaults: T - The defaults to merge
-- formData: T - The form data into which the defaults will be merged
+- [defaults]: T | undefined - The defaults to merge
+- [formData]: T | undefined - The form data into which the defaults will be merged
 
 #### Returns
-- T: The resulting merged form data with defaults
+- T | undefined: The resulting merged form data with defaults
 
 ### mergeObjects()
 Recursively merge deeply nested objects.
@@ -409,7 +409,7 @@ If the value is an empty string, then the `emptyValue` from the `options` is ret
 #### Parameters
 - schema: S - The schema to used to determine the value's true type
 - [value]: any - The value to convert
-- [options]: UIOptionsType<T, S, F> - The UIOptionsType from which to potentially extract the `emptyValue`
+- [options]: UIOptionsType<T, S, F> | undefined - The UIOptionsType from which to potentially extract the `emptyValue`
 
 #### Returns
 - string | boolean | number | string[] | boolean[] | number[] | undefined: The `value` converted to the proper type
@@ -498,8 +498,8 @@ Returns the superset of `formData` that includes the given set updated to includ
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which the default state is desired
-- [formData]: T - The current formData, if any, onto which to provide any missing defaults
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
+- [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
 
 #### Returns
@@ -512,7 +512,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if the label should be displayed or false if it should not
@@ -526,7 +526,7 @@ The closest match is determined using the number of matching properties, and mor
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
-- formData: T | undefined - The current formData, if any, used to figure out a match
+- [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
 
@@ -539,7 +539,7 @@ Always returns the first option if there is nothing that matches.
 
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- formData: T | undefined - The current formData, if any, used to figure out a match
+- [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 
@@ -552,7 +552,7 @@ Deprecated, use `getFirstMatchingOption()` instead.
 
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- formData: T | undefined - The current formData, if any, used to figure out a match
+- [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 
@@ -566,7 +566,7 @@ Checks to see if the `schema` and `uiSchema` combination represents an array of 
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for array of files flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to check the widget
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if schema/uiSchema contains an array of files, otherwise false
@@ -577,7 +577,7 @@ Checks to see if the `schema` combination represents a multi-select
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if schema contains a multi-select, otherwise false
@@ -588,7 +588,7 @@ Checks to see if the `schema` combination represents a select
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
 #### Returns
 - boolean: True if schema contains a select, otherwise false
@@ -600,7 +600,7 @@ If no `additionalErrorSchema` is passed, then `validationData` is returned.
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
 - validationData: ValidationData<T> - The current `ValidationData` into which to merge the additional errors
-- [additionalErrorSchema]: ErrorSchema<T> - The additional set of errors in an `ErrorSchema`
+- [additionalErrorSchema]: ErrorSchema<T> | undefined - The additional set of errors in an `ErrorSchema`
 
 #### Returns
 - ValidationData<T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
@@ -614,7 +614,7 @@ potentially recursive resolution.
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
-- [rawFormData]: T - The current formData, if any, to assist retrieving a schema
+- [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
 
 #### Returns
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
@@ -628,8 +628,8 @@ Also, any properties in the old schema that are non-existent in the new schema a
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root JSON schema of the entire form
-- [newSchema]: S - The new schema for which the data is being sanitized
-- [oldSchema]: S - The old schema from which the data originated
+- [newSchema]: S | undefined - The new schema for which the data is being sanitized
+- [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
 
 #### Returns
@@ -642,8 +642,8 @@ Generates an `IdSchema` object for the `schema`, recursively
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `IdSchema` is desired
 - [id]: string | null - The base id for the schema
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
-- [formData]: T - The current formData, if any, to assist retrieving a schema
+- [rootSchema]: S | undefined- The root schema, used to primarily to look up `$ref`s
+- [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
 - [idPrefix='root']: string - The prefix to use for the id
 - [idSeparator='_']: string - The separator to use for the path segments in the id
 
@@ -657,8 +657,8 @@ Generates an `PathSchema` object for the `schema`, recursively
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `PathSchema` is desired
 - [name='']: string - The base name for the schema
-- [rootSchema]: S - The root schema, used to primarily to look up `$ref`s
-- [formData]: T - The current formData, if any, to assist retrieving a schema
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
 
 #### Returns
 - PathSchema<T> - The `PathSchema` object for the `schema`
@@ -684,7 +684,7 @@ Use this class to add, replace or clear errors in an error schema by using eithe
 Once you are done building the `ErrorSchema`, you can get the result and/or reset all the errors back to an initial set and start again.
 
 #### Parameters
-- [initialSchema]: ErrorSchema<T> - The optional set of initial errors, that will be cloned into the class
+- [initialSchema]: ErrorSchema<T> | undefined - The optional set of initial errors, that will be cloned into the class
 
 #### Returns
 - ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
@@ -709,7 +709,7 @@ const errorSchema: ErrorSchema = builder.ErrorSchema;
 Resets all errors in the `ErrorSchemaBuilder` back to the `initialSchema` if provided, otherwise an empty set.
 
 #### Parameters
-- [initialSchema]: ErrorSchema<T> - The optional set of initial errors, that will be cloned into the class
+- [initialSchema]: ErrorSchema<T> | undefined - The optional set of initial errors, that will be cloned into the class
 
 #### Returns
 - ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
@@ -720,7 +720,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 
 #### Parameters
 - errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
-- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 - ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
@@ -731,7 +731,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 
 #### Parameters
 - errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
-- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 - ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
@@ -741,7 +741,7 @@ Clears the error(s) in the `ErrorSchema` at either the root level or the locatio
 For more information about how to specify the path see the [eslint lodash plugin docs](https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md).
 
 #### Parameters
-- [pathOfError]: string | string[] - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 - ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class

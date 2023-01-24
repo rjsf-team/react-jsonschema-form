@@ -424,7 +424,7 @@ export default class AJV8Validator<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T, rootSchema: S) {
+  isValid(schema: S, formData: T | undefined, rootSchema: S) {
     const rootSchemaId = rootSchema["$id"] ?? ROOT_SCHEMA_PREFIX;
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.

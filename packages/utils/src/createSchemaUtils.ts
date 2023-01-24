@@ -168,7 +168,7 @@ class SchemaUtils<
    * @returns - The index of the matched option or 0 if none is available
    * @deprecated
    */
-  getMatchingOption(formData: T, options: S[]) {
+  getMatchingOption(formData: T | undefined, options: S[]) {
     return getMatchingOption<T, S, F>(
       this.validator,
       formData,
@@ -238,7 +238,7 @@ class SchemaUtils<
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, rawFormData: T) {
+  retrieveSchema(schema: S, rawFormData?: T) {
     return retrieveSchema<T, S, F>(
       this.validator,
       schema,
