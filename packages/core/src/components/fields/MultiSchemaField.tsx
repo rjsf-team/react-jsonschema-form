@@ -81,7 +81,11 @@ class AnyOfField<
    * @param options - The list of options to choose from
    * @return - The index of the `option` that best matches the `formData`
    */
-  getMatchingOption(selectedOption: number, formData: T, options: S[]) {
+  getMatchingOption(
+    selectedOption: number,
+    formData: T | undefined,
+    options: S[]
+  ) {
     const { schemaUtils } = this.props.registry;
 
     const option = schemaUtils.getClosestMatchingOption(

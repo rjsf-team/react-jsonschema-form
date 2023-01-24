@@ -32,14 +32,14 @@ import getFirstMatchingOption from "./getFirstMatchingOption";
  * @param validator - An implementation of the `ValidatorType<T, S>` interface that is used to detect valid schema conditions
  * @param schema - The schema for which resolving a condition is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param formData - The current formData to assist retrieving a schema
+ * @param [formData] - The current formData to assist retrieving a schema
  * @returns - A schema with the appropriate condition resolved
  */
 export function resolveCondition<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, formData: T) {
+>(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, formData?: T) {
   const {
     if: expression,
     then,
