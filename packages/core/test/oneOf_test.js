@@ -659,10 +659,75 @@ describe("oneOf", () => {
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
-        formData: { ipsum: {} },
+        formData: { ipsum: {}, lorem: undefined },
       },
       "root__oneof_select"
     );
+  });
+
+  it("should select oneOf in additionalProperties with oneOf", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        testProperty: {
+          description: "Any key name, fixed set of possible values",
+          type: "object",
+          minProperties: 1,
+          additionalProperties: {
+            oneOf: [
+              {
+                title: "my choice 1",
+                type: "object",
+                properties: {
+                  prop1: {
+                    description: "prop1 description",
+                    type: "string",
+                  },
+                },
+                required: ["prop1"],
+                additionalProperties: false,
+              },
+              {
+                title: "my choice 2",
+                type: "object",
+                properties: {
+                  prop2: {
+                    description: "prop2 description",
+                    type: "string",
+                  },
+                },
+                required: ["prop2"],
+                additionalProperties: false,
+              },
+            ],
+          },
+        },
+      },
+      required: ["testProperty"],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { testProperty: { newKey: { prop2: "foo" } } },
+    });
+
+    const $select = node.querySelector(
+      "select#root_testProperty_newKey__oneof_select"
+    );
+
+    expect($select.value).eql("1");
+
+    Simulate.change($select, {
+      target: { value: $select.options[0].value },
+    });
+
+    expect($select.value).eql("0");
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        testProperty: { newKey: { prop1: undefined, prop2: undefined } },
+      },
+    });
   });
 
   describe("Arrays", () => {
@@ -907,6 +972,139 @@ describe("oneOf", () => {
       "select#root_components_0_fn_transformer_id"
     );
     expect(transformerId.value).eql("to_absolute");
+  });
+
+  it("should infer the value of an array with nested oneOfs properly", () => {
+    // From https://github.com/rjsf-team/react-jsonschema-form/issues/2944
+    const schema = {
+      type: "array",
+      items: {
+        oneOf: [
+          {
+            properties: {
+              lorem: {
+                type: "string",
+              },
+            },
+            required: ["lorem"],
+          },
+          {
+            properties: {
+              ipsum: {
+                oneOf: [
+                  {
+                    properties: {
+                      day: {
+                        type: "string",
+                      },
+                    },
+                  },
+                  {
+                    properties: {
+                      night: {
+                        type: "string",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            required: ["ipsum"],
+          },
+        ],
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      formData: [{ ipsum: { night: "nicht" } }],
+    });
+    const outerOneOf = node.querySelector("select#root_0__oneof_select");
+    expect(outerOneOf.value).eql("1");
+    const innerOneOf = node.querySelector("select#root__oneof_select");
+    expect(innerOneOf.value).eql("1");
+  });
+  it("should update formData to remove unnecessary data when one of option changes", () => {
+    const schema = {
+      title: "UFO Sightings",
+      type: "object",
+      required: ["craftTypes"],
+      properties: {
+        craftTypes: {
+          type: "array",
+          minItems: 1,
+          uniqueItems: true,
+          title: "Type of UFO",
+          items: {
+            oneOf: [
+              {
+                title: "Cigar Shaped",
+                type: "object",
+                required: ["daysOfYear"],
+                properties: {
+                  name: {
+                    type: "string",
+                    title: "What do you call it?",
+                  },
+                  daysOfYear: {
+                    type: "array",
+                    minItems: 1,
+                    uniqueItems: true,
+                    title: "What days of the year did you see it?",
+                    items: {
+                      type: "number",
+                      title: "Day",
+                    },
+                  },
+                },
+              },
+              {
+                title: "Round",
+                type: "object",
+                required: ["keywords"],
+                properties: {
+                  title: {
+                    type: "string",
+                    title: "What should we call it?",
+                  },
+                  keywords: {
+                    type: "array",
+                    minItems: 1,
+                    uniqueItems: true,
+                    title: "List of keywords related to the sighting",
+                    items: {
+                      type: "string",
+                      title: "Keyword",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+    });
+
+    // Added an empty array initially
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { craftTypes: [{ daysOfYear: [undefined] }] },
+    });
+
+    const select = node.querySelector("select#root_craftTypes_0__oneof_select");
+
+    Simulate.change(select, {
+      target: { value: select.options[1].value },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        craftTypes: [
+          { keywords: [undefined], title: undefined, daysOfYear: undefined },
+        ],
+      },
+    });
   });
 
   describe("Custom Field", function () {

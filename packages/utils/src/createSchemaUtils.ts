@@ -14,12 +14,15 @@ import {
 import {
   getDefaultFormState,
   getDisplayLabel,
+  getClosestMatchingOption,
+  getFirstMatchingOption,
   getMatchingOption,
   isFilesArray,
   isMultiSelect,
   isSelect,
   mergeValidationData,
   retrieveSchema,
+  sanitizeDataForNewSchema,
   toIdSchema,
   toPathSchema,
 } from "./schema";
@@ -116,11 +119,54 @@ class SchemaUtils<
     );
   }
 
+  /** Determines which of the given `options` provided most closely matches the `formData`.
+   * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+   *
+   * The closest match is determined using the number of matching properties, and more heavily favors options with
+   * matching readOnly, default, or const values.
+   *
+   * @param formData - The form data associated with the schema
+   * @param options - The list of options that can be selected from
+   * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
+   * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+   */
+  getClosestMatchingOption(
+    formData: T | undefined,
+    options: S[],
+    selectedOption?: number
+  ): number {
+    return getClosestMatchingOption<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      formData,
+      options,
+      selectedOption
+    );
+  }
+
+  /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
+   * Always returns the first option if there is nothing that matches.
+   *
+   * @param formData - The current formData, if any, used to figure out a match
+   * @param options - The list of options to find a matching options from
+   * @returns - The firstindex of the matched option or 0 if none is available
+   */
+  getFirstMatchingOption(formData: T | undefined, options: S[]): number {
+    return getFirstMatchingOption<T, S, F>(
+      this.validator,
+      formData,
+      options,
+      this.rootSchema
+    );
+  }
+
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
+   * Deprecated, use `getFirstMatchingOption()` instead.
    *
    * @param formData - The current formData, if any, onto which to provide any missing defaults
    * @param options - The list of options to find a matching options from
    * @returns - The index of the matched option or 0 if none is available
+   * @deprecated
    */
   getMatchingOption(formData: T, options: S[]) {
     return getMatchingOption<T, S, F>(
@@ -198,6 +244,27 @@ class SchemaUtils<
       schema,
       this.rootSchema,
       rawFormData
+    );
+  }
+
+  /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
+   * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
+   * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
+   * old schemas that are non-existent in the new schema are set to `undefined`.
+   *
+   * @param [newSchema] - The new schema for which the data is being sanitized
+   * @param [oldSchema] - The old schema from which the data originated
+   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @returns - The new form data, with all the fields uniquely associated with the old schema set
+   *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+   */
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
+    return sanitizeDataForNewSchema(
+      this.validator,
+      this.rootSchema,
+      newSchema,
+      oldSchema,
+      data
     );
   }
 

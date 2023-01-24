@@ -99,22 +99,22 @@ Return a consistent `id` for the field description element.
 Removes the `value` from the currently `selected` list of values.
 
 #### Parameters
-- value: EnumOptionsType<S>["value"] - The value that should be selected
-- selected: EnumOptionsType<S>["value"][] - The current list of selected values
+- value: EnumOptionsType\<S>["value"] - The value that should be selected
+- selected: EnumOptionsType\<S>["value"][] - The current list of selected values
 
 #### Returns
-- EnumOptionsType<S>["value"][]: The updated `selected` list with the `value` removed from it
+- EnumOptionsType\<S>["value"][]: The updated `selected` list with the `value` removed from it
 
 ### enumOptionsSelectValue\<S extends StrictRJSFSchema = RJSFSchema>()
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
 
 #### Parameters
-- value: EnumOptionsType<S>["value"] - The value that should be selected
-- selected: EnumOptionsType<S>["value"][] - The current list of selected values
-- allEnumOptions: EnumOptionsType<S>[] - The list of all the known enumOptions
+- value: EnumOptionsType\<S>["value"] - The value that should be selected
+- selected: EnumOptionsType\<S>["value"][] - The current list of selected values
+- allEnumOptions: EnumOptionsType\<S>[] - The list of all the known enumOptions
 
 #### Returns
-- EnumOptionsType<S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
+- EnumOptionsType\<S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
 
 ### errorId<T = any>()
 Return a consistent `id` for the field error element.
@@ -344,7 +344,7 @@ Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
 
 #### Parameters
 - id: string - The id of the parent component for the option
-- option: EnumOptionsType<S> - The option for which the id is desired
+- option: EnumOptionsType\<S> - The option for which the id is desired
 
 #### Returns
 - string: An id for the option based on the parent `id`
@@ -517,8 +517,38 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 #### Returns
 - boolean: True if the label should be displayed or false if it should not
 
+### getClosestMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+Determines which of the given `options` provided most closely matches the `formData`.
+Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+
+The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.
+
+#### Parameters
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- rootSchema: S - The root schema, used to primarily to look up `$ref`s
+- formData: T | undefined - The current formData, if any, used to figure out a match
+- options: S[] - The list of options to find a matching options from
+- [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
+
+#### Returns
+- number: The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+
+### getFirstMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
+Always returns the first option if there is nothing that matches.
+
+#### Parameters
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- formData: T | undefined - The current formData, if any, used to figure out a match
+- options: S[] - The list of options to find a matching options from
+- rootSchema: S - The root schema, used to primarily to look up `$ref`s
+
+#### Returns
+- number: The index of the first matched option or 0 if none is available
+
 ### getMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
+Deprecated, use `getFirstMatchingOption()` instead.
 
 #### Parameters
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -588,6 +618,22 @@ potentially recursive resolution.
 
 #### Returns
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
+
+### sanitizeDataForNewSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.
+If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
+Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
+Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
+
+#### Parameters
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- rootSchema: S - The root JSON schema of the entire form
+- [newSchema]: S - The new schema for which the data is being sanitized
+- [oldSchema]: S - The old schema from which the data originated
+- [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+
+#### Returns
+- T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
 
 ### toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Generates an `IdSchema` object for the `schema`, recursively

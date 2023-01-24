@@ -1,16 +1,17 @@
 import React, { Component } from "react";
+import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
+import omit from "lodash/omit";
 import {
   getUiOptions,
   getWidget,
-  guessType,
   deepEquals,
   FieldProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  ERRORS_KEY,
 } from "@rjsf/utils";
-import has from "lodash/has";
-import unset from "lodash/unset";
 
 /** Type used for the state of the `AnyOfField` component */
 type AnyOfFieldState = {
@@ -83,8 +84,12 @@ class AnyOfField<
   getMatchingOption(selectedOption: number, formData: T, options: S[]) {
     const { schemaUtils } = this.props.registry;
 
-    const option = schemaUtils.getMatchingOption(formData, options);
-    if (option !== 0) {
+    const option = schemaUtils.getClosestMatchingOption(
+      formData,
+      options,
+      selectedOption
+    );
+    if (option > 0) {
       return option;
     }
     // If the form data matches none of the options, use the currently selected
@@ -98,53 +103,40 @@ class AnyOfField<
    *
    * @param option -
    */
-  onOptionChange = (option: any) => {
-    const selectedOption = parseInt(option, 10);
+  onOptionChange = (option?: string) => {
+    const { selectedOption } = this.state;
     const { formData, onChange, options, registry } = this.props;
     const { schemaUtils } = registry;
-    const newOption = schemaUtils.retrieveSchema(
-      options[selectedOption],
+    const intOption = option !== undefined ? parseInt(option, 10) : -1;
+    if (intOption === selectedOption) {
+      return;
+    }
+    const newOption =
+      intOption >= 0
+        ? schemaUtils.retrieveSchema(options[intOption], formData)
+        : undefined;
+    const oldOption =
+      selectedOption >= 0
+        ? schemaUtils.retrieveSchema(options[selectedOption], formData)
+        : undefined;
+
+    let newFormData = schemaUtils.sanitizeDataForNewSchema(
+      newOption,
+      oldOption,
       formData
     );
-
-    // If the new option is of type object and the current data is an object,
-    // discard properties added using the old option.
-    let newFormData: T | undefined = undefined;
-    if (
-      guessType(formData) === "object" &&
-      (newOption.type === "object" || newOption.properties)
-    ) {
-      newFormData = Object.assign({}, formData);
-
-      const optionsToDiscard = options.slice();
-      optionsToDiscard.splice(selectedOption, 1);
-
-      // Discard any data added using other options
-      for (const option of optionsToDiscard) {
-        if (option.properties) {
-          for (const key in option.properties) {
-            if (has(newFormData, key)) {
-              unset(newFormData, key);
-            }
-          }
-        }
-      }
-    }
-    // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
-    // so that only the root objects themselves are created without adding undefined children properties
-    onChange(
-      schemaUtils.getDefaultFormState(
-        options[selectedOption],
+    if (newFormData && newOption) {
+      // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
+      // so that only the root objects themselves are created without adding undefined children properties
+      newFormData = schemaUtils.getDefaultFormState(
+        newOption,
         newFormData,
         "excludeObjectChildren"
-      ) as T,
-      undefined,
-      this.getFieldId()
-    );
+      ) as T;
+    }
+    onChange(newFormData, undefined, this.getFieldId());
 
-    this.setState({
-      selectedOption: parseInt(option, 10),
-    });
+    this.setState({ selectedOption: intOption });
   };
 
   getFieldId() {
@@ -158,19 +150,11 @@ class AnyOfField<
    */
   render() {
     const {
-      name,
       baseType,
       disabled = false,
-      readonly = false,
-      hideError = false,
       errorSchema = {},
-      formData,
       formContext,
-      idPrefix,
-      idSeparator,
-      idSchema,
       onBlur,
-      onChange,
       onFocus,
       options,
       registry,
@@ -180,8 +164,16 @@ class AnyOfField<
     const { widgets, fields } = registry;
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption } = this.state;
-    const { widget = "select", ...uiOptions } = getUiOptions<T, S, F>(uiSchema);
+    const {
+      widget = "select",
+      placeholder,
+      autofocus,
+      autocomplete,
+      ...uiOptions
+    } = getUiOptions<T, S, F>(uiSchema);
     const Widget = getWidget<T, S, F>({ type: "number" }, widget, widgets);
+    const rawErrors = get(errorSchema, ERRORS_KEY, []);
+    const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
 
     const option = options[selectedOption] || null;
     let optionSchema;
@@ -208,33 +200,22 @@ class AnyOfField<
             onChange={this.onOptionChange}
             onBlur={onBlur}
             onFocus={onFocus}
+            disabled={disabled || isEmpty(enumOptions)}
+            multiple={false}
+            rawErrors={rawErrors}
+            errorSchema={fieldErrorSchema}
             value={selectedOption}
-            options={{ enumOptions }}
+            options={{ enumOptions, ...uiOptions }}
             registry={registry}
             formContext={formContext}
-            {...uiOptions}
+            placeholder={placeholder}
+            autocomplete={autocomplete}
+            autofocus={autofocus}
             label=""
           />
         </div>
         {option !== null && (
-          <_SchemaField
-            name={name}
-            schema={optionSchema}
-            uiSchema={uiSchema}
-            errorSchema={errorSchema}
-            idSchema={idSchema}
-            idPrefix={idPrefix}
-            idSeparator={idSeparator}
-            formData={formData}
-            formContext={formContext}
-            onChange={onChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-            hideError={hideError}
-          />
+          <_SchemaField {...this.props} schema={optionSchema} />
         )}
       </div>
     );

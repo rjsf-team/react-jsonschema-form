@@ -56,6 +56,33 @@ describe("anyOf", () => {
     expect(node.querySelector("select").id).eql("root__anyof_select");
   });
 
+  it("should render a root select element with default value", () => {
+    const formData = { foo: "b" };
+    const schema = {
+      type: "object",
+      anyOf: [
+        {
+          title: "foo1",
+          properties: {
+            foo: { type: "string", enum: ["a", "b"], default: "a" },
+          },
+        },
+        {
+          title: "foo2",
+          properties: {
+            foo: { type: "string", enum: ["a", "b"], default: "b" },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData,
+    });
+    expect(node.querySelector("select").value).eql("1");
+  });
+
   it("should assign a default value and set defaults on option change", () => {
     const { node, onChange } = createFormComponent({
       schema: {
@@ -810,6 +837,71 @@ describe("anyOf", () => {
     let options = node.querySelectorAll("option");
     expect(options[0].firstChild.nodeValue).eql("Address");
     expect(options[1].firstChild.nodeValue).eql("Person");
+  });
+
+  it("should select anyOf in additionalProperties with anyOf", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        testProperty: {
+          description: "Any key name, fixed set of possible values",
+          type: "object",
+          minProperties: 1,
+          additionalProperties: {
+            anyOf: [
+              {
+                title: "my choice 1",
+                type: "object",
+                properties: {
+                  prop1: {
+                    description: "prop1 description",
+                    type: "string",
+                  },
+                },
+                required: ["prop1"],
+                additionalProperties: false,
+              },
+              {
+                title: "my choice 2",
+                type: "object",
+                properties: {
+                  prop2: {
+                    description: "prop2 description",
+                    type: "string",
+                  },
+                },
+                required: ["prop2"],
+                additionalProperties: false,
+              },
+            ],
+          },
+        },
+      },
+      required: ["testProperty"],
+    };
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: { testProperty: { newKey: { prop2: "foo" } } },
+    });
+
+    const $select = node.querySelector(
+      "select#root_testProperty_newKey__anyof_select"
+    );
+
+    expect($select.value).eql("1");
+
+    Simulate.change($select, {
+      target: { value: $select.options[0].value },
+    });
+
+    expect($select.value).eql("0");
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: {
+        testProperty: { newKey: { prop1: undefined, prop2: undefined } },
+      },
+    });
   });
 
   describe("Arrays", () => {

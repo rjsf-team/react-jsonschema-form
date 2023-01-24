@@ -1,10 +1,15 @@
-import { createSchemaUtils, getMatchingOption, RJSFSchema } from "../../src";
+import {
+  createSchemaUtils,
+  getFirstMatchingOption,
+  RJSFSchema,
+} from "../../src";
 import { TestValidatorType } from "./types";
 
-export default function getMatchingOptionTest(
+// Since getFirstMatchingOption() simply calls getMatchingOption() there is no need to have tests for that
+export default function getFirstMatchingOptionTest(
   testValidator: TestValidatorType
 ) {
-  describe("getMatchingOption()", () => {
+  describe("getFirstMatchingOption()", () => {
     let rootSchema: RJSFSchema;
     beforeAll(() => {
       rootSchema = {
@@ -39,7 +44,7 @@ export default function getMatchingOptionTest(
         },
       ];
       expect(
-        getMatchingOption(testValidator, undefined, options, rootSchema)
+        getFirstMatchingOption(testValidator, undefined, options, rootSchema)
       ).toEqual(0);
     });
     it("should infer correct anyOf schema with properties also having anyOf/allOf", () => {
@@ -62,7 +67,7 @@ export default function getMatchingOptionTest(
         },
       ];
       expect(
-        getMatchingOption(testValidator, null, options, rootSchema)
+        getFirstMatchingOption(testValidator, null, options, rootSchema)
       ).toEqual(0);
     });
     it("returns 0 if no options match", () => {
@@ -74,7 +79,7 @@ export default function getMatchingOptionTest(
         { type: "null" },
       ];
       expect(
-        getMatchingOption(testValidator, null, options, rootSchema)
+        getFirstMatchingOption(testValidator, null, options, rootSchema)
       ).toEqual(2);
     });
     it("should infer correct anyOf schema based on data if passing null and option 2 is {type: null}", () => {
@@ -86,7 +91,7 @@ export default function getMatchingOptionTest(
         { type: "null" },
       ];
       expect(
-        getMatchingOption(testValidator, null, options, rootSchema)
+        getFirstMatchingOption(testValidator, null, options, rootSchema)
       ).toEqual(2);
     });
     it("should infer correct anyOf schema based on data", () => {
@@ -112,6 +117,10 @@ export default function getMatchingOptionTest(
         },
       };
       const schemaUtils = createSchemaUtils(testValidator, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
+      // Mock again isValid fail the first non-nested value
+      testValidator.setReturnValues({ isValid: [false, true] });
+      // Test getMatchingOption call from `schemaUtils` to maintain coverage, delete when getMatchingOption is removed
       expect(schemaUtils.getMatchingOption(formData, options)).toEqual(1);
     });
   });
