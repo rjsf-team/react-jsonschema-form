@@ -15,7 +15,15 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.0.0-beta-18
+# 5.0.0-beta.19
+
+## @rjsf/core
+- Updated `MultiSchemaField` to cache options with refs in state and to output better labels for options without them when a title is available in either the `schema` or `uiSchema`
+
+## @rjsf/utils
+- Updated `toPathSchema()` to handle `oneOf`/`anyOf` by picking the closest option and generating the path for it, fixing [#2262](https://github.com/rjsf-team/react-jsonschema-form/issues/2262)
+
+# 5.0.0-beta.18
 
 ## @rjsf/core
 - Updated `MultiSchemaField` to utilize the new `getClosestMatchingOption()` and `sanitizeDataForNewSchema()` functions, fixing the following issues:
@@ -57,7 +65,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the documentation for `utility-functions` and the `5.x upgrade guide` to add the new utility functions and to document the deprecation of `getMatchingOption()`
   - Also updated `utility-functions`, making all optional parameters without a default (as denoted by the syntax `[<parameter>]: <type>`) to add ` | undefined` onto the type to make it clear it supports passing in undefined as a value.
 
-# 5.0.0-beta-17
+# 5.0.0-beta.17
 
 ## @rjsf/antd
 - Enable searching in the `SelectWidget` by the label that the user sees rather than by the value
@@ -128,7 +136,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `utility-functions` documentation to add the new `enumOptionsDeselectValue()` and `enumOptionsSelectValue()` functions and to describe the new id generator functions
 - Updated the `5.x migration guide` documentation to describe potential breaking `id` changes
 
-# 5.0.0-beta-16
+# 5.0.0-beta.16
 
 ## @rjsf/antd
 - Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
@@ -197,7 +205,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added new `typescript.md` documentation to `Advanced Customization` describing how to use custom generics as part of the fix for [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
 - Updated the documentation in `utilty-functions.md` to add the new `F` generic to all the places which needed them 
 
-# 5.0.0-beta-15
+# 5.0.0-beta.15
 
 ## @rjsf/core
 - Pass the `schema` along to the `ArrayFieldItemTemplate` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)

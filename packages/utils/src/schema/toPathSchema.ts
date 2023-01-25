@@ -3,10 +3,12 @@ import set from "lodash/set";
 
 import {
   ALL_OF_KEY,
+  ANY_OF_KEY,
   ADDITIONAL_PROPERTIES_KEY,
   DEPENDENCIES_KEY,
   ITEMS_KEY,
   NAME_KEY,
+  ONE_OF_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
@@ -18,6 +20,7 @@ import {
   StrictRJSFSchema,
   ValidatorType,
 } from "../types";
+import { getClosestMatchingOption } from "./index";
 import retrieveSchema from "./retrieveSchema";
 
 /** Generates an `PathSchema` object for the `schema`, recursively
@@ -59,6 +62,42 @@ export default function toPathSchema<
   const pathSchema: PathSchema = {
     [NAME_KEY]: name.replace(/^\./, ""),
   } as PathSchema;
+
+  if (ONE_OF_KEY in schema) {
+    const index = getClosestMatchingOption<T, S, F>(
+      validator,
+      rootSchema!,
+      formData,
+      schema.oneOf as S[],
+      0
+    );
+    const _schema: S = schema.oneOf![index] as S;
+    return toPathSchema<T, S, F>(
+      validator,
+      _schema,
+      name,
+      rootSchema,
+      formData
+    );
+  }
+
+  if (ANY_OF_KEY in schema) {
+    const index = getClosestMatchingOption<T, S, F>(
+      validator,
+      rootSchema!,
+      formData,
+      schema.anyOf as S[],
+      0
+    );
+    const _schema: S = schema.anyOf![index] as S;
+    return toPathSchema<T, S, F>(
+      validator,
+      _schema,
+      name,
+      rootSchema,
+      formData
+    );
+  }
 
   if (
     ADDITIONAL_PROPERTIES_KEY in schema &&

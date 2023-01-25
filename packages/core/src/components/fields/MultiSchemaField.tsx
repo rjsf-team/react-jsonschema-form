@@ -14,10 +14,15 @@ import {
 } from "@rjsf/utils";
 
 /** Type used for the state of the `AnyOfField` component */
-type AnyOfFieldState = {
+type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
   /** The currently selected option */
   selectedOption: number;
+  realOptions: S[];
 };
+
+/** The prefix used when a oneOf option does not have a title
+ */
+const UNKNOWN_OPTION_PREFIX = "Option";
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -28,7 +33,7 @@ class AnyOfField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> extends Component<FieldProps<T, S, F>, AnyOfFieldState> {
+> extends Component<FieldProps<T, S, F>, AnyOfFieldState<S>> {
   /** Constructs an `AnyOfField` with the given `props` to initialize the initially selected option in state
    *
    * @param props - The `FieldProps` for this template
@@ -36,14 +41,23 @@ class AnyOfField<
   constructor(props: FieldProps<T, S, F>) {
     super(props);
 
-    const { formData, options } = this.props;
+    const {
+      formData,
+      options,
+      registry: { schemaUtils },
+    } = this.props;
+    // cache the retrieved options in state in case they have $refs to save doing it later
+    const realOptions = options.map((opt: S) =>
+      schemaUtils.retrieveSchema(opt, formData)
+    );
 
     this.state = {
-      selectedOption: this.getMatchingOption(0, formData, options),
+      realOptions,
+      selectedOption: this.getMatchingOption(0, formData, realOptions),
     };
   }
 
-  /** React lifecycle methos that is called when the props and/or state for this component is updated. It recomputes the
+  /** React lifecycle method that is called when the props and/or state for this component is updated. It recomputes the
    * currently selected option based on the overall `formData`
    *
    * @param prevProps - The previous `FieldProps` for this template
@@ -55,23 +69,34 @@ class AnyOfField<
   ) {
     const { formData, options, idSchema } = this.props;
     const { selectedOption } = this.state;
+    let newState = this.state;
+    if (!deepEquals(prevProps.options, options)) {
+      const {
+        registry: { schemaUtils },
+      } = this.props;
+      // re-cache the retrieved options in state in case they have $refs to save doing it later
+      const realOptions = options.map((opt: S) =>
+        schemaUtils.retrieveSchema(opt, formData)
+      );
+      newState = { selectedOption, realOptions };
+    }
     if (
       !deepEquals(formData, prevProps.formData) &&
       idSchema.$id === prevProps.idSchema.$id
     ) {
+      const { realOptions } = newState;
       const matchingOption = this.getMatchingOption(
         selectedOption,
         formData,
-        options
+        realOptions
       );
 
-      if (!prevState || matchingOption === selectedOption) {
-        return;
+      if (prevState && matchingOption !== selectedOption) {
+        newState = { selectedOption: matchingOption, realOptions };
       }
-
-      this.setState({
-        selectedOption: matchingOption,
-      });
+    }
+    if (newState !== this.state) {
+      this.setState(newState);
     }
   }
 
@@ -105,24 +130,19 @@ class AnyOfField<
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
    * the `onChange` handler.
    *
-   * @param option -
+   * @param option - The new option value being selected
    */
   onOptionChange = (option?: string) => {
-    const { selectedOption } = this.state;
-    const { formData, onChange, options, registry } = this.props;
+    const { selectedOption, realOptions } = this.state;
+    const { formData, onChange, registry } = this.props;
     const { schemaUtils } = registry;
     const intOption = option !== undefined ? parseInt(option, 10) : -1;
     if (intOption === selectedOption) {
       return;
     }
-    const newOption =
-      intOption >= 0
-        ? schemaUtils.retrieveSchema(options[intOption], formData)
-        : undefined;
+    const newOption = intOption >= 0 ? realOptions[intOption] : undefined;
     const oldOption =
-      selectedOption >= 0
-        ? schemaUtils.retrieveSchema(options[selectedOption], formData)
-        : undefined;
+      selectedOption >= 0 ? realOptions[selectedOption] : undefined;
 
     let newFormData = schemaUtils.sanitizeDataForNewSchema(
       newOption,
@@ -160,27 +180,28 @@ class AnyOfField<
       formContext,
       onBlur,
       onFocus,
-      options,
       registry,
+      schema,
       uiSchema,
     } = this.props;
 
     const { widgets, fields } = registry;
     const { SchemaField: _SchemaField } = fields;
-    const { selectedOption } = this.state;
+    const { selectedOption, realOptions } = this.state;
     const {
       widget = "select",
       placeholder,
       autofocus,
       autocomplete,
+      title = schema.title,
       ...uiOptions
     } = getUiOptions<T, S, F>(uiSchema);
     const Widget = getWidget<T, S, F>({ type: "number" }, widget, widgets);
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
 
-    const option = options[selectedOption] || null;
-    let optionSchema;
+    const option = realOptions[selectedOption] || null;
+    let optionSchema: S;
 
     if (option) {
       // If the subschema doesn't declare a type, infer the type from the
@@ -190,10 +211,15 @@ class AnyOfField<
         : Object.assign({}, option, { type: baseType });
     }
 
-    const enumOptions = options.map((option: RJSFSchema, index: number) => ({
-      label: option.title || `Option ${index + 1}`,
-      value: index,
-    }));
+    const optionLabel = title
+      ? `${title} ${UNKNOWN_OPTION_PREFIX.toLowerCase()}`
+      : UNKNOWN_OPTION_PREFIX;
+    const enumOptions = realOptions.map(
+      (opt: { title?: string }, index: number) => ({
+        label: opt.title || `${optionLabel} ${index + 1}`,
+        value: index,
+      })
+    );
 
     return (
       <div className="panel panel-default panel-body">
@@ -219,7 +245,7 @@ class AnyOfField<
           />
         </div>
         {option !== null && (
-          <_SchemaField {...this.props} schema={optionSchema} />
+          <_SchemaField {...this.props} schema={optionSchema!} />
         )}
       </div>
     );
