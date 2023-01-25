@@ -1089,6 +1089,88 @@ describe("anyOf", () => {
       expect($select.options[2].text).eql("Baz");
     });
 
+    it("should correctly set the label of the options, with schema title prefix", () => {
+      const schema = {
+        type: "object",
+        title: "Root Title",
+        anyOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("Root Title option 2");
+      expect($select.options[2].text).eql("Baz");
+    });
+
+    it("should correctly set the label of the options, with uiSchema title prefix", () => {
+      const schema = {
+        type: "object",
+        anyOf: [
+          {
+            title: "Foo",
+            properties: {
+              foo: { type: "string" },
+            },
+          },
+          {
+            properties: {
+              bar: { type: "string" },
+            },
+          },
+          {
+            $ref: "#/definitions/baz",
+          },
+        ],
+        definitions: {
+          baz: {
+            title: "Baz",
+            properties: {
+              baz: { type: "string" },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { "ui:title": "My Title" },
+      });
+
+      const $select = node.querySelector("select");
+
+      expect($select.options[0].text).eql("Foo");
+      expect($select.options[1].text).eql("My Title option 2");
+      expect($select.options[2].text).eql("Baz");
+    });
+
     it("should correctly render mixed types for anyOf inside array items", () => {
       const schema = {
         type: "object",

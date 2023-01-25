@@ -3386,6 +3386,84 @@ describe("Form omitExtraData and liveOmit", () => {
     );
   });
 
+  it("should allow oneOf data entry with omitExtraData=true and liveOmit=true", () => {
+    const { node, onChange } = createFormComponent(
+      {
+        schema: {
+          type: "object",
+          oneOf: [
+            {
+              properties: {
+                lorem: {
+                  type: "string",
+                },
+              },
+              required: ["lorem"],
+            },
+            {
+              properties: {
+                ipsum: {
+                  type: "string",
+                },
+              },
+              required: ["ipsum"],
+            },
+          ],
+        },
+        formData: { lorum: "" },
+      },
+      { omitExtraData: true, liveOmit: true }
+    );
+
+    const textNode = node.querySelector("#root_lorem");
+    Simulate.change(textNode, {
+      target: { value: "12" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { lorem: "12" },
+    });
+  });
+
+  it("should allow anyOf data entry with omitExtraData=true and liveOmit=true", () => {
+    const { node, onChange } = createFormComponent(
+      {
+        schema: {
+          type: "object",
+          anyOf: [
+            {
+              properties: {
+                lorem: {
+                  type: "string",
+                },
+              },
+              required: ["lorem"],
+            },
+            {
+              properties: {
+                ipsum: {
+                  type: "string",
+                },
+              },
+              required: ["ipsum"],
+            },
+          ],
+        },
+        formData: { ipsum: "" },
+      },
+      { omitExtraData: true, liveOmit: true }
+    );
+
+    const textNode = node.querySelector("#root_ipsum");
+    Simulate.change(textNode, {
+      target: { value: "12" },
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { ipsum: "12" },
+    });
+  });
+
   describe("Async errors", () => {
     it("should render the async errors", () => {
       const schema = {

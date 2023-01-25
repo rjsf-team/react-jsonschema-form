@@ -611,5 +611,79 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
+    it("should return a pathSchema for a schema with oneOf", () => {
+      const schema: RJSFSchema = {
+        type: "object",
+        oneOf: [
+          {
+            properties: {
+              lorem: {
+                type: "string",
+              },
+            },
+          },
+          {
+            properties: {
+              ipsum: {
+                type: "string",
+              },
+            },
+          },
+        ],
+      };
+
+      const formData = {
+        lorem: "loremValue",
+      };
+
+      // Two options per getClosestMatchingOption, the first one is false, the second one makes the lorem value true
+      testValidator.setReturnValues({ isValid: [false, true] });
+
+      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+        {
+          $name: "",
+          lorem: {
+            $name: "lorem",
+          },
+        }
+      );
+    });
+    it("should return a pathSchema for a schema with anyOf", () => {
+      const schema: RJSFSchema = {
+        type: "object",
+        anyOf: [
+          {
+            properties: {
+              lorem: {
+                type: "string",
+              },
+            },
+          },
+          {
+            properties: {
+              ipsum: {
+                type: "string",
+              },
+            },
+          },
+        ],
+      };
+
+      const formData = {
+        ipsum: "ipsumValue",
+      };
+      // Two per option using getClosestMatchingOption, the first ones are both false
+      // the second ones make the ipsum value true
+      testValidator.setReturnValues({ isValid: [false, false, false, true] });
+
+      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+        {
+          $name: "",
+          ipsum: {
+            $name: "ipsum",
+          },
+        }
+      );
+    });
   });
 }
