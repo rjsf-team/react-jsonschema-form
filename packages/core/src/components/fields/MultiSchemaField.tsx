@@ -17,7 +17,8 @@ import {
 type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
   /** The currently selected option */
   selectedOption: number;
-  realOptions: S[];
+  /* The option schemas after retrieving all $refs */
+  retrievedOptions: S[];
 };
 
 /** The prefix used when a oneOf option does not have a title
@@ -47,13 +48,13 @@ class AnyOfField<
       registry: { schemaUtils },
     } = this.props;
     // cache the retrieved options in state in case they have $refs to save doing it later
-    const realOptions = options.map((opt: S) =>
+    const retrievedOptions = options.map((opt: S) =>
       schemaUtils.retrieveSchema(opt, formData)
     );
 
     this.state = {
-      realOptions,
-      selectedOption: this.getMatchingOption(0, formData, realOptions),
+      retrievedOptions,
+      selectedOption: this.getMatchingOption(0, formData, retrievedOptions),
     };
   }
 
@@ -75,24 +76,24 @@ class AnyOfField<
         registry: { schemaUtils },
       } = this.props;
       // re-cache the retrieved options in state in case they have $refs to save doing it later
-      const realOptions = options.map((opt: S) =>
+      const retrievedOptions = options.map((opt: S) =>
         schemaUtils.retrieveSchema(opt, formData)
       );
-      newState = { selectedOption, realOptions };
+      newState = { selectedOption, retrievedOptions };
     }
     if (
       !deepEquals(formData, prevProps.formData) &&
       idSchema.$id === prevProps.idSchema.$id
     ) {
-      const { realOptions } = newState;
+      const { retrievedOptions } = newState;
       const matchingOption = this.getMatchingOption(
         selectedOption,
         formData,
-        realOptions
+        retrievedOptions
       );
 
       if (prevState && matchingOption !== selectedOption) {
-        newState = { selectedOption: matchingOption, realOptions };
+        newState = { selectedOption: matchingOption, retrievedOptions };
       }
     }
     if (newState !== this.state) {
@@ -133,16 +134,16 @@ class AnyOfField<
    * @param option - The new option value being selected
    */
   onOptionChange = (option?: string) => {
-    const { selectedOption, realOptions } = this.state;
+    const { selectedOption, retrievedOptions } = this.state;
     const { formData, onChange, registry } = this.props;
     const { schemaUtils } = registry;
     const intOption = option !== undefined ? parseInt(option, 10) : -1;
     if (intOption === selectedOption) {
       return;
     }
-    const newOption = intOption >= 0 ? realOptions[intOption] : undefined;
+    const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
     const oldOption =
-      selectedOption >= 0 ? realOptions[selectedOption] : undefined;
+      selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
 
     let newFormData = schemaUtils.sanitizeDataForNewSchema(
       newOption,
@@ -187,7 +188,7 @@ class AnyOfField<
 
     const { widgets, fields } = registry;
     const { SchemaField: _SchemaField } = fields;
-    const { selectedOption, realOptions } = this.state;
+    const { selectedOption, retrievedOptions } = this.state;
     const {
       widget = "select",
       placeholder,
@@ -200,7 +201,7 @@ class AnyOfField<
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
 
-    const option = realOptions[selectedOption] || null;
+    const option = retrievedOptions[selectedOption] || null;
     let optionSchema: S;
 
     if (option) {
@@ -214,7 +215,7 @@ class AnyOfField<
     const optionLabel = title
       ? `${title} ${UNKNOWN_OPTION_PREFIX.toLowerCase()}`
       : UNKNOWN_OPTION_PREFIX;
-    const enumOptions = realOptions.map(
+    const enumOptions = retrievedOptions.map(
       (opt: { title?: string }, index: number) => ({
         label: opt.title || `${optionLabel} ${index + 1}`,
         value: index,
