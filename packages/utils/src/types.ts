@@ -861,6 +861,14 @@ export type UiSchema<
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
      */
     "ui:field"?: Field<T, S, F> | string;
+    /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
+     * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
+     * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
+     * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
+     * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
+     * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+     */
+    "ui:fieldReplacesAnyOrOneOf"?: boolean;
     /** An object that contains all the potential UI options in a single object */
     "ui:options"?: UIOptionsType<T, S, F>;
   };

@@ -314,6 +314,8 @@ function SchemaFieldRender<
 
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
+  const isReplacingAnyOrOneOf =
+    uiSchema?.["ui:field"] && uiSchema?.["ui:fieldReplacesAnyOrOneOf"] === true;
 
   return (
     <FieldTemplate {...fieldProps}>
@@ -325,7 +327,7 @@ function SchemaFieldRender<
         rendering
       */}
         {schema.anyOf &&
-          !uiSchema?.["ui:field"] &&
+          !isReplacingAnyOrOneOf &&
           !schemaUtils.isSelect(schema) && (
             <_AnyOfField
               name={name}
@@ -354,7 +356,7 @@ function SchemaFieldRender<
             />
           )}
         {schema.oneOf &&
-          !uiSchema?.["ui:field"] &&
+          !isReplacingAnyOrOneOf &&
           !schemaUtils.isSelect(schema) && (
             <_OneOfField
               name={name}

@@ -1189,9 +1189,9 @@ describe("oneOf", () => {
     });
   });
 
-  describe("Custom Field", function () {
+  describe("Custom Field without ui:fieldReplacesAnyOrOneOf", function () {
     const schema = {
-      anyOf: [
+      oneOf: [
         {
           type: "number",
         },
@@ -1202,6 +1202,33 @@ describe("oneOf", () => {
     };
     const uiSchema = {
       "ui:field": () => <div className="custom-field">Custom field</div>,
+    };
+    it("should be rendered twice", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const fields = node.querySelectorAll(".custom-field");
+      expect(fields).to.have.length.of(2);
+    });
+    it("should render <select>", function () {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const selects = node.querySelectorAll("select");
+      expect(selects).to.have.length.of(1);
+    });
+  });
+
+  describe("Custom Field with ui:fieldReplacesAnyOrOneOf", function () {
+    const schema = {
+      oneOf: [
+        {
+          type: "number",
+        },
+        {
+          type: "string",
+        },
+      ],
+    };
+    const uiSchema = {
+      "ui:field": () => <div className="custom-field">Custom field</div>,
+      "ui:fieldReplacesAnyOrOneOf": true,
     };
     it("should be rendered once", function () {
       const { node } = createFormComponent({ schema, uiSchema });

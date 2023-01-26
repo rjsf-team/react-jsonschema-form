@@ -71,6 +71,13 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/custom-widgets-fields#custom-field-components) for more information about how to use this property.
 
+### ui:fieldReplacesAnyOrOneOf
+
+By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
+This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
+By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
+If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+
 ### ui:options
 
 The `ui:options` property cannot be nested inside itself and thus is the last exception.
