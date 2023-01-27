@@ -201,7 +201,8 @@ class AnyOfField<
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
 
-    const option = retrievedOptions[selectedOption] || null;
+    const option =
+      selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
     let optionSchema: S;
 
     if (option) {
@@ -235,7 +236,7 @@ class AnyOfField<
             multiple={false}
             rawErrors={rawErrors}
             errorSchema={fieldErrorSchema}
-            value={selectedOption}
+            value={selectedOption >= 0 ? selectedOption : undefined}
             options={{ enumOptions, ...uiOptions }}
             registry={registry}
             formContext={formContext}

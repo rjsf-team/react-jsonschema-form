@@ -5,6 +5,7 @@ import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
 import SchemaField from "../src/components/fields/SchemaField";
+import SelectWidget from "../src/components/widgets/SelectWidget";
 
 describe("oneOf", () => {
   let sandbox;
@@ -435,6 +436,60 @@ describe("oneOf", () => {
     });
 
     expect(node.querySelectorAll("#custom-oneof-field")).to.have.length(1);
+  });
+
+  it("should support custom widget", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        choice: {
+          oneOf: [
+            {
+              title: "first",
+              type: "string",
+              default: "first",
+              readOnly: true,
+            },
+            {
+              title: "second",
+              type: "string",
+              default: "second",
+              readOnly: true,
+            },
+          ],
+        },
+      },
+    };
+
+    function CustomSelectWidget(props) {
+      const { schema, value } = props;
+      // Remove the default so that we can select an empty value to clear the selection
+      const schemaNoDefault = { ...schema, default: undefined };
+      if (value === -1) {
+        throw new Error("Value should not be -1 for oneOf");
+      }
+      return <SelectWidget {...props} schema={schemaNoDefault} />;
+    }
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: { choice: { "ui:placeholder": "None" } },
+      widgets: { SelectWidget: CustomSelectWidget },
+      formData: { choice: "first" },
+    });
+
+    const select = node.querySelector("select");
+    expect(select.value).eql(select.options[1].value);
+
+    Simulate.change(select, {
+      target: { value: select.options[0].value },
+    });
+
+    expect(select.value).eql(select.options[0].value);
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { choice: undefined },
+    });
   });
 
   it("should pass form context to schema field", () => {
