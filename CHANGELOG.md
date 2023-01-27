@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.0.0
+# 5.0.0-beta.20
 
 ## @rjsf/antd
 - Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
