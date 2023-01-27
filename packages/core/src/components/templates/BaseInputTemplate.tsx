@@ -92,13 +92,15 @@ export default function BaseInputTemplate<
       />
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
-          {[
-            ...new Set(
-              schema.examples.concat(schema.default ? [schema.default] : [])
-            ),
-          ].map((example: any) => (
-            <option key={example} value={example} />
-          ))}
+          {(schema.examples as string[])
+            .concat(
+              schema.default && !schema.examples.includes(schema.default)
+                ? ([schema.default] as string[])
+                : []
+            )
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
         </datalist>
       )}
     </>
