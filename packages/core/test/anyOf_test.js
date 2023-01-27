@@ -4,6 +4,7 @@ import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
 import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import SelectWidget from "../src/components/widgets/SelectWidget";
 
 describe("anyOf", () => {
   let sandbox;
@@ -456,6 +457,60 @@ describe("anyOf", () => {
     });
 
     expect(node.querySelectorAll("#custom-anyof-field")).to.have.length(1);
+  });
+
+  it("should support custom widget", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        choice: {
+          anyOf: [
+            {
+              title: "first",
+              type: "string",
+              default: "first",
+              readOnly: true,
+            },
+            {
+              title: "second",
+              type: "string",
+              default: "second",
+              readOnly: true,
+            },
+          ],
+        },
+      },
+    };
+
+    function CustomSelectWidget(props) {
+      const { schema, value } = props;
+      // Remove the default so that we can select an empty value to clear the selection
+      const schemaNoDefault = { ...schema, default: undefined };
+      if (value === -1) {
+        throw new Error("Value should not be -1 for anyOf");
+      }
+      return <SelectWidget {...props} schema={schemaNoDefault} />;
+    }
+
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: { choice: { "ui:placeholder": "None" } },
+      widgets: { SelectWidget: CustomSelectWidget },
+      formData: { choice: "first" },
+    });
+
+    const select = node.querySelector("select");
+    expect(select.value).eql(select.options[1].value);
+
+    Simulate.change(select, {
+      target: { value: select.options[0].value },
+    });
+
+    expect(select.value).eql(select.options[0].value);
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { choice: undefined },
+    });
   });
 
   it("should select the correct field when the form is rendered from existing data", () => {

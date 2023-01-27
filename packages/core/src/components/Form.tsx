@@ -187,6 +187,9 @@ export interface FormProps<
    * Use at your own risk as this prop is private and may change at any time without notice.
    */
   _internalFormWrapper?: React.ElementType;
+  /** Support receiving a React ref to the Form
+   */
+  ref?: React.Ref<Form<T, S, F>>;
 }
 
 /** The data that is contained within the state for the `Form` */
