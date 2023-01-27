@@ -95,26 +95,26 @@ Return a consistent `id` for the field description element.
 #### Returns
 - string: The consistent id for the field description element from the given `id`
 
-### enumOptionsDeselectValue\<S extends StrictRJSFSchema = RJSFSchema>()
+### enumOptionsDeselectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Removes the `value` from the currently `selected` list of values.
 
 #### Parameters
-- value: EnumOptionsType\<S>["value"] - The value that should be selected
-- selected: EnumOptionsType\<S>["value"][] - The current list of selected values
+- value: EnumOptionsType&lt;S>["value"] - The value that should be selected
+- selected: EnumOptionsType&lt;S>["value"][] - The current list of selected values
 
 #### Returns
-- EnumOptionsType\<S>["value"][]: The updated `selected` list with the `value` removed from it
+- EnumOptionsType&lt;S>["value"][]: The updated `selected` list with the `value` removed from it
 
-### enumOptionsSelectValue\<S extends StrictRJSFSchema = RJSFSchema>()
+### enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
 
 #### Parameters
-- value: EnumOptionsType\<S>["value"] - The value that should be selected
-- selected: EnumOptionsType\<S>["value"][] - The current list of selected values
-- allEnumOptions: EnumOptionsType\<S>[] - The list of all the known enumOptions
+- value: EnumOptionsType&lt;S>["value"] - The value that should be selected
+- selected: EnumOptionsType&lt;S>["value"][] - The current list of selected values
+- allEnumOptions: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 
 #### Returns
-- EnumOptionsType\<S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
+- EnumOptionsType&lt;S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
 
 ### errorId<T = any>()
 Return a consistent `id` for the field error element.
@@ -134,7 +134,7 @@ Return a consistent `id` for the field examples element.
 #### Returns
 - string: The consistent id for the field examples element from the given `id`
 
-### findSchemaDefinition\<S extends StrictRJSFSchema = RJSFSchema>()
+### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
 If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
 Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
@@ -252,7 +252,7 @@ Return a consistent `id` for the field help element.
 #### Returns
 - string: The consistent id for the field help element from the given `id`
 
-### isConstant\<S extends StrictRJSFSchema = RJSFSchema>()
+### isConstant&lt;S extends StrictRJSFSchema = RJSFSchema>()
 This function checks if the given `schema` matches a single constant value.
 This happens when either the schema has an `enum` array with a single value or there is a `const` defined.
 
@@ -271,7 +271,7 @@ Checks to see if the `uiSchema` contains the `widget` field and that the widget 
 #### Returns
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
 
-### isFixedItems\<S extends StrictRJSFSchema = RJSFSchema>()
+### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Detects whether the given `schema` contains fixed items.
 This is the case when `schema.items` is a non-empty array that only contains objects.
 
@@ -339,17 +339,17 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 #### Returns
 - GenericObjectType: The merged schema object
 
-### optionId\<S extends StrictRJSFSchema = RJSFSchema>()
+### optionId&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
 
 #### Parameters
 - id: string - The id of the parent component for the option
-- option: EnumOptionsType\<S> - The option for which the id is desired
+- option: EnumOptionsType&lt;S> - The option for which the id is desired
 
 #### Returns
 - string: An id for the option based on the parent `id`
 
-### optionsList\<S extends StrictRJSFSchema = RJSFSchema>()
+### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from the non-standard `enumNames` if it exists otherwise will be the same as the `value`.
 If the schema has a `oneOf` or `anyOf`, then the value is the list of `const` values from the schema and the label is either the `schema.title` or the value.
@@ -414,7 +414,7 @@ If the value is an empty string, then the `emptyValue` from the `options` is ret
 #### Returns
 - string | boolean | number | string[] | boolean[] | number[] | undefined: The `value` converted to the proper type
 
-### rangeSpec\<S extends StrictRJSFSchema = RJSFSchema>()
+### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
 
 #### Parameters
@@ -423,7 +423,7 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 - RangeSpecType: A range specification from the schema
 
-### schemaRequiresTrueValue\<S extends StrictRJSFSchema = RJSFSchema>()
+### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Check to see if a `schema` specifies that a value must be true. This happens when:
 - `schema.const` is truthy
 - `schema.enum` == `[true]`
@@ -457,7 +457,7 @@ Return a consistent `id` for the field title element.
 #### Returns
 - string: The consistent id for the field title element from the given `id`
 
-### toConstant\<S extends StrictRJSFSchema = RJSFSchema>()
+### toConstant&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Returns the constant value from the schema when it is either a single value enum or has a const key.
 Otherwise, throws an error.
 
