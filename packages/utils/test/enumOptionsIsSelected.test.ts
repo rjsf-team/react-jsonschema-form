@@ -12,7 +12,7 @@ describe("enumOptionsIsSelected()", () => {
   it("returns false when value is not in array of selected values", () => {
     expect(enumOptionsIsSelected("foo", VALUES)).toBe(false);
   });
-  it("returns false when value is not in array of selected values", () => {
+  it("returns true when value is in array of selected values", () => {
     expect(enumOptionsIsSelected({ foo: "bar" }, VALUES)).toBe(true);
   });
 });
