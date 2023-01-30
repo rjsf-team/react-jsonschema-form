@@ -138,7 +138,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="ant-checkbox-input"
               disabled={false}
-              id="root-foo"
+              id="root-0"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -147,7 +147,7 @@ exports[`single fields checkboxes field 1`] = `
               onKeyPress={[Function]}
               onKeyUp={[Function]}
               type="checkbox"
-              value="foo"
+              value="0"
             />
             <span
               className="ant-checkbox-inner"
@@ -172,7 +172,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="ant-checkbox-input"
               disabled={false}
-              id="root-bar"
+              id="root-1"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -181,7 +181,7 @@ exports[`single fields checkboxes field 1`] = `
               onKeyPress={[Function]}
               onKeyUp={[Function]}
               type="checkbox"
-              value="bar"
+              value="1"
             />
             <span
               className="ant-checkbox-inner"
@@ -206,7 +206,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="ant-checkbox-input"
               disabled={false}
-              id="root-fuzz"
+              id="root-2"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -215,7 +215,7 @@ exports[`single fields checkboxes field 1`] = `
               onKeyPress={[Function]}
               onKeyUp={[Function]}
               type="checkbox"
-              value="fuzz"
+              value="2"
             />
             <span
               className="ant-checkbox-inner"
@@ -240,7 +240,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="ant-checkbox-input"
               disabled={false}
-              id="root-qux"
+              id="root-3"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -249,7 +249,7 @@ exports[`single fields checkboxes field 1`] = `
               onKeyPress={[Function]}
               onKeyUp={[Function]}
               type="checkbox"
-              value="qux"
+              value="3"
             />
             <span
               className="ant-checkbox-inner"
@@ -1284,7 +1284,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="ant-radio-input"
             disabled={false}
-            id="root-true"
+            id="root-0"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -1293,7 +1293,7 @@ exports[`single fields radio field 1`] = `
             onKeyPress={[Function]}
             onKeyUp={[Function]}
             type="radio"
-            value="true"
+            value="0"
           />
           <span
             className="ant-radio-inner"
@@ -1315,7 +1315,7 @@ exports[`single fields radio field 1`] = `
             checked={false}
             className="ant-radio-input"
             disabled={false}
-            id="root-false"
+            id="root-1"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -1324,7 +1324,7 @@ exports[`single fields radio field 1`] = `
             onKeyPress={[Function]}
             onKeyUp={[Function]}
             type="radio"
-            value="false"
+            value="1"
           />
           <span
             className="ant-radio-inner"

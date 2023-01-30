@@ -6,6 +6,8 @@ import {
 } from "@fluentui/react";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -44,7 +46,7 @@ export default function RadioWidget<
   disabled,
   readonly,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   function _onChange(
     _ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
@@ -56,16 +58,17 @@ export default function RadioWidget<
   }
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const newOptions = Array.isArray(enumOptions)
-    ? enumOptions.map((option) => ({
-        key: option.value,
+    ? enumOptions.map((option, index) => ({
+        key: String(index),
         name: id,
-        id: optionId<S>(id, option),
+        id: optionId(id, index),
         text: option.label,
         disabled:
           Array.isArray(enumDisabled) &&
@@ -73,6 +76,11 @@ export default function RadioWidget<
         "aria-describedby": ariaDescribedByIds<T>(id),
       }))
     : [];
+
+  const selectedIndex = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions
+  ) as string;
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
@@ -86,7 +94,7 @@ export default function RadioWidget<
       onBlur={_onBlur}
       label={label || schema.title}
       required={required}
-      selectedKey={value}
+      selectedKey={selectedIndex}
       {...uiProps}
     />
   );

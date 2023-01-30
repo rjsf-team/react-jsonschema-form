@@ -3,7 +3,12 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, setProps } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  setProps,
+  getSelectedOptionValue,
+} from "./test_utils";
 import SelectWidget from "../src/components/widgets/SelectWidget";
 
 describe("anyOf", () => {
@@ -1353,17 +1358,17 @@ describe("anyOf", () => {
       });
 
       const rootId = node.querySelector("select#root_id");
-      expect(rootId.value).eql("chain");
+      expect(getSelectedOptionValue(rootId)).eql("chain");
       const componentId = node.querySelector("select#root_components_0_id");
-      expect(componentId.value).eql("map");
+      expect(getSelectedOptionValue(componentId)).eql("map");
 
       const fnId = node.querySelector("select#root_components_0_fn_id");
-      expect(fnId.value).eql("transform");
+      expect(getSelectedOptionValue(fnId)).eql("transform");
 
       const transformerId = node.querySelector(
         "select#root_components_0_fn_transformer_id"
       );
-      expect(transformerId.value).eql("to_absolute");
+      expect(getSelectedOptionValue(transformerId)).eql("to_absolute");
     });
   });
   describe("hideError works with anyOf", () => {

@@ -6,6 +6,7 @@ import sinon from "sinon";
 import {
   createFormComponent,
   createSandbox,
+  getSelectedOptionValue,
   setProps,
   submitForm,
 } from "./test_utils";
@@ -438,9 +439,9 @@ describe("NumberField", () => {
       expect($select.value).eql("");
 
       Simulate.change(node.querySelector(".field select"), {
-        target: { value: "1" },
+        target: { value: 0 }, // use index
       });
-      expect($select.value).eql("1");
+      expect(getSelectedOptionValue($select)).eql("1");
       expect(spy.lastCall.args[0].formData).eql(1);
       expect(spy.lastCall.args[1]).eql("root");
     });
@@ -479,7 +480,7 @@ describe("NumberField", () => {
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "2" },
+        target: { value: 1 }, // useIndex
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 }, "root");
@@ -548,7 +549,7 @@ describe("NumberField", () => {
       });
 
       const selects = node.querySelectorAll("select");
-      expect(selects[0].value).eql("2");
+      expect(getSelectedOptionValue(selects[0])).eql("2");
 
       const options = node.querySelectorAll("option");
       expect(options.length).eql(1);

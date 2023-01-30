@@ -8,6 +8,8 @@ import {
 } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -34,16 +36,23 @@ export default function RadioWidget<
   onFocus,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
 
+  const _onChange = (nextValue: any) =>
+    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
+  const selectedIndex = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions
+  ) as string;
 
   return (
     <FormControl
@@ -57,28 +66,28 @@ export default function RadioWidget<
         {label || schema.title}
       </FormLabel>
       <RadioGroup
-        onChange={onChange}
+        onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        value={`${value}`}
+        value={selectedIndex}
         name={id}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
-            enumOptions.map((option) => {
+            enumOptions.map((option, index) => {
               const itemDisabled =
                 Array.isArray(enumDisabled) &&
                 enumDisabled.indexOf(option.value) !== -1;
 
               return (
                 <Radio
-                  value={`${option.value}`}
-                  key={option.value}
-                  id={optionId<S>(id, option)}
+                  value={String(index)}
+                  key={index}
+                  id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
                 >
-                  {`${option.label}`}
+                  {option.label}
                 </Radio>
               );
             })}

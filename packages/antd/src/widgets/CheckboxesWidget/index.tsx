@@ -2,6 +2,8 @@ import React from "react";
 import Checkbox from "antd/lib/checkbox";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   WidgetProps,
@@ -33,15 +35,22 @@ export default function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled, inline } = options;
+  const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
-  const handleChange = (nextValue: any) => onChange(nextValue);
+  const handleChange = (nextValue: any) =>
+    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
+    onBlur(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
 
   const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
+    onFocus(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -51,27 +60,33 @@ export default function CheckboxesWidget<
     onFocus: !readonly ? handleFocus : undefined,
   };
 
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    true
+  ) as string[];
+
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       disabled={disabled || (readonlyAsDisabled && readonly)}
       name={id}
       onChange={!readonly ? handleChange : undefined}
-      value={value}
+      value={selectedIndexes}
       {...extraProps}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
-          <span key={option.value}>
+          <span key={i}>
             <Checkbox
-              id={optionId<S>(id, option)}
+              id={optionId(id, i)}
               name={id}
               autoFocus={i === 0 ? autofocus : false}
               disabled={
                 Array.isArray(enumDisabled) &&
                 enumDisabled.indexOf(value) !== -1
               }
-              value={option.value}
+              value={String(i)}
             >
               {option.label}
             </Checkbox>

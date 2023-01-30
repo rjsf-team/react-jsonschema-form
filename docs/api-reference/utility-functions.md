@@ -96,25 +96,64 @@ Return a consistent `id` for the field description element.
 - string: The consistent id for the field description element from the given `id`
 
 ### enumOptionsDeselectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
-Removes the `value` from the currently `selected` list of values.
+Removes the enum option value at the `valueIndex` from the currently `selected` (list of) value(s).
+If `selected` is a list, then that list is updated to remove the enum option value with the `valueIndex` in `allEnumOptions`.
+If it is a single value, then if the enum option value with the `valueIndex` in `allEnumOptions` matches `selected`, undefined is returned, otherwise the `selected` value is returned.
 
 #### Parameters
-- value: EnumOptionsType&lt;S>["value"] - The value that should be selected
-- selected: EnumOptionsType&lt;S>["value"][] - The current list of selected values
+- valueIndex: string | number - The index of the value to be removed from the selected list or single value
+- [selected]: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined - The current (list of) selected value(s)
+- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 
 #### Returns
 - EnumOptionsType&lt;S>["value"][]: The updated `selected` list with the `value` removed from it
+
+### enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+Returns the index(es) of the options in `allEnumOptions` whose value(s) match the ones in `value`.
+All the `enumOptions` are filtered based on whether they are a "selected" `value` and the index of each selected one is then stored in an array.
+If `multiple` is true, that array is returned, otherwise the first element in the array is returned.
+
+#### Parameters
+- value: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The single value or list of values for which indexes are desired
+- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+- [multiple=false]: boolean - Optional flag, if true will return a list of index, otherwise a single one
+
+#### Returns
+- string | string[] | undefined: A single string index for the first `value` in `allEnumOptions`, if not `multiple`. Otherwise, the list of indexes for (each of) the value(s) in `value`.
+
+### enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema>()
+Determines whether the given `value` is (one of) the `selected` value(s).
+
+#### Parameters
+- value: EnumOptionsType&lt;S>["value"] - The value being checked to see if it is selected
+- selected: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The current selected value or list of values
+- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+
+#### Returns
+- boolean: true if the `value` is one of the `selected` ones, false otherwise
 
 ### enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
 
 #### Parameters
-- value: EnumOptionsType&lt;S>["value"] - The value that should be selected
+- valueIndex: string | number - The index of the value that should be selected
 - selected: EnumOptionsType&lt;S>["value"][] - The current list of selected values
-- allEnumOptions: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 
 #### Returns
 - EnumOptionsType&lt;S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
+
+### enumOptionsValueForIndex&lt;S extends StrictRJSFSchema = RJSFSchema>()
+Returns the value(s) from `allEnumOptions` at the index(es) provided by `valueIndex`.
+If `valueIndex` is not an array AND the index is not valid for `allEnumOptions`, `emptyValue` is returned.
+If `valueIndex` is an array, AND it contains an invalid index, the returned array will have the resulting undefined values filtered out, leaving only valid values or in the worst case, an empty array.
+
+#### Parameters
+- valueIndex: string | number | Array<string | number> - The index(es) of the value(s) that should be returned
+- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+- [emptyValue]: EnumOptionsType&lt;S>["value"] | undefined - The value to return when the non-array `valueIndex` does not refer to a real option
+#### Returns
+- EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined: The single or list of values specified by the single or list of indexes if they are valid. Otherwise, `emptyValue` or an empty list.
 
 ### errorId<T = any>()
 Return a consistent `id` for the field error element.
@@ -339,15 +378,15 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 #### Returns
 - GenericObjectType: The merged schema object
 
-### optionId&lt;S extends StrictRJSFSchema = RJSFSchema>()
-Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
+### optionId()
+Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
 
 #### Parameters
 - id: string - The id of the parent component for the option
-- option: EnumOptionsType&lt;S> - The option for which the id is desired
+- optionIndex: number - The index of the option for which the id is desired
 
 #### Returns
-- string: An id for the option based on the parent `id`
+- string: An id for the option index based on the parent `id`
 
 ### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
@@ -400,19 +439,6 @@ Parses the `dateString` into a `DateObject`, including the time information when
 
 #### Throws
 - Error when the date cannot be parsed from the string
-
-### processSelectValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-Returns the real value for a select widget due to a silly limitation in the DOM which causes option change event values to always be retrieved as strings.
-Uses the `schema` to help determine the value's true type.
-If the value is an empty string, then the `emptyValue` from the `options` is returned, falling back to undefined.
-
-#### Parameters
-- schema: S - The schema to used to determine the value's true type
-- [value]: any - The value to convert
-- [options]: UIOptionsType<T, S, F> | undefined - The UIOptionsType from which to potentially extract the `emptyValue`
-
-#### Returns
-- string | boolean | number | string[] | boolean[] | number[] | undefined: The `value` converted to the proper type
 
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.

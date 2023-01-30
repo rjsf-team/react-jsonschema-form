@@ -3,11 +3,11 @@ import { Form } from "semantic-ui-react";
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
+  enumOptionsIsSelected,
   enumOptionsSelectValue,
   getTemplate,
   optionId,
   titleId,
-  EnumOptionsType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -58,20 +58,22 @@ export default function CheckboxesWidget<
     },
   });
   const _onChange =
-    (option: EnumOptionsType) =>
+    (index: number) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       // eslint-disable-next-line no-shadow
       if (checked) {
         onChange(
-          enumOptionsSelectValue<S>(option.value, checkboxesValues, enumOptions)
+          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
         );
       } else {
-        onChange(enumOptionsDeselectValue<S>(option.value, checkboxesValues));
+        onChange(
+          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
+        );
       }
     };
 
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+  const _onBlur = () => onBlur(id, value);
+  const _onFocus = () => onFocus(id, value);
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <>
@@ -87,22 +89,25 @@ export default function CheckboxesWidget<
       <Form.Group id={id} name={id} {...inlineOption}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const checked = checkboxesValues.includes(option.value);
+            const checked = enumOptionsIsSelected<S>(
+              option.value,
+              checkboxesValues
+            );
             const itemDisabled =
               Array.isArray(enumDisabled) &&
               enumDisabled.indexOf(option.value) !== -1;
             return (
               <Form.Checkbox
-                id={optionId<S>(id, option)}
+                id={optionId(id, index)}
                 name={id}
-                key={option.value}
+                key={index}
                 label={option.label}
                 {...semanticProps}
                 checked={checked}
                 error={rawErrors.length > 0}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
+                onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
                 aria-describedby={ariaDescribedByIds<T>(id)}

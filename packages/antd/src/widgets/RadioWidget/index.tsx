@@ -2,6 +2,8 @@ import React from "react";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   GenericObjectType,
@@ -29,21 +31,31 @@ export default function RadioWidget<
   onFocus,
   options,
   readonly,
-  schema,
   value,
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
-    onChange(schema.type === "boolean" ? nextValue !== "false" : nextValue);
+    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
+    onBlur(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
 
   const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
+    onFocus(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
+
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions
+  ) as string;
 
   return (
     <Radio.Group
@@ -53,20 +65,20 @@ export default function RadioWidget<
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={`${value}`}
+      value={selectedIndexes}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
           <Radio
-            id={optionId<S>(id, option)}
+            id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
             disabled={
               Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1
             }
-            key={option.value}
-            value={`${option.value}`}
+            key={i}
+            value={String(i)}
           >
             {option.label}
           </Radio>

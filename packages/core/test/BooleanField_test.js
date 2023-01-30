@@ -3,7 +3,12 @@ import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 
-import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  getSelectedOptionValue,
+  submitForm,
+} from "./test_utils";
 
 describe("BooleanField", () => {
   let sandbox;
@@ -427,7 +432,7 @@ describe("BooleanField", () => {
     const element = node.querySelector(".field-radio-group");
     Simulate.focus(node.querySelector("input"), {
       target: {
-        value: false,
+        value: 1, // use index
       },
     });
     expect(onFocus.calledWith(element.id, false)).to.be.true;
@@ -449,7 +454,7 @@ describe("BooleanField", () => {
     const element = node.querySelector(".field-radio-group");
     Simulate.blur(node.querySelector("input"), {
       target: {
-        value: false,
+        value: 1, // use index
       },
     });
     expect(onBlur.calledWith(element.id, false)).to.be.true;
@@ -490,7 +495,7 @@ describe("BooleanField", () => {
     const element = node.querySelector("select");
     Simulate.focus(element, {
       target: {
-        value: false,
+        value: 1, // use index
       },
     });
     expect(onFocus.calledWith(element.id, false)).to.be.true;
@@ -512,7 +517,7 @@ describe("BooleanField", () => {
     const element = node.querySelector("select");
     Simulate.blur(element, {
       target: {
-        value: false,
+        value: 1, // use index
       },
     });
     expect(onBlur.calledWith(element.id, false)).to.be.true;
@@ -660,9 +665,9 @@ describe("BooleanField", () => {
       expect($select.value).eql("");
 
       Simulate.change($select, {
-        target: { value: "true" },
+        target: { value: 0 }, // use index
       });
-      expect($select.value).eql("true");
+      expect(getSelectedOptionValue($select)).eql("true");
       expect(spy.lastCall.args[0].formData).eql(true);
       expect(spy.lastCall.args[1]).eql("root");
     });
@@ -698,7 +703,7 @@ describe("BooleanField", () => {
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "false" },
+        target: { value: 1 }, // use index
       });
 
       sinon.assert.calledWithMatch(

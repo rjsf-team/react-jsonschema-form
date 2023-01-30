@@ -1187,9 +1187,9 @@ describe("ArrayField", () => {
         Simulate.change(node.querySelector(".field select"), {
           target: {
             options: [
-              { selected: true, value: "foo" },
-              { selected: true, value: "bar" },
-              { selected: false, value: "fuzz" },
+              { selected: true, value: 0 }, // use index
+              { selected: true, value: 1 }, // use index
+              { selected: false, value: 2 }, // use index
             ],
           },
         });
@@ -1211,9 +1211,9 @@ describe("ArrayField", () => {
         Simulate.blur(select, {
           target: {
             options: [
-              { selected: true, value: "foo" },
-              { selected: true, value: "bar" },
-              { selected: false, value: "fuzz" },
+              { selected: true, value: 0 }, // use index
+              { selected: true, value: 1 }, // use index
+              { selected: false, value: 2 }, // use index
             ],
           },
         });
@@ -1229,9 +1229,9 @@ describe("ArrayField", () => {
         Simulate.focus(select, {
           target: {
             options: [
-              { selected: true, value: "foo" },
-              { selected: true, value: "bar" },
-              { selected: false, value: "fuzz" },
+              { selected: true, value: 0 }, // use index
+              { selected: true, value: 1 }, // use index
+              { selected: false, value: 2 }, // use index
             ],
           },
         });
@@ -1297,7 +1297,7 @@ describe("ArrayField", () => {
           },
         });
 
-        expect(node.querySelector("option[value=bar]").disabled).to.eql(true);
+        expect(node.querySelector("option[value='1']").disabled).to.eql(true); // use index
       });
     });
 
@@ -2011,9 +2011,9 @@ describe("ArrayField", () => {
       Simulate.change(node.querySelector(".field select"), {
         target: {
           options: [
-            { selected: true, value: "1" },
-            { selected: true, value: "2" },
-            { selected: false, value: "3" },
+            { selected: true, value: "0" }, // use index
+            { selected: true, value: "1" }, // use index
+            { selected: false, value: "2" }, // use index
           ],
         },
       });

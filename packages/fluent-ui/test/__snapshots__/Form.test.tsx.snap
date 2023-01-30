@@ -212,7 +212,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root-foo"
+        id="root-0"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -221,7 +221,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root-foo"
+        htmlFor="root-0"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -252,7 +252,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root-bar"
+        id="root-1"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -261,7 +261,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root-bar"
+        htmlFor="root-1"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -292,7 +292,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root-fuzz"
+        id="root-2"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -301,7 +301,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root-fuzz"
+        htmlFor="root-2"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -332,7 +332,7 @@ exports[`single fields checkboxes field 1`] = `
         checked={false}
         className="input-127"
         disabled={false}
-        id="root-qux"
+        id="root-3"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -341,7 +341,7 @@ exports[`single fields checkboxes field 1`] = `
       />
       <label
         className="ms-Checkbox-label label-128"
-        htmlFor="root-qux"
+        htmlFor="root-3"
       >
         <div
           className="ms-Checkbox-checkbox checkbox-129"
@@ -1874,7 +1874,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="ms-ChoiceField-input input-135"
                 disabled={false}
-                id="root-true"
+                id="root-0"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1883,11 +1883,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="root-true"
+                htmlFor="root-0"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel113-true"
+                  id="ChoiceGroupLabel113-0"
                 >
                   Yes
                 </span>
@@ -1905,7 +1905,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="ms-ChoiceField-input input-135"
                 disabled={false}
-                id="root-false"
+                id="root-1"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1914,11 +1914,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-136"
-                htmlFor="root-false"
+                htmlFor="root-1"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel113-false"
+                  id="ChoiceGroupLabel113-1"
                 >
                   No
                 </span>
@@ -2087,9 +2087,6 @@ exports[`single fields select field 1`] = `
       }
     }
   >
-    <label
-      className="ms-Label root-61"
-    />
     <div
       className="ms-Dropdown-container"
     >

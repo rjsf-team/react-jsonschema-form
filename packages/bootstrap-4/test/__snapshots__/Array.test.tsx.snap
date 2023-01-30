@@ -549,21 +549,21 @@ exports[`array fields checkboxes 1`] = `
         <option
           disabled={false}
           id="a"
-          value="a"
+          value="0"
         >
           a
         </option>
         <option
           disabled={false}
           id="b"
-          value="b"
+          value="1"
         >
           b
         </option>
         <option
           disabled={false}
           id="c"
-          value="c"
+          value="2"
         >
           c
         </option>

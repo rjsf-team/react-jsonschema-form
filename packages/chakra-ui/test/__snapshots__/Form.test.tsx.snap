@@ -470,7 +470,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-foo"
+              id="root-0"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -491,7 +491,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="foo"
+              value="0"
             />
             <span
               aria-hidden={true}
@@ -522,7 +522,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-bar"
+              id="root-1"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -543,7 +543,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="bar"
+              value="1"
             />
             <span
               aria-hidden={true}
@@ -574,7 +574,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-fuzz"
+              id="root-2"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -595,7 +595,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="fuzz"
+              value="2"
             />
             <span
               aria-hidden={true}
@@ -626,7 +626,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-qux"
+              id="root-3"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -647,7 +647,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="qux"
+              value="3"
             />
             <span
               aria-hidden={true}
@@ -2044,7 +2044,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-true"
+                id="root-0"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -2067,7 +2067,7 @@ exports[`single fields radio field 1`] = `
                   }
                 }
                 type="radio"
-                value="true"
+                value="0"
               />
               <span
                 aria-hidden={true}
@@ -2093,7 +2093,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-false"
+                id="root-1"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -2116,7 +2116,7 @@ exports[`single fields radio field 1`] = `
                   }
                 }
                 type="radio"
-                value="false"
+                value="1"
               />
               <span
                 aria-hidden={true}
@@ -2503,7 +2503,7 @@ exports[`single fields select field 1`] = `
               <div
                 className=" emotion-7"
               >
-                
+                foo
               </div>
               <div
                 className=" emotion-8"
@@ -2560,7 +2560,7 @@ exports[`single fields select field 1`] = `
           <input
             name="root"
             type="hidden"
-            value=""
+            value={0}
           />
         </div>
       </div>
@@ -3646,12 +3646,12 @@ exports[`single fields select field multiple choice formData 1`] = `
             <input
               name="root"
               type="hidden"
-              value="foo"
+              value={0}
             />
             <input
               name="root"
               type="hidden"
-              value="bar"
+              value={1}
             />
           </div>
         </div>
@@ -4238,7 +4238,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
               <div
                 className=" emotion-7"
               >
-                
+                foo
               </div>
               <div
                 className=" emotion-8"
@@ -4295,7 +4295,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           <input
             name="root"
             type="hidden"
-            value=""
+            value={0}
           />
         </div>
       </div>
@@ -4557,7 +4557,7 @@ exports[`single fields select field single choice formData 1`] = `
               <div
                 className=" emotion-7"
               >
-                bar
+                foo
               </div>
               <div
                 className=" emotion-8"
@@ -4614,7 +4614,7 @@ exports[`single fields select field single choice formData 1`] = `
           <input
             name="root"
             type="hidden"
-            value="bar"
+            value={0}
           />
         </div>
       </div>

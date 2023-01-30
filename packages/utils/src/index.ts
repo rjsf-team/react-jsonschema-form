@@ -5,7 +5,10 @@ import createSchemaUtils from "./createSchemaUtils";
 import dataURItoBlob from "./dataURItoBlob";
 import deepEquals from "./deepEquals";
 import enumOptionsDeselectValue from "./enumOptionsDeselectValue";
+import enumOptionsIndexForValue from "./enumOptionsIndexForValue";
+import enumOptionsIsSelected from "./enumOptionsIsSelected";
 import enumOptionsSelectValue from "./enumOptionsSelectValue";
+import enumOptionsValueForIndex from "./enumOptionsValueForIndex";
 import ErrorSchemaBuilder from "./ErrorSchemaBuilder";
 import findSchemaDefinition from "./findSchemaDefinition";
 import getInputProps from "./getInputProps";
@@ -37,7 +40,6 @@ import optionsList from "./optionsList";
 import orderProperties from "./orderProperties";
 import pad from "./pad";
 import parseDateString from "./parseDateString";
-import processSelectValue from "./processSelectValue";
 import rangeSpec from "./rangeSpec";
 import schemaRequiresTrueValue from "./schemaRequiresTrueValue";
 import shouldRender from "./shouldRender";
@@ -60,7 +62,10 @@ export {
   deepEquals,
   descriptionId,
   enumOptionsDeselectValue,
+  enumOptionsIndexForValue,
+  enumOptionsIsSelected,
   enumOptionsSelectValue,
+  enumOptionsValueForIndex,
   errorId,
   examplesId,
   ErrorSchemaBuilder,
@@ -87,7 +92,6 @@ export {
   orderProperties,
   pad,
   parseDateString,
-  processSelectValue,
   rangeSpec,
   schemaRequiresTrueValue,
   shouldRender,

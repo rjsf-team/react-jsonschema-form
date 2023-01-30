@@ -1,9 +1,12 @@
 import React from "react";
-import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
+import { Dropdown, IDropdownOption } from "@fluentui/react";
 import {
   ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIndexForValue,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
   WidgetProps,
-  processSelectValue,
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
@@ -74,7 +77,7 @@ export default function SelectWidget<
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   const _onChange = (
     _ev?: React.FormEvent<HTMLElement>,
@@ -86,46 +89,59 @@ export default function SelectWidget<
     if (multiple) {
       const valueOrDefault = value || [];
       if (item.selected) {
-        onChange([...valueOrDefault, item.key]);
+        onChange(enumOptionsSelectValue(item.key, valueOrDefault, enumOptions));
       } else {
-        onChange(valueOrDefault.filter((key: any) => key !== item.key));
+        onChange(
+          enumOptionsDeselectValue(item.key, valueOrDefault, enumOptions)
+        );
       }
     } else {
-      onChange(processSelectValue<T, S, F>(schema, item.key, options));
+      onChange(enumOptionsValueForIndex<S>(item.key, enumOptions, emptyValue));
     }
   };
   const _onBlur = (e: any) =>
-    onBlur(id, processSelectValue<T, S, F>(schema, e.target.value, options));
+    onBlur(
+      id,
+      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
+    );
 
   const _onFocus = (e: any) =>
-    onFocus(id, processSelectValue<T, S, F>(schema, e.target.value, options));
+    onFocus(
+      id,
+      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
+    );
 
-  const newOptions = (enumOptions as { value: any; label: any }[]).map(
-    (option) => ({
-      key: option.value,
-      text: option.label,
-      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
-    })
-  );
+  const newOptions = Array.isArray(enumOptions)
+    ? enumOptions.map((option, index) => ({
+        key: String(index),
+        text: option.label,
+        disabled:
+          Array.isArray(enumDisabled) &&
+          enumDisabled.indexOf(option.value) !== -1,
+      }))
+    : [];
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
   return (
-    <>
-      <Label>{label || schema.title}</Label>
-      <Dropdown
-        id={id}
-        multiSelect={multiple}
-        defaultSelectedKey={multiple ? undefined : value}
-        defaultSelectedKeys={multiple ? value : undefined}
-        required={required}
-        options={newOptions}
-        disabled={disabled || readonly}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        {...uiProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
-      />
-    </>
+    <Dropdown
+      id={id}
+      label={label || schema.title}
+      multiSelect={multiple}
+      defaultSelectedKey={multiple ? undefined : selectedIndexes}
+      defaultSelectedKeys={multiple ? (selectedIndexes as string[]) : undefined}
+      required={required}
+      options={newOptions}
+      disabled={disabled || readonly}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+      {...uiProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
+    />
   );
 }

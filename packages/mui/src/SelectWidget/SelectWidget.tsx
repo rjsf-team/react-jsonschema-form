@@ -3,7 +3,8 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import {
   ariaDescribedByIds,
-  processSelectValue,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -41,7 +42,7 @@ export default function SelectWidget<
   formContext,
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
   multiple = typeof multiple === "undefined" ? false : !!multiple;
 
@@ -53,21 +54,26 @@ export default function SelectWidget<
 
   const _onChange = ({
     target: { value },
-  }: React.ChangeEvent<{ name?: string; value: unknown }>) =>
-    onChange(processSelectValue<T, S, F>(schema, value, options));
+  }: React.ChangeEvent<{ value: string }>) =>
+    onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   return (
     <TextField
       id={id}
       name={id}
       label={label || schema.title}
-      value={isEmpty ? emptyValue : value}
+      value={isEmpty ? emptyValue : selectedIndexes}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -88,15 +94,16 @@ export default function SelectWidget<
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any =
-          enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-        return (
-          <MenuItem key={i} value={value} disabled={disabled}>
-            {label}
-          </MenuItem>
-        );
-      })}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map(({ value, label }, i: number) => {
+          const disabled: boolean =
+            Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+          return (
+            <MenuItem key={i} value={String(i)} disabled={disabled}>
+              {label}
+            </MenuItem>
+          );
+        })}
     </TextField>
   );
 }

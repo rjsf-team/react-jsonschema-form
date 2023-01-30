@@ -9,6 +9,9 @@ import {
 } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -37,18 +40,25 @@ export default function CheckboxesWidget<
     rawErrors = [],
     schema,
   } = props;
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  }: React.FocusEvent<HTMLInputElement | any>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement | any>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    true
+  ) as string[];
 
   return (
     <FormControl
@@ -63,23 +73,28 @@ export default function CheckboxesWidget<
         {label || schema.title}
       </FormLabel>
       <CheckboxGroup
-        onChange={(option) => onChange(option)}
-        defaultValue={value}
+        onChange={(option) =>
+          onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))
+        }
+        defaultValue={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
-            enumOptions.map((option) => {
-              const checked = checkboxesValues.includes(option.value);
+            enumOptions.map((option, index) => {
+              const checked = enumOptionsIsSelected<S>(
+                option.value,
+                checkboxesValues
+              );
               const itemDisabled =
                 Array.isArray(enumDisabled) &&
                 enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
-                  key={option.value}
-                  id={optionId<S>(id, option)}
+                  key={index}
+                  id={optionId(id, index)}
                   name={id}
-                  value={option.value}
+                  value={String(index)}
                   isChecked={checked}
                   isDisabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}

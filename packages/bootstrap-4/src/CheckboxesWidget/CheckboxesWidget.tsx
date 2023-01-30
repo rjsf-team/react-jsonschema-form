@@ -3,7 +3,9 @@ import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
+  enumOptionsIsSelected,
   enumOptionsSelectValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -27,32 +29,38 @@ export default function CheckboxesWidget<
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline } = options;
+  const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
-    (option: any) =>
+    (index: number) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       if (checked) {
         onChange(
-          enumOptionsSelectValue(option.value, checkboxesValues, enumOptions)
+          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
         );
       } else {
-        onChange(enumOptionsDeselectValue(option.value, checkboxesValues));
+        onChange(
+          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
+        );
       }
     };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   return (
     <Form.Group>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = checkboxesValues.includes(option.value);
+          const checked = enumOptionsIsSelected<S>(
+            option.value,
+            checkboxesValues
+          );
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;
@@ -66,11 +74,11 @@ export default function CheckboxesWidget<
               checked={checked}
               className="bg-transparent border-0"
               type={"checkbox"}
-              id={optionId<S>(id, option)}
+              id={optionId(id, index)}
               name={id}
               label={option.label}
               autoFocus={autofocus && index === 0}
-              onChange={_onChange(option)}
+              onChange={_onChange(index)}
               onBlur={_onBlur}
               onFocus={_onFocus}
               disabled={disabled || itemDisabled || readonly}
