@@ -1,6 +1,5 @@
 import {
   IdSchema,
-  EnumOptionsType,
   ID_KEY,
   ariaDescribedByIds,
   descriptionId,
@@ -14,10 +13,6 @@ import {
 const SIMPLE_ID = "simpleID";
 const SCHEMA_ID = "test";
 const ID_SCHEMA: IdSchema = { [ID_KEY]: SCHEMA_ID } as IdSchema;
-const OPTION: EnumOptionsType = {
-  label: "Foo",
-  value: "foo",
-};
 
 describe("idGenerators", () => {
   it("description id is generated for simple id", () => {
@@ -71,6 +66,6 @@ describe("idGenerators", () => {
     );
   });
   it("optionId generates the proper id for an option", () => {
-    expect(optionId(SIMPLE_ID, OPTION)).toEqual(`${SIMPLE_ID}-${OPTION.value}`);
+    expect(optionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}-${1}`);
   });
 });

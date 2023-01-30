@@ -6,7 +6,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
+  enumOptionsIsSelected,
   enumOptionsSelectValue,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   WidgetProps,
@@ -37,27 +39,31 @@ export default function CheckboxesWidget<
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline } = options;
+  const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
-    (option: any) =>
+    (index: number) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       if (checked) {
         onChange(
-          enumOptionsSelectValue(option.value, checkboxesValues, enumOptions)
+          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
         );
       } else {
-        onChange(enumOptionsDeselectValue(option.value, checkboxesValues));
+        onChange(
+          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
+        );
       }
     };
 
   const _onBlur = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   return (
     <>
@@ -67,18 +73,21 @@ export default function CheckboxesWidget<
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
-            const checked = checkboxesValues.includes(option.value);
+            const checked = enumOptionsIsSelected<S>(
+              option.value,
+              checkboxesValues
+            );
             const itemDisabled =
               Array.isArray(enumDisabled) &&
               enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                id={optionId<S>(id, option)}
+                id={optionId(id, index)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
+                onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
                 aria-describedby={ariaDescribedByIds<T>(id)}
@@ -87,7 +96,7 @@ export default function CheckboxesWidget<
             return (
               <FormControlLabel
                 control={checkbox}
-                key={option.value}
+                key={index}
                 label={option.label}
               />
             );

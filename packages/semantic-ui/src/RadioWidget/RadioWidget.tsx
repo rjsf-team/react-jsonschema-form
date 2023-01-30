@@ -1,6 +1,8 @@
 import React from "react";
 import {
   ariaDescribedByIds,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -29,35 +31,34 @@ export default function RadioWidget<
     onChange,
     onBlur,
     onFocus,
-    schema,
     options,
     formContext,
     uiSchema,
     rawErrors = [],
   } = props;
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const semanticProps = getSemanticProps<T, S, F>({
     formContext,
     options,
     uiSchema,
   });
-  // eslint-disable-next-line no-shadow
   const _onChange = (
     _: React.FormEvent<HTMLInputElement>,
     { value: eventValue }: CheckboxProps
   ) => {
-    return (
-      onChange &&
-      onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue)
+    return onChange(
+      enumOptionsValueForIndex<S>(eventValue!, enumOptions, emptyValue)
     );
   };
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+
+  const _onBlur = () => onBlur(id, value);
+  const _onFocus = () => onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
       {Array.isArray(enumOptions) &&
-        enumOptions.map((option) => {
+        enumOptions.map((option, index) => {
+          const checked = enumOptionsIsSelected<S>(option.value, value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;
@@ -65,17 +66,17 @@ export default function RadioWidget<
             <Form.Field
               required={required}
               control={Radio}
-              id={optionId<S>(id, option)}
+              id={optionId(id, index)}
               name={id}
               {...semanticProps}
               onFocus={_onFocus}
               onBlur={_onBlur}
-              label={`${option.label}`}
-              value={`${option.value}`}
-              error={rawErrors.length > 0}
-              key={option.value}
-              checked={value == option.value}
               onChange={_onChange}
+              label={option.label}
+              value={String(index)}
+              error={rawErrors.length > 0}
+              key={index}
+              checked={checked}
               disabled={disabled || itemDisabled || readonly}
               aria-describedby={ariaDescribedByIds<T>(id)}
             />

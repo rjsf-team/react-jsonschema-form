@@ -3,7 +3,8 @@ import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
   FormContextType,
-  processSelectValue,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -29,7 +30,7 @@ export default function SelectWidget<
   placeholder,
   rawErrors = [],
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : "";
 
@@ -46,6 +47,11 @@ export default function SelectWidget<
       return event.target.value;
     }
   }
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   return (
     <Form.Control
@@ -53,7 +59,9 @@ export default function SelectWidget<
       bsPrefix="custom-select"
       id={id}
       name={id}
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={
+        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
+      }
       required={required}
       multiple={multiple}
       disabled={disabled || readonly}
@@ -63,19 +71,27 @@ export default function SelectWidget<
         onBlur &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
+          onBlur(
+            id,
+            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+          );
         })
       }
       onFocus={
         onFocus &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(id, processSelectValue<T, S, F>(schema, newValue, options));
+          onFocus(
+            id,
+            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+          );
         })
       }
       onChange={(event: React.ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(processSelectValue<T, S, F>(schema, newValue, options));
+        onChange(
+          enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+        );
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
@@ -87,7 +103,7 @@ export default function SelectWidget<
           Array.isArray(enumDisabled) &&
           (enumDisabled as any).indexOf(value) != -1;
         return (
-          <option key={i} id={label} value={value} disabled={disabled}>
+          <option key={i} id={label} value={String(i)} disabled={disabled}>
             {label}
           </option>
         );

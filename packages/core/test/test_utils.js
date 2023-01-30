@@ -60,3 +60,24 @@ export function submitForm(node) {
     Simulate.submit(node);
   });
 }
+
+export function getSelectedOptionValue(selectNode) {
+  if (selectNode.type !== "select-one") {
+    throw new Error(
+      `invalid node provided, expected select got ${selectNode.type}`
+    );
+  }
+  const value = selectNode.value;
+  const options = [...selectNode.options];
+  const selectedOptions = options
+    .filter((option) =>
+      Array.isArray(value)
+        ? value.includes(option.value)
+        : value === option.value
+    )
+    .map((option) => option.text);
+  if (!Array.isArray(value)) {
+    return selectedOptions[0];
+  }
+  return selectedOptions;
+}

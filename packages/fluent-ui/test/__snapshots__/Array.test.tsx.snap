@@ -190,7 +190,7 @@ exports[`array fields array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-84"
+            className="ms-Button ms-Button--icon is-disabled root-83"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -207,7 +207,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-88 ms-Button-icon icon-85"
+                className="ms-Icon root-37 css-87 ms-Button-icon icon-84"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -220,7 +220,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-89"
+            className="ms-Button ms-Button--icon root-88"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -236,7 +236,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-88 ms-Button-icon icon-51"
+                className="ms-Icon root-37 css-87 ms-Button-icon icon-51"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -249,7 +249,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-89"
+            className="ms-Button ms-Button--icon root-88"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -346,7 +346,7 @@ exports[`array fields array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-89"
+            className="ms-Button ms-Button--icon root-88"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -362,7 +362,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-88 ms-Button-icon icon-51"
+                className="ms-Icon root-37 css-87 ms-Button-icon icon-51"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -376,7 +376,7 @@ exports[`array fields array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-84"
+            className="ms-Button ms-Button--icon is-disabled root-83"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -393,7 +393,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-88 ms-Button-icon icon-85"
+                className="ms-Icon root-37 css-87 ms-Button-icon icon-84"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -406,7 +406,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-89"
+            className="ms-Button ms-Button--icon root-88"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -544,9 +544,6 @@ exports[`array fields checkboxes 1`] = `
       }
     }
   >
-    <label
-      className="ms-Label root-66"
-    />
     <div
       className="ms-Dropdown-container"
     >
@@ -556,7 +553,7 @@ exports[`array fields checkboxes 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-67"
+        className="ms-Dropdown dropdown-66"
         data-is-focusable={true}
         id="root"
         onBlur={[Function]}
@@ -570,15 +567,15 @@ exports[`array fields checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-68"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-67"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-69"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-68"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-83"
+            className="ms-Dropdown-caretDown caretDown-82"
             data-icon-name="ChevronDown"
           >
             
@@ -666,14 +663,14 @@ exports[`array fields empty errors array 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-66"
+                className="ms-Label root-90"
                 htmlFor="root_name"
                 id="TextFieldLabel56"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-90"
+                className="ms-TextField-fieldGroup fieldGroup-89"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
@@ -955,14 +952,14 @@ exports[`array fields no errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-66"
+                className="ms-Label root-90"
                 htmlFor="root_name"
                 id="TextFieldLabel50"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-90"
+                className="ms-TextField-fieldGroup fieldGroup-89"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"

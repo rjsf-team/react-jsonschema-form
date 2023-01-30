@@ -1,7 +1,8 @@
 import React, { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
-  processSelectValue,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -45,7 +46,7 @@ function SelectWidget<
   onFocus,
   placeholder,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : "";
 
   const handleFocus = useCallback(
@@ -53,7 +54,7 @@ function SelectWidget<
       const newValue = getValue(event, multiple);
       return onFocus(
         id,
-        processSelectValue<T, S, F>(schema, newValue, options)
+        enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
       );
     },
     [onFocus, id, schema, multiple, options]
@@ -62,7 +63,10 @@ function SelectWidget<
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onBlur(id, processSelectValue<T, S, F>(schema, newValue, options));
+      return onBlur(
+        id,
+        enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
+      );
     },
     [onBlur, id, schema, multiple, options]
   );
@@ -70,9 +74,17 @@ function SelectWidget<
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple);
-      return onChange(processSelectValue<T, S, F>(schema, newValue, options));
+      return onChange(
+        enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
+      );
     },
     [onChange, schema, multiple, options]
+  );
+
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
   );
 
   return (
@@ -81,7 +93,9 @@ function SelectWidget<
       name={id}
       multiple={multiple}
       className="form-control"
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={
+        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
+      }
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
@@ -95,9 +109,9 @@ function SelectWidget<
       )}
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i) => {
-          const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
+          const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
           return (
-            <option key={i} value={value} disabled={disabled}>
+            <option key={i} value={String(i)} disabled={disabled}>
               {label}
             </option>
           );

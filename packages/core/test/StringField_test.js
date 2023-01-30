@@ -4,7 +4,12 @@ import { act, Simulate } from "react-dom/test-utils";
 import sinon from "sinon";
 import { parseDateString, toDateString, utcToLocal } from "@rjsf/utils";
 
-import { createFormComponent, createSandbox, submitForm } from "./test_utils";
+import {
+  createFormComponent,
+  createSandbox,
+  getSelectedOptionValue,
+  submitForm,
+} from "./test_utils";
 
 describe("StringField", () => {
   let sandbox;
@@ -376,7 +381,7 @@ describe("StringField", () => {
       });
       act(() => {
         Simulate.change(node.querySelector("select"), {
-          target: { value: "foo" },
+          target: { value: 0 }, // use index
         });
       });
       sinon.assert.calledWithMatch(
@@ -418,10 +423,10 @@ describe("StringField", () => {
       });
 
       Simulate.change(node.querySelector("select"), {
-        target: { value: "foo" },
+        target: { value: 0 }, // use index
       });
 
-      expect(node.querySelector("select").value).eql("foo");
+      expect(getSelectedOptionValue(node.querySelector("select"))).eql("foo");
     });
 
     it("should reflect undefined value into the dom as empty option", () => {
@@ -436,7 +441,7 @@ describe("StringField", () => {
         target: { value: "" },
       });
 
-      expect(node.querySelector("select").value).eql("");
+      expect(getSelectedOptionValue(node.querySelector("select"))).eql("");
     });
 
     it("should fill field with data", () => {
@@ -946,13 +951,13 @@ describe("StringField", () => {
 
       act(() => {
         Simulate.change(node.querySelector("#root_year"), {
-          target: { value: 2012 },
+          target: { value: 2012 - 1900 }, // convert year to index
         });
         Simulate.change(node.querySelector("#root_month"), {
-          target: { value: 10 },
+          target: { value: 9 }, // Month index
         });
         Simulate.change(node.querySelector("#root_day"), {
-          target: { value: 2 },
+          target: { value: 1 }, // Day index
         });
         Simulate.change(node.querySelector("#root_hour"), {
           target: { value: 1 },
@@ -1035,6 +1040,7 @@ describe("StringField", () => {
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
+        "0",
         "1",
         "2",
         "3",
@@ -1046,7 +1052,6 @@ describe("StringField", () => {
         "9",
         "10",
         "11",
-        "12",
       ]);
     });
 
@@ -1224,13 +1229,13 @@ describe("StringField", () => {
 
       act(() => {
         Simulate.change(node.querySelector("#root_year"), {
-          target: { value: 2012 },
+          target: { value: 2012 - 1900 }, // convert year to index
         });
         Simulate.change(node.querySelector("#root_month"), {
-          target: { value: 10 },
+          target: { value: 9 }, // Month index
         });
         Simulate.change(node.querySelector("#root_day"), {
-          target: { value: 2 },
+          target: { value: 1 }, // Day index
         });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1249,15 +1254,21 @@ describe("StringField", () => {
 
       act(() => {
         Simulate.change(node.querySelector("#root_year"), {
-          target: { value: 2012 },
+          target: { value: 2012 - 1900 }, // convert year to index
         });
         Simulate.change(node.querySelector("#root_month"), {
-          target: { value: 10 },
+          target: { value: 9 }, // Month index
         });
       });
-      expect(node.querySelector("#root_year").value).eql("2012");
-      expect(node.querySelector("#root_month").value).eql("10");
-      expect(node.querySelector("#root_day").value).eql("");
+      expect(getSelectedOptionValue(node.querySelector("#root_year"))).eql(
+        "2012"
+      );
+      expect(getSelectedOptionValue(node.querySelector("#root_month"))).eql(
+        "10"
+      );
+      expect(getSelectedOptionValue(node.querySelector("#root_day"))).eql(
+        "day"
+      );
       sinon.assert.notCalled(onChange);
     });
 
@@ -1318,6 +1329,7 @@ describe("StringField", () => {
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
       expect(monthOptionsValues).eql([
         "",
+        "0",
         "1",
         "2",
         "3",
@@ -1329,7 +1341,6 @@ describe("StringField", () => {
         "9",
         "10",
         "11",
-        "12",
       ]);
     });
 

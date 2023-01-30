@@ -15,6 +15,42 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.0
+
+## @rjsf/antd
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/bootstrap-4
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/chakra-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/core
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/fluent-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/material-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/mui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/semantic-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/utils
+- Added `enumOptionsIndexForValue()`, `enumOptionsIsSelected()`, `enumOptionsValueForIndex()` functions to support fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+  - Updated `enumOptionsDeselectValue()`, `enumOptionsSelectValue()` and `optionId()` to use indexes instead of values
+  - Deleted the `processSelectValue()` that was added in the beta and is no longer needed
+
+## Dev / docs / playground
+- Updated the `utility-functions` documentation for the new and updated methods mentioned above, as well as deleting the documentation for `processSelectValue()`
+- Updated the playground to add a new `Enum Objects` example to highlight the use of indexes for `enumOptions`
+- Updated `5.x migration guide` to document the change from values to indexes for the `enumOptions` based controls.
+
 # 5.0.0-beta.20
 
 ## @rjsf/antd

@@ -2,7 +2,8 @@ import React from "react";
 import Select, { DefaultOptionType } from "antd/lib/select";
 import {
   ariaDescribedByIds,
-  processSelectValue,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -36,21 +37,20 @@ export default function SelectWidget<
   options,
   placeholder,
   readonly,
-  schema,
   value,
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   const handleChange = (nextValue: any) =>
-    onChange(processSelectValue<T, S, F>(schema, nextValue, options));
+    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = () =>
-    onBlur(id, processSelectValue<T, S, F>(schema, value, options));
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const handleFocus = () =>
-    onFocus(id, processSelectValue<T, S, F>(schema, value, options));
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const filterOption = (input: string, option?: DefaultOptionType) => {
     if (option && isString(option.label)) {
@@ -62,8 +62,11 @@ export default function SelectWidget<
 
   const getPopupContainer = (node: any) => node.parentNode;
 
-  const stringify = (currentValue: any) =>
-    Array.isArray(currentValue) ? value.map(String) : String(value);
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -82,20 +85,20 @@ export default function SelectWidget<
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       style={SELECT_STYLE}
-      value={typeof value !== "undefined" ? stringify(value) : undefined}
+      value={selectedIndexes}
       {...extraProps}
       filterOption={filterOption}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: optionValue, label: optionLabel }) => (
+        enumOptions.map(({ value: optionValue, label: optionLabel }, index) => (
           <Select.Option
             disabled={
               Array.isArray(enumDisabled) &&
               enumDisabled.indexOf(optionValue) !== -1
             }
-            key={String(optionValue)}
-            value={String(optionValue)}
+            key={String(index)}
+            value={String(index)}
           >
             {optionLabel}
           </Select.Option>

@@ -1,11 +1,6 @@
 import isString from "lodash/isString";
 
-import {
-  EnumOptionsType,
-  IdSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "./types";
+import { IdSchema } from "./types";
 import { ID_KEY } from "./constants";
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
@@ -80,15 +75,12 @@ export function ariaDescribedByIds<T = any>(
   )}${examples}`;
 }
 
-/** Return a consistent `id` for the `option`s of a `Radio` or `Checkboxes` widget
+/** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
  *
  * @param id - The id of the parent component for the option
- * @param option - The option for which the id is desired
- * @returns - An id for the option based on the parent `id`
+ * @param optionIndex - The index of the option for which the id is desired
+ * @returns - An id for the option index based on the parent `id`
  */
-export function optionId<S extends StrictRJSFSchema = RJSFSchema>(
-  id: string,
-  option: EnumOptionsType<S>
-) {
-  return `${id}-${option.value}`;
+export function optionId(id: string, optionIndex: number) {
+  return `${id}-${optionIndex}`;
 }

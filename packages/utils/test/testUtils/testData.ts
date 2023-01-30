@@ -1,4 +1,4 @@
-import { ONE_OF_KEY, RJSFSchema } from "../../src";
+import { EnumOptionsType, ONE_OF_KEY, RJSFSchema } from "../../src";
 
 export const oneOfData = {
   name: "second_option",
@@ -269,3 +269,10 @@ export const FIRST_OPTION_ONE_OF_DATA = {
   unique_to_second: undefined,
 };
 export const ONE_OF_SCHEMA_DATA = { ...oneOfData, unique_to_second: 5 };
+
+export const ALL_OPTIONS: EnumOptionsType[] = [
+  { value: "foo", label: "Foo" },
+  { value: "bar", label: "Bar" },
+  { value: "baz", label: "Baz" },
+  { value: "boo", label: "Boo" },
+];

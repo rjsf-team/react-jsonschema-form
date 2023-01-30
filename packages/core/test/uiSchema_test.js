@@ -1775,7 +1775,7 @@ describe("uiSchema", () => {
         Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
           target: {
-            value: "true",
+            value: 0, // use index
           },
         });
 
@@ -1798,9 +1798,8 @@ describe("uiSchema", () => {
         });
 
         Simulate.change(node.querySelector("select"), {
-          // DOM option change events always return strings
           target: {
-            value: "false",
+            value: 1, // use index
           },
         });
 

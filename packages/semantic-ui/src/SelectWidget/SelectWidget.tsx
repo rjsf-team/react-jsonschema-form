@@ -1,8 +1,9 @@
 import React from "react";
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   EnumOptionsType,
-  processSelectValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -26,11 +27,11 @@ function createDefaultValueOptionsForDropDown<
   enumDisabled?: UIOptionsType["enumDisabled"]
 ) {
   const disabledOptions = enumDisabled || [];
-  const options = map(enumOptions, ({ label, value }) => ({
+  const options = map(enumOptions, ({ label, value }, index) => ({
     disabled: disabledOptions.indexOf(value) !== -1,
     key: label,
     text: label,
-    value,
+    value: String(index),
   }));
   return options;
 }
@@ -76,7 +77,7 @@ export default function SelectWidget<
       upward: false,
     },
   });
-  const { enumDisabled, enumOptions } = options;
+  const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : "";
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
@@ -85,19 +86,25 @@ export default function SelectWidget<
   const _onChange = (
     _: React.SyntheticEvent<HTMLElement>,
     { value }: DropdownProps
-  ) => onChange && onChange(processSelectValue(schema, value, options));
+  ) =>
+    onChange(
+      enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal)
+    );
   // eslint-disable-next-line no-shadow
   const _onBlur = (
     _: React.FocusEvent<HTMLElement>,
     { target: { value } }: DropdownProps
-  ) => onBlur && onBlur(id, processSelectValue(schema, value, options));
+  ) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onFocus = (
     _: React.FocusEvent<HTMLElement>,
-    {
-      // eslint-disable-next-line no-shadow
-      target: { value },
-    }: DropdownProps
-  ) => onFocus && onFocus(id, processSelectValue(schema, value, options));
+    { target: { value } }: DropdownProps
+  ) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   return (
     <Form.Dropdown
@@ -106,7 +113,7 @@ export default function SelectWidget<
       name={id}
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={typeof value === "undefined" ? emptyValue : selectedIndexes}
       error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}
