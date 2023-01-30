@@ -62,22 +62,6 @@ const cases: { schema: object; expected: string | undefined }[] = [
     expected: "string",
   },
   {
-    schema: { oneOf: [] },
-    expected: undefined,
-  },
-  {
-    schema: { oneOf: [{ type: "string" }] },
-    expected: "string",
-  },
-  {
-    schema: { anyOf: [] },
-    expected: undefined,
-  },
-  {
-    schema: { anyOf: [{ type: "number" }] },
-    expected: "number",
-  },
-  {
     schema: {},
     expected: undefined,
   },

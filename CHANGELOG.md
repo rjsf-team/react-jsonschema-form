@@ -45,6 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `enumOptionsIndexForValue()`, `enumOptionsIsSelected()`, `enumOptionsValueForIndex()` functions to support fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
   - Updated `enumOptionsDeselectValue()`, `enumOptionsSelectValue()` and `optionId()` to use indexes instead of values
   - Deleted the `processSelectValue()` that was added in the beta and is no longer needed
+- Updated `getSchemaType()` to remove the inference of type from `anyOf`/`oneOf`, fixing [#3412](https://github.com/rjsf-team/react-jsonschema-form/issues/3412)
 
 ## Dev / docs / playground
 - Updated the `utility-functions` documentation for the new and updated methods mentioned above, as well as deleting the documentation for `processSelectValue()`
