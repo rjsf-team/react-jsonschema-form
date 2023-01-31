@@ -292,7 +292,7 @@ return (<Form schema={schema} validator={validator} />);
 ### customFormats
 
 [Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited.
-react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](../usage/widgets.md).
+react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](docs/usage/widgets.md).
 To add formats of your own, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`:
 
 ```tsx

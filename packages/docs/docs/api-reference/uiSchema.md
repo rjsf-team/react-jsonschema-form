@@ -69,7 +69,7 @@ This will make all widgets have an id prefixed with `myform`.
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself.
 
-See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/custom-widgets-fields#custom-field-components) for more information about how to use this property.
+See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields#custom-field-components) for more information about how to use this property.
 
 ### ui:fieldReplacesAnyOrOneOf
 
@@ -86,14 +86,14 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-NOTE: The properties specific to array items can be found [here](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/arrays#array-item-uiSchema-options)
+NOTE: The properties specific to array items can be found [here](../usage/arrays#array-item-uiSchema-options)
 
 ### widget
 
 The `ui:field` property overrides the `Widget` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a widget that is used to look up an implementation from the `widgets` list or an actual one-off `Widget` component implementation itself.
 
-See [Custom Widgets and Fields](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/custom-widgets-fields) for more information about how to use this property.
+See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields) for more information about how to use this property.
 
 ### classNames
 

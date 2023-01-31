@@ -38,22 +38,31 @@ jobs:
     - if: matrix.node-version == '18.x'
       uses: actions/upload-artifact@v3
       with:
-        name: dist
+        name: playground
         path: packages/playground/dist
+    - if: matrix.node-version == '18.x'
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: packages/docs/build
     - run: npm test
-
-  deploy_playground:
+  deploy_playground_and_docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    name: Deploy playground to GitHub Pages
+    name: Deploy playground and docs to GitHub Pages
     needs: [build]
     steps:
-      - name: Download built files
+      - name: Download built playground
         uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
-      - name: Deploy playground
+      - name: Download built docs
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+          path: dist/docs
+      - name: Deploy playground + docs to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           keep_history: true
@@ -62,7 +71,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  docs:
+  old_docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

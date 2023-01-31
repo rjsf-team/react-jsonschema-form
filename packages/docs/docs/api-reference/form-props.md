@@ -1,3 +1,7 @@
+---
+title: <Form /> Props
+---
+
 # &lt;Form /> props
 
 ## acceptcharset
@@ -26,7 +30,7 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 
 You can provide custom buttons to your form via the `Form` component's `children`. If no children are provided, by default a `Submit` button will be rendered.
 
-For other ways to modify the default `Submit` button, see both the [Submit Button Options](../uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../../advanced-customization/custom-templates.md#submitbutton) documentation.
+For other ways to modify the default `Submit` button, see both the [Submit Button Options](./uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../advanced-customization/custom-templates.md#submitbutton) documentation.
 
 ```tsx
 import { RJSFSchema } from "@rjsf/utils";
