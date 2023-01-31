@@ -6,6 +6,6 @@ mkdocs:
 formats: all
 
 python:
-  version: "3.10"
+  version: "3.8"
   install:
     - requirements: requirements.docs.txt

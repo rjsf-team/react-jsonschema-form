@@ -35,7 +35,7 @@ jobs:
       env:
         NODE_OPTIONS: --max_old_space_size=4096
 
-    - if: matrix.node-version == '16.x'
+    - if: matrix.node-version == '18.x'
       uses: actions/upload-artifact@v3
       with:
         name: dist

@@ -15,6 +15,9 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.1
+- Updated the `peerDependencies` in all packages to remove the `-beta.x` tags from the `@rjsf/xxxx` packages
+
 # 5.0.0
 
 ## @rjsf/antd
