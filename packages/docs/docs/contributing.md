@@ -33,14 +33,14 @@ Code is automatically prettified upon commit using precommit hooks, assuming you
 
 ## Documentation
 
-We use [mkdocs](https://www.mkdocs.org/) to build our documentation. To run documentation locally, run:
+We use [Docusaurus](https://docusaurus.io/) to build our documentation. To run documentation locally, run:
 
 ```bash
-pip install -r requirements.docs.txt
-mkdocs serve
+cd packages/docs
+npm start
 ```
 
-Documentation will be served on [localhost:8000](http://localhost:8000).
+Documentation will be served on [localhost:3000](http://localhost:3000).
 
 ## Tests
 
