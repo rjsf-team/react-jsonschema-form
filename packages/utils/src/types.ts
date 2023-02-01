@@ -341,6 +341,16 @@ export interface FieldProps<
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
+  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
+   * Default is `root`
+   */
+  idPrefix?: string;
+  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
+   * ids (Default is `_`)
+   */
+  idSeparator?: string;
+  /** An array of strings listing all generated error messages from encountered errors for this field */
+  rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
 }

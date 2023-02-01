@@ -308,6 +308,9 @@ A field component will always be passed the following props:
  - `readonly`: A boolean value stating if the field is read-only;
  - `autofocus`: A boolean value stating if the field should autofocus;
  - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
+ - `idPrefix`: To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids; Default is `root`
+ - `idSeparator`: To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (Default is `_`)
+ - `rawErrors`: `An array of strings listing all generated error messages from encountered errors for this field
  - `onChange`: The field change event handler; called with the updated form data and an optional `ErrorSchema`
  - `onBlur`: The input blur event handler; call it with the field id and value;
  - `onFocus`: The input focus event handler; call it with the field id and value;
