@@ -86,8 +86,8 @@ jobs:
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  deprecated_docs:
+  # NOTE: The following workflow is deprecated. The docs are new deployed to GitHub pages above.
+  docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
