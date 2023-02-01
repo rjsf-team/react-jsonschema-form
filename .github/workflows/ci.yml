@@ -87,7 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  old_docs:
+  deprecated_docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

@@ -89,9 +89,9 @@ is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
 ### Releasing docs
 
-Docs are automatically published using [Read The Docs](https://readthedocs.org/) upon a new Release.
+Docs are automatically published to GitHub Pages when the `main` branch is updated.
 
-You can also publish the latest release of the docs by running the [Release Latest Documentation](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow) workflow on GitHub Actions.
+We are currently in the process of automatically configuring versionable documentation on our new docs site. 
 
 ### Releasing the playground
 
