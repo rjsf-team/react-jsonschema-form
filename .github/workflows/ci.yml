@@ -24,14 +24,28 @@ jobs:
     - run: npm run cs-check
 
     - name: Build with Netlify badge
-      if: github.ref != 'refs/heads/main'
+      if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'
       run: npm run build
       env:
         VITE_SHOW_NETLIFY_BADGE: true
         NODE_OPTIONS: --max_old_space_size=4096
+
     - name: Build
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && matrix.node-version != '14.x'
       run: npm run build
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+
+    # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
+    - name: Build with Netlify badge (no docs)
+      if: github.ref != 'refs/heads/main' && matrix.node-version == '14.x'
+      run: npx nx run-many --target=build --exclude=docs
+      env:
+        VITE_SHOW_NETLIFY_BADGE: true
+        NODE_OPTIONS: --max_old_space_size=4096
+    - name: Build (no docs)
+      if: github.ref == 'refs/heads/main' && matrix.node-version == '14.x'
+      run: npx nx run-many --target=build --exclude=docs
       env:
         NODE_OPTIONS: --max_old_space_size=4096
 
