@@ -71,7 +71,7 @@ jobs:
       - name: Download built playground
         uses: actions/download-artifact@v3
         with:
-          name: dist
+          name: playground
           path: dist
       - name: Download built docs
         uses: actions/download-artifact@v3
