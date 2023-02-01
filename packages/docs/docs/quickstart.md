@@ -45,7 +45,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](/docs/usage/single.md).
+For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](./usage/single.md).
 
 ## Form uiSchema
 

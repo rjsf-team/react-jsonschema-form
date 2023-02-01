@@ -21,6 +21,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Added the `idPrefix`, `idSeparator` and `rawErrors` optional props to `FieldProps` since they were missing
 
 ## Dev / docs / playground
+- Migrated latest documentation to Docusaurus, which is deployed to GitHub Pages.
+- Updated readthedocs.io documentation site to guide users to the new docs site.
+- Updated links in documentation and package README files to point to new site.
 - Updated the `custom-widgets-field` documentation for the new `FieldProps`
 
 # 5.0.1

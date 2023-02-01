@@ -16,7 +16,7 @@
   <p align="center">
   Chakra UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -70,7 +70,7 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 - `framer-motion >= 5.0.0`
 - `@rjsf/core >= 2.0.0`
 
-Refer to the [rjsf installation guide](https://react-jsonschema-form.readthedocs.io/en/stable/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
+Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonschema-form/docs/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
 
 ---
 
@@ -105,7 +105,7 @@ const Form = withTheme(ChakraUITheme);
 
 ## Optional Chakra UI Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://react-jsonschema-form.readthedocs.io/en/stable/form-customization/#object-additional-properties).
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
 
 You can use `ChakraProvider`, to customize the components at a theme level.\
 And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
@@ -138,7 +138,7 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/stable/contributing/) to get started.
+Read our [contributors' guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing/) to get started.
 
 <!-- CONTACT -->
 

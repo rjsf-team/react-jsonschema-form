@@ -34,7 +34,7 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 - [includeExamples=false]: boolean - Optional flag, if true, will add the `examplesId` into the list
 
 #### Returns
@@ -90,7 +90,7 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 Return a consistent `id` for the field description element.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field description element from the given `id`
@@ -159,7 +159,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 Return a consistent `id` for the field error element.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field error element from the given `id`
@@ -168,7 +168,7 @@ Return a consistent `id` for the field error element.
 Return a consistent `id` for the field examples element.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field examples element from the given `id`
@@ -224,7 +224,7 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 - UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones
 
 ### getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:` stripped off.
+Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 
 #### Parameters
 - [uiSchema={}]: UiSchema<T, S, F> - The UI Schema from which to get any `ui:xxx` options
@@ -286,7 +286,7 @@ Detects whether the `widget` exists for the `schema` with the associated `regist
 Return a consistent `id` for the field help element.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field help element from the given `id`
@@ -478,7 +478,7 @@ If either of those two sets are not the same, then the component should be reren
 Return a consistent `id` for the field title element.
 
 #### Parameters
-- id: IdSchema<T> | string - Either simple string id or an IdSchema from which to extract it
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
 
 #### Returns
 - string: The consistent id for the field title element from the given `id`
@@ -624,12 +624,12 @@ Merges the errors in `additionalErrorSchema` into the existing `validationData` 
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
 
 #### Parameters
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
-- validationData: ValidationData<T> - The current `ValidationData` into which to merge the additional errors
-- [additionalErrorSchema]: ErrorSchema<T> | undefined - The additional set of errors in an `ErrorSchema`
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
+- validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
+- [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The additional set of errors in an `ErrorSchema`
 
 #### Returns
-- ValidationData<T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+- ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
 
 ### retrieveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -674,7 +674,7 @@ Generates an `IdSchema` object for the `schema`, recursively
 - [idSeparator='_']: string - The separator to use for the path segments in the id
 
 #### Returns
-- IDSchema<T>: The `IdSchema` object for the `schema`
+- IDSchema&lt;T>: The `IdSchema` object for the `schema`
 
 ### toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 Generates an `PathSchema` object for the `schema`, recursively
@@ -687,7 +687,7 @@ Generates an `PathSchema` object for the `schema`, recursively
 - [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
 
 #### Returns
-- PathSchema<T> - The `PathSchema` object for the `schema`
+- PathSchema&lt;T> - The `PathSchema` object for the `schema`
 
 ## Schema utils creation function
 
@@ -704,16 +704,16 @@ The resulting interface implementation will forward the `validator` and `rootSch
 
 ## ErrorSchema builder class
 
-### ErrorSchemaBuilder<T = any>(initialSchema?: ErrorSchema<T>) constructor
-The `ErrorSchemaBuilder<T>` is used to build an `ErrorSchema<T>` since the definition of the `ErrorSchema` type is designed for reading information rather than writing it.
+### ErrorSchemaBuilder&lt;T = any>(initialSchema?: ErrorSchema&lt;T>) constructor
+The `ErrorSchemaBuilder&lt;T>` is used to build an `ErrorSchema&lt;T>` since the definition of the `ErrorSchema` type is designed for reading information rather than writing it.
 Use this class to add, replace or clear errors in an error schema by using either dotted path or an array of path names.
 Once you are done building the `ErrorSchema`, you can get the result and/or reset all the errors back to an initial set and start again.
 
 #### Parameters
-- [initialSchema]: ErrorSchema<T> | undefined - The optional set of initial errors, that will be cloned into the class
+- [initialSchema]: ErrorSchema&lt;T> | undefined - The optional set of initial errors, that will be cloned into the class
 
 #### Returns
-- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+- ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class
 
 ### ErrorSchema getter function
 Returns the `ErrorSchema` that has been updated by the methods of the `ErrorSchemaBuilder`
@@ -735,10 +735,10 @@ const errorSchema: ErrorSchema = builder.ErrorSchema;
 Resets all errors in the `ErrorSchemaBuilder` back to the `initialSchema` if provided, otherwise an empty set.
 
 #### Parameters
-- [initialSchema]: ErrorSchema<T> | undefined - The optional set of initial errors, that will be cloned into the class
+- [initialSchema]: ErrorSchema&lt;T> | undefined - The optional set of initial errors, that will be cloned into the class
 
 #### Returns
-- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+- ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class
 
 ### addErrors()
 Adds the `errorOrList` to the list of errors in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
@@ -749,7 +749,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 - [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
-- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+- ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class
 
 ### setErrors()
 Sets/replaces the `errorOrList` as the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
@@ -760,7 +760,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 - [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
-- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+- ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class
 
 ### clearErrors()
 Clears the error(s) in the `ErrorSchema` at either the root level or the location within the schema described by the `pathOfError`.
@@ -770,4 +770,4 @@ For more information about how to specify the path see the [eslint lodash plugin
 - [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
-- ErrorSchemaBuilder<T> - The instance of the `ErrorSchemaBuilder` class
+- ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class

@@ -976,7 +976,7 @@ render((
 
 The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOptions` capabilities in the `uiSchema` but it can also be fully customized as you see fit.
 > NOTE: However you choose to implement this, making it something other than a `submit` type `button` may result in the `Form` not submitting when pressed.
-> You could also choose to provide your own submit button as the [children prop](https://react-jsonschema-form.readthedocs.io/en/stable/api-reference/form-props#children) of the `Form` should you so choose.
+> You could also choose to provide your own submit button as the [children prop](../api-reference/form-props#children) of the `Form` should you so choose.
 
 ```tsx
 import React from "react";
