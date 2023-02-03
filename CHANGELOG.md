@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.3
+
+## @rjsf/chakra-ui
+- Fixed the `SelectWidget` to allow the proper display of the selected value, fixing [#3422](https://github.com/rjsf-team/react-jsonschema-form/issues/3422)
+
 # 5.0.2
 
 ## @rjsf/utils

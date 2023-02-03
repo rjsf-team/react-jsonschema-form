@@ -2503,7 +2503,7 @@ exports[`single fields select field 1`] = `
               <div
                 className=" emotion-7"
               >
-                foo
+                
               </div>
               <div
                 className=" emotion-8"
@@ -2560,7 +2560,6 @@ exports[`single fields select field 1`] = `
           <input
             name="root"
             type="hidden"
-            value={0}
           />
         </div>
       </div>
@@ -3646,12 +3645,12 @@ exports[`single fields select field multiple choice formData 1`] = `
             <input
               name="root"
               type="hidden"
-              value={0}
+              value="0"
             />
             <input
               name="root"
               type="hidden"
-              value={1}
+              value="1"
             />
           </div>
         </div>
@@ -4238,7 +4237,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
               <div
                 className=" emotion-7"
               >
-                foo
+                
               </div>
               <div
                 className=" emotion-8"
@@ -4295,7 +4294,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           <input
             name="root"
             type="hidden"
-            value={0}
           />
         </div>
       </div>
@@ -4557,7 +4555,7 @@ exports[`single fields select field single choice formData 1`] = `
               <div
                 className=" emotion-7"
               >
-                foo
+                bar
               </div>
               <div
                 className=" emotion-8"
@@ -4614,7 +4612,6 @@ exports[`single fields select field single choice formData 1`] = `
           <input
             name="root"
             type="hidden"
-            value={0}
           />
         </div>
       </div>

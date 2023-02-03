@@ -3,6 +3,7 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
   EnumOptionsType,
+  enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   FormContextType,
   RJSFSchema,
@@ -70,7 +71,7 @@ export default function SelectWidget<
   )
     ? enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
-        _valueLabelMap[index] = label;
+        _valueLabelMap[index] = label || String(value);
         return {
           label,
           value: String(index),
@@ -81,16 +82,21 @@ export default function SelectWidget<
     : [];
 
   const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
+  const selectedIndex = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    isMultiple
+  );
   const formValue: any = isMultiple
-    ? (value || []).map((v: any, index: number) => {
+    ? ((selectedIndex as string[]) || []).map((i: string) => {
         return {
-          label: _valueLabelMap[index] || v,
-          value: index,
+          label: _valueLabelMap[i],
+          value: i,
         };
       })
     : {
-        label: _valueLabelMap[0] || value || "",
-        value: 0,
+        label: _valueLabelMap[selectedIndex as string] || "",
+        selectedIndex,
       };
 
   return (
