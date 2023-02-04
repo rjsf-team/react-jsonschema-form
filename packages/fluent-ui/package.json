@@ -49,11 +49,11 @@
     "@types/react-dom": "^17.0.17",
     "@types/react-test-renderer": "^17.0.2",
     "dts-cli": "^1.6.3",
-    "eslint": "^8.31.0",
+    "eslint": "^8.33.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
-    "rimraf": "^4.0.4"
+    "rimraf": "^4.1.2"
   },
   "publishConfig": {
     "access": "public"

@@ -1045,6 +1045,7 @@ exports[`single fields checkboxes field 1`] = `
               id="root-0"
               name="root"
               onChange={[Function]}
+              required={false}
               type="checkbox"
             />
             <svg
@@ -1097,6 +1098,7 @@ exports[`single fields checkboxes field 1`] = `
               id="root-1"
               name="root"
               onChange={[Function]}
+              required={false}
               type="checkbox"
             />
             <svg
@@ -1149,6 +1151,7 @@ exports[`single fields checkboxes field 1`] = `
               id="root-2"
               name="root"
               onChange={[Function]}
+              required={false}
               type="checkbox"
             />
             <svg
@@ -1201,6 +1204,7 @@ exports[`single fields checkboxes field 1`] = `
               id="root-3"
               name="root"
               onChange={[Function]}
+              required={false}
               type="checkbox"
             />
             <svg
@@ -6752,6 +6756,7 @@ exports[`single fields radio field 1`] = `
               id="root-0"
               name="root"
               onChange={[Function]}
+              required={false}
               type="radio"
               value="0"
             />
@@ -6814,6 +6819,7 @@ exports[`single fields radio field 1`] = `
               id="root-1"
               name="root"
               onChange={[Function]}
+              required={false}
               type="radio"
               value="1"
             />
@@ -8182,7 +8188,7 @@ exports[`single fields slider field 1`] = `
           }
         />
         <span
-          className="MuiSlider-thumb MuiSlider-thumbColorPrimary MuiSlider-thumbSizeMedium emotion-5"
+          className="MuiSlider-thumb MuiSlider-thumbSizeMedium MuiSlider-thumbColorPrimary emotion-5"
           data-focusvisible={false}
           data-index={0}
           onMouseLeave={[Function]}
