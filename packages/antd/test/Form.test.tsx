@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 import { RJSFSchema, ErrorSchema } from "@rjsf/utils";
 
 import "../__mocks__/matchMedia.mock";
@@ -192,9 +192,10 @@ describe("single fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test("checkbox field with label", () => {
     const schema: RJSFSchema = {
       type: "boolean",
+      title: "test",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)

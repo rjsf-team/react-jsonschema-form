@@ -1,6 +1,9 @@
 import React, { useCallback } from "react";
 import {
+  ariaDescribedByIds,
+  examplesId,
   getInputProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -15,7 +18,7 @@ import {
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -81,20 +84,23 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         value={inputValue}
         {...inputProps}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
       {Array.isArray(schema.examples) && (
-        <datalist key={`datalist_${id}`} id={`examples_${id}`}>
-          {[
-            ...new Set(
-              schema.examples.concat(schema.default ? [schema.default] : [])
-            ),
-          ].map((example: any) => (
-            <option key={example} value={example} />
-          ))}
+        <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
+          {(schema.examples as string[])
+            .concat(
+              schema.default && !schema.examples.includes(schema.default)
+                ? ([schema.default] as string[])
+                : []
+            )
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
         </datalist>
       )}
     </>

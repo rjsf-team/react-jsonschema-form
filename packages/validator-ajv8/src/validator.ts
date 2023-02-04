@@ -1,24 +1,30 @@
-import Ajv, { ErrorObject } from "ajv";
+import Ajv, { ErrorObject, ValidateFunction } from "ajv";
 import toPath from "lodash/toPath";
 import isObject from "lodash/isObject";
 import clone from "lodash/clone";
 import {
   CustomValidator,
+  ERRORS_KEY,
   ErrorSchema,
+  ErrorSchemaBuilder,
   ErrorTransformer,
   FieldValidation,
+  FormContextType,
   FormValidation,
   GenericObjectType,
+  getDefaultFormState,
+  mergeValidationData,
+  REF_KEY,
   RJSFSchema,
   RJSFValidationError,
   StrictRJSFSchema,
+  UiSchema,
   ValidationData,
   ValidatorType,
-  getDefaultFormState,
-  mergeValidationData,
-  ERRORS_KEY,
-  REF_KEY,
+  PROPERTIES_KEY,
+  getUiOptions,
 } from "@rjsf/utils";
+import get from "lodash/get";
 
 import { CustomValidatorOptionsType, Localizer } from "./types";
 import createAjvInstance from "./createAjvInstance";
@@ -29,8 +35,9 @@ const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
  */
 export default class AJV8Validator<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
-> implements ValidatorType<T>
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> implements ValidatorType<T, S, F>
 {
   /** The AJV instance to use for all validations
    *
@@ -55,12 +62,14 @@ export default class AJV8Validator<
       customFormats,
       ajvOptionsOverrides,
       ajvFormatOptions,
+      AjvClass,
     } = options;
     this.ajv = createAjvInstance(
       additionalMetaSchemas,
       customFormats,
       ajvOptionsOverrides,
-      ajvFormatOptions
+      ajvFormatOptions,
+      AjvClass
     );
     this.localizer = localizer;
   }
@@ -85,42 +94,23 @@ export default class AJV8Validator<
    * @private
    */
   private toErrorSchema(errors: RJSFValidationError[]): ErrorSchema<T> {
-    if (!errors.length) {
-      return {} as ErrorSchema<T>;
-    }
-    return errors.reduce(
-      (errorSchema: ErrorSchema<T>, error): ErrorSchema<T> => {
+    const builder = new ErrorSchemaBuilder<T>();
+    if (errors.length) {
+      errors.forEach((error) => {
         const { property, message } = error;
         const path = toPath(property);
-        let parent: GenericObjectType = errorSchema;
 
         // If the property is at the root (.level1) then toPath creates
         // an empty array element at the first index. Remove it.
         if (path.length > 0 && path[0] === "") {
           path.splice(0, 1);
         }
-
-        for (const segment of path.slice(0)) {
-          if (!(segment in parent)) {
-            parent[segment] = {};
-          }
-          parent = parent[segment];
+        if (message) {
+          builder.addErrors(message, path);
         }
-
-        if (Array.isArray(parent.__errors)) {
-          // We store the list of errors for this node in a property named __errors
-          // to avoid name collision with a possible sub schema field named
-          // 'errors' (see `validate.createErrorHandler`).
-          parent.__errors = parent.__errors.concat(message!);
-        } else {
-          if (message) {
-            parent.__errors = [message];
-          }
-        }
-        return errorSchema;
-      },
-      {} as ErrorSchema<T>
-    );
+      });
+    }
+    return builder.ErrorSchema;
   }
 
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
@@ -135,7 +125,7 @@ export default class AJV8Validator<
     let errorList: RJSFValidationError[] = [];
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
-        errorSchema.__errors!.map((message: string) => {
+        errorSchema[ERRORS_KEY]!.map((message: string) => {
           const property = `.${fieldPath.join(".")}`;
           return {
             property,
@@ -212,18 +202,64 @@ export default class AJV8Validator<
    * At some point, components should be updated to support ajv.
    *
    * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
-   * @private
+   * @protected
    */
-  private transformRJSFValidationErrors(
-    errors: Ajv["errors"] = []
+  protected transformRJSFValidationErrors(
+    errors: ErrorObject[] = [],
+    uiSchema?: UiSchema<T, S, F>
   ): RJSFValidationError[] {
-    if (errors === null) {
-      return [];
-    }
-
     return errors.map((e: ErrorObject) => {
-      const { instancePath, keyword, message, params, schemaPath } = e;
-      const property = instancePath.replace(/\//g, ".");
+      const {
+        instancePath,
+        keyword,
+        params,
+        schemaPath,
+        parentSchema,
+        ...rest
+      } = e;
+      let { message = "" } = rest;
+      let property = instancePath.replace(/\//g, ".");
+      let stack = `${property} ${message}`.trim();
+
+      if ("missingProperty" in params) {
+        property = property
+          ? `${property}.${params.missingProperty}`
+          : params.missingProperty;
+        const currentProperty: string = params.missingProperty;
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
+
+        if (uiSchemaTitle) {
+          message = message.replace(currentProperty, uiSchemaTitle);
+        } else {
+          const parentSchemaTitle = get(parentSchema, [
+            PROPERTIES_KEY,
+            currentProperty,
+            "title",
+          ]);
+
+          if (parentSchemaTitle) {
+            message = message.replace(currentProperty, parentSchemaTitle);
+          }
+        }
+
+        stack = message;
+      } else {
+        const uiSchemaTitle = getUiOptions(
+          get(uiSchema, `${property.replace(/^\./, "")}`)
+        ).title;
+
+        if (uiSchemaTitle) {
+          stack = `'${uiSchemaTitle}' ${message}`.trim();
+        } else {
+          const parentSchemaTitle = parentSchema?.title;
+
+          if (parentSchemaTitle) {
+            stack = `'${parentSchemaTitle}' ${message}`.trim();
+          }
+        }
+      }
 
       // put data in expected format
       return {
@@ -231,10 +267,51 @@ export default class AJV8Validator<
         property,
         message,
         params, // specific to ajv
-        stack: `${property} ${message}`.trim(),
+        stack,
         schemaPath,
       };
     });
+  }
+
+  /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
+   * by the playground. Returns the `errors` from the validation
+   *
+   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param formData - The form data to validate
+   */
+  rawValidation<Result = any>(
+    schema: RJSFSchema,
+    formData?: T
+  ): { errors?: Result[]; validationError?: Error } {
+    let compilationError: Error | undefined = undefined;
+    let compiledValidator: ValidateFunction | undefined;
+    if (schema["$id"]) {
+      compiledValidator = this.ajv.getSchema(schema["$id"]);
+    }
+    try {
+      if (compiledValidator === undefined) {
+        compiledValidator = this.ajv.compile(schema);
+      }
+      compiledValidator(formData);
+    } catch (err) {
+      compilationError = err as Error;
+    }
+
+    let errors;
+    if (compiledValidator) {
+      if (typeof this.localizer === "function") {
+        this.localizer(compiledValidator.errors);
+      }
+      errors = compiledValidator.errors || undefined;
+
+      // Clear errors to prevent persistent errors, see #1104
+      compiledValidator.errors = null;
+    }
+
+    return {
+      errors: errors as unknown as Result[],
+      validationError: compilationError,
+    };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -246,60 +323,33 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
     formData: T | undefined,
     schema: S,
-    customValidate?: CustomValidator<T>,
-    transformErrors?: ErrorTransformer
+    customValidate?: CustomValidator<T, S, F>,
+    transformErrors?: ErrorTransformer<T, S, F>,
+    uiSchema?: UiSchema<T, S, F>
   ): ValidationData<T> {
-    // Include form data with undefined values, which is required for validation.
-    const rootSchema = schema;
-    const newFormData = getDefaultFormState<T>(
-      this,
-      schema,
-      formData,
-      rootSchema,
-      true
-    ) as T;
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const { validationError: invalidSchemaError } = rawErrors;
+    let errors = this.transformRJSFValidationErrors(rawErrors.errors, uiSchema);
 
-    let validationError: Error | null = null;
-    try {
-      this.ajv.validate(schema, newFormData);
-    } catch (err) {
-      validationError = err as Error;
-    }
-
-    if (typeof this.localizer === "function") {
-      this.localizer(this.ajv.errors);
-    }
-    let errors = this.transformRJSFValidationErrors(this.ajv.errors);
-    // Clear errors to prevent persistent errors, see #1104
-
-    this.ajv.errors = null;
-
-    const noProperMetaSchema =
-      validationError &&
-      validationError.message &&
-      typeof validationError.message === "string" &&
-      validationError.message.includes("no schema with key or ref ");
-
-    if (noProperMetaSchema) {
-      errors = [...errors, { stack: validationError!.message }];
+    if (invalidSchemaError) {
+      errors = [...errors, { stack: invalidSchemaError!.message }];
     }
     if (typeof transformErrors === "function") {
-      errors = transformErrors(errors);
+      errors = transformErrors(errors, uiSchema);
     }
 
     let errorSchema = this.toErrorSchema(errors);
 
-    if (noProperMetaSchema) {
+    if (invalidSchemaError) {
       errorSchema = {
         ...errorSchema,
-        ...{
-          $schema: {
-            __errors: [validationError!.message],
-          },
+        $schema: {
+          __errors: [invalidSchemaError!.message],
         },
       };
     }
@@ -308,12 +358,22 @@ export default class AJV8Validator<
       return { errors, errorSchema };
     }
 
+    // Include form data with undefined values, which is required for custom validation.
+    const newFormData = getDefaultFormState<T, S, F>(
+      this,
+      schema,
+      formData,
+      schema,
+      true
+    ) as T;
+
     const errorHandler = customValidate(
       newFormData,
-      this.createErrorHandler(newFormData)
+      this.createErrorHandler(newFormData),
+      uiSchema
     );
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    return mergeValidationData<T>(
+    return mergeValidationData<T, S, F>(
       this,
       { errors, errorSchema },
       userErrorSchema
@@ -360,25 +420,37 @@ export default class AJV8Validator<
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData- - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T, rootSchema: S) {
+  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+    const rootSchemaId = rootSchema["$id"] ?? ROOT_SCHEMA_PREFIX;
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      const result = this.ajv
-        .addSchema(rootSchema, ROOT_SCHEMA_PREFIX)
-        .validate(this.withIdRefPrefix(schema), formData);
+      if (this.ajv.getSchema(rootSchemaId) === undefined) {
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      }
+      const schemaWithIdRefPrefix = this.withIdRefPrefix(schema) as S;
+      let compiledValidator: ValidateFunction | undefined;
+      if (schemaWithIdRefPrefix["$id"]) {
+        compiledValidator = this.ajv.getSchema(schemaWithIdRefPrefix["$id"]);
+      }
+      if (compiledValidator === undefined) {
+        compiledValidator = this.ajv.compile(schemaWithIdRefPrefix);
+      }
+      const result = compiledValidator(formData);
       return result as boolean;
     } catch (e) {
+      console.warn("Error encountered compiling schema:", e);
       return false;
     } finally {
+      // TODO: A function should be called if the root schema changes so we don't have to remove and recompile the schema every run.
       // make sure we remove the rootSchema from the global ajv instance
-      this.ajv.removeSchema(ROOT_SCHEMA_PREFIX);
+      this.ajv.removeSchema(rootSchemaId);
     }
   }
 

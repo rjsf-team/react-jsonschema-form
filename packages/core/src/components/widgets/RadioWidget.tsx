@@ -1,5 +1,14 @@
 import React, { FocusEvent, useCallback } from "react";
-import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -9,7 +18,7 @@ import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
 function RadioWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   options,
   value,
@@ -24,17 +33,17 @@ function RadioWidget<
 }: WidgetProps<T, S, F>) {
   // Generating a unique field name to identify this set of radio buttons
   const name = Math.random().toString();
-  const { enumOptions, enumDisabled, inline } = options;
-  // checked={checked} has been moved above name={name}, As mentioned in #349;
-  // this is a temporary fix for radio button rendering bug in React, facebook/react#7630.
+  const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
   const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => onBlur(id, event.target.value),
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+      onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
     [onBlur, id]
   );
 
   const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.value),
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+      onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
     [onFocus, id]
   );
 
@@ -42,10 +51,10 @@ function RadioWidget<
     <div className="field-radio-group" id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
-          const checked = option.value === value;
+          const checked = enumOptionsIsSelected<S>(option.value, value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) != -1;
+            enumDisabled.indexOf(option.value) !== -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
@@ -55,27 +64,28 @@ function RadioWidget<
             <span>
               <input
                 type="radio"
-                id={`${id}-${option.value}`}
+                id={optionId(id, i)}
                 checked={checked}
                 name={name}
                 required={required}
-                value={option.value}
+                value={String(i)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && i === 0}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
               <span>{option.label}</span>
             </span>
           );
 
           return inline ? (
-            <label key={option.value} className={`radio-inline ${disabledCls}`}>
+            <label key={i} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={option.value} className={`radio ${disabledCls}`}>
+            <div key={i} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

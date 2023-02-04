@@ -1,18 +1,25 @@
 import React from "react";
 import classNames from "classnames";
-import { TitleFieldProps } from "@rjsf/utils";
-import { withConfigConsumer } from "antd/lib/config-provider/context";
+import {
+  ConfigConsumer,
+  ConfigConsumerProps,
+} from "antd/lib/config-provider/context";
+import {
+  FormContextType,
+  TitleFieldProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-// Add in the `prefixCls` element needed by the `withConfigConsumer` HOC
-export type AntdTitleFieldProps = TitleFieldProps & { prefixCls: string };
-
-const TitleField = ({
-  id,
-  prefixCls,
-  required,
-  registry,
-  title,
-}: AntdTitleFieldProps) => {
+/** The `TitleField` is the template to use to render the title of a field
+ *
+ * @param props - The `TitleFieldProps` for this component
+ */
+export default function TitleField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ id, required, registry, title }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
   const { colon = true } = formContext;
 
@@ -20,11 +27,6 @@ const TitleField = ({
   if (colon && typeof title === "string" && title.trim() !== "") {
     labelChildren = title.replace(/[：:]\s*$/, "");
   }
-
-  const labelClassName = classNames({
-    [`${prefixCls}-item-required`]: required,
-    [`${prefixCls}-item-no-colon`]: !colon,
-  });
 
   const handleLabelClick = () => {
     if (!id) {
@@ -40,21 +42,26 @@ const TitleField = ({
   };
 
   return title ? (
-    <label
-      className={labelClassName}
-      htmlFor={id}
-      onClick={handleLabelClick}
-      title={typeof title === "string" ? title : ""}
-    >
-      {labelChildren}
-    </label>
+    <ConfigConsumer>
+      {(configProps: ConfigConsumerProps) => {
+        const { getPrefixCls } = configProps;
+        const prefixCls = getPrefixCls("form");
+        const labelClassName = classNames({
+          [`${prefixCls}-item-required`]: required,
+          [`${prefixCls}-item-no-colon`]: !colon,
+        });
+
+        return (
+          <label
+            className={labelClassName}
+            htmlFor={id}
+            onClick={handleLabelClick}
+            title={typeof title === "string" ? title : ""}
+          >
+            {labelChildren}
+          </label>
+        );
+      }}
+    </ConfigConsumer>
   ) : null;
-};
-
-TitleField.defaultProps = {
-  formContext: {},
-};
-
-export default withConfigConsumer<AntdTitleFieldProps>({ prefixCls: "form" })(
-  TitleField
-);
+}

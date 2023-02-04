@@ -74,7 +74,7 @@ exports[`object fields additionalProperties 1`] = `
                     className="ui fluid input"
                   >
                     <input
-                      aria-describedby={null}
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       autoFocus={false}
                       disabled={false}
                       id="root_foo"
@@ -182,7 +182,7 @@ exports[`object fields object 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_a__error root_a__description root_a__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_a"
@@ -218,7 +218,7 @@ exports[`object fields object 1`] = `
               className="ui fluid input"
             >
               <input
-                aria-describedby={null}
+                aria-describedby="root_b__error root_b__description root_b__help"
                 autoFocus={false}
                 disabled={false}
                 id="root_b"

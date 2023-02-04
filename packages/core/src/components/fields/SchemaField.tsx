@@ -2,12 +2,14 @@ import React from "react";
 import {
   mergeObjects,
   deepEquals,
+  descriptionId,
   getUiOptions,
   getSchemaType,
   getTemplate,
   ErrorSchema,
   FieldProps,
   FieldTemplateProps,
+  FormContextType,
   IdSchema,
   Registry,
   RJSFSchema,
@@ -15,6 +17,7 @@ import {
   UIOptionsType,
   ID_KEY,
   ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
@@ -43,7 +46,7 @@ const COMPONENT_TYPES: { [key: string]: string } = {
 function getFieldComponent<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
@@ -101,7 +104,7 @@ function getFieldComponent<
 function SchemaFieldRender<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: FieldProps<T, S, F>) {
   const {
     schema: _schema,
@@ -153,7 +156,7 @@ function SchemaFieldRender<
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = React.useCallback(
-    (formData: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
       return onChange(formData, newErrorSchema, theId);
     },
@@ -187,11 +190,16 @@ function SchemaFieldRender<
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
-  // See #439: uiSchema: Don't pass consumed class names to child components
-  const fieldUiSchema = omit(uiSchema, ["ui:classNames", "classNames"]);
-  if ("ui:options" in fieldUiSchema) {
-    fieldUiSchema["ui:options"] = omit(fieldUiSchema["ui:options"], [
+  // See #439: uiSchema: Don't pass consumed class names or style to child components
+  const fieldUiSchema = omit(uiSchema, [
+    "ui:classNames",
+    "classNames",
+    "ui:style",
+  ]);
+  if (UI_OPTIONS_KEY in fieldUiSchema) {
+    fieldUiSchema[UI_OPTIONS_KEY] = omit(fieldUiSchema[UI_OPTIONS_KEY], [
       "classNames",
+      "style",
     ]);
   }
 
@@ -272,7 +280,7 @@ function SchemaFieldRender<
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, "children"> = {
     description: (
       <DescriptionFieldTemplate
-        id={`${id}__description`}
+        id={descriptionId<T>(id)}
         description={description}
         schema={schema}
         uiSchema={uiSchema}
@@ -296,6 +304,7 @@ function SchemaFieldRender<
     hideError,
     displayLabel,
     classNames: classNames.join(" ").trim(),
+    style: uiOptions.style,
     formContext,
     formData,
     schema,
@@ -305,6 +314,8 @@ function SchemaFieldRender<
 
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
+  const isReplacingAnyOrOneOf =
+    uiSchema?.["ui:field"] && uiSchema?.["ui:fieldReplacesAnyOrOneOf"] === true;
 
   return (
     <FieldTemplate {...fieldProps}>
@@ -316,7 +327,7 @@ function SchemaFieldRender<
         rendering
       */}
         {schema.anyOf &&
-          !uiSchema?.["ui:field"] &&
+          !isReplacingAnyOrOneOf &&
           !schemaUtils.isSelect(schema) && (
             <_AnyOfField
               name={name}
@@ -345,7 +356,7 @@ function SchemaFieldRender<
             />
           )}
         {schema.oneOf &&
-          !uiSchema?.["ui:field"] &&
+          !isReplacingAnyOrOneOf &&
           !schemaUtils.isSelect(schema) && (
             <_OneOfField
               name={name}
@@ -384,7 +395,7 @@ function SchemaFieldRender<
 class SchemaField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends React.Component<FieldProps<T, S, F>> {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     return !deepEquals(this.props, nextProps);

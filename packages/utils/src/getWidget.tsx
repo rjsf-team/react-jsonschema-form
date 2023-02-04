@@ -4,6 +4,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 
 import {
+  FormContextType,
   RJSFSchema,
   Widget,
   RegistryWidgetsType,
@@ -75,9 +76,9 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
 function mergeWidgetOptions<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(AWidget: Widget<T, S, F>) {
-  let MergedWidget: Widget<T, S, F> = get(AWidget, "MergedWidget");
+  let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, "MergedWidget");
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
     const defaultOptions =
@@ -104,7 +105,7 @@ function mergeWidgetOptions<
 export default function getWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(
   schema: RJSFSchema,
   widget?: Widget<T, S, F> | string,

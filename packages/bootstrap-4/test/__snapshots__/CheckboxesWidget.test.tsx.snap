@@ -8,11 +8,12 @@ exports[`CheckboxesWidget inline 1`] = `
     className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
   >
     <input
+      aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
-      checked={true}
+      checked={false}
       className="custom-control-input"
       disabled={true}
-      id="_id-a"
+      id="_id-0"
       name="_id"
       onBlur={[Function]}
       onChange={[Function]}
@@ -22,7 +23,7 @@ exports[`CheckboxesWidget inline 1`] = `
     />
     <label
       className="custom-control-label"
-      htmlFor="_id-a"
+      htmlFor="_id-0"
       title=""
     >
       A
@@ -39,11 +40,12 @@ exports[`CheckboxesWidget simple 1`] = `
     className="bg-transparent border-0 custom-control custom-checkbox"
   >
     <input
+      aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
-      checked={true}
+      checked={false}
       className="custom-control-input"
       disabled={true}
-      id="_id-a"
+      id="_id-0"
       name="_id"
       onBlur={[Function]}
       onChange={[Function]}
@@ -53,7 +55,7 @@ exports[`CheckboxesWidget simple 1`] = `
     />
     <label
       className="custom-control-label"
-      htmlFor="_id-a"
+      htmlFor="_id-0"
       title=""
     >
       A

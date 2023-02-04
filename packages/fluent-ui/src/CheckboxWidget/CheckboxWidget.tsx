@@ -1,6 +1,12 @@
 import React from "react";
 import { Checkbox } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of ICheckboxProps from @fluentui/react
@@ -27,7 +33,11 @@ export const allowedProps = [
   "theme",
 ];
 
-const CheckboxWidget = (props: WidgetProps) => {
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -72,9 +82,8 @@ const CheckboxWidget = (props: WidgetProps) => {
         checked={typeof value === "undefined" ? false : value}
         onChange={_onChange}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );
-};
-
-export default CheckboxWidget;
+}

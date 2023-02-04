@@ -2,9 +2,22 @@ import React, { CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { ArrayFieldTemplateItemType } from "@rjsf/utils";
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
+export default function ArrayFieldItemTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
     disabled,
@@ -45,6 +58,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               disabled={disabled || readonly || !hasMoveUp}
               onClick={onReorderClick(index, index - 1)}
               uiSchema={uiSchema}
+              registry={registry}
             />
           )}
           {(hasMoveUp || hasMoveDown) && (
@@ -53,6 +67,7 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               disabled={disabled || readonly || !hasMoveDown}
               onClick={onReorderClick(index, index + 1)}
               uiSchema={uiSchema}
+              registry={registry}
             />
           )}
           {hasRemove && (
@@ -61,12 +76,11 @@ const ArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
               disabled={disabled || readonly}
               onClick={onDropIndexClick(index)}
               uiSchema={uiSchema}
+              registry={registry}
             />
           )}
         </Grid>
       )}
     </Grid>
   );
-};
-
-export default ArrayFieldItemTemplate;
+}

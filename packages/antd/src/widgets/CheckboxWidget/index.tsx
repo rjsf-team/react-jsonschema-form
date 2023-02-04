@@ -1,20 +1,37 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  GenericObjectType,
+} from "@rjsf/utils";
 
-const CheckboxWidget = ({
-  autofocus,
-  disabled,
-  formContext,
-  id,
-  label,
-  onBlur,
-  onChange,
-  onFocus,
-  readonly,
-  value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+/** The `CheckBoxWidget` is a widget for rendering boolean properties.
+ *  It is typically used to represent a boolean.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    autofocus,
+    disabled,
+    formContext,
+    id,
+    label,
+    onBlur,
+    onChange,
+    onFocus,
+    readonly,
+    value,
+  } = props;
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = ({ target }: CheckboxChangeEvent) =>
     onChange(target.checked);
@@ -41,10 +58,9 @@ const CheckboxWidget = ({
       name={id}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {label}
     </Checkbox>
   );
-};
-
-export default CheckboxWidget;
+}

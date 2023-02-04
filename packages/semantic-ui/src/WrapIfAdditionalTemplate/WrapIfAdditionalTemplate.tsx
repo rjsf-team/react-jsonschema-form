@@ -1,24 +1,38 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import { Form, Grid } from "semantic-ui-react";
 
-const WrapIfAdditionalTemplate = ({
-  children,
-  classNames,
-  disabled,
-  id,
-  label,
-  onDropPropertyClick,
-  onKeyChange,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: WrapIfAdditionalTemplateProps) => {
+/** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
+ * part of an `additionalProperties` part of a schema.
+ *
+ * @param props - The `WrapIfAdditionalProps` for this component
+ */
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const {
+    children,
+    classNames,
+    style,
+    disabled,
+    id,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const { readonlyAsDisabled = true, wrapperStyle } = registry.formContext;
@@ -27,14 +41,18 @@ const WrapIfAdditionalTemplate = ({
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
 
   return (
-    <div className={classNames} key={`${id}-key`}>
+    <div className={classNames} style={style} key={`${id}-key`}>
       <Grid columns="equal">
         <Grid.Row>
           <Grid.Column className="form-additional">
@@ -66,12 +84,11 @@ const WrapIfAdditionalTemplate = ({
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
               uiSchema={uiSchema}
+              registry={registry}
             />
           </Grid.Column>
         </Grid.Row>
       </Grid>
     </div>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

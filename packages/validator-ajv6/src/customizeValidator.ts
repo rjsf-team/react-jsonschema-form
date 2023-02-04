@@ -1,4 +1,9 @@
-import { ValidatorType } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "@rjsf/utils";
 
 import { CustomValidatorOptionsType } from "./types";
 import AJV6Validator from "./validator";
@@ -7,9 +12,12 @@ import AJV6Validator from "./validator";
  * provided.
  *
  * @param [options={}] - The `CustomValidatorOptionsType` options that are used to create the `ValidatorType` instance
+ * @deprecated in favor of the `@rjsf/validator-ajv8
  */
-export default function customizeValidator<T = any>(
-  options: CustomValidatorOptionsType = {}
-): ValidatorType<T> {
-  return new AJV6Validator<T>(options);
+export default function customizeValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(options: CustomValidatorOptionsType = {}): ValidatorType<T, S, F> {
+  return new AJV6Validator<T, S, F>(options);
 }

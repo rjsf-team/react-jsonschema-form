@@ -6,12 +6,21 @@ import Container from "react-bootstrap/Container";
 
 import {
   canExpand,
+  descriptionId,
+  FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  titleId,
 } from "@rjsf/utils";
 
-const ObjectFieldTemplate = ({
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   description,
   title,
   properties,
@@ -24,18 +33,19 @@ const ObjectFieldTemplate = ({
   disabled,
   readonly,
   registry,
-}: ObjectFieldTemplateProps) => {
-  const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+}: ObjectFieldTemplateProps<T, S, F>) {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -44,7 +54,7 @@ const ObjectFieldTemplate = ({
     <>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={uiOptions.title || title}
           required={required}
           schema={schema}
@@ -54,7 +64,7 @@ const ObjectFieldTemplate = ({
       )}
       {(uiOptions.description || description) && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           description={uiOptions.description || description!}
           schema={schema}
           uiSchema={uiSchema}
@@ -79,6 +89,7 @@ const ObjectFieldTemplate = ({
                 disabled={disabled || readonly}
                 className="object-property-expand"
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </Col>
           </Row>
@@ -86,6 +97,4 @@ const ObjectFieldTemplate = ({
       </Container>
     </>
   );
-};
-
-export default ObjectFieldTemplate;
+}

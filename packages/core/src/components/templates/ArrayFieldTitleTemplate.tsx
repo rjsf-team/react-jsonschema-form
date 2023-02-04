@@ -2,10 +2,12 @@ import React from "react";
 import {
   getTemplate,
   getUiOptions,
+  titleId,
   ArrayFieldTitleProps,
-  TemplatesType,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TemplatesType,
 } from "@rjsf/utils";
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
@@ -16,7 +18,7 @@ import {
 export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldTitleProps<T, S, F>) {
   const { idSchema, title, schema, uiSchema, required, registry } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
@@ -30,10 +32,9 @@ export default function ArrayFieldTitleTemplate<
       registry,
       options
     );
-  const id = `${idSchema.$id}__title`;
   return (
     <TitleFieldTemplate
-      id={id}
+      id={titleId<T>(idSchema)}
       title={title}
       required={required}
       schema={schema}

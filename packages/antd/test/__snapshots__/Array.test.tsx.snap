@@ -182,7 +182,7 @@ exports[`array fields array icons 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -190,6 +190,7 @@ exports[`array fields array icons 1`] = `
                             }
                           >
                             <input
+                              aria-describedby="root_0__error root_0__description root_0__help"
                               className="ant-input"
                               hidden={null}
                               id="root_0"
@@ -372,7 +373,7 @@ exports[`array fields array icons 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -380,6 +381,7 @@ exports[`array fields array icons 1`] = `
                             }
                           >
                             <input
+                              aria-describedby="root_1__error root_1__description root_1__help"
                               className="ant-input"
                               hidden={null}
                               id="root_1"
@@ -609,6 +611,7 @@ exports[`array fields checkboxes 1`] = `
     className="form-group field field-array"
   >
     <div
+      aria-describedby="root__error root__description root__help"
       className="ant-select ant-select-multiple ant-select-show-search"
       name="root"
       onBlur={[Function]}
@@ -657,6 +660,7 @@ exports[`array fields checkboxes 1`] = `
                 aria-activedescendant="root_list_0"
                 aria-autocomplete="list"
                 aria-controls="root_list"
+                aria-describedby="root__error root__description root__help"
                 aria-haspopup="listbox"
                 aria-owns="root_list"
                 autoComplete="off"
@@ -745,7 +749,7 @@ exports[`array fields empty errors array 1`] = `
             className="form-group field field-string"
           >
             <div
-              className="ant-form-item ant-form-item-with-help"
+              className="ant-form-item"
             >
               <div
                 className="ant-row ant-form-item-row"
@@ -775,7 +779,7 @@ exports[`array fields empty errors array 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -783,6 +787,7 @@ exports[`array fields empty errors array 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_name__error root_name__description root_name__help"
                           className="ant-input"
                           hidden={null}
                           id="root_name"
@@ -896,7 +901,7 @@ exports[`array fields fixed array 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -904,6 +909,7 @@ exports[`array fields fixed array 1`] = `
                             }
                           >
                             <input
+                              aria-describedby="root_0__error root_0__description root_0__help"
                               className="ant-input"
                               hidden={null}
                               id="root_0"
@@ -1055,6 +1061,7 @@ exports[`array fields fixed array 1`] = `
                                 className="ant-input-number-input-wrap"
                               >
                                 <input
+                                  aria-describedby="root_1__error root_1__description root_1__help"
                                   aria-valuenow={null}
                                   autoComplete="off"
                                   className="ant-input-number-input"
@@ -1244,7 +1251,7 @@ exports[`array fields has errors 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-status-error ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -1252,6 +1259,7 @@ exports[`array fields has errors 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_name__error root_name__description root_name__help"
                           className="ant-input"
                           hidden={null}
                           id="root_name"
@@ -1381,7 +1389,7 @@ exports[`array fields no errors 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -1389,6 +1397,7 @@ exports[`array fields no errors 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_name__error root_name__description root_name__help"
                           className="ant-input"
                           hidden={null}
                           id="root_name"

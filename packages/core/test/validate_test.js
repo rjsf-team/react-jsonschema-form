@@ -4,10 +4,10 @@ import sinon from "sinon";
 import { Simulate } from "react-dom/test-utils";
 
 import { createFormComponent, submitForm } from "./test_utils";
-import { customizeValidator as customizeV6Validator } from "@rjsf/validator-ajv6";
-import v8Validator, {
-  customizeValidator as customizeV8Validator,
-} from "@rjsf/validator-ajv8";
+import v6Validator, {
+  customizeValidator as customizeV6Validator,
+} from "@rjsf/validator-ajv6";
+import { customizeValidator as customizeV8Validator } from "@rjsf/validator-ajv8";
 
 describe("Validation", () => {
   describe("Form integration, v6 validator", () => {
@@ -22,6 +22,71 @@ describe("Validation", () => {
     });
 
     describe("JSONSchema validation", () => {
+      describe("ShowErrorList prop top", () => {
+        const schema = {
+          type: "object",
+          required: ["foo"],
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+
+        let node;
+        const compInfo = createFormComponent({
+          schema,
+          formData: {
+            foo: undefined,
+          },
+        });
+        node = compInfo.node;
+        submitForm(node);
+
+        it("should render errors at the top", () => {
+          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelector(".errors li").textContent).eql(
+            "must have required property 'foo'"
+          );
+          expect(node.childNodes[0].className).to.eql(
+            "panel panel-danger errors"
+          );
+        });
+      });
+
+      describe("ShowErrorList prop bottom", () => {
+        const schema = {
+          type: "object",
+          required: ["foo"],
+          properties: {
+            foo: { type: "string" },
+            bar: { type: "string" },
+          },
+        };
+
+        let node;
+        const compInfo = createFormComponent({
+          showErrorList: "bottom",
+          schema,
+          formData: {
+            foo: undefined,
+          },
+        });
+        node = compInfo.node;
+        submitForm(node);
+
+        it("should render errors at the bottom", () => {
+          expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
+          expect(node.querySelector(".errors li").textContent).eql(
+            "must have required property 'foo'"
+          );
+
+          // The last child node is the submit button so the one before it will be the error list
+          expect(node.childNodes[2].className).to.eql(
+            "panel panel-danger errors"
+          );
+        });
+      });
+
       describe("Required fields", () => {
         const schema = {
           type: "object",
@@ -39,6 +104,7 @@ describe("Validation", () => {
             formData: {
               foo: undefined,
             },
+            validator: v6Validator,
           });
           onError = compInfo.onError;
           node = compInfo.node;
@@ -62,6 +128,9 @@ describe("Validation", () => {
           expect(node.querySelectorAll(".errors li")).to.have.length.of(1);
           expect(node.querySelector(".errors li").textContent).eql(
             ".foo is a required property"
+          );
+          expect(node.childNodes[0].className).to.eql(
+            "panel panel-danger errors"
           );
         });
       });
@@ -88,6 +157,7 @@ describe("Validation", () => {
               foo: "123456789",
             },
             onError,
+            validator: v6Validator,
           });
           node = compInfo.node;
 
@@ -132,6 +202,7 @@ describe("Validation", () => {
           schema,
           customValidate,
           formData,
+          validator: v6Validator,
         });
 
         submitForm(node);
@@ -156,6 +227,7 @@ describe("Validation", () => {
           customValidate,
           formData,
           liveValidate: true,
+          validator: v6Validator,
         });
         Simulate.change(node.querySelector("input"), {
           target: { value: "1234" },
@@ -189,6 +261,7 @@ describe("Validation", () => {
           formData,
           customValidate,
           onSubmit,
+          validator: v6Validator,
         });
 
         submitForm(node);
@@ -215,6 +288,7 @@ describe("Validation", () => {
           customValidate,
           onSubmit,
           onError,
+          validator: v6Validator,
         });
 
         submitForm(node);
@@ -246,6 +320,7 @@ describe("Validation", () => {
           schema,
           customValidate,
           formData,
+          validator: v6Validator,
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
@@ -295,6 +370,7 @@ describe("Validation", () => {
           schema,
           customValidate,
           formData,
+          validator: v6Validator,
         });
 
         submitForm(node);
@@ -328,6 +404,7 @@ describe("Validation", () => {
           schema,
           customValidate,
           formData,
+          validator: v6Validator,
         });
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
@@ -359,6 +436,7 @@ describe("Validation", () => {
               foo: undefined,
             },
             showErrorList: false,
+            validator: v6Validator,
           });
           node = compInfo.node;
           onError = compInfo.onError;
@@ -421,6 +499,7 @@ describe("Validation", () => {
           formData,
           templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: "foo" },
+          validator: v6Validator,
         });
         expect(node.querySelectorAll(".CustomErrorList")).to.have.length.of(1);
         expect(node.querySelector(".CustomErrorList").textContent).eql(
@@ -527,7 +606,6 @@ describe("Validation", () => {
             formData: {
               foo: undefined,
             },
-            validator: v8Validator,
           });
           onError = compInfo.onError;
           node = compInfo.node;
@@ -540,7 +618,7 @@ describe("Validation", () => {
               message: "must have required property 'foo'",
               name: "required",
               params: { missingProperty: "foo" },
-              property: "",
+              property: "foo",
               schemaPath: "#/required",
               stack: "must have required property 'foo'",
             },
@@ -576,7 +654,6 @@ describe("Validation", () => {
             formData: {
               foo: "123456789",
             },
-            validator: v8Validator,
             onError,
           });
           node = compInfo.node;
@@ -621,7 +698,6 @@ describe("Validation", () => {
         const { onError, node } = createFormComponent({
           schema,
           customValidate,
-          validator: v8Validator,
           formData,
         });
 
@@ -646,7 +722,6 @@ describe("Validation", () => {
           schema,
           customValidate,
           formData,
-          validator: v8Validator,
           liveValidate: true,
         });
         Simulate.change(node.querySelector("input"), {
@@ -680,7 +755,6 @@ describe("Validation", () => {
           schema,
           formData,
           customValidate,
-          validator: v8Validator,
           onSubmit,
         });
 
@@ -705,7 +779,6 @@ describe("Validation", () => {
         const { node } = createFormComponent({
           schema,
           formData,
-          validator: v8Validator,
           customValidate,
           onSubmit,
           onError,
@@ -738,7 +811,6 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validator: v8Validator,
           customValidate,
           formData,
         });
@@ -788,7 +860,6 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validator: v8Validator,
           customValidate,
           formData,
         });
@@ -822,7 +893,6 @@ describe("Validation", () => {
 
         const { node, onError } = createFormComponent({
           schema,
-          validator: v8Validator,
           customValidate,
           formData,
         });
@@ -855,7 +925,6 @@ describe("Validation", () => {
             formData: {
               foo: undefined,
             },
-            validator: v8Validator,
             showErrorList: false,
           });
           node = compInfo.node;
@@ -874,7 +943,7 @@ describe("Validation", () => {
               message: "must have required property 'foo'",
               name: "required",
               params: { missingProperty: "foo" },
-              property: "",
+              property: "foo",
               schemaPath: "#/required",
               stack: "must have required property 'foo'",
             },
@@ -915,7 +984,6 @@ describe("Validation", () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          validator: v8Validator,
           liveValidate: true,
           formData,
           templates: { ErrorListTemplate: CustomErrorList },

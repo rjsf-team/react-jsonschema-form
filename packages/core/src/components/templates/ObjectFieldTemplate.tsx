@@ -1,12 +1,15 @@
 import React from "react";
 import {
+  FormContextType,
   ObjectFieldTemplatePropertyType,
   ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
   canExpand,
+  descriptionId,
   getTemplate,
   getUiOptions,
+  titleId,
 } from "@rjsf/utils";
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -18,7 +21,7 @@ import {
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -54,7 +57,7 @@ export default function ObjectFieldTemplate<
     <fieldset id={idSchema.$id}>
       {(options.title || title) && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}__title`}
+          id={titleId<T>(idSchema)}
           title={options.title || title}
           required={required}
           schema={schema}
@@ -64,7 +67,7 @@ export default function ObjectFieldTemplate<
       )}
       {(options.description || description) && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}__description`}
+          id={descriptionId<T>(idSchema)}
           description={options.description || description!}
           schema={schema}
           uiSchema={uiSchema}
@@ -72,12 +75,13 @@ export default function ObjectFieldTemplate<
         />
       )}
       {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
-      {canExpand(schema, uiSchema, formData) && (
+      {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
           className="object-property-expand"
           onClick={onAddClick(schema)}
           disabled={disabled || readonly}
           uiSchema={uiSchema}
+          registry={registry}
         />
       )}
     </fieldset>

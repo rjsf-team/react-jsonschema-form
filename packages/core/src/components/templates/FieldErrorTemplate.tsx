@@ -1,5 +1,11 @@
 import React from "react";
-import { FieldErrorProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  errorId,
+  FieldErrorProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -8,13 +14,13 @@ import { FieldErrorProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: FieldErrorProps<T, S, F>) {
   const { errors = [], idSchema } = props;
   if (errors.length === 0) {
     return null;
   }
-  const id = `${idSchema.$id}__error`;
+  const id = errorId<T>(idSchema);
 
   return (
     <div>

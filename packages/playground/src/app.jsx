@@ -4,7 +4,8 @@ import { samples } from "./samples";
 import "react-app-polyfill/ie11";
 import Form, { withTheme } from "@rjsf/core";
 import { shouldRender } from "@rjsf/utils";
-import localValidator from "@rjsf/validator-ajv6";
+import localValidator from "@rjsf/validator-ajv8";
+import isEqualWith from "lodash/isEqualWith";
 
 import DemoFrame from "./DemoFrame";
 import ErrorBoundary from "./ErrorBoundary";
@@ -21,6 +22,7 @@ const liveSettingsSchema = {
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
     noValidate: { type: "boolean", title: "Disable validation" },
+    showErrorList:{ type: "string", "default": "top", title: "Show Error List", enum:[false,"top","bottom"] }
   },
 };
 
@@ -284,13 +286,59 @@ class CopyLink extends Component {
   }
 }
 
+function RawValidatorTest({ validator, schema, formData }) {
+  const [rawValidation, setRawValidation] = React.useState();
+  const handleClearClick = () => setRawValidation(undefined);
+  const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
+
+  let displayErrors = "Validation not run";
+  if (rawValidation) {
+    displayErrors =
+      rawValidation.errors || rawValidation.validationError ?
+        JSON.stringify(rawValidation, null, 2) :
+        "No AJV errors encountered";
+  }
+  return (
+    <div>
+      <details style={{ marginBottom: "10px" }}>
+        <summary style={{ display: "list-item" }}>Raw Ajv Validation</summary>
+        To determine whether a validation issue is really a BUG in Ajv use the button to trigger the raw Ajv validation.
+        This will run your schema and formData through Ajv without involving any react-jsonschema-form specific code.
+        If there is an unexpected error, then <a href="https://github.com/ajv-validator/ajv/issues/new/choose" target="_blank" rel="noopener">file an issue</a> with Ajv instead.
+      </details>
+      <div style={{ marginBottom: "10px" }}>
+        <button
+          className="btn btn-default"
+          type="button"
+          onClick={handleRawClick}
+        >
+          Raw Validate
+        </button>
+        {rawValidation && (
+          <>
+            <span>{" "}</span>
+            <button
+              className="btn btn-default"
+              type="button"
+              onClick={handleClearClick}
+            >
+              Clear
+            </button>
+          </>
+        )}
+      </div>
+      <textarea rows={4} readOnly disabled={!rawValidation} value={displayErrors} />
+    </div>
+  );
+}
+
 class Playground extends Component {
   constructor(props) {
     super(props);
 
     // set default theme
     const theme = "default";
-    const validator = "AJV6";
+    const validator = "AJV8";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.playGroundForm = React.createRef();
@@ -304,6 +352,7 @@ class Playground extends Component {
       validator,
       subtheme: null,
       liveSettings: {
+        showErrorList:'top',
         validate: false,
         disable: false,
         readonly: false,
@@ -365,7 +414,16 @@ class Playground extends Component {
 
   onUISchemaEdited = (uiSchema) => this.setState({ uiSchema, shareURL: null });
 
-  onFormDataEdited = (formData) => this.setState({ formData, shareURL: null });
+  onFormDataEdited = (formData) => {
+    if (!isEqualWith(formData, this.state.formData, (newValue, oldValue) => {
+      // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+      // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+      // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+      return JSON.stringify(oldValue) === JSON.stringify(newValue);
+    })) {
+      this.setState({ formData, shareURL: null });
+    }
+  };
 
   onExtraErrorsEdited = (extraErrors) =>
     this.setState({ extraErrors, shareURL: null });
@@ -461,7 +519,7 @@ class Playground extends Component {
         <div className="page-header">
           <h1>react-jsonschema-form</h1>
           <div className="row">
-            <div className="col-sm-8">
+            <div className="col-sm-6">
               <Selector onSelected={this.load} />
             </div>
             <div className="col-sm-2">
@@ -481,7 +539,7 @@ class Playground extends Component {
                 theme={theme}
                 select={this.onThemeSelected}
               />
-              {themes[theme].subthemes && (
+              {themes[theme] && themes[theme].subthemes && (
                 <SubthemeSelector
                   subthemes={themes[theme].subthemes}
                   subtheme={subtheme}
@@ -515,6 +573,9 @@ class Playground extends Component {
               </button>
               <div style={{ marginTop: "5px" }} />
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
+            </div>
+            <div className="col-sm-2">
+              <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
             </div>
           </div>
         </div>
@@ -589,6 +650,7 @@ class Playground extends Component {
                   omitExtraData={liveSettings.omitExtraData}
                   liveOmit={liveSettings.liveOmit}
                   noValidate={liveSettings.noValidate}
+                  showErrorList={liveSettings.showErrorList}
                   schema={schema}
                   uiSchema={uiSchema}
                   formData={formData}

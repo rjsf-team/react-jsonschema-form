@@ -2,6 +2,7 @@ import arrays from "./arrays";
 import anyOf from "./anyOf";
 import oneOf from "./oneOf";
 import allOf from "./allOf";
+import enumObjects from "./enumObjects";
 import nested from "./nested";
 import numbers from "./numbers";
 import simple from "./simple";
@@ -59,6 +60,7 @@ export const samples = {
   "All Of": allOf,
   "If Then Else": ifThenElse,
   "Null fields": nullField,
+  "Enumerated objects": enumObjects,
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,

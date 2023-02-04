@@ -1,9 +1,20 @@
 import React from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  WidgetProps,
+  schemaRequiresTrueValue,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const CheckboxWidget = (props: WidgetProps) => {
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -12,11 +23,15 @@ const CheckboxWidget = (props: WidgetProps) => {
     onChange,
     onBlur,
     onFocus,
-    required,
     label,
     uiSchema,
+    schema,
   } = props;
   const chakraProps = getChakra({ uiSchema });
+  // Because an unchecked checkbox will cause html5 validation to fail, only add
+  // the "required" attribute if the field value must be "true", due to the
+  // "const" or "enum" keywords
+  const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = ({
     target: { checked },
@@ -38,11 +53,10 @@ const CheckboxWidget = (props: WidgetProps) => {
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         {label && <Text>{label}</Text>}
       </Checkbox>
     </FormControl>
   );
-};
-
-export default CheckboxWidget;
+}

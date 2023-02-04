@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 import {
   ArrayFieldTemplateItemType,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -12,7 +13,7 @@ import {
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
     children,
@@ -55,6 +56,7 @@ export default function ArrayFieldItemTemplate<
                 disabled={disabled || readonly || !hasMoveUp}
                 onClick={onReorderClick(index, index - 1)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {(hasMoveUp || hasMoveDown) && (
@@ -63,6 +65,7 @@ export default function ArrayFieldItemTemplate<
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
             {hasRemove && (
@@ -71,6 +74,7 @@ export default function ArrayFieldItemTemplate<
                 disabled={disabled || readonly}
                 onClick={onDropIndexClick(index)}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             )}
           </div>

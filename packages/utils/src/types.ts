@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StyleHTMLAttributes } from "react";
 import { JSONSchema7 } from "json-schema";
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
@@ -8,14 +8,18 @@ export type GenericObjectType = {
   [name: string]: any;
 };
 
-/** Map the JSONSchema7 to our own type so that we can easily bump to JSONSchema8 at some future date and only have to
- * update this one type.
+/** Map the JSONSchema7 to our own type so that we can easily bump to a more recent version at some future date and only
+ * have to update this one type.
  */
 export type StrictRJSFSchema = JSONSchema7;
 
 /** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7
  */
 export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
+
+/** Alias GenericObjectType as FormContextType to allow us to remap this at some future date
+ */
+export type FormContextType = GenericObjectType;
 
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
@@ -131,7 +135,7 @@ export type FormValidation<T = any> = FieldValidation & {
 export type ErrorListProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The errorSchema constructed by `Form` */
   errorSchema: ErrorSchema<T>;
@@ -149,7 +153,7 @@ export type ErrorListProps<
 export type FieldErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
@@ -169,7 +173,7 @@ export type FieldErrorProps<
 export type FieldHelpProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The help information to be rendered */
   help?: string | React.ReactElement;
@@ -189,7 +193,7 @@ export type FieldHelpProps<
 export type RegistryFieldsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A `Field` indexed by `name` */
   [name: string]: Field<T, S, F>;
@@ -199,7 +203,7 @@ export type RegistryFieldsType<
 export type RegistryWidgetsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A `Widget` indexed by `name` */
   [name: string]: Widget<T, S, F>;
@@ -209,7 +213,7 @@ export type RegistryWidgetsType<
 export interface TemplatesType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate: React.ComponentType<ArrayFieldTemplateProps<T, S, F>>;
@@ -266,7 +270,7 @@ export interface TemplatesType<
 export interface Registry<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any custom
    * registered fields
@@ -294,7 +298,7 @@ export interface Registry<
 export interface FieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
       React.HTMLAttributes<HTMLElement>,
@@ -310,11 +314,15 @@ export interface FieldProps<
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The data for this field */
-  formData: T;
+  formData?: T;
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated form data and an optional `ErrorSchema` */
-  onChange: (newFormData: T, es?: ErrorSchema<T>, id?: string) => any;
+  onChange: (
+    newFormData: T | undefined,
+    es?: ErrorSchema<T>,
+    id?: string
+  ) => any;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -333,6 +341,16 @@ export interface FieldProps<
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
+  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
+   * Default is `root`
+   */
+  idPrefix?: string;
+  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
+   * ids (Default is `_`)
+   */
+  idSeparator?: string;
+  /** An array of strings listing all generated error messages from encountered errors for this field */
+  rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
 }
@@ -341,19 +359,21 @@ export interface FieldProps<
 export type Field<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ComponentType<FieldProps<T, S, F>>;
 
 /** The properties that are passed to a FieldTemplate implementation */
 export type FieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget */
   id: string;
   /** A string containing the base CSS classes, merged with any custom ones defined in your uiSchema */
   classNames?: string;
+  /** An object containing the style as defined in the `uiSchema` */
+  style?: StyleHTMLAttributes<any>;
   /** The computed label for this field, as a string */
   label: string;
   /** A component instance rendering the field description, if one is defined (this will use any custom
@@ -395,7 +415,7 @@ export type FieldTemplateProps<
   /** The `formContext` object that was passed to `Form` */
   formContext?: F;
   /** The formData for this field */
-  formData: T;
+  formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps["onChange"];
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
@@ -410,7 +430,7 @@ export type FieldTemplateProps<
 export type UnsupportedFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The schema object for this field */
   schema: S;
@@ -426,7 +446,7 @@ export type UnsupportedFieldProps<
 export type TitleFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field title in the hierarchy */
   id: string;
@@ -446,7 +466,7 @@ export type TitleFieldProps<
 export type DescriptionFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The id of the field description in the hierarchy */
   id: string;
@@ -464,7 +484,7 @@ export type DescriptionFieldProps<
 export type ArrayFieldTitleProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Omit<TitleFieldProps<T, S, F>, "id" | "title"> & {
   /** The title for the field being rendered */
   title?: string;
@@ -476,7 +496,7 @@ export type ArrayFieldTitleProps<
 export type ArrayFieldDescriptionProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Omit<DescriptionFieldProps<T, S, F>, "id" | "description"> & {
   /** The description of the field being rendered */
   description?: string | React.ReactElement;
@@ -488,7 +508,7 @@ export type ArrayFieldDescriptionProps<
 export type ArrayFieldTemplateItemType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The html for the item's content */
   children: React.ReactElement;
@@ -496,6 +516,8 @@ export type ArrayFieldTemplateItemType<
   className: string;
   /** A boolean value stating if the array item is disabled */
   disabled: boolean;
+  /** A boolean value stating whether new items can be added to the array */
+  canAdd: boolean;
   /** A boolean value stating whether the array item can be moved down */
   hasMoveDown: boolean;
   /** A boolean value stating whether the array item can be moved up */
@@ -506,6 +528,8 @@ export type ArrayFieldTemplateItemType<
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
+  /** A number stating the total number `items` in the array */
+  totalItems: number;
   /** Returns a function that adds a new item at `index` */
   onAddIndexClick: (index: number) => (event?: any) => void;
   /** Returns a function that removes the item at `index` */
@@ -516,7 +540,9 @@ export type ArrayFieldTemplateItemType<
   readonly: boolean;
   /** A stable, unique key for the array item */
   key: string;
-  /** The uiSchema object for this field */
+  /** The schema object for this array item */
+  schema: S;
+  /** The uiSchema object for this array item */
   uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   registry: Registry<T, S, F>;
@@ -526,7 +552,7 @@ export type ArrayFieldTemplateItemType<
 export type ArrayFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A boolean value stating whether new elements can be added to the array */
   canAdd?: boolean;
@@ -555,7 +581,7 @@ export type ArrayFieldTemplateProps<
   /** The `formContext` object that was passed to Form */
   formContext?: F;
   /** The formData for this array */
-  formData: T;
+  formData?: T;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
   /** The `registry` object */
@@ -580,7 +606,7 @@ export type ObjectFieldTemplatePropertyType = {
 export type ObjectFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** A string value containing the title for the object */
   title: string;
@@ -605,7 +631,7 @@ export type ObjectFieldTemplateProps<
   /** An object containing the id for this object & ids for its properties */
   idSchema: IdSchema<T>;
   /** The form data for the object */
-  formData: T;
+  formData?: T;
   /** The `formContext` object that was passed to Form */
   formContext?: F;
   /** The `registry` object */
@@ -616,7 +642,7 @@ export type ObjectFieldTemplateProps<
 export type WrapIfAdditionalTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The field or widget component instance for this field row */
   children: React.ReactNode;
@@ -624,6 +650,7 @@ export type WrapIfAdditionalTemplateProps<
   FieldTemplateProps<T, S, F>,
   | "id"
   | "classNames"
+  | "style"
   | "label"
   | "required"
   | "readonly"
@@ -639,7 +666,7 @@ export type WrapIfAdditionalTemplateProps<
 export interface WidgetProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
       React.HTMLAttributes<HTMLElement>,
@@ -670,7 +697,7 @@ export interface WidgetProps<
    */
   options: NonNullable<UIOptionsType<T, S, F>> & {
     /** The enum options list for a type that supports them */
-    enumOptions?: EnumOptionsType[];
+    enumOptions?: EnumOptionsType<S>[];
   };
   /** The `formContext` object that you passed to `Form` */
   formContext?: F;
@@ -694,24 +721,26 @@ export interface WidgetProps<
 export type Widget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ComponentType<WidgetProps<T, S, F>>;
 
 /** The type that defines the props used by the Submit button */
 export type SubmitButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = {
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
 };
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
 export type IconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** An alternative specification for the type of the icon button */
   iconType?: string;
@@ -719,6 +748,8 @@ export type IconButtonProps<
   icon?: string | React.ReactElement;
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
 };
 
 /** The type that defines how to change the behavior of the submit button for the form */
@@ -757,10 +788,12 @@ type MakeUIType<Type> = {
 type UIOptionsBaseType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
+  /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
+  style?: StyleHTMLAttributes<any>;
   /** We know that for title, it will be a string, if it is provided */
   title?: string;
   /** We know that for description, it will be a string, if it is provided */
@@ -817,7 +850,7 @@ type UIOptionsBaseType<
 export type UIOptionsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = UIOptionsBaseType<T, S, F> & {
   /** Anything else will be one of these types */
   [key: string]: boolean | number | string | object | any[] | null | undefined;
@@ -829,7 +862,7 @@ export type UIOptionsType<
 export type UiSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > = GenericObjectType &
   MakeUIType<UIOptionsBaseType<T, S, F>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
@@ -838,23 +871,41 @@ export type UiSchema<
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
      */
     "ui:field"?: Field<T, S, F> | string;
+    /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
+     * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
+     * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
+     * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
+     * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
+     * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+     */
+    "ui:fieldReplacesAnyOrOneOf"?: boolean;
     /** An object that contains all the potential UI options in a single object */
     "ui:options"?: UIOptionsType<T, S, F>;
   };
 
-/** A `CustomValidator` function takes in a `formData` and `errors` object and returns the given `errors` object back,
- * while potentially adding additional messages to the `errors`
+/** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`
+ * object back, while potentially adding additional messages to the `errors`
  */
-export type CustomValidator<T = any> = (
-  formData: T,
-  errors: FormValidation<T>
+export type CustomValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = (
+  formData: T | undefined,
+  errors: FormValidation<T>,
+  uiSchema?: UiSchema<T, S, F>
 ) => FormValidation<T>;
 
-/** An `ErrorTransformer` function will take in a list of `errors` and potentially return a transformation of those
- * errors in what ever way it deems necessary
+/** An `ErrorTransformer` function will take in a list of `errors` & a `uiSchema` and potentially return a
+ * transformation of those errors in what ever way it deems necessary
  */
-export type ErrorTransformer = (
-  errors: RJSFValidationError[]
+export type ErrorTransformer<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = (
+  errors: RJSFValidationError[],
+  uiSchema?: UiSchema<T, S, F>
 ) => RJSFValidationError[];
 
 /** The type that describes the data that is returned from the `ValidatorType.validateFormData()` function */
@@ -870,7 +921,8 @@ export type ValidationData<T> = {
  */
 export interface ValidatorType<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 > {
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
    * the form data and a `errorHandler` function that will be used to add custom validation errors for each field. Also
@@ -881,12 +933,14 @@ export interface ValidatorType<
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
     formData: T | undefined,
     schema: S,
-    customValidate?: CustomValidator<T>,
-    transformErrors?: ErrorTransformer
+    customValidate?: CustomValidator<T, S, F>,
+    transformErrors?: ErrorTransformer<T, S, F>,
+    uiSchema?: UiSchema<T, S, F>
   ): ValidationData<T>;
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
@@ -902,10 +956,20 @@ export interface ValidatorType<
    * false.
    *
    * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData- - The form data to validate
+   * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T, rootSchema: S): boolean;
+  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean;
+  /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
+   * by the playground. Returns the `errors` from the validation
+   *
+   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param formData - The form data to validate
+   */
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: T
+  ): { errors?: Result[]; validationError?: Error };
 }
 
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`
@@ -916,13 +980,13 @@ export interface ValidatorType<
 export interface SchemaUtilsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > {
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *
    * @returns - The `ValidatorType`
    */
-  getValidator(): ValidatorType<T, S>;
+  getValidator(): ValidatorType<T, S, F>;
   /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
    * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
    * of a new `SchemaUtilsType` with incomplete properties.
@@ -931,19 +995,24 @@ export interface SchemaUtilsType<
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S>, rootSchema: S): boolean;
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S
+  ): boolean;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+   *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+   *          object properties.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues?: boolean
+    includeUndefinedValues?: boolean | "excludeObjectChildren"
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
@@ -953,13 +1022,39 @@ export interface SchemaUtilsType<
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>): boolean;
+  /** Determines which of the given `options` provided most closely matches the `formData`.
+   * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+   *
+   * The closest match is determined using the number of matching properties, and more heavily favors options with
+   * matching readOnly, default, or const values.
+   *
+   * @param formData - The form data associated with the schema
+   * @param options - The list of options that can be selected from
+   * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
+   * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+   */
+  getClosestMatchingOption(
+    formData: T | undefined,
+    options: S[],
+    selectedOption?: number
+  ): number;
+  /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
+   * Always returns the first option if there is nothing that matches.
+   *
+   * @param formData - The current formData, if any, used to figure out a match
+   * @param options - The list of options to find a matching options from
+   * @returns - The firstindex of the matched option or 0 if none is available
+   */
+  getFirstMatchingOption(formData: T | undefined, options: S[]): number;
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
+   * Deprecated, use `getFirstMatchingOption()` instead.
    *
    * @param formData - The current formData, if any, onto which to provide any missing defaults
    * @param options - The list of options to find a matching options from
    * @returns - The index of the matched option or 0 if none is available
+   * @deprecated
    */
-  getMatchingOption(formData: T, options: S[]): number;
+  getMatchingOption(formData: T | undefined, options: S[]): number;
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired
@@ -1001,6 +1096,18 @@ export interface SchemaUtilsType<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, formData?: T): S;
+  /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
+   * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
+   * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
+   * old schema that are non-existent in the new schema are set to `undefined`.
+   *
+   * @param [newSchema] - The new schema for which the data is being sanitized
+   * @param [oldSchema] - The old schema from which the data originated
+   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @returns - The new form data, with all of the fields uniquely associated with the old schema set
+   *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+   */
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
   /** Generates an `IdSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired

@@ -1,5 +1,10 @@
 import React from "react";
-import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -9,7 +14,7 @@ import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
 export default function RangeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const {
     value,

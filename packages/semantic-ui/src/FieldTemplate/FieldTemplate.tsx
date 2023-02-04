@@ -1,36 +1,57 @@
 import React from "react";
-import { getTemplate, getUiOptions, FieldTemplateProps } from "@rjsf/utils";
+import {
+  FieldTemplateProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  descriptionId,
+  getTemplate,
+  getUiOptions,
+} from "@rjsf/utils";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps, MaybeWrap } from "../util";
 
-function FieldTemplate({
-  id,
-  children,
-  classNames,
-  displayLabel,
-  label,
-  errors,
-  help,
-  hidden,
-  rawDescription,
-  registry,
-  schema,
-  uiSchema,
-  ...props
-}: FieldTemplateProps) {
-  const semanticProps = getSemanticProps(props);
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
+  const {
+    id,
+    children,
+    classNames,
+    style,
+    displayLabel,
+    label,
+    errors,
+    help,
+    hidden,
+    rawDescription,
+    registry,
+    schema,
+    uiSchema,
+    ...otherProps
+  } = props;
+  const semanticProps = getSemanticProps<T, S, F>(otherProps);
   const { wrapLabel, wrapContent } = semanticProps;
-  const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<"WrapIfAdditionalTemplate">(
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
     "WrapIfAdditionalTemplate",
-    registry,
-    uiOptions
-  );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+    T,
+    S,
+    F
+  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: "none" }}>{children}</div>;
@@ -39,12 +60,13 @@ function FieldTemplate({
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
+      style={style}
       id={id}
       label={label}
       registry={registry}
       schema={schema}
       uiSchema={uiSchema}
-      {...props}
+      {...otherProps}
     >
       <Form.Group key={id} widths="equal" grouped>
         <MaybeWrap wrap={wrapContent} className="sui-field-content">
@@ -53,7 +75,7 @@ function FieldTemplate({
             <MaybeWrap wrap={wrapLabel} className="sui-field-label">
               {rawDescription && (
                 <DescriptionFieldTemplate
-                  id={`${id}-description`}
+                  id={descriptionId<T>(id)}
                   description={rawDescription}
                   schema={schema}
                   uiSchema={uiSchema}
@@ -69,5 +91,3 @@ function FieldTemplate({
     </WrapIfAdditionalTemplate>
   );
 }
-
-export default FieldTemplate;

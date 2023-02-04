@@ -1,8 +1,10 @@
 import React from "react";
 import {
+  descriptionId,
   getTemplate,
   getUiOptions,
   ArrayFieldDescriptionProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -15,7 +17,7 @@ import {
 export default function ArrayFieldDescriptionTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { idSchema, description, registry, schema, uiSchema } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
@@ -29,10 +31,9 @@ export default function ArrayFieldDescriptionTemplate<
     S,
     F
   >("DescriptionFieldTemplate", registry, options);
-  const id = `${idSchema.$id}__description`;
   return (
     <DescriptionFieldTemplate
-      id={id}
+      id={descriptionId<T>(idSchema)}
       description={description}
       schema={schema}
       uiSchema={uiSchema}

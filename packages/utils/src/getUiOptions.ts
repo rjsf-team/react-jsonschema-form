@@ -1,6 +1,12 @@
 import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from "./constants";
 import isObject from "./isObject";
-import { RJSFSchema, StrictRJSFSchema, UIOptionsType, UiSchema } from "./types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+  UiSchema,
+} from "./types";
 
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off.
@@ -11,7 +17,7 @@ import { RJSFSchema, StrictRJSFSchema, UIOptionsType, UiSchema } from "./types";
 export default function getUiOptions<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(uiSchema: UiSchema<T, S, F> = {}): UIOptionsType<T, S, F> {
   return Object.keys(uiSchema)
     .filter((key) => key.indexOf("ui:") === 0)

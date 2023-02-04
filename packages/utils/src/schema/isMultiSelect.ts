@@ -1,4 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, ValidatorType } from "../types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "../types";
 
 import isSelect from "./isSelect";
 
@@ -11,8 +16,9 @@ import isSelect from "./isSelect";
  */
 export default function isMultiSelect<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
->(validator: ValidatorType<T, S>, schema: S, rootSchema?: S) {
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(validator: ValidatorType<T, S, F>, schema: S, rootSchema?: S) {
   if (
     !schema.uniqueItems ||
     !schema.items ||
@@ -20,5 +26,5 @@ export default function isMultiSelect<
   ) {
     return false;
   }
-  return isSelect<T, S>(validator, schema.items as S, rootSchema);
+  return isSelect<T, S, F>(validator, schema.items as S, rootSchema);
 }

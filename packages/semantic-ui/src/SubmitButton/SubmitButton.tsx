@@ -1,13 +1,25 @@
-import { getSubmitButtonOptions, SubmitButtonProps } from "@rjsf/utils";
 import React from "react";
 import { Button } from "semantic-ui-react";
+import {
+  getSubmitButtonOptions,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  SubmitButtonProps,
+} from "@rjsf/utils";
 
-export default ({ uiSchema }: SubmitButtonProps) => {
+/** The `SubmitButton` renders a button that represent the `Submit` action on a form
+ */
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const {
     submitText,
     norender,
-    props: submitButtonProps,
-  } = getSubmitButtonOptions(uiSchema);
+    props: submitButtonProps = {},
+  } = getSubmitButtonOptions<T, S, F>(uiSchema);
   if (norender) {
     return null;
   }
@@ -16,4 +28,4 @@ export default ({ uiSchema }: SubmitButtonProps) => {
       {submitText}
     </Button>
   );
-};
+}

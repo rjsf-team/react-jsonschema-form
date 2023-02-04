@@ -13,14 +13,14 @@ import { GenericObjectType } from "../src";
  *   - when the array is not set in form data, the default is copied over
  * - scalars are overwritten/set by form data
  *
- * @param defaults - The defaults to merge
- * @param formData - The form data into which the defaults will be merged
+ * @param [defaults] - The defaults to merge
+ * @param [formData] - The form data into which the defaults will be merged
  * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = any>(
-  defaults: T,
-  formData: T
-): T {
+  defaults?: T,
+  formData?: T
+): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
     const mapped = formData.map((value, idx) => {

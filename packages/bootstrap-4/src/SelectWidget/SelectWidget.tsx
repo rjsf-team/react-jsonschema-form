@@ -1,10 +1,20 @@
 import React from "react";
-
 import Form from "react-bootstrap/Form";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
-
-const SelectWidget = ({
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -19,8 +29,8 @@ const SelectWidget = ({
   onFocus,
   placeholder,
   rawErrors = [],
-}: WidgetProps) => {
-  const { enumOptions, enumDisabled } = options;
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
   const emptyValue = multiple ? [] : "";
 
@@ -37,6 +47,11 @@ const SelectWidget = ({
       return event.target.value;
     }
   }
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   return (
     <Form.Control
@@ -44,7 +59,9 @@ const SelectWidget = ({
       bsPrefix="custom-select"
       id={id}
       name={id}
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={
+        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
+      }
       required={required}
       multiple={multiple}
       disabled={disabled || readonly}
@@ -54,20 +71,29 @@ const SelectWidget = ({
         onBlur &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(id, processSelectValue(schema, newValue, options));
+          onBlur(
+            id,
+            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+          );
         })
       }
       onFocus={
         onFocus &&
         ((event: React.FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(id, processSelectValue(schema, newValue, options));
+          onFocus(
+            id,
+            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+          );
         })
       }
       onChange={(event: React.ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(processSelectValue(schema, newValue, options));
+        onChange(
+          enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
+        );
       }}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {!multiple && schema.default === undefined && (
         <option value="">{placeholder}</option>
@@ -77,13 +103,11 @@ const SelectWidget = ({
           Array.isArray(enumDisabled) &&
           (enumDisabled as any).indexOf(value) != -1;
         return (
-          <option key={i} id={label} value={value} disabled={disabled}>
+          <option key={i} id={label} value={String(i)} disabled={disabled}>
             {label}
           </option>
         );
       })}
     </Form.Control>
   );
-};
-
-export default SelectWidget;
+}

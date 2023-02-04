@@ -102,6 +102,7 @@ exports[`single fields checkbox field 1`] = `
           onClick={[Function]}
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-disabled={false}
             checked={false}
             className="chakra-checkbox__input"
@@ -146,6 +147,177 @@ exports[`single fields checkbox field 1`] = `
   >
     <button
       className="chakra-button emotion-5"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+.emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-2 {
+  cursor: pointer;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: top;
+  position: relative;
+}
+
+.emotion-2[disabled],
+.emotion-2[aria-disabled=true],
+.emotion-2[data-disabled] {
+  cursor: not-allowed;
+}
+
+.emotion-3 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  vertical-align: top;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-4 {
+  -webkit-margin-start: 0.5rem;
+  margin-inline-start: 0.5rem;
+}
+
+.emotion-6 {
+  margin-top: 3px;
+}
+
+.emotion-7 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="chakra-form-control emotion-1"
+        role="group"
+      >
+        <label
+          className="chakra-checkbox emotion-2"
+          onClick={[Function]}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-disabled={false}
+            checked={false}
+            className="chakra-checkbox__input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            style={
+              Object {
+                "border": "0px",
+                "clip": "rect(0px, 0px, 0px, 0px)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0px",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+            type="checkbox"
+          />
+          <span
+            aria-hidden={true}
+            className="chakra-checkbox__control emotion-3"
+            onMouseDown={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+          />
+          <span
+            className="chakra-checkbox__label emotion-4"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          >
+            <p
+              className="chakra-text emotion-0"
+            >
+              test
+            </p>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-6"
+  >
+    <button
+      className="chakra-button emotion-7"
       disabled={false}
       type="submit"
     >
@@ -298,7 +470,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-foo"
+              id="root-0"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -319,7 +491,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="foo"
+              value="0"
             />
             <span
               aria-hidden={true}
@@ -350,7 +522,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-bar"
+              id="root-1"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -371,7 +543,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="bar"
+              value="1"
             />
             <span
               aria-hidden={true}
@@ -402,7 +574,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-fuzz"
+              id="root-2"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -423,7 +595,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="fuzz"
+              value="2"
             />
             <span
               aria-hidden={true}
@@ -454,7 +626,7 @@ exports[`single fields checkboxes field 1`] = `
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
-              id="root-qux"
+              id="root-3"
               name="root"
               onBlur={[Function]}
               onChange={[Function]}
@@ -475,7 +647,7 @@ exports[`single fields checkboxes field 1`] = `
                 }
               }
               type="checkbox"
-              value="qux"
+              value="3"
             />
             <span
               aria-hidden={true}
@@ -606,6 +778,7 @@ exports[`single fields field with description 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -737,6 +910,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -832,6 +1006,7 @@ exports[`single fields format color 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -918,6 +1093,7 @@ exports[`single fields format date 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1004,6 +1180,7 @@ exports[`single fields format datetime 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1174,6 +1351,7 @@ exports[`single fields help and error display 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           aria-invalid={true}
           autoFocus={false}
           className="chakra-input emotion-1"
@@ -1370,6 +1548,7 @@ exports[`single fields hidden label 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1517,6 +1696,7 @@ exports[`single fields number field 0 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1604,6 +1784,7 @@ exports[`single fields number field 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1691,6 +1872,7 @@ exports[`single fields password field 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -1846,6 +2028,7 @@ exports[`single fields radio field 1`] = `
           id="root-label"
         />
         <div
+          aria-describedby="root__error root__description root__help"
           className="chakra-radio-group emotion-0"
           onBlur={[Function]}
           onFocus={[Function]}
@@ -1861,7 +2044,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-true"
+                id="root-0"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1884,7 +2067,7 @@ exports[`single fields radio field 1`] = `
                   }
                 }
                 type="radio"
-                value="true"
+                value="0"
               />
               <span
                 aria-hidden={true}
@@ -1910,7 +2093,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="chakra-radio__input"
                 disabled={false}
-                id="root-false"
+                id="root-1"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -1933,7 +2116,7 @@ exports[`single fields radio field 1`] = `
                   }
                 }
                 type="radio"
-                value="false"
+                value="1"
               />
               <span
                 aria-hidden={true}
@@ -2026,11 +2209,12 @@ exports[`single fields schema examples 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help root__examples"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
           id="root"
-          list="examples_root"
+          list="root__examples"
           name="root"
           onBlur={[Function]}
           onChange={[Function]}
@@ -2042,7 +2226,7 @@ exports[`single fields schema examples 1`] = `
           value=""
         />
         <datalist
-          id="examples_root"
+          id="root__examples"
         >
           <option
             value="Firefox"
@@ -2334,6 +2518,7 @@ exports[`single fields select field 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -2375,7 +2560,6 @@ exports[`single fields select field 1`] = `
           <input
             name="root"
             type="hidden"
-            value=""
           />
         </div>
       </div>
@@ -2655,6 +2839,7 @@ exports[`single fields select field multiple choice 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -2697,6 +2882,7 @@ exports[`single fields select field multiple choice 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -2977,6 +3163,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3019,6 +3206,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -3394,6 +3582,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                   autoCorrect="off"
                   className=" emotion-16"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3456,12 +3645,12 @@ exports[`single fields select field multiple choice formData 1`] = `
             <input
               name="root"
               type="hidden"
-              value="foo"
+              value="0"
             />
             <input
               name="root"
               type="hidden"
-              value="bar"
+              value="1"
             />
           </div>
         </div>
@@ -3742,6 +3931,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -3784,6 +3974,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             <input
               name="root"
               type="hidden"
+              value=""
             />
           </div>
         </div>
@@ -4061,6 +4252,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -4102,7 +4294,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           <input
             name="root"
             type="hidden"
-            value=""
           />
         </div>
       </div>
@@ -4379,6 +4570,7 @@ exports[`single fields select field single choice formData 1`] = `
                   autoCorrect="off"
                   className=" emotion-9"
                   disabled={false}
+                  getClassNames={[Function]}
                   id="root"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -4420,7 +4612,6 @@ exports[`single fields select field single choice formData 1`] = `
           <input
             name="root"
             type="hidden"
-            value="bar"
           />
         </div>
       </div>
@@ -4495,6 +4686,7 @@ exports[`single fields slider field 1`] = `
         role="group"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           className="chakra-slider emotion-0"
           label=""
           onBlur={[Function]}
@@ -4633,6 +4825,7 @@ exports[`single fields string field format data-url 1`] = `
       <div>
         <p>
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             defaultValue=""
             disabled={false}
@@ -4714,6 +4907,7 @@ exports[`single fields string field format email 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -4800,6 +4994,7 @@ exports[`single fields string field format uri 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -4886,6 +5081,7 @@ exports[`single fields string field regular 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -4972,6 +5168,7 @@ exports[`single fields string field with placeholder 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}
@@ -5058,6 +5255,7 @@ exports[`single fields textarea field 1`] = `
         role="group"
       >
         <textarea
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-textarea emotion-0"
           disabled={false}
@@ -5162,7 +5360,7 @@ exports[`single fields title field 1`] = `
     >
       <div
         className="emotion-1"
-        id="root-title"
+        id="root__title"
       >
         <h5
           className="chakra-heading emotion-0"
@@ -5199,6 +5397,7 @@ exports[`single fields title field 1`] = `
                   title
                 </label>
                 <input
+                  aria-describedby="root_title__error root_title__description root_title__help"
                   autoFocus={false}
                   className="chakra-input emotion-0"
                   disabled={false}
@@ -5440,6 +5639,7 @@ exports[`single fields up/down field 1`] = `
           value=""
         >
           <input
+            aria-describedby="root__error root__description root__help"
             aria-readonly={false}
             aria-required={false}
             aria-valuemax={9007199254740991}
@@ -5582,6 +5782,7 @@ exports[`single fields using custom tagName 1`] = `
         role="group"
       >
         <input
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="chakra-input emotion-0"
           disabled={false}

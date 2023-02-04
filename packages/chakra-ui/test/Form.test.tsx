@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/react";
 import renderer from "react-test-renderer";
 import { UiSchema, RJSFSchema, ErrorSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import Form from "../src/index";
 
@@ -291,6 +291,16 @@ describe("single fields", () => {
   test("checkbox field", () => {
     const schema: RJSFSchema = {
       type: "boolean",
+    };
+    const tree = renderer
+      .create(<Form schema={schema} validator={validator} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  test("checkbox field with label", () => {
+    const schema: RJSFSchema = {
+      type: "boolean",
+      title: "test",
     };
     const tree = renderer
       .create(<Form schema={schema} validator={validator} />)

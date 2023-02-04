@@ -87,7 +87,7 @@ exports[`object fields additionalProperties 1`] = `
                           >
                             <span
                               className="ant-input-affix-wrapper form-control ant-input-affix-wrapper-has-feedback"
-                              onMouseDown={[Function]}
+                              onClick={[Function]}
                               style={
                                 Object {
                                   "width": "100%",
@@ -159,7 +159,7 @@ exports[`object fields additionalProperties 1`] = `
                         >
                           <span
                             className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                            onMouseDown={[Function]}
+                            onClick={[Function]}
                             style={
                               Object {
                                 "width": "100%",
@@ -167,6 +167,7 @@ exports[`object fields additionalProperties 1`] = `
                             }
                           >
                             <input
+                              aria-describedby="root_foo__error root_foo__description root_foo__help"
                               className="ant-input"
                               hidden={null}
                               id="root_foo"
@@ -368,7 +369,7 @@ exports[`object fields object 1`] = `
                     >
                       <span
                         className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onMouseDown={[Function]}
+                        onClick={[Function]}
                         style={
                           Object {
                             "width": "100%",
@@ -376,6 +377,7 @@ exports[`object fields object 1`] = `
                         }
                       >
                         <input
+                          aria-describedby="root_a__error root_a__description root_a__help"
                           className="ant-input"
                           hidden={null}
                           id="root_a"
@@ -528,6 +530,7 @@ exports[`object fields object 1`] = `
                             className="ant-input-number-input-wrap"
                           >
                             <input
+                              aria-describedby="root_b__error root_b__description root_b__help"
                               aria-valuenow={null}
                               autoComplete="off"
                               className="ant-input-number-input"

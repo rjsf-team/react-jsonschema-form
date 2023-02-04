@@ -7,23 +7,24 @@ import {
   Text,
   Stack,
 } from "@chakra-ui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-// const selectValue = (value, selected, all) => {
-//   const at = all.indexOf(value);
-//   const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-//   // As inserting values at predefined index positions doesn't work with empty
-//   // arrays, we need to reorder the updated selection to match the initial order
-//   return updated.sort((a, b) => all.indexOf(a) > all.indexOf(b));
-// };
-
-// const deselectValue = (value, selected) => {
-//   return selected.filter((v) => v !== value);
-// };
-
-const CheckboxesWidget = (props: WidgetProps) => {
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     disabled,
@@ -39,26 +40,25 @@ const CheckboxesWidget = (props: WidgetProps) => {
     rawErrors = [],
     schema,
   } = props;
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
-  // const _onChange = option => ({ target: { checked } }) => {
-  //   const all = enumOptions.map(({ value }) => value)
-
-  //   if (checked) {
-  //     onChange(selectValue(option.value, value, all))
-  //   } else {
-  //     onChange(deselectValue(option.value, value))
-  //   }
-  // }
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  }: React.FocusEvent<HTMLInputElement | any>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement | any>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    true
+  ) as string[];
 
   return (
     <FormControl
@@ -73,22 +73,28 @@ const CheckboxesWidget = (props: WidgetProps) => {
         {label || schema.title}
       </FormLabel>
       <CheckboxGroup
-        onChange={(option) => onChange(option)}
-        defaultValue={value}
+        onChange={(option) =>
+          onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))
+        }
+        defaultValue={selectedIndexes}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       >
         <Stack direction={row ? "row" : "column"}>
           {Array.isArray(enumOptions) &&
-            enumOptions.map((option) => {
-              const checked = value.indexOf(option.value) !== -1;
+            enumOptions.map((option, index) => {
+              const checked = enumOptionsIsSelected<S>(
+                option.value,
+                checkboxesValues
+              );
               const itemDisabled =
                 Array.isArray(enumDisabled) &&
                 enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
-                  key={option.value}
-                  id={`${id}-${option.value}`}
+                  key={index}
+                  id={optionId(id, index)}
                   name={id}
-                  value={option.value}
+                  value={String(index)}
                   isChecked={checked}
                   isDisabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
@@ -102,6 +108,4 @@ const CheckboxesWidget = (props: WidgetProps) => {
       </CheckboxGroup>
     </FormControl>
   );
-};
-
-export default CheckboxesWidget;
+}

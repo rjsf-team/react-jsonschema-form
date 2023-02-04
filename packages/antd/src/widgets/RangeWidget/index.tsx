@@ -1,22 +1,40 @@
 import React from "react";
-import { rangeSpec, WidgetProps } from "@rjsf/utils";
 import Slider from "antd/lib/slider";
+import {
+  ariaDescribedByIds,
+  rangeSpec,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  GenericObjectType,
+} from "@rjsf/utils";
 
-const RangeWidget = ({
-  autofocus,
-  disabled,
-  formContext,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  placeholder,
-  readonly,
-  schema,
-  value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+/** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
+ * in a div, with the value along side it.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    autofocus,
+    disabled,
+    formContext,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    schema,
+    value,
+  } = props;
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { min, max, step } = rangeSpec(schema);
 
@@ -49,8 +67,7 @@ const RangeWidget = ({
       step={step}
       value={value}
       {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
-};
-
-export default RangeWidget;
+}

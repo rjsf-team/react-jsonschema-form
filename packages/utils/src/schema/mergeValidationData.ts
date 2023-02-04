@@ -3,6 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import mergeObjects from "../mergeObjects";
 import {
   ErrorSchema,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidationData,
@@ -21,9 +22,10 @@ import {
  */
 export default function mergeValidationData<
   T = any,
-  S extends StrictRJSFSchema = RJSFSchema
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
 >(
-  validator: ValidatorType<T, S>,
+  validator: ValidatorType<T, S, F>,
   validationData: ValidationData<T>,
   additionalErrorSchema?: ErrorSchema<T>
 ): ValidationData<T> {

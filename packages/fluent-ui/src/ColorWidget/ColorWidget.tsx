@@ -6,7 +6,13 @@ import {
   getColorFromString,
   Label,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const styles_red = {
@@ -35,14 +41,19 @@ const allowedProps: (keyof IColorPickerProps)[] = [
   "showPreview",
 ];
 
-const ColorWidget = ({
+export default function ColorWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
+  id,
   schema,
   options,
   value,
   required,
   label,
   onChange,
-}: WidgetProps) => {
+}: WidgetProps<T, S, F>) {
   const updateColor = (_ev: any, colorObj: IColor) => {
     onChange(colorObj.hex);
   };
@@ -61,8 +72,8 @@ const ColorWidget = ({
         alphaType={"alpha"}
         showPreview={true}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </>
   );
-};
-export default ColorWidget;
+}

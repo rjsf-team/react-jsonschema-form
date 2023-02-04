@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
@@ -16,11 +17,12 @@ import Label from "./FieldTemplate/Label";
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     id,
     classNames,
+    style,
     disabled,
     label,
     onKeyChange,
@@ -38,11 +40,15 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       <div className="row">
         <div className="col-xs-5 form-additional">
           <div className="form-group">
@@ -64,6 +70,7 @@ export default function WrapIfAdditionalTemplate<
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={uiSchema}
+            registry={registry}
           />
         </div>
       </div>

@@ -1,10 +1,23 @@
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
-import { processSelectValue, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  EnumOptionsType,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
-import { GroupBase, OptionsOrGroups, Select } from "chakra-react-select";
+import { OptionsOrGroups, Select } from "chakra-react-select";
 
-const SelectWidget = (props: WidgetProps) => {
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -23,53 +36,69 @@ const SelectWidget = (props: WidgetProps) => {
     rawErrors = [],
     uiSchema,
   } = props;
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
 
   const _onMultiChange = (e: any) => {
     return onChange(
-      processSelectValue(
-        schema,
-        e.map((v: { label: any; value: any }) => {
+      enumOptionsValueForIndex<S>(
+        e.map((v: { value: any }) => {
           return v.value;
         }),
-        options
+        enumOptions,
+        emptyValue
       )
     );
   };
 
   const _onChange = (e: any) => {
-    return onChange(processSelectValue(schema, e.value, options));
+    return onChange(
+      enumOptionsValueForIndex<S>(e.value, enumOptions, emptyValue)
+    );
   };
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, processSelectValue(schema, value, options));
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const _onFocus = ({
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, processSelectValue(schema, value, options));
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const _valueLabelMap: any = {};
-  (enumOptions as any).map((option: any) => {
-    const { value, label }: any = option;
-    _valueLabelMap[value] = label;
-    option["isDisabled"] =
-      enumDisabled && (enumDisabled as any).indexOf(value) != -1;
-  });
+  const displayEnumOptions: OptionsOrGroups<any, any> = Array.isArray(
+    enumOptions
+  )
+    ? enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+        const { value, label } = option;
+        _valueLabelMap[index] = label || String(value);
+        return {
+          label,
+          value: String(index),
+          isDisabled:
+            Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+        };
+      })
+    : [];
 
   const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
+  const selectedIndex = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    isMultiple
+  );
   const formValue: any = isMultiple
-    ? (value || []).map((v: any) => {
+    ? ((selectedIndex as string[]) || []).map((i: string) => {
         return {
-          label: _valueLabelMap[v] || v,
-          value: v,
+          label: _valueLabelMap[i],
+          value: i,
         };
       })
     : {
-        label: _valueLabelMap[value] || value || "",
-        value: value || "",
+        label: _valueLabelMap[selectedIndex as string] || "",
+        selectedIndex,
       };
+
   return (
     <FormControl
       mb={1}
@@ -88,7 +117,7 @@ const SelectWidget = (props: WidgetProps) => {
         inputId={id}
         name={id}
         isMulti={isMultiple}
-        options={enumOptions as OptionsOrGroups<unknown, GroupBase<unknown>>}
+        options={displayEnumOptions}
         placeholder={placeholder}
         closeMenuOnSelect={!isMultiple}
         onBlur={_onBlur}
@@ -96,9 +125,8 @@ const SelectWidget = (props: WidgetProps) => {
         onFocus={_onFocus}
         autoFocus={autofocus}
         value={formValue}
+        aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </FormControl>
   );
-};
-
-export default SelectWidget;
+}

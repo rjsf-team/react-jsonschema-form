@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import React, { Component, createRef } from "react";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import { withTheme } from "../src";
 import { createComponent, createSandbox } from "./test_utils";

@@ -1,7 +1,12 @@
 import React from "react";
 import {
+  ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
   EnumOptionsType,
-  processSelectValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WidgetProps,
   UIOptionsType,
 } from "@rjsf/utils";
@@ -10,26 +15,37 @@ import { Form, DropdownProps } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
 /**
- * * Returns and creates an array format required for semantic drop down
+ * Returns and creates an array format required for semantic drop down
  * @param {array} enumOptions- array of items for the dropdown
  * @param {array} enumDisabled - array of enum option values to disable
  * @returns {*}
  */
-function createDefaultValueOptionsForDropDown(
-  enumOptions?: EnumOptionsType[],
+function createDefaultValueOptionsForDropDown<
+  S extends StrictRJSFSchema = RJSFSchema
+>(
+  enumOptions?: EnumOptionsType<S>[],
   enumDisabled?: UIOptionsType["enumDisabled"]
 ) {
   const disabledOptions = enumDisabled || [];
-  const options = map(enumOptions, ({ label, value }) => ({
+  const options = map(enumOptions, ({ label, value }, index) => ({
     disabled: disabledOptions.indexOf(value) !== -1,
     key: label,
     text: label,
-    value,
+    value: String(index),
   }));
   return options;
 }
 
-function SelectWidget(props: WidgetProps) {
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     uiSchema,
@@ -49,7 +65,7 @@ function SelectWidget(props: WidgetProps) {
     onFocus,
     rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({
+  const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     formContext,
     options,
@@ -61,28 +77,34 @@ function SelectWidget(props: WidgetProps) {
       upward: false,
     },
   });
-  const { enumDisabled, enumOptions } = options;
+  const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : "";
-  const dropdownOptions = createDefaultValueOptionsForDropDown(
+  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled
   );
   const _onChange = (
     _: React.SyntheticEvent<HTMLElement>,
     { value }: DropdownProps
-  ) => onChange && onChange(processSelectValue(schema, value, options));
+  ) =>
+    onChange(
+      enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal)
+    );
   // eslint-disable-next-line no-shadow
   const _onBlur = (
     _: React.FocusEvent<HTMLElement>,
     { target: { value } }: DropdownProps
-  ) => onBlur && onBlur(id, processSelectValue(schema, value, options));
+  ) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onFocus = (
     _: React.FocusEvent<HTMLElement>,
-    {
-      // eslint-disable-next-line no-shadow
-      target: { value },
-    }: DropdownProps
-  ) => onFocus && onFocus(id, processSelectValue(schema, value, options));
+    { target: { value } }: DropdownProps
+  ) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
+  );
 
   return (
     <Form.Dropdown
@@ -91,7 +113,7 @@ function SelectWidget(props: WidgetProps) {
       name={id}
       label={label || schema.title}
       multiple={typeof multiple === "undefined" ? false : multiple}
-      value={typeof value === "undefined" ? emptyValue : value}
+      value={typeof value === "undefined" ? emptyValue : selectedIndexes}
       error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}
@@ -103,7 +125,7 @@ function SelectWidget(props: WidgetProps) {
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }
-export default SelectWidget;

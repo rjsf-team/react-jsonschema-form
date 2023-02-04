@@ -1,9 +1,18 @@
 import React from "react";
-import { ErrorListProps } from "@rjsf/utils";
+import {
+  ErrorListProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 import { List, ListIcon, ListItem, Alert, AlertTitle } from "@chakra-ui/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
-const ErrorList = ({ errors }: ErrorListProps) => {
+export default function ErrorList<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({ errors }: ErrorListProps<T, S, F>) {
   return (
     <Alert
       flexDirection="column"
@@ -23,6 +32,4 @@ const ErrorList = ({ errors }: ErrorListProps) => {
       </List>
     </Alert>
   );
-};
-
-export default ErrorList;
+}

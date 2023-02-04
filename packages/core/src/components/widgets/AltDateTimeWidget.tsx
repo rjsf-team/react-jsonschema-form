@@ -1,4 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import React from "react";
 
 /** The `AltDateTimeWidget` is an alternative widget for rendering datetime properties.
@@ -9,7 +14,7 @@ import React from "react";
 function AltDateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({ time = true, ...props }: WidgetProps<T, S, F>) {
   const { AltDateWidget } = props.registry.widgets;
   return <AltDateWidget time={time} {...props} />;

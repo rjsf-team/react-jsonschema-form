@@ -13,6 +13,7 @@ exports[`single fields checkbox field 1`] = `
       className="form-group"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="checkbox  form-group"
       >
         <div
@@ -28,6 +29,7 @@ exports[`single fields checkbox field 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
         </div>
@@ -46,7 +48,7 @@ exports[`single fields checkbox field 1`] = `
 </form>
 `;
 
-exports[`single fields checkbox field 2`] = `
+exports[`single fields checkbox field with label 1`] = `
 <form
   className="rjsf"
   noValidate={false}
@@ -59,6 +61,7 @@ exports[`single fields checkbox field 2`] = `
       className="form-group"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="checkbox  form-group"
       >
         <div
@@ -67,15 +70,23 @@ exports[`single fields checkbox field 2`] = `
           <input
             autoFocus={false}
             checked={false}
-            className="form-check-input position-static"
+            className="form-check-input"
             disabled={false}
             id="root"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            required={false}
             type="checkbox"
           />
+          <label
+            className="form-check-label"
+            htmlFor="root"
+            title=""
+          >
+            test
+          </label>
         </div>
       </div>
     </div>
@@ -117,11 +128,12 @@ exports[`single fields checkboxes field 1`] = `
           className="bg-transparent border-0 custom-control custom-checkbox"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="custom-control-input"
             disabled={false}
-            id="root-foo"
+            id="root-0"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -131,7 +143,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <label
             className="custom-control-label"
-            htmlFor="root-foo"
+            htmlFor="root-0"
             title=""
           >
             foo
@@ -141,11 +153,12 @@ exports[`single fields checkboxes field 1`] = `
           className="bg-transparent border-0 custom-control custom-checkbox"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="custom-control-input"
             disabled={false}
-            id="root-bar"
+            id="root-1"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -155,7 +168,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <label
             className="custom-control-label"
-            htmlFor="root-bar"
+            htmlFor="root-1"
             title=""
           >
             bar
@@ -165,11 +178,12 @@ exports[`single fields checkboxes field 1`] = `
           className="bg-transparent border-0 custom-control custom-checkbox"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="custom-control-input"
             disabled={false}
-            id="root-fuzz"
+            id="root-2"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -179,7 +193,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <label
             className="custom-control-label"
-            htmlFor="root-fuzz"
+            htmlFor="root-2"
             title=""
           >
             fuzz
@@ -189,11 +203,12 @@ exports[`single fields checkboxes field 1`] = `
           className="bg-transparent border-0 custom-control custom-checkbox"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
             className="custom-control-input"
             disabled={false}
-            id="root-qux"
+            id="root-3"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
@@ -203,7 +218,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <label
             className="custom-control-label"
-            htmlFor="root-qux"
+            htmlFor="root-3"
             title=""
           >
             qux
@@ -266,6 +281,7 @@ exports[`single fields field with description 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="form-control"
                   disabled={false}
@@ -345,6 +361,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   my-field
                 </label>
                 <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   autoFocus={false}
                   className="form-control"
                   disabled={false}
@@ -402,6 +419,7 @@ exports[`single fields format color 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -449,6 +467,7 @@ exports[`single fields format date 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -496,6 +515,7 @@ exports[`single fields format datetime 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -571,6 +591,7 @@ exports[`single fields help and error display 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="is-invalid form-control"
         disabled={false}
@@ -691,6 +712,7 @@ exports[`single fields hidden label 1`] = `
       className="form-group"
     >
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -770,6 +792,7 @@ exports[`single fields number field 0 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -818,6 +841,7 @@ exports[`single fields number field 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -866,6 +890,7 @@ exports[`single fields password field 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -919,20 +944,21 @@ exports[`single fields radio field 1`] = `
           className="form-check"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="root-true"
+            id="root-0"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
             type="radio"
-            value={true}
+            value="0"
           />
           <label
             className="form-check-label"
-            htmlFor="root-true"
+            htmlFor="root-0"
             title=""
           >
             Yes
@@ -942,20 +968,21 @@ exports[`single fields radio field 1`] = `
           className="form-check"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             checked={false}
             className="form-check-input"
             disabled={false}
-            id="root-false"
+            id="root-1"
             name="root"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
             type="radio"
-            value={false}
+            value="1"
           />
           <label
             className="form-check-label"
-            htmlFor="root-false"
+            htmlFor="root-1"
             title=""
           >
             No
@@ -996,11 +1023,12 @@ exports[`single fields schema examples 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help root__examples"
         autoFocus={false}
         className="form-control"
         disabled={false}
         id="root"
-        list="examples_root"
+        list="root__examples"
         name="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -1011,7 +1039,7 @@ exports[`single fields schema examples 1`] = `
         value=""
       />
       <datalist
-        id="examples_root"
+        id="root__examples"
       >
         <option
           value="Firefox"
@@ -1063,6 +1091,7 @@ exports[`single fields select field 1`] = `
         
       </label>
       <select
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="custom-select"
         disabled={false}
@@ -1081,14 +1110,14 @@ exports[`single fields select field 1`] = `
         <option
           disabled={false}
           id="foo"
-          value="foo"
+          value="0"
         >
           foo
         </option>
         <option
           disabled={false}
           id="bar"
-          value="bar"
+          value="1"
         >
           bar
         </option>
@@ -1127,6 +1156,7 @@ exports[`single fields slider field 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1182,6 +1212,7 @@ exports[`single fields string field format data-url 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control-file"
         disabled={false}
@@ -1229,6 +1260,7 @@ exports[`single fields string field format email 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1276,6 +1308,7 @@ exports[`single fields string field format uri 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1323,6 +1356,7 @@ exports[`single fields string field regular 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1370,6 +1404,7 @@ exports[`single fields string field with placeholder 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1420,6 +1455,7 @@ exports[`single fields textarea field 1`] = `
         className="input-group"
       >
         <textarea
+          aria-describedby="root__error root__description root__help"
           autoFocus={false}
           className="form-control"
           disabled={false}
@@ -1462,7 +1498,7 @@ exports[`single fields title field 1`] = `
     >
       <div
         className="my-1"
-        id="root-title"
+        id="root__title"
       >
         <h5>
           Titre 1
@@ -1504,6 +1540,7 @@ exports[`single fields title field 1`] = `
                   Titre 2
                 </label>
                 <input
+                  aria-describedby="root_title__error root_title__description root_title__help"
                   autoFocus={false}
                   className="form-control"
                   disabled={false}
@@ -1612,6 +1649,7 @@ exports[`single fields up/down field 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}
@@ -1659,6 +1697,7 @@ exports[`single fields using custom tagName 1`] = `
         
       </label>
       <input
+        aria-describedby="root__error root__description root__help"
         autoFocus={false}
         className="form-control"
         disabled={false}

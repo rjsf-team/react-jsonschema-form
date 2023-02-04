@@ -1,4 +1,9 @@
-import { RJSFSchema, StrictRJSFSchema, UiSchema } from "./types";
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from "./types";
 import getUiOptions from "./getUiOptions";
 
 /** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
@@ -13,7 +18,7 @@ import getUiOptions from "./getUiOptions";
 export default function canExpand<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(schema: RJSFSchema, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
   if (!schema.additionalProperties) {
     return false;

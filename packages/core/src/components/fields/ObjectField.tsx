@@ -5,6 +5,7 @@ import {
   orderProperties,
   ErrorSchema,
   FieldProps,
+  FormContextType,
   GenericObjectType,
   IdSchema,
   RJSFSchema,
@@ -12,6 +13,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   PROPERTIES_KEY,
   REF_KEY,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
 } from "@rjsf/utils";
 import get from "lodash/get";
 import has from "lodash/has";
@@ -35,7 +38,7 @@ type ObjectFieldState = {
 class ObjectField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 > extends Component<FieldProps<T, S, F>, ObjectFieldState> {
   /** Set up the initial state */
   state = {
@@ -64,7 +67,11 @@ class ObjectField<
    * @returns - The onPropertyChange callback for the `name` property
    */
   onPropertyChange = (name: string, addedByAdditionalProperties = false) => {
-    return (value: T, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    return (
+      value: T | undefined,
+      newErrorSchema?: ErrorSchema<T>,
+      id?: string
+    ) => {
       const { formData, onChange, errorSchema } = this.props;
       if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
@@ -76,7 +83,7 @@ class ObjectField<
         // set empty values to the empty string.
         value = "" as unknown as T;
       }
-      const newFormData = { ...formData, [name]: value };
+      const newFormData = { ...formData, [name]: value } as unknown as T;
       onChange(
         newFormData,
         errorSchema &&
@@ -99,7 +106,7 @@ class ObjectField<
     return (event: DragEvent) => {
       event.preventDefault();
       const { onChange, formData } = this.props;
-      const copiedFormData = { ...formData };
+      const copiedFormData = { ...formData } as T;
       unset(copiedFormData, key);
       onChange(copiedFormData);
     };
@@ -109,10 +116,10 @@ class ObjectField<
    * that is already not assigned is found.
    *
    * @param preferredKey - The preferred name of a new key
-   * @param formData - The form data in which to check if the desired key already exists
+   * @param [formData] - The form data in which to check if the desired key already exists
    * @returns - The name of the next available key from `preferredKey`
    */
-  getAvailableKey = (preferredKey: string, formData: T) => {
+  getAvailableKey = (preferredKey: string, formData?: T) => {
     const { uiSchema } = this.props;
     const { duplicateKeySuffixSeparator = "-" } = getUiOptions<T, S, F>(
       uiSchema
@@ -120,7 +127,7 @@ class ObjectField<
 
     let index = 0;
     let newKey = preferredKey;
-    while (newKey in formData) {
+    while (has(formData, newKey)) {
       newKey = `${preferredKey}${duplicateKeySuffixSeparator}${++index}`;
     }
     return newKey;
@@ -197,18 +204,22 @@ class ObjectField<
       return;
     }
     const { formData, onChange, registry } = this.props;
-    const newFormData = { ...formData };
+    const newFormData = { ...formData } as T;
 
     let type: RJSFSchema["type"] = undefined;
     if (isObject(schema.additionalProperties)) {
       type = schema.additionalProperties.type;
-      if (REF_KEY in schema.additionalProperties) {
+      let apSchema = schema.additionalProperties;
+      if (REF_KEY in apSchema) {
         const { schemaUtils } = registry;
-        const refSchema = schemaUtils.retrieveSchema(
-          { $ref: schema.additionalProperties[REF_KEY] } as S,
+        apSchema = schemaUtils.retrieveSchema(
+          { $ref: apSchema[REF_KEY] } as S,
           formData
         );
-        type = refSchema.type;
+        type = apSchema.type;
+      }
+      if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
+        type = "object";
       }
     }
 

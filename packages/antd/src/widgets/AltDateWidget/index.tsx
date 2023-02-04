@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
-
+import Button from "antd/lib/button";
+import Col from "antd/lib/col";
+import Row from "antd/lib/row";
 import {
+  ariaDescribedByIds,
   pad,
   parseDateString,
   toDateString,
   DateObject,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WidgetProps,
+  GenericObjectType,
 } from "@rjsf/utils";
-import Button from "antd/lib/button";
-import Col from "antd/lib/col";
-import Row from "antd/lib/row";
 
-type DateElementProps = Pick<
-  WidgetProps,
+type DateElementProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = Pick<
+  WidgetProps<T, S, F>,
   | "id"
   | "name"
   | "value"
@@ -65,22 +73,27 @@ function dateElementProps(
   return data;
 }
 
-const AltDateWidget = ({
-  autofocus,
-  disabled,
-  formContext,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  readonly,
-  registry,
-  showTime,
-  value,
-}: WidgetProps) => {
+export default function AltDateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    autofocus,
+    disabled,
+    formContext,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    readonly,
+    registry,
+    showTime,
+    value,
+  } = props;
   const { SelectWidget } = registry.widgets;
-  const { rowGutter = 24 } = formContext;
+  const { rowGutter = 24 } = formContext as GenericObjectType;
 
   const [state, setState] = useState(parseDateString(value, showTime));
 
@@ -118,7 +131,7 @@ const AltDateWidget = ({
     onChange(undefined);
   };
 
-  const renderDateElement = (elemProps: DateElementProps) => (
+  const renderDateElement = (elemProps: DateElementProps<T, S, F>) => (
     <SelectWidget
       autofocus={elemProps.autofocus}
       className="form-control"
@@ -135,10 +148,11 @@ const AltDateWidget = ({
       }}
       placeholder={elemProps.type}
       readonly={elemProps.readonly}
-      schema={{ type: "integer" }}
+      schema={{ type: "integer" } as S}
       value={elemProps.value}
       registry={registry}
       label=""
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 
@@ -192,7 +206,7 @@ const AltDateWidget = ({
       )}
     </Row>
   );
-};
+}
 
 AltDateWidget.defaultProps = {
   autofocus: false,
@@ -203,5 +217,3 @@ AltDateWidget.defaultProps = {
   readonly: false,
   showTime: false,
 };
-
-export default AltDateWidget;

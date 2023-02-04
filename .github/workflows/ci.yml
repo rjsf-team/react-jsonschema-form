@@ -19,67 +19,74 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: 'packages/**/package-lock.json'
     - run: npm ci
     - run: npm run lint
     - run: npm run cs-check
 
     - name: Build with Netlify badge
-      if: github.ref != 'refs/heads/main'
+      if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'
       run: npm run build
       env:
         VITE_SHOW_NETLIFY_BADGE: true
         NODE_OPTIONS: --max_old_space_size=4096
+
     - name: Build
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && matrix.node-version != '14.x'
       run: npm run build
       env:
         NODE_OPTIONS: --max_old_space_size=4096
 
-    - if: matrix.node-version == '16.x'
+    # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
+    - name: Build with Netlify badge (no docs)
+      if: github.ref != 'refs/heads/main' && matrix.node-version == '14.x'
+      run: npx nx run-many --target=build --exclude=docs
+      env:
+        VITE_SHOW_NETLIFY_BADGE: true
+        NODE_OPTIONS: --max_old_space_size=4096
+    - name: Build (no docs)
+      if: github.ref == 'refs/heads/main' && matrix.node-version == '14.x'
+      run: npx nx run-many --target=build --exclude=docs
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+
+    - if: matrix.node-version == '18.x'
       uses: actions/upload-artifact@v3
       with:
-        name: dist
+        name: playground
         path: packages/playground/dist
+    - if: matrix.node-version == '18.x'
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs
+        path: packages/docs/build
     - run: npm test
-
-#  deploy_preview:
-#    runs-on: ubuntu-latest
-#    if: github.ref != 'refs/heads/main'
-#    name: "Deploy preview (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-#    needs: [build]
-#    steps:
-#      - name: Download built files
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: dist
-#          path: dist
-#      - name: "Deploy to Netlify (https://deploy-preview-${{ github.event.pull_request.number }}--rjsf.netlify.app/)"
-#        run: npx netlify-cli deploy --build --prod --dir=dist --alias="deploy-preview-${PR_NUMBER}"
-#        env:
-#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-#          PR_NUMBER: ${{ github.event.pull_request.number }}
-
-  deploy_playground:
+  deploy_playground_and_docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    name: Deploy playground to GitHub Pages
+    name: Deploy playground and docs to GitHub Pages
     needs: [build]
     steps:
-      - name: Download built files
+      - name: Download built playground
         uses: actions/download-artifact@v3
         with:
-          name: dist
+          name: playground
           path: dist
-      - name: Deploy playground
-        uses: crazy-max/ghaction-github-pages@v3.0.0
+      - name: Download built docs
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+          path: dist/docs
+      - name: Deploy playground + docs to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           keep_history: true
           target_branch: gh-pages
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+  # NOTE: The following workflow is deprecated. The docs are new deployed to GitHub pages above.
   docs:
     runs-on: ubuntu-latest
     steps:
@@ -87,24 +94,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.6
+        python-version: "3.10"
     - run: pip install -r requirements.docs.txt
     - run: mkdocs build --clean
-  # deploy_canary:
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #   name: Deploy canary version of packages to npm
-  #   needs: [build]
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Use Node.js 14.x
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 14.x
-  #     - run: npm ci
-  #     - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-  #       env:
-  #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  #     - run: npx lerna publish from-package --yes --no-verify-access --canary
-  #     - if: always()
-  #       run: rm .npmrc
+

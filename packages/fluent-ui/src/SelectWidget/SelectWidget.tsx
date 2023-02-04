@@ -1,6 +1,16 @@
 import React from "react";
-import { Label, Dropdown, IDropdownOption } from "@fluentui/react";
-import { WidgetProps, processSelectValue } from "@rjsf/utils";
+import { Dropdown, IDropdownOption } from "@fluentui/react";
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIndexForValue,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
+  WidgetProps,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of IDropdownProps from @fluentui/react
@@ -49,7 +59,11 @@ const allowedProps = [
   "openOnKeyboardFocus",
 ];
 
-const SelectWidget = ({
+export default function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   id,
   options,
@@ -62,8 +76,8 @@ const SelectWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
-  const { enumOptions, enumDisabled } = options;
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   const _onChange = (
     _ev?: React.FormEvent<HTMLElement>,
@@ -75,47 +89,59 @@ const SelectWidget = ({
     if (multiple) {
       const valueOrDefault = value || [];
       if (item.selected) {
-        onChange([...valueOrDefault, item.key]);
+        onChange(enumOptionsSelectValue(item.key, valueOrDefault, enumOptions));
       } else {
-        onChange(valueOrDefault.filter((key: any) => key !== item.key));
+        onChange(
+          enumOptionsDeselectValue(item.key, valueOrDefault, enumOptions)
+        );
       }
     } else {
-      onChange(processSelectValue(schema, item.key, options));
+      onChange(enumOptionsValueForIndex<S>(item.key, enumOptions, emptyValue));
     }
   };
   const _onBlur = (e: any) =>
-    onBlur(id, processSelectValue(schema, e.target.value, options));
+    onBlur(
+      id,
+      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
+    );
 
   const _onFocus = (e: any) =>
-    onFocus(id, processSelectValue(schema, e.target.value, options));
+    onFocus(
+      id,
+      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
+    );
 
-  const newOptions = (enumOptions as { value: any; label: any }[]).map(
-    (option) => ({
-      key: option.value,
-      text: option.label,
-      disabled: ((enumDisabled as any[]) || []).indexOf(option.value) !== -1,
-    })
-  );
+  const newOptions = Array.isArray(enumOptions)
+    ? enumOptions.map((option, index) => ({
+        key: String(index),
+        text: option.label,
+        disabled:
+          Array.isArray(enumDisabled) &&
+          enumDisabled.indexOf(option.value) !== -1,
+      }))
+    : [];
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
-  return (
-    <>
-      <Label>{label || schema.title}</Label>
-      <Dropdown
-        id={id}
-        multiSelect={multiple}
-        defaultSelectedKey={multiple ? undefined : value}
-        defaultSelectedKeys={multiple ? value : undefined}
-        required={required}
-        options={newOptions}
-        disabled={disabled || readonly}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        {...uiProps}
-      />
-    </>
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions,
+    multiple
   );
-};
-
-export default SelectWidget;
+  return (
+    <Dropdown
+      id={id}
+      label={label || schema.title}
+      multiSelect={multiple}
+      defaultSelectedKey={multiple ? undefined : selectedIndexes}
+      defaultSelectedKeys={multiple ? (selectedIndexes as string[]) : undefined}
+      required={required}
+      options={newOptions}
+      disabled={disabled || readonly}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+      {...uiProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
+    />
+  );
+}

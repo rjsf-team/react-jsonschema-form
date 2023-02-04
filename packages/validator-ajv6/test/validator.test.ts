@@ -1,8 +1,10 @@
 import {
   ErrorSchema,
+  ErrorSchemaBuilder,
   FormValidation,
   RJSFSchema,
   RJSFValidationError,
+  UiSchema,
   ValidatorType,
 } from "@rjsf/utils";
 
@@ -19,6 +21,13 @@ const metaSchemaDraft4 = require("ajv/lib/refs/json-schema-draft-04.json");
 const metaSchemaDraft6 = require("ajv/lib/refs/json-schema-draft-06.json");
 
 describe("AJV6Validator", () => {
+  let builder: ErrorSchemaBuilder;
+  beforeAll(() => {
+    builder = new ErrorSchemaBuilder();
+  });
+  afterEach(() => {
+    builder.resetAllErrors();
+  });
   describe("default options", () => {
     // Use the TestValidator to access the `withIdRefPrefix` function
     let validator: TestValidator;
@@ -111,17 +120,10 @@ describe("AJV6Validator", () => {
         expect(validator.toErrorList()).toEqual([]);
       });
       it("should convert an errorSchema into a flat list", () => {
-        const errorSchema: ErrorSchema = {
-          __errors: ["err1", "err2"],
-          a: {
-            b: {
-              __errors: ["err3", "err4"],
-            } as ErrorSchema,
-          },
-          c: {
-            __errors: ["err5"],
-          } as ErrorSchema,
-        } as unknown as ErrorSchema;
+        const errorSchema = builder
+          .addErrors(["err1", "err2"])
+          .addErrors(["err3", "err4"], "a.b")
+          .addErrors(["err5"], "c").ErrorSchema;
         expect(validator.toErrorList(errorSchema)).toEqual([
           { property: ".", message: "err1", stack: ". err1" },
           { property: ".", message: "err2", stack: ". err2" },
@@ -223,9 +225,101 @@ describe("AJV6Validator", () => {
           ]);
         });
       });
+      describe("Validating required fields", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+        describe("formData is not provided at top level", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              required: ["pass1", "pass2"],
+              properties: {
+                pass1: { type: "string" },
+                pass2: { type: "string" },
+              },
+            };
+
+            const formData = { pass1: "a" };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(".pass2 is a required property");
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.pass2!.__errors![0]).toEqual(
+              "is a required property"
+            );
+          });
+        });
+        describe("formData is not provided for nested child", () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: "object",
+              properties: {
+                nested: {
+                  type: "object",
+                  required: ["pass1", "pass2"],
+                  properties: {
+                    pass1: { type: "string" },
+                    pass2: { type: "string" },
+                  },
+                },
+              },
+            };
+
+            const formData = { nested: { pass1: "a" } };
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it("should return an error list", () => {
+            expect(errors).toHaveLength(1);
+            expect(errors[0].stack).toEqual(
+              ".nested.pass2 is a required property"
+            );
+          });
+          it("should return an errorSchema", () => {
+            expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual(
+              "is a required property"
+            );
+          });
+        });
+      });
+      describe("No custom validate function, single additionalProperties value", () => {
+        let errors: RJSFValidationError[];
+        let errorSchema: ErrorSchema;
+
+        beforeAll(() => {
+          const schema: RJSFSchema = {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
+          };
+          const result = validator.validateFormData({ foo: 42 }, schema);
+          errors = result.errors;
+          errorSchema = result.errorSchema;
+        });
+
+        it("should return an error list", () => {
+          expect(errors).toHaveLength(1);
+          expect(errors[0].message).toEqual("should be string");
+        });
+        it("should return an errorSchema", () => {
+          expect(errorSchema.foo!.__errors).toHaveLength(1);
+          expect(errorSchema.foo!.__errors![0]).toEqual("should be string");
+        });
+      });
       describe("TransformErrors", () => {
         let errors: RJSFValidationError[];
         let newErrorMessage: string;
+        let transformErrors: jest.Mock;
+        let uiSchema: UiSchema;
         beforeAll(() => {
           const schema: RJSFSchema = {
             type: "object",
@@ -234,15 +328,19 @@ describe("AJV6Validator", () => {
               [illFormedKey]: { type: "string" },
             },
           };
-          newErrorMessage = "Better error message";
-          const transformErrors = (errors: RJSFValidationError[]) => {
-            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          uiSchema = {
+            foo: { "ui:label": false },
           };
+          newErrorMessage = "Better error message";
+          transformErrors = jest.fn((errors: RJSFValidationError[]) => {
+            return [Object.assign({}, errors[0], { message: newErrorMessage })];
+          });
           const result = validator.validateFormData(
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
-            transformErrors
+            transformErrors,
+            uiSchema
           );
           errors = result.errors;
         });
@@ -251,10 +349,30 @@ describe("AJV6Validator", () => {
           expect(errors).not.toHaveLength(0);
           expect(errors[0].message).toEqual(newErrorMessage);
         });
+        it("transformErrors function was called with uiSchema", () => {
+          expect(transformErrors).toHaveBeenCalledWith(
+            expect.any(Array),
+            uiSchema
+          );
+        });
       });
       describe("Custom validate function", () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        let validate: jest.Mock;
+        let uiSchema: UiSchema;
+        beforeAll(() => {
+          uiSchema = {
+            foo: { "ui:label": false },
+          };
+
+          validate = jest.fn((formData: any, errors: FormValidation<any>) => {
+            if (formData.pass1 !== formData.pass2) {
+              errors.pass2!.addError("passwords don`t match.");
+            }
+            return errors;
+          });
+        });
         describe("formData is provided", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
@@ -266,18 +384,13 @@ describe("AJV6Validator", () => {
                 foo: { type: "array", items: { type: "string" } }, // Adding an array for test coverage
               },
             };
-
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
-            };
             const formData = { pass1: "a", pass2: "b", foo: ["a"] };
             const result = validator.validateFormData(
               formData,
               schema,
-              validate
+              validate,
+              undefined,
+              uiSchema
             );
             errors = result.errors;
             errorSchema = result.errorSchema;
@@ -292,6 +405,13 @@ describe("AJV6Validator", () => {
               "passwords don`t match."
             );
           });
+          it("validate function was called with uiSchema", () => {
+            expect(validate).toHaveBeenCalledWith(
+              expect.any(Object),
+              expect.any(Object),
+              uiSchema
+            );
+          });
         });
         describe("formData is missing data", () => {
           beforeAll(() => {
@@ -301,12 +421,6 @@ describe("AJV6Validator", () => {
                 pass1: { type: "string" },
                 pass2: { type: "string" },
               },
-            };
-            const validate = (formData: any, errors: FormValidation<any>) => {
-              if (formData.pass1 !== formData.pass2) {
-                errors.pass2!.addError("passwords don`t match.");
-              }
-              return errors;
             };
             const formData = { pass1: "a" };
             const result = validator.validateFormData(
@@ -325,6 +439,13 @@ describe("AJV6Validator", () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
             expect(errorSchema.pass2!.__errors![0]).toEqual(
               "passwords don`t match."
+            );
+          });
+          it("validate function was called with undefined uiSchema", () => {
+            expect(validate).toHaveBeenCalledWith(
+              expect.any(Object),
+              expect.any(Object),
+              undefined
             );
           });
         });

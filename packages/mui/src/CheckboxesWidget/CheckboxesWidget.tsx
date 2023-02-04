@@ -3,22 +3,29 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
-const selectValue = (value: any, selected: any, all: any) => {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
-};
-
-const deselectValue = (value: any, selected: any) => {
-  return selected.filter((v: any) => v !== value);
-};
-
-const CheckboxesWidget = ({
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   label,
   id,
@@ -31,27 +38,30 @@ const CheckboxesWidget = ({
   onChange,
   onBlur,
   onFocus,
-}: WidgetProps) => {
-  const { enumOptions, enumDisabled, inline } = options;
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
-    (option: any) =>
+    (index: number) =>
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      const all = (enumOptions as any).map(({ value }: any) => value);
-
       if (checked) {
-        onChange(selectValue(option.value, value, all));
+        onChange(enumOptionsSelectValue(index, checkboxesValues, enumOptions));
       } else {
-        onChange(deselectValue(option.value, value));
+        onChange(
+          enumOptionsDeselectValue(index, checkboxesValues, enumOptions)
+        );
       }
     };
 
   const _onBlur = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   return (
     <>
@@ -61,26 +71,30 @@ const CheckboxesWidget = ({
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
-            const checked = value.indexOf(option.value) !== -1;
+            const checked = enumOptionsIsSelected<S>(
+              option.value,
+              checkboxesValues
+            );
             const itemDisabled =
               Array.isArray(enumDisabled) &&
               enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
-                id={`${id}-${option.value}`}
+                id={optionId(id, index)}
                 name={id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
-                onChange={_onChange(option)}
+                onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
             return (
               <FormControlLabel
                 control={checkbox}
-                key={option.value}
+                key={index}
                 label={option.label}
               />
             );
@@ -88,6 +102,4 @@ const CheckboxesWidget = ({
       </FormGroup>
     </>
   );
-};
-
-export default CheckboxesWidget;
+}

@@ -7,4 +7,4 @@
 
 [build.environment]
   VITE_SHOW_NETLIFY_BADGE = "true"
-  NODE_VERSION = "16"
+  NODE_VERSION = "18"

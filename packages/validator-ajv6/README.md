@@ -16,7 +16,7 @@
   <p align="center">
   AJV-6 based validator plugin for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -57,6 +57,8 @@ Exports `validator-ajv6` plugin for `react-jsonschema-form`.
 <!-- GETTING STARTED -->
 
 ## Getting Started
+
+> NOTE: This package is deprecated in favor of the `@rjsf/validator-ajv8` and is provided primarily for people upgrading to version 5 who initially want to minimize the validator differences.
 
 ### Prerequisites
 
@@ -196,7 +198,7 @@ See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues)
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/stable/contributing/) to get started.
+Read our [contributors' guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing/) to get started.
 
 <!-- CONTACT -->
 

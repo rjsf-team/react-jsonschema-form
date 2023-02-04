@@ -1,5 +1,10 @@
 import React from "react";
-import { IconButtonProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 import IconButton from "./IconButton";
 
@@ -8,8 +13,8 @@ import IconButton from "./IconButton";
 export default function AddButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
->({ className, onClick, disabled }: IconButtonProps<T, S, F>) {
+  F extends FormContextType = any
+>({ className, onClick, disabled, registry }: IconButtonProps<T, S, F>) {
   return (
     <div className="row">
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
@@ -20,6 +25,7 @@ export default function AddButton<
           title="Add"
           onClick={onClick}
           disabled={disabled}
+          registry={registry}
         />
       </p>
     </div>

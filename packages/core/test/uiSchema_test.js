@@ -3,7 +3,7 @@ import React from "react";
 import sinon from "sinon";
 import { render } from "react-dom";
 import { Simulate } from "react-dom/test-utils";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 
 import SelectWidget from "../src/components/widgets/SelectWidget";
 import RadioWidget from "../src/components/widgets/RadioWidget";
@@ -64,6 +64,43 @@ describe("uiSchema", () => {
       expect(
         console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)
       ).to.be.true;
+    });
+  });
+
+  describe("custom style", () => {
+    const schema = {
+      type: "object",
+      properties: {
+        foo: {
+          type: "string",
+        },
+        bar: {
+          type: "string",
+        },
+      },
+    };
+
+    const uiSchema = {
+      foo: {
+        "ui:style": {
+          paddingRight: "1em",
+        },
+      },
+      bar: {
+        "ui:style": {
+          paddingLeft: "1.5em",
+          color: "orange",
+        },
+      },
+    };
+
+    it("should apply custom style to target widgets", () => {
+      const { node } = createFormComponent({ schema, uiSchema });
+      const [foo, bar] = node.querySelectorAll(".field-string");
+
+      expect(foo.style.paddingRight).eql("1em");
+      expect(bar.style.paddingLeft).eql("1.5em");
+      expect(bar.style.color).eql("orange");
     });
   });
 
@@ -1738,7 +1775,7 @@ describe("uiSchema", () => {
         Simulate.change(node.querySelector("select"), {
           // DOM option change events always return strings
           target: {
-            value: "true",
+            value: 0, // use index
           },
         });
 
@@ -1761,9 +1798,8 @@ describe("uiSchema", () => {
         });
 
         Simulate.change(node.querySelector("select"), {
-          // DOM option change events always return strings
           target: {
-            value: "false",
+            value: 1, // use index
           },
         });
 

@@ -15,28 +15,410 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.0.3
+
+## @rjsf/chakra-ui
+- Fixed the `SelectWidget` to allow the proper display of the selected value, fixing [#3422](https://github.com/rjsf-team/react-jsonschema-form/issues/3422)
+
+# 5.0.2
+
+## @rjsf/utils
+- Added the `idPrefix`, `idSeparator` and `rawErrors` optional props to `FieldProps` since they were missing
+
+## Dev / docs / playground
+- Migrated latest documentation to Docusaurus, which is deployed to GitHub Pages.
+- Updated readthedocs.io documentation site to guide users to the new docs site.
+- Updated links in documentation and package README files to point to new site.
+- Updated the `custom-widgets-field` documentation for the new `FieldProps`
+
+# 5.0.1
+- Updated the `peerDependencies` in all packages to remove the `-beta.x` tags from the `@rjsf/xxxx` packages
+
+# 5.0.0
+
+## @rjsf/antd
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/bootstrap-4
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/chakra-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/core
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/fluent-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/material-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/mui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/semantic-ui
+- Updated `CheckboxesWidget`, `RadioWidget` and `SelectWidget` to use indexes as values to support `enumOptions` with object values, fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+
+## @rjsf/utils
+- Added `enumOptionsIndexForValue()`, `enumOptionsIsSelected()`, `enumOptionsValueForIndex()` functions to support fixing [#1494](https://github.com/rjsf-team/react-jsonschema-form/issues/1494)
+  - Updated `enumOptionsDeselectValue()`, `enumOptionsSelectValue()` and `optionId()` to use indexes instead of values
+  - Deleted the `processSelectValue()` that was added in the beta and is no longer needed
+- Updated `getSchemaType()` to remove the inference of type from `anyOf`/`oneOf`, fixing [#3412](https://github.com/rjsf-team/react-jsonschema-form/issues/3412)
+
+## Dev / docs / playground
+- Updated the `utility-functions` documentation for the new and updated methods mentioned above, as well as deleting the documentation for `processSelectValue()`
+- Updated the playground to add a new `Enum Objects` example to highlight the use of indexes for `enumOptions`
+- Updated `5.x migration guide` to document the change from values to indexes for the `enumOptions` based controls.
+
+# 5.0.0-beta.20
+
+## @rjsf/antd
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/bootstrap-4
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/chakra-ui
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/core
+- Updated `MultiSchemaField` to pass `undefined` as the value to the widget when the `selectedOption` is -1, supporting `SelectWidget` implementations that allow the user to clear the selected value of the `anyOf`/`oneOf` field.
+- Updated `Form` to support receiving an optional `ref` prop.
+- Updated `Form` to restore providing empty root level objects, fixing [#3391](https://github.com/rjsf-team/react-jsonschema-form/issues/3391)
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/fluent-ui
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/material-ui
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/mui
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+## @rjsf/semantic-ui
+- Fixed `schema.examples` to deduplicate when `schema.default` exists in the examples, fixing [#3393](https://github.com/rjsf-team/react-jsonschema-form/issues/3393)
+
+# 5.0.0-beta.19
+
+## @rjsf/core
+- Updated `MultiSchemaField` to cache options with refs in state and to output better labels for options without them when a title is available in either the `schema` or `uiSchema`
+- Improved fix for [#2691](https://github.com/rjsf-team/react-jsonschema-form/issues/2691) to remove the breaking change caused by the original fix [#2980](https://github.com/rjsf-team/react-jsonschema-form/issues/2980) as follows:
+  - Added a new `ui:fieldReplacesAnyOrOneOf` flag to the `uiSchema` that when true will allow users to opt-out of the `anyOf`/`oneOf` wrapping of a custom field
+
+## @rjsf/utils
+- Updated `toPathSchema()` to handle `oneOf`/`anyOf` by picking the closest option and generating the path for it, fixing [#2262](https://github.com/rjsf-team/react-jsonschema-form/issues/2262)
+- Added new `uiSchema` only flag `ui:fieldReplacesAnyOrOneOf` that, if true allows the user to opt-out of the `anyOf`/`oneOf` wrapping of a custom field
+
+## Dev / docs / playground
+- Updated the `uiSchema` documentation for `ui:fieldReplacesAnyOrOneOf`
+
+# 5.0.0-beta.18
+
+## @rjsf/core
+- Updated `MultiSchemaField` to utilize the new `getClosestMatchingOption()` and `sanitizeDataForNewSchema()` functions, fixing the following issues:
+  - [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236)
+  - [#2978](https://github.com/rjsf-team/react-jsonschema-form/issues/2978)
+  - [#2944](https://github.com/rjsf-team/react-jsonschema-form/issues/2944)
+  - [#2202](https://github.com/rjsf-team/react-jsonschema-form/issues/2202)
+  - [#2183](https://github.com/rjsf-team/react-jsonschema-form/issues/2183)
+  - [#2086](https://github.com/rjsf-team/react-jsonschema-form/issues/2086)
+  - [#2069](https://github.com/rjsf-team/react-jsonschema-form/issues/2069)
+  - [#1661](https://github.com/rjsf-team/react-jsonschema-form/issues/1661)
+  - And probably others
+- Updated `ObjectField` to deal with `additionalProperties` with `oneOf`/`anyOf`, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
+- Updated `Form`, `MultiSchemaField`, `ObjectField` and `SchemaField` to properly support making `formData` optional, fixing [#3305](https://github.com/rjsf-team/react-jsonschema-form/issues/3305)
+
+## @rjsf/material-ui
+- Fix shrinking of `SelectWidget` label only if value is not empty, fixing [#3369](https://github.com/rjsf-team/react-jsonschema-form/issues/3369)
+
+## @rjsf/mui
+- Fix shrinking of `SelectWidget` label only if value is not empty, fixing [#3369](https://github.com/rjsf-team/react-jsonschema-form/issues/3369)
+
+## @rjsf/utils
+- Added new `getClosestMatchingOption()`, `getFirstMatchingOption()` and `sanitizeDataForNewSchema()` schema-based utility functions
+  - Deprecated `getMatchingOption()` and updated all calls to it in other utility functions to use `getFirstMatchingOption()`
+- Updated `stubExistingAdditionalProperties()` to deal with `additionalProperties` with `oneOf`/`anyOf`, fixing [#2538](https://github.com/rjsf-team/react-jsonschema-form/issues/2538)
+- Updated `getSchemaType()` to grab the type of the first element of a `oneOf`/`anyOf`, fixing [#1654](https://github.com/rjsf-team/react-jsonschema-form/issues/1654)
+- Updated all props or function parameters of the generic type `T` to allow for them to be optionally provided, fixing [#3305](https://github.com/rjsf-team/react-jsonschema-form/issues/3305)
+  - This was done in both the types file and the actual implementation code
+
+## @rjsf/validator-ajv6
+- Updated places where `formData` was required as a function argument to make it optional, fixing [#3305](https://github.com/rjsf-team/react-jsonschema-form/issues/3305)
+
+## @rjsf/validator-ajv8
+- Updated places where `formData` was required as a function argument to make it optional, fixing [#3305](https://github.com/rjsf-team/react-jsonschema-form/issues/3305)
+
+## Dev / docs / playground
+- Updated the playground to `onFormDataEdited()` to only change the formData in the state if the `JSON.stringify()` of the old and new values are different, partially fixing [#3236](https://github.com/rjsf-team/react-jsonschema-form/issues/3236)
+- Updated the playground `npm start` command to always use the `--force` option to avoid issues where changes made to other packages weren't getting picked up due to `vite` caching
+- Updated the documentation for `utility-functions` and the `5.x upgrade guide` to add the new utility functions and to document the deprecation of `getMatchingOption()`
+  - Also updated `utility-functions`, making all optional parameters without a default (as denoted by the syntax `[<parameter>]: <type>`) to add ` | undefined` onto the type to make it clear it supports passing in undefined as a value.
+
+# 5.0.0-beta.17
+
+## @rjsf/antd
+- Enable searching in the `SelectWidget` by the label that the user sees rather than by the value
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200) 
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/bootstrap-4
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/chakra-ui
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/core
+- Updated `SchemaField` to handle the new `style` prop in the `uiSchema` similarly to `classNames`, passing it to the `FieldTemplate` and removing it from being passed down to children.
+  - Also, added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper
+  - This partially fixes [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/fluent-ui
+- Added support for new `style` prop on `FieldTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/material-ui
+- Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/mui
+- Updated `SelectWidget` to support additional `TextFieldProps` in a manner similar to how `BaseInputTemplate` does
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/semantic-ui
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Updated `CheckboxesWidget` to treat the value as an array when selecting/deselecting values and when determining the checked state - fixing [#2141](https://github.com/rjsf-team/react-jsonschema-form/issues/2141)
+- Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
+  - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
+
+## @rjsf/utils
+- Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Added `enumOptionsDeselectValue()` and `enumOptionsSelectValue()` as a loose refactor of the duplicated functions in the various `CheckboxesWidget` implementations
+- Updated the `FieldTemplateProps`, `WrapIfAdditionalTemplateProps` and `UIOptionsBaseType` types to add `style?: StyleHTMLAttributes<any>`, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
+- Added new `ariaDescribedByIds()`, `descriptionId()`, `errorId()`, `examplesId()`, `helpId()` `optionId()` and `titleId()` id generator functions
+
+## @rjsf/validator-ajv8
+- Remove alias for ajv -> ajv8 in package.json. This fixes [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).
+- Updated `AJV8Validator#transformRJSFValidationErrors` to return more human-readable error messages.  The ajv8 `ErrorObject` message is enhanced by replacing the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#3246](https://github.com/rjsf-team/react-jsonschema-form/issues/3246)
+
+## Dev / docs / playground
+- In the playground, change Vite `preserveSymlinks` to `true`, which provides an alternative fix for [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228) since the prior fix caused [#3215](https://github.com/rjsf-team/react-jsonschema-form/issues/3215).
+- Updated the `custom-templates.md` and `uiSchema.md` to document the new `style` prop
+- Updated the `validation.md` documentation to describe the new `uiSchema` parameter passed to the `customValidate()` and `transformError()` functions
+- Updated the `utility-functions` documentation to add the new `enumOptionsDeselectValue()` and `enumOptionsSelectValue()` functions and to describe the new id generator functions
+- Updated the `5.x migration guide` documentation to describe potential breaking `id` changes
+
+# 5.0.0-beta.16
+
+## @rjsf/antd
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+- Updated the use of the deprecated `withConfigConsumer` with the `ConfigConsumer` component instead, fixing [#3336](https://github.com/rjsf-team/react-jsonschema-form/issues/3336)
+
+## @rjsf/bootstrap-4
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated `CheckboxWidget` to get the `required` state of the checkbox from the `schemaRequiresTrueValue()` utility function rather than the `required` prop, fixing [#3317](https://github.com/rjsf-team/react-jsonschema-form/issues/3317)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/chakra-ui
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated `CheckboxWidget` to get the `required` state of the checkbox from the `schemaRequiresTrueValue()` utility function rather than the `required` prop, fixing [#3317](https://github.com/rjsf-team/react-jsonschema-form/issues/3317)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/core
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+  - Also, passed `registry` into the `SubmitButton` inside of the `Form` as part of this fix
+- Updated `ArrayField` to pass the new `totalItems` and `canAdd` props to the `ArrayFieldItemTemplate` instances, fixing [#3315](https://github.com/rjsf-team/react-jsonschema-form/issues/3315)
+  - Also refactored the near duplicate logic for `onAddClick` and `onAddIndexClick` into a new `_handleAddClick()` function, fixing [#3316](https://github.com/rjsf-team/react-jsonschema-form/issues/3316)
+- Fix passing of generic types to a few helper methods, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+- Updated the types for `ValidatorType`, `CustomValidator` and `ErrorTransformer` to add the new generics, as well as passing `uiSchema` to the `validateFormData()` call, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
+
+## @rjsf/fluent-ui
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/material-ui
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/mui
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/semantic-ui
+- Updated the usage of the `ButtonTemplates` to pass the new required `registry` prop, filtering it out in the actual implementations before spreading props, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated `CheckboxWidget` to get the `required` state of the checkbox from the `schemaRequiresTrueValue()` utility function rather than the `required` prop, fixing [#3317](https://github.com/rjsf-team/react-jsonschema-form/issues/3317)
+  - Also fixed the `CheckboxWidget` missing label issue [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the test for the `CheckboxWidget` validating that the `schema.title` is passed as the label, fixing [#3302](https://github.com/rjsf-team/react-jsonschema-form/issues/3302)
+- Updated the theme to accept generic types, exporting `generateXXX` functions for `Form`, `Theme`, `Templates` and `Widgets` to support using the theme with user-specified type generics, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/utils
+- Updated the `SubmitButtonProps` and `IconButtonProps` to add required `registry` prop, fixing - [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314)
+- Updated the `ArrayFieldTemplateItemType` to add the new `totalItems` and `canAdd` props, fixing [#3315](https://github.com/rjsf-team/react-jsonschema-form/issues/3315)
+- Updated the `CustomValidator` and `ErrorTransformer` types to take the full set of `T`, `S`, `F` generics in order to accept a new optional `uiSchema` property, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
+- Updated the `ValidatorType` to add the `F` generic to allow the `validateFormData()` function to take a new optional `uiSchema` parameter, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
+  - Updated many of the schema-based utility functions to take the additional generics as well to fulfill the `ValidatorType` interface change 
+
+## @rjsf/validator-ajv6
+- Updated the `customizeValidator` and `AJV6Validator` implementations to add the `S` and `F` generics, so that `validateFormData()` can accept a new optional `uiSchema` parameter that is passed to `transformErrors()` and `customValidate()`, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
+
+## @rjsf/validator-ajv8
+- Updated the `customizeValidator` and `AJV8Validator` implementations to add the `F` generic, so that `validateFormData()` can accept a new optional `uiSchema` parameter that is passed to `transformErrors()` and `customValidate()`, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
+
+## Dev / docs / playground
+- Fixed the documentation for `ArrayFieldItemTemplate`, `SubmitButtonProps` and `IconButtonProps` as part of the fix for [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314) and [#3315](https://github.com/rjsf-team/react-jsonschema-form/issues/3315)
+- Updated the documentation in `form-props.md` for `children`, fixing [#3322](https://github.com/rjsf-team/react-jsonschema-form/issues/3322)
+- Added new `typescript.md` documentation to `Advanced Customization` describing how to use custom generics as part of the fix for [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+- Updated the documentation in `utilty-functions.md` to add the new `F` generic to all the places which needed them 
+
+# 5.0.0-beta.15
+
+## @rjsf/core
+- Pass the `schema` along to the `ArrayFieldItemTemplate` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)
+- Tweak Babel configuration to emit ES5-compatible output files, fixing [#3240](https://github.com/rjsf-team/react-jsonschema-form/issues/3240)
+
+## @rjsf/material-ui
+- Reverse the condition used in the `onChange` handler in the `RangeWidget`, fixing [#2161](https://github.com/rjsf-team/react-jsonschema-form/issues/2161)
+
+## @rjsf/mui
+- Reverse the condition used in the `onChange` handler in the `RangeWidget`, fixing [#2161](https://github.com/rjsf-team/react-jsonschema-form/issues/2161)
+
+## @rjsf/utils
+- Update the `ArrayFieldItemTemplate` to add `schema` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)
+- Fix improper merging of nested `allOf`s ([#3025](https://github.com/rjsf-team/react-jsonschema-form/pull/3025), [#3227](https://github.com/rjsf-team/react-jsonschema-form/pull/3227)), fixing [#2923](https://github.com/rjsf-team/react-jsonschema-form/pull/2929)
+- Added a new `ErrorSchemaBuilder` class to enable building a proper `ErrorSchema` without crazy castings, fixing [#3239](https://github.com/rjsf-team/react-jsonschema-form/issues/3239)
+
+## @rjsf/validator-ajv6
+- Updated the validator to use the `ErrorSchemaBuilder` in the `toErrorSchema()` function to simplify the implementation
+
+## @rjsf/validator-ajv8
+- Updated the validator to use the `ErrorSchemaBuilder` in the `toErrorSchema()` function to simplify the implementation
+- Updated the validator to properly map missing required field errors in the `ErrorSchema`, fixing [#3260](https://github.com/rjsf-team/react-jsonschema-form/issues/3260)
+
+## Dev / docs / playground
+- Fixed the documentation for `ArrayFieldItemTemplate` as part of the fix for [#3253](https://github.com/rjsf-team/react-jsonschema-form/issues/3253)
+- Added documentation for `ErrorSchemaBuilder` in the `utility-functions.md`, fixing [#3239](https://github.com/rjsf-team/react-jsonschema-form/issues/3239)
+
+# 5.0.0-beta.14
+
+## @rjsf/antd
+- No longer render extra 0 for array without errors, fixing [#3233](https://github.com/rjsf-team/react-jsonschema-form/issues/3233)
+
+## @rjsf/core
+- Added `ref` definition to `ThemeProps` fixing [#2135](https://github.com/rjsf-team/react-jsonschema-form/issues/2135)
+- Updated the `onChange` handler in `Form` to use the new `preventDuplicates` mode of `mergeObjects()` when merging `extraErrors` when live validation is off, fixing [#3169](https://github.com/rjsf-team/react-jsonschema-form/issues/3169)
+
+## @rjsf/material-ui
+- Fix RangeWidget missing htmlFor and schema.title [#3281](https://github.com/rjsf-team/react-jsonschema-form/pull/3281)
+
+## @rjsf/mui
+- Fix RangeWidget missing htmlFor and schema.title [#3281](https://github.com/rjsf-team/react-jsonschema-form/pull/3281)
+
+## @rjsf/utils
+- Updated `computedDefaults` (used by `getDefaultFormState`) to skip saving the computed default if it's an empty object unless `includeUndefinedValues` is truthy, fixing [#2150](https://github.com/rjsf-team/react-jsonschema-form/issues/2150) and [#2708](https://github.com/rjsf-team/react-jsonschema-form/issues/2708)
+- Expanded the `getDefaultFormState` util's `includeUndefinedValues` prop to accept a boolean or `"excludeObjectChildren"` if it does not want to include undefined values in nested objects
+- Updated `mergeObjects` to add new `preventDuplicates` mode when concatenating arrays so that only unique values from the source object array are copied to the destination object array
+- Fix `isObject` to correctly identify 'Date' as not an object, similar to 'File', thus preventing them from being merged with Object default values.
+
+## Dev / docs / playground
+- Removed extraneous leading space on the examples in the validation documentation, fixing [#3282](https://github.com/rjsf-team/react-jsonschema-form/issues/3282)
+- Updated the documentation for `mergeObjects()` for the new `preventDuplicates` mode of concatenating arrays
+- Updated the documentation for unpkg releases to the correct name fixing the confusion found in [#3262](https://github.com/rjsf-team/react-jsonschema-form/issues/3262)
+
+# 5.0.0-beta.13
+
+## @rjsf/playground
+- Fix Vite development server [#3228](https://github.com/rjsf-team/react-jsonschema-form/issues/3228)
+
+## @rjsf/validator-ajv8
+- BREAKING CHANGE: Disable form data validation for invalid JSON Schemas. Use @rjsf/validator-ajv6 if you need to validate against invalid schemas.
+- Fix additionalProperties validation [#3213](https://github.com/rjsf-team/react-jsonschema-form/issues/3213)
+- Report all schema errors thrown by Ajv. Previously, we would only report errors thrown for a missing meta-schema. This behavior is unchanged for @rjsf/validator-ajv6.
+- Disable Ajv strict mode by default.
+- Add RJSF-specific additional properties keywords to Ajv to prevent errors from being reported in strict mode.
+- For JSON Schemas with `$id`s, use a pre-compiled Ajv validation function when available.
+- No longer fail to validate inner schemas with `$id`s, fixing [#2821](https://github.com/rjsf-team/react-jsonschema-form/issues/2181).
+
 # 5.0.0-beta.12
+
+## @rjsf/antd
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/bootstrap
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
 
 ## @rjsf/chakra-ui
 - Automatically close single-choice Select widget on selection
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
 
 ## @rjsf/core
+- BREAKING CHANGE: ShowErrorList prop changed to support `false`, `top` or `bottom`; `true` is no longer a valid value as the default changed from `true` to `top` [#634](https://github.com/rjsf-team/react-jsonschema-form/issues/634)
 - Added the new generic, `S extends StrictRJSFSchema = RJSFSchema`, for `schema`/`rootSchema` to every component that needed it.
+- Fix omitExtraData with field names with dots #2643
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+- Changed the `F = any` generic to be `F extends FormContextType = any` to better support how `formContext` is defined and used, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
+
+## @rjsf/fluent-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/material-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/mui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
+
+## @rjsf/semantic-ui
+- Updated the tests to use the `@rjsf/validator-ajv8` fixing [#3110](https://github.com/rjsf-team/react-jsonschema-form/issues/3110)
 
 ## @rjsf/utils
 - Beta-only potentially BREAKING CHANGE: Changed all types that directly or indirectly defined `schema`/`rootSchema` to add the generic `S extends StrictRJSFSchema = RJSFSchema` and use `S` as the type for them.
   - `StrictRJSFSchema` was added as the alias to `JSON7Schema` and `RJSFSchema` was modified to be `StrictRJSFSchema & GenericObjectType`
   - This new generic was added BEFORE the newly added `F = any` generic because it is assumed that more people will want to change the schema than the formContext types
   - This provides future support for the newer draft versions of the schema
+- Updated the `ValidatorType` interface to add a new `rawValidation()` method for use by the playground
+- Added the `FormContextType` alias to `GenericObjectType` and changing the `F = any` generic to be `F extends FormContextType = any` to better support how `formContext` is defined and used, partially fixing [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
 
 ## @rjsf/validator-ajv6
 - Fixed a few type casts given the new expanded definition of the `RJSFSchema` type change
+- Deprecated this library in favor of the `@rjsf/validator-ajv8`
+- Refactored out the `rawValidation()` function for use by the playground
 
 ## @rjsf/validator-ajv8
 - Updated the typing to add the new `S extends StrictRJSFSchema = RJSFSchema` generic and fixed up type casts
+- Added the `AjvClass` prop to the `CustomValidatorOptionsType` to support using the `Ajv2019` or `Ajv2020` class implementation instead of the default `Ajv` class; fixing [#3189](https://github.com/rjsf-team/react-jsonschema-form/issues/3189)
+- Refactored out the `rawValidation()` function for use by the playground
 
 ## Dev / docs / playground
-- Updated the `5.x upgrade guide` to document the new `StrictRJSFSchema` and `S` generic
+- Updated the `5.x upgrade guide` and `utility-functions.md` to document the new `StrictRJSFSchema`, the `S` generic and changing the `F` generic extend
+- Updated the `validation` guide to document the new `AjvClass` prop on `CustomValidatorOptionsType` and mentioning the deprecation of `@rjsf/validator-ajv6`
+- Updated the playground to add support for using the AJV 8 validator with the `draft-2019-09` and `draft-2020-12` schemas and to make the `AJV8` validator the default validator, marking `AJV6` as deprecated
+- Updated all the documentation to switch to Typescript notation where missing along with switching to using the `@rjsf/validator-ajv8` validator as the default
+- Added a way of doing a raw Ajv validation in the playground to determine whether an issue is with RJSF or Ajv
 
 # 5.0.0-beta.11
 

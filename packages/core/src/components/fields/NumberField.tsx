@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import {
   asNumber,
   FieldProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -35,9 +36,11 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>(
-  props: FieldProps<T, S, F>
-) {
+function NumberField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldProps<T, S, F>) {
   const { registry, onChange, formData, value: initialValue } = props;
   const [lastValue, setLastValue] = useState(initialValue);
   const { StringField } = registry.fields;

@@ -1,9 +1,27 @@
 import React from "react";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getInputProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-function BaseInputTemplate(props: WidgetProps) {
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     placeholder,
@@ -24,8 +42,8 @@ function BaseInputTemplate(props: WidgetProps) {
     registry,
     rawErrors = [],
   } = props;
-  const inputProps = getInputProps(schema, type, options);
-  const semanticProps = getSemanticProps({
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     formContext,
     options,
@@ -51,18 +69,23 @@ function BaseInputTemplate(props: WidgetProps) {
         required={required}
         autoFocus={autofocus}
         disabled={disabled || readonly}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...semanticProps}
         value={value || value === 0 ? value : ""}
         error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
-      {schema.examples && (
-        <datalist id={`examples_${id}`}>
+      {Array.isArray(schema.examples) && (
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .concat(
+              schema.default && !schema.examples.includes(schema.default)
+                ? ([schema.default] as string[])
+                : []
+            )
             .map((example) => {
               return <option key={example} value={example} />;
             })}
@@ -71,4 +94,3 @@ function BaseInputTemplate(props: WidgetProps) {
     </>
   );
 }
-export default BaseInputTemplate;

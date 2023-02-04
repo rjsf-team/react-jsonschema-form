@@ -1,17 +1,16 @@
-import React, { ChangeEvent } from "react";
-import { WidgetProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
-
-function selectValue(value: any, selected: any[], all: any[]) {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a, b) => Number(all.indexOf(a) > all.indexOf(b)));
-}
-
-function deselectValue(value: any, selected: any[]) {
-  return selected.filter((v) => v !== value);
-}
+import React, { ChangeEvent, FocusEvent, useCallback } from "react";
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  WidgetProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -21,33 +20,58 @@ function deselectValue(value: any, selected: any[]) {
 function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   id,
   disabled,
-  options: { inline = false, enumOptions, enumDisabled },
+  options: { inline = false, enumOptions, enumDisabled, emptyValue },
   value,
   autofocus = false,
   readonly,
   onChange,
+  onBlur,
+  onFocus,
 }: WidgetProps<T, S, F>) {
+  const checkboxesValues = Array.isArray(value) ? value : [value];
+
+  const handleBlur = useCallback(
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+      onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
+    [onBlur, id]
+  );
+
+  const handleFocus = useCallback(
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+      onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
+    [onFocus, id]
+  );
   return (
     <div className="checkboxes" id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const checked = value.indexOf(option.value) !== -1;
+          const checked = enumOptionsIsSelected<S>(
+            option.value,
+            checkboxesValues
+          );
           const itemDisabled =
             Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) != -1;
+            enumDisabled.indexOf(option.value) !== -1;
           const disabledCls =
             disabled || itemDisabled || readonly ? "disabled" : "";
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const all = enumOptions.map(({ value }) => value);
             if (event.target.checked) {
-              onChange(selectValue(option.value, value, all));
+              onChange(
+                enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
+              );
             } else {
-              onChange(deselectValue(option.value, value));
+              onChange(
+                enumOptionsDeselectValue<S>(
+                  index,
+                  checkboxesValues,
+                  enumOptions
+                )
+              );
             }
           };
 
@@ -55,25 +79,26 @@ function CheckboxesWidget<
             <span>
               <input
                 type="checkbox"
-                id={`${id}-${option.value}`}
+                id={optionId(id, index)}
                 name={id}
                 checked={checked}
+                value={String(index)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
               />
               <span>{option.label}</span>
             </span>
           );
           return inline ? (
-            <label
-              key={option.value}
-              className={`checkbox-inline ${disabledCls}`}
-            >
+            <label key={index} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
           ) : (
-            <div key={option.value} className={`checkbox ${disabledCls}`}>
+            <div key={index} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );

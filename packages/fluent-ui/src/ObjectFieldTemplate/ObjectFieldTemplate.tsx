@@ -1,11 +1,20 @@
 import React from "react";
 import {
+  descriptionId,
+  FormContextType,
   getTemplate,
   getUiOptions,
   ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  titleId,
 } from "@rjsf/utils";
 
-const ObjectFieldTemplate = ({
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   description,
   title,
   properties,
@@ -14,23 +23,24 @@ const ObjectFieldTemplate = ({
   uiSchema,
   idSchema,
   registry,
-}: ObjectFieldTemplateProps) => {
-  const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+}: ObjectFieldTemplateProps<T, S, F>) {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   return (
     <>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={title}
           required={required}
           schema={schema}
@@ -40,7 +50,7 @@ const ObjectFieldTemplate = ({
       )}
       {(uiOptions.description || description) && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           schema={schema}
           uiSchema={uiSchema}
           description={uiOptions.description || description!}
@@ -54,6 +64,4 @@ const ObjectFieldTemplate = ({
       </div>
     </>
   );
-};
-
-export default ObjectFieldTemplate;
+}

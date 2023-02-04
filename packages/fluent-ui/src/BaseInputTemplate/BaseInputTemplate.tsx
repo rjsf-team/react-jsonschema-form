@@ -1,6 +1,14 @@
 import React from "react";
 import { TextField } from "@fluentui/react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  examplesId,
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 // Keys of ITextFieldProps from @fluentui/react
@@ -44,7 +52,11 @@ const allowedProps = [
   "list",
 ];
 
-const BaseInputTemplate = ({
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   placeholder,
   required,
@@ -61,8 +73,8 @@ const BaseInputTemplate = ({
   type,
   rawErrors,
   multiline,
-}: WidgetProps) => {
-  const inputProps = getInputProps(schema, type, options);
+}: WidgetProps<T, S, F>) {
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
@@ -95,13 +107,18 @@ const BaseInputTemplate = ({
         onBlur={_onBlur}
         onFocus={_onFocus}
         errorMessage={(rawErrors || []).join("\n")}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
         {...uiProps}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
-      {schema.examples && (
-        <datalist id={`examples_${id}`}>
+      {Array.isArray(schema.examples) && (
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .concat(
+              schema.default && !schema.examples.includes(schema.default)
+                ? ([schema.default] as string[])
+                : []
+            )
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}
@@ -109,6 +126,4 @@ const BaseInputTemplate = ({
       )}
     </>
   );
-};
-
-export default BaseInputTemplate;
+}

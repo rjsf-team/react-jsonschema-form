@@ -353,7 +353,7 @@ exports[`array fields array 1`] = `
     className="MuiBox-root emotion-9"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-10"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-10"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -710,6 +710,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
 
 .emotion-14 {
   float: unset;
+  width: auto;
   overflow: hidden;
   padding: 0;
   line-height: 11px;
@@ -1195,6 +1196,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
                             <div
@@ -1400,6 +1402,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
                             <div
@@ -1634,7 +1637,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     className="MuiBox-root emotion-50"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-51"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-51"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1950,6 +1953,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
 
 .emotion-7 {
   float: unset;
+  width: auto;
   overflow: hidden;
   padding: 0;
   line-height: 11px;
@@ -2065,12 +2069,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
+        aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
           onClick={[Function]}
-          variant="outlined"
         >
           <div
             aria-expanded="false"
@@ -2136,7 +2140,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     className="MuiBox-root emotion-8"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2507,9 +2511,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 
 .emotion-9 {
   float: unset;
+  width: auto;
   overflow: hidden;
   display: block;
-  width: auto;
   padding: 0;
   height: 11px;
   font-size: 0.75em;
@@ -2671,10 +2675,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
             >
               <div
+                aria-describedby="root_name__error root_name__description root_name__help"
                 className="MuiFormControl-root MuiTextField-root emotion-4"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                   data-shrink={false}
                   htmlFor="root_name"
                   id="root_name-label"
@@ -2725,7 +2730,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     className="MuiBox-root emotion-10"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -3085,6 +3090,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
 
 .emotion-14 {
   float: unset;
+  width: auto;
   overflow: hidden;
   padding: 0;
   line-height: 11px;
@@ -3247,6 +3253,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
+                            aria-describedby="root_0__error root_0__description root_0__help"
                             className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
                             <div
@@ -3319,6 +3326,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
+                            aria-describedby="root_1__error root_1__description root_1__help"
                             className="MuiFormControl-root MuiTextField-root emotion-10"
                           >
                             <div
@@ -3374,7 +3382,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     className="MuiBox-root emotion-26"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-27"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-27"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -3748,9 +3756,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
 
 .emotion-9 {
   float: unset;
+  width: auto;
   overflow: hidden;
   display: block;
-  width: auto;
   padding: 0;
   height: 11px;
   font-size: 0.75em;
@@ -3900,10 +3908,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
             >
               <div
+                aria-describedby="root_name__error root_name__description root_name__help"
                 className="MuiFormControl-root MuiTextField-root emotion-4"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary emotion-5"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                   data-shrink={false}
                   htmlFor="root_name"
                   id="root_name-label"
@@ -3954,7 +3963,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     className="MuiBox-root emotion-10"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-11"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}

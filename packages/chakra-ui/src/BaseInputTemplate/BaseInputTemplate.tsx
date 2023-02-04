@@ -1,9 +1,21 @@
 import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { getInputProps, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  examplesId,
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { getChakra } from "../utils";
 
-const BaseInputTemplate = (props: WidgetProps) => {
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     type,
@@ -23,7 +35,7 @@ const BaseInputTemplate = (props: WidgetProps) => {
     disabled,
     registry,
   } = props;
-  const inputProps = getInputProps(schema, type, options);
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
 
@@ -65,12 +77,17 @@ const BaseInputTemplate = (props: WidgetProps) => {
         autoFocus={autofocus}
         placeholder={placeholder}
         {...inputProps}
-        list={schema.examples ? `examples_${id}` : undefined}
+        list={schema.examples ? examplesId<T>(id) : undefined}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
-      {schema.examples ? (
-        <datalist id={`examples_${id}`}>
+      {Array.isArray(schema.examples) ? (
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(schema.default ? ([schema.default] as string[]) : [])
+            .concat(
+              schema.default && !schema.examples.includes(schema.default)
+                ? ([schema.default] as string[])
+                : []
+            )
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}
@@ -78,6 +95,4 @@ const BaseInputTemplate = (props: WidgetProps) => {
       ) : null}
     </FormControl>
   );
-};
-
-export default BaseInputTemplate;
+}

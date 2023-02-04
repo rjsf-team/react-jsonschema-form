@@ -1,6 +1,7 @@
 import React from "react";
 import {
   FieldTemplateProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
@@ -17,7 +18,7 @@ import Label from "./Label";
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,

@@ -1,9 +1,23 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { Form } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
-function TextareaWidget(props: WidgetProps) {
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     placeholder,
@@ -23,7 +37,7 @@ function TextareaWidget(props: WidgetProps) {
     registry,
     rawErrors = [],
   } = props;
-  const semanticProps = getSemanticProps({
+  const semanticProps = getSemanticProps<T, S, F>({
     formContext,
     options,
     defaultSchemaProps: { inverted: false },
@@ -54,7 +68,7 @@ function TextareaWidget(props: WidgetProps) {
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }
-export default TextareaWidget;

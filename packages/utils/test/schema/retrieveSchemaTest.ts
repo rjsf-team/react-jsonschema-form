@@ -171,6 +171,64 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
 
+    it("should `resolve` and stub out a schema which contains an `additionalProperties` with oneOf", () => {
+      const oneOf: RJSFSchema[] = [
+        {
+          type: "string",
+        },
+        {
+          type: "number",
+        },
+      ];
+      const schema: RJSFSchema = {
+        additionalProperties: {
+          oneOf,
+        },
+        type: "object",
+      };
+
+      const formData = { newKey: {} };
+      expect(retrieveSchema(testValidator, schema, {}, formData)).toEqual({
+        ...schema,
+        properties: {
+          newKey: {
+            type: "object",
+            oneOf,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
+
+    it("should `resolve` and stub out a schema which contains an `additionalProperties` with anyOf", () => {
+      const anyOf: RJSFSchema[] = [
+        {
+          type: "string",
+        },
+        {
+          type: "number",
+        },
+      ];
+      const schema: RJSFSchema = {
+        additionalProperties: {
+          anyOf,
+        },
+        type: "object",
+      };
+
+      const formData = { newKey: {} };
+      expect(retrieveSchema(testValidator, schema, {}, formData)).toEqual({
+        ...schema,
+        properties: {
+          newKey: {
+            type: "object",
+            anyOf,
+            [ADDITIONAL_PROPERTY_FLAG]: true,
+          },
+        },
+      });
+    });
+
     it("should handle null formData for schema which contains additionalProperties", () => {
       const schema: RJSFSchema = {
         additionalProperties: {
@@ -1205,14 +1263,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                   title: "Breed name",
                   type: "string",
                 },
-                Spots: {
-                  default: "small",
-                  enum: ["large", "small"],
-                  title: "Spots",
-                  type: "string",
-                },
               },
-              required: ["BreedName", "Spots"],
+              allOf: [
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Alsatian",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Fur: {
+                        default: "brown",
+                        enum: ["black", "brown"],
+                        title: "Fur",
+                        type: "string",
+                      },
+                    },
+                    required: ["Fur"],
+                  },
+                },
+                {
+                  if: {
+                    required: ["BreedName"],
+                    properties: {
+                      BreedName: {
+                        const: "Dalmation",
+                      },
+                    },
+                  },
+                  then: {
+                    properties: {
+                      Spots: {
+                        default: "small",
+                        enum: ["large", "small"],
+                        title: "Spots",
+                        type: "string",
+                      },
+                    },
+                    required: ["Spots"],
+                  },
+                },
+              ],
+              required: ["BreedName"],
               title: "Breed",
             },
           },

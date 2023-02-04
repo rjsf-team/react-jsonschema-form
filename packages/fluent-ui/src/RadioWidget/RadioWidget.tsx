@@ -4,7 +4,16 @@ import {
   IChoiceGroupOption,
   IChoiceGroupProps,
 } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [
@@ -20,7 +29,11 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
   "ariaLabelledBy",
 ];
 
-const RadioWidget = ({
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   id,
   schema,
   options,
@@ -32,8 +45,8 @@ const RadioWidget = ({
   onFocus,
   disabled,
   readonly,
-}: WidgetProps) => {
-  const { enumOptions, enumDisabled } = options;
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   function _onChange(
     _ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
@@ -45,22 +58,29 @@ const RadioWidget = ({
   }
 
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const newOptions = Array.isArray(enumOptions)
-    ? enumOptions.map((option) => ({
-        key: option.value,
+    ? enumOptions.map((option, index) => ({
+        key: String(index),
         name: id,
-        id: `${id}-${option.value}`,
+        id: optionId(id, index),
         text: option.label,
         disabled:
           Array.isArray(enumDisabled) &&
           enumDisabled.indexOf(option.value) !== -1,
+        "aria-describedby": ariaDescribedByIds<T>(id),
       }))
     : [];
+
+  const selectedIndex = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions
+  ) as string;
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
@@ -74,10 +94,8 @@ const RadioWidget = ({
       onBlur={_onBlur}
       label={label || schema.title}
       required={required}
-      selectedKey={value}
+      selectedKey={selectedIndex}
       {...uiProps}
     />
   );
-};
-
-export default RadioWidget;
+}

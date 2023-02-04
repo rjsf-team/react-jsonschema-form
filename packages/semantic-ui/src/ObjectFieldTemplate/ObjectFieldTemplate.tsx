@@ -1,33 +1,54 @@
 import React from "react";
-import { ObjectFieldTemplateProps } from "@rjsf/utils";
 import { Grid } from "semantic-ui-react";
-import { canExpand, getTemplate, getUiOptions } from "@rjsf/utils";
+import {
+  FormContextType,
+  ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  canExpand,
+  descriptionId,
+  getTemplate,
+  getUiOptions,
+  titleId,
+} from "@rjsf/utils";
 
-function ObjectFieldTemplate({
-  description,
-  onAddClick,
-  title,
-  properties,
-  disabled,
-  readonly,
-  required,
-  uiSchema,
-  schema,
-  formData,
-  idSchema,
-  registry,
-}: ObjectFieldTemplateProps) {
-  const uiOptions = getUiOptions(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
+/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
+ * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
+ * the properties.
+ *
+ * @param props - The `ObjectFieldTemplateProps` for this component
+ */
+export default function ObjectFieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: ObjectFieldTemplateProps<T, S, F>) {
+  const {
+    description,
+    onAddClick,
+    title,
+    properties,
+    disabled,
+    readonly,
+    required,
+    uiSchema,
+    schema,
+    formData,
+    idSchema,
+    registry,
+  } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
     "TitleFieldTemplate",
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<"DescriptionFieldTemplate">(
+  const DescriptionFieldTemplate = getTemplate<
     "DescriptionFieldTemplate",
-    registry,
-    uiOptions
-  );
+    T,
+    S,
+    F
+  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -35,10 +56,10 @@ function ObjectFieldTemplate({
   const fieldTitle = uiOptions.title || title;
   const fieldDescription = uiOptions.description || description;
   return (
-    <React.Fragment>
+    <>
       {fieldTitle && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-title`}
+          id={titleId<T>(idSchema)}
           title={fieldTitle}
           required={required}
           schema={schema}
@@ -48,7 +69,7 @@ function ObjectFieldTemplate({
       )}
       {fieldDescription && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-description`}
+          id={descriptionId<T>(idSchema)}
           description={fieldDescription}
           schema={schema}
           uiSchema={uiSchema}
@@ -56,7 +77,7 @@ function ObjectFieldTemplate({
         />
       )}
       {properties.map((prop) => prop.content)}
-      {canExpand(schema, uiSchema, formData) && (
+      {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <Grid.Column width={16} verticalAlign="middle">
           <Grid.Row>
             <div
@@ -70,13 +91,12 @@ function ObjectFieldTemplate({
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}
+                registry={registry}
               />
             </div>
           </Grid.Row>
         </Grid.Column>
       )}
-    </React.Fragment>
+    </>
   );
 }
-
-export default ObjectFieldTemplate;

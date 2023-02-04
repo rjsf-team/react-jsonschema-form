@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import validator from "@rjsf/validator-ajv6";
+import validator from "@rjsf/validator-ajv8";
 import { RJSFSchema } from "@rjsf/utils";
 
 import "../__mocks__/matchMedia.mock";

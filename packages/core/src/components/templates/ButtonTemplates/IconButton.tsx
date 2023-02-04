@@ -1,16 +1,22 @@
 import React from "react";
-import { IconButtonProps, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import {
+  FormContextType,
+  IconButtonProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from "@rjsf/utils";
 
 export default function IconButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
   const {
     iconType = "default",
     icon,
     className,
     uiSchema,
+    registry,
     ...otherProps
   } = props;
   return (
@@ -27,7 +33,7 @@ export default function IconButton<
 export function MoveDownButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
   return (
     <IconButton
@@ -42,7 +48,7 @@ export function MoveDownButton<
 export function MoveUpButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
   return (
     <IconButton
@@ -57,7 +63,7 @@ export function MoveUpButton<
 export function RemoveButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
   return (
     <IconButton

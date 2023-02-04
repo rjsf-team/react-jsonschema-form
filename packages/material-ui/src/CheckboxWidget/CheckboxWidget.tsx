@@ -1,9 +1,25 @@
 import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { schemaRequiresTrueValue, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  schemaRequiresTrueValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const CheckboxWidget = (props: WidgetProps) => {
+/** The `CheckBoxWidget` is a widget for rendering boolean properties.
+ *  It is typically used to represent a boolean.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -19,7 +35,7 @@ const CheckboxWidget = (props: WidgetProps) => {
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue(schema);
+  const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = (_: any, checked: boolean) => onChange(checked);
   const _onBlur = ({
@@ -42,11 +58,10 @@ const CheckboxWidget = (props: WidgetProps) => {
           onChange={_onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
+          aria-describedby={ariaDescribedByIds<T>(id)}
         />
       }
       label={label || ""}
     />
   );
-};
-
-export default CheckboxWidget;
+}

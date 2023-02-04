@@ -68,6 +68,7 @@ exports[`AdditionalProperties tests show add button and fields if additionalProp
                     additionalProperty
                   </label>
                   <input
+                    aria-describedby="root__error root__description root__help"
                     autoFocus={false}
                     className="form-control"
                     disabled={false}

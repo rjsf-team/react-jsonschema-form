@@ -1,7 +1,10 @@
 import React, { useCallback } from "react";
 import {
+  ariaDescribedByIds,
+  descriptionId,
   getTemplate,
   schemaRequiresTrueValue,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
@@ -15,7 +18,7 @@ import {
 function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   schema,
   uiSchema,
@@ -40,7 +43,7 @@ function CheckboxWidget<
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
-  const required = schemaRequiresTrueValue(schema);
+  const required = schemaRequiresTrueValue<S>(schema);
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -64,7 +67,7 @@ function CheckboxWidget<
     <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
       {schema.description && (
         <DescriptionFieldTemplate
-          id={id + "__description"}
+          id={descriptionId<T>(id)}
           description={schema.description}
           schema={schema}
           uiSchema={uiSchema}
@@ -83,6 +86,7 @@ function CheckboxWidget<
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
+          aria-describedby={ariaDescribedByIds<T>(id)}
         />
         <span>{label}</span>
       </label>

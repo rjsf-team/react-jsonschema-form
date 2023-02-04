@@ -2,6 +2,9 @@ import React from "react";
 
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 
@@ -9,8 +12,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
-const WrapIfAdditionalTemplate = ({
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   classNames,
+  style,
   children,
   disabled,
   id,
@@ -22,14 +30,18 @@ const WrapIfAdditionalTemplate = ({
   schema,
   uiSchema,
   registry,
-}: WrapIfAdditionalTemplateProps) => {
+}: WrapIfAdditionalTemplateProps<T, S, F>) {
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    );
   }
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
@@ -37,7 +49,7 @@ const WrapIfAdditionalTemplate = ({
   const keyId = `${id}-key`;
 
   return (
-    <Row className={classNames} key={keyId}>
+    <Row className={classNames} style={style} key={keyId}>
       <Col xs={5}>
         <Form.Group>
           <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>
@@ -60,10 +72,9 @@ const WrapIfAdditionalTemplate = ({
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}
+          registry={registry}
         />
       </Col>
     </Row>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

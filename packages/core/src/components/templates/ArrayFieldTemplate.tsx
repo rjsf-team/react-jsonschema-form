@@ -4,6 +4,7 @@ import {
   getUiOptions,
   ArrayFieldTemplateProps,
   ArrayFieldTemplateItemType,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
 } from "@rjsf/utils";
@@ -15,7 +16,7 @@ import {
 export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
@@ -84,6 +85,7 @@ export default function ArrayFieldTemplate<
           onClick={onAddClick}
           disabled={disabled || readonly}
           uiSchema={uiSchema}
+          registry={registry}
         />
       )}
     </fieldset>

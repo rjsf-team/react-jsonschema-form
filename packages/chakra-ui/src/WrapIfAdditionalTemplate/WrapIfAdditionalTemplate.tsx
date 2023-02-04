@@ -1,6 +1,9 @@
 import React from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import {
@@ -11,10 +14,15 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
     classNames,
+    style,
     disabled,
     id,
     label,
@@ -30,7 +38,11 @@ const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
-    return <div className={classNames}>{children}</div>;
+    return (
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    );
   }
   const keyLabel = `${label} Key`;
 
@@ -38,7 +50,13 @@ const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
     onKeyChange(target.value);
 
   return (
-    <Grid key={`${id}-key`} className={classNames} alignItems="center" gap={2}>
+    <Grid
+      key={`${id}-key`}
+      className={classNames}
+      style={style}
+      alignItems="center"
+      gap={2}
+    >
       <GridItem>
         <FormControl isRequired={required}>
           <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>
@@ -61,10 +79,9 @@ const WrapIfAdditionalTemplate = (props: WrapIfAdditionalTemplateProps) => {
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}
+          registry={registry}
         />
       </GridItem>
     </Grid>
   );
-};
-
-export default WrapIfAdditionalTemplate;
+}

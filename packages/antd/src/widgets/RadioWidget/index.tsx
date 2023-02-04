@@ -1,8 +1,27 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
+import {
+  ariaDescribedByIds,
+  enumOptionsIndexForValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
-const RadioWidget = ({
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   autofocus,
   disabled,
   formContext,
@@ -12,21 +31,31 @@ const RadioWidget = ({
   onFocus,
   options,
   readonly,
-  schema,
   value,
-}: WidgetProps) => {
-  const { readonlyAsDisabled = true } = formContext;
+}: WidgetProps<T, S, F>) {
+  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
-    onChange(schema.type === "boolean" ? nextValue !== "false" : nextValue);
+    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
+    onBlur(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
 
   const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
+    onFocus(
+      id,
+      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
+    );
+
+  const selectedIndexes = enumOptionsIndexForValue<S>(
+    value,
+    enumOptions
+  ) as string;
 
   return (
     <Radio.Group
@@ -36,25 +65,24 @@ const RadioWidget = ({
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={`${value}`}
+      value={selectedIndexes}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: optionValue, label: optionLabel }, i) => (
+        enumOptions.map((option, i) => (
           <Radio
-            id={`${id}-${optionValue}`}
+            id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
             disabled={
               Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1
             }
-            key={optionValue}
-            value={`${optionValue}`}
+            key={i}
+            value={String(i)}
           >
-            {optionLabel}
+            {option.label}
           </Radio>
         ))}
     </Radio.Group>
   );
-};
-
-export default RadioWidget;
+}

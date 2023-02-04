@@ -12,7 +12,7 @@
   <p align="center">
     A simple <a href="http://facebook.github.io/react/">React</a> component capable of using <a href="http://json-schema.org/">JSON Schema</a> to declaratively build and customize web forms.
     <br />
-    <a href="https://react-jsonschema-form.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
+    <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/">View Playground</a>
@@ -38,15 +38,15 @@
 
 ## Documentation
 
-Read our [documentation](https://react-jsonschema-form.readthedocs.io/en/latest/) on Read the Docs.
+Read our [documentation](https://rjsf-team.github.io/react-jsonschema-form/docs), powered by [Docusaurus](https://docusaurus.io/).
 
 ## Live Playground
 
-A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on gh-pages.
+A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on GitHub Pages.
 
 ## Contributing
 
-Read our [contributors' guide](https://react-jsonschema-form.readthedocs.io/en/latest/contributing/) to get started.
+Read our [contributors' guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing) to get started.
 
 ## Credits
 

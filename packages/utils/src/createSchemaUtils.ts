@@ -1,6 +1,7 @@
 import deepEquals from "./deepEquals";
 import {
   ErrorSchema,
+  FormContextType,
   IdSchema,
   PathSchema,
   RJSFSchema,
@@ -13,12 +14,15 @@ import {
 import {
   getDefaultFormState,
   getDisplayLabel,
+  getClosestMatchingOption,
+  getFirstMatchingOption,
   getMatchingOption,
   isFilesArray,
   isMultiSelect,
   isSelect,
   mergeValidationData,
   retrieveSchema,
+  sanitizeDataForNewSchema,
   toIdSchema,
   toPathSchema,
 } from "./schema";
@@ -28,18 +32,21 @@ import {
  * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
-class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
-  implements SchemaUtilsType<T, S>
+class SchemaUtils<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> implements SchemaUtilsType<T, S, F>
 {
   rootSchema: S;
-  validator: ValidatorType<T, S>;
+  validator: ValidatorType<T, S, F>;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
-  constructor(validator: ValidatorType<T, S>, rootSchema: S) {
+  constructor(validator: ValidatorType<T, S, F>, rootSchema: S) {
     this.rootSchema = rootSchema;
     this.validator = validator;
   }
@@ -61,7 +68,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
-    validator: ValidatorType<T, S>,
+    validator: ValidatorType<T, S, F>,
     rootSchema: S
   ): boolean {
     if (!validator || !rootSchema) {
@@ -77,15 +84,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults
+   * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
+   *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
+   *          object properties.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues = false
+    includeUndefinedValues: boolean | "excludeObjectChildren" = false
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S>(
+    return getDefaultFormState<T, S, F>(
       this.validator,
       schema,
       formData,
@@ -110,14 +119,57 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
     );
   }
 
+  /** Determines which of the given `options` provided most closely matches the `formData`.
+   * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+   *
+   * The closest match is determined using the number of matching properties, and more heavily favors options with
+   * matching readOnly, default, or const values.
+   *
+   * @param formData - The form data associated with the schema
+   * @param options - The list of options that can be selected from
+   * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
+   * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+   */
+  getClosestMatchingOption(
+    formData: T | undefined,
+    options: S[],
+    selectedOption?: number
+  ): number {
+    return getClosestMatchingOption<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      formData,
+      options,
+      selectedOption
+    );
+  }
+
+  /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
+   * Always returns the first option if there is nothing that matches.
+   *
+   * @param formData - The current formData, if any, used to figure out a match
+   * @param options - The list of options to find a matching options from
+   * @returns - The firstindex of the matched option or 0 if none is available
+   */
+  getFirstMatchingOption(formData: T | undefined, options: S[]): number {
+    return getFirstMatchingOption<T, S, F>(
+      this.validator,
+      formData,
+      options,
+      this.rootSchema
+    );
+  }
+
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
+   * Deprecated, use `getFirstMatchingOption()` instead.
    *
    * @param formData - The current formData, if any, onto which to provide any missing defaults
    * @param options - The list of options to find a matching options from
    * @returns - The index of the matched option or 0 if none is available
+   * @deprecated
    */
-  getMatchingOption(formData: T, options: S[]) {
-    return getMatchingOption<T, S>(
+  getMatchingOption(formData: T | undefined, options: S[]) {
+    return getMatchingOption<T, S, F>(
       this.validator,
       formData,
       options,
@@ -146,7 +198,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S>(this.validator, schema, this.rootSchema);
+    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -155,7 +207,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S>(this.validator, schema, this.rootSchema);
+    return isSelect<T, S, F>(this.validator, schema, this.rootSchema);
   }
 
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
@@ -171,7 +223,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
     validationData: ValidationData<T>,
     additionalErrorSchema?: ErrorSchema<T>
   ): ValidationData<T> {
-    return mergeValidationData<T, S>(
+    return mergeValidationData<T, S, F>(
       this.validator,
       validationData,
       additionalErrorSchema
@@ -186,12 +238,33 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, rawFormData: T) {
-    return retrieveSchema<T, S>(
+  retrieveSchema(schema: S, rawFormData?: T) {
+    return retrieveSchema<T, S, F>(
       this.validator,
       schema,
       this.rootSchema,
       rawFormData
+    );
+  }
+
+  /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
+   * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
+   * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
+   * old schemas that are non-existent in the new schema are set to `undefined`.
+   *
+   * @param [newSchema] - The new schema for which the data is being sanitized
+   * @param [oldSchema] - The old schema from which the data originated
+   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @returns - The new form data, with all the fields uniquely associated with the old schema set
+   *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+   */
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
+    return sanitizeDataForNewSchema(
+      this.validator,
+      this.rootSchema,
+      newSchema,
+      oldSchema,
+      data
     );
   }
 
@@ -211,7 +284,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
     idPrefix = "root",
     idSeparator = "_"
   ): IdSchema<T> {
-    return toIdSchema<T, S>(
+    return toIdSchema<T, S, F>(
       this.validator,
       schema,
       id,
@@ -230,7 +303,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T, S>(
+    return toPathSchema<T, S, F>(
       this.validator,
       schema,
       name,
@@ -250,7 +323,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F = any>
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
->(validator: ValidatorType<T, S>, rootSchema: S): SchemaUtilsType<T, S, F> {
+  F extends FormContextType = any
+>(validator: ValidatorType<T, S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(validator, rootSchema);
 }

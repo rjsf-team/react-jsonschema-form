@@ -1,9 +1,27 @@
 import React from "react";
-import { WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  enumOptionsIsSelected,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import { CheckboxProps, Form, Radio } from "semantic-ui-react";
 import { getSemanticProps } from "../util";
 
-function RadioWidget(props: WidgetProps) {
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RadioWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -13,31 +31,34 @@ function RadioWidget(props: WidgetProps) {
     onChange,
     onBlur,
     onFocus,
-    schema,
     options,
     formContext,
     uiSchema,
     rawErrors = [],
   } = props;
-  const { enumOptions, enumDisabled } = options;
-  const semanticProps = getSemanticProps({ formContext, options, uiSchema });
-  // eslint-disable-next-line no-shadow
+  const { enumOptions, enumDisabled, emptyValue } = options;
+  const semanticProps = getSemanticProps<T, S, F>({
+    formContext,
+    options,
+    uiSchema,
+  });
   const _onChange = (
     _: React.FormEvent<HTMLInputElement>,
     { value: eventValue }: CheckboxProps
   ) => {
-    return (
-      onChange &&
-      onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue)
+    return onChange(
+      enumOptionsValueForIndex<S>(eventValue!, enumOptions, emptyValue)
     );
   };
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
+
+  const _onBlur = () => onBlur(id, value);
+  const _onFocus = () => onFocus(id, value);
   const inlineOption = options.inline ? { inline: true } : { grouped: true };
   return (
     <Form.Group {...inlineOption}>
       {Array.isArray(enumOptions) &&
-        enumOptions.map((option) => {
+        enumOptions.map((option, index) => {
+          const checked = enumOptionsIsSelected<S>(option.value, value);
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;
@@ -45,22 +66,22 @@ function RadioWidget(props: WidgetProps) {
             <Form.Field
               required={required}
               control={Radio}
-              id={`${id}-${option.value}`}
+              id={optionId(id, index)}
               name={id}
               {...semanticProps}
               onFocus={_onFocus}
               onBlur={_onBlur}
-              label={`${option.label}`}
-              value={`${option.value}`}
-              error={rawErrors.length > 0}
-              key={option.value}
-              checked={value == option.value}
               onChange={_onChange}
+              label={option.label}
+              value={String(index)}
+              error={rawErrors.length > 0}
+              key={index}
+              checked={checked}
               disabled={disabled || itemDisabled || readonly}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}
     </Form.Group>
   );
 }
-export default RadioWidget;

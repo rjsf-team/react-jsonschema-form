@@ -1,8 +1,19 @@
 import React from "react";
 import { Checkbox, Label } from "@fluentui/react";
-import { WidgetProps } from "@rjsf/utils";
-import { allowedProps } from "../CheckboxWidget";
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  enumOptionsValueForIndex,
+  optionId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 import _pick from "lodash/pick";
+import { allowedProps } from "../CheckboxWidget";
 
 const styles_red = {
   // TODO: get this color from theme.
@@ -12,20 +23,11 @@ const styles_red = {
   fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
 };
 
-const selectValue = (value: any, selected: any, all: any) => {
-  const at = all.indexOf(value);
-  const updated = selected.slice(0, at).concat(value, selected.slice(at));
-
-  // As inserting values at predefined index positions doesn't work with empty
-  // arrays, we need to reorder the updated selection to match the initial order
-  return updated.sort((a: any, b: any) => all.indexOf(a) > all.indexOf(b));
-};
-
-const deselectValue = (value: any, selected: any) => {
-  return selected.filter((v: any) => v !== value);
-};
-
-const CheckboxesWidget = ({
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   schema,
   label,
   id,
@@ -39,28 +41,33 @@ const CheckboxesWidget = ({
   onBlur,
   onFocus,
   rawErrors = [],
-}: WidgetProps) => {
-  const { enumOptions, enumDisabled } = options;
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, emptyValue } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
-    (option: any) =>
+    (index: number) =>
     (_ev?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-      const all = (enumOptions as any).map(({ value }: any) => value);
-
       if (checked) {
-        onChange(selectValue(option.value, value, all));
+        onChange(
+          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
+        );
       } else {
-        onChange(deselectValue(option.value, value));
+        onChange(
+          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
+        );
       }
     };
 
   const _onBlur = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  }: React.FocusEvent<HTMLButtonElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
@@ -72,29 +79,31 @@ const CheckboxesWidget = ({
       </Label>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = value.indexOf(option.value) !== -1;
+          const checked = enumOptionsIsSelected<S>(
+            option.value,
+            checkboxesValues
+          );
           const itemDisabled =
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;
           return (
             <Checkbox
-              id={`${id}-${option.value}`}
+              id={optionId(id, index)}
               name={id}
               checked={checked}
               label={option.label}
               disabled={disabled || itemDisabled || readonly}
               autoFocus={autofocus && index === 0}
-              onChange={_onChange(option)}
+              onChange={_onChange(index)}
               onBlur={_onBlur}
               onFocus={_onFocus}
-              key={option.value}
+              key={index}
               {...uiProps}
+              aria-describedby={ariaDescribedByIds<T>(id)}
             />
           );
         })}
       <span style={styles_red}>{(rawErrors || []).join("\n")}</span>
     </>
   );
-};
-
-export default CheckboxesWidget;
+}

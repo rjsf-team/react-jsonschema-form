@@ -1,5 +1,11 @@
 import React, { FocusEvent, useCallback } from "react";
-import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
+import {
+  ariaDescribedByIds,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from "@rjsf/utils";
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -8,7 +14,7 @@ import { RJSFSchema, StrictRJSFSchema, WidgetProps } from "@rjsf/utils";
 function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F = any
+  F extends FormContextType = any
 >({
   id,
   options = {},
@@ -55,6 +61,7 @@ function TextareaWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       onChange={handleChange}
+      aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );
 }
