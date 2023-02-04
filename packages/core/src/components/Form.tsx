@@ -322,7 +322,7 @@ export default class Form<
     const formData: T = schemaUtils.getDefaultFormState(
       schema,
       inputFormData,
-      "excludeObjectChildren"
+      "allowEmptyObject"
     ) as T;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
 

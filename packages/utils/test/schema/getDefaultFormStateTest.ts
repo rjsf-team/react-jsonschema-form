@@ -114,7 +114,10 @@ export default function getDefaultFormStateTest(
         const schema: RJSFSchema = {
           type: "object",
           properties: {
-            optionalProperty: {
+            optionalNumberProperty: {
+              type: "number",
+            },
+            optionalObjectProperty: {
               type: "object",
               properties: {
                 nestedRequiredProperty: {
@@ -145,9 +148,50 @@ export default function getDefaultFormStateTest(
             "excludeObjectChildren"
           )
         ).toEqual({
-          optionalProperty: {
-            nestedRequiredProperty: undefined,
+          optionalNumberProperty: undefined,
+          optionalObjectProperty: {},
+          requiredProperty: "foo",
+        });
+      });
+      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'allowEmptyObject'", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            optionalNumberProperty: {
+              type: "number",
+            },
+            optionalObjectProperty: {
+              type: "object",
+              properties: {
+                nestedRequiredProperty: {
+                  type: "object",
+                  properties: {
+                    undefinedProperty: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              required: ["nestedRequiredProperty"],
+            },
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
           },
+          required: ["requiredProperty"],
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            "allowEmptyObject"
+          )
+        ).toEqual({
+          optionalObjectProperty: {},
           requiredProperty: "foo",
         });
       });
