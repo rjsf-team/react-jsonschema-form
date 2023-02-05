@@ -112,6 +112,10 @@ You can pass a React component to this prop to customize how form errors are dis
 
 Dictionary of registered fields in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
 
+## focusOnFirstError
+
+If set to true, then the first field with an error will receive the focus when the form is submitted with errors.
+
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.

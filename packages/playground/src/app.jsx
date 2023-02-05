@@ -16,12 +16,13 @@ const toJson = (val) => JSON.stringify(val, null, 2);
 const liveSettingsSchema = {
   type: "object",
   properties: {
-    validate: { type: "boolean", title: "Live validation" },
+    liveValidate: { type: "boolean", title: "Live validation" },
     disable: { type: "boolean", title: "Disable whole form" },
     readonly: { type: "boolean", title: "Readonly whole form" },
     omitExtraData: { type: "boolean", title: "Omit extra data" },
     liveOmit: { type: "boolean", title: "Live omit" },
     noValidate: { type: "boolean", title: "Disable validation" },
+    focusOnFirstError: { type: "boolean", title: "Focus on 1st Error" },
     showErrorList:{ type: "string", "default": "top", title: "Show Error List", enum:[false,"top","bottom"] }
   },
 };
@@ -644,13 +645,7 @@ class Playground extends Component {
               >
                 <FormComponent
                   {...templateProps}
-                  liveValidate={liveSettings.validate}
-                  disabled={liveSettings.disable}
-                  readonly={liveSettings.readonly}
-                  omitExtraData={liveSettings.omitExtraData}
-                  liveOmit={liveSettings.liveOmit}
-                  noValidate={liveSettings.noValidate}
-                  showErrorList={liveSettings.showErrorList}
+                  {...liveSettings}
                   schema={schema}
                   uiSchema={uiSchema}
                   formData={formData}
