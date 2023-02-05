@@ -34,13 +34,6 @@ export enum AdditionalItemsHandling {
   Fallback,
 }
 
-/** List of choices for `includeUndefinedValues` that should pass false to the recursion
- */
-const passAsFalseForIncludeUndefinedValues: Array<string | boolean> = [
-  "excludeObjectChildren",
-  "allowEmptyObject",
-];
-
 /** List of choices for `includeUndefinedValues` that should allow undefined values to be saved
  */
 const allowUndefinedForIncludeUndefinedValues: Array<string | boolean> = [
@@ -213,11 +206,7 @@ export function computeDefaults<
             get(defaults, [key]),
             rootSchema,
             get(formData, [key]),
-            passAsFalseForIncludeUndefinedValues.includes(
-              includeUndefinedValues
-            )
-              ? false
-              : includeUndefinedValues
+            includeUndefinedValues === true
           );
           if (includeUndefinedValues) {
             // Check to make sure an undefined value is allowed, otherwise don't save it
@@ -313,8 +302,10 @@ export function computeDefaults<
  * @param [formData] - The current formData, if any, onto which to provide any missing defaults
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
- *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
- *          object properties.
+ *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
+ *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
+ *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
+ *          false when computing defaults for any nested object properties.
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
