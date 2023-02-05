@@ -69,7 +69,7 @@
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react-app-polyfill": "^3.0.0",
-    "react-bootstrap": "^1.6.5",
+    "react-bootstrap": "^2.7.0",
     "react-frame-component": "^4.1.1",
     "react-is": "^18.2.0"
   },
