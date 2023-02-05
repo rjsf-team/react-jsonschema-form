@@ -261,6 +261,35 @@ describe("BooleanField", () => {
     });
   });
 
+  it("should focus on required radio missing data when focusOnFirstField", () => {
+    const { node, onError } = createFormComponent({
+      schema: {
+        type: "object",
+        properties: {
+          bool: {
+            type: "boolean",
+          },
+        },
+        required: ["bool"],
+      },
+      focusOnFirstError: true,
+      uiSchema: { bool: { "ui:widget": "radio" } },
+    });
+    const focusSpys = [sinon.spy(), sinon.spy()];
+    console.log(node.innerHTML);
+    const inputs = node.querySelectorAll("input[id^=root_bool]");
+    expect(inputs.length).eql(2);
+    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+    inputs[0].focus = focusSpys[0];
+    inputs[1].focus = focusSpys[1];
+    submitForm(node);
+    sinon.assert.calledWithMatch(onError.lastCall, {
+      formData: undefined,
+    });
+    sinon.assert.calledOnce(focusSpys[0]);
+    sinon.assert.notCalled(focusSpys[1]);
+  });
+
   it("should handle a change event", () => {
     const { node, onChange } = createFormComponent({
       schema: {

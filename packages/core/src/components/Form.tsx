@@ -31,6 +31,7 @@ import {
 import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 import _pick from "lodash/pick";
+import _toPath from "lodash/toPath";
 
 import getDefaultRegistry from "../getDefaultRegistry";
 
@@ -170,6 +171,9 @@ export interface FormProps<
    * Schema validation
    */
   transformErrors?: ErrorTransformer<T, S, F>;
+  /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
+   */
+  focusOnFirstError?: boolean;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -733,13 +737,42 @@ export default class Form<
     }
   }
 
+  /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
+   * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
+   * id is attempted to be found using the `formElement` ref. If it is located, then it is focused.
+   *
+   * @param error - The error on which to focus
+   */
+  focusOnError(error: RJSFValidationError) {
+    const { idPrefix = "root", idSeparator = "_" } = this.props;
+    const { property } = error;
+    const path = _toPath(property);
+    if (path[0] === "") {
+      // Most of the time the `.foo` property results in the first element being empty, so replace it with the idPrefix
+      path[0] = idPrefix;
+    } else {
+      // Otherwise insert the idPrefix into the first location using unshift
+      path.unshift(idPrefix);
+    }
+
+    const elementId = path.join(idSeparator);
+    let field = this.formElement.current.elements[elementId];
+    if (!field) {
+      // if not an exact match, try finding an input starting with the element id (like radio buttons or checkboxes)
+      field = this.formElement.current.querySelector(`input[id^=${elementId}`);
+    }
+    if (field) {
+      field.focus();
+    }
+  }
+
   /** Programmatically validate the form. If `onError` is provided, then it will be called with the list of errors the
    * same way as would happen on form submission.
    *
    * @returns - True if the form is valid, false otherwise.
    */
   validateForm() {
-    const { extraErrors, onError } = this.props;
+    const { extraErrors, focusOnFirstError, onError } = this.props;
     const { formData } = this.state;
     const { schemaUtils } = this.state;
     const schemaValidation = this.validate(formData);
@@ -755,6 +788,9 @@ export default class Form<
         );
         errorSchema = merged.errorSchema;
         errors = merged.errors;
+      }
+      if (focusOnFirstError) {
+        this.focusOnError(schemaValidation.errors[0]);
       }
       this.setState(
         {

@@ -1692,11 +1692,19 @@ describeRepeated("Form common", (createFormComponent) => {
         minLength: 8,
       };
 
-      it("should call the onError handler", () => {
+      it("should call the onError handler and focus on the error", () => {
         const onError = sandbox.spy();
-        const { node } = createFormComponent({ schema, onError });
+        const { node } = createFormComponent({
+          schema,
+          onError,
+          focusOnFirstError: true,
+        });
 
-        Simulate.change(node.querySelector("input[type=text]"), {
+        const input = node.querySelector("input[type=text]");
+        const focusSpy = sinon.spy();
+        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        input.focus = focusSpy;
+        Simulate.change(input, {
           target: { value: "short" },
         });
         Simulate.submit(node);
@@ -1710,6 +1718,7 @@ describeRepeated("Form common", (createFormComponent) => {
             );
           })
         );
+        sinon.assert.calledOnce(focusSpy);
       });
 
       it("should reset errors and errorSchema state to initial state after correction and resubmission", () => {
@@ -2047,8 +2056,16 @@ describeRepeated("Form common", (createFormComponent) => {
 
       const formProps = { schema, formData, liveValidate: true };
 
-      it("should contextualize the error for nested array indices", () => {
-        const { node, onError } = createFormComponent(formProps);
+      it("should contextualize the error for nested array indices, focusing on first error", () => {
+        const { node, onError } = createFormComponent({
+          ...formProps,
+          focusOnFirstError: true,
+        });
+
+        const focusSpy = sinon.spy();
+        const input = node.querySelector("input[id=root_outer_0_1]");
+        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        input.focus = focusSpy;
 
         submitForm(node);
         sinon.assert.calledWithMatch(onError.lastCall, [
@@ -2069,6 +2086,7 @@ describeRepeated("Form common", (createFormComponent) => {
             stack: ".outer.1.0 must NOT have fewer than 4 characters",
           },
         ]);
+        sinon.assert.calledOnce(focusSpy);
       });
 
       it("should denote the error in the nested item field in error", () => {
