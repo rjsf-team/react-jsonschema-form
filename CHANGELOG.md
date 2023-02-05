@@ -17,8 +17,20 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.0.3
 
+## @rjsf/bootstrap-4
+- Updated the `AltDateTimeWidget` in `@rjsf/core` to add `className="list-inline-item"` to the `LI` tags
+
 ## @rjsf/chakra-ui
 - Fixed the `SelectWidget` to allow the proper display of the selected value, fixing [#3422](https://github.com/rjsf-team/react-jsonschema-form/issues/3422)
+
+## @rjsf/core
+- Fixed `Form` to pass `allowEmptyObject` to `getDefaultFormState()`, fixing [#3424](https://github.com/rjsf-team/react-jsonschema-form/issues/3424)
+
+## @rjsf/utils
+- Updated `getDefaultFormState()` to add a new possible value for `includeUndefinedValues` called `allowEmptyObject` which prevents undefined values within an object but allows an empty object itself.  
+
+## Dev / docs / playground
+- Updated the `utility-functions` documentation to describe the addition of `allowEmptyObject` to `getDefaultFormState()`'s `includeUndefinedValues` parameter.
 
 # 5.0.2
 

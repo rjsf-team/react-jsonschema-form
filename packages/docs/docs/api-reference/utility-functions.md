@@ -526,7 +526,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 - theSchema: S - The schema for which the default state is desired
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
+- [includeUndefinedValues=false]: boolean | "excludeObjectChildren" | "allowEmptyObject" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as false when computing defaults for any nested object properties.
 
 #### Returns
 - T: The resulting `formData` with all the defaults provided

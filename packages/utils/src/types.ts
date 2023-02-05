@@ -1005,14 +1005,19 @@ export interface SchemaUtilsType<
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
-   *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
-   *          object properties.
+   *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
+   *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
+   *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
+   *          false when computing defaults for any nested object properties.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues?: boolean | "excludeObjectChildren"
+    includeUndefinedValues?:
+      | boolean
+      | "excludeObjectChildren"
+      | "allowEmptyObject"
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
