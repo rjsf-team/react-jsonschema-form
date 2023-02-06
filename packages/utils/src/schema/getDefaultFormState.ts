@@ -242,8 +242,7 @@ export function computeDefaults<
 
   switch (getSchemaType<S>(schema)) {
     // We need to recur for object schema inner default values.
-    case "object":
-      // eslint-disable-next-line no-case-declarations
+    case "object": {
       const objectDefaults = Object.keys(schema.properties || {}).reduce(
         (acc: GenericObjectType, key: string) => {
           // Compute the defaults for this node, with the parent defaults we might
@@ -290,6 +289,7 @@ export function computeDefaults<
           });
       }
       return objectDefaults;
+    }
     case "array":
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
