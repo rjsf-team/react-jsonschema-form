@@ -28,7 +28,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Added new feature prop `focusOnFirstError`, that if true, will cause the first field with an error to be focused on when a submit has errors 
 
 ## @rjsf/utils
-- Updated `getDefaultFormState()` to add a new possible value for `includeUndefinedValues` called `allowEmptyObject` which prevents undefined values within an object but allows an empty object itself.  
+- Updated `getDefaultFormState()` to add a new possible value for `includeUndefinedValues` called `allowEmptyObject` which prevents undefined values within an object but allows an empty object itself.
+- Updated `computeDefaults()` to fix additionalProperties defaults not being propagated, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593)
+  - Also made sure to properly deal with empty `anyOf`/`oneOf` lists by simply returning undefined
 
 ## Dev / docs / playground
 - Updated the `utility-functions` documentation to describe the addition of `allowEmptyObject` to `getDefaultFormState()`'s `includeUndefinedValues` parameter.

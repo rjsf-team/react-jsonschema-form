@@ -86,6 +86,47 @@ export function getInnerSchemaForArrayItem<
   return {} as S;
 }
 
+/** Either add `computedDefault` at `key` into `obj` or not add it based on its value and the value of
+ * `includeUndefinedValues`. Generally undefined `computedDefault` values are added only when `includeUndefinedValues`
+ * is either true or "excludeObjectChildren". If `includeUndefinedValues` is false, then non-undefined and
+ * non-empty-object values will be added.
+ *
+ * @param obj - The object into which the computed default may be added
+ * @param key - The key into the object at which the computed default may be added
+ * @param computedDefault - The computed default value that maybe should be added to the obj
+ * @param includeUndefinedValues - Optional flag, if true, cause undefined values to be added as defaults.
+ *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
+ *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
+ *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
+ *          false when computing defaults for any nested object properties.
+ */
+function maybeAddDefaultToObject<T = any>(
+  obj: GenericObjectType,
+  key: string,
+  computedDefault: T | T[] | undefined,
+  includeUndefinedValues: boolean | "excludeObjectChildren" | "allowEmptyObject"
+) {
+  if (includeUndefinedValues) {
+    // Check to make sure an undefined value is allowed, otherwise don't save it
+    if (
+      allowUndefinedForIncludeUndefinedValues.includes(
+        includeUndefinedValues
+      ) ||
+      computedDefault !== undefined
+    ) {
+      obj[key] = computedDefault;
+    }
+  } else if (isObject(computedDefault)) {
+    // Store computedDefault if it's a non-empty object (e.g. not {})
+    if (!isEmpty(computedDefault)) {
+      obj[key] = computedDefault;
+    }
+  } else if (computedDefault !== undefined) {
+    // Store computedDefault if it's a defined primitive (e.g. true)
+    obj[key] = computedDefault;
+  }
+}
+
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -167,6 +208,9 @@ export function computeDefaults<
       )
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
+    if (schema.oneOf!.length === 0) {
+      return undefined;
+    }
     schema = schema.oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
@@ -177,6 +221,9 @@ export function computeDefaults<
       )
     ] as S;
   } else if (ANY_OF_KEY in schema) {
+    if (schema.anyOf!.length === 0) {
+      return undefined;
+    }
     schema = schema.anyOf![
       getClosestMatchingOption<T, S, F>(
         validator,
@@ -196,7 +243,8 @@ export function computeDefaults<
   switch (getSchemaType<S>(schema)) {
     // We need to recur for object schema inner default values.
     case "object":
-      return Object.keys(schema.properties || {}).reduce(
+      // eslint-disable-next-line no-case-declarations
+      const objectDefaults = Object.keys(schema.properties || {}).reduce(
         (acc: GenericObjectType, key: string) => {
           // Compute the defaults for this node, with the parent defaults we might
           // have from a previous run: defaults[key].
@@ -208,30 +256,40 @@ export function computeDefaults<
             get(formData, [key]),
             includeUndefinedValues === true
           );
-          if (includeUndefinedValues) {
-            // Check to make sure an undefined value is allowed, otherwise don't save it
-            if (
-              allowUndefinedForIncludeUndefinedValues.includes(
-                includeUndefinedValues
-              ) ||
-              computedDefault !== undefined
-            ) {
-              acc[key] = computedDefault;
-            }
-          } else if (isObject(computedDefault)) {
-            // Store computedDefault if it's a non-empty object (e.g. not {})
-            if (!isEmpty(computedDefault)) {
-              acc[key] = computedDefault;
-            }
-          } else if (computedDefault !== undefined) {
-            // Store computedDefault if it's a defined primitive (e.g. true)
-            acc[key] = computedDefault;
-          }
+          maybeAddDefaultToObject<T>(
+            acc,
+            key,
+            computedDefault,
+            includeUndefinedValues
+          );
           return acc;
         },
         {}
       ) as T;
-
+      if (schema.additionalProperties && isObject(defaults)) {
+        const additionalPropertiesSchema = isObject(schema.additionalProperties)
+          ? schema.additionalProperties
+          : {}; // as per spec additionalProperties may be either schema or boolean
+        Object.keys(defaults as GenericObjectType)
+          .filter((key) => !schema.properties || !schema.properties[key])
+          .forEach((key) => {
+            const computedDefault = computeDefaults(
+              validator,
+              additionalPropertiesSchema as S,
+              get(defaults, [key]),
+              rootSchema,
+              get(formData, [key]),
+              includeUndefinedValues === true
+            );
+            maybeAddDefaultToObject<T>(
+              objectDefaults as GenericObjectType,
+              key,
+              computedDefault,
+              includeUndefinedValues
+            );
+          });
+      }
+      return objectDefaults;
     case "array":
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {

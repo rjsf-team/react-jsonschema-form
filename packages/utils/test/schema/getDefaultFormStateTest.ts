@@ -43,7 +43,7 @@ export default function getDefaultFormStateTest(
           foo: 42,
         });
       });
-      it("test computeDefaults that is passed an object with an optional object property that has a nested required property", () => {
+      it("test an object with an optional property that has a nested required property", () => {
         const schema: RJSFSchema = {
           type: "object",
           properties: {
@@ -67,7 +67,7 @@ export default function getDefaultFormStateTest(
           computeDefaults(testValidator, schema, undefined, schema)
         ).toEqual({ requiredProperty: "foo" });
       });
-      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues", () => {
+      it("test an object with an optional property that has a nested required property and includeUndefinedValues", () => {
         const schema: RJSFSchema = {
           type: "object",
           properties: {
@@ -110,7 +110,7 @@ export default function getDefaultFormStateTest(
           requiredProperty: "foo",
         });
       });
-      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
+      it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
         const schema: RJSFSchema = {
           type: "object",
           properties: {
@@ -153,7 +153,7 @@ export default function getDefaultFormStateTest(
           requiredProperty: "foo",
         });
       });
-      it("test computeDefaults that is passed an object with an optional object property that has a nested required property and includeUndefinedValues is 'allowEmptyObject'", () => {
+      it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'allowEmptyObject'", () => {
         const schema: RJSFSchema = {
           type: "object",
           properties: {
@@ -194,6 +194,53 @@ export default function getDefaultFormStateTest(
           optionalObjectProperty: {},
           requiredProperty: "foo",
         });
+      });
+      it("test an object with an additionalProperties", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
+          },
+          additionalProperties: true,
+          required: ["requiredProperty"],
+          default: {
+            foo: "bar",
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, undefined, schema)
+        ).toEqual({ requiredProperty: "foo", foo: "bar" });
+      });
+      it("test an object with an additionalProperties and includeUndefinedValues", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            requiredProperty: {
+              type: "string",
+              default: "foo",
+            },
+          },
+          additionalProperties: {
+            type: "string",
+          },
+          required: ["requiredProperty"],
+          default: {
+            foo: "bar",
+          },
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            true
+          )
+        ).toEqual({ requiredProperty: "foo", foo: "bar" });
       });
       it("test computeDefaults handles an invalid property schema", () => {
         const schema: RJSFSchema = {
@@ -834,6 +881,18 @@ export default function getDefaultFormStateTest(
       });
     });
     describe("defaults with oneOf", () => {
+      it("should not populate defaults for empty oneOf", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              oneOf: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({});
+      });
       it("should populate defaults for oneOf", () => {
         const schema: RJSFSchema = {
           type: "object",
@@ -949,6 +1008,18 @@ export default function getDefaultFormStateTest(
       });
     });
     describe("defaults with anyOf", () => {
+      it("should not populate defaults for empty oneOf", () => {
+        const schema: RJSFSchema = {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              anyOf: [],
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({});
+      });
       it("should populate defaults for anyOf", () => {
         const schema: RJSFSchema = {
           type: "object",
