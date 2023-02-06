@@ -932,6 +932,7 @@ describeRepeated("Form common", (createFormComponent) => {
       });
     });
   });
+
   describe("Defaults additionalProperties propagation", () => {
     it("should submit string string map defaults", () => {
       const schema = {
@@ -1265,6 +1266,7 @@ describeRepeated("Form common", (createFormComponent) => {
       sinon.assert.callCount(secondOnChange, 1);
     });
   });
+
   describe("Blur handler", () => {
     it("should call provided blur handler on form input blur event", () => {
       const schema = {
@@ -1335,6 +1337,97 @@ describeRepeated("Form common", (createFormComponent) => {
       Simulate.submit(node);
 
       sinon.assert.calledOnce(onError);
+    });
+  });
+
+  describe("Required and optional fields", () => {
+    const schema = {
+      definitions: {
+        address: {
+          type: "object",
+          properties: {
+            street_address: {
+              type: "string",
+            },
+            city: {
+              type: "string",
+            },
+            state: {
+              type: "string",
+            },
+          },
+          required: ["street_address", "city", "state"],
+        },
+      },
+      type: "object",
+      properties: {
+        billing_address: {
+          title: "Billing address",
+          $ref: "#/definitions/address",
+        },
+        shipping_address: {
+          title: "Shipping address",
+          $ref: "#/definitions/address",
+        },
+      },
+      required: ["shipping_address"],
+    };
+    it("Errors when shipping address is not filled out, billing address is not needed", () => {
+      const { node, onChange, onError } = createFormComponent({ schema });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          shipping_address: {},
+        },
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: "must have required property 'street_address'",
+          name: "required",
+          params: { missingProperty: "street_address" },
+          property: ".shipping_address.street_address",
+          schemaPath: "#/definitions/address/required",
+          stack: "must have required property 'street_address'",
+        },
+        {
+          message: "must have required property 'city'",
+          name: "required",
+          params: { missingProperty: "city" },
+          property: ".shipping_address.city",
+          schemaPath: "#/definitions/address/required",
+          stack: "must have required property 'city'",
+        },
+        {
+          message: "must have required property 'state'",
+          name: "required",
+          params: { missingProperty: "state" },
+          property: ".shipping_address.state",
+          schemaPath: "#/definitions/address/required",
+          stack: "must have required property 'state'",
+        },
+      ]);
+    });
+    it("Submits when shipping address is filled out, billing address is not needed", () => {
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        formData: {
+          shipping_address: {
+            street_address: "21, Jump Street",
+            city: "Babel",
+            state: "Neverland",
+          },
+        },
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: {
+          shipping_address: {
+            street_address: "21, Jump Street",
+            city: "Babel",
+            state: "Neverland",
+          },
+        },
+      });
     });
   });
 

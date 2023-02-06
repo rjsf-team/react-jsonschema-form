@@ -149,49 +149,9 @@ export default function getDefaultFormStateTest(
           )
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
-          requiredProperty: "foo",
-        });
-      });
-      it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'allowEmptyObject'", () => {
-        const schema: RJSFSchema = {
-          type: "object",
-          properties: {
-            optionalNumberProperty: {
-              type: "number",
-            },
-            optionalObjectProperty: {
-              type: "object",
-              properties: {
-                nestedRequiredProperty: {
-                  type: "object",
-                  properties: {
-                    undefinedProperty: {
-                      type: "string",
-                    },
-                  },
-                },
-              },
-              required: ["nestedRequiredProperty"],
-            },
-            requiredProperty: {
-              type: "string",
-              default: "foo",
-            },
+          optionalObjectProperty: {
+            nestedRequiredProperty: {},
           },
-          required: ["requiredProperty"],
-        };
-        expect(
-          computeDefaults(
-            testValidator,
-            schema,
-            undefined,
-            schema,
-            undefined,
-            "allowEmptyObject"
-          )
-        ).toEqual({
-          optionalObjectProperty: {},
           requiredProperty: "foo",
         });
       });
