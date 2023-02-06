@@ -34,13 +34,6 @@ export enum AdditionalItemsHandling {
   Fallback,
 }
 
-/** List of choices for `includeUndefinedValues` that should allow undefined values to be saved
- */
-const allowUndefinedForIncludeUndefinedValues: Array<string | boolean> = [
-  "excludeObjectChildren",
-  true,
-];
-
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
  * `additionalItems` enum and the value of `idx`. There are four possible returns:
  * 1. If `idx` is >= 0, then if `schema.items` is an array the `idx`th element of the array is returned if it is a valid
@@ -99,26 +92,20 @@ export function getInnerSchemaForArrayItem<
  *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
  *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
+ * @param requiredFields - The list of fields that are required
  */
 function maybeAddDefaultToObject<T = any>(
   obj: GenericObjectType,
   key: string,
   computedDefault: T | T[] | undefined,
-  includeUndefinedValues: boolean | "excludeObjectChildren" | "allowEmptyObject"
+  includeUndefinedValues: boolean | "excludeObjectChildren",
+  requiredFields: string[] = []
 ) {
   if (includeUndefinedValues) {
-    // Check to make sure an undefined value is allowed, otherwise don't save it
-    if (
-      allowUndefinedForIncludeUndefinedValues.includes(
-        includeUndefinedValues
-      ) ||
-      computedDefault !== undefined
-    ) {
-      obj[key] = computedDefault;
-    }
+    obj[key] = computedDefault;
   } else if (isObject(computedDefault)) {
     // Store computedDefault if it's a non-empty object (e.g. not {})
-    if (!isEmpty(computedDefault)) {
+    if (!isEmpty(computedDefault) || requiredFields.includes(key)) {
       obj[key] = computedDefault;
     }
   } else if (computedDefault !== undefined) {
@@ -137,8 +124,6 @@ function maybeAddDefaultToObject<T = any>(
  * @param [rawFormData] - The current formData, if any, onto which to provide any missing defaults
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
- *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
- *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @returns - The resulting `formData` with all the defaults provided
  */
@@ -152,10 +137,7 @@ export function computeDefaults<
   parentDefaults?: T,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  includeUndefinedValues:
-    | boolean
-    | "excludeObjectChildren"
-    | "allowEmptyObject" = false
+  includeUndefinedValues: boolean | "excludeObjectChildren" = false
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -259,7 +241,8 @@ export function computeDefaults<
             acc,
             key,
             computedDefault,
-            includeUndefinedValues
+            includeUndefinedValues,
+            schema.required
           );
           return acc;
         },
@@ -361,8 +344,6 @@ export function computeDefaults<
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
- *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
- *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @returns - The resulting `formData` with all the defaults provided
  */
@@ -375,10 +356,7 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  includeUndefinedValues:
-    | boolean
-    | "excludeObjectChildren"
-    | "allowEmptyObject" = false
+  includeUndefinedValues: boolean | "excludeObjectChildren" = false
 ) {
   if (!isObject(theSchema)) {
     throw new Error("Invalid schema: " + theSchema);

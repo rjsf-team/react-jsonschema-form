@@ -24,16 +24,15 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the `SelectWidget` to allow the proper display of the selected value, fixing [#3422](https://github.com/rjsf-team/react-jsonschema-form/issues/3422)
 
 ## @rjsf/core
-- Fixed `Form` to pass `allowEmptyObject` to `getDefaultFormState()`, fixing [#3424](https://github.com/rjsf-team/react-jsonschema-form/issues/3424)
+- Fixed `Form` to remove passing `excludeObjectChildren` to `getDefaultFormState()`, fixing [#3424](https://github.com/rjsf-team/react-jsonschema-form/issues/3424) and [#675](https://github.com/rjsf-team/react-jsonschema-form/issues/675)
 - Added new feature prop `focusOnFirstError`, that if true, will cause the first field with an error to be focused on when a submit has errors 
 
 ## @rjsf/utils
-- Updated `getDefaultFormState()` to add a new possible value for `includeUndefinedValues` called `allowEmptyObject` which prevents undefined values within an object but allows an empty object itself.
 - Updated `computeDefaults()` to fix additionalProperties defaults not being propagated, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593)
   - Also made sure to properly deal with empty `anyOf`/`oneOf` lists by simply returning undefined
+  - Add support for adding an empty object when that object is marked as required in a schema
 
 ## Dev / docs / playground
-- Updated the `utility-functions` documentation to describe the addition of `allowEmptyObject` to `getDefaultFormState()`'s `includeUndefinedValues` parameter.
 - Updated the playground to add a control for `focusOnFirstError` and the `form-props` documentation for it as well
 
 # 5.0.2

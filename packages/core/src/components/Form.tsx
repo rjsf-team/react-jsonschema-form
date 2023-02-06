@@ -325,8 +325,7 @@ export default class Form<
     }
     const formData: T = schemaUtils.getDefaultFormState(
       schema,
-      inputFormData,
-      "allowEmptyObject"
+      inputFormData
     ) as T;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
 
