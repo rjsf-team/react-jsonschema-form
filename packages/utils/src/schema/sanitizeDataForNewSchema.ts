@@ -16,7 +16,7 @@ const NO_VALUE = Symbol("no Value");
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
  * of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the old schema
- * that are non-existent in the new schema are set to `undefined`. The data sanitization process has the following flow:
+ * that are non-existent in the new schema are removed. The data sanitization process has the following flow:
  *
  * - If the new schema is an object that contains a `properties` object then:
  *   - Create a `removeOldSchemaData` object, setting each key in the `oldSchema.properties` having `data` to undefined
@@ -80,6 +80,11 @@ export default function sanitizeDataForNewSchema<
     if (has(oldSchema, PROPERTIES_KEY)) {
       const properties = get(oldSchema, PROPERTIES_KEY, {});
       Object.keys(properties).forEach((key) => {
+        // if new schema does not have removeOldSchemaData[key]
+        if (!has(newSchema, [PROPERTIES_KEY, key])) {
+          delete removeOldSchemaData[key];
+          delete data[key];
+        }
         if (has(data, key)) {
           removeOldSchemaData[key] = undefined;
         }
