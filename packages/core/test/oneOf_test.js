@@ -1243,7 +1243,7 @@ describe("oneOf", () => {
     sinon.assert.calledWithMatch(onChange.lastCall, {
       formData: {
         craftTypes: [
-          { keywords: [undefined], title: undefined, daysOfYear: undefined },
+          { keywords: [undefined], title: undefined },
         ],
       },
     });
