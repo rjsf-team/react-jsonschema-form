@@ -1,7 +1,6 @@
 name: Release
 on:
-  release:
-    types: [published]
+  pull_request:
 
 jobs:
   release_to_npm:
@@ -15,13 +14,7 @@ jobs:
           node-version: 18.x
           cache: 'npm'
           cache-dependency-path: 'packages/**/package-lock.json'
-      - run: npm ci
-      - run: npm run build
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
-      - run: npm test
-      - run: npm run lint
-      - run: npm run cs-check
+      - run: npm deprecate react-jsonschema-form "react-jsonschema-form has been moved to @rjsf/core"
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
