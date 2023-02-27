@@ -173,7 +173,6 @@ render((
 This will render `<input id="root/first">` instead of `<input
 id="root_first">` when rendering `first`.
 
-
 ## liveOmit
 
 If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called. Set to `false` by default.
@@ -298,6 +297,31 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 ## transformErrors
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
+
+## translateString
+
+Optional string translation function, if provided, allows users to change the translation of the RJSF internal strings.
+Some strings contain replaceable parameter values as indicated by `%1`, `%2`, etc.
+The number after the `%` indicates the order of the parameter.
+The ordering of parameters is important because some languages may choose to put the second parameter before the first in its translation.
+
+One could use this function to alter one or more of the existing english strings to better suit one's application or fully translate all strings into a different language.
+Below is an example of changing a few of the english strings to something else:
+
+```ts
+import { TranslatableString, englishStringTranslator, replaceStringParameters } from "@rjsf/utils";
+
+function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?: string[]): string {
+  switch(stringToTranslate) {
+    case TranslatableString.NewStringDefault:
+      return ""; // Use an empty string for the new additionalProperties string default value
+    case TranslatableString.KeyLabel:
+      return replaceStringParameters("%1 Key Name", params); // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
+    default:
+      return englishStringTranslator(stringToTranslate, params); // Fallback to the default english
+  }
+}
+```
 
 ## uiSchema
 

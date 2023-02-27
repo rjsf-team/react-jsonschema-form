@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import { Form, Grid } from "semantic-ui-react";
@@ -33,11 +34,12 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const { RemoveButton } = templates.ButtonTemplates;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const { readonlyAsDisabled = true, wrapperStyle } = registry.formContext;
 
-  const keyLabel = `${label} Key`; // i18n ?
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {

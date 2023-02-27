@@ -1,4 +1,5 @@
 import {
+  englishStringTranslator,
   FormContextType,
   Registry,
   RJSFSchema,
@@ -24,5 +25,6 @@ export default function getDefaultRegistry<
     widgets: widgets<T, S, F>(),
     rootSchema: {} as S,
     formContext: {} as F,
+    translateString: englishStringTranslator,
   };
 }

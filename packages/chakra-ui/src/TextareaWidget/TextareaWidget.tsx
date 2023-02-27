@@ -63,7 +63,7 @@ export default function TextareaWidget<
       <Textarea
         id={id}
         name={id}
-        value={value ?? ""}
+        value={value || ""}
         placeholder={placeholder}
         autoFocus={autofocus}
         onChange={_onChange}

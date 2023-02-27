@@ -1982,19 +1982,17 @@ exports[`single fields unsupported field 1`] = `
       className="unsupported-field"
     >
       <p>
-        Unsupported field schema
         <span>
-           for
-           field 
+          Unsupported field schema for field 
           <code>
             root
           </code>
-        </span>
-        <em>
           : 
-          Unknown field type undefined
-        </em>
-        .
+          <em>
+            Unknown field type undefined
+          </em>
+          .
+        </span>
       </p>
       <pre>
         {}
