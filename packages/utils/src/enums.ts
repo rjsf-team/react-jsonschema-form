@@ -29,8 +29,6 @@ export enum TranslatableString {
   MoveUpButton = "Move up",
   /** Remove button title, used by IconButton */
   RemoveButton = "Remove",
-  /** Unsupported field schema, used by UnsupportedField */
-  UnsupportedField = "Unsupported field schema.",
   /** Now label, used by AltDateWidget */
   NowLabel = "Now",
   /** Clear label, used by AltDateWidget */
@@ -50,6 +48,11 @@ export enum TranslatableString {
    * MultiSchemaField
    */
   TitleOptionPrefix = "%1 option %2",
+  /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
+  KeyLabel = "%1 Key",
+  // Strings with replaceable parameters AND/OR that support markdown and html
+    /** Unsupported field schema, used by UnsupportedField */
+  UnsupportedField = "Unsupported field schema.",
   /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */
   UnsupportedFieldWithId = "Unsupported field schema for field <code>%1</code>.",
   /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField */
@@ -58,8 +61,6 @@ export enum TranslatableString {
    * as provided by UnsupportedField
    */
   UnsupportedFieldWithIdAndReason = "Unsupported field schema for field <code>%1</code>: <em>%2</em>.",
-  /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
-  KeyLabel = "%1 Key",
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
