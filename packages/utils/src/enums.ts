@@ -2,7 +2,8 @@
  * enumeration keys is expected to be the actual english string. Some strings contain replaceable parameter values
  * as indicated by `%1`, `%2`, etc. The number after the `%` indicates the order of the parameter. The ordering of
  * parameters is important because some languages may choose to put the second parameter before the first in its
- * translation.
+ * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown
+ * and inline html.
  */
 export enum TranslatableString {
   /** Fallback title of an array item, used by ArrayField */
@@ -51,7 +52,7 @@ export enum TranslatableString {
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel = "%1 Key",
   // Strings with replaceable parameters AND/OR that support markdown and html
-    /** Unsupported field schema, used by UnsupportedField */
+  /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField = "Unsupported field schema.",
   /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */
   UnsupportedFieldWithId = "Unsupported field schema for field <code>%1</code>.",
