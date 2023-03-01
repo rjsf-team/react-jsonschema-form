@@ -2,8 +2,7 @@
  * enumeration keys is expected to be the actual english string. Some strings contain replaceable parameter values
  * as indicated by `%1`, `%2`, etc. The number after the `%` indicates the order of the parameter. The ordering of
  * parameters is important because some languages may choose to put the second parameter before the first in its
- * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown
- * and inline html.
+ * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown and inline html.
  */
 export enum TranslatableString {
   /** Fallback title of an array item, used by ArrayField */
