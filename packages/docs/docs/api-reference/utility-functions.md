@@ -21,7 +21,7 @@ These types can be found on Github [here](https://github.com/rjsf-team/react-jso
 ## Enums
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These types can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
+These enums can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
 
 ## Non-Validator utility functions
 
