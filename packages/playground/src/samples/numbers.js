@@ -24,8 +24,8 @@ export default {
       integerRange: {
         title: "Integer range",
         type: "integer",
-        minimum: 42,
-        maximum: 100,
+        minimum: -50,
+        maximum: 50,
       },
       integerRangeSteps: {
         title: "Integer range (by 10)",
