@@ -1,11 +1,12 @@
 import React from "react";
 import {
   ariaDescribedByIds,
-  WidgetProps,
   pad,
-  StrictRJSFSchema,
-  RJSFSchema,
   FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TranslatableString,
+  WidgetProps,
 } from "@rjsf/utils";
 import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
 import _pick from "lodash/pick";
@@ -96,7 +97,9 @@ export default function DateWidget<
   onFocus,
   options,
   placeholder,
+  registry,
 }: WidgetProps<T, S, F>) {
+  const { translateString } = registry;
   const _onSelectDate = (date: Date | null | undefined) => {
     if (date) {
       const formatted = formatDate(date);
@@ -116,7 +119,7 @@ export default function DateWidget<
       className={controlClass.control}
       firstDayOfWeek={DayOfWeek.Sunday}
       placeholder={placeholder}
-      ariaLabel="Select a date"
+      ariaLabel={translateString(TranslatableString.AriaDateLabel)}
       isRequired={required}
       label={label}
       onSelectDate={_onSelectDate}

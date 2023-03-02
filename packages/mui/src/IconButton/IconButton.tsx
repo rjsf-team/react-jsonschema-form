@@ -10,6 +10,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 export default function MuiIconButton<
@@ -34,9 +35,12 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <MuiIconButton
-      title="Move down"
+      title={translateString(TranslatableString.MoveDownButton)}
       {...props}
       icon={<ArrowDownwardIcon fontSize="small" />}
     />
@@ -48,9 +52,12 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <MuiIconButton
-      title="Move up"
+      title={translateString(TranslatableString.MoveUpButton)}
       {...props}
       icon={<ArrowUpwardIcon fontSize="small" />}
     />
@@ -63,9 +70,12 @@ export function RemoveButton<
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
   const { iconType, ...otherProps } = props;
+  const {
+    registry: { translateString },
+  } = otherProps;
   return (
     <MuiIconButton
-      title="Remove"
+      title={translateString(TranslatableString.RemoveButton)}
       {...otherProps}
       color="error"
       icon={

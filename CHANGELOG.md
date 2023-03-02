@@ -15,6 +15,37 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.2.0
+
+## @rjsf/antd
+- Updated `ErrorList`, `IconButton`s, `WrapIfAdditionalTemplate` and `AltDateWidget` to use the new `translateString()` function to support localization
+
+## @rjsf/bootstrap-4
+- Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+
+## @rjsf/chakra-ui
+- Updated `AddButton`, `ErrorList`, `IconButton`s, `WrapIfAdditionalTemplate` and `AltDateWidget` to use the new `translateString()` function to support localization
+
+## @rjsf/core
+- Updated `ArrayField`, `BooleanField`, `MultiSchemaField`, `ObjectField`, `SchemaField`, `AddButton`, `IconButton`s, `ErrorList`, `WrapIfAdditionalTemplate` and `AltDateWidget` and `FileWidget` to use the new `translateString()` function to support localization
+  - Also updated `Form` to take a new optional `translateString` prop and `getDefaultRegistry()` to set `translateString` to `englishStringTranslator()`
+
+## @rjsf/fluent-ui
+- Updated `AddButton`, `ColorWidget`, `ErrorList`, `IconButton`s and `UpDownWidget` to use the new `translateString()` function to support localization
+
+## @rjsf/material-ui
+- Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+
+## @rjsf/mui
+- Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+
+## @rjsf/semantic-ui
+- Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+
+## Dev / docs / playground
+- Updated the `utility-functions` documentation for the `enums` and `englishStringTranslator()` & `replaceStringParameters()` functions
+- Updated the `form-props` documentation for the new, optional `translateString` prop on `Form`
+
 # 5.1.0
 
 ## @rjsf/bootstrap-4

@@ -10,6 +10,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 // The `type` for IconButtonProps collides with the `type` for `ButtonProps` so omit it to avoid Typescript issue
@@ -39,9 +40,12 @@ export function AddButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: AntdIconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <IconButton
-      title="Add Item"
+      title={translateString(TranslatableString.AddItemButton)}
       {...props}
       block
       iconType="primary"
@@ -55,8 +59,15 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: AntdIconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
-    <IconButton title="Move down" {...props} icon={<ArrowDownOutlined />} />
+    <IconButton
+      title={translateString(TranslatableString.MoveDownButton)}
+      {...props}
+      icon={<ArrowDownOutlined />}
+    />
   );
 }
 
@@ -65,7 +76,16 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: AntdIconButtonProps<T, S, F>) {
-  return <IconButton title="Move up" {...props} icon={<ArrowUpOutlined />} />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.MoveUpButton)}
+      {...props}
+      icon={<ArrowUpOutlined />}
+    />
+  );
 }
 
 export function RemoveButton<
@@ -75,9 +95,12 @@ export function RemoveButton<
 >(props: AntdIconButtonProps<T, S, F>) {
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so get it from the uiSchema instead
   const options = getUiOptions<T, S, F>(props.uiSchema);
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <IconButton
-      title="Remove"
+      title={translateString(TranslatableString.RemoveButton)}
       {...props}
       danger
       block={!!options.block}

@@ -3,14 +3,15 @@ import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import omit from "lodash/omit";
 import {
-  getUiOptions,
-  getWidget,
   deepEquals,
+  ERRORS_KEY,
   FieldProps,
   FormContextType,
+  getUiOptions,
+  getWidget,
   RJSFSchema,
   StrictRJSFSchema,
-  ERRORS_KEY,
+  TranslatableString,
 } from "@rjsf/utils";
 
 /** Type used for the state of the `AnyOfField` component */
@@ -20,10 +21,6 @@ type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
   /* The option schemas after retrieving all $refs */
   retrievedOptions: S[];
 };
-
-/** The prefix used when a oneOf option does not have a title
- */
-const UNKNOWN_OPTION_PREFIX = "Option";
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -186,7 +183,7 @@ class AnyOfField<
       uiSchema,
     } = this.props;
 
-    const { widgets, fields } = registry;
+    const { widgets, fields, translateString } = registry;
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption, retrievedOptions } = this.state;
     const {
@@ -213,12 +210,18 @@ class AnyOfField<
         : Object.assign({}, option, { type: baseType });
     }
 
-    const optionLabel = title
-      ? `${title} ${UNKNOWN_OPTION_PREFIX.toLowerCase()}`
-      : UNKNOWN_OPTION_PREFIX;
+    const translateEnum: TranslatableString = title
+      ? TranslatableString.TitleOptionPrefix
+      : TranslatableString.OptionPrefix;
+    const translateParams = title ? [title] : [];
     const enumOptions = retrievedOptions.map(
       (opt: { title?: string }, index: number) => ({
-        label: opt.title || `${optionLabel} ${index + 1}`,
+        label:
+          opt.title ||
+          translateString(
+            translateEnum,
+            translateParams.concat(String(index + 1))
+          ),
         value: index,
       })
     );

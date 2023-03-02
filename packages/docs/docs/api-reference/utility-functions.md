@@ -18,6 +18,11 @@ Those types are exported for use by `@rjsf/core` and all the themes, as well as 
 
 These types can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
+## Enums
+There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
+
+These enums can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
+
 ## Non-Validator utility functions
 
 ### allowAdditionalItems()
@@ -94,6 +99,17 @@ Return a consistent `id` for the field description element.
 
 #### Returns
 - string: The consistent id for the field description element from the given `id`
+
+### englishStringTranslator()
+Translates a `TranslatableString` value `stringToTranslate` into english.
+When a `params` array is provided, each value in the array is used to replace any of the replaceable parameters in the `stringToTranslate` using the `%1`, `%2`, etc. replacement specifiers.
+
+#### Parameters
+stringToTranslate: TranslatableString - The `TranslatableString` value to convert to english
+[params]: string[] - The optional list of replaceable parameter values to substitute to the english string
+
+#### Returns
+- string: The `stringToTranslate` itself with any replaceable parameter values substituted
 
 ### enumOptionsDeselectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Removes the enum option value at the `valueIndex` from the currently `selected` (list of) value(s).
@@ -448,6 +464,17 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 #### Returns
 - RangeSpecType: A range specification from the schema
+
+### replaceStringParameters()
+Potentially substitutes all replaceable parameters with the associated value(s) from the `params` if available.
+When a `params` array is provided, each value in the array is used to replace any of the replaceable parameters in the `inputString` using the `%1`, `%2`, etc. replacement specifiers.
+
+#### Parameters
+- inputString: string - The string which will be potentially updated with replacement parameters
+- [params]: string[] - The optional list of replaceable parameter values to substitute into the english string
+
+#### Returns
+- string: The updated string with any replacement specifiers replaced
 
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 Check to see if a `schema` specifies that a value must be true. This happens when:

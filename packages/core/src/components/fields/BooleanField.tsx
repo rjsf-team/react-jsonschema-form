@@ -8,6 +8,7 @@ import {
   EnumOptionsType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 
@@ -38,9 +39,11 @@ function BooleanField<
     rawErrors,
   } = props;
   const { title } = schema;
-  const { widgets, formContext } = registry;
+  const { widgets, formContext, translateString } = registry;
   const { widget = "checkbox", ...options } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
+  const yes = translateString(TranslatableString.YesLabel);
+  const no = translateString(TranslatableString.NoLabel);
 
   let enumOptions: EnumOptionsType<S>[] | undefined;
 
@@ -51,7 +54,7 @@ function BooleanField<
           if (isObject(option)) {
             return {
               ...option,
-              title: option.title || (option.const === true ? "Yes" : "No"),
+              title: option.title || (option.const === true ? yes : no),
             };
           }
           return undefined;
@@ -70,11 +73,11 @@ function BooleanField<
       enumOptions = [
         {
           value: enums[0],
-          label: enums[0] ? "Yes" : "No",
+          label: enums[0] ? yes : no,
         },
         {
           value: enums[1],
-          label: enums[1] ? "Yes" : "No",
+          label: enums[1] ? yes : no,
         },
       ];
     } else {

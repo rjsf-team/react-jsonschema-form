@@ -5,6 +5,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -15,9 +16,12 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <ChakraIconButton<T, S, F>
-      title="Move down"
+      title={translateString(TranslatableString.MoveDownButton)}
       {...props}
       icon={<ArrowDownIcon />}
     />
@@ -29,9 +33,12 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <ChakraIconButton<T, S, F>
-      title="Move up"
+      title={translateString(TranslatableString.MoveUpButton)}
       {...props}
       icon={<ArrowUpIcon />}
     />
@@ -43,9 +50,12 @@ export function RemoveButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <ChakraIconButton<T, S, F>
-      title="Remove"
+      title={translateString(TranslatableString.RemoveButton)}
       {...props}
       icon={<DeleteIcon />}
     />

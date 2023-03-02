@@ -1,23 +1,24 @@
 import React from "react";
 import {
-  mergeObjects,
+  ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   descriptionId,
-  getUiOptions,
-  getSchemaType,
-  getTemplate,
   ErrorSchema,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  getSchemaType,
+  getTemplate,
+  getUiOptions,
+  ID_KEY,
   IdSchema,
+  mergeObjects,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
-  UIOptionsType,
-  ID_KEY,
-  ADDITIONAL_PROPERTY_FLAG,
+  TranslatableString,
   UI_OPTIONS_KEY,
+  UIOptionsType,
 } from "@rjsf/utils";
 import isObject from "lodash/isObject";
 import omit from "lodash/omit";
@@ -54,7 +55,7 @@ function getFieldComponent<
   registry: Registry<T, S, F>
 ) {
   const field = uiOptions.field;
-  const { fields } = registry;
+  const { fields, translateString } = registry;
   if (typeof field === "function") {
     return field;
   }
@@ -88,7 +89,9 @@ function getFieldComponent<
           <UnsupportedFieldTemplate
             schema={schema}
             idSchema={idSchema}
-            reason={`Unknown field type ${schema.type}`}
+            reason={translateString(TranslatableString.UnknownFieldType, [
+              String(schema.type),
+            ])}
             registry={registry}
           />
         );

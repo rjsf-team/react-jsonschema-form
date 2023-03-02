@@ -12,6 +12,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
@@ -22,11 +23,14 @@ export default function ErrorList<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ errors }: ErrorListProps<T, S, F>) {
+>({ errors, registry }: ErrorListProps<T, S, F>) {
+  const { translateString } = registry;
   return (
     <Paper elevation={2}>
       <Box mb={2} p={2}>
-        <Typography variant="h6">Errors</Typography>
+        <Typography variant="h6">
+          {translateString(TranslatableString.ErrorsLabel)}
+        </Typography>
         <List dense={true}>
           {errors.map((error, i: number) => {
             return (

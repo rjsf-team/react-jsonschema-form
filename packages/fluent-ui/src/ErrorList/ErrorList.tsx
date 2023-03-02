@@ -5,13 +5,15 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 export default function ErrorList<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ errors }: ErrorListProps<T, S, F>) {
+>({ errors, registry }: ErrorListProps<T, S, F>) {
+  const { translateString } = registry;
   return (
     <>
       {errors.map((error, i) => {
@@ -20,7 +22,9 @@ export default function ErrorList<
             key={i}
             messageBarType={MessageBarType.error}
             isMultiline={false}
-            dismissButtonAriaLabel="Close"
+            dismissButtonAriaLabel={translateString(
+              TranslatableString.CloseLabel
+            )}
           >
             {error.stack}
           </MessageBar>

@@ -14,6 +14,7 @@ import {
   IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   UiSchema,
   ITEMS_KEY,
 } from "@rjsf/utils";
@@ -132,11 +133,16 @@ class ArrayField<
    * the description from the schema.items, and finally the string "Item"
    */
   get itemTitle() {
-    const { schema } = this.props;
+    const { schema, registry } = this.props;
+    const { translateString } = registry;
     return get(
       schema,
       [ITEMS_KEY, "title"],
-      get(schema, [ITEMS_KEY, "description"], "Item")
+      get(
+        schema,
+        [ITEMS_KEY, "description"],
+        translateString(TranslatableString.ArrayItemTitle)
+      )
     );
   }
 
@@ -303,7 +309,7 @@ class ArrayField<
       }
       const { onChange, errorSchema } = this.props;
       let newErrorSchema: ErrorSchema<T>;
-      if (this.props.errorSchema) {
+      if (errorSchema) {
         newErrorSchema = {};
         for (const idx in errorSchema) {
           const i = parseInt(idx);
@@ -379,7 +385,7 @@ class ArrayField<
    */
   render() {
     const { schema, uiSchema, idSchema, registry } = this.props;
-    const { schemaUtils } = registry;
+    const { schemaUtils, translateString } = registry;
     if (!(ITEMS_KEY in schema)) {
       const uiOptions = getUiOptions<T[], S, F>(uiSchema);
       const UnsupportedFieldTemplate = getTemplate<
@@ -393,7 +399,7 @@ class ArrayField<
         <UnsupportedFieldTemplate
           schema={schema}
           idSchema={idSchema}
-          reason="Missing items definition"
+          reason={translateString(TranslatableString.MissingItems)}
           registry={registry}
         />
       );

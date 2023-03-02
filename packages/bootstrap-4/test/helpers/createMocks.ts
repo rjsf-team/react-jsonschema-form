@@ -1,4 +1,9 @@
-import { createSchemaUtils, WidgetProps, RJSFSchema } from "@rjsf/utils";
+import {
+  createSchemaUtils,
+  englishStringTranslator,
+  WidgetProps,
+  RJSFSchema,
+} from "@rjsf/utils";
 import { getDefaultRegistry } from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 
@@ -24,6 +29,7 @@ export function mockRegistry() {
     formContext: {},
     rootSchema: {},
     schemaUtils: mockSchemaUtils,
+    translateString: englishStringTranslator,
   };
 }
 

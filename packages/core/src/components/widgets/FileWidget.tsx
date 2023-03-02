@@ -3,10 +3,13 @@ import {
   ariaDescribedByIds,
   dataURItoBlob,
   FormContextType,
+  Registry,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WidgetProps,
 } from "@rjsf/utils";
+import Markdown from "markdown-to-jsx";
 
 function addNameToDataURL(dataURL: string, name: string) {
   if (dataURL === null) {
@@ -52,21 +55,34 @@ function processFiles(files: FileList) {
   return Promise.all(Array.from(files).map(processFile));
 }
 
-function FilesInfo({
+function FilesInfo<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   filesInfo,
+  registry,
 }: {
   filesInfo: { name: string; size: number; type: string }[];
+  registry: Registry<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
     return null;
   }
+  const { translateString } = registry;
   return (
     <ul className="file-info">
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type } = fileInfo;
         return (
           <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
+            <Markdown>
+              {translateString(TranslatableString.FilesInfo, [
+                name,
+                type,
+                String(size),
+              ])}
+            </Markdown>
           </li>
         );
       })}
@@ -104,6 +120,7 @@ function FileWidget<
   value,
   autofocus = false,
   options,
+  registry,
 }: WidgetProps<T, S, F>) {
   const extractedFilesInfo = useMemo(
     () =>
@@ -147,7 +164,7 @@ function FileWidget<
           aria-describedby={ariaDescribedByIds<T>(id)}
         />
       </p>
-      <FilesInfo filesInfo={filesInfo} />
+      <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} />
     </div>
   );
 }
