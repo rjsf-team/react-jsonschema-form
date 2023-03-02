@@ -4,6 +4,7 @@ import canExpand from "./canExpand";
 import createSchemaUtils from "./createSchemaUtils";
 import dataURItoBlob from "./dataURItoBlob";
 import deepEquals from "./deepEquals";
+import englishStringTranslator from "./englishStringTranslator";
 import enumOptionsDeselectValue from "./enumOptionsDeselectValue";
 import enumOptionsIndexForValue from "./enumOptionsIndexForValue";
 import enumOptionsIsSelected from "./enumOptionsIsSelected";
@@ -41,6 +42,7 @@ import orderProperties from "./orderProperties";
 import pad from "./pad";
 import parseDateString from "./parseDateString";
 import rangeSpec from "./rangeSpec";
+import replaceStringParameters from "./replaceStringParameters";
 import schemaRequiresTrueValue from "./schemaRequiresTrueValue";
 import shouldRender from "./shouldRender";
 import toConstant from "./toConstant";
@@ -48,6 +50,7 @@ import toDateString from "./toDateString";
 import utcToLocal from "./utcToLocal";
 
 export * from "./types";
+export * from "./enums";
 
 export * from "./constants";
 export * from "./schema";
@@ -61,6 +64,7 @@ export {
   dataURItoBlob,
   deepEquals,
   descriptionId,
+  englishStringTranslator,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
@@ -93,6 +97,7 @@ export {
   pad,
   parseDateString,
   rangeSpec,
+  replaceStringParameters,
   schemaRequiresTrueValue,
   shouldRender,
   titleId,

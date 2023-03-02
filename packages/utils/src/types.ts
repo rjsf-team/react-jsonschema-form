@@ -1,6 +1,8 @@
 import React, { StyleHTMLAttributes } from "react";
 import { JSONSchema7 } from "json-schema";
 
+import { TranslatableString } from "./enums";
+
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else)
  */
@@ -147,6 +149,8 @@ export type ErrorListProps<
   schema: S;
   /** The uiSchema that was passed to `Form` */
   uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
 };
 
 /** The properties that are passed to an `FieldErrorTemplate` implementation */
@@ -292,6 +296,8 @@ export interface Registry<
    * of the validation-schema-based utility functions
    */
   schemaUtils: SchemaUtilsType<T, S>;
+  /** The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets */
+  translateString: (stringKey: TranslatableString, params?: string[]) => string;
 }
 
 /** The properties that are passed to a Field implementation */

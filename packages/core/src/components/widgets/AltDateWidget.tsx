@@ -8,6 +8,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WidgetProps,
 } from "@rjsf/utils";
 
@@ -128,6 +129,7 @@ function AltDateWidget<
   onChange,
   value,
 }: WidgetProps<T, S, F>) {
+  const { translateString } = registry;
   const [state, setState] = useReducer(
     (state: DateObject, action: Partial<DateObject>) => {
       return { ...state, ...action };
@@ -205,7 +207,7 @@ function AltDateWidget<
         : true) && (
         <li className="list-inline-item">
           <a href="#" className="btn btn-info btn-now" onClick={handleSetNow}>
-            Now
+            {translateString(TranslatableString.NowLabel)}
           </a>
         </li>
       )}
@@ -218,7 +220,7 @@ function AltDateWidget<
             className="btn btn-warning btn-clear"
             onClick={handleClear}
           >
-            Clear
+            {translateString(TranslatableString.ClearLabel)}
           </a>
         </li>
       )}

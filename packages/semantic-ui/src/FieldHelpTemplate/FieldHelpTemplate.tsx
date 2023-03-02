@@ -5,6 +5,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  helpId,
 } from "@rjsf/utils";
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
@@ -18,7 +19,7 @@ export default function FieldHelpTemplate<
 >(props: FieldHelpProps<T, S, F>) {
   const { idSchema, help } = props;
   if (help) {
-    const id = `${idSchema.$id}__help`;
+    const id = helpId<T>(idSchema);
     return <Message size="mini" info id={id} content={help} />;
   }
   return null;

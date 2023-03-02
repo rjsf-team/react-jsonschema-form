@@ -4,6 +4,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 import IconButton from "./IconButton";
@@ -15,6 +16,7 @@ export default function AddButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({ className, onClick, disabled, registry }: IconButtonProps<T, S, F>) {
+  const { translateString } = registry;
   return (
     <div className="row">
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
@@ -22,7 +24,7 @@ export default function AddButton<
           iconType="info"
           icon="plus"
           className="btn-add col-xs-12"
-          title="Add"
+          title={translateString(TranslatableString.AddButton)}
           onClick={onClick}
           disabled={disabled}
           registry={registry}

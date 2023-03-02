@@ -4,6 +4,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 import { IIconProps, CommandBarButton } from "@fluentui/react";
 
@@ -14,11 +15,14 @@ export default function AddButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <CommandBarButton
       style={{ height: "32px" }}
       iconProps={addIcon}
-      text="Add item"
+      text={translateString(TranslatableString.AddItemButton)}
       className={props.className}
       onClick={props.onClick}
       disabled={props.disabled}

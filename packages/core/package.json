@@ -39,6 +39,7 @@
   "dependencies": {
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
+    "markdown-to-jsx": "^7.1.9",
     "nanoid": "^3.3.4",
     "prop-types": "^15.7.2"
   },

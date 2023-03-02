@@ -174,6 +174,12 @@ export interface FormProps<
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
    */
   focusOnFirstError?: boolean;
+  /** Optional string translation function, if provided, allows users to change the translation of the RJSF internal
+   * strings. Some strings contain replaceable parameter values as indicated by `%1`, `%2`, etc. The number after the
+   * `%` indicates the order of the parameter. The ordering of parameters is important because some languages may choose
+   * to put the second parameter before the first in its translation.
+   */
+  translateString?: Registry["translateString"];
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -451,6 +457,7 @@ export default class Form<
           schema={schema}
           uiSchema={uiSchema}
           formContext={formContext}
+          registry={registry}
         />
       );
     }
@@ -701,12 +708,10 @@ export default class Form<
 
   /** Returns the registry for the form */
   getRegistry(): Registry<T, S, F> {
+    const { translateString: customTranslateString } = this.props;
     const { schemaUtils } = this.state;
-    const { fields, templates, widgets, formContext } = getDefaultRegistry<
-      T,
-      S,
-      F
-    >();
+    const { fields, templates, widgets, formContext, translateString } =
+      getDefaultRegistry<T, S, F>();
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -721,6 +726,7 @@ export default class Form<
       rootSchema: this.props.schema,
       formContext: this.props.formContext || formContext,
       schemaUtils,
+      translateString: customTranslateString || translateString,
     };
   }
 

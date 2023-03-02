@@ -4,6 +4,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 export default function IconButton<
@@ -35,9 +36,12 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <IconButton
-      title="Move down"
+      title={translateString(TranslatableString.MoveDownButton)}
       className="array-item-move-down"
       {...props}
       icon="arrow-down"
@@ -50,9 +54,12 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <IconButton
-      title="Move up"
+      title={translateString(TranslatableString.MoveUpButton)}
       className="array-item-move-up"
       {...props}
       icon="arrow-up"
@@ -65,9 +72,12 @@ export function RemoveButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
+  const {
+    registry: { translateString },
+  } = props;
   return (
     <IconButton
-      title="Remove"
+      title={translateString(TranslatableString.RemoveButton)}
       className="array-item-remove"
       {...props}
       iconType="danger"

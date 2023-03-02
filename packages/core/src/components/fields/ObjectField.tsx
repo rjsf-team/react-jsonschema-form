@@ -10,6 +10,7 @@ import {
   IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   ADDITIONAL_PROPERTY_FLAG,
   PROPERTIES_KEY,
   REF_KEY,
@@ -175,9 +176,10 @@ class ObjectField<
    * @param type - The type of the new additional schema property
    */
   getDefaultValue(type?: RJSFSchema["type"]) {
+    const {
+      registry: { translateString },
+    } = this.props;
     switch (type) {
-      case "string":
-        return "New Value";
       case "array":
         return [];
       case "boolean":
@@ -188,9 +190,10 @@ class ObjectField<
         return 0;
       case "object":
         return {};
+      case "string":
       default:
         // We don't have a datatype for some reason (perhaps additionalProperties was true)
-        return "New Value";
+        return translateString(TranslatableString.NewStringDefault);
     }
   }
 

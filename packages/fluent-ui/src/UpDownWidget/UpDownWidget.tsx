@@ -6,6 +6,7 @@ import {
   rangeSpec,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WidgetProps,
 } from "@rjsf/utils";
 import _pick from "lodash/pick";
@@ -66,8 +67,9 @@ export default function UpDownWidget<
   onFocus,
   options,
   schema,
-}: // autofocus,
-WidgetProps<T, S, F>) {
+  registry,
+}: WidgetProps<T, S, F>) {
+  const { translateString } = registry;
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
@@ -107,15 +109,18 @@ WidgetProps<T, S, F>) {
 
   return (
     <>
-      {/* TODO: add label for= attribute */}
       <Label htmlFor={id}>{label + requiredSymbol}</Label>
       <SpinButton
         id={id}
         min={min}
         max={max}
         step={step}
-        incrementButtonAriaLabel={"Increase value by 1"}
-        decrementButtonAriaLabel={"Decrease value by 1"}
+        incrementButtonAriaLabel={translateString(
+          TranslatableString.IncrementAriaLabel
+        )}
+        decrementButtonAriaLabel={translateString(
+          TranslatableString.DecrementAriaLabel
+        )}
         disabled={disabled || readonly}
         value={value || value === 0 ? value : ""}
         onBlur={_onBlur}

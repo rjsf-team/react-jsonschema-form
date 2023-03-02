@@ -8,6 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   toDateString,
+  TranslatableString,
   WidgetProps,
 } from "@rjsf/utils";
 import { Box, Button } from "@chakra-ui/react";
@@ -74,6 +75,7 @@ function AltDateWidget<
     showTime,
     value,
   } = props;
+  const { translateString } = registry;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
     setState(parseDateString(value, showTime));
@@ -160,14 +162,14 @@ function AltDateWidget<
             onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)}
             mr="2"
           >
-            Now
+            {translateString(TranslatableString.NowLabel)}
           </Button>
         )}
         {!options.hideClearButton && (
           <Button
             onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}
           >
-            Clear
+            {translateString(TranslatableString.ClearLabel)}
           </Button>
         )}
       </Box>

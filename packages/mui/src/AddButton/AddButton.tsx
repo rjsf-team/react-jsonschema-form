@@ -6,6 +6,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
@@ -15,8 +16,13 @@ export default function AddButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({ uiSchema, registry, ...props }: IconButtonProps<T, S, F>) {
+  const { translateString } = registry;
   return (
-    <IconButton title="Add Item" {...props} color="primary">
+    <IconButton
+      title={translateString(TranslatableString.AddItemButton)}
+      {...props}
+      color="primary"
+    >
       <AddIcon />
     </IconButton>
   );

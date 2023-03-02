@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  errorId,
   FieldErrorProps,
   FormContextType,
   RJSFSchema,
@@ -34,7 +35,7 @@ export default function FieldErrorTemplate<
   });
   const { pointing, size } = options;
   if (errors && errors.length > 0) {
-    const id = `${idSchema.$id}__error`;
+    const id = errorId<T>(idSchema);
     return (
       <Label
         id={id}

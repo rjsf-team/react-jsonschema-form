@@ -69,7 +69,7 @@ export default function ColorWidget<
       <ColorPicker
         color={getColorFromString(value) as any}
         onChange={updateColor}
-        alphaType={"alpha"}
+        alphaType="alpha"
         showPreview={true}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id)}

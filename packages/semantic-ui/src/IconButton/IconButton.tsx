@@ -5,6 +5,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 function IconButton<
@@ -39,7 +40,16 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <IconButton title="Move down" {...props} icon="angle down" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.MoveDownButton)}
+      {...props}
+      icon="angle down"
+    />
+  );
 }
 
 export function MoveUpButton<
@@ -47,7 +57,16 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <IconButton title="Move up" {...props} icon="angle up" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.MoveUpButton)}
+      {...props}
+      icon="angle up"
+    />
+  );
 }
 
 export function RemoveButton<
@@ -55,5 +74,14 @@ export function RemoveButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <IconButton title="Remove" {...props} icon="trash" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.RemoveButton)}
+      {...props}
+      icon="trash"
+    />
+  );
 }

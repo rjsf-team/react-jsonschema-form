@@ -5,6 +5,7 @@ import {
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
 } from "@rjsf/utils";
 
 export default function FluentIconButton<
@@ -31,7 +32,16 @@ export function MoveDownButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <FluentIconButton<T, S, F> title="Move down" {...props} icon="Down" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <FluentIconButton<T, S, F>
+      title={translateString(TranslatableString.MoveDownButton)}
+      {...props}
+      icon="Down"
+    />
+  );
 }
 
 export function MoveUpButton<
@@ -39,7 +49,16 @@ export function MoveUpButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <FluentIconButton<T, S, F> title="Move up" {...props} icon="Up" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <FluentIconButton<T, S, F>
+      title={translateString(TranslatableString.MoveUpButton)}
+      {...props}
+      icon="Up"
+    />
+  );
 }
 
 export function RemoveButton<
@@ -47,5 +66,14 @@ export function RemoveButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  return <FluentIconButton<T, S, F> title="Remove" {...props} icon="Delete" />;
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <FluentIconButton<T, S, F>
+      title={translateString(TranslatableString.RemoveButton)}
+      {...props}
+      icon="Delete"
+    />
+  );
 }

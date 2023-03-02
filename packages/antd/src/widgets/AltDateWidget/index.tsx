@@ -9,10 +9,11 @@ import {
   toDateString,
   DateObject,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WidgetProps,
-  GenericObjectType,
 } from "@rjsf/utils";
 
 type DateElementProps<
@@ -92,7 +93,8 @@ export default function AltDateWidget<
     showTime,
     value,
   } = props;
-  const { SelectWidget } = registry.widgets;
+  const { translateString, widgets } = registry;
+  const { SelectWidget } = widgets;
   const { rowGutter = 24 } = formContext as GenericObjectType;
 
   const [state, setState] = useState(parseDateString(value, showTime));
@@ -187,7 +189,7 @@ export default function AltDateWidget<
       {!options.hideNowButton && (
         <Col flex="88px">
           <Button block className="btn-now" onClick={handleNow} type="primary">
-            Now
+            {translateString(TranslatableString.NowLabel)}
           </Button>
         </Col>
       )}
@@ -200,7 +202,7 @@ export default function AltDateWidget<
             onClick={handleClear}
             type="primary"
           >
-            Clear
+            {translateString(TranslatableString.ClearLabel)}
           </Button>
         </Col>
       )}

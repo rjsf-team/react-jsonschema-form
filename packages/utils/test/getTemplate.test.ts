@@ -1,5 +1,6 @@
 import {
   createSchemaUtils,
+  englishStringTranslator,
   getTemplate,
   RJSFSchema,
   Registry,
@@ -16,6 +17,7 @@ const registry: Registry = {
   formContext: {},
   rootSchema: {} as RJSFSchema,
   schemaUtils: createSchemaUtils(getTestValidator({}), {}),
+  translateString: englishStringTranslator,
   templates: {
     ArrayFieldDescriptionTemplate: FakeTemplate,
     ArrayFieldItemTemplate: FakeTemplate,

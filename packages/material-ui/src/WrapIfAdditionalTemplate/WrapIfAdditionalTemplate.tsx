@@ -8,6 +8,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 
@@ -36,9 +37,10 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
-  const { RemoveButton } = registry.templates.ButtonTemplates;
-  const keyLabel = `${label} Key`; // i18n ?
+  const { RemoveButton } = templates.ButtonTemplates;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const btnStyle: CSSProperties = {
     flex: 1,

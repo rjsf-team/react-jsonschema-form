@@ -4,6 +4,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from "@rjsf/utils";
 import {
@@ -34,8 +35,10 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
   } = props;
+  const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
-  const { RemoveButton } = registry.templates.ButtonTemplates;
+  const { RemoveButton } = templates.ButtonTemplates;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   if (!additional) {
     return (
@@ -44,7 +47,6 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
-  const keyLabel = `${label} Key`;
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);

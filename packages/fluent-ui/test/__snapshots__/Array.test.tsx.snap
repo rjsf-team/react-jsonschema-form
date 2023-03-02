@@ -62,7 +62,7 @@ exports[`array fields array 1`] = `
               className="ms-Button-label label-45"
               id="id__0"
             >
-              Add item
+              Add Item
             </span>
           </span>
         </span>
@@ -483,7 +483,7 @@ exports[`array fields array icons 1`] = `
               className="ms-Button-label label-45"
               id="id__42"
             >
-              Add item
+              Add Item
             </span>
           </span>
         </span>
