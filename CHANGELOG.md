@@ -35,11 +35,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/material-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
-- Patch `RangeWidget` to support `0` as range slider value
+- Patch `RangeWidget` to support `0` as range slider value, fixing [#3458](https://github.com/rjsf-team/react-jsonschema-form/issues/3458)
 
 ## @rjsf/mui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
-- Patch `RangeWidget` to support `0` as range slider value
+- Patch `RangeWidget` to support `0` as range slider value, fixing [#3458](https://github.com/rjsf-team/react-jsonschema-form/issues/3458)
 
 ## @rjsf/semantic-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
