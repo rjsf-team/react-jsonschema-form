@@ -15,7 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-
 # 5.2.0
 
 ## @rjsf/antd
@@ -39,10 +38,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Patch `RangeWidget` to support `0` as range slider value
 
 ## @rjsf/mui
-- Patch `RangeWidget` to support `0` as range slider value
-
-## @rjsf/mui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+- Patch `RangeWidget` to support `0` as range slider value
 
 ## @rjsf/semantic-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
