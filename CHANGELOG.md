@@ -15,16 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.2.1 (upcoming)
-
-## @rjsf/material-ui
-- Patch `RangeWidget` to support `0` as range slider value
-
-## @rjsf/mui
-- Patch `RangeWidget` to support `0` as range slider value
-
-## Dev / docs / playground
-- Updated the playground's `numbers` example to use a range slider with a valid negative and `0` value
 
 # 5.2.0
 
@@ -46,6 +36,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/material-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+- Patch `RangeWidget` to support `0` as range slider value
+
+## @rjsf/mui
+- Patch `RangeWidget` to support `0` as range slider value
 
 ## @rjsf/mui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
@@ -56,6 +50,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Updated the `utility-functions` documentation for the `enums` and `englishStringTranslator()` & `replaceStringParameters()` functions
 - Updated the `form-props` documentation for the new, optional `translateString` prop on `Form`
+- Updated the playground's `numbers` example to use a range slider with a valid negative and `0` value
 
 # 5.1.0
 
