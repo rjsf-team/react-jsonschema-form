@@ -35,9 +35,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/material-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+- Patch `RangeWidget` to support `0` as range slider value, fixing [#3458](https://github.com/rjsf-team/react-jsonschema-form/issues/3458)
 
 ## @rjsf/mui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
+- Patch `RangeWidget` to support `0` as range slider value, fixing [#3458](https://github.com/rjsf-team/react-jsonschema-form/issues/3458)
 
 ## @rjsf/semantic-ui
 - Updated `AddButton`, `ErrorList`, `IconButton`s and `WrapIfAdditionalTemplate` to use the new `translateString()` function to support localization
@@ -45,6 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 - Updated the `utility-functions` documentation for the `enums` and `englishStringTranslator()` & `replaceStringParameters()` functions
 - Updated the `form-props` documentation for the new, optional `translateString` prop on `Form`
+- Updated the playground's `numbers` example to use a range slider with a valid negative and `0` value
 
 # 5.1.0
 
@@ -56,7 +59,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 - Fixed `Form` to remove passing `excludeObjectChildren` to `getDefaultFormState()`, fixing [#3424](https://github.com/rjsf-team/react-jsonschema-form/issues/3424) and [#675](https://github.com/rjsf-team/react-jsonschema-form/issues/675)
-- Added new feature prop `focusOnFirstError`, that if true, will cause the first field with an error to be focused on when a submit has errors 
+- Added new feature prop `focusOnFirstError`, that if true, will cause the first field with an error to be focused on when a submit has errors
 
 ## @rjsf/utils
 - Updated `computeDefaults()` to fix additionalProperties defaults not being propagated, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593)
@@ -206,7 +209,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 - Enable searching in the `SelectWidget` by the label that the user sees rather than by the value
-- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200) 
+- Added support for new `style` prop on `FieldTemplate` and `WrapIfAdditionalTemplate` rendering them on the outermost wrapper, partially fixing [#1200](https://github.com/rjsf-team/react-jsonschema-form/issues/1200)
 - Updated all the user "input" controls to have an `aria-describedby` value built using the `ariaDescribedByIds()` function, partially fixing [#959](https://github.com/rjsf-team/react-jsonschema-form/issues/959)
   - Also updated the generation of ids for the title, description, error, examples, options and help blocks using the associated new id generation utilty functions
 
@@ -328,7 +331,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplateItemType` to add the new `totalItems` and `canAdd` props, fixing [#3315](https://github.com/rjsf-team/react-jsonschema-form/issues/3315)
 - Updated the `CustomValidator` and `ErrorTransformer` types to take the full set of `T`, `S`, `F` generics in order to accept a new optional `uiSchema` property, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
 - Updated the `ValidatorType` to add the `F` generic to allow the `validateFormData()` function to take a new optional `uiSchema` parameter, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
-  - Updated many of the schema-based utility functions to take the additional generics as well to fulfill the `ValidatorType` interface change 
+  - Updated many of the schema-based utility functions to take the additional generics as well to fulfill the `ValidatorType` interface change
 
 ## @rjsf/validator-ajv6
 - Updated the `customizeValidator` and `AJV6Validator` implementations to add the `S` and `F` generics, so that `validateFormData()` can accept a new optional `uiSchema` parameter that is passed to `transformErrors()` and `customValidate()`, partially fixing [#3170](https://github.com/rjsf-team/react-jsonschema-form/issues/3170)
@@ -340,7 +343,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the documentation for `ArrayFieldItemTemplate`, `SubmitButtonProps` and `IconButtonProps` as part of the fix for [#3314](https://github.com/rjsf-team/react-jsonschema-form/issues/3314) and [#3315](https://github.com/rjsf-team/react-jsonschema-form/issues/3315)
 - Updated the documentation in `form-props.md` for `children`, fixing [#3322](https://github.com/rjsf-team/react-jsonschema-form/issues/3322)
 - Added new `typescript.md` documentation to `Advanced Customization` describing how to use custom generics as part of the fix for [#3072](https://github.com/rjsf-team/react-jsonschema-form/issues/3072)
-- Updated the documentation in `utilty-functions.md` to add the new `F` generic to all the places which needed them 
+- Updated the documentation in `utilty-functions.md` to add the new `F` generic to all the places which needed them
 
 # 5.0.0-beta.15
 
