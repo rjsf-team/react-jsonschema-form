@@ -395,6 +395,8 @@ First, there are many things to be aware of related to internal migration from A
 One big difference is that Ajv 8 dropped support for any JSON Schema version before draft-06.
 So if your schema is using an older format, you have to either upgrade it or stick with the `@rjsf/validator-ajv6`.
 
+Our implementation of `@rjsf/validator-ajv8` also utilizes Ajv's internal cache to avoid unnecessarily re-compiling schemas, which can be an expensive operation. The cache key is the schema `$id`.
+
 The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version and not the Ajv 6 validator.
 Second, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
 A new `ajvFormatOptions` option is available on the `customizeValidator()` API to be able to configure this.
