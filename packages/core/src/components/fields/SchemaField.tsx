@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback, Component } from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
@@ -158,7 +158,7 @@ function SchemaFieldRender<
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
-  const handleFieldComponentChange = React.useCallback(
+  const handleFieldComponentChange = useCallback(
     (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
       return onChange(formData, newErrorSchema, theId);
@@ -399,7 +399,7 @@ class SchemaField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> extends React.Component<FieldProps<T, S, F>> {
+> extends Component<FieldProps<T, S, F>> {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     return !deepEquals(this.props, nextProps);
   }

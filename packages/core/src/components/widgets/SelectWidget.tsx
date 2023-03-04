@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FocusEvent, useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from "react";
+import * as React from "react";
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,

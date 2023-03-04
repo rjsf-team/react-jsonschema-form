@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import React from "react";
 
 import { createFormComponent, createSandbox } from "./test_utils";
 import SchemaField from "../src/components/fields/SchemaField";

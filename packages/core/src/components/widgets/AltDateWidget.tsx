@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback, useEffect, useReducer } from "react";
+import { MouseEvent, useCallback, useEffect, useReducer } from "react";
 import {
   ariaDescribedByIds,
   parseDateString,

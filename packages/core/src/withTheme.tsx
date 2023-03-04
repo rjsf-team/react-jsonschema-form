@@ -1,4 +1,5 @@
-import React, { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
+import * as React from "react";
 
 import Form, { FormProps } from "./components/Form";
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";

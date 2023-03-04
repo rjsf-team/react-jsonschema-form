@@ -1,4 +1,3 @@
-import React from "react";
 import { expect } from "chai";
 
 import { createFormComponent, createSandbox } from "./test_utils";

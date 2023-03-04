@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import { createSchemaUtils, englishStringTranslator } from "@rjsf/utils";
@@ -106,7 +106,7 @@ describe("SchemaField", () => {
   });
 
   describe("ui:field support", () => {
-    class MyObject extends React.Component {
+    class MyObject extends Component {
       constructor(props) {
         super(props);
       }
