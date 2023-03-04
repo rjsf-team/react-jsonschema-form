@@ -12,7 +12,9 @@ module.exports = {
         targets
       },
     ],
-    "@babel/preset-react"
+    ["@babel/preset-react", {
+      "runtime": "automatic"
+    }]
   ],
   plugins: [
     "@babel/plugin-proposal-class-properties",
