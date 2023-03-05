@@ -17,11 +17,37 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.2.1
 
+## @rjsf/antd
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+
+## @rjsf/bootstrap-4
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`, deleting the theme's `FileWidget`, fixing [#2095](https://github.com/rjsf-team/react-jsonschema-form/issues/2095)
+
+## @rjsf/chakra-ui
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+
 ## @rjsf/core
 - Ensure that `name` is consistently passed to all `Widgets` through the field components, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
+- Updated the `FileWidget` to render the input using the `BaseInputTemplate` passing a special `onChangeOverride` function to deal with the file events, fixing [#2095](https://github.com/rjsf-team/react-jsonschema-form/issues/2095)
+
+## @rjsf/fluent-ui
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+
+## @rjsf/material-ui
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget` and to support automatically shrinking the label for the `date`, `datetime-local` and `file` types
+  - Removed the `DateWidget` and `DateTimeWidget` since they were only created to provide the label shrinking property
+
+## @rjsf/mui
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget` and to support automatically shrinking the label for the `date`, `datetime-local` and `file` types
+  - Removed the `DateWidget` and `DateTimeWidget` since they were only created to provide the label shrinking property
+
+## @rjsf/semantic-ui
+- Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
 
 ## @rjsf/utils
 - Added the `name` prop to the `WidgetProps` type, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
+- Fixed `dataURItoBlob()` to handle the exception thrown by `atob()` when it is passed a malformed URL, returning an `blob` that indicates the error in the `type` prop
+- Fixed `replaceStringParameters()` to improve the replaceable parameters logic so that it works properly when a parameter also contains a replaceable parameter identifier
 
 ## Dev / docs / playground
 - Updated the `custom-widgets-fields` documentation to ensure the new `WidgetProps` `name` prop is documented

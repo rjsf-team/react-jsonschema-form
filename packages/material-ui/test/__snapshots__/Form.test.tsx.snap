@@ -1949,18 +1949,32 @@ exports[`single fields string field format data-url 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div>
-        <p>
-          <input
-            aria-describedby="root__error root__description root__help"
-            autoFocus={false}
-            defaultValue=""
-            disabled={false}
-            id="root"
-            name="root"
-            onChange={[Function]}
-            type="file"
-          />
-        </p>
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="MuiFormControl-root MuiTextField-root"
+        >
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+            onClick={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              autoFocus={false}
+              className="MuiInputBase-input MuiInput-input"
+              disabled={false}
+              id="root"
+              name="root"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              required={false}
+              type="file"
+              value=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

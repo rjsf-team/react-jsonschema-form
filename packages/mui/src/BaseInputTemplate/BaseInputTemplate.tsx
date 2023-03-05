@@ -9,6 +9,8 @@ import {
   WidgetProps,
 } from "@rjsf/utils";
 
+const TYPES_THAT_SHRINK_LABEL = ["date", "datetime-local", "file"];
+
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
  * It can be customized/overridden for other themes or individual implementations as needed.
@@ -31,6 +33,7 @@ export default function BaseInputTemplate<
     label,
     value,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
@@ -40,6 +43,7 @@ export default function BaseInputTemplate<
     rawErrors = [],
     formContext,
     registry,
+    InputLabelProps,
     ...textFieldProps
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -66,6 +70,12 @@ export default function BaseInputTemplate<
 
   const { schemaUtils } = registry;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
+    ? {
+        ...InputLabelProps,
+        shrink: true,
+      }
+    : InputLabelProps;
 
   return (
     <>
@@ -80,9 +90,10 @@ export default function BaseInputTemplate<
         {...otherProps}
         value={value || value === 0 ? value : ""}
         error={rawErrors.length > 0}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        InputLabelProps={DisplayInputLabelProps}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />

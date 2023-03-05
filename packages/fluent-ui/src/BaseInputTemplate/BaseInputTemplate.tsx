@@ -64,6 +64,7 @@ export default function BaseInputTemplate<
   label,
   value,
   onChange,
+  onChangeOverride,
   onBlur,
   onFocus,
   autofocus,
@@ -102,7 +103,7 @@ export default function BaseInputTemplate<
         // name={name}
         {...inputProps}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange as any}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         errorMessage={(rawErrors || []).join("\n")}

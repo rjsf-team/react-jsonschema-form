@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import {
-  ariaDescribedByIds,
   dataURItoBlob,
+  getTemplate,
   FormContextType,
   Registry,
   RJSFSchema,
@@ -92,7 +92,7 @@ function FilesInfo<
 
 function extractFileInfo(dataURLs: string[]) {
   return dataURLs
-    .filter((dataURL) => typeof dataURL !== "undefined")
+    .filter((dataURL) => dataURL)
     .map((dataURL) => {
       const { blob, name } = dataURItoBlob(dataURL);
       return {
@@ -111,17 +111,14 @@ function FileWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({
-  multiple,
-  id,
-  readonly,
-  disabled,
-  onChange,
-  value,
-  autofocus = false,
-  options,
-  registry,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const { disabled, readonly, multiple, onChange, value, options, registry } =
+    props;
+  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
+    "BaseInputTemplate",
+    registry,
+    options
+  );
   const extractedFilesInfo = useMemo(
     () =>
       Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value]),
@@ -150,20 +147,14 @@ function FileWidget<
 
   return (
     <div>
-      <p>
-        <input
-          id={id}
-          name={id}
-          type="file"
-          disabled={readonly || disabled}
-          onChange={handleChange}
-          defaultValue=""
-          autoFocus={autofocus}
-          multiple={multiple}
-          accept={options.accept ? String(options.accept) : undefined}
-          aria-describedby={ariaDescribedByIds<T>(id)}
-        />
-      </p>
+      <BaseInputTemplate
+        {...props}
+        disabled={disabled || readonly}
+        type="file"
+        onChangeOverride={handleChange}
+        value=""
+        accept={options.accept ? String(options.accept) : undefined}
+      />
       <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} />
     </div>
   );

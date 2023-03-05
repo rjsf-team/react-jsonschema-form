@@ -32,6 +32,7 @@ export default function BaseInputTemplate<
     id,
     onBlur,
     onChange,
+    onChangeOverride,
     onFocus,
     options,
     placeholder,
@@ -45,8 +46,10 @@ export default function BaseInputTemplate<
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue);
 
-  const handleTextChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(target.value === "" ? options.emptyValue : target.value);
+  const handleTextChange = onChangeOverride
+    ? onChangeOverride
+    : ({ target }: React.ChangeEvent<HTMLInputElement>) =>
+        onChange(target.value === "" ? options.emptyValue : target.value);
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.value);

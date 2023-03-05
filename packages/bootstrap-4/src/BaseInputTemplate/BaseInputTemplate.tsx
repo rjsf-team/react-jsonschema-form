@@ -22,6 +22,7 @@ export default function BaseInputTemplate<
   type,
   value,
   onChange,
+  onChangeOverride,
   onBlur,
   onFocus,
   autofocus,
@@ -60,7 +61,7 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}

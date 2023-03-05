@@ -23,6 +23,7 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     options,
@@ -70,7 +71,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         autoFocus={autofocus}

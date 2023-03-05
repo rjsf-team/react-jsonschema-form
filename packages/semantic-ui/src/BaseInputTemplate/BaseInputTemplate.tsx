@@ -30,6 +30,7 @@ export default function BaseInputTemplate<
     readonly,
     disabled,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
@@ -72,7 +73,7 @@ export default function BaseInputTemplate<
         {...semanticProps}
         value={value || value === 0 ? value : ""}
         error={rawErrors.length > 0}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
