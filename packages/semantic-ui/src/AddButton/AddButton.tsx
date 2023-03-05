@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Icon, ButtonProps } from "semantic-ui-react";
 import {
   FormContextType,
