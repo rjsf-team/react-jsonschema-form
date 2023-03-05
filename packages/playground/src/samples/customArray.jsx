@@ -1,5 +1,3 @@
-import React from "react";
-
 function ArrayFieldTemplate(props) {
   return (
     <div className={props.className}>

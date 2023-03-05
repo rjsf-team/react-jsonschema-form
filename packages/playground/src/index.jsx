@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { Theme as MuiV4Theme } from "@rjsf/material-ui";
 import { Theme as MuiV5Theme } from "@rjsf/mui";
