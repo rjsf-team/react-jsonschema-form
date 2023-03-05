@@ -1,4 +1,3 @@
-import React from "react";
 import { Slider, Label } from "@fluentui/react";
 import {
   ariaDescribedByIds,

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import {
   ariaDescribedByIds,
