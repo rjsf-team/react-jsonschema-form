@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment } from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import {
   canExpand,
@@ -49,7 +49,7 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
 
   return (
-    <React.Fragment>
+    <Fragment>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
@@ -91,6 +91,6 @@ export default function ObjectFieldTemplate<
           </GridItem>
         )}
       </Grid>
-    </React.Fragment>
+    </Fragment>
   );
 }

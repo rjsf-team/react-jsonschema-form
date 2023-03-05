@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,

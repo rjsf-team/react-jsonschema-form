@@ -1,5 +1,3 @@
-import React from "react";
-
 import _AltDateWidget from "../AltDateWidget";
 import {
   FormContextType,

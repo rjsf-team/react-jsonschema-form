@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Box, ButtonGroup, HStack } from "@chakra-ui/react";
 import {
   ArrayFieldTemplateItemType,

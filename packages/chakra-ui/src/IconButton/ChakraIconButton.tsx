@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { IconButtonProps as ChakraIconButtonProps } from "@chakra-ui/button/dist/declarations/src/icon-button";
 import {
@@ -25,4 +25,4 @@ function ChakraIconButton<
 
 ChakraIconButton.displayName = "ChakraIconButton";
 
-export default React.memo(ChakraIconButton) as typeof ChakraIconButton;
+export default memo(ChakraIconButton) as typeof ChakraIconButton;
