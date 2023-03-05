@@ -7,8 +7,6 @@
     "plugin:react-hooks/recommended"
   ],
   "rules": {
-    "react/jsx-uses-react": "off",
-    "react/jsx-uses-vars": "off",
     "react/prop-types": 0,
     "react/no-find-dom-node": 0,
     "react/display-name": 0,
