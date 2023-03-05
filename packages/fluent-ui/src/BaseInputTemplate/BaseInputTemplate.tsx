@@ -73,7 +73,10 @@ export default function BaseInputTemplate<
   type,
   rawErrors,
   multiline,
+  registry,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
+  const { schemaUtils } = registry;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const _onChange = ({
     target: { value },
@@ -85,6 +88,7 @@ export default function BaseInputTemplate<
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
@@ -93,7 +97,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={label || schema.title}
+        label={displayLabel ? label || schema.title : undefined}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
