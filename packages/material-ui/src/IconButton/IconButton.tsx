@@ -1,4 +1,3 @@
-import React from "react";
 import IconButton, {
   IconButtonProps as MuiIconButtonProps,
 } from "@material-ui/core/IconButton";

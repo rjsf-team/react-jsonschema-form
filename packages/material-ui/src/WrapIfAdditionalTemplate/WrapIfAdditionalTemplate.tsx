@@ -1,4 +1,5 @@
-import React, { CSSProperties } from "react";
+import { CSSProperties } from "react";
+import * as React from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
