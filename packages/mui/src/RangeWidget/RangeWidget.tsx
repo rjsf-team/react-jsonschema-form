@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import {

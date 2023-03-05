@@ -1,4 +1,3 @@
-import React from "react";
 import { RJSFSchema, UiSchema, ErrorSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import renderer from "react-test-renderer";
