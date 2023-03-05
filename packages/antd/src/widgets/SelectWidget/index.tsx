@@ -1,4 +1,3 @@
-import React from "react";
 import Select, { DefaultOptionType } from "antd/lib/select";
 import {
   ariaDescribedByIds,

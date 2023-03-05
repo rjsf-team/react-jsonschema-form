@@ -1,4 +1,3 @@
-import React from "react";
 import Button, { ButtonType } from "antd/lib/button";
 import {
   getSubmitButtonOptions,
