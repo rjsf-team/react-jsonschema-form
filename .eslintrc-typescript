@@ -4,29 +4,53 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime"
   ],
   "rules": {
     "react/prop-types": 0,
     "react/no-find-dom-node": 0,
     "react/display-name": 0,
-    "react/jsx-tag-spacing": [1, {
-      "beforeSelfClosing": "always"
-    }],
-    "curly": [2],
-    "linebreak-style": [2, "unix"],
-    "semi": [2, "always"],
-    "comma-dangle": [0],
-    "@typescript-eslint/no-unused-vars": [2, {
-      "vars": "all",
-      "args": "none",
-      "ignoreRestSiblings": true
-    }],
+    "react/jsx-tag-spacing": [
+      1,
+      {
+        "beforeSelfClosing": "always"
+      }
+    ],
+    "curly": [
+      2
+    ],
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "semi": [
+      2,
+      "always"
+    ],
+    "comma-dangle": [
+      0
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "no-console": [0],
-    "object-curly-spacing": [2, "always"],
-    "keyword-spacing": ["error"],
+    "no-console": [
+      0
+    ],
+    "object-curly-spacing": [
+      2,
+      "always"
+    ],
+    "keyword-spacing": [
+      "error"
+    ],
     "no-prototype-builtins": "error",
     "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-var-requires": "warn"
