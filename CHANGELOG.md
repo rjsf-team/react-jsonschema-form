@@ -15,6 +15,17 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.2.1
+
+## @rjsf/core
+- Ensure that `name` is consistently passed to all `Widgets` through the field components, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
+
+## @rjsf/utils
+- Added the `name` prop to the `WidgetProps` type, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
+
+## Dev / docs / playground
+- Updated the `custom-widgets-fields` documentation to ensure the new `WidgetProps` `name` prop is documented
+
 # 5.2.0
 
 ## @rjsf/antd

@@ -678,8 +678,14 @@ export interface WidgetProps<
       React.HTMLAttributes<HTMLElement>,
       Exclude<keyof React.HTMLAttributes<HTMLElement>, "onBlur" | "onFocus">
     > {
-  /** The generated id for this widget */
+  /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
+   * widgets
+   */
   id: string;
+  /** The unique name of the field, usually derived from the name of the property in the JSONSchema; Provided in support
+   * of custom widgets.
+   */
+  name: string;
   /** The JSONSchema subschema object for this widget */
   schema: S;
   /** The uiSchema for this widget */

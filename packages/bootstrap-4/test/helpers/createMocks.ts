@@ -53,6 +53,7 @@ export function makeWidgetMockProps(
     options: {},
     formContext: {},
     id: "_id",
+    name: "_name",
     placeholder: "",
     registry: mockRegistry(),
     ...props,

@@ -172,6 +172,7 @@ class AnyOfField<
    */
   render() {
     const {
+      name,
       baseType,
       disabled = false,
       errorSchema = {},
@@ -231,6 +232,9 @@ class AnyOfField<
         <div className="form-group">
           <Widget
             id={this.getFieldId()}
+            name={`${name}${
+              schema.oneOf ? "__oneof_select" : "__anyof_select"
+            }`}
             schema={{ type: "number", default: 0 } as S}
             onChange={this.onOptionChange}
             onBlur={onBlur}

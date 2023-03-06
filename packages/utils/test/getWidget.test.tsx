@@ -63,6 +63,7 @@ TestWidgetDefaults.defaultProps = {
 
 const widgetProps: WidgetProps = {
   id: "",
+  name: "",
   autofocus: false,
   disabled: false,
   errorSchema: {},
