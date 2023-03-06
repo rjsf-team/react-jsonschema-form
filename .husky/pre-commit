@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+# Hopefully this disables husky on github CI
+[ -n "$CI" ] && exit 0
+npm run pre-commit:husky
