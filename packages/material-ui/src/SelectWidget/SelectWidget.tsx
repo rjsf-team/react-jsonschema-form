@@ -22,6 +22,7 @@ export default function SelectWidget<
 >({
   schema,
   id,
+  name, // remove this from textFieldProps
   options,
   label,
   required,

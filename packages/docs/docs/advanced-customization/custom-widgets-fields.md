@@ -128,7 +128,8 @@ render((
 
 The following props are passed to custom widget components:
 
-- `id`: The generated id for this widget;
+- `id`: The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by widgets;
+- `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema; Provided in support of custom widgets; 
 - `schema`: The JSONSchema subschema object for this widget;
 - `uiSchema`: The uiSchema for this widget;
 - `value`: The current value for this widget;

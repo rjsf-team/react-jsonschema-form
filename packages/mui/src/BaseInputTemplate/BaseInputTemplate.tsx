@@ -22,6 +22,7 @@ export default function BaseInputTemplate<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    name, // remove this from textFieldProps
     placeholder,
     required,
     readonly,

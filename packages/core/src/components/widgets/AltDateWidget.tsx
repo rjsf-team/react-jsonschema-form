@@ -56,6 +56,7 @@ type DateElementProps<
 > = Pick<
   WidgetProps<T, S, F>,
   | "value"
+  | "name"
   | "disabled"
   | "readonly"
   | "autofocus"
@@ -79,6 +80,7 @@ function DateElement<
   value,
   select,
   rootId,
+  name,
   disabled,
   readonly,
   autofocus,
@@ -92,6 +94,7 @@ function DateElement<
     <SelectWidget
       schema={{ type: "integer" } as S}
       id={id}
+      name={name}
       className="form-control"
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
       placeholder={type}
@@ -123,6 +126,7 @@ function AltDateWidget<
   autofocus = false,
   options,
   id,
+  name,
   registry,
   onBlur,
   onFocus,
@@ -191,6 +195,7 @@ function AltDateWidget<
         <li className="list-inline-item" key={i}>
           <DateElement
             rootId={id}
+            name={name}
             select={handleChange}
             {...elemProps}
             disabled={disabled}

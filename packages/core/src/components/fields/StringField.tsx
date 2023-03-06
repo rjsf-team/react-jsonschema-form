@@ -55,6 +55,7 @@ function StringField<
       schema={schema}
       uiSchema={uiSchema}
       id={idSchema.$id}
+      name={name}
       label={title === undefined ? name : title}
       value={formData}
       onChange={onChange}

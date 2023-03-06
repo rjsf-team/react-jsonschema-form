@@ -538,6 +538,7 @@ class ArrayField<
     return (
       <Widget
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -588,6 +589,7 @@ class ArrayField<
     return (
       <Widget
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -635,6 +637,7 @@ class ArrayField<
       <Widget
         options={options}
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}

@@ -94,6 +94,7 @@ function BooleanField<
       schema={schema}
       uiSchema={uiSchema}
       id={idSchema.$id}
+      name={name}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
