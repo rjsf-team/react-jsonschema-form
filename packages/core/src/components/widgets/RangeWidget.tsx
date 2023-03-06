@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -22,9 +22,9 @@ export default function RangeWidget<
     },
   } = props;
   return (
-    <div className="field-range-wrapper">
-      <BaseInputTemplate type="range" {...props} />
-      <span className="range-view">{value}</span>
+    <div className='field-range-wrapper'>
+      <BaseInputTemplate type='range' {...props} />
+      <span className='range-view'>{value}</span>
     </div>
   );
 }

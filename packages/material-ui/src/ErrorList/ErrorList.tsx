@@ -1,18 +1,18 @@
-import ErrorIcon from "@material-ui/icons/Error";
-import Box from "@material-ui/core/Box";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import ErrorIcon from '@material-ui/icons/Error';
+import Box from '@material-ui/core/Box';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import {
   ErrorListProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -27,7 +27,7 @@ export default function ErrorList<
   return (
     <Paper elevation={2}>
       <Box mb={2} p={2}>
-        <Typography variant="h6">
+        <Typography variant='h6'>
           {translateString(TranslatableString.ErrorsLabel)}
         </Typography>
         <List dense={true}>
@@ -35,7 +35,7 @@ export default function ErrorList<
             return (
               <ListItem key={i}>
                 <ListItemIcon>
-                  <ErrorIcon color="error" />
+                  <ErrorIcon color='error' />
                 </ListItemIcon>
                 <ListItemText primary={error.stack} />
               </ListItem>

@@ -1,11 +1,11 @@
-import getWidget from "./getWidget";
+import getWidget from './getWidget';
 import {
   FormContextType,
   RegistryWidgetsType,
   RJSFSchema,
   StrictRJSFSchema,
   Widget,
-} from "./types";
+} from './types';
 
 /** Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it
  * does, or false if it doesn't.
@@ -31,8 +31,8 @@ export default function hasWidget<
     const err: Error = e as Error;
     if (
       err.message &&
-      (err.message.startsWith("No widget") ||
-        err.message.startsWith("Unsupported widget"))
+      (err.message.startsWith('No widget') ||
+        err.message.startsWith('Unsupported widget'))
     ) {
       return false;
     }

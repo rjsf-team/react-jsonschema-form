@@ -1,5 +1,5 @@
-import FormLabel from "@mui/material/FormLabel";
-import Slider from "@mui/material/Slider";
+import FormLabel from '@mui/material/FormLabel';
+import Slider from '@mui/material/Slider';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,7 +7,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   rangeSpec,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -53,7 +53,7 @@ export default function RangeWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        valueLabelDisplay="auto"
+        valueLabelDisplay='auto'
         {...sliderProps}
         aria-describedby={ariaDescribedByIds<T>(id)}
       />

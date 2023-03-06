@@ -1,15 +1,11 @@
 module.exports = {
   moduleNameMapper: {
-    "^react$": "<rootDir>/node_modules/react",
-    "^react-dom$": "<rootDir>/node_modules/react-dom",
+    '^react$': '<rootDir>/node_modules/react',
+    '^react-dom$': '<rootDir>/node_modules/react-dom',
   },
-  snapshotSerializers: ["@emotion/jest/serializer"],
-  testEnvironment: "jsdom",
+  snapshotSerializers: ['@emotion/jest/serializer'],
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
-    "browsers": [
-      "chrome",
-      "firefox",
-      "safari"
-    ]
-  }
+    browsers: ['chrome', 'firefox', 'safari'],
+  },
 };

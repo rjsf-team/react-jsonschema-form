@@ -5,13 +5,13 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   getUiOptions,
-} from "@rjsf/utils";
-import { Button, Grid, Segment } from "semantic-ui-react";
+} from '@rjsf/utils';
+import { Button, Grid, Segment } from 'semantic-ui-react';
 
-import { MaybeWrap } from "../util";
+import { MaybeWrap } from '../util';
 
 const gridStyle = (vertical: boolean) => ({
-  display: "grid",
+  display: 'grid',
   gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
 });
 
@@ -45,25 +45,25 @@ export default function ArrayFieldItemTemplate<
   const { horizontalButtons = false, wrapItem = false } =
     uiOptions.semantic as GenericObjectType;
   return (
-    <div className="array-item">
+    <div className='array-item'>
       <MaybeWrap wrap={wrapItem} component={Segment}>
         <Grid
           style={
             index !== 0
-              ? { ...gridStyle(!horizontalButtons), alignItems: "center" }
+              ? { ...gridStyle(!horizontalButtons), alignItems: 'center' }
               : gridStyle(!horizontalButtons)
           }
         >
-          <Grid.Column width={16} verticalAlign="middle">
+          <Grid.Column width={16} verticalAlign='middle'>
             {children}
           </Grid.Column>
           {hasToolbar && (
             <Grid.Column>
               {(hasMoveUp || hasMoveDown || hasRemove) && (
-                <Button.Group size="mini" vertical={!horizontalButtons}>
+                <Button.Group size='mini' vertical={!horizontalButtons}>
                   {(hasMoveUp || hasMoveDown) && (
                     <MoveUpButton
-                      className="array-item-move-up"
+                      className='array-item-move-up'
                       disabled={disabled || readonly || !hasMoveUp}
                       onClick={onReorderClick(index, index - 1)}
                       uiSchema={uiSchema}
@@ -72,7 +72,7 @@ export default function ArrayFieldItemTemplate<
                   )}
                   {(hasMoveUp || hasMoveDown) && (
                     <MoveDownButton
-                      className="array-item-move-down"
+                      className='array-item-move-down'
                       disabled={disabled || readonly || !hasMoveDown}
                       onClick={onReorderClick(index, index + 1)}
                       uiSchema={uiSchema}
@@ -81,7 +81,7 @@ export default function ArrayFieldItemTemplate<
                   )}
                   {hasRemove && (
                     <RemoveButton
-                      className="array-item-remove"
+                      className='array-item-remove'
                       disabled={disabled || readonly}
                       onClick={onDropIndexClick(index)}
                       uiSchema={uiSchema}

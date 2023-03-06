@@ -1,4 +1,4 @@
-import Form from "react-bootstrap/Form";
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function SelectWidget<
   T = any,
@@ -31,7 +31,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
-  const emptyValue = multiple ? [] : "";
+  const emptyValue = multiple ? [] : '';
 
   function getValue(
     event: React.FocusEvent | React.ChangeEvent | any,
@@ -54,18 +54,18 @@ export default function SelectWidget<
 
   return (
     <Form.Control
-      as="select"
-      bsPrefix="custom-select"
+      as='select'
+      bsPrefix='custom-select'
       id={id}
       name={id}
       value={
-        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
+        typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes
       }
       required={required}
       multiple={multiple}
       disabled={disabled || readonly}
       autoFocus={autofocus}
-      className={rawErrors.length > 0 ? "is-invalid" : ""}
+      className={rawErrors.length > 0 ? 'is-invalid' : ''}
       onBlur={
         onBlur &&
         ((event: React.FocusEvent) => {
@@ -95,7 +95,7 @@ export default function SelectWidget<
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {!multiple && schema.default === undefined && (
-        <option value="">{placeholder}</option>
+        <option value=''>{placeholder}</option>
       )}
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any =

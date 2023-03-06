@@ -6,7 +6,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export type SemanticPropsTypes<
   T = any,
@@ -89,7 +89,7 @@ export function getSemanticErrorProps<
   formContext = {} as F,
   uiSchema = {},
   options = {},
-  defaultProps = { size: "small", pointing: "above" },
+  defaultProps = { size: 'small', pointing: 'above' },
 }: SemanticErrorPropsType<T, S, F>) {
   const formContextProps =
     formContext.semantic && formContext.semantic.errorOptions;
@@ -132,7 +132,7 @@ export function cleanClassNames(
 
   // Remove any class names from omit, and make the rest unique before
   // returning them as a string
-  return [...new Set(classList.filter((cn) => !omit.includes(cn)))].join(" ");
+  return [...new Set(classList.filter((cn) => !omit.includes(cn)))].join(' ');
 }
 
 /**
@@ -145,7 +145,7 @@ export function cleanClassNames(
  */
 export function MaybeWrap({
   wrap,
-  component: Component = "div",
+  component: Component = 'div',
   ...props
 }: WrapProps) {
   return wrap ? <Component {...props} /> : props.children;

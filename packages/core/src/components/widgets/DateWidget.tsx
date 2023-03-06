@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 import {
   getTemplate,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
  * the value to undefined when it is falsy during the `onChange` handling.
@@ -18,8 +18,8 @@ export default function DateWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { onChange, options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
@@ -28,5 +28,5 @@ export default function DateWidget<
     [onChange]
   );
 
-  return <BaseInputTemplate type="date" {...props} onChange={handleChange} />;
+  return <BaseInputTemplate type='date' {...props} onChange={handleChange} />;
 }

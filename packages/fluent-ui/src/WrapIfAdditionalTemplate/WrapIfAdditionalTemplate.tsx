@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function WrapIfAdditionalTemplate<
   T = any,

@@ -1,4 +1,4 @@
-import { Checkbox, Label } from "@fluentui/react";
+import { Checkbox, Label } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -10,15 +10,15 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
-import { allowedProps } from "../CheckboxWidget";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
+import { allowedProps } from '../CheckboxWidget';
 
 const styles_red = {
   // TODO: get this color from theme.
-  color: "rgb(164, 38, 44)",
+  color: 'rgb(164, 38, 44)',
   fontSize: 12,
-  fontWeight: "normal" as any,
+  fontWeight: 'normal' as any,
   fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
 };
 
@@ -102,7 +102,7 @@ export default function CheckboxesWidget<
             />
           );
         })}
-      <span style={styles_red}>{(rawErrors || []).join("\n")}</span>
+      <span style={styles_red}>{(rawErrors || []).join('\n')}</span>
     </>
   );
 }

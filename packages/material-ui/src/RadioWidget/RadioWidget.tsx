@@ -1,7 +1,7 @@
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -11,7 +11,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -72,7 +72,7 @@ export default function RadioWidget<
             const radio = (
               <FormControlLabel
                 control={
-                  <Radio name={id} id={optionId(id, index)} color="primary" />
+                  <Radio name={id} id={optionId(id, index)} color='primary' />
                 }
                 label={option.label}
                 value={String(index)}

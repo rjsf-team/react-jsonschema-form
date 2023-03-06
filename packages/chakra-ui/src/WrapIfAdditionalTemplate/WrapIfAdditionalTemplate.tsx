@@ -5,14 +5,14 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 import {
   FormControl,
   FormLabel,
   Grid,
   GridItem,
   Input,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 export default function WrapIfAdditionalTemplate<
   T = any,
@@ -55,7 +55,7 @@ export default function WrapIfAdditionalTemplate<
       key={`${id}-key`}
       className={classNames}
       style={style}
-      alignItems="center"
+      alignItems='center'
       gap={2}
     >
       <GridItem>
@@ -69,7 +69,7 @@ export default function WrapIfAdditionalTemplate<
             id={`${id}-key`}
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
-            type="text"
+            type='text'
             mb={1}
           />
         </FormControl>

@@ -1,4 +1,4 @@
-import { useCallback, Component } from "react";
+import { useCallback, Component } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
@@ -19,19 +19,19 @@ import {
   TranslatableString,
   UI_OPTIONS_KEY,
   UIOptionsType,
-} from "@rjsf/utils";
-import isObject from "lodash/isObject";
-import omit from "lodash/omit";
+} from '@rjsf/utils';
+import isObject from 'lodash/isObject';
+import omit from 'lodash/omit';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: { [key: string]: string } = {
-  array: "ArrayField",
-  boolean: "BooleanField",
-  integer: "NumberField",
-  number: "NumberField",
-  object: "ObjectField",
-  string: "StringField",
-  null: "NullField",
+  array: 'ArrayField',
+  boolean: 'BooleanField',
+  integer: 'NumberField',
+  number: 'NumberField',
+  object: 'ObjectField',
+  string: 'StringField',
+  null: 'NullField',
 };
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
@@ -56,17 +56,17 @@ function getFieldComponent<
 ) {
   const field = uiOptions.field;
   const { fields, translateString } = registry;
-  if (typeof field === "function") {
+  if (typeof field === 'function') {
     return field;
   }
-  if (typeof field === "string" && field in fields) {
+  if (typeof field === 'string' && field in fields) {
     return fields[field];
   }
 
   const schemaType = getSchemaType(schema);
   const type: string = Array.isArray(schemaType)
     ? schemaType[0]
-    : schemaType || "";
+    : schemaType || '';
   const componentName = COMPONENT_TYPES[type];
 
   // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
@@ -79,11 +79,11 @@ function getFieldComponent<
     ? fields[componentName]
     : () => {
         const UnsupportedFieldTemplate = getTemplate<
-          "UnsupportedFieldTemplate",
+          'UnsupportedFieldTemplate',
           T,
           S,
           F
-        >("UnsupportedFieldTemplate", registry, uiOptions);
+        >('UnsupportedFieldTemplate', registry, uiOptions);
 
         return (
           <UnsupportedFieldTemplate
@@ -127,24 +127,24 @@ function SchemaFieldRender<
   } = props;
   const { formContext, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const FieldTemplate = getTemplate<"FieldTemplate", T, S, F>(
-    "FieldTemplate",
+  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>(
+    'FieldTemplate',
     registry,
     uiOptions
   );
   const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     T,
     S,
     F
-  >("DescriptionFieldTemplate", registry, uiOptions);
-  const FieldHelpTemplate = getTemplate<"FieldHelpTemplate", T, S, F>(
-    "FieldHelpTemplate",
+  >('DescriptionFieldTemplate', registry, uiOptions);
+  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>(
+    'FieldHelpTemplate',
     registry,
     uiOptions
   );
-  const FieldErrorTemplate = getTemplate<"FieldErrorTemplate", T, S, F>(
-    "FieldErrorTemplate",
+  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>(
+    'FieldErrorTemplate',
     registry,
     uiOptions
   );
@@ -195,14 +195,14 @@ function SchemaFieldRender<
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components
   const fieldUiSchema = omit(uiSchema, [
-    "ui:classNames",
-    "classNames",
-    "ui:style",
+    'ui:classNames',
+    'classNames',
+    'ui:style',
   ]);
   if (UI_OPTIONS_KEY in fieldUiSchema) {
     fieldUiSchema[UI_OPTIONS_KEY] = omit(fieldUiSchema[UI_OPTIONS_KEY], [
-      "classNames",
-      "style",
+      'classNames',
+      'style',
     ]);
   }
 
@@ -240,16 +240,16 @@ function SchemaFieldRender<
     uiOptions.description ||
     props.schema.description ||
     schema.description ||
-    "";
+    '';
   const help = uiOptions.help;
-  const hidden = uiOptions.widget === "hidden";
+  const hidden = uiOptions.widget === 'hidden';
 
-  const classNames = ["form-group", "field", `field-${schema.type}`];
+  const classNames = ['form-group', 'field', `field-${schema.type}`];
   if (!hideError && __errors && __errors.length > 0) {
-    classNames.push("field-error has-error has-danger");
+    classNames.push('field-error has-error has-danger');
   }
   if (uiSchema?.classNames) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== 'production') {
       console.warn(
         "'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead."
       );
@@ -280,7 +280,7 @@ function SchemaFieldRender<
       registry={registry}
     />
   );
-  const fieldProps: Omit<FieldTemplateProps<T, S, F>, "children"> = {
+  const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
     description: (
       <DescriptionFieldTemplate
         id={descriptionId<T>(id)}
@@ -292,7 +292,7 @@ function SchemaFieldRender<
     ),
     rawDescription: description,
     help: helpComponent,
-    rawHelp: typeof help === "string" ? help : undefined,
+    rawHelp: typeof help === 'string' ? help : undefined,
     errors: errorsComponent,
     rawErrors: hideError ? undefined : __errors,
     id,
@@ -306,7 +306,7 @@ function SchemaFieldRender<
     readonly,
     hideError,
     displayLabel,
-    classNames: classNames.join(" ").trim(),
+    classNames: classNames.join(' ').trim(),
     style: uiOptions.style,
     formContext,
     formData,
@@ -318,7 +318,7 @@ function SchemaFieldRender<
   const _AnyOfField = registry.fields.AnyOfField;
   const _OneOfField = registry.fields.OneOfField;
   const isReplacingAnyOrOneOf =
-    uiSchema?.["ui:field"] && uiSchema?.["ui:fieldReplacesAnyOrOneOf"] === true;
+    uiSchema?.['ui:field'] && uiSchema?.['ui:fieldReplacesAnyOrOneOf'] === true;
 
   return (
     <FieldTemplate {...fieldProps}>

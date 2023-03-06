@@ -1,7 +1,7 @@
-import get from "lodash/get";
+import get from 'lodash/get';
 
-import isObject from "./isObject";
-import { GenericObjectType } from "../src";
+import isObject from './isObject';
+import { GenericObjectType } from '../src';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *

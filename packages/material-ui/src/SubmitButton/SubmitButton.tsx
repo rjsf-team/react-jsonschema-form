@@ -1,12 +1,12 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import {
   getSubmitButtonOptions,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */
@@ -26,9 +26,9 @@ export default function SubmitButton<
   return (
     <Box marginTop={3}>
       <Button
-        type="submit"
-        variant="contained"
-        color="primary"
+        type='submit'
+        variant='contained'
+        color='primary'
         {...submitButtonProps}
       >
         {submitText}

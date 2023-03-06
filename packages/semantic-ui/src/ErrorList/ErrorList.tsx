@@ -1,11 +1,11 @@
-import { Message } from "semantic-ui-react";
+import { Message } from 'semantic-ui-react';
 import {
   ErrorListProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *

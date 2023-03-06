@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   examplesId,
@@ -7,8 +7,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -41,7 +41,7 @@ export default function BaseInputTemplate<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -69,7 +69,7 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={id}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

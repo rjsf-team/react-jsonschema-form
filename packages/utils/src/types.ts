@@ -1,7 +1,7 @@
-import React, { StyleHTMLAttributes } from "react";
-import { JSONSchema7 } from "json-schema";
+import React, { StyleHTMLAttributes } from 'react';
+import { JSONSchema7 } from 'json-schema';
 
-import { TranslatableString } from "./enums";
+import { TranslatableString } from './enums';
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else)
@@ -50,13 +50,13 @@ export type RangeSpecType = {
 };
 
 /** Properties describing a Range specification in terms of attribute that can be added to the `HTML` `<input>` */
-export type InputPropsType = Omit<RangeSpecType, "step"> & {
+export type InputPropsType = Omit<RangeSpecType, 'step'> & {
   /** Specifies the type of the <input> element */
   type: string;
   /** Specifies the interval between legal numbers in an input field or "any" */
-  step?: number | "any";
+  step?: number | 'any';
   /** Specifies the `autoComplete` value for an <input> element */
-  autoComplete?: HTMLInputElement["autocomplete"];
+  autoComplete?: HTMLInputElement['autocomplete'];
 };
 
 /** Type describing an id used for a field in the `IdSchema` */
@@ -310,7 +310,7 @@ export interface FieldProps<
       React.HTMLAttributes<HTMLElement>,
       Exclude<
         keyof React.HTMLAttributes<HTMLElement>,
-        "onBlur" | "onFocus" | "onChange"
+        'onBlur' | 'onFocus' | 'onChange'
       >
     > {
   /** The JSON subschema object for this field */
@@ -423,7 +423,7 @@ export type FieldTemplateProps<
   /** The formData for this field */
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
-  onChange: FieldProps["onChange"];
+  onChange: FieldProps['onChange'];
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
   onKeyChange: (value: string) => () => void;
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context */
@@ -491,7 +491,7 @@ export type ArrayFieldTitleProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = Omit<TitleFieldProps<T, S, F>, "id" | "title"> & {
+> = Omit<TitleFieldProps<T, S, F>, 'id' | 'title'> & {
   /** The title for the field being rendered */
   title?: string;
   /** The idSchema of the field in the hierarchy */
@@ -503,7 +503,7 @@ export type ArrayFieldDescriptionProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = Omit<DescriptionFieldProps<T, S, F>, "id" | "description"> & {
+> = Omit<DescriptionFieldProps<T, S, F>, 'id' | 'description'> & {
   /** The description of the field being rendered */
   description?: string | React.ReactElement;
   /** The idSchema of the field in the hierarchy */
@@ -654,18 +654,18 @@ export type WrapIfAdditionalTemplateProps<
   children: React.ReactNode;
 } & Pick<
   FieldTemplateProps<T, S, F>,
-  | "id"
-  | "classNames"
-  | "style"
-  | "label"
-  | "required"
-  | "readonly"
-  | "disabled"
-  | "schema"
-  | "uiSchema"
-  | "onKeyChange"
-  | "onDropPropertyClick"
-  | "registry"
+  | 'id'
+  | 'classNames'
+  | 'style'
+  | 'label'
+  | 'required'
+  | 'readonly'
+  | 'disabled'
+  | 'schema'
+  | 'uiSchema'
+  | 'onKeyChange'
+  | 'onDropPropertyClick'
+  | 'registry'
 >;
 
 /** The properties that are passed to a Widget implementation */
@@ -676,7 +676,7 @@ export interface WidgetProps<
 > extends GenericObjectType,
     Pick<
       React.HTMLAttributes<HTMLElement>,
-      Exclude<keyof React.HTMLAttributes<HTMLElement>, "onBlur" | "onFocus">
+      Exclude<keyof React.HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>
     > {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
    * widgets
@@ -801,7 +801,7 @@ type UIOptionsBaseType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
+> = Partial<Omit<TemplatesType<T, S, F>, 'ButtonTemplates'>> & {
   /** Any classnames that the user wants to be applied to a field in the ui */
   classNames?: string;
   /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
@@ -817,7 +817,7 @@ type UIOptionsBaseType<
   /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
   autofocus?: boolean;
   /** Use to mark the field as supporting auto complete on a text input or textarea input */
-  autocomplete?: HTMLInputElement["autocomplete"];
+  autocomplete?: HTMLInputElement['autocomplete'];
   /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
   disabled?: boolean;
   /** The default value to use when an input for a field is empty */
@@ -878,11 +878,11 @@ export type UiSchema<
 > = GenericObjectType &
   MakeUIType<UIOptionsBaseType<T, S, F>> & {
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
-    "ui:rootFieldId"?: string;
+    'ui:rootFieldId'?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
      */
-    "ui:field"?: Field<T, S, F> | string;
+    'ui:field'?: Field<T, S, F> | string;
     /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
      * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
      * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
@@ -890,9 +890,9 @@ export type UiSchema<
      * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
      * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
      */
-    "ui:fieldReplacesAnyOrOneOf"?: boolean;
+    'ui:fieldReplacesAnyOrOneOf'?: boolean;
     /** An object that contains all the potential UI options in a single object */
-    "ui:options"?: UIOptionsType<T, S, F>;
+    'ui:options'?: UIOptionsType<T, S, F>;
   };
 
 /** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`
@@ -1024,7 +1024,7 @@ export interface SchemaUtilsType<
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues?: boolean | "excludeObjectChildren"
+    includeUndefinedValues?: boolean | 'excludeObjectChildren'
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.

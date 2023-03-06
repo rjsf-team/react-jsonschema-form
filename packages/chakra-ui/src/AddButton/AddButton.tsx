@@ -4,9 +4,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import { Button } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+} from '@rjsf/utils';
+import { Button } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 
 export default function AddButton<
   T = any,

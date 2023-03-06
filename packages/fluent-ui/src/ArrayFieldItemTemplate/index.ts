@@ -1,2 +1,2 @@
-export { default } from "./ArrayFieldItemTemplate";
-export * from "./ArrayFieldItemTemplate";
+export { default } from './ArrayFieldItemTemplate';
+export * from './ArrayFieldItemTemplate';

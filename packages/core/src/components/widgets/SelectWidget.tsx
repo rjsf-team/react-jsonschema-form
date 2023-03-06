@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 function getValue(
   event: React.SyntheticEvent<HTMLSelectElement>,
@@ -47,7 +47,7 @@ function SelectWidget<
   placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
-  const emptyValue = multiple ? [] : "";
+  const emptyValue = multiple ? [] : '';
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
@@ -92,9 +92,9 @@ function SelectWidget<
       id={id}
       name={id}
       multiple={multiple}
-      className="form-control"
+      className='form-control'
       value={
-        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
+        typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes
       }
       required={required}
       disabled={disabled || readonly}
@@ -105,7 +105,7 @@ function SelectWidget<
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       {!multiple && schema.default === undefined && (
-        <option value="">{placeholder}</option>
+        <option value=''>{placeholder}</option>
       )}
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i) => {

@@ -1,5 +1,5 @@
-import { TranslatableString } from "./enums";
-import replaceStringParameters from "./replaceStringParameters";
+import { TranslatableString } from './enums';
+import replaceStringParameters from './replaceStringParameters';
 
 /** Translates a `TranslatableString` value `stringToTranslate` into english. When a `params` array is provided, each
  * value in the array is used to replace any of the replaceable parameters in the `stringToTranslate` using the `%1`,

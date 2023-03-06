@@ -1,4 +1,4 @@
-import { Label, SpinButton } from "@fluentui/react";
+import { Label, SpinButton } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,47 +7,47 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 // Keys of ISpinButtonProps from @fluentui/react
 const allowedProps = [
-  "ariaDescribedBy",
-  "ariaLabel",
-  "ariaPositionInSet",
-  "ariaSetSize",
-  "ariaValueNow",
-  "ariaValueText",
-  "className",
-  "componentRef",
-  "decrementButtonAriaLabel",
-  "decrementButtonIcon",
-  "defaultValue",
-  "disabled",
-  "downArrowButtonStyles",
-  "getClassNames",
-  "iconButtonProps",
-  "iconProps",
-  "incrementButtonAriaLabel",
-  "incrementButtonIcon",
-  "inputProps",
-  "keytipProps",
-  "label",
-  "labelPosition",
-  "max",
-  "min",
-  "onBlur",
-  "onDecrement",
-  "onFocus",
-  "onIncrement",
-  "onValidate",
-  "precision",
-  "step",
-  "styles",
-  "theme",
-  "title",
-  "upArrowButtonStyles",
-  "value",
+  'ariaDescribedBy',
+  'ariaLabel',
+  'ariaPositionInSet',
+  'ariaSetSize',
+  'ariaValueNow',
+  'ariaValueText',
+  'className',
+  'componentRef',
+  'decrementButtonAriaLabel',
+  'decrementButtonIcon',
+  'defaultValue',
+  'disabled',
+  'downArrowButtonStyles',
+  'getClassNames',
+  'iconButtonProps',
+  'iconProps',
+  'incrementButtonAriaLabel',
+  'incrementButtonIcon',
+  'inputProps',
+  'keytipProps',
+  'label',
+  'labelPosition',
+  'max',
+  'min',
+  'onBlur',
+  'onDecrement',
+  'onFocus',
+  'onIncrement',
+  'onValidate',
+  'precision',
+  'step',
+  'styles',
+  'theme',
+  'title',
+  'upArrowButtonStyles',
+  'value',
 ];
 
 export default function UpDownWidget<
@@ -102,7 +102,7 @@ export default function UpDownWidget<
     target: { value },
   }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const requiredSymbol = required ? "*" : "";
+  const requiredSymbol = required ? '*' : '';
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
@@ -121,7 +121,7 @@ export default function UpDownWidget<
           TranslatableString.DecrementAriaLabel
         )}
         disabled={disabled || readonly}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onBlur={_onBlur}
         onFocus={_onFocus}
         onChange={_onChange}

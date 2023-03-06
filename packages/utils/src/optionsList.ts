@@ -1,5 +1,5 @@
-import toConstant from "./toConstant";
-import { RJSFSchema, EnumOptionsType, StrictRJSFSchema } from "./types";
+import toConstant from './toConstant';
+import { RJSFSchema, EnumOptionsType, StrictRJSFSchema } from './types';
 
 /** Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned. The
  * labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise
@@ -15,9 +15,9 @@ export default function optionsList<S extends StrictRJSFSchema = RJSFSchema>(
   // enumNames was deprecated in v5 and is intentionally omitted from the RJSFSchema type.
   // Cast the type to include enumNames so the feature still works.
   const schemaWithEnumNames = schema as S & { enumNames?: string[] };
-  if (schemaWithEnumNames.enumNames && process.env.NODE_ENV !== "production") {
+  if (schemaWithEnumNames.enumNames && process.env.NODE_ENV !== 'production') {
     console.warn(
-      "The enumNames property is deprecated and may be removed in a future major release."
+      'The enumNames property is deprecated and may be removed in a future major release.'
     );
   }
   if (schema.enum) {

@@ -1,5 +1,5 @@
-import FormControl from "@material-ui/core/FormControl";
-import Typography from "@material-ui/core/Typography";
+import FormControl from '@material-ui/core/FormControl';
+import Typography from '@material-ui/core/Typography';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -7,7 +7,7 @@ import {
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -42,14 +42,14 @@ export default function FieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
+    'WrapIfAdditionalTemplate',
     T,
     S,
     F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  >('WrapIfAdditionalTemplate', registry, uiOptions);
 
   if (hidden) {
-    return <div style={{ display: "none" }}>{children}</div>;
+    return <div style={{ display: 'none' }}>{children}</div>;
   }
   return (
     <WrapIfAdditionalTemplate
@@ -73,7 +73,7 @@ export default function FieldTemplate<
       >
         {children}
         {displayLabel && rawDescription ? (
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant='caption' color='textSecondary'>
             {rawDescription}
           </Typography>
         ) : null}

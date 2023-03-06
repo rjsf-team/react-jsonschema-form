@@ -1,4 +1,4 @@
-import { Options } from "ajv";
+import { Options } from 'ajv';
 
 /** The type describing how to customize the AJV6 validator
  */

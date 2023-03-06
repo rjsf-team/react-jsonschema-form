@@ -1,4 +1,4 @@
-import Input from "antd/lib/input";
+import Input from 'antd/lib/input';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,7 +6,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
  *
@@ -31,10 +31,10 @@ export default function PasswordWidget<
   } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const emptyValue = options.emptyValue || "";
+  const emptyValue = options.emptyValue || '';
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(target.value === "" ? emptyValue : target.value);
+    onChange(target.value === '' ? emptyValue : target.value);
 
   const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.value);
@@ -51,7 +51,7 @@ export default function PasswordWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      value={value || ""}
+      value={value || ''}
       aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );

@@ -7,17 +7,17 @@ import {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import classNames from "classnames";
-import Col from "antd/lib/col";
-import Row from "antd/lib/row";
+} from '@rjsf/utils';
+import classNames from 'classnames';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import {
   ConfigConsumer,
   ConfigConsumerProps,
-} from "antd/lib/config-provider/context";
+} from 'antd/lib/config-provider/context';
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: "8px",
+  paddingBottom: '8px',
 };
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
@@ -46,38 +46,38 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
+    'ArrayFieldDescriptionTemplate',
     T,
     S,
     F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
   const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
+    'ArrayFieldTitleTemplate',
     T,
     S,
     F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  >('ArrayFieldTitleTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = "right", rowGutter = 24 } =
+  const { labelAlign = 'right', rowGutter = 24 } =
     formContext as GenericObjectType;
 
   return (
     <ConfigConsumer>
       {(configProps: ConfigConsumerProps) => {
         const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls("form");
+        const prefixCls = getPrefixCls('form');
         const labelClsBasic = `${prefixCls}-item-label`;
         const labelColClassName = classNames(
           labelClsBasic,
-          labelAlign === "left" && `${labelClsBasic}-left`
+          labelAlign === 'left' && `${labelClsBasic}-left`
           // labelCol.className,
         );
 
@@ -100,7 +100,7 @@ export default function ArrayFieldTemplate<
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <ArrayFieldDescriptionTemplate
                     description={
-                      uiOptions.description || schema.description || ""
+                      uiOptions.description || schema.description || ''
                     }
                     idSchema={idSchema}
                     schema={schema}
@@ -109,7 +109,7 @@ export default function ArrayFieldTemplate<
                   />
                 </Col>
               )}
-              <Col className="row array-item-list" span={24}>
+              <Col className='row array-item-list' span={24}>
                 {items &&
                   items.map(
                     ({
@@ -123,10 +123,10 @@ export default function ArrayFieldTemplate<
 
               {canAdd && (
                 <Col span={24}>
-                  <Row gutter={rowGutter} justify="end">
-                    <Col flex="192px">
+                  <Row gutter={rowGutter} justify='end'>
+                    <Col flex='192px'>
                       <AddButton
-                        className="array-item-add"
+                        className='array-item-add'
                         disabled={disabled || readonly}
                         onClick={onAddClick}
                         uiSchema={uiSchema}

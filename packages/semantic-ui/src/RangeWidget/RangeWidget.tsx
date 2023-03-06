@@ -1,4 +1,4 @@
-import { Input } from "semantic-ui-react";
+import { Input } from 'semantic-ui-react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,8 +6,8 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   rangeSpec,
-} from "@rjsf/utils";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { getSemanticProps } from '../util';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -47,7 +47,7 @@ export default function RangeWidget<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange && onChange(value === "" ? options.emptyValue : value);
+    onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
 
@@ -57,12 +57,12 @@ export default function RangeWidget<
         id={id}
         key={id}
         name={id}
-        type="range"
+        type='range'
         required={required}
         disabled={disabled || readonly}
         {...rangeSpec<S>(schema)}
         {...semanticProps}
-        value={value || ""}
+        value={value || ''}
         error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}

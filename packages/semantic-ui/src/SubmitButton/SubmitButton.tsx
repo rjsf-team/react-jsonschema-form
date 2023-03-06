@@ -1,11 +1,11 @@
-import { Button } from "semantic-ui-react";
+import { Button } from 'semantic-ui-react';
 import {
   getSubmitButtonOptions,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */
@@ -23,7 +23,7 @@ export default function SubmitButton<
     return null;
   }
   return (
-    <Button type="submit" primary {...submitButtonProps}>
+    <Button type='submit' primary {...submitButtonProps}>
       {submitText}
     </Button>
   );

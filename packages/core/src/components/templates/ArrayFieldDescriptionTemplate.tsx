@@ -6,7 +6,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ArrayFieldDescriptionTemplate` component renders a `DescriptionFieldTemplate` with an `id` derived from
  * the `idSchema`.
@@ -25,11 +25,11 @@ export default function ArrayFieldDescriptionTemplate<
     return null;
   }
   const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     T,
     S,
     F
-  >("DescriptionFieldTemplate", registry, options);
+  >('DescriptionFieldTemplate', registry, options);
   return (
     <DescriptionFieldTemplate
       id={descriptionId<T>(idSchema)}

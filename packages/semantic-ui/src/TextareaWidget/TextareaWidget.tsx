@@ -4,9 +4,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { Form } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { Form } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -46,7 +46,7 @@ export default function TextareaWidget<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) =>
-    onChange && onChange(value === "" ? options.emptyValue : value);
+    onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
@@ -61,7 +61,7 @@ export default function TextareaWidget<
       required={required}
       disabled={disabled || readonly}
       {...semanticProps}
-      value={value || ""}
+      value={value || ''}
       error={rawErrors.length > 0}
       rows={options.rows || 5}
       onChange={_onChange}

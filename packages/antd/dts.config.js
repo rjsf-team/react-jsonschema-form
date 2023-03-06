@@ -1,13 +1,13 @@
-const replace = require("@rollup/plugin-replace");
+const replace = require('@rollup/plugin-replace');
 
 module.exports = {
   // This function will run for each entry/format/env combination
   rollup(config, options) {
-    if (options.format === "esm") {
+    if (options.format === 'esm') {
       config.plugins.push(
         replace({
-          "antd/lib": "antd/es",
-          "rc-picker/lib": "rc-picker/es",
+          'antd/lib': 'antd/es',
+          'rc-picker/lib': 'rc-picker/es',
         })
       );
     }

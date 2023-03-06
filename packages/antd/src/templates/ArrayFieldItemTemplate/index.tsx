@@ -1,19 +1,19 @@
-import Button from "antd/lib/button";
-import Col from "antd/lib/col";
-import Row from "antd/lib/row";
+import Button from 'antd/lib/button';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import {
   ArrayFieldTemplateItemType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const BTN_GRP_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 const BTN_STYLE = {
-  width: "calc(100% / 3)",
+  width: 'calc(100% / 3)',
 };
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
@@ -41,14 +41,14 @@ export default function ArrayFieldItemTemplate<
   } = props;
   const { MoveDownButton, MoveUpButton, RemoveButton } =
     registry.templates.ButtonTemplates;
-  const { rowGutter = 24, toolbarAlign = "top" } = registry.formContext;
+  const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
   return (
     <Row align={toolbarAlign} key={`array-item-${index}`} gutter={rowGutter}>
-      <Col flex="1">{children}</Col>
+      <Col flex='1'>{children}</Col>
 
       {hasToolbar && (
-        <Col flex="192px">
+        <Col flex='192px'>
           <Button.Group style={BTN_GRP_STYLE}>
             {(hasMoveUp || hasMoveDown) && (
               <MoveUpButton

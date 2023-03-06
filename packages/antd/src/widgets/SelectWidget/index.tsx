@@ -1,4 +1,4 @@
-import Select, { DefaultOptionType } from "antd/lib/select";
+import Select, { DefaultOptionType } from 'antd/lib/select';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -8,11 +8,11 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import isString from "lodash/isString";
+} from '@rjsf/utils';
+import isString from 'lodash/isString';
 
 const SELECT_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
@@ -78,7 +78,7 @@ export default function SelectWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      mode={typeof multiple !== "undefined" ? "multiple" : undefined}
+      mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}

@@ -1,12 +1,12 @@
-import { memo } from "react";
-import { IconButton } from "@chakra-ui/react";
-import { IconButtonProps as ChakraIconButtonProps } from "@chakra-ui/button/dist/declarations/src/icon-button";
+import { memo } from 'react';
+import { IconButton } from '@chakra-ui/react';
+import { IconButtonProps as ChakraIconButtonProps } from '@chakra-ui/button/dist/declarations/src/icon-button';
 import {
   FormContextType,
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 function ChakraIconButton<
   T = any,
@@ -18,11 +18,11 @@ function ChakraIconButton<
     <IconButton
       aria-label={props.title!}
       {...otherProps}
-      icon={icon as ChakraIconButtonProps["icon"]}
+      icon={icon as ChakraIconButtonProps['icon']}
     />
   );
 }
 
-ChakraIconButton.displayName = "ChakraIconButton";
+ChakraIconButton.displayName = 'ChakraIconButton';
 
 export default memo(ChakraIconButton) as typeof ChakraIconButton;

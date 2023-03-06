@@ -6,57 +6,57 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
-} from "@rjsf/utils";
-import { DatePicker, DayOfWeek, mergeStyleSets } from "@fluentui/react";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import { DatePicker, DayOfWeek, mergeStyleSets } from '@fluentui/react';
+import _pick from 'lodash/pick';
 
 // Keys of IDropdownProps from @fluentui/react
 const allowedProps = [
-  "componentRef",
-  "styles",
-  "theme",
-  "calloutProps",
-  "calendarProps",
-  "textField",
-  "calendarAs",
-  "onSelectDate",
-  "label",
-  "isRequired",
-  "disabled",
-  "ariaLabel",
-  "underlined",
-  "pickerAriaLabel",
-  "isMonthPickerVisible",
-  "showMonthPickerAsOverlay",
-  "allowTextInput",
-  "disableAutoFocus",
-  "placeholder",
-  "today",
-  "value",
-  "formatDate",
-  "parseDateFromString",
-  "firstDayOfWeek",
-  "strings",
-  "highlightCurrentMonth",
-  "highlightSelectedMonth",
-  "showWeekNumbers",
-  "firstWeekOfYear",
-  "showGoToToday",
-  "borderless",
-  "className",
-  "dateTimeFormatter",
-  "minDate",
-  "maxDate",
-  "initialPickerDate",
-  "allFocusable",
-  "onAfterMenuDismiss",
-  "showCloseButton",
-  "tabIndex",
+  'componentRef',
+  'styles',
+  'theme',
+  'calloutProps',
+  'calendarProps',
+  'textField',
+  'calendarAs',
+  'onSelectDate',
+  'label',
+  'isRequired',
+  'disabled',
+  'ariaLabel',
+  'underlined',
+  'pickerAriaLabel',
+  'isMonthPickerVisible',
+  'showMonthPickerAsOverlay',
+  'allowTextInput',
+  'disableAutoFocus',
+  'placeholder',
+  'today',
+  'value',
+  'formatDate',
+  'parseDateFromString',
+  'firstDayOfWeek',
+  'strings',
+  'highlightCurrentMonth',
+  'highlightSelectedMonth',
+  'showWeekNumbers',
+  'firstWeekOfYear',
+  'showGoToToday',
+  'borderless',
+  'className',
+  'dateTimeFormatter',
+  'minDate',
+  'maxDate',
+  'initialPickerDate',
+  'allFocusable',
+  'onAfterMenuDismiss',
+  'showCloseButton',
+  'tabIndex',
 ];
 
 const controlClass = mergeStyleSets({
   control: {
-    margin: "0 0 15px 0",
+    margin: '0 0 15px 0',
   },
 });
 
@@ -65,7 +65,7 @@ const controlClass = mergeStyleSets({
 // how we can get this to work with locales.
 const formatDate = (date?: Date) => {
   if (!date) {
-    return "";
+    return '';
   }
   const yyyy = pad(date.getFullYear(), 4);
   const MM = pad(date.getMonth() + 1, 2);
@@ -77,7 +77,7 @@ const parseDate = (dateStr?: string) => {
   if (!dateStr) {
     return undefined;
   }
-  const [year, month, day] = dateStr.split("-").map((e) => parseInt(e));
+  const [year, month, day] = dateStr.split('-').map((e) => parseInt(e));
   const dt = new Date(year, month - 1, day);
   return dt;
 };

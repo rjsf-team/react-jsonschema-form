@@ -3,9 +3,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
+} from '../types';
 
-import isSelect from "./isSelect";
+import isSelect from './isSelect';
 
 /** Checks to see if the `schema` combination represents a multi-select
  *
@@ -22,7 +22,7 @@ export default function isMultiSelect<
   if (
     !schema.uniqueItems ||
     !schema.items ||
-    typeof schema.items === "boolean"
+    typeof schema.items === 'boolean'
   ) {
     return false;
   }

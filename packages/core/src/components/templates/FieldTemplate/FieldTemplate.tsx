@@ -5,9 +5,9 @@ import {
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import Label from "./Label";
+import Label from './Label';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -34,13 +34,13 @@ export default function FieldTemplate<
   } = props;
   const uiOptions = getUiOptions(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
+    'WrapIfAdditionalTemplate',
     T,
     S,
     F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  >('WrapIfAdditionalTemplate', registry, uiOptions);
   if (hidden) {
-    return <div className="hidden">{children}</div>;
+    return <div className='hidden'>{children}</div>;
   }
   return (
     <WrapIfAdditionalTemplate {...props}>

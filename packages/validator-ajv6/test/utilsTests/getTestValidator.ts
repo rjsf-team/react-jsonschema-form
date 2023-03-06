@@ -5,10 +5,10 @@ import {
   RJSFSchema,
   RJSFValidationError,
   ValidationData,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 // With Lerna active, the test world has access to the test suite via the symlink
-import { TestValidatorType } from "@rjsf/utils/test/schema";
-import { customizeValidator, CustomValidatorOptionsType } from "../../src";
+import { TestValidatorType } from '@rjsf/utils/test/schema';
+import { customizeValidator, CustomValidatorOptionsType } from '../../src';
 
 export default function getTestValidator<T = any>(
   options: CustomValidatorOptionsType

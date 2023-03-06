@@ -1,7 +1,7 @@
-import Col from "antd/lib/col";
-import Form from "antd/lib/form";
-import Input from "antd/lib/input";
-import Row from "antd/lib/row";
+import Col from 'antd/lib/col';
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Row from 'antd/lib/row';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
@@ -10,13 +10,13 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const INPUT_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -49,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
     labelCol = VERTICAL_LABEL_COL,
     readonlyAsDisabled = true,
     rowGutter = 24,
-    toolbarAlign = "top",
+    toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = registry.formContext;
@@ -80,11 +80,11 @@ export default function WrapIfAdditionalTemplate<
   return (
     <div className={classNames} style={style}>
       <Row align={toolbarAlign} gutter={rowGutter}>
-        <Col className="form-additional" flex="1">
-          <div className="form-group">
+        <Col className='form-additional' flex='1'>
+          <div className='form-group'>
             <Form.Item
               colon={colon}
-              className="form-group"
+              className='form-group'
               hasFeedback
               htmlFor={`${id}-key`}
               label={keyLabel}
@@ -94,24 +94,24 @@ export default function WrapIfAdditionalTemplate<
               wrapperCol={wrapperCol}
             >
               <Input
-                className="form-control"
+                className='form-control'
                 defaultValue={label}
                 disabled={disabled || (readonlyAsDisabled && readonly)}
                 id={`${id}-key`}
                 name={`${id}-key`}
                 onBlur={!readonly ? handleBlur : undefined}
                 style={INPUT_STYLE}
-                type="text"
+                type='text'
               />
             </Form.Item>
           </div>
         </Col>
-        <Col className="form-additional" flex="1">
+        <Col className='form-additional' flex='1'>
           {children}
         </Col>
-        <Col flex="192px">
+        <Col flex='192px'>
           <RemoveButton
-            className="array-item-remove"
+            className='array-item-remove'
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={buttonUiOptions}

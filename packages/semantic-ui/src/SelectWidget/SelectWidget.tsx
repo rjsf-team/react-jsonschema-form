@@ -8,10 +8,10 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   UIOptionsType,
-} from "@rjsf/utils";
-import map from "lodash/map";
-import { Form, DropdownProps } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import map from 'lodash/map';
+import { Form, DropdownProps } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 
 /**
  * Returns and creates an array format required for semantic drop down
@@ -23,7 +23,7 @@ function createDefaultValueOptionsForDropDown<
   S extends StrictRJSFSchema = RJSFSchema
 >(
   enumOptions?: EnumOptionsType<S>[],
-  enumDisabled?: UIOptionsType["enumDisabled"]
+  enumDisabled?: UIOptionsType['enumDisabled']
 ) {
   const disabledOptions = enumDisabled || [];
   const options = map(enumOptions, ({ label, value }, index) => ({
@@ -69,7 +69,7 @@ export default function SelectWidget<
     formContext,
     options,
     defaultSchemaProps: {
-      inverted: "false",
+      inverted: 'false',
       selection: true,
       fluid: true,
       scrolling: true,
@@ -77,7 +77,7 @@ export default function SelectWidget<
     },
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
-  const emptyValue = multiple ? [] : "";
+  const emptyValue = multiple ? [] : '';
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
     enumOptions,
     enumDisabled
@@ -111,8 +111,8 @@ export default function SelectWidget<
       id={id}
       name={id}
       label={label || schema.title}
-      multiple={typeof multiple === "undefined" ? false : multiple}
-      value={typeof value === "undefined" ? emptyValue : selectedIndexes}
+      multiple={typeof multiple === 'undefined' ? false : multiple}
+      value={typeof value === 'undefined' ? emptyValue : selectedIndexes}
       error={rawErrors.length > 0}
       disabled={disabled}
       placeholder={placeholder}

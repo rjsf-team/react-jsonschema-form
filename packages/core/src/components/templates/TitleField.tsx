@@ -3,9 +3,9 @@ import {
   TitleFieldProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-const REQUIRED_FIELD_SYMBOL = "*";
+const REQUIRED_FIELD_SYMBOL = '*';
 
 /** The `TitleField` is the template to use to render the title of a field
  *
@@ -20,7 +20,7 @@ export default function TitleField<
   return (
     <legend id={id}>
       {title}
-      {required && <span className="required">{REQUIRED_FIELD_SYMBOL}</span>}
+      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </legend>
   );
 }

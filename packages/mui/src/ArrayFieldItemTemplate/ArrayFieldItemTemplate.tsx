@@ -1,13 +1,13 @@
-import { CSSProperties } from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+import { CSSProperties } from 'react';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import {
   ArrayFieldTemplateItemType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -38,12 +38,12 @@ export default function ArrayFieldItemTemplate<
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     minWidth: 0,
   };
   return (
-    <Grid container={true} alignItems="center">
-      <Grid item={true} xs style={{ overflow: "auto" }}>
+    <Grid container={true} alignItems='center'>
+      <Grid item={true} xs style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{children}</Box>

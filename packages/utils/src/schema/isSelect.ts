@@ -1,11 +1,11 @@
-import isConstant from "../isConstant";
+import isConstant from '../isConstant';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
-import retrieveSchema from "./retrieveSchema";
+} from '../types';
+import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` combination represents a select
  *
@@ -31,7 +31,7 @@ export default function isSelect<
   }
   if (Array.isArray(altSchemas)) {
     return altSchemas.every(
-      (altSchemas) => typeof altSchemas !== "boolean" && isConstant(altSchemas)
+      (altSchemas) => typeof altSchemas !== 'boolean' && isConstant(altSchemas)
     );
   }
   return false;

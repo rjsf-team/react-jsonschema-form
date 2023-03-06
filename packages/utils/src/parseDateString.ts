@@ -1,4 +1,4 @@
-import { DateObject } from "./types";
+import { DateObject } from './types';
 
 /** Parses the `dateString` into a `DateObject`, including the time information when `includeTime` is true
  *
@@ -23,7 +23,7 @@ export default function parseDateString(
   }
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
-    throw new Error("Unable to parse date " + dateString);
+    throw new Error('Unable to parse date ' + dateString);
   }
   return {
     year: date.getUTCFullYear(),

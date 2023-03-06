@@ -108,7 +108,8 @@ const config = {
               {
                 label: 'Quickstart',
                 to: 'quickstart',
-              },          {
+              },
+              {
                 to: '/api-reference',
                 label: 'API Reference',
               },

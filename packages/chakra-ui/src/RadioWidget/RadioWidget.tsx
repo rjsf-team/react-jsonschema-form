@@ -4,7 +4,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -14,8 +14,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function RadioWidget<
   T = any,
@@ -72,7 +72,7 @@ export default function RadioWidget<
         name={id}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        <Stack direction={row ? "row" : "column"}>
+        <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
               const itemDisabled =

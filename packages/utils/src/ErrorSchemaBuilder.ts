@@ -1,9 +1,9 @@
-import cloneDeep from "lodash/cloneDeep";
-import get from "lodash/get";
-import set from "lodash/set";
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
-import { ErrorSchema } from "./types";
-import { ERRORS_KEY } from "./constants";
+import { ErrorSchema } from './types';
+import { ERRORS_KEY } from './constants';
 
 /** The `ErrorSchemaBuilder<T>` is used to build an `ErrorSchema<T>` since the definition of the `ErrorSchema` type is
  * designed for reading information rather than writing it. Use this class to add, replace or clear errors in an error
@@ -40,7 +40,7 @@ export default class ErrorSchemaBuilder<T = any> {
   private getOrCreateErrorBlock(pathOfError?: string | string[]) {
     const hasPath =
       (Array.isArray(pathOfError) && pathOfError.length > 0) ||
-      typeof pathOfError === "string";
+      typeof pathOfError === 'string';
     let errorBlock: ErrorSchema = hasPath
       ? get(this.errorSchema, pathOfError)
       : this.errorSchema;

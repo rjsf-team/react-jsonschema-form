@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,12 +6,12 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import DatePicker from "../../components/DatePicker";
+import DatePicker from '../../components/DatePicker';
 
 const DATE_PICKER_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
@@ -38,7 +38,7 @@ export default function DateWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = (nextValue: any) =>
-    onChange(nextValue && nextValue.format("YYYY-MM-DD"));
+    onChange(nextValue && nextValue.format('YYYY-MM-DD'));
 
   const handleBlur = () => onBlur(id, value);
 

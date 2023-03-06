@@ -1,11 +1,11 @@
-import { MessageBar, MessageBarType } from "@fluentui/react";
+import { MessageBar, MessageBarType } from '@fluentui/react';
 import {
   ErrorListProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function ErrorList<
   T = any,

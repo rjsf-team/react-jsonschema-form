@@ -6,7 +6,7 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function DateTimeWidget<
   T = any,
@@ -14,16 +14,16 @@ export default function DateTimeWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { registry } = props;
-  const uiProps: any = props.options["props"] || {};
+  const uiProps: any = props.options['props'] || {};
   const options = {
     ...props.options,
     props: {
-      type: "datetime-local",
+      type: 'datetime-local',
       ...uiProps,
     },
   };
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );

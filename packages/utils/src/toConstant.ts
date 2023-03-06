@@ -1,5 +1,5 @@
-import { CONST_KEY, ENUM_KEY } from "./constants";
-import { RJSFSchema, StrictRJSFSchema } from "./types";
+import { CONST_KEY, ENUM_KEY } from './constants';
+import { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Returns the constant value from the schema when it is either a single value enum or has a const key. Otherwise
  * throws an error.
@@ -21,5 +21,5 @@ export default function toConstant<S extends StrictRJSFSchema = RJSFSchema>(
   if (CONST_KEY in schema) {
     return schema.const;
   }
-  throw new Error("schema cannot be inferred as a constant");
+  throw new Error('schema cannot be inferred as a constant');
 }

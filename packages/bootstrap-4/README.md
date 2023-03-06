@@ -39,7 +39,6 @@
 
 ## About The Project
 
-
 Exports `bootstrap-4` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With

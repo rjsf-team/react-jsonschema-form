@@ -1,8 +1,8 @@
-import { CSSProperties } from "react";
-import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/OutlinedInput";
+import { CSSProperties } from 'react';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import InputLabel from '@mui/material/InputLabel';
+import Input from '@mui/material/OutlinedInput';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -46,7 +46,7 @@ export default function WrapIfAdditionalTemplate<
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
 
   if (!additional) {
@@ -64,7 +64,7 @@ export default function WrapIfAdditionalTemplate<
     <Grid
       container
       key={`${id}-key`}
-      alignItems="center"
+      alignItems='center'
       spacing={2}
       className={classNames}
       style={style}
@@ -78,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
             id={`${id}-key`}
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
-            type="text"
+            type='text'
           />
         </FormControl>
       </Grid>
@@ -87,7 +87,7 @@ export default function WrapIfAdditionalTemplate<
       </Grid>
       <Grid item={true}>
         <RemoveButton
-          iconType="default"
+          iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}

@@ -5,7 +5,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -13,8 +13,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function RangeWidget<
   T = any,

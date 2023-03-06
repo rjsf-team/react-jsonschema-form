@@ -1,4 +1,4 @@
-import Form from "react-bootstrap/Form";
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   examplesId,
@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -38,7 +38,7 @@ export default function BaseInputTemplate<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -56,10 +56,10 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={rawErrors.length > 0 ? "is-invalid" : ""}
+        className={rawErrors.length > 0 ? 'is-invalid' : ''}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

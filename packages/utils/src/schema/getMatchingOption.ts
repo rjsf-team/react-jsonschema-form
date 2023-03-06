@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
+} from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
  * Deprecated, use `getFirstMatchingOption()` instead.

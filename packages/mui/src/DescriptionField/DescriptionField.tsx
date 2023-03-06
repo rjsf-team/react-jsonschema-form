@@ -1,10 +1,10 @@
-import Typography from "@mui/material/Typography";
+import Typography from '@mui/material/Typography';
 import {
   DescriptionFieldProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *
@@ -18,7 +18,7 @@ export default function DescriptionField<
   const { id, description } = props;
   if (description) {
     return (
-      <Typography id={id} variant="subtitle2" style={{ marginTop: "5px" }}>
+      <Typography id={id} variant='subtitle2' style={{ marginTop: '5px' }}>
         {description}
       </Typography>
     );

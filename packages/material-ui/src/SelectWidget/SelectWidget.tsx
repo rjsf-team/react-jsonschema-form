@@ -1,5 +1,5 @@
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -8,7 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -44,11 +44,11 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
-  multiple = typeof multiple === "undefined" ? false : !!multiple;
+  multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
-  const emptyValue = multiple ? [] : "";
+  const emptyValue = multiple ? [] : '';
   const isEmpty =
-    typeof value === "undefined" ||
+    typeof value === 'undefined' ||
     (multiple && value.length < 1) ||
     (!multiple && value === emptyValue);
 

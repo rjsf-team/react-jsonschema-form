@@ -5,9 +5,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { Form, CheckboxProps } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { Form, CheckboxProps } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -53,7 +53,7 @@ export default function CheckboxWidget<
   ) => onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const checked = value == "true" || value == true;
+  const checked = value == 'true' || value == true;
   return (
     <Form.Checkbox
       id={id}
@@ -61,13 +61,13 @@ export default function CheckboxWidget<
       disabled={disabled || readonly}
       autoFocus={autofocus}
       {...semanticProps}
-      checked={typeof value === "undefined" ? false : checked}
+      checked={typeof value === 'undefined' ? false : checked}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
       required={required}
-      label={label || ""}
+      label={label || ''}
       aria-describedby={ariaDescribedByIds<T>(id)}
     />
   );

@@ -1,4 +1,4 @@
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
   examplesId,
@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -57,7 +57,7 @@ export default function BaseInputTemplate<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -78,7 +78,7 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled || readonly}
         {...otherProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
         onChange={_onChange}
         onBlur={_onBlur}

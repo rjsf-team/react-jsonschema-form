@@ -17,6 +17,7 @@ All packages will be live-built, and a live development server showcasing compon
 If this is the first time you have cloned the repo, run the `npm run prepare` script that will set up `husky` to provide a git precommit hook that will format and lint any code you have added to a PR.
 
 ### Optional development process
+
 With the large number of packages, sometimes running `npm run build` or `npm start` from the root directory will overwhelm an underpowered computer.
 If that is the situation for you, you can instead use `npm run build-serial` to build the packages one at a time instead of all at once.
 Also, if you are only working on one package, you can `npm run build` and `npm run test` from within the subdirectory.
@@ -24,7 +25,7 @@ Finally, you can simply `npm start` inside of the `playground` directory to test
 
 ## Cloud builds
 
-When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially. 
+When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially.
 
 ## Coding style
 
@@ -91,7 +92,7 @@ is stored as the `NPM_TOKEN` secret on GitHub Actions.
 
 Docs are automatically published to GitHub Pages when the `main` branch is updated.
 
-We are currently in the process of automatically configuring versionable documentation on our new docs site. 
+We are currently in the process of automatically configuring versionable documentation on our new docs site.
 
 ### Releasing the playground
 

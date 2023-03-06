@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `HiddenWidget` is a widget for rendering a hidden input field.
  *  It is typically used by setting type to "hidden".
@@ -17,10 +17,10 @@ function HiddenWidget<
 >({ id, value }: WidgetProps<T, S, F>) {
   return (
     <input
-      type="hidden"
+      type='hidden'
       id={id}
       name={id}
-      value={typeof value === "undefined" ? "" : value}
+      value={typeof value === 'undefined' ? '' : value}
     />
   );
 }

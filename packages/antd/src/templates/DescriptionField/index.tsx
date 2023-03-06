@@ -3,7 +3,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *

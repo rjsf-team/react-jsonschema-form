@@ -1,4 +1,4 @@
-import { TextField } from "@fluentui/react";
+import { TextField } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   examplesId,
@@ -7,48 +7,48 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 // Keys of ITextFieldProps from @fluentui/react
 const allowedProps = [
-  "multiline",
-  "resizable",
-  "autoAdjustHeight",
-  "underlined",
-  "borderless",
-  "label",
-  "onRenderLabel",
-  "description",
-  "onRenderDescription",
-  "prefix",
-  "suffix",
-  "onRenderPrefix",
-  "onRenderSuffix",
-  "iconProps",
-  "defaultValue",
-  "value",
-  "disabled",
-  "readOnly",
-  "errorMessage",
-  "onChange",
-  "onNotifyValidationResult",
-  "onGetErrorMessage",
-  "deferredValidationTime",
-  "className",
-  "inputClassName",
-  "ariaLabel",
-  "validateOnFocusIn",
-  "validateOnFocusOut",
-  "validateOnLoad",
-  "theme",
-  "styles",
-  "autoComplete",
-  "mask",
-  "maskChar",
-  "maskFormat",
-  "type",
-  "list",
+  'multiline',
+  'resizable',
+  'autoAdjustHeight',
+  'underlined',
+  'borderless',
+  'label',
+  'onRenderLabel',
+  'description',
+  'onRenderDescription',
+  'prefix',
+  'suffix',
+  'onRenderPrefix',
+  'onRenderSuffix',
+  'iconProps',
+  'defaultValue',
+  'value',
+  'disabled',
+  'readOnly',
+  'errorMessage',
+  'onChange',
+  'onNotifyValidationResult',
+  'onGetErrorMessage',
+  'deferredValidationTime',
+  'className',
+  'inputClassName',
+  'ariaLabel',
+  'validateOnFocusIn',
+  'validateOnFocusOut',
+  'validateOnLoad',
+  'theme',
+  'styles',
+  'autoComplete',
+  'mask',
+  'maskChar',
+  'maskFormat',
+  'type',
+  'list',
 ];
 
 export default function BaseInputTemplate<
@@ -77,7 +77,7 @@ export default function BaseInputTemplate<
   const _onChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({
@@ -101,11 +101,11 @@ export default function BaseInputTemplate<
         // TODO: once fluent-ui supports the name prop, we can add it back in here.
         // name={name}
         {...inputProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onChange={_onChange as any}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        errorMessage={(rawErrors || []).join("\n")}
+        errorMessage={(rawErrors || []).join('\n')}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}

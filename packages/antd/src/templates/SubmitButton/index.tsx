@@ -1,11 +1,11 @@
-import Button, { ButtonType } from "antd/lib/button";
+import Button, { ButtonType } from 'antd/lib/button';
 import {
   getSubmitButtonOptions,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */
@@ -24,9 +24,9 @@ export default function SubmitButton<
   }
   return (
     <Button
-      type={"submit" as ButtonType}
+      type={'submit' as ButtonType}
       {...submitButtonProps}
-      htmlType="submit"
+      htmlType='submit'
     >
       {submitText}
     </Button>

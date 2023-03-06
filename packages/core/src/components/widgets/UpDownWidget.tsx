@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `UpDownWidget` component uses the `BaseInputTemplate` changing the type to `number`.
  *
@@ -16,10 +16,10 @@ export default function UpDownWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
-  return <BaseInputTemplate type="number" {...props} />;
+  return <BaseInputTemplate type='number' {...props} />;
 }

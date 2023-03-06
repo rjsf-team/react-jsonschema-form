@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function FileWidget<
   T = any,
@@ -12,10 +12,10 @@ export default function FileWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
-  return <BaseInputTemplate {...props} type="file" />;
+  return <BaseInputTemplate {...props} type='file' />;
 }

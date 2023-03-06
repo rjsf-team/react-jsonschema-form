@@ -1,8 +1,8 @@
-import Button, { ButtonProps, ButtonType } from "antd/lib/button";
-import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
-import ArrowUpOutlined from "@ant-design/icons/ArrowUpOutlined";
-import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
-import PlusCircleOutlined from "@ant-design/icons/PlusCircleOutlined";
+import Button, { ButtonProps, ButtonType } from 'antd/lib/button';
+import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
+import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
+import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
+import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
 import {
   getUiOptions,
   FormContextType,
@@ -10,14 +10,14 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 // The `type` for IconButtonProps collides with the `type` for `ButtonProps` so omit it to avoid Typescript issue
 export type AntdIconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = Omit<IconButtonProps<T, S, F>, "type">;
+> = Omit<IconButtonProps<T, S, F>, 'type'>;
 
 export default function IconButton<
   T = any,
@@ -25,7 +25,7 @@ export default function IconButton<
   F extends FormContextType = any
 >(props: AntdIconButtonProps<T, S, F> & ButtonProps) {
   const {
-    iconType = "default",
+    iconType = 'default',
     icon,
     uiSchema,
     registry,
@@ -47,7 +47,7 @@ export function AddButton<
       title={translateString(TranslatableString.AddItemButton)}
       {...props}
       block
-      iconType="primary"
+      iconType='primary'
       icon={<PlusCircleOutlined />}
     />
   );
@@ -103,7 +103,7 @@ export function RemoveButton<
       {...props}
       danger
       block={!!options.block}
-      iconType="primary"
+      iconType='primary'
       icon={<DeleteOutlined />}
     />
   );

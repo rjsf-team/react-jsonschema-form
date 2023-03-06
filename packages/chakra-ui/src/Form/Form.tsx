@@ -1,7 +1,7 @@
-import { ComponentType } from "react";
-import { withTheme, FormProps } from "@rjsf/core";
-import { generateTheme } from "../Theme";
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import { ComponentType } from 'react';
+import { withTheme, FormProps } from '@rjsf/core';
+import { generateTheme } from '../Theme';
+import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export function generateForm<
   T = any,

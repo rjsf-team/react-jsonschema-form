@@ -1,12 +1,12 @@
-import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from "./constants";
-import isObject from "./isObject";
+import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants';
+import isObject from './isObject';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
   UiSchema,
-} from "./types";
+} from './types';
 
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off.
@@ -20,12 +20,12 @@ export default function getUiOptions<
   F extends FormContextType = any
 >(uiSchema: UiSchema<T, S, F> = {}): UIOptionsType<T, S, F> {
   return Object.keys(uiSchema)
-    .filter((key) => key.indexOf("ui:") === 0)
+    .filter((key) => key.indexOf('ui:') === 0)
     .reduce((options, key) => {
       const value = uiSchema[key];
       if (key === UI_WIDGET_KEY && isObject(value)) {
         console.error(
-          "Setting options via ui:widget object is no longer supported, use ui:options instead"
+          'Setting options via ui:widget object is no longer supported, use ui:options instead'
         );
         return options;
       }

@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   errorId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *

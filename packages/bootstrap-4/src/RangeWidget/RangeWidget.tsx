@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function RangeWidget<
   T = any,
@@ -12,14 +12,14 @@ export default function RangeWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { value, label, options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
   return (
     <BaseInputTemplate {...props} extraProps={label}>
-      <span className="range-view">{value}</span>
+      <span className='range-view'>{value}</span>
     </BaseInputTemplate>
   );
 }

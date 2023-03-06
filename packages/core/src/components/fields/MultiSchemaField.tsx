@@ -1,7 +1,7 @@
-import { Component } from "react";
-import get from "lodash/get";
-import isEmpty from "lodash/isEmpty";
-import omit from "lodash/omit";
+import { Component } from 'react';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import omit from 'lodash/omit';
 import {
   deepEquals,
   ERRORS_KEY,
@@ -12,7 +12,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** Type used for the state of the `AnyOfField` component */
 type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
@@ -153,7 +153,7 @@ class AnyOfField<
       newFormData = schemaUtils.getDefaultFormState(
         newOption,
         newFormData,
-        "excludeObjectChildren"
+        'excludeObjectChildren'
       ) as T;
     }
     onChange(newFormData, undefined, this.getFieldId());
@@ -164,7 +164,7 @@ class AnyOfField<
   getFieldId() {
     const { idSchema, schema } = this.props;
     return `${idSchema.$id}${
-      schema.oneOf ? "__oneof_select" : "__anyof_select"
+      schema.oneOf ? '__oneof_select' : '__anyof_select'
     }`;
   }
 
@@ -188,14 +188,14 @@ class AnyOfField<
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption, retrievedOptions } = this.state;
     const {
-      widget = "select",
+      widget = 'select',
       placeholder,
       autofocus,
       autocomplete,
       title = schema.title,
       ...uiOptions
     } = getUiOptions<T, S, F>(uiSchema);
-    const Widget = getWidget<T, S, F>({ type: "number" }, widget, widgets);
+    const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
 
@@ -228,14 +228,14 @@ class AnyOfField<
     );
 
     return (
-      <div className="panel panel-default panel-body">
-        <div className="form-group">
+      <div className='panel panel-default panel-body'>
+        <div className='form-group'>
           <Widget
             id={this.getFieldId()}
             name={`${name}${
-              schema.oneOf ? "__oneof_select" : "__anyof_select"
+              schema.oneOf ? '__oneof_select' : '__anyof_select'
             }`}
-            schema={{ type: "number", default: 0 } as S}
+            schema={{ type: 'number', default: 0 } as S}
             onChange={this.onOptionChange}
             onBlur={onBlur}
             onFocus={onFocus}
@@ -250,7 +250,7 @@ class AnyOfField<
             placeholder={placeholder}
             autocomplete={autocomplete}
             autofocus={autofocus}
-            label=""
+            label=''
           />
         </div>
         {option !== null && (

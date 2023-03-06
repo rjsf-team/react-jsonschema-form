@@ -3,10 +3,10 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import { CustomValidatorOptionsType } from "./types";
-import AJV6Validator from "./validator";
+import { CustomValidatorOptionsType } from './types';
+import AJV6Validator from './validator';
 
 /** Creates and returns a customized implementation of the `ValidatorType` with the given customization `options` if
  * provided.

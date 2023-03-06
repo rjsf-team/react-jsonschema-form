@@ -18,7 +18,9 @@
     "build-serial": "lerna run --concurrency 1 --stream build",
     "start": "lerna run start --stream --parallel",
     "pre-commit:husky": "lerna run --concurrency 1 --stream precommit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format-check": "prettier --check .",
+    "format": "prettier --write ."
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",

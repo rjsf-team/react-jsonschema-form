@@ -3,10 +3,10 @@ import {
   TitleFieldProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { Header } from "semantic-ui-react";
+} from '@rjsf/utils';
+import { Header } from 'semantic-ui-react';
 
-import { getSemanticProps } from "../util";
+import { getSemanticProps } from '../util';
 
 const DEFAULT_OPTIONS = {
   inverted: false,
@@ -30,7 +30,7 @@ export default function TitleField<
     return null;
   }
   return (
-    <Header id={id} {...semanticProps} as="h5">
+    <Header id={id} {...semanticProps} as='h5'>
       {title}
     </Header>
   );

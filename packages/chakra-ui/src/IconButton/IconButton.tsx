@@ -4,10 +4,10 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from "@chakra-ui/icons";
-import ChakraIconButton from "./ChakraIconButton";
+import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from '@chakra-ui/icons';
+import ChakraIconButton from './ChakraIconButton';
 
 export function MoveDownButton<
   T = any,

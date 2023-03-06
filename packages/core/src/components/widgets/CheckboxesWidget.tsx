@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -10,7 +10,7 @@ import {
   WidgetProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -46,7 +46,7 @@ function CheckboxesWidget<
     [onFocus, id]
   );
   return (
-    <div className="checkboxes" id={id}>
+    <div className='checkboxes' id={id}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(
@@ -57,7 +57,7 @@ function CheckboxesWidget<
             Array.isArray(enumDisabled) &&
             enumDisabled.indexOf(option.value) !== -1;
           const disabledCls =
-            disabled || itemDisabled || readonly ? "disabled" : "";
+            disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.checked) {
@@ -78,7 +78,7 @@ function CheckboxesWidget<
           const checkbox = (
             <span>
               <input
-                type="checkbox"
+                type='checkbox'
                 id={optionId(id, index)}
                 name={id}
                 checked={checked}

@@ -1,12 +1,12 @@
-import { UI_WIDGET_KEY } from "../constants";
+import { UI_WIDGET_KEY } from '../constants';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
   ValidatorType,
-} from "../types";
-import retrieveSchema from "./retrieveSchema";
+} from '../types';
+import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
  *
@@ -26,7 +26,7 @@ export default function isFilesArray<
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S
 ) {
-  if (uiSchema[UI_WIDGET_KEY] === "files") {
+  if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }
   if (schema.items) {
@@ -35,7 +35,7 @@ export default function isFilesArray<
       schema.items as S,
       rootSchema
     );
-    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+    return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }
   return false;
 }
