@@ -51,6 +51,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 - Updated the `custom-widgets-fields` documentation to ensure the new `WidgetProps` `name` prop is documented
+- Added Algolia DocSearch to the documentation site
 
 # 5.2.0
 
