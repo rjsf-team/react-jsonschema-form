@@ -25,6 +25,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@nrwl/nx-cloud": "latest",
+    "@types/prettier": "^2.7.2",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
     "dts-cli": "^1.6.3",
