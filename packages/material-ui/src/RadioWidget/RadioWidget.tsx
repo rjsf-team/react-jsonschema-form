@@ -1,4 +1,3 @@
-import React from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";

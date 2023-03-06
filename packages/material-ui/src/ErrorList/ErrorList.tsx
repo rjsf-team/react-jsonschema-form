@@ -1,4 +1,3 @@
-import React from "react";
 import ErrorIcon from "@material-ui/icons/Error";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";

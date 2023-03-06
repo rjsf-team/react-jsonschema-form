@@ -1,4 +1,4 @@
-import React from "react";
+import { Component } from "react";
 import { expect } from "chai";
 
 import TitleField from "../src/components/templates/TitleField";
@@ -17,7 +17,7 @@ describe("TitleField", () => {
 
   // For some reason, stateless components needs to be wrapped into a stateful
   // one to be rendered into the document.
-  class TitleFieldWrapper extends React.Component {
+  class TitleFieldWrapper extends Component {
     constructor(props) {
       super(props);
     }

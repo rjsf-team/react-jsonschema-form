@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";

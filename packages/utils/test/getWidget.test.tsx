@@ -1,4 +1,4 @@
-import React from "react";
+import { forwardRef, memo } from "react";
 import TestRenderer from "react-test-renderer";
 
 import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget } from "../src";
@@ -27,7 +27,7 @@ const schema: RJSFSchema = {
   },
 };
 
-const TestRefWidget = React.forwardRef(function TestRefWidget(
+const TestRefWidget = forwardRef(function TestRefWidget(
   props: WidgetProps,
   ref: React.ForwardedRef<any>
 ) {
@@ -150,7 +150,7 @@ describe("getWidget()", () => {
   });
 
   it("should not fail on memo component", () => {
-    const TheWidget = React.memo(TestWidget);
+    const TheWidget = memo(TestWidget);
     const rendered = TestRenderer.create(<TheWidget {...widgetProps} />);
     expect(rendered.toJSON()).toEqual({
       children: ["test"],

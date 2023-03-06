@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { useState, createRef, Component } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { samples } from "./samples";
 import "react-app-polyfill/ie11";
@@ -288,7 +288,7 @@ class CopyLink extends Component {
 }
 
 function RawValidatorTest({ validator, schema, formData }) {
-  const [rawValidation, setRawValidation] = React.useState();
+  const [rawValidation, setRawValidation] = useState();
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
@@ -342,7 +342,7 @@ class Playground extends Component {
     const validator = "AJV8";
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
-    this.playGroundForm = React.createRef();
+    this.playGroundForm = createRef();
     this.state = {
       form: false,
       schema,
@@ -619,7 +619,7 @@ class Playground extends Component {
             {this.state.form && (
               <DemoFrame
                 head={
-                  <React.Fragment>
+                  <>
                     <link
                       rel="stylesheet"
                       id="theme"
@@ -634,7 +634,7 @@ class Playground extends Component {
                         }}
                       />
                     )}
-                  </React.Fragment>
+                  </>
                 }
                 style={{
                   width: "100%",

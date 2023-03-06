@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import { CSSProperties } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {

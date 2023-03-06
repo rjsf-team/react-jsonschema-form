@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import omit from "lodash/omit";

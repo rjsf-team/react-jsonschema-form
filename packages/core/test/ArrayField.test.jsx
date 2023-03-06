@@ -1,5 +1,3 @@
-import React from "react";
-
 import { expect } from "chai";
 import { Simulate } from "react-dom/test-utils";
 import sinon from "sinon";

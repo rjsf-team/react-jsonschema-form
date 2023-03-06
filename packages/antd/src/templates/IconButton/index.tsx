@@ -1,4 +1,3 @@
-import React from "react";
 import Button, { ButtonProps, ButtonType } from "antd/lib/button";
 import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
 import ArrowUpOutlined from "@ant-design/icons/ArrowUpOutlined";

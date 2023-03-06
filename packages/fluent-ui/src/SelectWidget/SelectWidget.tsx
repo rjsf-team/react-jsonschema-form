@@ -1,4 +1,3 @@
-import React from "react";
 import { Dropdown, IDropdownOption } from "@fluentui/react";
 import {
   ariaDescribedByIds,

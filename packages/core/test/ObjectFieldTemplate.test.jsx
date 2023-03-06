@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 
 import { expect } from "chai";
 import { createFormComponent, createSandbox } from "./test_utils";

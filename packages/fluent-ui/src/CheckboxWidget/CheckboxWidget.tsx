@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback } from "react";
 import { Checkbox } from "@fluentui/react";
 import {
   ariaDescribedByIds,
@@ -53,7 +53,7 @@ export default function CheckboxWidget<
     options,
   } = props;
 
-  const _onChange = React.useCallback(
+  const _onChange = useCallback(
     (_, checked?: boolean): void => {
       onChange(checked);
     },

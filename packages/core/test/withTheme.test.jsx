@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import React, { Component, createRef } from "react";
+import { Component, createRef } from "react";
 import validator from "@rjsf/validator-ajv8";
 
 import { withTheme } from "../src";

@@ -1,6 +1,7 @@
+import * as React from "react";
 import { expect } from "chai";
 import sinon from "sinon";
-import React, { createRef } from "react";
+import { createRef } from "react";
 import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
 import { render, findDOMNode } from "react-dom";
 import { Portal } from "react-portal";

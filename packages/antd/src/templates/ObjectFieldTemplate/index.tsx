@@ -1,4 +1,3 @@
-import React from "react";
 import classNames from "classnames";
 import isObject from "lodash/isObject";
 import isNumber from "lodash/isNumber";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Label, SpinButton } from "@fluentui/react";
 import {
   ariaDescribedByIds,
