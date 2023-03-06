@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import Col from "antd/lib/col";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
@@ -67,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead

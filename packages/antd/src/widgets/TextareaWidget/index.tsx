@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Input from "antd/lib/input";
 import {
   ariaDescribedByIds,
@@ -34,13 +35,13 @@ export default function TextareaWidget<
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(target.value === "" ? options.emptyValue : target.value);
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLTextAreaElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) =>
     onBlur(id, target.value);
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLTextAreaElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) =>
     onFocus(id, target.value);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,

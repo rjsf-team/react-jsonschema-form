@@ -19,35 +19,44 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/bootstrap-4
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`, deleting the theme's `FileWidget`, fixing [#2095](https://github.com/rjsf-team/react-jsonschema-form/issues/2095)
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/chakra-ui
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/core
 - Ensure that `name` is consistently passed to all `Widgets` through the field components, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
 - Updated the `FileWidget` to render the input using the `BaseInputTemplate` passing a special `onChangeOverride` function to deal with the file events, fixing [#2095](https://github.com/rjsf-team/react-jsonschema-form/issues/2095)
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/fluent-ui
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/material-ui
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget` and to support automatically shrinking the label for the `date`, `datetime-local` and `file` types
   - Removed the `DateWidget` and `DateTimeWidget` since they were only created to provide the label shrinking property
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/mui
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget` and to support automatically shrinking the label for the `date`, `datetime-local` and `file` types
   - Removed the `DateWidget` and `DateTimeWidget` since they were only created to provide the label shrinking property
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/semantic-ui
 - Updated `BaseInputTemplate` to favor the special `onChangeOverride` provided by the `core` `FileWidget`
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## @rjsf/utils
 - Added the `name` prop to the `WidgetProps` type, fixing [#1763](https://github.com/rjsf-team/react-jsonschema-form/issues/1763)
 - Fixed `dataURItoBlob()` to handle the exception thrown by `atob()` when it is passed a malformed URL, returning an `blob` that indicates the error in the `type` prop
 - Fixed `replaceStringParameters()` to improve the replaceable parameters logic so that it works properly when a parameter also contains a replaceable parameter identifier
+- Removed explicit import of `React`, switching imports to explicit ones after fixing linting rules to not require `React` for JSX
 
 ## Dev / docs / playground
 - Updated the `custom-widgets-fields` documentation to ensure the new `WidgetProps` `name` prop is documented

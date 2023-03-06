@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   FormControl,
   FormLabel,
@@ -45,11 +46,10 @@ export default function RangeWidget<
 
   const _onChange = (value: undefined | number) =>
     onChange(value === undefined ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   return (
     <FormControl mb={1} {...chakraProps}>

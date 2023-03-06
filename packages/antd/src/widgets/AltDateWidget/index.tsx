@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import Button from "antd/lib/button";
 import Col from "antd/lib/col";
 import Row from "antd/lib/row";
@@ -116,7 +116,7 @@ export default function AltDateWidget<
     }
   };
 
-  const handleNow = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNow = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -125,7 +125,7 @@ export default function AltDateWidget<
     onChange(toDateString(nextState, showTime));
   };
 
-  const handleClear = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClear = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;

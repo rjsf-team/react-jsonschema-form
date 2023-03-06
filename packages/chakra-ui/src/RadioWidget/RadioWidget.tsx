@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   FormControl,
   FormLabel,
@@ -40,11 +41,9 @@ export default function RadioWidget<
 
   const _onChange = (nextValue: any) =>
     onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;

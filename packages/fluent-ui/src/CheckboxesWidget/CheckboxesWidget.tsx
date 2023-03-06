@@ -1,3 +1,4 @@
+import { FormEvent, FocusEvent } from "react";
 import { Checkbox, Label } from "@fluentui/react";
 import {
   ariaDescribedByIds,
@@ -45,8 +46,7 @@ export default function CheckboxesWidget<
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange =
-    (index: number) =>
-    (_ev?: React.FormEvent<HTMLElement>, checked?: boolean) => {
+    (index: number) => (_ev?: FormEvent<HTMLElement>, checked?: boolean) => {
       if (checked) {
         onChange(
           enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
@@ -58,14 +58,10 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);

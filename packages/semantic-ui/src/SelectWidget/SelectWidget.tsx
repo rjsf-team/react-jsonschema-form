@@ -1,3 +1,4 @@
+import { FocusEvent, SyntheticEvent } from "react";
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -83,7 +84,7 @@ export default function SelectWidget<
     enumDisabled
   );
   const _onChange = (
-    _: React.SyntheticEvent<HTMLElement>,
+    _: SyntheticEvent<HTMLElement>,
     { value }: DropdownProps
   ) =>
     onChange(
@@ -91,11 +92,11 @@ export default function SelectWidget<
     );
   // eslint-disable-next-line no-shadow
   const _onBlur = (
-    _: React.FocusEvent<HTMLElement>,
+    _: FocusEvent<HTMLElement>,
     { target: { value } }: DropdownProps
   ) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onFocus = (
-    _: React.FocusEvent<HTMLElement>,
+    _: FocusEvent<HTMLElement>,
     { target: { value } }: DropdownProps
   ) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));

@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   CheckboxGroup,
   Checkbox,
@@ -43,13 +44,11 @@ export default function CheckboxesWidget<
   const chakraProps = getChakra({ uiSchema });
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) =>
+  }: FocusEvent<HTMLInputElement | any>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;

@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -43,9 +44,7 @@ export default function TextareaWidget<
   });
   const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);

@@ -1,3 +1,4 @@
+import { FormEvent, FocusEvent } from "react";
 import {
   ChoiceGroup,
   IChoiceGroupOption,
@@ -48,7 +49,7 @@ export default function RadioWidget<
   const { enumOptions, enumDisabled, emptyValue } = options;
 
   function _onChange(
-    _ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
+    _ev?: FormEvent<HTMLElement | HTMLInputElement>,
     option?: IChoiceGroupOption
   ): void {
     if (option) {
@@ -56,11 +57,9 @@ export default function RadioWidget<
     }
   }
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const newOptions = Array.isArray(enumOptions)

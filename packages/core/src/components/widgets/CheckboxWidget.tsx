@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -46,20 +46,17 @@ function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(event.target.checked),
+    (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
     [onChange]
   );
 
   const handleBlur = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) =>
-      onBlur(id, event.target.checked),
+    (event: FocusEvent<HTMLInputElement>) => onBlur(id, event.target.checked),
     [onBlur, id]
   );
 
   const handleFocus = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) =>
-      onFocus(id, event.target.checked),
+    (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.checked),
     [onFocus, id]
   );
 

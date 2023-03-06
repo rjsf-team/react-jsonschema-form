@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, FocusEvent } from "react";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -57,7 +57,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
 
   return (

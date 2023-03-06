@@ -24,7 +24,7 @@ export default function DateWidget<
     options
   );
   const handleChange = useCallback(
-    (value: React.ChangeEvent) => onChange(value || undefined),
+    (value: any) => onChange(value || undefined),
     [onChange]
   );
 

@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
@@ -33,10 +34,7 @@ export default function SelectWidget<
 
   const emptyValue = multiple ? [] : "";
 
-  function getValue(
-    event: React.FocusEvent | React.ChangeEvent | any,
-    multiple?: boolean
-  ) {
+  function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {
       return [].slice
         .call(event.target.options as any)
@@ -68,7 +66,7 @@ export default function SelectWidget<
       className={rawErrors.length > 0 ? "is-invalid" : ""}
       onBlur={
         onBlur &&
-        ((event: React.FocusEvent) => {
+        ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
           onBlur(
             id,
@@ -78,7 +76,7 @@ export default function SelectWidget<
       }
       onFocus={
         onFocus &&
-        ((event: React.FocusEvent) => {
+        ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
           onFocus(
             id,
@@ -86,7 +84,7 @@ export default function SelectWidget<
           );
         })
       }
-      onChange={(event: React.ChangeEvent) => {
+      onChange={(event: ChangeEvent) => {
         const newValue = getValue(event, multiple);
         onChange(
           enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)

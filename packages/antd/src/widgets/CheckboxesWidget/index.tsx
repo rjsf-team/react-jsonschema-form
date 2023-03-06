@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import Checkbox from "antd/lib/checkbox";
 import {
   ariaDescribedByIds,
@@ -39,13 +40,13 @@ export default function CheckboxesWidget<
   const handleChange = (nextValue: any) =>
     onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(
       id,
       enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
     );
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(
       id,
       enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)

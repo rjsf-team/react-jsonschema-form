@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
@@ -36,16 +37,12 @@ export default function TextareaWidget<
     schemaUtils.getDisplayLabel(schema, uiSchema) &&
     (!!label || !!schema.title);
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLTextAreaElement>) => onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
+    onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
+    onFocus(id, value);
 
   return (
     <FormControl

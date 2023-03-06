@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import { Input } from "semantic-ui-react";
 import {
   ariaDescribedByIds,
@@ -44,9 +45,7 @@ export default function RangeWidget<
   });
 
   // eslint-disable-next-line no-shadow
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange && onChange(value === "" ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);

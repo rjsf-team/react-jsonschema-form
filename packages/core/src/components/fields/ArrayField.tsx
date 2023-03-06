@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, MouseEvent } from "react";
 import {
   getTemplate,
   getWidget,
@@ -302,7 +302,7 @@ class ArrayField<
    * @param newIndex - The index to where the item is to be moved
    */
   onReorderClick = (index: number, newIndex: number) => {
-    return (event: React.MouseEvent<HTMLButtonElement>) => {
+    return (event: MouseEvent<HTMLButtonElement>) => {
       if (event) {
         event.preventDefault();
         event.currentTarget.blur();

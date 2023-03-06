@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
@@ -33,7 +34,7 @@ export default function CheckboxesWidget<
 
   const _onChange =
     (index: number) =>
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
         onChange(
           enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
@@ -45,11 +46,9 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   return (

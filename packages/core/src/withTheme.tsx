@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ComponentType, ForwardedRef, forwardRef } from "react";
 import Form, { FormProps } from "./components/Form";
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
 
@@ -19,7 +19,7 @@ export default function withTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(themeProps: ThemeProps<T, S, F>): React.ComponentType<FormProps<T, S, F>> {
+>(themeProps: ThemeProps<T, S, F>): ComponentType<FormProps<T, S, F>> {
   return forwardRef(
     (
       { fields, widgets, templates, ...directProps }: FormProps<T, S, F>,

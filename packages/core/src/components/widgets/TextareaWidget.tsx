@@ -1,4 +1,4 @@
-import { FocusEvent, useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -29,7 +29,7 @@ function TextareaWidget<
   onFocus,
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
-    ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) =>
+    ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
       onChange(value === "" ? options.emptyValue : value),
     [onChange, options.emptyValue]
   );

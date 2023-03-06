@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import {
@@ -52,15 +53,11 @@ export default function SelectWidget<
     (multiple && value.length < 1) ||
     (!multiple && value === emptyValue);
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<{ value: string }>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(
     value,

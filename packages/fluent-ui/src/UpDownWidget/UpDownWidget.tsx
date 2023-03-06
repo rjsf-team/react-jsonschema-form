@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import { Label, SpinButton } from "@fluentui/react";
 import {
   ariaDescribedByIds,
@@ -69,9 +70,8 @@ export default function UpDownWidget<
   registry,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => onChange(Number(value));
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(Number(value));
 
   let { min, max, step } = rangeSpec<S>(schema);
   if (min === undefined) {
@@ -96,11 +96,10 @@ export default function UpDownWidget<
     }
   };
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   const requiredSymbol = required ? "*" : "";
 

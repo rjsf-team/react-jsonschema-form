@@ -1,3 +1,4 @@
+import { FormEvent } from "react";
 import {
   ariaDescribedByIds,
   enumOptionsIsSelected,
@@ -42,7 +43,7 @@ export default function RadioWidget<
     uiSchema,
   });
   const _onChange = (
-    _: React.FormEvent<HTMLInputElement>,
+    _: FormEvent<HTMLInputElement>,
     { value: eventValue }: CheckboxProps
   ) => {
     return onChange(

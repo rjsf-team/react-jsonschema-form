@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from "react";
+import { ChangeEvent, FocusEvent, SyntheticEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -9,10 +9,7 @@ import {
   WidgetProps,
 } from "@rjsf/utils";
 
-function getValue(
-  event: React.SyntheticEvent<HTMLSelectElement>,
-  multiple: boolean
-) {
+function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
   if (multiple) {
     return Array.from((event.target as HTMLSelectElement).options)
       .slice()
