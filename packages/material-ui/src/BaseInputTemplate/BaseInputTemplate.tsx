@@ -1,13 +1,16 @@
+import { ChangeEvent, FocusEvent } from "react";
 import TextField, { TextFieldProps } from "@material-ui/core/TextField";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
 } from "@rjsf/utils";
+
+const TYPES_THAT_SHRINK_LABEL = ["date", "datetime-local", "file"];
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -19,7 +22,7 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from textFieldProps
@@ -31,6 +34,7 @@ export default function BaseInputTemplate<
     label,
     value,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
@@ -40,6 +44,7 @@ export default function BaseInputTemplate<
     rawErrors = [],
     formContext,
     registry,
+    InputLabelProps,
     ...textFieldProps
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -54,18 +59,21 @@ export default function BaseInputTemplate<
     },
     ...rest,
   };
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   const { schemaUtils } = registry;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
+    ? {
+        ...InputLabelProps,
+        shrink: true,
+      }
+    : InputLabelProps;
 
   return (
     <>
@@ -80,9 +88,10 @@ export default function BaseInputTemplate<
         {...otherProps}
         value={value || value === 0 ? value : ""}
         error={rawErrors.length > 0}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        InputLabelProps={DisplayInputLabelProps}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />

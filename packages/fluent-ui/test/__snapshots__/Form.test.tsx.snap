@@ -76,7 +76,7 @@ exports[`single fields checkbox field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__103"
+              id="id__106"
             >
               Submit
             </span>
@@ -171,7 +171,7 @@ exports[`single fields checkbox field with label 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__106"
+              id="id__109"
             >
               Submit
             </span>
@@ -401,7 +401,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__109"
+              id="id__112"
             >
               Submit
             </span>
@@ -456,7 +456,7 @@ exports[`single fields field with description 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_my-field"
-                id="TextFieldLabel126"
+                id="TextFieldLabel129"
               >
                 my-field
               </label>
@@ -466,7 +466,7 @@ exports[`single fields field with description 1`] = `
                 <input
                   aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel126"
+                  aria-labelledby="TextFieldLabel129"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -520,7 +520,7 @@ exports[`single fields field with description 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__127"
+              id="id__130"
             >
               Submit
             </span>
@@ -575,7 +575,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_my-field"
-                id="TextFieldLabel132"
+                id="TextFieldLabel135"
               >
                 my-field
               </label>
@@ -585,7 +585,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 <input
                   aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel132"
+                  aria-labelledby="TextFieldLabel135"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -639,7 +639,7 @@ exports[`single fields field with description in uiSchema 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__133"
+              id="id__136"
             >
               Submit
             </span>
@@ -679,7 +679,7 @@ exports[`single fields format color 1`] = `
         className="ms-ColorPicker-panel panel-63"
       >
         <div
-          aria-describedby="ColorRectangle-description45"
+          aria-describedby="ColorRectangle-description48"
           aria-label="Saturation and brightness"
           aria-valuemax={100}
           aria-valuemin={0}
@@ -699,7 +699,7 @@ exports[`single fields format color 1`] = `
         >
           <div
             className="description-76"
-            id="ColorRectangle-description45"
+            id="ColorRectangle-description48"
           >
             Use left and right arrow keys to set saturation. Use up and down arrow keys to set brightness.
           </div>
@@ -840,7 +840,7 @@ exports[`single fields format color 1`] = `
                         aria-label="Hex"
                         autoComplete="off"
                         className="ms-TextField-field field-44"
-                        id="TextField46"
+                        id="TextField49"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
@@ -869,7 +869,7 @@ exports[`single fields format color 1`] = `
                         aria-live="assertive"
                         autoComplete="off"
                         className="ms-TextField-field field-44"
-                        id="TextField49"
+                        id="TextField52"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
@@ -898,7 +898,7 @@ exports[`single fields format color 1`] = `
                         aria-live="assertive"
                         autoComplete="off"
                         className="ms-TextField-field field-44"
-                        id="TextField52"
+                        id="TextField55"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
@@ -927,7 +927,7 @@ exports[`single fields format color 1`] = `
                         aria-live="assertive"
                         autoComplete="off"
                         className="ms-TextField-field field-44"
-                        id="TextField55"
+                        id="TextField58"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
@@ -956,7 +956,7 @@ exports[`single fields format color 1`] = `
                         aria-live="assertive"
                         autoComplete="off"
                         className="ms-TextField-field field-44"
-                        id="TextField58"
+                        id="TextField61"
                         onBlur={[Function]}
                         onChange={[Function]}
                         onFocus={[Function]}
@@ -1001,7 +1001,7 @@ exports[`single fields format color 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__61"
+              id="id__64"
             >
               Submit
             </span>
@@ -1109,7 +1109,7 @@ exports[`single fields format date 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__68"
+              id="id__71"
             >
               Submit
             </span>
@@ -1193,7 +1193,7 @@ exports[`single fields format datetime 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__74"
+              id="id__77"
             >
               Submit
             </span>
@@ -1232,7 +1232,7 @@ exports[`single fields help and error display 1`] = `
       <div
         aria-live="assertive"
         className="ms-MessageBar-text text-159"
-        id="MessageBar160"
+        id="MessageBar163"
         role="status"
       >
         <span
@@ -1261,7 +1261,7 @@ exports[`single fields help and error display 1`] = `
           className="ms-TextField-fieldGroup fieldGroup-165"
         >
           <input
-            aria-describedby="TextFieldDescription162"
+            aria-describedby="TextFieldDescription165"
             aria-invalid={true}
             autoFocus={false}
             className="ms-TextField-field field-44"
@@ -1280,7 +1280,7 @@ exports[`single fields help and error display 1`] = `
         </div>
       </div>
       <span
-        id="TextFieldDescription162"
+        id="TextFieldDescription165"
       >
         <div
           role="alert"
@@ -1345,7 +1345,7 @@ exports[`single fields help and error display 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__164"
+              id="id__167"
             >
               Submit
             </span>
@@ -1428,7 +1428,7 @@ exports[`single fields hidden field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__121"
+              id="id__124"
             >
               Submit
             </span>
@@ -1512,7 +1512,7 @@ exports[`single fields hidden label 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__145"
+              id="id__148"
             >
               Submit
             </span>
@@ -1567,7 +1567,7 @@ exports[`single fields null field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__39"
+              id="id__42"
             >
               Submit
             </span>
@@ -1652,7 +1652,7 @@ exports[`single fields number field 0 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__36"
+              id="id__39"
             >
               Submit
             </span>
@@ -1737,7 +1737,7 @@ exports[`single fields number field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__30"
+              id="id__33"
             >
               Submit
             </span>
@@ -1821,7 +1821,7 @@ exports[`single fields password field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__80"
+              id="id__83"
             >
               Submit
             </span>
@@ -1887,7 +1887,7 @@ exports[`single fields radio field 1`] = `
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel113-0"
+                  id="ChoiceGroupLabel116-0"
                 >
                   Yes
                 </span>
@@ -1918,7 +1918,7 @@ exports[`single fields radio field 1`] = `
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel113-1"
+                  id="ChoiceGroupLabel116-1"
                 >
                   No
                 </span>
@@ -1955,7 +1955,7 @@ exports[`single fields radio field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__114"
+              id="id__117"
             >
               Submit
             </span>
@@ -2059,7 +2059,7 @@ exports[`single fields schema examples 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__157"
+              id="id__160"
             >
               Submit
             </span>
@@ -2152,7 +2152,7 @@ exports[`single fields select field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__100"
+              id="id__103"
             >
               Submit
             </span>
@@ -2197,7 +2197,7 @@ exports[`single fields slider field 1`] = `
           aria-valuetext="42"
           className="ms-Slider-slideBox ms-Slider-showValue ms-Slider-showTransitions slideBox-144"
           data-is-focusable={true}
-          id="Slider117"
+          id="Slider120"
           onKeyDown={[Function]}
           onMouseDown={[Function]}
           onTouchStart={[Function]}
@@ -2267,7 +2267,7 @@ exports[`single fields slider field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__118"
+              id="id__121"
             >
               Submit
             </span>
@@ -2296,18 +2296,35 @@ exports[`single fields string field format data-url 1`] = `
     }
   >
     <div>
-      <p>
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          defaultValue=""
-          disabled={false}
-          id="root"
-          name="root"
-          onChange={[Function]}
-          type="file"
-        />
-      </p>
+      <div
+        className="ms-TextField root-42"
+      >
+        <div
+          className="ms-TextField-wrapper"
+        >
+          <div
+            className="ms-TextField-fieldGroup fieldGroup-43"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              autoFocus={false}
+              className="ms-TextField-field field-44"
+              disabled={false}
+              id="root"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              placeholder=""
+              readOnly={false}
+              type="file"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
     </div>
     
   </div>
@@ -2336,7 +2353,7 @@ exports[`single fields string field format data-url 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__18"
+              id="id__21"
             >
               Submit
             </span>
@@ -2672,7 +2689,7 @@ exports[`single fields string field with placeholder 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__24"
+              id="id__27"
             >
               Submit
             </span>
@@ -2756,7 +2773,7 @@ exports[`single fields textarea field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__97"
+              id="id__100"
             >
               Submit
             </span>
@@ -2816,7 +2833,7 @@ exports[`single fields title field 1`] = `
               <label
                 className="ms-Label root-61"
                 htmlFor="root_title"
-                id="TextFieldLabel138"
+                id="TextFieldLabel141"
               >
                 title
               </label>
@@ -2826,7 +2843,7 @@ exports[`single fields title field 1`] = `
                 <input
                   aria-describedby="root_title__error root_title__description root_title__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel138"
+                  aria-labelledby="TextFieldLabel141"
                   autoFocus={false}
                   className="ms-TextField-field field-44"
                   disabled={false}
@@ -2876,7 +2893,7 @@ exports[`single fields title field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__139"
+              id="id__142"
             >
               Submit
             </span>
@@ -2951,7 +2968,7 @@ exports[`single fields unsupported field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__42"
+              id="id__45"
             >
               Submit
             </span>
@@ -3005,7 +3022,7 @@ exports[`single fields up/down field 1`] = `
           className="ms-spinButton-input css-99"
           data-lpignore={true}
           disabled={false}
-          id="input84"
+          id="input87"
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -3113,7 +3130,7 @@ exports[`single fields up/down field 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__91"
+              id="id__94"
             >
               Submit
             </span>
@@ -3197,7 +3214,7 @@ exports[`single fields using custom tagName 1`] = `
           >
             <span
               className="ms-Button-label label-57"
-              id="id__151"
+              id="id__154"
             >
               Submit
             </span>

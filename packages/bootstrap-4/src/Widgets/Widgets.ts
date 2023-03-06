@@ -4,7 +4,6 @@ import RadioWidget from "../RadioWidget/RadioWidget";
 import RangeWidget from "../RangeWidget/RangeWidget";
 import SelectWidget from "../SelectWidget/SelectWidget";
 import TextareaWidget from "../TextareaWidget/TextareaWidget";
-import FileWidget from "../FileWidget/FileWidget";
 import {
   FormContextType,
   RegistryWidgetsType,
@@ -24,7 +23,6 @@ export function generateWidgets<
     RangeWidget,
     SelectWidget,
     TextareaWidget,
-    FileWidget,
   };
 }
 

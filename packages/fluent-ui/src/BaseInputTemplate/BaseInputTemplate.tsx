@@ -1,12 +1,13 @@
+import { ChangeEvent, FocusEvent } from "react";
 import { TextField } from "@fluentui/react";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
 } from "@rjsf/utils";
 import _pick from "lodash/pick";
 
@@ -64,6 +65,7 @@ export default function BaseInputTemplate<
   label,
   value,
   onChange,
+  onChangeOverride,
   onBlur,
   onFocus,
   autofocus,
@@ -72,18 +74,19 @@ export default function BaseInputTemplate<
   type,
   rawErrors,
   multiline,
-}: WidgetProps<T, S, F>) {
+  registry,
+  uiSchema,
+}: BaseInputTemplateProps<T, S, F>) {
+  const { schemaUtils } = registry;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
@@ -92,7 +95,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={label || schema.title}
+        label={displayLabel ? label || schema.title : undefined}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
@@ -102,7 +105,7 @@ export default function BaseInputTemplate<
         // name={name}
         {...inputProps}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange as any}
+        onChange={(onChangeOverride as any) || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         errorMessage={(rawErrors || []).join("\n")}

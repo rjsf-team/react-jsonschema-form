@@ -1,12 +1,13 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
 } from "@rjsf/utils";
 
 export default function BaseInputTemplate<
@@ -22,6 +23,7 @@ export default function BaseInputTemplate<
   type,
   value,
   onChange,
+  onChangeOverride,
   onBlur,
   onFocus,
   autofocus,
@@ -30,20 +32,17 @@ export default function BaseInputTemplate<
   rawErrors = [],
   children,
   extraProps,
-}: WidgetProps<T, S, F>) {
+}: BaseInputTemplateProps<T, S, F>) {
   const inputProps = {
     ...extraProps,
     ...getInputProps<T, S, F>(schema, type, options),
   };
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
@@ -60,7 +59,7 @@ export default function BaseInputTemplate<
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}

@@ -1602,18 +1602,24 @@ exports[`single fields string field format data-url 1`] = `
     className="form-group field field-string"
   >
     <div>
-      <p>
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          defaultValue=""
-          disabled={false}
-          id="root"
-          name="root"
-          onChange={[Function]}
-          type="file"
-        />
-      </p>
+      <input
+        aria-describedby="root__error root__description root__help"
+        className="ant-input"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder=""
+        style={
+          Object {
+            "width": "100%",
+          }
+        }
+        type="file"
+        value=""
+      />
     </div>
   </div>
   <button

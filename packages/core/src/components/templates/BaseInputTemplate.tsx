@@ -1,12 +1,12 @@
-import { useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from "react";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
 } from "@rjsf/utils";
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -19,7 +19,7 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from ...rest
@@ -30,6 +30,7 @@ export default function BaseInputTemplate<
     onBlur,
     onFocus,
     onChange,
+    onChangeOverride,
     options,
     schema,
     uiSchema,
@@ -59,18 +60,16 @@ export default function BaseInputTemplate<
   }
 
   const _onChange = useCallback(
-    ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
       onChange(value === "" ? options.emptyValue : value),
     [onChange, options]
   );
   const _onBlur = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onBlur(id, value),
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value),
     [onBlur, id]
   );
   const _onFocus = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onFocus(id, value),
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value),
     [onFocus, id]
   );
 
@@ -86,7 +85,7 @@ export default function BaseInputTemplate<
         value={inputValue}
         {...inputProps}
         list={schema.examples ? examplesId<T>(id) : undefined}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}

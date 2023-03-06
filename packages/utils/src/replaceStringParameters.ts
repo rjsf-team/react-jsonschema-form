@@ -12,9 +12,14 @@ export default function replaceStringParameters(
 ) {
   let output = inputString;
   if (Array.isArray(params)) {
+    const parts = output.split(/(%\d)/);
     params.forEach((param, index) => {
-      output = output.replace(`%${index + 1}`, param);
+      const partIndex = parts.findIndex((part) => part === `%${index + 1}`);
+      if (partIndex >= 0) {
+        parts[partIndex] = param;
+      }
     });
+    output = parts.join("");
   }
   return output;
 }

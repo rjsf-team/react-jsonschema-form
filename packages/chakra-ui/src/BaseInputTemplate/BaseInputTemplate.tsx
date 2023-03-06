@@ -1,12 +1,13 @@
+import { ChangeEvent, FocusEvent } from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   FormContextType,
   getInputProps,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
 } from "@rjsf/utils";
 import { getChakra } from "../utils";
 
@@ -14,7 +15,7 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     type,
@@ -23,6 +24,7 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     options,
@@ -38,15 +40,12 @@ export default function BaseInputTemplate<
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   const displayLabel =
     schemaUtils.getDisplayLabel(schema, uiSchema) &&
@@ -70,7 +69,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         value={value || value === 0 ? value : ""}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         autoFocus={autofocus}

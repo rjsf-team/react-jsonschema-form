@@ -1,4 +1,12 @@
-import React, { StyleHTMLAttributes } from "react";
+import type {
+  ButtonHTMLAttributes,
+  ChangeEvent,
+  ComponentType,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  StyleHTMLAttributes,
+} from "react";
 import { JSONSchema7 } from "json-schema";
 
 import { TranslatableString } from "./enums";
@@ -162,7 +170,7 @@ export type FieldErrorProps<
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
   /** An array of the errors */
-  errors?: Array<string | React.ReactElement>;
+  errors?: Array<string | ReactElement>;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The schema that was passed to field */
@@ -180,7 +188,7 @@ export type FieldHelpProps<
   F extends FormContextType = any
 > = {
   /** The help information to be rendered */
-  help?: string | React.ReactElement;
+  help?: string | ReactElement;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The schema that was passed to field */
@@ -220,51 +228,49 @@ export interface TemplatesType<
   F extends FormContextType = any
 > {
   /** The template to use while rendering normal or fixed array fields */
-  ArrayFieldTemplate: React.ComponentType<ArrayFieldTemplateProps<T, S, F>>;
+  ArrayFieldTemplate: ComponentType<ArrayFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the description for an array field */
-  ArrayFieldDescriptionTemplate: React.ComponentType<
+  ArrayFieldDescriptionTemplate: ComponentType<
     ArrayFieldDescriptionProps<T, S, F>
   >;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: React.ComponentType<
-    ArrayFieldTemplateItemType<T, S, F>
-  >;
+  ArrayFieldItemTemplate: ComponentType<ArrayFieldTemplateItemType<T, S, F>>;
   /** The template to use while rendering the title for an array field */
-  ArrayFieldTitleTemplate: React.ComponentType<ArrayFieldTitleProps<T, S, F>>;
+  ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
-  BaseInputTemplate: React.ComponentType<WidgetProps<T, S, F>>;
+  BaseInputTemplate: ComponentType<BaseInputTemplateProps<T, S, F>>;
   /** The template to use for rendering the description of a field */
-  DescriptionFieldTemplate: React.ComponentType<DescriptionFieldProps<T, S, F>>;
+  DescriptionFieldTemplate: ComponentType<DescriptionFieldProps<T, S, F>>;
   /** The template to use while rendering the errors for the whole form */
-  ErrorListTemplate: React.ComponentType<ErrorListProps<T, S, F>>;
+  ErrorListTemplate: ComponentType<ErrorListProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
-  FieldErrorTemplate: React.ComponentType<FieldErrorProps<T, S, F>>;
+  FieldErrorTemplate: ComponentType<FieldErrorProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
-  FieldHelpTemplate: React.ComponentType<FieldHelpProps<T, S, F>>;
+  FieldHelpTemplate: ComponentType<FieldHelpProps<T, S, F>>;
   /** The template to use while rendering a field */
-  FieldTemplate: React.ComponentType<FieldTemplateProps<T, S, F>>;
+  FieldTemplate: ComponentType<FieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */
-  ObjectFieldTemplate: React.ComponentType<ObjectFieldTemplateProps<T, S, F>>;
+  ObjectFieldTemplate: ComponentType<ObjectFieldTemplateProps<T, S, F>>;
   /** The template to use for rendering the title of a field */
-  TitleFieldTemplate: React.ComponentType<TitleFieldProps<T, S, F>>;
+  TitleFieldTemplate: ComponentType<TitleFieldProps<T, S, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
-  UnsupportedFieldTemplate: React.ComponentType<UnsupportedFieldProps<T, S, F>>;
+  UnsupportedFieldTemplate: ComponentType<UnsupportedFieldProps<T, S, F>>;
   /** The template to use for rendering a field that allows a user to add additional properties */
-  WrapIfAdditionalTemplate: React.ComponentType<
+  WrapIfAdditionalTemplate: ComponentType<
     WrapIfAdditionalTemplateProps<T, S, F>
   >;
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
-    SubmitButton: React.ComponentType<SubmitButtonProps<T, S, F>>;
+    SubmitButton: ComponentType<SubmitButtonProps<T, S, F>>;
     /** The template to use for the Add button used for AdditionalProperties and Array items */
-    AddButton: React.ComponentType<IconButtonProps<T, S, F>>;
+    AddButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Down button used for Array items */
-    MoveDownButton: React.ComponentType<IconButtonProps<T, S, F>>;
+    MoveDownButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Up button used for Array items */
-    MoveUpButton: React.ComponentType<IconButtonProps<T, S, F>>;
+    MoveUpButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Remove button used for AdditionalProperties and Array items */
-    RemoveButton: React.ComponentType<IconButtonProps<T, S, F>>;
+    RemoveButton: ComponentType<IconButtonProps<T, S, F>>;
   };
 }
 
@@ -307,9 +313,9 @@ export interface FieldProps<
   F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
-      React.HTMLAttributes<HTMLElement>,
+      HTMLAttributes<HTMLElement>,
       Exclude<
-        keyof React.HTMLAttributes<HTMLElement>,
+        keyof HTMLAttributes<HTMLElement>,
         "onBlur" | "onFocus" | "onChange"
       >
     > {
@@ -366,7 +372,7 @@ export type Field<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = React.ComponentType<FieldProps<T, S, F>>;
+> = ComponentType<FieldProps<T, S, F>>;
 
 /** The properties that are passed to a FieldTemplate implementation */
 export type FieldTemplateProps<
@@ -385,17 +391,17 @@ export type FieldTemplateProps<
   /** A component instance rendering the field description, if one is defined (this will use any custom
    * `DescriptionField` defined)
    */
-  description?: React.ReactElement;
+  description?: ReactElement;
   /** A string containing any `ui:description` uiSchema directive defined */
   rawDescription?: string;
   /** The field or widget component instance for this field row */
-  children: React.ReactElement;
+  children: ReactElement;
   /** A component instance listing any encountered errors for this field */
-  errors?: React.ReactElement;
+  errors?: ReactElement;
   /** An array of strings listing all generated error messages from encountered errors for this field */
   rawErrors?: string[];
   /** A component instance rendering any `ui:help` uiSchema directive defined */
-  help?: React.ReactElement;
+  help?: ReactElement;
   /** A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed
    * `ui:help` is a React component instead of a string
    */
@@ -481,7 +487,7 @@ export type DescriptionFieldProps<
   /** The uiSchema object for this description field */
   uiSchema?: UiSchema<T, S, F>;
   /** The description of the field being rendered */
-  description: string | React.ReactElement;
+  description: string | ReactElement;
   /** The `registry` object */
   registry: Registry<T, S, F>;
 };
@@ -505,7 +511,7 @@ export type ArrayFieldDescriptionProps<
   F extends FormContextType = any
 > = Omit<DescriptionFieldProps<T, S, F>, "id" | "description"> & {
   /** The description of the field being rendered */
-  description?: string | React.ReactElement;
+  description?: string | ReactElement;
   /** The idSchema of the field in the hierarchy */
   idSchema: IdSchema<T>;
 };
@@ -517,7 +523,7 @@ export type ArrayFieldTemplateItemType<
   F extends FormContextType = any
 > = {
   /** The html for the item's content */
-  children: React.ReactElement;
+  children: ReactElement;
   /** The className string */
   className: string;
   /** A boolean value stating if the array item is disabled */
@@ -597,7 +603,7 @@ export type ArrayFieldTemplateProps<
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
 export type ObjectFieldTemplatePropertyType = {
   /** The html for the property's content */
-  content: React.ReactElement;
+  content: ReactElement;
   /** A string representing the property name */
   name: string;
   /** A boolean value stating if the object property is disabled */
@@ -651,7 +657,7 @@ export type WrapIfAdditionalTemplateProps<
   F extends FormContextType = any
 > = {
   /** The field or widget component instance for this field row */
-  children: React.ReactNode;
+  children: ReactNode;
 } & Pick<
   FieldTemplateProps<T, S, F>,
   | "id"
@@ -675,8 +681,8 @@ export interface WidgetProps<
   F extends FormContextType = any
 > extends GenericObjectType,
     Pick<
-      React.HTMLAttributes<HTMLElement>,
-      Exclude<keyof React.HTMLAttributes<HTMLElement>, "onBlur" | "onFocus">
+      HTMLAttributes<HTMLElement>,
+      Exclude<keyof HTMLAttributes<HTMLElement>, "onBlur" | "onFocus">
     > {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
    * widgets
@@ -734,7 +740,20 @@ export type Widget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = React.ComponentType<WidgetProps<T, S, F>>;
+> = ComponentType<WidgetProps<T, S, F>>;
+
+/** The properties that are passed to the BaseInputTemplate */
+export interface BaseInputTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> extends WidgetProps<T, S, F> {
+  /** A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle
+   * the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case,
+   * that widget should provide its own handler via this prop.
+   */
+  onChangeOverride?: (event: ChangeEvent<HTMLInputElement>) => void;
+}
 
 /** The type that defines the props used by the Submit button */
 export type SubmitButtonProps<
@@ -753,11 +772,11 @@ export type IconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+> = ButtonHTMLAttributes<HTMLButtonElement> & {
   /** An alternative specification for the type of the icon button */
   iconType?: string;
   /** The name representation or actual react element implementation for the icon */
-  icon?: string | React.ReactElement;
+  icon?: string | ReactElement;
   /** The uiSchema for this widget */
   uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
