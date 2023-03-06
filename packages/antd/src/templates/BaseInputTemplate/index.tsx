@@ -1,14 +1,15 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   getInputProps,
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
-  GenericObjectType,
 } from "@rjsf/utils";
 
 const INPUT_STYLE = {
@@ -25,7 +26,7 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     disabled,
     formContext,
@@ -48,13 +49,13 @@ export default function BaseInputTemplate<
 
   const handleTextChange = onChangeOverride
     ? onChangeOverride
-    : ({ target }: React.ChangeEvent<HTMLInputElement>) =>
+    : ({ target }: ChangeEvent<HTMLInputElement>) =>
         onChange(target.value === "" ? options.emptyValue : target.value);
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.value);
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, target.value);
 
   const input =

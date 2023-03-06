@@ -290,7 +290,8 @@ If you desire a different implementation for the `<input>` based widgets, you ca
 For instance, say you have a `CustomTextInput` component that you want to integrate:
 
 ```tsx
-import { getInputProps, RJSFSchema, WidgetProps } from "@rjsf/utils";
+import { ChangeEvent, FocusEvent } from 'react';
+import { getInputProps, RJSFSchema, BaseInputTemplateProps } from "@rjsf/utils";
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -301,7 +302,7 @@ const schema: RJSFSchema = {
   description: "input description"
 };
 
-function BaseInputTemplate(props: WidgetProps) {
+function BaseInputTemplate (props: BaseInputTemplateProps) {
   const {
     schema,
     id,
@@ -315,6 +316,7 @@ function BaseInputTemplate(props: WidgetProps) {
     readonly,
     autofocus,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     rawErrors,
@@ -324,12 +326,12 @@ function BaseInputTemplate(props: WidgetProps) {
     formContext,
     ...rest
   } = props;
-  const onTextChange = ({ target: { value: val } }: React.ChangeEvent<HTMLInputElement>) => {
+  const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
     // Use the options.emptyValue if it is specified and newVal is also an empty string
     onChange(val === '' ? options.emptyValue || '' : val);
   };
-  const onTextBlur = ({ target: { value: val } }: React.FocusEvent<HTMLInputElement>) => onBlur(id, val);
-  const onTextFocus = ({ target: { value: val } }: React.FocusEvent<HTMLInputElement>) => onFocus(id, val);
+  const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
+  const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
   const hasError = rawErrors.length > 0 && !hideError;
@@ -345,7 +347,7 @@ function BaseInputTemplate(props: WidgetProps) {
       autoFocus={autofocus}
       error={hasError}
       errors={hasError ? rawErrors : undefined}
-      onChange={onTextChange}
+      onChange={onChangeOverride || onTextChange}
       onBlur={onTextBlur}
       onFocus={onTextFocus}
       {...inputProps}
@@ -354,7 +356,7 @@ function BaseInputTemplate(props: WidgetProps) {
 }
 
 render((
-  <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />
+  <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }}/>
 ), document.getElementById("app"));
 ```
 
@@ -373,6 +375,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `label`: The computed label for this widget, as a string
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
+- `onChangeOverride`: A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case, that widget should provide its own handler via this prop;
 - `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
