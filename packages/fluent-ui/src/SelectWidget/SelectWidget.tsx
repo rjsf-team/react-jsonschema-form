@@ -1,3 +1,4 @@
+import { FormEvent } from "react";
 import { Dropdown, IDropdownOption } from "@fluentui/react";
 import {
   ariaDescribedByIds,
@@ -78,10 +79,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = (
-    _ev?: React.FormEvent<HTMLElement>,
-    item?: IDropdownOption
-  ) => {
+  const _onChange = (_ev?: FormEvent<HTMLElement>, item?: IDropdownOption) => {
     if (!item) {
       return;
     }

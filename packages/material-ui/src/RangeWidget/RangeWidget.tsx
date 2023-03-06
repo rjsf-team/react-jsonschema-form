@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import Slider from "@material-ui/core/Slider";
 import {
@@ -37,11 +38,10 @@ export default function RangeWidget<
   const _onChange = (_: any, value?: number | number[]) => {
     onChange(value ?? options.emptyValue);
   };
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   return (
     <>

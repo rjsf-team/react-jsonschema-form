@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Input from "antd/lib/input";
 import {
   ariaDescribedByIds,
@@ -33,13 +34,13 @@ export default function PasswordWidget<
 
   const emptyValue = options.emptyValue || "";
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
     onChange(target.value === "" ? emptyValue : target.value);
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.value);
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, target.value);
 
   return (

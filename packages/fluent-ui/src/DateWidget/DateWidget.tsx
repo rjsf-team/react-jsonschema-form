@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   ariaDescribedByIds,
   pad,
@@ -105,11 +106,10 @@ export default function DateWidget<
       formatted && onChange(formatted);
     }
   };
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (

@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Form from "react-bootstrap/Form";
 import {
   ariaDescribedByIds,
@@ -27,15 +28,11 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const inline = Boolean(options && options.inline);

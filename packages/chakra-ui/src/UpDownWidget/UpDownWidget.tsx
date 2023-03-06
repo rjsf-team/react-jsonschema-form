@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   NumberInput,
   NumberDecrementStepper,
@@ -45,12 +46,11 @@ export default function UpDownWidget<
   const chakraProps = getChakra({ uiSchema });
 
   const _onChange = (value: string | number) => onChange(value);
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
+    onBlur(id, value);
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
     <FormControl

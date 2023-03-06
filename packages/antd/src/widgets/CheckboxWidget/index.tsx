@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
 import {
   ariaDescribedByIds,
@@ -35,10 +36,10 @@ export default function CheckboxWidget<
   const handleChange = ({ target }: CheckboxChangeEvent) =>
     onChange(target.checked);
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.checked);
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, target.checked);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,

@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -43,7 +44,7 @@ export default function CheckboxesWidget<
 
   const _onChange =
     (index: number) =>
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
         onChange(
           enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
@@ -55,13 +56,9 @@ export default function CheckboxesWidget<
       }
     };
 
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLButtonElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   return (

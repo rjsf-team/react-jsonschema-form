@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import {
   getTemplate,
   getUiOptions,
@@ -10,7 +11,7 @@ import {
 
 const rightJustify = {
   float: "right",
-} as React.CSSProperties;
+} as CSSProperties;
 
 export default function ArrayFieldTemplate<
   T = any,

@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
@@ -56,12 +57,10 @@ export default function SelectWidget<
     );
   };
 
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const _valueLabelMap: any = {};

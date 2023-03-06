@@ -1,3 +1,4 @@
+import { ElementType } from "react";
 import {
   UiSchema,
   GenericObjectType,
@@ -33,7 +34,7 @@ export type SemanticErrorPropsType<
 
 export type WrapProps = GenericObjectType & {
   wrap: boolean;
-  component?: React.ElementType;
+  component?: ElementType;
 };
 
 /**

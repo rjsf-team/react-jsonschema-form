@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   ariaDescribedByIds,
   WidgetProps,
@@ -30,15 +31,12 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = ({
-    target: { checked },
-  }: React.FocusEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({
-    target: { checked },
-  }: React.FocusEvent<HTMLInputElement>) => onBlur(id, checked);
-  const _onFocus = ({
-    target: { checked },
-  }: React.FocusEvent<HTMLInputElement>) => onFocus(id, checked);
+  const _onChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) =>
+    onChange(checked);
+  const _onBlur = ({ target: { checked } }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, checked);
+  const _onFocus = ({ target: { checked } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, checked);
 
   const desc = label || schema.description;
   return (

@@ -1,3 +1,4 @@
+import { ChangeEvent, FocusEvent } from "react";
 import { Checkbox, FormControl, Text } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,
@@ -32,15 +33,13 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(checked);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
+    onBlur(id, value);
   const _onFocus = ({
     target: { value },
-  }: React.FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
     <FormControl mb={1} {...chakraProps} isRequired={required}>

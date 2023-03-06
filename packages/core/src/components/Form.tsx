@@ -1,4 +1,12 @@
-import { Component, createRef } from "react";
+import {
+  Component,
+  ElementType,
+  FormEvent,
+  ReactNode,
+  Ref,
+  RefObject,
+  createRef,
+} from "react";
 import {
   createSchemaUtils,
   CustomValidator,
@@ -46,7 +54,7 @@ export interface FormProps<
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
   validator: ValidatorType<T, S, F>;
   /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
-  children?: React.ReactNode;
+  children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<T, S, F>;
   /** The data for the form, used to prefill a form with existing data */
@@ -99,7 +107,7 @@ export interface FormProps<
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, S, F>, event: React.FormEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: FormEvent<any>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -134,7 +142,7 @@ export interface FormProps<
    * nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no
    * longer work
    */
-  tagName?: React.ElementType;
+  tagName?: ElementType;
   /** The value of this prop will be passed to the `target` HTML attribute on the form */
   target?: string;
   // Errors and validation
@@ -196,10 +204,10 @@ export interface FormProps<
    *
    * Use at your own risk as this prop is private and may change at any time without notice.
    */
-  _internalFormWrapper?: React.ElementType;
+  _internalFormWrapper?: ElementType;
   /** Support receiving a React ref to the Form
    */
-  ref?: React.Ref<Form<T, S, F>>;
+  ref?: Ref<Form<T, S, F>>;
 }
 
 /** The data that is contained within the state for the `Form` */
@@ -258,7 +266,7 @@ export default class Form<
   /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
    * provide any possible type here
    */
-  formElement: React.RefObject<any>;
+  formElement: RefObject<any>;
 
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
    * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
@@ -655,7 +663,7 @@ export default class Form<
    *
    * @param event - The submit HTML form event
    */
-  onSubmit = (event: React.FormEvent<any>) => {
+  onSubmit = (event: FormEvent<any>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;

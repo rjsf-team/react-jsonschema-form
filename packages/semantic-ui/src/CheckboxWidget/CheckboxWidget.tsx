@@ -1,3 +1,4 @@
+import { FormEvent } from "react";
 import {
   ariaDescribedByIds,
   schemaRequiresTrueValue,
@@ -47,10 +48,8 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
-  const _onChange = (
-    _: React.FormEvent<HTMLInputElement>,
-    data: CheckboxProps
-  ) => onChange && onChange(data.checked);
+  const _onChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) =>
+    onChange && onChange(data.checked);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const checked = value == "true" || value == true;

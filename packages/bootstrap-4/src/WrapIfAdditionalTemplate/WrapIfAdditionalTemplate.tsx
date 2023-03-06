@@ -1,3 +1,4 @@
+import { FocusEvent } from "react";
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -44,7 +45,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onKeyChange(target.value);
   const keyId = `${id}-key`;
 

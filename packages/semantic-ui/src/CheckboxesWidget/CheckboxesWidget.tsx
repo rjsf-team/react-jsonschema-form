@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import { Form } from "semantic-ui-react";
 import {
   ariaDescribedByIds,
@@ -58,7 +59,7 @@ export default function CheckboxesWidget<
   });
   const _onChange =
     (index: number) =>
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       // eslint-disable-next-line no-shadow
       if (checked) {
         onChange(
