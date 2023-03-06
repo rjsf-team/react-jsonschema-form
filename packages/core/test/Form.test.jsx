@@ -1,3 +1,4 @@
+import * as React from "react";
 import { expect } from "chai";
 import sinon from "sinon";
 import { createRef } from "react";
