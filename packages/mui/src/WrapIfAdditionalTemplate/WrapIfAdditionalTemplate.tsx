@@ -1,5 +1,4 @@
 import { CSSProperties } from "react";
-import * as React from "react";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";

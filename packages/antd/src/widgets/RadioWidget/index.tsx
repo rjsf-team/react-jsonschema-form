@@ -1,4 +1,3 @@
-import * as React from "react";
 import Radio, { RadioChangeEvent } from "antd/lib/radio";
 import {
   ariaDescribedByIds,

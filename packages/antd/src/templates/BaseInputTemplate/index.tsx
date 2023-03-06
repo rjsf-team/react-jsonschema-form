@@ -1,4 +1,3 @@
-import * as React from "react";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import {

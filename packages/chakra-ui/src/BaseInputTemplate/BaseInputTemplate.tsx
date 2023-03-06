@@ -1,4 +1,3 @@
-import * as React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import {
   ariaDescribedByIds,

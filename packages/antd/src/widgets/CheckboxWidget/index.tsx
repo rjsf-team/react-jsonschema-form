@@ -1,4 +1,3 @@
-import * as React from "react";
 import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
 import {
   ariaDescribedByIds,

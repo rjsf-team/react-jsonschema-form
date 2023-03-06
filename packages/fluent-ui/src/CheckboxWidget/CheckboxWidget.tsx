@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Checkbox } from "@fluentui/react";
 import {
   ariaDescribedByIds,

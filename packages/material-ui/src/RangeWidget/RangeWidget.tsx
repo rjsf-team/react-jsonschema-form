@@ -1,4 +1,3 @@
-import * as React from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import Slider from "@material-ui/core/Slider";
 import {

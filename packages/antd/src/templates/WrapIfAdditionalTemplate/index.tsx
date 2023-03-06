@@ -1,4 +1,3 @@
-import * as React from "react";
 import Col from "antd/lib/col";
 import Form from "antd/lib/form";
 import Input from "antd/lib/input";
