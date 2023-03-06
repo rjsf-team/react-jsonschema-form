@@ -1,11 +1,11 @@
-import { ChakraProps, shouldForwardProp } from "@chakra-ui/react";
-import { UiSchema } from "@rjsf/utils";
+import { ChakraProps, shouldForwardProp } from '@chakra-ui/react';
+import { UiSchema } from '@rjsf/utils';
 
-export interface ChakraUiSchema extends Omit<UiSchema, "ui:options"> {
-  "ui:options"?: ChakraUiOptions;
+export interface ChakraUiSchema extends Omit<UiSchema, 'ui:options'> {
+  'ui:options'?: ChakraUiOptions;
 }
 
-type ChakraUiOptions = UiSchema["ui:options"] & { chakra?: ChakraProps };
+type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraProps };
 
 interface GetChakraProps {
   uiSchema?: ChakraUiSchema;
@@ -13,7 +13,7 @@ interface GetChakraProps {
 
 export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
   const chakraProps =
-    (uiSchema["ui:options"] && uiSchema["ui:options"].chakra) || {};
+    (uiSchema['ui:options'] && uiSchema['ui:options'].chakra) || {};
 
   Object.keys(chakraProps).forEach((key) => {
     /**

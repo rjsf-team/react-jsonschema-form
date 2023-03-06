@@ -33,9 +33,9 @@ function ArrayFieldTemplate(props) {
         ))}
 
       {props.canAdd && (
-        <div className="row">
-          <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
-            <button onClick={props.onAddClick} type="button">
+        <div className='row'>
+          <p className='col-xs-3 col-xs-offset-9 array-item-add text-right'>
+            <button onClick={props.onAddClick} type='button'>
               Custom +
             </button>
           </p>
@@ -47,12 +47,12 @@ function ArrayFieldTemplate(props) {
 
 export default {
   schema: {
-    title: "Custom array of strings",
-    type: "array",
+    title: 'Custom array of strings',
+    type: 'array',
     items: {
-      type: "string",
+      type: 'string',
     },
   },
-  formData: ["react", "jsonschema", "form"],
+  formData: ['react', 'jsonschema', 'form'],
   ArrayFieldTemplate,
 };

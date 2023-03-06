@@ -1,48 +1,48 @@
 export default {
   schema: {
-    title: "A registration form",
-    type: "object",
-    required: ["firstName", "lastName"],
+    title: 'A registration form',
+    type: 'object',
+    required: ['firstName', 'lastName'],
     properties: {
       password: {
-        type: "string",
-        title: "Password",
+        type: 'string',
+        title: 'Password',
       },
       lastName: {
-        type: "string",
-        title: "Last name",
+        type: 'string',
+        title: 'Last name',
       },
       bio: {
-        type: "string",
-        title: "Bio",
+        type: 'string',
+        title: 'Bio',
       },
       firstName: {
-        type: "string",
-        title: "First name",
+        type: 'string',
+        title: 'First name',
       },
       age: {
-        type: "integer",
-        title: "Age",
+        type: 'integer',
+        title: 'Age',
       },
     },
   },
   uiSchema: {
-    "ui:order": ["firstName", "lastName", "*", "password"],
+    'ui:order': ['firstName', 'lastName', '*', 'password'],
     age: {
-      "ui:widget": "updown",
+      'ui:widget': 'updown',
     },
     bio: {
-      "ui:widget": "textarea",
+      'ui:widget': 'textarea',
     },
     password: {
-      "ui:widget": "password",
+      'ui:widget': 'password',
     },
   },
   formData: {
-    firstName: "Chuck",
-    lastName: "Norris",
+    firstName: 'Chuck',
+    lastName: 'Norris',
     age: 75,
-    bio: "Roundhouse kicking asses since 1940",
-    password: "noneed",
+    bio: 'Roundhouse kicking asses since 1940',
+    password: 'noneed',
   },
 };

@@ -3,8 +3,8 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { Text } from "@fluentui/react";
+} from '@rjsf/utils';
+import { Text } from '@fluentui/react';
 
 export default function DescriptionField<
   T = any,

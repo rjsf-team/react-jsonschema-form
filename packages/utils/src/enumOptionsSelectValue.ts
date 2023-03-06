@@ -1,5 +1,5 @@
-import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from "./types";
-import enumOptionsValueForIndex from "./enumOptionsValueForIndex";
+import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 
 /** Add the enum option value at the `valueIndex` to the list of `selected` values in the proper order as defined by
  * `allEnumOptions`
@@ -13,7 +13,7 @@ export default function enumOptionsSelectValue<
   S extends StrictRJSFSchema = RJSFSchema
 >(
   valueIndex: string | number,
-  selected: EnumOptionsType<S>["value"][],
+  selected: EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = []
 ) {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);

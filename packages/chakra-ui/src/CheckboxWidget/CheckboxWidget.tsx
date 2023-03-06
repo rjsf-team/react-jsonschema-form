@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import { Checkbox, FormControl, Text } from "@chakra-ui/react";
+import { ChangeEvent, FocusEvent } from 'react';
+import { Checkbox, FormControl, Text } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   WidgetProps,
@@ -7,8 +7,8 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function CheckboxWidget<
   T = any,
@@ -46,7 +46,7 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={id}
-        isChecked={typeof value === "undefined" ? false : value}
+        isChecked={typeof value === 'undefined' ? false : value}
         isDisabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}

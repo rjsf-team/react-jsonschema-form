@@ -1,36 +1,36 @@
-import { FocusEvent, useCallback } from "react";
-import { Checkbox } from "@fluentui/react";
+import { FocusEvent, useCallback } from 'react';
+import { Checkbox } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 // Keys of ICheckboxProps from @fluentui/react
 export const allowedProps = [
-  "ariaDescribedBy",
-  "ariaLabel",
-  "ariaPositionInSet",
-  "ariaSetSize",
-  "boxSide",
-  "checked",
-  "checkmarkIconProps",
-  "className",
-  "componentRef",
-  "defaultChecked",
-  "defaultIndeterminate",
-  "disabled",
-  "indeterminate",
-  "inputProps",
-  "keytipProps",
-  "label",
-  "onChange",
-  "onRenderLabel",
-  "styles",
-  "theme",
+  'ariaDescribedBy',
+  'ariaLabel',
+  'ariaPositionInSet',
+  'ariaSetSize',
+  'boxSide',
+  'checked',
+  'checkmarkIconProps',
+  'className',
+  'componentRef',
+  'defaultChecked',
+  'defaultIndeterminate',
+  'disabled',
+  'indeterminate',
+  'inputProps',
+  'keytipProps',
+  'label',
+  'onChange',
+  'onRenderLabel',
+  'styles',
+  'theme',
 ];
 
 export default function CheckboxWidget<
@@ -77,7 +77,7 @@ export default function CheckboxWidget<
         autoFocus={autofocus}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        checked={typeof value === "undefined" ? false : value}
+        checked={typeof value === 'undefined' ? false : value}
         onChange={_onChange}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id)}

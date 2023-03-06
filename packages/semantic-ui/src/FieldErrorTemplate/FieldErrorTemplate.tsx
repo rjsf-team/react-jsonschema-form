@@ -4,16 +4,16 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { nanoid } from "nanoid";
-import { Label, List } from "semantic-ui-react";
+} from '@rjsf/utils';
+import { nanoid } from 'nanoid';
+import { Label, List } from 'semantic-ui-react';
 
-import { getSemanticErrorProps } from "../util";
+import { getSemanticErrorProps } from '../util';
 
 const DEFAULT_OPTIONS = {
   options: {
-    pointing: "above",
-    size: "small",
+    pointing: 'above',
+    size: 'small',
   },
 };
 
@@ -38,9 +38,9 @@ export default function FieldErrorTemplate<
     return (
       <Label
         id={id}
-        color="red"
-        pointing={pointing || "above"}
-        size={size || "small"}
+        color='red'
+        pointing={pointing || 'above'}
+        size={size || 'small'}
         basic
       >
         <List bulleted>

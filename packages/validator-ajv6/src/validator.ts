@@ -1,5 +1,5 @@
-import { Ajv, ErrorObject } from "ajv";
-import toPath from "lodash/toPath";
+import { Ajv, ErrorObject } from 'ajv';
+import toPath from 'lodash/toPath';
 import {
   CustomValidator,
   ErrorSchema,
@@ -20,12 +20,12 @@ import {
   mergeValidationData,
   ERRORS_KEY,
   REF_KEY,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import { CustomValidatorOptionsType } from "./types";
-import createAjvInstance from "./createAjvInstance";
+import { CustomValidatorOptionsType } from './types';
+import createAjvInstance from './createAjvInstance';
 
-const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
+const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 
 /** `ValidatorType` implementation that uses the AJV 6 validation mechanism.
  *
@@ -85,7 +85,7 @@ export default class AJV6Validator<
 
         // If the property is at the root (.level1) then toPath creates
         // an empty array element at the first index. Remove it.
-        if (path.length > 0 && path[0] === "") {
+        if (path.length > 0 && path[0] === '') {
           path.splice(0, 1);
         }
         if (message) {
@@ -109,7 +109,7 @@ export default class AJV6Validator<
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
         errorSchema.__errors!.map((message: string) => {
-          const property = `.${fieldPath.join(".")}`;
+          const property = `.${fieldPath.join('.')}`;
           return {
             property,
             message,
@@ -167,7 +167,7 @@ export default class AJV6Validator<
    */
   private unwrapErrorHandler(errorHandler: FormValidation<T>): ErrorSchema<T> {
     return Object.keys(errorHandler).reduce((acc, key) => {
-      if (key === "addError") {
+      if (key === 'addError') {
         return acc;
       } else if (key === ERRORS_KEY) {
         return { ...acc, [key]: (errorHandler as GenericObjectType)[key] };
@@ -258,12 +258,12 @@ export default class AJV6Validator<
     const noProperMetaSchema =
       validationError &&
       validationError.message &&
-      validationError.message.includes("no schema with key or ref ");
+      validationError.message.includes('no schema with key or ref ');
 
     if (noProperMetaSchema) {
       errors = [...errors, { stack: validationError!.message }];
     }
-    if (typeof transformErrors === "function") {
+    if (typeof transformErrors === 'function') {
       errors = transformErrors(errors, uiSchema);
     }
 
@@ -280,7 +280,7 @@ export default class AJV6Validator<
       };
     }
 
-    if (typeof customValidate !== "function") {
+    if (typeof customValidate !== 'function') {
       return { errors, errorSchema };
     }
 
@@ -318,8 +318,8 @@ export default class AJV6Validator<
       const value = realObj[key];
       if (
         key === REF_KEY &&
-        typeof value === "string" &&
-        value.startsWith("#")
+        typeof value === 'string' &&
+        value.startsWith('#')
       ) {
         realObj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {

@@ -1,12 +1,12 @@
-import Ajv, { Options } from "ajv";
-import addFormats, { FormatsPluginOptions } from "ajv-formats";
-import isObject from "lodash/isObject";
+import Ajv, { Options } from 'ajv';
+import addFormats, { FormatsPluginOptions } from 'ajv-formats';
+import isObject from 'lodash/isObject';
 
-import { CustomValidatorOptionsType } from "./types";
+import { CustomValidatorOptionsType } from './types';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,
@@ -35,9 +35,9 @@ export const DATA_URL_FORMAT_REGEX =
  * @param [AjvClass] - The `Ajv` class to use when creating the validator instance
  */
 export default function createAjvInstance(
-  additionalMetaSchemas?: CustomValidatorOptionsType["additionalMetaSchemas"],
-  customFormats?: CustomValidatorOptionsType["customFormats"],
-  ajvOptionsOverrides: CustomValidatorOptionsType["ajvOptionsOverrides"] = {},
+  additionalMetaSchemas?: CustomValidatorOptionsType['additionalMetaSchemas'],
+  customFormats?: CustomValidatorOptionsType['customFormats'],
+  ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
   ajvFormatOptions?: FormatsPluginOptions | false,
   AjvClass: typeof Ajv = Ajv
 ) {
@@ -49,8 +49,8 @@ export default function createAjvInstance(
   }
 
   // add custom formats
-  ajv.addFormat("data-url", DATA_URL_FORMAT_REGEX);
-  ajv.addFormat("color", COLOR_FORMAT_REGEX);
+  ajv.addFormat('data-url', DATA_URL_FORMAT_REGEX);
+  ajv.addFormat('color', COLOR_FORMAT_REGEX);
 
   // Add RJSF-specific additional properties keywords so Ajv doesn't report errors if strict is enabled.
   ajv.addKeyword(ADDITIONAL_PROPERTY_FLAG);

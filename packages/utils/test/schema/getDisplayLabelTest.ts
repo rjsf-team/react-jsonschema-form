@@ -1,66 +1,66 @@
-import { createSchemaUtils, getDisplayLabel, RJSFSchema } from "../../src";
-import { TestValidatorType } from "./types";
+import { createSchemaUtils, getDisplayLabel, RJSFSchema } from '../../src';
+import { TestValidatorType } from './types';
 
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
-  describe("getDisplayLabel()", () => {
-    it("object type", () => {
-      expect(getDisplayLabel(testValidator, { type: "object" })).toEqual(false);
+  describe('getDisplayLabel()', () => {
+    it('object type', () => {
+      expect(getDisplayLabel(testValidator, { type: 'object' })).toEqual(false);
     });
-    it("boolean type without widget", () => {
-      expect(getDisplayLabel(testValidator, { type: "boolean" })).toEqual(
+    it('boolean type without widget', () => {
+      expect(getDisplayLabel(testValidator, { type: 'boolean' })).toEqual(
         false
       );
     });
-    it("boolean type with widget", () => {
+    it('boolean type with widget', () => {
       expect(
         getDisplayLabel(
           testValidator,
-          { type: "boolean" },
-          { "ui:widget": "test" }
+          { type: 'boolean' },
+          { 'ui:widget': 'test' }
         )
       ).toEqual(true);
     });
-    it("with ui:field", () => {
-      const schema: RJSFSchema = { type: "string" };
+    it('with ui:field', () => {
+      const schema: RJSFSchema = { type: 'string' };
       const schemaUtils = createSchemaUtils(testValidator, schema);
       expect(
-        schemaUtils.getDisplayLabel(schema, { "ui:field": "test" })
+        schemaUtils.getDisplayLabel(schema, { 'ui:field': 'test' })
       ).toEqual(false);
     });
-    describe("array type", () => {
-      it("items", () => {
+    describe('array type', () => {
+      it('items', () => {
         expect(
           getDisplayLabel(
             testValidator,
-            { type: "array", items: { type: "string" } },
+            { type: 'array', items: { type: 'string' } },
             {}
           )
         ).toEqual(false);
       });
-      it("items enum", () => {
+      it('items enum', () => {
         expect(
           getDisplayLabel(
             testValidator,
-            { type: "array", enum: ["NW", "NE", "SW", "SE"] },
+            { type: 'array', enum: ['NW', 'NE', 'SW', 'SE'] },
             {}
           )
         ).toEqual(false);
       });
-      it("files type", () => {
+      it('files type', () => {
         expect(
           getDisplayLabel(
             testValidator,
-            { type: "array" },
-            { "ui:widget": "files" }
+            { type: 'array' },
+            { 'ui:widget': 'files' }
           )
         ).toEqual(true);
       });
-      it("custom type", () => {
+      it('custom type', () => {
         expect(
           getDisplayLabel(
             testValidator,
-            { type: "array", title: "myAwesomeTitle" },
-            { "ui:widget": "MyAwesomeWidget" }
+            { type: 'array', title: 'myAwesomeTitle' },
+            { 'ui:widget': 'MyAwesomeWidget' }
           )
         ).toEqual(true);
       });

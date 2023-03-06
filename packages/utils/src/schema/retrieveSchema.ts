@@ -1,6 +1,6 @@
-import get from "lodash/get";
-import set from "lodash/set";
-import mergeAllOf, { Options } from "json-schema-merge-allof";
+import get from 'lodash/get';
+import set from 'lodash/set';
+import mergeAllOf, { Options } from 'json-schema-merge-allof';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -10,21 +10,21 @@ import {
   DEPENDENCIES_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from "../constants";
+} from '../constants';
 import findSchemaDefinition, {
   splitKeyElementFromObject,
-} from "../findSchemaDefinition";
-import guessType from "../guessType";
-import isObject from "../isObject";
-import mergeSchemas from "../mergeSchemas";
+} from '../findSchemaDefinition';
+import guessType from '../guessType';
+import isObject from '../isObject';
+import mergeSchemas from '../mergeSchemas';
 import {
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
-import getFirstMatchingOption from "./getFirstMatchingOption";
+} from '../types';
+import getFirstMatchingOption from './getFirstMatchingOption';
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema
@@ -55,7 +55,7 @@ export function resolveCondition<
     ? then
     : otherwise;
 
-  if (conditionalSchema && typeof conditionalSchema !== "boolean") {
+  if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
     return retrieveSchema<T, S>(
       validator,
       mergeSchemas(
@@ -196,8 +196,8 @@ export function stubExistingAdditionalProperties<
       return;
     }
 
-    let additionalProperties: S["additionalProperties"] = {};
-    if (typeof schema.additionalProperties !== "boolean") {
+    let additionalProperties: S['additionalProperties'] = {};
+    if (typeof schema.additionalProperties !== 'boolean') {
       if (REF_KEY in schema.additionalProperties!) {
         additionalProperties = retrieveSchema<T, S, F>(
           validator,
@@ -205,14 +205,14 @@ export function stubExistingAdditionalProperties<
           rootSchema,
           formData as T
         );
-      } else if ("type" in schema.additionalProperties!) {
+      } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
       } else if (
         ANY_OF_KEY in schema.additionalProperties! ||
         ONE_OF_KEY in schema.additionalProperties!
       ) {
         additionalProperties = {
-          type: "object",
+          type: 'object',
           ...schema.additionalProperties,
         };
       } else {
@@ -261,7 +261,7 @@ export default function retrieveSchema<
     rawFormData
   );
 
-  if ("if" in schema) {
+  if ('if' in schema) {
     return resolveCondition<T, S, F>(
       validator,
       schema,
@@ -278,7 +278,7 @@ export default function retrieveSchema<
         deep: false,
       } as Options) as S;
     } catch (e) {
-      console.warn("could not merge subschemas in allOf:\n" + e);
+      console.warn('could not merge subschemas in allOf:\n' + e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
       return resolvedSchemaWithoutAllOf as S;
     }
@@ -361,7 +361,7 @@ export function processDependencies<
   F extends FormContextType = any
 >(
   validator: ValidatorType<T, S, F>,
-  dependencies: S["dependencies"],
+  dependencies: S['dependencies'],
   resolvedSchema: S,
   rootSchema: S,
   formData?: T
@@ -457,7 +457,7 @@ export function withDependentSchema<
   }
   // Resolve $refs inside oneOf.
   const resolvedOneOf = oneOf.map((subschema) => {
-    if (typeof subschema === "boolean" || !(REF_KEY in subschema)) {
+    if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
       return subschema;
     }
     return resolveReference<T, S, F>(
@@ -496,17 +496,17 @@ export function withExactlyOneSubschema<
   schema: S,
   rootSchema: S,
   dependencyKey: string,
-  oneOf: S["oneOf"],
+  oneOf: S['oneOf'],
   formData?: T
 ): S {
   const validSubschemas = oneOf!.filter((subschema) => {
-    if (typeof subschema === "boolean" || !subschema || !subschema.properties) {
+    if (typeof subschema === 'boolean' || !subschema || !subschema.properties) {
       return false;
     }
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
     if (conditionPropertySchema) {
       const conditionSchema: S = {
-        type: "object",
+        type: 'object',
         properties: {
           [dependencyKey]: conditionPropertySchema,
         },

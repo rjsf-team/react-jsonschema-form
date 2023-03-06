@@ -1,4 +1,4 @@
-import { Slider, Label } from "@fluentui/react";
+import { Slider, Label } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,39 +6,39 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 const styles_red = {
   // TODO: get this color from theme.
-  color: "rgb(164, 38, 44)",
+  color: 'rgb(164, 38, 44)',
   fontSize: 12,
-  fontWeight: "normal" as any,
+  fontWeight: 'normal' as any,
   fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
 };
 
 // Keys of ISliderProps from @fluentui/react
 const allowedProps = [
-  "componentRef",
-  "styles?",
-  "theme",
-  "label",
-  "defaultValue",
-  "value",
-  "min",
-  "max",
-  "step",
-  "showValue",
-  "onChange",
-  "ariaLabel",
-  "ariaValueText",
-  "vertical",
-  "disabled",
-  "snapToStep",
-  "className",
-  "buttonProps",
-  "valueFormat",
-  "originFromZero",
+  'componentRef',
+  'styles?',
+  'theme',
+  'label',
+  'defaultValue',
+  'value',
+  'min',
+  'max',
+  'step',
+  'showValue',
+  'onChange',
+  'ariaLabel',
+  'ariaValueText',
+  'vertical',
+  'disabled',
+  'snapToStep',
+  'className',
+  'buttonProps',
+  'valueFormat',
+  'originFromZero',
 ];
 
 export default function RangeWidget<

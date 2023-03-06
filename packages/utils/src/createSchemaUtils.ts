@@ -1,4 +1,4 @@
-import deepEquals from "./deepEquals";
+import deepEquals from './deepEquals';
 import {
   ErrorSchema,
   FormContextType,
@@ -10,7 +10,7 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
-} from "./types";
+} from './types';
 import {
   getDefaultFormState,
   getDisplayLabel,
@@ -25,7 +25,7 @@ import {
   sanitizeDataForNewSchema,
   toIdSchema,
   toPathSchema,
-} from "./schema";
+} from './schema';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both the `validator`
@@ -92,7 +92,7 @@ class SchemaUtils<
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | "excludeObjectChildren" = false
+    includeUndefinedValues: boolean | 'excludeObjectChildren' = false
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -281,8 +281,8 @@ class SchemaUtils<
     schema: S,
     id?: string | null,
     formData?: T,
-    idPrefix = "root",
-    idSeparator = "_"
+    idPrefix = 'root',
+    idSeparator = '_'
   ): IdSchema<T> {
     return toIdSchema<T, S, F>(
       this.validator,

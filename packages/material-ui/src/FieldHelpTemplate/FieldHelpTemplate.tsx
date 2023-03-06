@@ -1,11 +1,11 @@
-import FormHelperText from "@material-ui/core/FormHelperText";
+import FormHelperText from '@material-ui/core/FormHelperText';
 import {
   helpId,
   FieldHelpProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *

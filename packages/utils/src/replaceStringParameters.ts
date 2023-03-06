@@ -19,7 +19,7 @@ export default function replaceStringParameters(
         parts[partIndex] = param;
       }
     });
-    output = parts.join("");
+    output = parts.join('');
   }
   return output;
 }

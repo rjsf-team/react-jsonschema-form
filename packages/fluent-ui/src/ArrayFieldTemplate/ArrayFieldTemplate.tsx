@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties } from 'react';
 import {
   getTemplate,
   getUiOptions,
@@ -7,10 +7,10 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const rightJustify = {
-  float: "right",
+  float: 'right',
 } as CSSProperties;
 
 export default function ArrayFieldTemplate<
@@ -33,22 +33,22 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
+    'ArrayFieldDescriptionTemplate',
     T,
     S,
     F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
   const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
+    'ArrayFieldTitleTemplate',
     T,
     S,
     F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  >('ArrayFieldTitleTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -79,7 +79,7 @@ export default function ArrayFieldTemplate<
       {canAdd && (
         <span style={rightJustify}>
           <AddButton
-            className="array-item-add"
+            className='array-item-add'
             onClick={onAddClick}
             disabled={disabled || readonly}
             uiSchema={uiSchema}

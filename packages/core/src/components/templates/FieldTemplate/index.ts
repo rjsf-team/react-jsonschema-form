@@ -1,3 +1,3 @@
-import FieldTemplate from "./FieldTemplate";
+import FieldTemplate from './FieldTemplate';
 
 export default FieldTemplate;

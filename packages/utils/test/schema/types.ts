@@ -1,4 +1,4 @@
-import { RJSFValidationError, ValidationData, ValidatorType } from "../../src";
+import { RJSFValidationError, ValidationData, ValidatorType } from '../../src';
 
 export interface TestValidatorParams<T = any> {
   isValid?: boolean[];

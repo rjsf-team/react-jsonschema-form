@@ -5,8 +5,8 @@ import {
   getUiOptions,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { Text, FormControl } from "@chakra-ui/react";
+} from '@rjsf/utils';
+import { Text, FormControl } from '@chakra-ui/react';
 
 export default function FieldTemplate<
   T = any,
@@ -36,14 +36,14 @@ export default function FieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
+    'WrapIfAdditionalTemplate',
     T,
     S,
     F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  >('WrapIfAdditionalTemplate', registry, uiOptions);
 
   if (hidden) {
-    return <div style={{ display: "none" }}>{children}</div>;
+    return <div style={{ display: 'none' }}>{children}</div>;
   }
 
   return (

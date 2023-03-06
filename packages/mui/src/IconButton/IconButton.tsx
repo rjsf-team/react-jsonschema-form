@@ -1,16 +1,16 @@
 import IconButton, {
   IconButtonProps as MuiIconButtonProps,
-} from "@mui/material/IconButton";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import RemoveIcon from "@mui/icons-material/Remove";
+} from '@mui/material/IconButton';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   FormContextType,
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function MuiIconButton<
   T = any,
@@ -21,8 +21,8 @@ export default function MuiIconButton<
   return (
     <IconButton
       {...otherProps}
-      size="small"
-      color={color as MuiIconButtonProps["color"]}
+      size='small'
+      color={color as MuiIconButtonProps['color']}
     >
       {icon}
     </IconButton>
@@ -41,7 +41,7 @@ export function MoveDownButton<
     <MuiIconButton
       title={translateString(TranslatableString.MoveDownButton)}
       {...props}
-      icon={<ArrowDownwardIcon fontSize="small" />}
+      icon={<ArrowDownwardIcon fontSize='small' />}
     />
   );
 }
@@ -58,7 +58,7 @@ export function MoveUpButton<
     <MuiIconButton
       title={translateString(TranslatableString.MoveUpButton)}
       {...props}
-      icon={<ArrowUpwardIcon fontSize="small" />}
+      icon={<ArrowUpwardIcon fontSize='small' />}
     />
   );
 }
@@ -76,9 +76,9 @@ export function RemoveButton<
     <MuiIconButton
       title={translateString(TranslatableString.RemoveButton)}
       {...otherProps}
-      color="error"
+      color='error'
       icon={
-        <RemoveIcon fontSize={iconType === "default" ? undefined : "small"} />
+        <RemoveIcon fontSize={iconType === 'default' ? undefined : 'small'} />
       }
     />
   );

@@ -1,11 +1,11 @@
-import { useState, useRef, useCallback, cloneElement } from "react";
-import { CssBaseline } from "@mui/material";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-import { create } from "jss";
-import { jssPreset, StylesProvider } from "@material-ui/core/styles";
-import Frame, { FrameContextConsumer } from "react-frame-component";
-import { __createChakraFrameProvider } from "@rjsf/chakra-ui";
+import { useState, useRef, useCallback, cloneElement } from 'react';
+import { CssBaseline } from '@mui/material';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { create } from 'jss';
+import { jssPreset, StylesProvider } from '@material-ui/core/styles';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -52,20 +52,20 @@ function DemoFrame(props) {
       ready: true,
       jss: create({
         plugins: jssPreset().plugins,
-        insertionPoint: instanceRef.current.contentWindow["demo-frame-jss"],
+        insertionPoint: instanceRef.current.contentWindow['demo-frame-jss'],
       }),
       sheetsManager: new Map(),
       emotionCache: createCache({
-        key: "css",
+        key: 'css',
         prepend: true,
-        container: instanceRef.current.contentWindow["demo-frame-jss"],
+        container: instanceRef.current.contentWindow['demo-frame-jss'],
       }),
       container: instanceRef.current.contentDocument.body,
       window: () => instanceRef.current.contentWindow,
     });
   };
   let body = children;
-  if (theme === "material-ui-4") {
+  if (theme === 'material-ui-4') {
     body = state.ready ? (
       <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
         {cloneElement(children, {
@@ -74,7 +74,7 @@ function DemoFrame(props) {
         })}
       </StylesProvider>
     ) : null;
-  } else if (theme === "material-ui-5") {
+  } else if (theme === 'material-ui-5') {
     body = state.ready ? (
       <CacheProvider value={state.emotionCache}>
         <CssBaseline />
@@ -84,19 +84,19 @@ function DemoFrame(props) {
         })}
       </CacheProvider>
     ) : null;
-  } else if (theme === "fluent-ui") {
+  } else if (theme === 'fluent-ui') {
     // TODO: find a better way to render fluent-ui in an iframe, if we need to do so.
     const { head } = props;
     body = (
       <>
         <style
-          dangerouslySetInnerHTML={{ __html: "label { font-weight: normal; }" }}
+          dangerouslySetInnerHTML={{ __html: 'label { font-weight: normal; }' }}
         />
         {head}
         {children}
       </>
     );
-  } else if (theme === "chakra-ui") {
+  } else if (theme === 'chakra-ui') {
     body = (
       <FrameContextConsumer>
         {__createChakraFrameProvider(props)}
@@ -105,7 +105,7 @@ function DemoFrame(props) {
   }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>
-      <div id="demo-frame-jss" />
+      <div id='demo-frame-jss' />
       {body}
     </Frame>
   );

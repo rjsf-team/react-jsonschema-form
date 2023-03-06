@@ -1,5 +1,5 @@
-import guessType from "./guessType";
-import { RJSFSchema, StrictRJSFSchema } from "./types";
+import guessType from './guessType';
+import { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Gets the type of a given `schema`. If the type is not explicitly defined, then an attempt is made to infer it from
  * other elements of the schema as follows:
@@ -22,15 +22,15 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (!type && schema.enum) {
-    return "string";
+    return 'string';
   }
 
   if (!type && (schema.properties || schema.additionalProperties)) {
-    return "object";
+    return 'object';
   }
 
-  if (Array.isArray(type) && type.length === 2 && type.includes("null")) {
-    type = type.find((type) => type !== "null");
+  if (Array.isArray(type) && type.length === 2 && type.includes('null')) {
+    type = type.find((type) => type !== 'null');
   }
 
   return type;

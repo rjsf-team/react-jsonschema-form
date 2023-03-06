@@ -7,7 +7,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -39,13 +39,13 @@ function StringField<
   const enumOptions = schemaUtils.isSelect(schema)
     ? optionsList(schema)
     : undefined;
-  let defaultWidget = enumOptions ? "select" : "text";
+  let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
     defaultWidget = format;
   }
   const {
     widget = defaultWidget,
-    placeholder = "",
+    placeholder = '',
     ...options
   } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget<T, S, F>(schema, widget, widgets);

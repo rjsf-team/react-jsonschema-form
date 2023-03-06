@@ -1,5 +1,5 @@
-import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from "./types";
-import enumOptionsIsSelected from "./enumOptionsIsSelected";
+import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import enumOptionsIsSelected from './enumOptionsIsSelected';
 
 /** Returns the index(es) of the options in `allEnumOptions` whose value(s) match the ones in `value`. All the
  * `enumOptions` are filtered based on whether they are a "selected" `value` and the index of each selected one is then
@@ -15,7 +15,7 @@ import enumOptionsIsSelected from "./enumOptionsIsSelected";
 export default function enumOptionsIndexForValue<
   S extends StrictRJSFSchema = RJSFSchema
 >(
-  value: EnumOptionsType<S>["value"] | EnumOptionsType<S>["value"][],
+  value: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = [],
   multiple = false
 ): string | string[] | undefined {
@@ -23,7 +23,7 @@ export default function enumOptionsIndexForValue<
     .map((opt, index) =>
       enumOptionsIsSelected(opt.value, value) ? String(index) : undefined
     )
-    .filter((opt) => typeof opt !== "undefined") as string[];
+    .filter((opt) => typeof opt !== 'undefined') as string[];
   if (!multiple) {
     return selectedIndexes[0];
   }

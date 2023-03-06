@@ -1,5 +1,5 @@
-import isObject from "./isObject";
-import { RJSFSchema, StrictRJSFSchema } from "./types";
+import isObject from './isObject';
+import { RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Detects whether the given `schema` contains fixed items. This is the case when `schema.items` is a non-empty array
  * that only contains objects.

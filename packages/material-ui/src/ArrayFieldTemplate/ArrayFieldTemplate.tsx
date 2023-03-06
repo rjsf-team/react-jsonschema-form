@@ -1,6 +1,6 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import {
   getTemplate,
   getUiOptions,
@@ -9,7 +9,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -35,22 +35,22 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
+    'ArrayFieldDescriptionTemplate',
     T,
     S,
     F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
   const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
+    'ArrayFieldTitleTemplate',
     T,
     S,
     F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  >('ArrayFieldTitleTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -81,11 +81,11 @@ export default function ArrayFieldTemplate<
               )
             )}
           {canAdd && (
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent='flex-end'>
               <Grid item={true}>
                 <Box mt={2}>
                   <AddButton
-                    className="array-item-add"
+                    className='array-item-add'
                     onClick={onAddClick}
                     disabled={disabled || readonly}
                     uiSchema={uiSchema}

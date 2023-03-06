@@ -3,9 +3,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import _AltDateWidget from "../AltDateWidget";
+import _AltDateWidget from '../AltDateWidget';
 
 export default function AltDateTimeWidget<
   T = any,

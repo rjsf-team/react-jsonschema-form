@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import Form from "react-bootstrap/Form";
+import { ChangeEvent, FocusEvent } from 'react';
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -8,7 +8,7 @@ import {
   getInputProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -38,7 +38,7 @@ export default function BaseInputTemplate<
     ...getInputProps<T, S, F>(schema, type, options),
   };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
@@ -55,10 +55,10 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={rawErrors.length > 0 ? "is-invalid" : ""}
+        className={rawErrors.length > 0 ? 'is-invalid' : ''}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

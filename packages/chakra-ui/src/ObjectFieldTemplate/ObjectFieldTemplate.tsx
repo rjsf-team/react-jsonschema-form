@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from '@chakra-ui/react';
 import {
   canExpand,
   descriptionId,
@@ -9,7 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = any,
@@ -31,17 +31,17 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
     uiOptions
   );
   const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     T,
     S,
     F
-  >("DescriptionFieldTemplate", registry, uiOptions);
+  >('DescriptionFieldTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -79,9 +79,9 @@ export default function ObjectFieldTemplate<
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <GridItem justifySelf="flex-end">
+          <GridItem justifySelf='flex-end'>
             <AddButton
-              className="object-property-expand"
+              className='object-property-expand'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

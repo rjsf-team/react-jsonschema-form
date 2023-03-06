@@ -1,6 +1,6 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 
 import {
   canExpand,
@@ -12,7 +12,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = any,
@@ -33,17 +33,17 @@ export default function ObjectFieldTemplate<
   registry,
 }: ObjectFieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
     uiOptions
   );
   const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     T,
     S,
     F
-  >("DescriptionFieldTemplate", registry, uiOptions);
+  >('DescriptionFieldTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -69,23 +69,23 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Container fluid className="p-0">
+      <Container fluid className='p-0'>
         {properties.map((element: any, index: number) => (
           <Row
             key={index}
-            style={{ marginBottom: "10px" }}
-            className={element.hidden ? "d-none" : undefined}
+            style={{ marginBottom: '10px' }}
+            className={element.hidden ? 'd-none' : undefined}
           >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
         {canExpand(schema, uiSchema, formData) ? (
           <Row>
-            <Col xs={{ offset: 9, span: 3 }} className="py-4">
+            <Col xs={{ offset: 9, span: 3 }} className='py-4'>
               <AddButton
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
-                className="object-property-expand"
+                className='object-property-expand'
                 uiSchema={uiSchema}
                 registry={registry}
               />

@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { Box, ButtonGroup, HStack } from "@chakra-ui/react";
+import { useMemo } from 'react';
+import { Box, ButtonGroup, HStack } from '@chakra-ui/react';
 import {
   ArrayFieldTemplateItemType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function ArrayFieldItemTemplate<
   T = any,
@@ -44,8 +44,8 @@ export default function ArrayFieldItemTemplate<
   );
 
   return (
-    <HStack alignItems={"flex-end"} py={1}>
-      <Box w="100%">{children}</Box>
+    <HStack alignItems={'flex-end'} py={1}>
+      <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>
           <ButtonGroup isAttached mb={1}>

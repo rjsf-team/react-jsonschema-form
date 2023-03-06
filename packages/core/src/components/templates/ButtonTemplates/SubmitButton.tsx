@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */
@@ -24,7 +24,7 @@ export default function SubmitButton<
   return (
     <div>
       <button
-        type="submit"
+        type='submit'
         {...submitButtonProps}
         className={`btn btn-info ${submitButtonProps.className}`}
       >

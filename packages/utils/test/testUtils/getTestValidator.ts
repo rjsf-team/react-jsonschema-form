@@ -1,5 +1,5 @@
-import { RJSFValidationError, ValidationData } from "../../src";
-import { TestValidatorParams, TestValidatorType } from "../schema/types";
+import { RJSFValidationError, ValidationData } from '../../src';
+import { TestValidatorParams, TestValidatorType } from '../schema/types';
 
 export default function getTestValidator<T = any>({
   isValid = [],

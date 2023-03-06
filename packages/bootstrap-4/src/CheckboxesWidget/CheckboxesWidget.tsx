@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import Form from "react-bootstrap/Form";
+import { ChangeEvent, FocusEvent } from 'react';
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -11,7 +11,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function CheckboxesWidget<
   T = any,
@@ -70,8 +70,8 @@ export default function CheckboxesWidget<
               custom
               required={required}
               checked={checked}
-              className="bg-transparent border-0"
-              type={"checkbox"}
+              className='bg-transparent border-0'
+              type={'checkbox'}
               id={optionId(id, index)}
               name={id}
               label={option.label}

@@ -1,6 +1,6 @@
-import { ComponentType, ForwardedRef, forwardRef } from "react";
-import Form, { FormProps } from "./components/Form";
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from "@rjsf/utils";
+import { ComponentType, ForwardedRef, forwardRef } from 'react';
+import Form, { FormProps } from './components/Form';
+import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
@@ -11,7 +11,7 @@ export type ThemeProps<
   F extends FormContextType = any
 > = Pick<
   FormProps<T, S, F>,
-  "fields" | "templates" | "widgets" | "_internalFormWrapper"
+  'fields' | 'templates' | 'widgets' | '_internalFormWrapper'
 >;
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */

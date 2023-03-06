@@ -1,5 +1,5 @@
-import get from "lodash/get";
-import set from "lodash/set";
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 import {
   ALL_OF_KEY,
@@ -12,16 +12,16 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
-} from "../constants";
+} from '../constants';
 import {
   FormContextType,
   PathSchema,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
-import { getClosestMatchingOption } from "./index";
-import retrieveSchema from "./retrieveSchema";
+} from '../types';
+import { getClosestMatchingOption } from './index';
+import retrieveSchema from './retrieveSchema';
 
 /** Generates an `PathSchema` object for the `schema`, recursively
  *
@@ -39,7 +39,7 @@ export default function toPathSchema<
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
-  name = "",
+  name = '',
   rootSchema?: S,
   formData?: T
 ): PathSchema<T> {
@@ -60,7 +60,7 @@ export default function toPathSchema<
   }
 
   const pathSchema: PathSchema = {
-    [NAME_KEY]: name.replace(/^\./, ""),
+    [NAME_KEY]: name.replace(/^\./, ''),
   } as PathSchema;
 
   if (ONE_OF_KEY in schema) {

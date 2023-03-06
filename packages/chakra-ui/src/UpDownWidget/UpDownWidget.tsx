@@ -1,4 +1,4 @@
-import { FocusEvent } from "react";
+import { FocusEvent } from 'react';
 import {
   NumberInput,
   NumberDecrementStepper,
@@ -7,15 +7,15 @@ import {
   NumberInputStepper,
   FormControl,
   FormLabel,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function UpDownWidget<
   T = any,
@@ -65,7 +65,7 @@ export default function UpDownWidget<
         <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
       ) : null}
       <NumberInput
-        value={value ?? ""}
+        value={value ?? ''}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

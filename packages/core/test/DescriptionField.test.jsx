@@ -1,10 +1,10 @@
-import { Component } from "react";
-import { expect } from "chai";
+import { Component } from 'react';
+import { expect } from 'chai';
 
-import DescriptionField from "../src/components/templates/DescriptionField";
-import { createSandbox, createComponent } from "./test_utils";
+import DescriptionField from '../src/components/templates/DescriptionField';
+import { createSandbox, createComponent } from './test_utils';
 
-describe("DescriptionField", () => {
+describe('DescriptionField', () => {
   let sandbox;
 
   beforeEach(() => {
@@ -26,31 +26,31 @@ describe("DescriptionField", () => {
     }
   }
 
-  it("should return a div for a custom component", () => {
+  it('should return a div for a custom component', () => {
     const props = {
       description: <em>description</em>,
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.tagName).to.equal("DIV");
+    expect(node.tagName).to.equal('DIV');
   });
 
-  it("should return a p for a description text", () => {
+  it('should return a p for a description text', () => {
     const props = {
-      description: "description",
+      description: 'description',
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.tagName).to.equal("P");
+    expect(node.tagName).to.equal('P');
   });
 
-  it("should have the expected id", () => {
+  it('should have the expected id', () => {
     const props = {
-      description: "Field description",
-      id: "sample_id",
+      description: 'Field description',
+      id: 'sample_id',
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.id).to.equal("sample_id");
+    expect(node.id).to.equal('sample_id');
   });
 });

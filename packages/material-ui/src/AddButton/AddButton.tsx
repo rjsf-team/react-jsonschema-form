@@ -1,12 +1,12 @@
-import AddIcon from "@material-ui/icons/Add";
-import IconButton from "@material-ui/core/IconButton";
+import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
 import {
   FormContextType,
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */
@@ -20,7 +20,7 @@ export default function AddButton<
     <IconButton
       title={translateString(TranslatableString.AddItemButton)}
       {...props}
-      color="primary"
+      color='primary'
     >
       <AddIcon />
     </IconButton>

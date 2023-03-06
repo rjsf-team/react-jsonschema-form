@@ -1,4 +1,4 @@
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid';
 import {
   FormContextType,
   ObjectFieldTemplateProps,
@@ -9,7 +9,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -37,17 +37,17 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
     uiOptions
   );
   const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     T,
     S,
     F
-  >("DescriptionFieldTemplate", registry, uiOptions);
+  >('DescriptionFieldTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -73,7 +73,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container={true} spacing={2} style={{ marginTop: "10px" }}>
+      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
@@ -84,17 +84,17 @@ export default function ObjectFieldTemplate<
               item={true}
               xs={12}
               key={index}
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: '10px' }}
             >
               {element.content}
             </Grid>
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent='flex-end'>
             <Grid item={true}>
               <AddButton
-                className="object-property-expand"
+                className='object-property-expand'
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}

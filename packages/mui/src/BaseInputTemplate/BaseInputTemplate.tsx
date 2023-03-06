@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { ChangeEvent, FocusEvent } from 'react';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -8,9 +8,9 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-const TYPES_THAT_SHRINK_LABEL = ["date", "datetime-local", "file"];
+const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file'];
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -60,7 +60,7 @@ export default function BaseInputTemplate<
     ...rest,
   };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
@@ -86,7 +86,7 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled || readonly}
         {...otherProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}

@@ -1,9 +1,9 @@
-import { expect } from "chai";
+import { expect } from 'chai';
 
-import { createFormComponent, createSandbox } from "./test_utils";
-import SchemaField from "../src/components/fields/SchemaField";
+import { createFormComponent, createSandbox } from './test_utils';
+import SchemaField from '../src/components/fields/SchemaField';
 
-describe("allOf", () => {
+describe('allOf', () => {
   let sandbox;
 
   beforeEach(() => {
@@ -14,12 +14,12 @@ describe("allOf", () => {
     sandbox.restore();
   });
 
-  it("should render a regular input element with a single type, when multiple types specified", () => {
+  it('should render a regular input element with a single type, when multiple types specified', () => {
     const schema = {
-      type: "object",
+      type: 'object',
       properties: {
         foo: {
-          allOf: [{ type: ["string", "number", "null"] }, { type: "string" }],
+          allOf: [{ type: ['string', 'number', 'null'] }, { type: 'string' }],
         },
       },
     };
@@ -28,15 +28,15 @@ describe("allOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("input")).to.have.length.of(1);
+    expect(node.querySelectorAll('input')).to.have.length.of(1);
   });
 
-  it("should be able to handle incompatible types and not crash", () => {
+  it('should be able to handle incompatible types and not crash', () => {
     const schema = {
-      type: "object",
+      type: 'object',
       properties: {
         foo: {
-          allOf: [{ type: "string" }, { type: "boolean" }],
+          allOf: [{ type: 'string' }, { type: 'boolean' }],
         },
       },
     };
@@ -45,18 +45,18 @@ describe("allOf", () => {
       schema,
     });
 
-    expect(node.querySelectorAll("input")).to.have.length.of(0);
+    expect(node.querySelectorAll('input')).to.have.length.of(0);
   });
-  it("should pass form context to schema field", () => {
+  it('should pass form context to schema field', () => {
     const schema = {
-      type: "object",
+      type: 'object',
       properties: {
         foo: {
-          allOf: [{ type: "string" }, { type: "boolean" }],
+          allOf: [{ type: 'string' }, { type: 'boolean' }],
         },
       },
     };
-    const formContext = { root: "root-id", root_foo: "foo-id" };
+    const formContext = { root: 'root-id', root_foo: 'foo-id' };
     function CustomSchemaField(props) {
       const { formContext, idSchema } = props;
       return (
@@ -68,12 +68,12 @@ describe("allOf", () => {
     }
     const { node } = createFormComponent({
       schema,
-      formData: { userId: "foobarbaz" },
+      formData: { userId: 'foobarbaz' },
       formContext,
       fields: { SchemaField: CustomSchemaField },
     });
 
-    const codeBlocks = node.querySelectorAll("code");
+    const codeBlocks = node.querySelectorAll('code');
     expect(codeBlocks).to.have.length(2);
     Object.keys(formContext).forEach((key) => {
       expect(node.querySelector(`code#${formContext[key]}`)).to.exist;

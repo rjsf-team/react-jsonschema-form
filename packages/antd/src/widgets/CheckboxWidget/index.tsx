@@ -1,5 +1,5 @@
-import { FocusEvent } from "react";
-import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { FocusEvent } from 'react';
+import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,7 +7,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -52,7 +52,7 @@ export default function CheckboxWidget<
   return (
     <Checkbox
       autoFocus={autofocus}
-      checked={typeof value === "undefined" ? false : value}
+      checked={typeof value === 'undefined' ? false : value}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={id}

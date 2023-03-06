@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIsSelected,
@@ -8,9 +8,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { CheckboxProps, Form, Radio } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { CheckboxProps, Form, Radio } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.

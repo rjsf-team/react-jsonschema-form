@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,12 +6,12 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import DatePicker from "../../components/DatePicker";
+import DatePicker from '../../components/DatePicker';
 
 const DATE_PICKER_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `DateTimeWidget` component uses the `BaseInputTemplate` changing the type to `datetime-local` and transforms

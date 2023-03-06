@@ -1,4 +1,4 @@
-import Slider from "antd/lib/slider";
+import Slider from 'antd/lib/slider';
 import {
   ariaDescribedByIds,
   rangeSpec,
@@ -7,7 +7,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -37,10 +37,10 @@ export default function RangeWidget<
 
   const { min, max, step } = rangeSpec(schema);
 
-  const emptyValue = options.emptyValue || "";
+  const emptyValue = options.emptyValue || '';
 
   const handleChange = (nextValue: any) =>
-    onChange(nextValue === "" ? emptyValue : nextValue);
+    onChange(nextValue === '' ? emptyValue : nextValue);
 
   const handleBlur = () => onBlur(id, value);
 

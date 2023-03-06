@@ -1,10 +1,10 @@
-import _AltDateWidget from "../AltDateWidget";
+import _AltDateWidget from '../AltDateWidget';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 function AltDateTimeWidget<
   T = any,

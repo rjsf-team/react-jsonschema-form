@@ -8,8 +8,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import isObject from "lodash/isObject";
+} from '@rjsf/utils';
+import isObject from 'lodash/isObject';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -39,7 +39,7 @@ function BooleanField<
   } = props;
   const { title } = schema;
   const { widgets, formContext, translateString } = registry;
-  const { widget = "checkbox", ...options } = getUiOptions<T, S, F>(uiSchema);
+  const { widget = 'checkbox', ...options } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
@@ -67,7 +67,7 @@ function BooleanField<
     if (
       !schemaWithEnumNames.enumNames &&
       enums.length === 2 &&
-      enums.every((v: any) => typeof v === "boolean")
+      enums.every((v: any) => typeof v === 'boolean')
     ) {
       enumOptions = [
         {

@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
   dataURItoBlob,
   getTemplate,
@@ -8,14 +8,14 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
-} from "@rjsf/utils";
-import Markdown from "markdown-to-jsx";
+} from '@rjsf/utils';
+import Markdown from 'markdown-to-jsx';
 
 function addNameToDataURL(dataURL: string, name: string) {
   if (dataURL === null) {
     return null;
   }
-  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
+  return dataURL.replace(';base64', `;name=${encodeURIComponent(name)};base64`);
 }
 
 type FileInfoType = {
@@ -31,7 +31,7 @@ function processFile(file: File): Promise<FileInfoType> {
     const reader = new window.FileReader();
     reader.onerror = reject;
     reader.onload = (event) => {
-      if (typeof event.target?.result === "string") {
+      if (typeof event.target?.result === 'string') {
         resolve({
           dataURL: addNameToDataURL(event.target.result, name),
           name,
@@ -71,7 +71,7 @@ function FilesInfo<
   }
   const { translateString } = registry;
   return (
-    <ul className="file-info">
+    <ul className='file-info'>
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type } = fileInfo;
         return (
@@ -114,8 +114,8 @@ function FileWidget<
 >(props: WidgetProps<T, S, F>) {
   const { disabled, readonly, multiple, onChange, value, options, registry } =
     props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
@@ -150,9 +150,9 @@ function FileWidget<
       <BaseInputTemplate
         {...props}
         disabled={disabled || readonly}
-        type="file"
+        type='file'
         onChangeOverride={handleChange}
-        value=""
+        value=''
         accept={options.accept ? String(options.accept) : undefined}
       />
       <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} />

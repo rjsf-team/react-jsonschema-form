@@ -1,12 +1,12 @@
 /* Utils for tests. */
 
-import { createElement } from "react";
-import sinon from "sinon";
-import { renderIntoDocument, act, Simulate } from "react-dom/test-utils";
-import { findDOMNode, render } from "react-dom";
-import validator from "@rjsf/validator-ajv8";
+import { createElement } from 'react';
+import sinon from 'sinon';
+import { renderIntoDocument, act, Simulate } from 'react-dom/test-utils';
+import { findDOMNode, render } from 'react-dom';
+import validator from '@rjsf/validator-ajv8';
 
-import Form from "../src";
+import Form from '../src';
 
 export function createComponent(Component, props) {
   const onChange = sinon.spy();
@@ -49,7 +49,7 @@ export function describeRepeated(title, fn) {
   for (let formExtraProps of formExtraPropsList) {
     const createFormComponentFn = (props) =>
       createFormComponent({ ...props, ...formExtraProps });
-    describe(title + " " + JSON.stringify(formExtraProps), () =>
+    describe(title + ' ' + JSON.stringify(formExtraProps), () =>
       fn(createFormComponentFn)
     );
   }
@@ -62,7 +62,7 @@ export function submitForm(node) {
 }
 
 export function getSelectedOptionValue(selectNode) {
-  if (selectNode.type !== "select-one") {
+  if (selectNode.type !== 'select-one') {
     throw new Error(
       `invalid node provided, expected select got ${selectNode.type}`
     );

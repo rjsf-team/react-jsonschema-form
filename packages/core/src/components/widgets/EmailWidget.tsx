@@ -4,7 +4,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `EmailWidget` component uses the `BaseInputTemplate` changing the type to `email`.
  *
@@ -16,10 +16,10 @@ export default function EmailWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     options
   );
-  return <BaseInputTemplate type="email" {...props} />;
+  return <BaseInputTemplate type='email' {...props} />;
 }

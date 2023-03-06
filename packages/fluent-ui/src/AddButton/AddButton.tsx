@@ -4,10 +4,10 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import { IIconProps, CommandBarButton } from "@fluentui/react";
+} from '@rjsf/utils';
+import { IIconProps, CommandBarButton } from '@fluentui/react';
 
-const addIcon: IIconProps = { iconName: "Add" };
+const addIcon: IIconProps = { iconName: 'Add' };
 
 export default function AddButton<
   T = any,
@@ -19,7 +19,7 @@ export default function AddButton<
   } = props;
   return (
     <CommandBarButton
-      style={{ height: "32px" }}
+      style={{ height: '32px' }}
       iconProps={addIcon}
       text={translateString(TranslatableString.AddItemButton)}
       className={props.className}

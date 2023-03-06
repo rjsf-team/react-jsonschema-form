@@ -81,7 +81,7 @@ yarn add @rjsf/validator-ajv6
 ## Usage
 
 ```tsx
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv6';
 
@@ -89,18 +89,18 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 or, using a more complex example using custom validator with custom formats
 
 ```tsx
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
 const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
 };
 
 const validator = customizeValidator({
@@ -109,37 +109,37 @@ const validator = customizeValidator({
 
 const schema: RJSFSchema = {
   type: 'string',
-  format: 'phone-us'
+  format: 'phone-us',
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 or, using a more complex example using a custom with additional meta schema
 
 ```tsx
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
-const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
+const metaSchemaDraft04 = require('ajv/lib/refs/json-schema-draft-04.json');
 
 const validator = customizeValidator({
   additionalMetaSchemas: [metaSchemaDraft04],
 });
 
 const schema: RJSFSchema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  $schema: 'http://json-schema.org/draft-04/schema#',
   type: 'string',
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 or, using a more complex example using custom validator config override options
 
 ```tsx
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
@@ -147,27 +147,27 @@ const validator = customizeValidator({
   ajvOptionsOverrides: {
     $data: true,
     verbose: true,
-  }
+  },
 });
 
 const schema: RJSFSchema = {
   type: 'string',
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 Finally, you can combine both additional meta schemas, custom formats and custom validator config override options.
 
 ```tsx
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
-const metaSchemaDraft04 = require("ajv/lib/refs/json-schema-draft-04.json");
+const metaSchemaDraft04 = require('ajv/lib/refs/json-schema-draft-04.json');
 
 const customFormats = {
-  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/
+  'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
 };
 
 const validator = customizeValidator({
@@ -176,16 +176,16 @@ const validator = customizeValidator({
   ajvOptionsOverrides: {
     $data: true,
     verbose: true,
-  }
+  },
 });
 
 const schema: RJSFSchema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  $schema: 'http://json-schema.org/draft-04/schema#',
   type: 'string',
-  format: 'phone-us'
+  format: 'phone-us',
 };
 
-<Form schema={schema} validator={validator} />
+<Form schema={schema} validator={validator} />;
 ```
 
 <!-- ROADMAP -->

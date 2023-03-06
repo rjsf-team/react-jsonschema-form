@@ -6,7 +6,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -33,22 +33,22 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
+    'ArrayFieldDescriptionTemplate',
     T,
     S,
     F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
   const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
+    'ArrayFieldTitleTemplate',
     T,
     S,
     F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  >('ArrayFieldTitleTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -70,7 +70,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         registry={registry}
       />
-      <div className="row array-item-list">
+      <div className='row array-item-list'>
         {items &&
           items.map(
             ({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
@@ -80,7 +80,7 @@ export default function ArrayFieldTemplate<
       </div>
       {canAdd && (
         <AddButton
-          className="array-item-add"
+          className='array-item-add'
           onClick={onAddClick}
           disabled={disabled || readonly}
           uiSchema={uiSchema}

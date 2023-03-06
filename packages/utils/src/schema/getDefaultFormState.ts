@@ -1,5 +1,5 @@
-import get from "lodash/get";
-import isEmpty from "lodash/isEmpty";
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 
 import {
   ANY_OF_KEY,
@@ -8,23 +8,23 @@ import {
   PROPERTIES_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from "../constants";
-import findSchemaDefinition from "../findSchemaDefinition";
-import getClosestMatchingOption from "./getClosestMatchingOption";
-import getSchemaType from "../getSchemaType";
-import isObject from "../isObject";
-import isFixedItems from "../isFixedItems";
-import mergeDefaultsWithFormData from "../mergeDefaultsWithFormData";
-import mergeObjects from "../mergeObjects";
+} from '../constants';
+import findSchemaDefinition from '../findSchemaDefinition';
+import getClosestMatchingOption from './getClosestMatchingOption';
+import getSchemaType from '../getSchemaType';
+import isObject from '../isObject';
+import isFixedItems from '../isFixedItems';
+import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
+import mergeObjects from '../mergeObjects';
 import {
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
-import isMultiSelect from "./isMultiSelect";
-import retrieveSchema, { resolveDependencies } from "./retrieveSchema";
+} from '../types';
+import isMultiSelect from './isMultiSelect';
+import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -59,14 +59,14 @@ export function getInnerSchemaForArrayItem<
   if (idx >= 0) {
     if (Array.isArray(schema.items) && idx < schema.items.length) {
       const item = schema.items[idx];
-      if (typeof item !== "boolean") {
+      if (typeof item !== 'boolean') {
         return item as S;
       }
     }
   } else if (
     schema.items &&
     !Array.isArray(schema.items) &&
-    typeof schema.items !== "boolean"
+    typeof schema.items !== 'boolean'
   ) {
     return schema.items as S;
   }
@@ -98,7 +98,7 @@ function maybeAddDefaultToObject<T = any>(
   obj: GenericObjectType,
   key: string,
   computedDefault: T | T[] | undefined,
-  includeUndefinedValues: boolean | "excludeObjectChildren",
+  includeUndefinedValues: boolean | 'excludeObjectChildren',
   requiredFields: string[] = []
 ) {
   if (includeUndefinedValues) {
@@ -137,7 +137,7 @@ export function computeDefaults<
   parentDefaults?: T,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  includeUndefinedValues: boolean | "excludeObjectChildren" = false
+  includeUndefinedValues: boolean | 'excludeObjectChildren' = false
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -218,13 +218,13 @@ export function computeDefaults<
   }
 
   // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === "undefined") {
+  if (typeof defaults === 'undefined') {
     defaults = schema.default as unknown as T;
   }
 
   switch (getSchemaType<S>(schema)) {
     // We need to recur for object schema inner default values.
-    case "object": {
+    case 'object': {
       const objectDefaults = Object.keys(schema.properties || {}).reduce(
         (acc: GenericObjectType, key: string) => {
           // Compute the defaults for this node, with the parent defaults we might
@@ -273,7 +273,7 @@ export function computeDefaults<
       }
       return objectDefaults;
     }
-    case "array":
+    case 'array':
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
@@ -356,10 +356,10 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  includeUndefinedValues: boolean | "excludeObjectChildren" = false
+  includeUndefinedValues: boolean | 'excludeObjectChildren' = false
 ) {
   if (!isObject(theSchema)) {
-    throw new Error("Invalid schema: " + theSchema);
+    throw new Error('Invalid schema: ' + theSchema);
   }
   const schema = retrieveSchema<T, S, F>(
     validator,
@@ -376,9 +376,9 @@ export default function getDefaultFormState<
     includeUndefinedValues
   );
   if (
-    typeof formData === "undefined" ||
+    typeof formData === 'undefined' ||
     formData === null ||
-    (typeof formData === "number" && isNaN(formData))
+    (typeof formData === 'number' && isNaN(formData))
   ) {
     // No form data? Use schema defaults.
     return defaults;

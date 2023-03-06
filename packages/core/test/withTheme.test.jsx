@@ -1,9 +1,9 @@
-import { expect } from "chai";
-import { Component, createRef } from "react";
-import validator from "@rjsf/validator-ajv8";
+import { expect } from 'chai';
+import { Component, createRef } from 'react';
+import validator from '@rjsf/validator-ajv8';
 
-import { withTheme } from "../src";
-import { createComponent, createSandbox } from "./test_utils";
+import { withTheme } from '../src';
+import { createComponent, createSandbox } from './test_utils';
 
 const WrapperClassComponent = (...args) => {
   return class extends Component {
@@ -14,7 +14,7 @@ const WrapperClassComponent = (...args) => {
   };
 };
 
-describe("withTheme", () => {
+describe('withTheme', () => {
   let sandbox;
 
   beforeEach(() => {
@@ -25,21 +25,21 @@ describe("withTheme", () => {
     sandbox.restore();
   });
 
-  describe("With fields", () => {
-    it("should use the withTheme field", () => {
+  describe('With fields', () => {
+    it('should use the withTheme field', () => {
       const fields = {
         StringField() {
-          return <div className="string-field" />;
+          return <div className='string-field' />;
         },
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            type: "string",
+            type: 'string',
           },
         },
       };
@@ -49,28 +49,28 @@ describe("withTheme", () => {
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll(".string-field")).to.have.length.of(2);
+      expect(node.querySelectorAll('.string-field')).to.have.length.of(2);
     });
 
-    it("should use withTheme field and the user defined field", () => {
+    it('should use withTheme field and the user defined field', () => {
       const themeFields = {
         StringField() {
-          return <div className="string-field" />;
+          return <div className='string-field' />;
         },
       };
       const userFields = {
         NumberField() {
-          return <div className="number-field" />;
+          return <div className='number-field' />;
         },
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            type: "number",
+            type: 'number',
           },
         },
       };
@@ -84,29 +84,29 @@ describe("withTheme", () => {
           validator,
         }
       );
-      expect(node.querySelectorAll(".string-field")).to.have.length.of(1);
-      expect(node.querySelectorAll(".number-field")).to.have.length.of(1);
+      expect(node.querySelectorAll('.string-field')).to.have.length.of(1);
+      expect(node.querySelectorAll('.number-field')).to.have.length.of(1);
     });
 
-    it("should use only the user defined field", () => {
+    it('should use only the user defined field', () => {
       const themeFields = {
         StringField() {
-          return <div className="string-field" />;
+          return <div className='string-field' />;
         },
       };
       const userFields = {
         StringField() {
-          return <div className="form-control" />;
+          return <div className='form-control' />;
         },
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            type: "string",
+            type: 'string',
           },
         },
       };
@@ -120,18 +120,18 @@ describe("withTheme", () => {
           validator,
         }
       );
-      expect(node.querySelectorAll(".string-field")).to.have.length.of(0);
-      expect(node.querySelectorAll(".form-control")).to.have.length.of(2);
+      expect(node.querySelectorAll('.string-field')).to.have.length.of(0);
+      expect(node.querySelectorAll('.form-control')).to.have.length.of(2);
     });
   });
 
-  describe("With widgets", () => {
-    it("should use the withTheme widget", () => {
+  describe('With widgets', () => {
+    it('should use the withTheme widget', () => {
       const widgets = {
-        TextWidget: () => <div id="test" />,
+        TextWidget: () => <div id='test' />,
       };
       const schema = {
-        type: "string",
+        type: 'string',
       };
       const uiSchema = {};
       let { node } = createComponent(WrapperClassComponent({ widgets }), {
@@ -139,25 +139,25 @@ describe("withTheme", () => {
         uiSchema,
         validator,
       });
-      expect(node.querySelectorAll("#test")).to.have.length.of(1);
+      expect(node.querySelectorAll('#test')).to.have.length.of(1);
     });
 
-    it("should use the withTheme widget as well as user defined widget", () => {
+    it('should use the withTheme widget as well as user defined widget', () => {
       const themeWidgets = {
-        TextWidget: () => <div id="test-theme-widget" />,
+        TextWidget: () => <div id='test-theme-widget' />,
       };
       const userWidgets = {
-        DateWidget: () => <div id="test-user-widget" />,
+        DateWidget: () => <div id='test-user-widget' />,
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            format: "date",
-            type: "string",
+            format: 'date',
+            type: 'string',
           },
         },
       };
@@ -171,22 +171,22 @@ describe("withTheme", () => {
           validator,
         }
       );
-      expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(1);
-      expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
+      expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(1);
+      expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
     });
 
-    it("should use only the user defined widget", () => {
+    it('should use only the user defined widget', () => {
       const themeWidgets = {
-        TextWidget: () => <div id="test-theme-widget" />,
+        TextWidget: () => <div id='test-theme-widget' />,
       };
       const userWidgets = {
-        TextWidget: () => <div id="test-user-widget" />,
+        TextWidget: () => <div id='test-user-widget' />,
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
         },
       };
@@ -200,26 +200,26 @@ describe("withTheme", () => {
           validator,
         }
       );
-      expect(node.querySelectorAll("#test-theme-widget")).to.have.length.of(0);
-      expect(node.querySelectorAll("#test-user-widget")).to.have.length.of(1);
+      expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(0);
+      expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
     });
   });
 
-  describe("With templates", () => {
-    it("should use the withTheme template", () => {
+  describe('With templates', () => {
+    it('should use the withTheme template', () => {
       const themeTemplates = {
         FieldTemplate() {
-          return <div className="with-theme-field-template" />;
+          return <div className='with-theme-field-template' />;
         },
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            type: "string",
+            type: 'string',
           },
         },
       };
@@ -233,25 +233,25 @@ describe("withTheme", () => {
         }
       );
       expect(
-        node.querySelectorAll(".with-theme-field-template")
+        node.querySelectorAll('.with-theme-field-template')
       ).to.have.length.of(1);
     });
 
-    it("should use only the user defined template", () => {
+    it('should use only the user defined template', () => {
       const themeTemplates = {
         FieldTemplate() {
-          return <div className="with-theme-field-template" />;
+          return <div className='with-theme-field-template' />;
         },
       };
       const userTemplates = {
         FieldTemplate() {
-          return <div className="user-field-template" />;
+          return <div className='user-field-template' />;
         },
       };
 
       const schema = {
-        type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } },
+        type: 'object',
+        properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
       let { node } = createComponent(
         WrapperClassComponent({ templates: themeTemplates }),
@@ -262,19 +262,19 @@ describe("withTheme", () => {
         }
       );
       expect(
-        node.querySelectorAll(".with-theme-field-template")
+        node.querySelectorAll('.with-theme-field-template')
       ).to.have.length.of(0);
-      expect(node.querySelectorAll(".user-field-template")).to.have.length.of(
+      expect(node.querySelectorAll('.user-field-template')).to.have.length.of(
         1
       );
     });
 
-    it("should use the withTheme submit button template", () => {
+    it('should use the withTheme submit button template', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
             return (
-              <button className="with-theme-button-template">
+              <button className='with-theme-button-template'>
                 ThemeSubmit
               </button>
             );
@@ -282,13 +282,13 @@ describe("withTheme", () => {
         },
       };
       const schema = {
-        type: "object",
+        type: 'object',
         properties: {
           fieldA: {
-            type: "string",
+            type: 'string',
           },
           fieldB: {
-            type: "string",
+            type: 'string',
           },
         },
       };
@@ -302,16 +302,16 @@ describe("withTheme", () => {
         }
       );
       expect(
-        node.querySelectorAll(".with-theme-button-template")
+        node.querySelectorAll('.with-theme-button-template')
       ).to.have.length.of(1);
     });
 
-    it("should use only the user defined submit button", () => {
+    it('should use only the user defined submit button', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
             return (
-              <button className="with-theme-button-template">
+              <button className='with-theme-button-template'>
                 ThemeSubmit
               </button>
             );
@@ -321,14 +321,14 @@ describe("withTheme", () => {
       const userTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return <button className="user-button-template">UserSubmit</button>;
+            return <button className='user-button-template'>UserSubmit</button>;
           },
         },
       };
 
       const schema = {
-        type: "object",
-        properties: { foo: { type: "string" }, bar: { type: "string" } },
+        type: 'object',
+        properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
       let { node } = createComponent(
         WrapperClassComponent({ templates: themeTemplates }),
@@ -339,15 +339,15 @@ describe("withTheme", () => {
         }
       );
       expect(
-        node.querySelectorAll(".with-theme-button-template")
+        node.querySelectorAll('.with-theme-button-template')
       ).to.have.length.of(0);
-      expect(node.querySelectorAll(".user-button-template")).to.have.length.of(
+      expect(node.querySelectorAll('.user-button-template')).to.have.length.of(
         1
       );
     });
   });
 
-  it("should forward the ref", () => {
+  it('should forward the ref', () => {
     const ref = createRef();
     const schema = {};
     const uiSchema = {};

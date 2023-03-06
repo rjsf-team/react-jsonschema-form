@@ -1,11 +1,11 @@
-import Button from "react-bootstrap/Button";
+import Button from 'react-bootstrap/Button';
 import {
   FormContextType,
   getSubmitButtonOptions,
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function SubmitButton<
   T = any,
@@ -22,7 +22,7 @@ export default function SubmitButton<
   }
   return (
     <div>
-      <Button variant="primary" type="submit" {...submitButtonProps}>
+      <Button variant='primary' type='submit' {...submitButtonProps}>
         {submitText}
       </Button>
     </div>

@@ -6,7 +6,7 @@ import {
   Ref,
   RefObject,
   createRef,
-} from "react";
+} from 'react';
 import {
   createSchemaUtils,
   CustomValidator,
@@ -35,13 +35,13 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
-} from "@rjsf/utils";
-import _get from "lodash/get";
-import _isEmpty from "lodash/isEmpty";
-import _pick from "lodash/pick";
-import _toPath from "lodash/toPath";
+} from '@rjsf/utils';
+import _get from 'lodash/get';
+import _isEmpty from 'lodash/isEmpty';
+import _pick from 'lodash/pick';
+import _toPath from 'lodash/toPath';
 
-import getDefaultRegistry from "../getDefaultRegistry";
+import getDefaultRegistry from '../getDefaultRegistry';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<
@@ -88,8 +88,8 @@ export interface FormProps<
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<T, S, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<T, S, F>, "ButtonTemplates">> & {
-    ButtonTemplates?: Partial<TemplatesType<T, S, F>["ButtonTemplates"]>;
+  templates?: Partial<Omit<TemplatesType<T, S, F>, 'ButtonTemplates'>> & {
+    ButtonTemplates?: Partial<TemplatesType<T, S, F>['ButtonTemplates']>;
   };
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<T, S, F>;
@@ -174,7 +174,7 @@ export interface FormProps<
   /** When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also
    * show. When set to false, only inline input validation errors will be shown. Set to `top` by default
    */
-  showErrorList?: false | "top" | "bottom";
+  showErrorList?: false | 'top' | 'bottom';
   /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
    * Schema validation
    */
@@ -187,7 +187,7 @@ export interface FormProps<
    * `%` indicates the order of the parameter. The ordering of parameters is important because some languages may choose
    * to put the second parameter before the first in its translation.
    */
-  translateString?: Registry["translateString"];
+  translateString?: Registry['translateString'];
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -251,10 +251,10 @@ export interface IChangeEvent<
   F extends FormContextType = any
 > extends Omit<
     FormState<T, S, F>,
-    "schemaValidationErrors" | "schemaValidationErrorSchema"
+    'schemaValidationErrors' | 'schemaValidationErrorSchema'
   > {
   /** The status of the form when submitted */
-  status?: "submitted";
+  status?: 'submitted';
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
@@ -278,7 +278,7 @@ export default class Form<
     super(props);
 
     if (!props.validator) {
-      throw new Error("A validator is required for Form functionality to work");
+      throw new Error('A validator is required for Form functionality to work');
     }
 
     this.state = this.getStateFromProps(props, props.formData);
@@ -322,12 +322,12 @@ export default class Form<
     inputFormData?: T
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
-    const schema = "schema" in props ? props.schema : this.props.schema;
+    const schema = 'schema' in props ? props.schema : this.props.schema;
     const uiSchema: UiSchema<T, S, F> =
-      ("uiSchema" in props ? props.uiSchema! : this.props.uiSchema!) || {};
-    const edit = typeof inputFormData !== "undefined";
+      ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
+    const edit = typeof inputFormData !== 'undefined';
     const liveValidate =
-      "liveValidate" in props ? props.liveValidate : this.props.liveValidate;
+      'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
@@ -385,7 +385,7 @@ export default class Form<
     }
     const idSchema = schemaUtils.toIdSchema(
       retrievedSchema,
-      uiSchema["ui:rootFieldId"],
+      uiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
       props.idSeparator
@@ -451,8 +451,8 @@ export default class Form<
     const { errors, errorSchema, schema, uiSchema } = this.state;
     const { formContext } = this.props;
     const options = getUiOptions<T, S, F>(uiSchema);
-    const ErrorListTemplate = getTemplate<"ErrorListTemplate", T, S, F>(
-      "ErrorListTemplate",
+    const ErrorListTemplate = getTemplate<'ErrorListTemplate', T, S, F>(
+      'ErrorListTemplate',
       registry,
       options
     );
@@ -482,7 +482,7 @@ export default class Form<
     fields: string[][]
   ): T | undefined => {
     // For the case of a single input form
-    if (fields.length === 0 && typeof formData !== "object") {
+    if (fields.length === 0 && typeof formData !== 'object') {
       return formData;
     }
 
@@ -510,23 +510,23 @@ export default class Form<
       paths: string[][] = [[]]
     ) => {
       Object.keys(_obj).forEach((key: string) => {
-        if (typeof _obj[key] === "object") {
+        if (typeof _obj[key] === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
           if (
             _obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] &&
-            _obj[key][NAME_KEY] !== ""
+            _obj[key][NAME_KEY] !== ''
           ) {
             acc.push(_obj[key][NAME_KEY]);
           } else {
             getAllPaths(_obj[key], acc, newPaths);
           }
-        } else if (key === NAME_KEY && _obj[key] !== "") {
+        } else if (key === NAME_KEY && _obj[key] !== '') {
           paths.forEach((path) => {
             const formValue = _get(formData, path);
             // adds path to fieldNames if it points to a value
             // or an empty object/array
-            if (typeof formValue !== "object" || _isEmpty(formValue)) {
+            if (typeof formValue !== 'object' || _isEmpty(formValue)) {
               acc.push(path);
             }
           });
@@ -576,7 +576,7 @@ export default class Form<
       const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
       const pathSchema = schemaUtils.toPathSchema(
         retrievedSchema,
-        "",
+        '',
         formData
       );
 
@@ -614,7 +614,7 @@ export default class Form<
         ? (mergeObjects(
             newErrorSchema,
             extraErrors,
-            "preventDuplicates"
+            'preventDuplicates'
           ) as ErrorSchema<T>)
         : newErrorSchema;
       state = {
@@ -678,7 +678,7 @@ export default class Form<
       const retrievedSchema = schemaUtils.retrieveSchema(schema, newFormData);
       const pathSchema = schemaUtils.toPathSchema(
         retrievedSchema,
-        "",
+        '',
         newFormData
       );
 
@@ -705,7 +705,7 @@ export default class Form<
         () => {
           if (onSubmit) {
             onSubmit(
-              { ...this.state, formData: newFormData, status: "submitted" },
+              { ...this.state, formData: newFormData, status: 'submitted' },
               event
             );
           }
@@ -742,7 +742,7 @@ export default class Form<
   submit() {
     if (this.formElement.current) {
       this.formElement.current.dispatchEvent(
-        new CustomEvent("submit", {
+        new CustomEvent('submit', {
           cancelable: true,
         })
       );
@@ -757,10 +757,10 @@ export default class Form<
    * @param error - The error on which to focus
    */
   focusOnError(error: RJSFValidationError) {
-    const { idPrefix = "root", idSeparator = "_" } = this.props;
+    const { idPrefix = 'root', idSeparator = '_' } = this.props;
     const { property } = error;
     const path = _toPath(property);
-    if (path[0] === "") {
+    if (path[0] === '') {
       // Most of the time the `.foo` property results in the first element being empty, so replace it with the idPrefix
       path[0] = idPrefix;
     } else {
@@ -816,7 +816,7 @@ export default class Form<
           if (onError) {
             onError(errors);
           } else {
-            console.error("Form validation failed", errors);
+            console.error('Form validation failed', errors);
           }
         }
       );
@@ -834,7 +834,7 @@ export default class Form<
       id,
       idPrefix,
       idSeparator,
-      className = "",
+      className = '',
       tagName,
       name,
       method,
@@ -847,7 +847,7 @@ export default class Form<
       disabled = false,
       readonly = false,
       formContext,
-      showErrorList = "top",
+      showErrorList = 'top',
       _internalFormWrapper,
     } = this.props;
 
@@ -859,11 +859,11 @@ export default class Form<
     // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
     // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
     const as = _internalFormWrapper ? tagName : undefined;
-    const FormTag = _internalFormWrapper || tagName || "form";
+    const FormTag = _internalFormWrapper || tagName || 'form';
 
     return (
       <FormTag
-        className={className ? className : "rjsf"}
+        className={className ? className : 'rjsf'}
         id={id}
         name={name}
         method={method}
@@ -877,9 +877,9 @@ export default class Form<
         as={as}
         ref={this.formElement}
       >
-        {showErrorList === "top" && this.renderErrors(registry)}
+        {showErrorList === 'top' && this.renderErrors(registry)}
         <_SchemaField
-          name=""
+          name=''
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}
@@ -900,7 +900,7 @@ export default class Form<
         ) : (
           <SubmitButton uiSchema={uiSchema} registry={registry} />
         )}
-        {showErrorList === "bottom" && this.renderErrors(registry)}
+        {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );
   }

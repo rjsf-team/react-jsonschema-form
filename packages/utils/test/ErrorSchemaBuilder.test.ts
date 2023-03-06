@@ -1,13 +1,13 @@
-import { ErrorSchemaBuilder, ERRORS_KEY, ErrorSchema } from "../src";
+import { ErrorSchemaBuilder, ERRORS_KEY, ErrorSchema } from '../src';
 
-const AN_ERROR = "an error";
-const SOME_ERRORS = ["error1", "error2"];
-const STRING_PATH = "foo";
-const ARRAY_PATH = ["bar", "baz"];
+const AN_ERROR = 'an error';
+const SOME_ERRORS = ['error1', 'error2'];
+const STRING_PATH = 'foo';
+const ARRAY_PATH = ['bar', 'baz'];
 
-const INITIAL_ROOT = "initial root";
-const INITIAL_STRING = "initial string path";
-const INITIAL_ARRAY = "initial array path";
+const INITIAL_ROOT = 'initial root';
+const INITIAL_STRING = 'initial string path';
+const INITIAL_ARRAY = 'initial array path';
 
 // We have to cast to ErrorSchema because the type is not meant for building
 const INITIAL_SCHEMA: ErrorSchema = {
@@ -22,31 +22,31 @@ const INITIAL_SCHEMA: ErrorSchema = {
   },
 } as ErrorSchema;
 
-describe("ErrorSchemaBuilder", () => {
-  describe("no initial schema", () => {
+describe('ErrorSchemaBuilder', () => {
+  describe('no initial schema', () => {
     let builder: ErrorSchemaBuilder;
     beforeAll(() => {
       builder = new ErrorSchemaBuilder();
     });
-    it("returns an empty error schema after construction", () => {
+    it('returns an empty error schema after construction', () => {
       expect(builder.ErrorSchema).toEqual({});
     });
-    it("adding error string without a path puts it into the root", () => {
+    it('adding error string without a path puts it into the root', () => {
       expect(builder.addErrors(AN_ERROR).ErrorSchema).toEqual({
         [ERRORS_KEY]: [AN_ERROR],
       });
     });
-    it("setting error string list without a path replaces at the root", () => {
+    it('setting error string list without a path replaces at the root', () => {
       expect(builder.setErrors(SOME_ERRORS).ErrorSchema).toEqual({
         [ERRORS_KEY]: SOME_ERRORS,
       });
     });
-    it("clearing errors without a path clears them from the root", () => {
+    it('clearing errors without a path clears them from the root', () => {
       expect(builder.clearErrors().ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
       });
     });
-    it("adding error string with a string path puts it at the path", () => {
+    it('adding error string with a string path puts it at the path', () => {
       expect(builder.addErrors(AN_ERROR, STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -54,7 +54,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string list with a string path replaces errors at the path", () => {
+    it('setting error string list with a string path replaces errors at the path', () => {
       expect(builder.setErrors(SOME_ERRORS, STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -62,7 +62,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors with a string path clears them the path", () => {
+    it('clearing errors with a string path clears them the path', () => {
       expect(builder.clearErrors(STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -70,7 +70,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("adding error string with a string[] path puts it at the path", () => {
+    it('adding error string with a string[] path puts it at the path', () => {
       expect(builder.addErrors(AN_ERROR, ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -83,7 +83,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string list with a string[] path replaces errors at the path", () => {
+    it('setting error string list with a string[] path replaces errors at the path', () => {
       expect(builder.setErrors(SOME_ERRORS, ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -96,9 +96,9 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string with a new path set errors at the path", () => {
+    it('setting error string with a new path set errors at the path', () => {
       expect(
-        builder.setErrors(AN_ERROR, ["another", "path"]).ErrorSchema
+        builder.setErrors(AN_ERROR, ['another', 'path']).ErrorSchema
       ).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -116,7 +116,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors with a string[] path clears them the path", () => {
+    it('clearing errors with a string[] path clears them the path', () => {
       expect(builder.clearErrors(ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -134,8 +134,8 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors with a new path creates an empty block", () => {
-      expect(builder.clearErrors("newPath").ErrorSchema).toEqual({
+    it('clearing errors with a new path creates an empty block', () => {
+      expect(builder.clearErrors('newPath').ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
           [ERRORS_KEY]: [],
@@ -155,19 +155,19 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("resetting error restores things back to an empty object", () => {
+    it('resetting error restores things back to an empty object', () => {
       expect(builder.resetAllErrors().ErrorSchema).toEqual({});
     });
   });
-  describe("using initial schema", () => {
+  describe('using initial schema', () => {
     let builder: ErrorSchemaBuilder;
     beforeAll(() => {
       builder = new ErrorSchemaBuilder(INITIAL_SCHEMA);
     });
-    it("returns the INITIAL_SCHEMA after construction", () => {
+    it('returns the INITIAL_SCHEMA after construction', () => {
       expect(builder.ErrorSchema).toEqual(INITIAL_SCHEMA);
     });
-    it("adding error array with an empty array as a path puts it into the root", () => {
+    it('adding error array with an empty array as a path puts it into the root', () => {
       expect(builder.addErrors(SOME_ERRORS, []).ErrorSchema).toEqual({
         [ERRORS_KEY]: [INITIAL_ROOT, ...SOME_ERRORS],
         [STRING_PATH]: {
@@ -180,7 +180,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string without a path replaces at the root", () => {
+    it('setting error string without a path replaces at the root', () => {
       expect(builder.setErrors(AN_ERROR).ErrorSchema).toEqual({
         [ERRORS_KEY]: [AN_ERROR],
         [STRING_PATH]: {
@@ -193,7 +193,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors without a path clears them from the root", () => {
+    it('clearing errors without a path clears them from the root', () => {
       expect(builder.clearErrors().ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -206,7 +206,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("adding error string with a string path puts it at the path", () => {
+    it('adding error string with a string path puts it at the path', () => {
       expect(builder.addErrors(AN_ERROR, STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -219,7 +219,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string list with a string path replaces errors at the path", () => {
+    it('setting error string list with a string path replaces errors at the path', () => {
       expect(builder.setErrors(SOME_ERRORS, STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -232,7 +232,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors with a string path clears them the path", () => {
+    it('clearing errors with a string path clears them the path', () => {
       expect(builder.clearErrors(STRING_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -245,7 +245,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("adding error string with a string[] path puts it at the path", () => {
+    it('adding error string with a string[] path puts it at the path', () => {
       expect(builder.addErrors(AN_ERROR, ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -258,7 +258,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("setting error string list with a string[] path replaces errors at the path", () => {
+    it('setting error string list with a string[] path replaces errors at the path', () => {
       expect(builder.setErrors(SOME_ERRORS, ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -271,7 +271,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("clearing errors with a string[] path clears them the path", () => {
+    it('clearing errors with a string[] path clears them the path', () => {
       expect(builder.clearErrors(ARRAY_PATH).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
@@ -284,7 +284,7 @@ describe("ErrorSchemaBuilder", () => {
         },
       });
     });
-    it("resetting error restores things back to the INITIAL_SCHEMA", () => {
+    it('resetting error restores things back to the INITIAL_SCHEMA', () => {
       expect(builder.resetAllErrors(INITIAL_SCHEMA).ErrorSchema).toEqual(
         INITIAL_SCHEMA
       );

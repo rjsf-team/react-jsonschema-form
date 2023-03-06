@@ -3,8 +3,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TitleFieldProps,
-} from "@rjsf/utils";
-import { Label } from "@fluentui/react";
+} from '@rjsf/utils';
+import { Label } from '@fluentui/react';
 
 const styles = {
   root: [

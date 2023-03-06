@@ -1,5 +1,5 @@
-import { FocusEvent } from "react";
-import { FormControl, FormLabel } from "@chakra-ui/react";
+import { FocusEvent } from 'react';
+import { FormControl, FormLabel } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   EnumOptionsType,
@@ -9,9 +9,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
-import { OptionsOrGroups, Select } from "chakra-react-select";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
+import { OptionsOrGroups, Select } from 'chakra-react-select';
 
 export default function SelectWidget<
   T = any,
@@ -79,7 +79,7 @@ export default function SelectWidget<
       })
     : [];
 
-  const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
+  const isMultiple = typeof multiple !== 'undefined' && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(
     value,
     enumOptions,
@@ -93,7 +93,7 @@ export default function SelectWidget<
         };
       })
     : {
-        label: _valueLabelMap[selectedIndex as string] || "",
+        label: _valueLabelMap[selectedIndex as string] || '',
         selectedIndex,
       };
 

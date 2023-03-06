@@ -1,15 +1,15 @@
-import { RJSFSchema, ErrorSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv8";
-import renderer from "react-test-renderer";
+import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import renderer from 'react-test-renderer';
 
-import Form from "../src/index";
+import Form from '../src/index';
 
-describe("array fields", () => {
-  test("array", () => {
+describe('array fields', () => {
+  test('array', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
+        type: 'string',
       },
     };
     const tree = renderer
@@ -17,15 +17,15 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("fixed array", () => {
+  test('fixed array', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: [
         {
-          type: "string",
+          type: 'string',
         },
         {
-          type: "number",
+          type: 'number',
         },
       ],
     };
@@ -34,12 +34,12 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkboxes", () => {
+  test('checkboxes', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["a", "b", "c"],
+        type: 'string',
+        enum: ['a', 'b', 'c'],
       },
       uniqueItems: true,
     };
@@ -48,26 +48,26 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("array icons", () => {
+  test('array icons', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
+        type: 'string',
       },
     };
     const tree = renderer
       .create(
-        <Form schema={schema} validator={validator} formData={["a", "b"]} />
+        <Form schema={schema} validator={validator} formData={['a', 'b']} />
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("no errors", () => {
+  test('no errors', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
+          type: 'string',
         },
       },
     };
@@ -76,12 +76,12 @@ describe("array fields", () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("empty errors array", () => {
+  test('empty errors array', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
+          type: 'string',
         },
       },
     };

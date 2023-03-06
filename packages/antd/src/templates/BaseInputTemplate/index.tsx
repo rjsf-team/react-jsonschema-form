@@ -1,6 +1,6 @@
-import { ChangeEvent, FocusEvent } from "react";
-import Input from "antd/lib/input";
-import InputNumber from "antd/lib/input-number";
+import { ChangeEvent, FocusEvent } from 'react';
+import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,10 +10,10 @@ import {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const INPUT_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -50,7 +50,7 @@ export default function BaseInputTemplate<
   const handleTextChange = onChangeOverride
     ? onChangeOverride
     : ({ target }: ChangeEvent<HTMLInputElement>) =>
-        onChange(target.value === "" ? options.emptyValue : target.value);
+        onChange(target.value === '' ? options.emptyValue : target.value);
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, target.value);
@@ -59,7 +59,7 @@ export default function BaseInputTemplate<
     onFocus(id, target.value);
 
   const input =
-    inputProps.type === "number" || inputProps.type === "integer" ? (
+    inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <InputNumber
         disabled={disabled || (readonlyAsDisabled && readonly)}
         id={id}

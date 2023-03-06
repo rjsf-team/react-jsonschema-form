@@ -1,4 +1,4 @@
-import { FocusEvent } from "react";
+import { FocusEvent } from 'react';
 import {
   CheckboxGroup,
   Checkbox,
@@ -6,7 +6,7 @@ import {
   FormControl,
   Text,
   Stack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -17,8 +17,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function CheckboxesWidget<
   T = any,
@@ -77,7 +77,7 @@ export default function CheckboxesWidget<
         defaultValue={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        <Stack direction={row ? "row" : "column"}>
+        <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
               const checked = enumOptionsIsSelected<S>(

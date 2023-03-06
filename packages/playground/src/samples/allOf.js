@@ -1,11 +1,11 @@
 export default {
   schema: {
-    type: "object",
+    type: 'object',
     allOf: [
       {
         properties: {
           lorem: {
-            type: ["string", "boolean"],
+            type: ['string', 'boolean'],
             default: true,
           },
         },
@@ -13,10 +13,10 @@ export default {
       {
         properties: {
           lorem: {
-            type: "boolean",
+            type: 'boolean',
           },
           ipsum: {
-            type: "string",
+            type: 'string',
           },
         },
       },

@@ -4,9 +4,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import { List, ListIcon, ListItem, Alert, AlertTitle } from "@chakra-ui/react";
-import { WarningIcon } from "@chakra-ui/icons";
+} from '@rjsf/utils';
+import { List, ListIcon, ListItem, Alert, AlertTitle } from '@chakra-ui/react';
+import { WarningIcon } from '@chakra-ui/icons';
 
 export default function ErrorList<
   T = any,
@@ -16,16 +16,16 @@ export default function ErrorList<
   const { translateString } = registry;
   return (
     <Alert
-      flexDirection="column"
-      alignItems="flex-start"
+      flexDirection='column'
+      alignItems='flex-start'
       gap={3}
-      status="error"
+      status='error'
     >
       <AlertTitle>{translateString(TranslatableString.ErrorsLabel)}</AlertTitle>
       <List>
         {errors.map((error, i) => (
           <ListItem key={i}>
-            <ListIcon as={WarningIcon} color="red.500" />
+            <ListIcon as={WarningIcon} color='red.500' />
             {error.stack}
           </ListItem>
         ))}

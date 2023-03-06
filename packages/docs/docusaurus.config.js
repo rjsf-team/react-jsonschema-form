@@ -108,7 +108,8 @@ const config = {
               {
                 label: 'Quickstart',
                 to: 'quickstart',
-              },          {
+              },
+              {
                 to: '/api-reference',
                 label: 'API Reference',
               },
@@ -152,7 +153,7 @@ const config = {
         searchParameters: {},
         // Optional: path for search page that enabled by default (`false` to disable it)
         searchPagePath: 'search',
-      }
+      },
     }),
 };
 

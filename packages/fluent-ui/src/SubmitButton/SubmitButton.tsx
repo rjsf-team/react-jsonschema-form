@@ -4,8 +4,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-} from "@rjsf/utils";
-import { PrimaryButton } from "@fluentui/react";
+} from '@rjsf/utils';
+import { PrimaryButton } from '@fluentui/react';
 
 export default function SubmitButton<
   T = any,
@@ -23,8 +23,8 @@ export default function SubmitButton<
   return (
     <div>
       <br />
-      <div className="ms-Grid-col ms-sm12">
-        <PrimaryButton text={submitText} type="submit" {...submitButtonProps} />
+      <div className='ms-Grid-col ms-sm12'>
+        <PrimaryButton text={submitText} type='submit' {...submitButtonProps} />
       </div>
     </div>
   );

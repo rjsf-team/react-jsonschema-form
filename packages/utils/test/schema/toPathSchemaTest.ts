@@ -1,68 +1,68 @@
-import { toPathSchema, RJSFSchema, createSchemaUtils } from "../../src";
-import { TestValidatorType } from "./types";
+import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
+import { TestValidatorType } from './types';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
-  describe("toPathSchema()", () => {
-    it("should return a pathSchema for root field", () => {
-      const schema: RJSFSchema = { type: "string" };
+  describe('toPathSchema()', () => {
+    it('should return a pathSchema for root field', () => {
+      const schema: RJSFSchema = { type: 'string' };
 
-      expect(toPathSchema(testValidator, schema)).toEqual({ $name: "" });
+      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '' });
     });
-    it("should return a pathSchema for root field, with additional properties", () => {
-      const schema: RJSFSchema = { type: "string", additionalProperties: true };
+    it('should return a pathSchema for root field, with additional properties', () => {
+      const schema: RJSFSchema = { type: 'string', additionalProperties: true };
 
       expect(toPathSchema(testValidator, schema)).toEqual({
-        $name: "",
+        $name: '',
         __rjsf_additionalProperties: true,
       });
     });
-    it("should return a pathSchema for root field, without additional properties", () => {
+    it('should return a pathSchema for root field, without additional properties', () => {
       const schema: RJSFSchema = {
-        type: "string",
+        type: 'string',
         additionalProperties: false,
       };
 
-      expect(toPathSchema(testValidator, schema)).toEqual({ $name: "" });
+      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '' });
     });
-    it("should return a pathSchema for nested objects", () => {
+    it('should return a pathSchema for nested objects', () => {
       const schema: RJSFSchema = {
-        type: "object",
+        type: 'object',
         properties: {
           level1: {
-            type: "object",
+            type: 'object',
             properties: {
-              level2: { type: "string" },
+              level2: { type: 'string' },
             },
           },
         },
       };
 
       expect(toPathSchema(testValidator, schema)).toEqual({
-        $name: "",
+        $name: '',
         level1: {
-          $name: "level1",
-          level2: { $name: "level1.level2" },
+          $name: 'level1',
+          level2: { $name: 'level1.level2' },
         },
       });
     });
-    it("should return a pathSchema for a schema with dependencies", () => {
+    it('should return a pathSchema for a schema with dependencies', () => {
       const schema: RJSFSchema = {
-        type: "object",
+        type: 'object',
         properties: {
           list: {
-            title: "list",
-            type: "array",
+            title: 'list',
+            type: 'array',
             items: {
-              type: "object",
+              type: 'object',
               properties: {
-                a: { type: "string" },
-                b: { type: "string" },
+                a: { type: 'string' },
+                b: { type: 'string' },
               },
               dependencies: {
                 b: {
                   properties: {
                     c: {
-                      type: "string",
+                      type: 'string',
                     },
                   },
                 },
@@ -75,139 +75,139 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const formData = {
         list: [
           {
-            a: "a1",
-            b: "b1",
-            c: "c1",
+            a: 'a1',
+            b: 'b1',
+            c: 'c1',
           },
           {
-            a: "a2",
+            a: 'a2',
           },
           {
-            a: "a2",
-            c: "c2",
+            a: 'a2',
+            c: 'c2',
           },
         ],
       };
 
-      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
         {
-          $name: "",
+          $name: '',
           list: {
-            $name: "list",
-            "0": {
-              $name: "list.0",
+            $name: 'list',
+            '0': {
+              $name: 'list.0',
               a: {
-                $name: "list.0.a",
+                $name: 'list.0.a',
               },
               b: {
-                $name: "list.0.b",
+                $name: 'list.0.b',
               },
               c: {
-                $name: "list.0.c",
+                $name: 'list.0.c',
               },
             },
-            "1": {
-              $name: "list.1",
+            '1': {
+              $name: 'list.1',
               a: {
-                $name: "list.1.a",
+                $name: 'list.1.a',
               },
               b: {
-                $name: "list.1.b",
+                $name: 'list.1.b',
               },
             },
-            "2": {
-              $name: "list.2",
+            '2': {
+              $name: 'list.2',
               a: {
-                $name: "list.2.a",
+                $name: 'list.2.a',
               },
               b: {
-                $name: "list.2.b",
+                $name: 'list.2.b',
               },
             },
           },
         }
       );
     });
-    it("should return a pathSchema for a schema with references", () => {
+    it('should return a pathSchema for a schema with references', () => {
       const schema: RJSFSchema = {
         definitions: {
           address: {
-            type: "object",
+            type: 'object',
             properties: {
               street_address: {
-                type: "string",
+                type: 'string',
               },
               city: {
-                type: "string",
+                type: 'string',
               },
               state: {
-                type: "string",
+                type: 'string',
               },
             },
-            required: ["street_address", "city", "state"],
+            required: ['street_address', 'city', 'state'],
           },
         },
-        type: "object",
+        type: 'object',
         properties: {
           billing_address: {
-            title: "Billing address",
-            $ref: "#/definitions/address",
+            title: 'Billing address',
+            $ref: '#/definitions/address',
           },
         },
       };
 
       const formData = {
         billing_address: {
-          street_address: "21, Jump Street",
-          city: "Babel",
-          state: "Neverland",
+          street_address: '21, Jump Street',
+          city: 'Babel',
+          state: 'Neverland',
         },
       };
 
-      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
         {
-          $name: "",
+          $name: '',
           billing_address: {
-            $name: "billing_address",
+            $name: 'billing_address',
             city: {
-              $name: "billing_address.city",
+              $name: 'billing_address.city',
             },
             state: {
-              $name: "billing_address.state",
+              $name: 'billing_address.state',
             },
             street_address: {
-              $name: "billing_address.street_address",
+              $name: 'billing_address.street_address',
             },
           },
         }
       );
     });
-    it("should return a pathSchema for a schema with references in an array item", () => {
+    it('should return a pathSchema for a schema with references in an array item', () => {
       const schema: RJSFSchema = {
         definitions: {
           address: {
-            type: "object",
+            type: 'object',
             properties: {
               street_address: {
-                type: "string",
+                type: 'string',
               },
               city: {
-                type: "string",
+                type: 'string',
               },
               state: {
-                type: "string",
+                type: 'string',
               },
             },
-            required: ["street_address", "city", "state"],
+            required: ['street_address', 'city', 'state'],
           },
         },
-        type: "object",
+        type: 'object',
         properties: {
           address_list: {
-            title: "Address list",
-            type: "array",
+            title: 'Address list',
+            type: 'array',
             items: {
-              $ref: "#/definitions/address",
+              $ref: '#/definitions/address',
             },
           },
         },
@@ -216,416 +216,416 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const formData = {
         address_list: [
           {
-            street_address: "21, Jump Street",
-            city: "Babel",
-            state: "Neverland",
+            street_address: '21, Jump Street',
+            city: 'Babel',
+            state: 'Neverland',
           },
           {
-            street_address: "1234 Schema Rd.",
-            city: "New York",
-            state: "Arizona",
+            street_address: '1234 Schema Rd.',
+            city: 'New York',
+            state: 'Arizona',
           },
         ],
       };
 
-      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
         {
-          $name: "",
+          $name: '',
           address_list: {
-            $name: "address_list",
-            "0": {
-              $name: "address_list.0",
+            $name: 'address_list',
+            '0': {
+              $name: 'address_list.0',
               city: {
-                $name: "address_list.0.city",
+                $name: 'address_list.0.city',
               },
               state: {
-                $name: "address_list.0.state",
+                $name: 'address_list.0.state',
               },
               street_address: {
-                $name: "address_list.0.street_address",
+                $name: 'address_list.0.street_address',
               },
             },
-            "1": {
-              $name: "address_list.1",
+            '1': {
+              $name: 'address_list.1',
               city: {
-                $name: "address_list.1.city",
+                $name: 'address_list.1.city',
               },
               state: {
-                $name: "address_list.1.state",
+                $name: 'address_list.1.state',
               },
               street_address: {
-                $name: "address_list.1.street_address",
+                $name: 'address_list.1.street_address',
               },
             },
           },
         }
       );
     });
-    it("should return an pathSchema with different types of arrays", () => {
+    it('should return an pathSchema with different types of arrays', () => {
       const schema: RJSFSchema = {
         definitions: {
           Thing: {
-            type: "object",
+            type: 'object',
             properties: {
               name: {
-                type: "string",
-                default: "Default name",
+                type: 'string',
+                default: 'Default name',
               },
             },
           },
         },
-        type: "object",
+        type: 'object',
         properties: {
           listOfStrings: {
-            type: "array",
-            title: "A list of strings",
+            type: 'array',
+            title: 'A list of strings',
             items: {
-              type: "string",
-              default: "bazinga",
+              type: 'string',
+              default: 'bazinga',
             },
           },
           multipleChoicesList: {
-            type: "array",
-            title: "A multiple choices list",
+            type: 'array',
+            title: 'A multiple choices list',
             items: {
-              type: "string",
-              enum: ["foo", "bar", "fuzz", "qux"],
+              type: 'string',
+              enum: ['foo', 'bar', 'fuzz', 'qux'],
             },
             uniqueItems: true,
           },
           fixedItemsList: {
-            type: "array",
-            title: "A list of fixed items",
+            type: 'array',
+            title: 'A list of fixed items',
             items: [
               {
-                title: "A string value",
-                type: "string",
-                default: "lorem ipsum",
+                title: 'A string value',
+                type: 'string',
+                default: 'lorem ipsum',
               },
               {
-                title: "a boolean value",
-                type: "boolean",
+                title: 'a boolean value',
+                type: 'boolean',
               },
             ],
             additionalItems: {
-              title: "Additional item",
-              type: "number",
+              title: 'Additional item',
+              type: 'number',
             },
           },
           minItemsList: {
-            type: "array",
-            title: "A list with a minimal number of items",
+            type: 'array',
+            title: 'A list with a minimal number of items',
             minItems: 3,
             items: {
-              $ref: "#/definitions/Thing",
+              $ref: '#/definitions/Thing',
             },
           },
           defaultsAndMinItems: {
-            type: "array",
-            title: "List and item level defaults",
+            type: 'array',
+            title: 'List and item level defaults',
             minItems: 5,
-            default: ["carp", "trout", "bream"],
+            default: ['carp', 'trout', 'bream'],
             items: {
-              type: "string",
-              default: "unidentified",
+              type: 'string',
+              default: 'unidentified',
             },
           },
           nestedList: {
-            type: "array",
-            title: "Nested list",
+            type: 'array',
+            title: 'Nested list',
             items: {
-              type: "array",
-              title: "Inner list",
+              type: 'array',
+              title: 'Inner list',
               items: {
-                type: "string",
-                default: "lorem ipsum",
+                type: 'string',
+                default: 'lorem ipsum',
               },
             },
           },
           listOfObjects: {
-            type: "array",
-            title: "List of objects",
+            type: 'array',
+            title: 'List of objects',
             items: {
-              type: "object",
-              title: "Object in list",
+              type: 'object',
+              title: 'Object in list',
               properties: {
                 name: {
-                  type: "string",
-                  default: "Default name",
+                  type: 'string',
+                  default: 'Default name',
                 },
                 id: {
-                  type: "number",
-                  default: "an id",
+                  type: 'number',
+                  default: 'an id',
                 },
               },
             },
           },
           unorderable: {
-            title: "Unorderable items",
-            type: "array",
+            title: 'Unorderable items',
+            type: 'array',
             items: {
-              type: "string",
-              default: "lorem ipsum",
+              type: 'string',
+              default: 'lorem ipsum',
             },
           },
           unremovable: {
-            title: "Unremovable items",
-            type: "array",
+            title: 'Unremovable items',
+            type: 'array',
             items: {
-              type: "string",
-              default: "lorem ipsum",
+              type: 'string',
+              default: 'lorem ipsum',
             },
           },
           noToolbar: {
-            title: "No add, remove and order buttons",
-            type: "array",
+            title: 'No add, remove and order buttons',
+            type: 'array',
             items: {
-              type: "string",
-              default: "lorem ipsum",
+              type: 'string',
+              default: 'lorem ipsum',
             },
           },
           fixedNoToolbar: {
-            title: "Fixed array without buttons",
-            type: "array",
+            title: 'Fixed array without buttons',
+            type: 'array',
             items: [
               {
-                title: "A number",
-                type: "number",
+                title: 'A number',
+                type: 'number',
                 default: 42,
               },
               {
-                title: "A boolean",
-                type: "boolean",
+                title: 'A boolean',
+                type: 'boolean',
                 default: false,
               },
             ],
             additionalItems: {
-              title: "A string",
-              type: "string",
-              default: "lorem ipsum",
+              title: 'A string',
+              type: 'string',
+              default: 'lorem ipsum',
             },
           },
         },
       };
 
       const formData = {
-        listOfStrings: ["foo", "bar"],
-        multipleChoicesList: ["foo", "bar"],
-        fixedItemsList: ["Some text", true, 123],
+        listOfStrings: ['foo', 'bar'],
+        multipleChoicesList: ['foo', 'bar'],
+        fixedItemsList: ['Some text', true, 123],
         minItemsList: [
           {
-            name: "Default name",
+            name: 'Default name',
           },
           {
-            name: "Default name",
+            name: 'Default name',
           },
           {
-            name: "Default name",
+            name: 'Default name',
           },
         ],
         defaultsAndMinItems: [
-          "carp",
-          "trout",
-          "bream",
-          "unidentified",
-          "unidentified",
+          'carp',
+          'trout',
+          'bream',
+          'unidentified',
+          'unidentified',
         ],
-        nestedList: [["lorem", "ipsum"], ["dolor"]],
+        nestedList: [['lorem', 'ipsum'], ['dolor']],
         listOfObjects: [
-          { name: "name1", id: 123 },
-          { name: "name2", id: 1234 },
+          { name: 'name1', id: 123 },
+          { name: 'name2', id: 1234 },
           { id: 12345 },
         ],
-        unorderable: ["one", "two"],
-        unremovable: ["one", "two"],
-        noToolbar: ["one", "two"],
+        unorderable: ['one', 'two'],
+        unremovable: ['one', 'two'],
+        noToolbar: ['one', 'two'],
         fixedNoToolbar: [
           42,
           true,
-          "additional item one",
-          "additional item two",
+          'additional item one',
+          'additional item two',
         ],
       };
 
       const schemaUtils = createSchemaUtils(testValidator, schema);
-      expect(schemaUtils.toPathSchema(schema, "", formData)).toEqual({
-        $name: "",
+      expect(schemaUtils.toPathSchema(schema, '', formData)).toEqual({
+        $name: '',
         defaultsAndMinItems: {
-          $name: "defaultsAndMinItems",
-          "0": {
-            $name: "defaultsAndMinItems.0",
+          $name: 'defaultsAndMinItems',
+          '0': {
+            $name: 'defaultsAndMinItems.0',
           },
-          "1": {
-            $name: "defaultsAndMinItems.1",
+          '1': {
+            $name: 'defaultsAndMinItems.1',
           },
-          "2": {
-            $name: "defaultsAndMinItems.2",
+          '2': {
+            $name: 'defaultsAndMinItems.2',
           },
-          "3": {
-            $name: "defaultsAndMinItems.3",
+          '3': {
+            $name: 'defaultsAndMinItems.3',
           },
-          "4": {
-            $name: "defaultsAndMinItems.4",
+          '4': {
+            $name: 'defaultsAndMinItems.4',
           },
         },
         fixedItemsList: {
-          $name: "fixedItemsList",
-          "0": {
-            $name: "fixedItemsList.0",
+          $name: 'fixedItemsList',
+          '0': {
+            $name: 'fixedItemsList.0',
           },
-          "1": {
-            $name: "fixedItemsList.1",
+          '1': {
+            $name: 'fixedItemsList.1',
           },
-          "2": {
-            $name: "fixedItemsList.2",
+          '2': {
+            $name: 'fixedItemsList.2',
           },
         },
         fixedNoToolbar: {
-          $name: "fixedNoToolbar",
-          "0": {
-            $name: "fixedNoToolbar.0",
+          $name: 'fixedNoToolbar',
+          '0': {
+            $name: 'fixedNoToolbar.0',
           },
-          "1": {
-            $name: "fixedNoToolbar.1",
+          '1': {
+            $name: 'fixedNoToolbar.1',
           },
-          "2": {
-            $name: "fixedNoToolbar.2",
+          '2': {
+            $name: 'fixedNoToolbar.2',
           },
-          "3": {
-            $name: "fixedNoToolbar.3",
+          '3': {
+            $name: 'fixedNoToolbar.3',
           },
         },
         listOfObjects: {
-          $name: "listOfObjects",
-          "0": {
-            $name: "listOfObjects.0",
+          $name: 'listOfObjects',
+          '0': {
+            $name: 'listOfObjects.0',
             id: {
-              $name: "listOfObjects.0.id",
+              $name: 'listOfObjects.0.id',
             },
             name: {
-              $name: "listOfObjects.0.name",
+              $name: 'listOfObjects.0.name',
             },
           },
-          "1": {
-            $name: "listOfObjects.1",
+          '1': {
+            $name: 'listOfObjects.1',
             id: {
-              $name: "listOfObjects.1.id",
+              $name: 'listOfObjects.1.id',
             },
             name: {
-              $name: "listOfObjects.1.name",
+              $name: 'listOfObjects.1.name',
             },
           },
-          "2": {
-            $name: "listOfObjects.2",
+          '2': {
+            $name: 'listOfObjects.2',
             id: {
-              $name: "listOfObjects.2.id",
+              $name: 'listOfObjects.2.id',
             },
             name: {
-              $name: "listOfObjects.2.name",
+              $name: 'listOfObjects.2.name',
             },
           },
         },
         listOfStrings: {
-          $name: "listOfStrings",
-          "0": {
-            $name: "listOfStrings.0",
+          $name: 'listOfStrings',
+          '0': {
+            $name: 'listOfStrings.0',
           },
-          "1": {
-            $name: "listOfStrings.1",
+          '1': {
+            $name: 'listOfStrings.1',
           },
         },
         minItemsList: {
-          $name: "minItemsList",
-          "0": {
-            $name: "minItemsList.0",
+          $name: 'minItemsList',
+          '0': {
+            $name: 'minItemsList.0',
             name: {
-              $name: "minItemsList.0.name",
+              $name: 'minItemsList.0.name',
             },
           },
-          "1": {
-            $name: "minItemsList.1",
+          '1': {
+            $name: 'minItemsList.1',
             name: {
-              $name: "minItemsList.1.name",
+              $name: 'minItemsList.1.name',
             },
           },
-          "2": {
-            $name: "minItemsList.2",
+          '2': {
+            $name: 'minItemsList.2',
             name: {
-              $name: "minItemsList.2.name",
+              $name: 'minItemsList.2.name',
             },
           },
         },
         multipleChoicesList: {
-          $name: "multipleChoicesList",
-          "0": {
-            $name: "multipleChoicesList.0",
+          $name: 'multipleChoicesList',
+          '0': {
+            $name: 'multipleChoicesList.0',
           },
-          "1": {
-            $name: "multipleChoicesList.1",
+          '1': {
+            $name: 'multipleChoicesList.1',
           },
         },
         nestedList: {
-          $name: "nestedList",
-          "0": {
-            $name: "nestedList.0",
-            "0": {
-              $name: "nestedList.0.0",
+          $name: 'nestedList',
+          '0': {
+            $name: 'nestedList.0',
+            '0': {
+              $name: 'nestedList.0.0',
             },
-            "1": {
-              $name: "nestedList.0.1",
+            '1': {
+              $name: 'nestedList.0.1',
             },
           },
-          "1": {
-            $name: "nestedList.1",
-            "0": {
-              $name: "nestedList.1.0",
+          '1': {
+            $name: 'nestedList.1',
+            '0': {
+              $name: 'nestedList.1.0',
             },
           },
         },
         noToolbar: {
-          $name: "noToolbar",
-          "0": {
-            $name: "noToolbar.0",
+          $name: 'noToolbar',
+          '0': {
+            $name: 'noToolbar.0',
           },
-          "1": {
-            $name: "noToolbar.1",
+          '1': {
+            $name: 'noToolbar.1',
           },
         },
         unorderable: {
-          $name: "unorderable",
-          "0": {
-            $name: "unorderable.0",
+          $name: 'unorderable',
+          '0': {
+            $name: 'unorderable.0',
           },
-          "1": {
-            $name: "unorderable.1",
+          '1': {
+            $name: 'unorderable.1',
           },
         },
         unremovable: {
-          $name: "unremovable",
-          "0": {
-            $name: "unremovable.0",
+          $name: 'unremovable',
+          '0': {
+            $name: 'unremovable.0',
           },
-          "1": {
-            $name: "unremovable.1",
+          '1': {
+            $name: 'unremovable.1',
           },
         },
       });
     });
-    it("should return a pathSchema for a schema with oneOf", () => {
+    it('should return a pathSchema for a schema with oneOf', () => {
       const schema: RJSFSchema = {
-        type: "object",
+        type: 'object',
         oneOf: [
           {
             properties: {
               lorem: {
-                type: "string",
+                type: 'string',
               },
             },
           },
           {
             properties: {
               ipsum: {
-                type: "string",
+                type: 'string',
               },
             },
           },
@@ -633,36 +633,36 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = {
-        lorem: "loremValue",
+        lorem: 'loremValue',
       };
 
       // Two options per getClosestMatchingOption, the first one is false, the second one makes the lorem value true
       testValidator.setReturnValues({ isValid: [false, true] });
 
-      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
         {
-          $name: "",
+          $name: '',
           lorem: {
-            $name: "lorem",
+            $name: 'lorem',
           },
         }
       );
     });
-    it("should return a pathSchema for a schema with anyOf", () => {
+    it('should return a pathSchema for a schema with anyOf', () => {
       const schema: RJSFSchema = {
-        type: "object",
+        type: 'object',
         anyOf: [
           {
             properties: {
               lorem: {
-                type: "string",
+                type: 'string',
               },
             },
           },
           {
             properties: {
               ipsum: {
-                type: "string",
+                type: 'string',
               },
             },
           },
@@ -670,17 +670,17 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = {
-        ipsum: "ipsumValue",
+        ipsum: 'ipsumValue',
       };
       // Two per option using getClosestMatchingOption, the first ones are both false
       // the second ones make the ipsum value true
       testValidator.setReturnValues({ isValid: [false, false, false, true] });
 
-      expect(toPathSchema(testValidator, schema, "", schema, formData)).toEqual(
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
         {
-          $name: "",
+          $name: '',
           ipsum: {
-            $name: "ipsum",
+            $name: 'ipsum',
           },
         }
       );

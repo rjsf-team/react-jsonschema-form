@@ -1,9 +1,9 @@
-import union from "lodash/union";
+import union from 'lodash/union';
 
-import { REQUIRED_KEY } from "./constants";
-import getSchemaType from "./getSchemaType";
-import isObject from "./isObject";
-import { GenericObjectType } from "./types";
+import { REQUIRED_KEY } from './constants';
+import getSchemaType from './getSchemaType';
+import isObject from './isObject';
+import { GenericObjectType } from './types';
 
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
@@ -26,7 +26,7 @@ export default function mergeSchemas(
     } else if (
       obj1 &&
       obj2 &&
-      (getSchemaType(obj1) === "object" || getSchemaType(obj2) === "object") &&
+      (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') &&
       key === REQUIRED_KEY &&
       Array.isArray(left) &&
       Array.isArray(right)

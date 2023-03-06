@@ -4,9 +4,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import Button from "react-bootstrap/Button";
-import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
+} from '@rjsf/utils';
+import Button from 'react-bootstrap/Button';
+import { BsPlus } from '@react-icons/all-files/bs/BsPlus';
 
 export default function AddButton<
   T = any,
@@ -17,7 +17,7 @@ export default function AddButton<
   return (
     <Button
       {...props}
-      style={{ width: "100%" }}
+      style={{ width: '100%' }}
       className={`ml-1 ${props.className}`}
       title={translateString(TranslatableString.AddItemButton)}
     >

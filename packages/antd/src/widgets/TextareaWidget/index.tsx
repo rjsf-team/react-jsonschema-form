@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import Input from "antd/lib/input";
+import { ChangeEvent, FocusEvent } from 'react';
+import Input from 'antd/lib/input';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,10 +7,10 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const INPUT_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
@@ -36,7 +36,7 @@ export default function TextareaWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) =>
-    onChange(target.value === "" ? options.emptyValue : target.value);
+    onChange(target.value === '' ? options.emptyValue : target.value);
 
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) =>
     onBlur(id, target.value);
@@ -47,7 +47,7 @@ export default function TextareaWidget<
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
   const extraProps = {
-    type: "textarea",
+    type: 'textarea',
   };
 
   return (

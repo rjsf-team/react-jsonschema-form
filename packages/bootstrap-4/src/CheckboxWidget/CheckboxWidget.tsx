@@ -1,4 +1,4 @@
-import { FocusEvent } from "react";
+import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   WidgetProps,
@@ -6,8 +6,8 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
-} from "@rjsf/utils";
-import Form from "react-bootstrap/Form";
+} from '@rjsf/utils';
+import Form from 'react-bootstrap/Form';
 
 export default function CheckboxWidget<
   T = any,
@@ -41,19 +41,19 @@ export default function CheckboxWidget<
   const desc = label || schema.description;
   return (
     <Form.Group
-      className={`checkbox ${disabled || readonly ? "disabled" : ""}`}
+      className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
       <Form.Check
         id={id}
         name={id}
         label={desc}
-        checked={typeof value === "undefined" ? false : value}
+        checked={typeof value === 'undefined' ? false : value}
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={_onChange}
-        type="checkbox"
+        type='checkbox'
         onBlur={_onBlur}
         onFocus={_onFocus}
       />

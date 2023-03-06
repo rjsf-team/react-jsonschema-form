@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import { Form } from "semantic-ui-react";
+import { ChangeEvent } from 'react';
+import { Form } from 'semantic-ui-react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -12,8 +12,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { getSemanticProps } from '../util';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -41,8 +41,8 @@ export default function CheckboxesWidget<
     rawErrors = [],
     registry,
   } = props;
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
     options
   );

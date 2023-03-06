@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component } from 'react';
 import {
   getTemplate,
   getUiOptions,
@@ -16,12 +16,12 @@ import {
   REF_KEY,
   ANY_OF_KEY,
   ONE_OF_KEY,
-} from "@rjsf/utils";
-import get from "lodash/get";
-import has from "lodash/has";
-import isObject from "lodash/isObject";
-import set from "lodash/set";
-import unset from "lodash/unset";
+} from '@rjsf/utils';
+import get from 'lodash/get';
+import has from 'lodash/has';
+import isObject from 'lodash/isObject';
+import set from 'lodash/set';
+import unset from 'lodash/unset';
 
 /** Type used for the state of the `ObjectField` component */
 type ObjectFieldState = {
@@ -82,7 +82,7 @@ class ObjectField<
         // fields which are "mandated" by the schema, these fields can
         // be set to undefined by clicking a "delete field" button, so
         // set empty values to the empty string.
-        value = "" as unknown as T;
+        value = '' as unknown as T;
       }
       const newFormData = { ...formData, [name]: value } as unknown as T;
       onChange(
@@ -122,7 +122,7 @@ class ObjectField<
    */
   getAvailableKey = (preferredKey: string, formData?: T) => {
     const { uiSchema } = this.props;
-    const { duplicateKeySuffixSeparator = "-" } = getUiOptions<T, S, F>(
+    const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(
       uiSchema
     );
 
@@ -175,22 +175,22 @@ class ObjectField<
    *
    * @param type - The type of the new additional schema property
    */
-  getDefaultValue(type?: RJSFSchema["type"]) {
+  getDefaultValue(type?: RJSFSchema['type']) {
     const {
       registry: { translateString },
     } = this.props;
     switch (type) {
-      case "array":
+      case 'array':
         return [];
-      case "boolean":
+      case 'boolean':
         return false;
-      case "null":
+      case 'null':
         return null;
-      case "number":
+      case 'number':
         return 0;
-      case "object":
+      case 'object':
         return {};
-      case "string":
+      case 'string':
       default:
         // We don't have a datatype for some reason (perhaps additionalProperties was true)
         return translateString(TranslatableString.NewStringDefault);
@@ -209,7 +209,7 @@ class ObjectField<
     const { formData, onChange, registry } = this.props;
     const newFormData = { ...formData } as T;
 
-    let type: RJSFSchema["type"] = undefined;
+    let type: RJSFSchema['type'] = undefined;
     if (isObject(schema.additionalProperties)) {
       type = schema.additionalProperties.type;
       let apSchema = schema.additionalProperties;
@@ -222,11 +222,11 @@ class ObjectField<
         type = apSchema.type;
       }
       if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
-        type = "object";
+        type = 'object';
       }
     }
 
-    const newKey = this.getAvailableKey("newKey", newFormData);
+    const newKey = this.getAvailableKey('newKey', newFormData);
     // Cast this to make the `set` work properly
     set(newFormData as GenericObjectType, newKey, this.getDefaultValue(type));
 
@@ -269,8 +269,8 @@ class ObjectField<
     } catch (err) {
       return (
         <div>
-          <p className="config-error" style={{ color: "red" }}>
-            Invalid {name || "root"} object field configuration:
+          <p className='config-error' style={{ color: 'red' }}>
+            Invalid {name || 'root'} object field configuration:
             <em>{(err as Error).message}</em>.
           </p>
           <pre>{JSON.stringify(schema)}</pre>
@@ -278,8 +278,8 @@ class ObjectField<
       );
     }
 
-    const Template = getTemplate<"ObjectFieldTemplate", T, S, F>(
-      "ObjectFieldTemplate",
+    const Template = getTemplate<'ObjectFieldTemplate', T, S, F>(
+      'ObjectFieldTemplate',
       registry,
       uiOptions
     );
@@ -296,7 +296,7 @@ class ObjectField<
         const fieldUiSchema = addedByAdditionalProperties
           ? uiSchema.additionalProperties
           : uiSchema[name];
-        const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === "hidden";
+        const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
         const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
 
         return {

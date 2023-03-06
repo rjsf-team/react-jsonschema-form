@@ -1,6 +1,6 @@
-import { FocusEvent } from "react";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { FocusEvent } from 'react';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {
   ariaDescribedByIds,
   schemaRequiresTrueValue,
@@ -8,7 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -49,7 +49,7 @@ export default function CheckboxWidget<
         <Checkbox
           id={id}
           name={id}
-          checked={typeof value === "undefined" ? false : Boolean(value)}
+          checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
@@ -59,7 +59,7 @@ export default function CheckboxWidget<
           aria-describedby={ariaDescribedByIds<T>(id)}
         />
       }
-      label={label || ""}
+      label={label || ''}
     />
   );
 }

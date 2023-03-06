@@ -1,10 +1,10 @@
-import getMatchingOption from "./getMatchingOption";
+import getMatchingOption from './getMatchingOption';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
+} from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches.

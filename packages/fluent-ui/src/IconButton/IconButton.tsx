@@ -1,11 +1,11 @@
-import { IconButton, IIconProps } from "@fluentui/react";
+import { IconButton, IIconProps } from '@fluentui/react';
 import {
   FormContextType,
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function FluentIconButton<
   T = any,
@@ -21,7 +21,7 @@ export default function FluentIconButton<
       disabled={props.disabled}
       onClick={props.onClick}
       iconProps={iconProps}
-      color="secondary"
+      color='secondary'
     />
   );
 }
@@ -38,7 +38,7 @@ export function MoveDownButton<
     <FluentIconButton<T, S, F>
       title={translateString(TranslatableString.MoveDownButton)}
       {...props}
-      icon="Down"
+      icon='Down'
     />
   );
 }
@@ -55,7 +55,7 @@ export function MoveUpButton<
     <FluentIconButton<T, S, F>
       title={translateString(TranslatableString.MoveUpButton)}
       {...props}
-      icon="Up"
+      icon='Up'
     />
   );
 }
@@ -72,7 +72,7 @@ export function RemoveButton<
     <FluentIconButton<T, S, F>
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
-      icon="Delete"
+      icon='Delete'
     />
   );
 }

@@ -1,5 +1,5 @@
-import { FocusEvent } from "react";
-import Radio, { RadioChangeEvent } from "antd/lib/radio";
+import { FocusEvent } from 'react';
+import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -10,7 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.

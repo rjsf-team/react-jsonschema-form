@@ -1,29 +1,29 @@
-import get from "lodash/get";
-import has from "lodash/has";
-import isObject from "lodash/isObject";
-import isString from "lodash/isString";
-import reduce from "lodash/reduce";
-import times from "lodash/times";
+import get from 'lodash/get';
+import has from 'lodash/has';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
+import reduce from 'lodash/reduce';
+import times from 'lodash/times';
 
-import getFirstMatchingOption from "./getFirstMatchingOption";
-import retrieveSchema from "./retrieveSchema";
-import { ONE_OF_KEY, REF_KEY } from "../constants";
-import guessType from "../guessType";
+import getFirstMatchingOption from './getFirstMatchingOption';
+import retrieveSchema from './retrieveSchema';
+import { ONE_OF_KEY, REF_KEY } from '../constants';
+import guessType from '../guessType';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
+} from '../types';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
  */
 export const JUNK_OPTION: StrictRJSFSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     __not_really_there__: {
-      type: "number",
+      type: 'number',
     },
   },
 };
@@ -65,7 +65,7 @@ export function calculateIndexScore<
         schema.properties,
         (score, value, key) => {
           const formValue = get(formData, key);
-          if (typeof value === "boolean") {
+          if (typeof value === 'boolean') {
             return score;
           }
           if (has(value, REF_KEY)) {
@@ -96,7 +96,7 @@ export function calculateIndexScore<
               )
             );
           }
-          if (value.type === "object") {
+          if (value.type === 'object') {
             return (
               score +
               calculateIndexScore<T, S, F>(

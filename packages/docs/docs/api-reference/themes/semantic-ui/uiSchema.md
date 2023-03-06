@@ -16,28 +16,28 @@ inverted: Format to appear on dark backgrounds.
 ```json
 {
   "ui:options": {
-    "semantic" : {
+    "semantic": {
       "fluid": true,
       "inverted": false,
       "errorOptions": {
         "size": "small",
-        "pointing": "above",
+        "pointing": "above"
       }
     }
   }
 }
 ```
+
 #### Semantic Widget Optional Properties
- - [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
- - [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
- - [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
- - [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
-
+- [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
+- [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
+- [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
+- [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
 ## errorOptions
 
@@ -49,18 +49,19 @@ pointing: determines the direction of the arrow on the error message dialog
 ```
 
 Below are the current defaults
+
 ```tsx
-import { UiSchema } from "@rjsf/utils";
+import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  "ui:options": {
-    "semantic" : {
-      "errorOptions": {
-        "size": "small",
-        "pointing": "above",
-      }
-    }
-  }
+  'ui:options': {
+    semantic: {
+      errorOptions: {
+        size: 'small',
+        pointing: 'above',
+      },
+    },
+  },
 };
 ```
 
@@ -68,35 +69,35 @@ const uiSchema: UiSchema = {
 
 To specify a uiSchema that applies to array items, specify the semantic uiSchema value within the `ui:options` property:
 
-
 ```
 wrapItem: wrap each array item in a Segment
 horizontalButtons: horizontal buttons instead of the default vertical
 ```
 
 ```tsx
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv8";
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: "array",
+  type: 'array',
   items: {
-    type: "string"
-  }
+    type: 'string',
+  },
 };
 
 const uiSchema: UiSchema = {
-   "ui:options": {
-      "semantic": {
-        "wrapItem": true,
-        "horizontalButtons": true
-      }
-    }
+  'ui:options': {
+    semantic: {
+      wrapItem: true,
+      horizontalButtons: true,
+    },
+  },
 };
 
-render((
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-), document.getElementById("app"));
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
+  document.getElementById('app')
+);
 ```
 
 ## formContext
@@ -111,11 +112,11 @@ wrapLabel: wrap all labels in a div, for custom styling via CSS
 ```jsx
 <Form
   formContext={{
-    "semantic" : {
-      "wrapLabel": true,
-      "wrapContent": true
-    }
-  // other props...
+    semantic: {
+      wrapLabel: true,
+      wrapContent: true,
+    },
+    // other props...
   }}
 />
 ```

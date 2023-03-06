@@ -1,12 +1,12 @@
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
+import Box from '@material-ui/core/Box';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 import {
   FormContextType,
   TitleFieldProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `TitleField` is the template to use to render the title of a field
  *
@@ -19,7 +19,7 @@ export default function TitleField<
 >({ id, title }: TitleFieldProps<T, S, F>) {
   return (
     <Box id={id} mb={1} mt={1}>
-      <Typography variant="h5">{title}</Typography>
+      <Typography variant='h5'>{title}</Typography>
       <Divider />
     </Box>
   );

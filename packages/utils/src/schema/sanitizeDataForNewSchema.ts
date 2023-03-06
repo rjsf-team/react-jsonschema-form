@@ -1,5 +1,5 @@
-import get from "lodash/get";
-import has from "lodash/has";
+import get from 'lodash/get';
+import has from 'lodash/has';
 
 import {
   FormContextType,
@@ -7,11 +7,11 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from "../types";
-import { PROPERTIES_KEY, REF_KEY } from "../constants";
-import retrieveSchema from "./retrieveSchema";
+} from '../types';
+import { PROPERTIES_KEY, REF_KEY } from '../constants';
+import retrieveSchema from './retrieveSchema';
 
-const NO_VALUE = Symbol("no Value");
+const NO_VALUE = Symbol('no Value');
 
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
@@ -110,8 +110,8 @@ export default function sanitizeDataForNewSchema<
         );
       }
       // Now get types and see if they are the same
-      const oldSchemaTypeForKey = get(oldKeyedSchema, "type");
-      const newSchemaTypeForKey = get(newKeyedSchema, "type");
+      const oldSchemaTypeForKey = get(oldKeyedSchema, 'type');
+      const newSchemaTypeForKey = get(newKeyedSchema, 'type');
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {
         if (has(removeOldSchemaData, key)) {
@@ -120,8 +120,8 @@ export default function sanitizeDataForNewSchema<
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key
         if (
-          newSchemaTypeForKey === "object" ||
-          (newSchemaTypeForKey === "array" && Array.isArray(formValue))
+          newSchemaTypeForKey === 'object' ||
+          (newSchemaTypeForKey === 'array' && Array.isArray(formValue))
         ) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
@@ -131,7 +131,7 @@ export default function sanitizeDataForNewSchema<
             oldKeyedSchema,
             formValue
           );
-          if (itemData !== undefined || newSchemaTypeForKey === "array") {
+          if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
           }
@@ -139,20 +139,20 @@ export default function sanitizeDataForNewSchema<
           // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
           // with the new default or const. This allows the case where two schemas differ that only by the default/const
           // value to be properly selected
-          const newOptionDefault = get(newKeyedSchema, "default", NO_VALUE);
-          const oldOptionDefault = get(oldKeyedSchema, "default", NO_VALUE);
+          const newOptionDefault = get(newKeyedSchema, 'default', NO_VALUE);
+          const oldOptionDefault = get(oldKeyedSchema, 'default', NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
             if (oldOptionDefault === formValue) {
               // If the old default matches the formValue, we'll update the new value to match the new default
               removeOldSchemaData[key] = newOptionDefault;
-            } else if (get(newKeyedSchema, "readOnly") === true) {
+            } else if (get(newKeyedSchema, 'readOnly') === true) {
               // If the new schema has the default set to read-only, treat it like a const and remove the value
               removeOldSchemaData[key] = undefined;
             }
           }
 
-          const newOptionConst = get(newKeyedSchema, "const", NO_VALUE);
-          const oldOptionConst = get(oldKeyedSchema, "const", NO_VALUE);
+          const newOptionConst = get(newKeyedSchema, 'const', NO_VALUE);
+          const oldOptionConst = get(oldKeyedSchema, 'const', NO_VALUE);
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
             removeOldSchemaData[key] =
@@ -169,17 +169,17 @@ export default function sanitizeDataForNewSchema<
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
   } else if (
-    get(oldSchema, "type") === "array" &&
-    get(newSchema, "type") === "array" &&
+    get(oldSchema, 'type') === 'array' &&
+    get(newSchema, 'type') === 'array' &&
     Array.isArray(data)
   ) {
-    let oldSchemaItems = get(oldSchema, "items");
-    let newSchemaItems = get(newSchema, "items");
+    let oldSchemaItems = get(oldSchema, 'items');
+    let newSchemaItems = get(newSchema, 'items');
     // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
     // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
     if (
-      typeof oldSchemaItems === "object" &&
-      typeof newSchemaItems === "object" &&
+      typeof oldSchemaItems === 'object' &&
+      typeof newSchemaItems === 'object' &&
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
@@ -200,12 +200,12 @@ export default function sanitizeDataForNewSchema<
         );
       }
       // Now get types and see if they are the same
-      const oldSchemaType = get(oldSchemaItems, "type");
-      const newSchemaType = get(newSchemaItems, "type");
+      const oldSchemaType = get(oldSchemaItems, 'type');
+      const newSchemaType = get(newSchemaItems, 'type');
       // Check if the old option has the same key with the same type
       if (!oldSchemaType || oldSchemaType === newSchemaType) {
-        const maxItems = get(newSchema, "maxItems", -1);
-        if (newSchemaType === "object") {
+        const maxItems = get(newSchema, 'maxItems', -1);
+        if (newSchemaType === 'object') {
           newFormData = data.reduce((newValue, aValue) => {
             const itemValue = sanitizeDataForNewSchema<T, S, F>(
               validator,
@@ -230,8 +230,8 @@ export default function sanitizeDataForNewSchema<
         }
       }
     } else if (
-      typeof oldSchemaItems === "boolean" &&
-      typeof newSchemaItems === "boolean" &&
+      typeof oldSchemaItems === 'boolean' &&
+      typeof newSchemaItems === 'boolean' &&
       oldSchemaItems === newSchemaItems
     ) {
       // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined

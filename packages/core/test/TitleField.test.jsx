@@ -1,10 +1,10 @@
-import { Component } from "react";
-import { expect } from "chai";
+import { Component } from 'react';
+import { expect } from 'chai';
 
-import TitleField from "../src/components/templates/TitleField";
-import { createSandbox, createComponent } from "./test_utils";
+import TitleField from '../src/components/templates/TitleField';
+import { createSandbox, createComponent } from './test_utils';
 
-describe("TitleField", () => {
+describe('TitleField', () => {
   let sandbox;
 
   beforeEach(() => {
@@ -26,30 +26,30 @@ describe("TitleField", () => {
     }
   }
 
-  it("should return a legend", () => {
+  it('should return a legend', () => {
     const props = {
-      title: "Field title",
+      title: 'Field title',
       required: true,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.tagName).to.equal("LEGEND");
+    expect(node.tagName).to.equal('LEGEND');
   });
 
-  it("should have the expected id", () => {
+  it('should have the expected id', () => {
     const props = {
-      title: "Field title",
+      title: 'Field title',
       required: true,
-      id: "sample_id",
+      id: 'sample_id',
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.id).to.equal("sample_id");
+    expect(node.id).to.equal('sample_id');
   });
 
-  it("should include only title, when field is not required", () => {
+  it('should include only title, when field is not required', () => {
     const props = {
-      title: "Field title",
+      title: 'Field title',
       required: false,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
@@ -57,15 +57,15 @@ describe("TitleField", () => {
     expect(node.textContent).to.equal(props.title);
   });
 
-  it("should add an asterisk to the title, when field is required", () => {
+  it('should add an asterisk to the title, when field is required', () => {
     const props = {
-      title: "Field title",
+      title: 'Field title',
       required: true,
     };
     const { node } = createComponent(TitleFieldWrapper, props);
 
-    expect(node.textContent).to.equal(props.title + "*");
+    expect(node.textContent).to.equal(props.title + '*');
 
-    expect(node.querySelector("span.required").textContent).to.equal("*");
+    expect(node.querySelector('span.required').textContent).to.equal('*');
   });
 });

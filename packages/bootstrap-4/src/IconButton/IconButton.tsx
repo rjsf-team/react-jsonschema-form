@@ -4,11 +4,11 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import Button, { ButtonProps } from "react-bootstrap/Button";
-import { IoIosRemove } from "@react-icons/all-files/io/IoIosRemove";
-import { AiOutlineArrowUp } from "@react-icons/all-files/ai/AiOutlineArrowUp";
-import { AiOutlineArrowDown } from "@react-icons/all-files/ai/AiOutlineArrowDown";
+} from '@rjsf/utils';
+import Button, { ButtonProps } from 'react-bootstrap/Button';
+import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
+import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
+import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
 
 export default function IconButton<
   T = any,
@@ -19,10 +19,10 @@ export default function IconButton<
     props;
   return (
     <Button
-      block={iconType === "block"}
+      block={iconType === 'block'}
       {...otherProps}
-      variant={props.variant || "light"}
-      size="sm"
+      variant={props.variant || 'light'}
+      size='sm'
     >
       {icon}
     </Button>
@@ -75,7 +75,7 @@ export function RemoveButton<
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
-      variant="danger"
+      variant='danger'
       icon={<IoIosRemove />}
     />
   );

@@ -1,9 +1,9 @@
-import { FormEvent, FocusEvent } from "react";
+import { FormEvent, FocusEvent } from 'react';
 import {
   ChoiceGroup,
   IChoiceGroupOption,
   IChoiceGroupProps,
-} from "@fluentui/react";
+} from '@fluentui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -13,20 +13,20 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [
-  "componentRef",
-  "options",
-  "defaultSelectedKey",
-  "selectedKey",
-  "onChange",
-  "label",
-  "onChanged",
-  "theme",
-  "styles",
-  "ariaLabelledBy",
+  'componentRef',
+  'options',
+  'defaultSelectedKey',
+  'selectedKey',
+  'onChange',
+  'label',
+  'onChanged',
+  'theme',
+  'styles',
+  'ariaLabelledBy',
 ];
 
 export default function RadioWidget<
@@ -71,7 +71,7 @@ export default function RadioWidget<
         disabled:
           Array.isArray(enumDisabled) &&
           enumDisabled.indexOf(option.value) !== -1,
-        "aria-describedby": ariaDescribedByIds<T>(id),
+        'aria-describedby': ariaDescribedByIds<T>(id),
       }))
     : [];
 

@@ -5,7 +5,7 @@ import {
   UIOptionsType,
   StrictRJSFSchema,
   RJSFSchema,
-} from "./types";
+} from './types';
 
 /** Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
  * otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
@@ -26,7 +26,7 @@ export default function getTemplate<
   uiOptions: UIOptionsType<T, S, F> = {}
 ): TemplatesType<T, S, F>[Name] {
   const { templates } = registry;
-  if (name === "ButtonTemplates") {
+  if (name === 'ButtonTemplates') {
     return templates[name];
   }
   return (

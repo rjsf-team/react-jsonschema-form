@@ -1,11 +1,11 @@
-import { Button, ButtonProps } from "semantic-ui-react";
+import { Button, ButtonProps } from 'semantic-ui-react';
 import {
   FormContextType,
   IconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 function IconButton<
   T = any,
@@ -24,8 +24,8 @@ function IconButton<
   return (
     <Button
       icon={icon}
-      size={iconType as ButtonProps["size"]}
-      color={color as ButtonProps["color"]}
+      size={iconType as ButtonProps['size']}
+      color={color as ButtonProps['color']}
       className={className}
       {...otherProps}
     />
@@ -46,7 +46,7 @@ export function MoveDownButton<
     <IconButton
       title={translateString(TranslatableString.MoveDownButton)}
       {...props}
-      icon="angle down"
+      icon='angle down'
     />
   );
 }
@@ -63,7 +63,7 @@ export function MoveUpButton<
     <IconButton
       title={translateString(TranslatableString.MoveUpButton)}
       {...props}
-      icon="angle up"
+      icon='angle up'
     />
   );
 }
@@ -80,7 +80,7 @@ export function RemoveButton<
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
-      icon="trash"
+      icon='trash'
     />
   );
 }

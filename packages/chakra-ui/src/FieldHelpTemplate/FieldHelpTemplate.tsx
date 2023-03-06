@@ -4,8 +4,8 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { FormHelperText } from "@chakra-ui/react";
+} from '@rjsf/utils';
+import { FormHelperText } from '@chakra-ui/react';
 
 /** The `FieldHelpTemplate` component renders any help desired for a field
  *
