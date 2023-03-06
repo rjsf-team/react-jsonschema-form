@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, createRef } from "react";
 import {
   createSchemaUtils,
   CustomValidator,
@@ -280,7 +280,7 @@ export default class Form<
     ) {
       this.props.onChange(this.state);
     }
-    this.formElement = React.createRef();
+    this.formElement = createRef();
   }
 
   /** React lifecycle method that gets called before new props are provided, updates the state based on new props. It
