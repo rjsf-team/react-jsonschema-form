@@ -272,10 +272,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### order
@@ -295,10 +292,7 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'http://',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
@@ -312,10 +306,7 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'Choose an option',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### readonly
@@ -340,10 +331,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### title

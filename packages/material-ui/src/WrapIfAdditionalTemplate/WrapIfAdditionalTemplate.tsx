@@ -57,18 +57,10 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onKeyChange(target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
   return (
-    <Grid
-      container
-      key={`${id}-key`}
-      alignItems='center'
-      spacing={2}
-      className={classNames}
-      style={style}
-    >
+    <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
       <Grid item xs>
         <FormControl fullWidth={true} required={required}>
           <InputLabel>{keyLabel}</InputLabel>

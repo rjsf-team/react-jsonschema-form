@@ -8,9 +8,7 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
  * @param selected - The current selected value or list of values
  * @returns - true if the `value` is one of the `selected` ones, false otherwise
  */
-export default function enumOptionsIsSelected<
-  S extends StrictRJSFSchema = RJSFSchema
->(
+export default function enumOptionsIsSelected<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>['value'],
   selected: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][]
 ) {

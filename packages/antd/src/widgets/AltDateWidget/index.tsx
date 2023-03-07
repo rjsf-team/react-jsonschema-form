@@ -16,21 +16,9 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 
-type DateElementProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> = Pick<
+type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
   WidgetProps<T, S, F>,
-  | 'id'
-  | 'name'
-  | 'value'
-  | 'disabled'
-  | 'readonly'
-  | 'autofocus'
-  | 'registry'
-  | 'onBlur'
-  | 'onFocus'
+  'id' | 'name' | 'value' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus'
 > & {
   select: (property: keyof DateObject, value: any) => void;
   type: string;
@@ -141,9 +129,7 @@ export default function AltDateWidget<
       id={elemProps.id}
       name={elemProps.name}
       onBlur={elemProps.onBlur}
-      onChange={(elemValue) =>
-        elemProps.select(elemProps.type as keyof DateObject, elemValue)
-      }
+      onChange={(elemValue) => elemProps.select(elemProps.type as keyof DateObject, elemValue)}
       onFocus={elemProps.onFocus}
       options={{
         enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
@@ -160,11 +146,7 @@ export default function AltDateWidget<
 
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
-      {dateElementProps(
-        state,
-        showTime,
-        options.yearsRange as [number, number] | undefined
-      ).map((elemProps, i) => {
+      {dateElementProps(state, showTime, options.yearsRange as [number, number] | undefined).map((elemProps, i) => {
         const elemId = id + '_' + elemProps.type;
         return (
           <Col flex='88px' key={elemId}>
@@ -195,13 +177,7 @@ export default function AltDateWidget<
       )}
       {!options.hideClearButton && (
         <Col flex='88px'>
-          <Button
-            block
-            className='btn-clear'
-            danger
-            onClick={handleClear}
-            type='primary'
-          >
+          <Button block className='btn-clear' danger onClick={handleClear} type='primary'>
             {translateString(TranslatableString.ClearLabel)}
           </Button>
         </Col>

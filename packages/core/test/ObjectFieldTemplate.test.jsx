@@ -19,8 +19,7 @@ describe('ObjectFieldTemplate', () => {
   class ObjectFieldTemplate extends PureComponent {
     render() {
       const { properties, title, description, registry } = this.props;
-      const { DescriptionFieldTemplate, TitleFieldTemplate } =
-        registry.templates;
+      const { DescriptionFieldTemplate, TitleFieldTemplate } = registry.templates;
       return (
         <div className='root'>
           <TitleFieldTemplate title={title} />
@@ -38,8 +37,7 @@ describe('ObjectFieldTemplate', () => {
   }
 
   const TitleFieldTemplate = () => <div className='title-field' />;
-  const DescriptionFieldTemplate = ({ description }) =>
-    description ? <div className='description-field' /> : null;
+  const DescriptionFieldTemplate = ({ description }) => (description ? <div className='description-field' /> : null);
 
   let node;
   describe('with template globally configured', () => {

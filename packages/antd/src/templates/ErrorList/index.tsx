@@ -2,23 +2,16 @@ import Alert from 'antd/lib/alert';
 import List from 'antd/lib/list';
 import Space from 'antd/lib/space';
 import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
-import {
-  ErrorListProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
+import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
  * @param props - The `ErrorListProps` for this component
  */
-export default function ErrorList<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({ errors, registry }: ErrorListProps<T, S, F>) {
+export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  errors,
+  registry,
+}: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   const renderErrors = () => (
     <List className='list-group' size='small'>

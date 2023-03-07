@@ -24,12 +24,8 @@ describe('ArrayFieldTemplate', () => {
           {props.items.map((element) => {
             return (
               <div className='custom-array-item' key={element.index}>
-                {element.hasMoveUp && (
-                  <button className='custom-array-item-move-up' />
-                )}
-                {element.hasMoveDown && (
-                  <button className='custom-array-item-move-down' />
-                )}
+                {element.hasMoveUp && <button className='custom-array-item-move-up' />}
+                {element.hasMoveDown && <button className='custom-array-item-move-down' />}
 
                 {element.children}
               </div>
@@ -60,9 +56,7 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate },
           });
 
-          expect(
-            node.querySelectorAll('.field-array .field-content div')
-          ).to.have.length.of(3);
+          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
         });
       });
       describe('with template configured in ui:ArrayFieldTemplate', () => {
@@ -75,9 +69,7 @@ describe('ArrayFieldTemplate', () => {
             },
           });
 
-          expect(
-            node.querySelectorAll('.field-array .field-content div')
-          ).to.have.length.of(3);
+          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
         });
       });
       describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
@@ -92,9 +84,7 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate: () => <div /> },
           });
 
-          expect(
-            node.querySelectorAll('.field-array .field-content div')
-          ).to.have.length.of(3);
+          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
         });
       });
     });
@@ -163,33 +153,25 @@ describe('ArrayFieldTemplate', () => {
         });
 
         it('should render one add button', () => {
-          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(
-            1
-          );
+          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(1);
         });
 
         it('should render one child for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(formData.length);
+        });
+
+        it('should render text input for each array item', () => {
+          expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
             formData.length
           );
         });
 
-        it('should render text input for each array item', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item .field input[type=text]')
-          ).to.have.length.of(formData.length);
-        });
-
         it('should render move up button for all but one array items', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item-move-up')
-          ).to.have.length.of(formData.length - 1);
+          expect(node.querySelectorAll('.custom-array-item-move-up')).to.have.length.of(formData.length - 1);
         });
 
         it('should render move down button for all but one array items', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item-move-down')
-          ).to.have.length.of(formData.length - 1);
+          expect(node.querySelectorAll('.custom-array-item-move-down')).to.have.length.of(formData.length - 1);
         });
       }
     });
@@ -255,33 +237,25 @@ describe('ArrayFieldTemplate', () => {
         });
 
         it('should not render an add button', () => {
-          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(
-            0
-          );
+          expect(node.querySelectorAll('.custom-array-add')).to.have.length.of(0);
         });
 
         it('should render one child for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item')).to.have.length.of(formData.length);
+        });
+
+        it('should render text input for each array item', () => {
+          expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
             formData.length
           );
         });
 
-        it('should render text input for each array item', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item .field input[type=text]')
-          ).to.have.length.of(formData.length);
-        });
-
         it('should not render any move up buttons', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item-move-up')
-          ).to.have.length.of(0);
+          expect(node.querySelectorAll('.custom-array-item-move-up')).to.have.length.of(0);
         });
 
         it('should not render any move down buttons', () => {
-          expect(
-            node.querySelectorAll('.custom-array-item-move-down')
-          ).to.have.length.of(0);
+          expect(node.querySelectorAll('.custom-array-item-move-down')).to.have.length.of(0);
         });
       }
     });
@@ -306,9 +280,7 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate },
       });
-      expect(
-        node.querySelectorAll('.field-array .field-content div')
-      ).to.have.length.of(3);
+      expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
     });
   });
 

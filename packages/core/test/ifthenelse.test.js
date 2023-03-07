@@ -150,12 +150,7 @@ describe('conditional items', () => {
           type: 'string',
         },
         country: {
-          enum: [
-            'United States of America',
-            'Canada',
-            'United Kingdom',
-            'France',
-          ],
+          enum: ['United States of America', 'Canada', 'United Kingdom', 'France'],
         },
       },
       allOf: [
@@ -249,12 +244,7 @@ describe('conditional items', () => {
           type: 'string',
         },
         country: {
-          enum: [
-            'United States of America',
-            'Canada',
-            'United Kingdom',
-            'France',
-          ],
+          enum: ['United States of America', 'Canada', 'United Kingdom', 'France'],
         },
       },
       definitions: {
@@ -309,13 +299,9 @@ describe('conditional items', () => {
 
     // The zipcode field exists, but not as an additional property
     expect(node.querySelector('input[label=zipcode]')).not.eql(null);
-    expect(
-      node.querySelector('div.form-additional input[label=zipcode]')
-    ).to.eql(null);
+    expect(node.querySelector('div.form-additional input[label=zipcode]')).to.eql(null);
 
     // The "otherKey" field exists as an additional property
-    expect(
-      node.querySelector('div.form-additional input[label=otherKey]')
-    ).not.eql(null);
+    expect(node.querySelector('div.form-additional input[label=otherKey]')).not.eql(null);
   });
 });

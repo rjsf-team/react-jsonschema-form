@@ -1,12 +1,6 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import { FormControl, FormLabel, Textarea } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getChakra } from '../utils';
 
 export default function TextareaWidget<
@@ -33,16 +27,12 @@ export default function TextareaWidget<
 }: WidgetProps<T, S, F>) {
   const chakraProps = getChakra({ uiSchema });
   const { schemaUtils } = registry;
-  const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) &&
-    (!!label || !!schema.title);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) =>
-    onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, value);
 
   return (
     <FormControl
@@ -53,9 +43,7 @@ export default function TextareaWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel ? (
-        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      ) : null}
+      {displayLabel ? <FormLabel htmlFor={id}>{label || schema.title}</FormLabel> : null}
       <Textarea
         id={id}
         name={id}

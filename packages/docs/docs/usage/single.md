@@ -22,10 +22,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Titles and descriptions
@@ -42,10 +39,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Enumerated values
@@ -61,10 +55,7 @@ const schema: RJSFSchema = {
   enum: ['one', 'two', 'three'],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### Custom labels for `enum` fields
@@ -96,10 +87,7 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ```tsx
@@ -114,10 +102,7 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 In your JSON Schema, you may also specify `enumNames`, a non-standard field which RJSF can use to label an enumeration. **This behavior is deprecated and may be removed in a future major release of RJSF.**
@@ -131,10 +116,7 @@ const schema: RJSFSchema = {
   enum: [1, 2, 3],
   enumNames: ['one', 'two', 'three'],
 };
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### Disabled attribute for `enum` fields
@@ -154,10 +136,7 @@ const uiSchema: UiSchema = {
   'ui:enumDisabled': [true],
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Nullable types
@@ -172,8 +151,5 @@ const schema: RJSFSchema = {
   type: ['string', 'null'],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```

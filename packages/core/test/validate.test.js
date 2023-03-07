@@ -3,9 +3,7 @@ import sinon from 'sinon';
 import { Simulate } from 'react-dom/test-utils';
 
 import { createFormComponent, submitForm } from './test_utils';
-import v6Validator, {
-  customizeValidator as customizeV6Validator,
-} from '@rjsf/validator-ajv6';
+import v6Validator, { customizeValidator as customizeV6Validator } from '@rjsf/validator-ajv6';
 import { customizeValidator as customizeV8Validator } from '@rjsf/validator-ajv8';
 
 describe('Validation', () => {
@@ -43,12 +41,8 @@ describe('Validation', () => {
 
         it('should render errors at the top', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            "must have required property 'foo'"
-          );
-          expect(node.childNodes[0].className).to.eql(
-            'panel panel-danger errors'
-          );
+          expect(node.querySelector('.errors li').textContent).eql("must have required property 'foo'");
+          expect(node.childNodes[0].className).to.eql('panel panel-danger errors');
         });
       });
 
@@ -75,14 +69,10 @@ describe('Validation', () => {
 
         it('should render errors at the bottom', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            "must have required property 'foo'"
-          );
+          expect(node.querySelector('.errors li').textContent).eql("must have required property 'foo'");
 
           // The last child node is the submit button so the one before it will be the error list
-          expect(node.childNodes[2].className).to.eql(
-            'panel panel-danger errors'
-          );
+          expect(node.childNodes[2].className).to.eql('panel panel-danger errors');
         });
       });
 
@@ -125,12 +115,8 @@ describe('Validation', () => {
 
         it('should render errors', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            '.foo is a required property'
-          );
-          expect(node.childNodes[0].className).to.eql(
-            'panel panel-danger errors'
-          );
+          expect(node.querySelector('.errors li').textContent).eql('.foo is a required property');
+          expect(node.childNodes[0].className).to.eql('panel panel-danger errors');
         });
       });
 
@@ -165,9 +151,7 @@ describe('Validation', () => {
 
         it('should render errors', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            '.foo should NOT be shorter than 10 characters'
-          );
+          expect(node.querySelector('.errors li').textContent).eql('.foo should NOT be shorter than 10 characters');
         });
 
         it('should trigger the onError handler', () => {
@@ -205,9 +189,7 @@ describe('Validation', () => {
         });
 
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [
-          { property: '.', message: 'Invalid', stack: '. Invalid' },
-        ]);
+        sinon.assert.calledWithMatch(onError.lastCall, [{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
       });
 
       it('should live validate a simple string value when liveValidate is set to true', () => {
@@ -474,13 +456,7 @@ describe('Validation', () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({
-        errors,
-        errorSchema,
-        schema,
-        uiSchema,
-        formContext: { className },
-      }) => (
+      const CustomErrorList = ({ errors, errorSchema, schema, uiSchema, formContext: { className } }) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className={'ErrorSchema'}>{errorSchema.__errors[0]}</div>
@@ -501,13 +477,9 @@ describe('Validation', () => {
           validator: v6Validator,
         });
         expect(node.querySelectorAll('.CustomErrorList')).to.have.length.of(1);
-        expect(node.querySelector('.CustomErrorList').textContent).eql(
-          '1 custom'
-        );
+        expect(node.querySelector('.CustomErrorList').textContent).eql('1 custom');
         expect(node.querySelectorAll('.ErrorSchema')).to.have.length.of(1);
-        expect(node.querySelector('.ErrorSchema').textContent).eql(
-          'should be string'
-        );
+        expect(node.querySelector('.ErrorSchema').textContent).eql('should be string');
         expect(node.querySelectorAll('.Schema')).to.have.length.of(1);
         expect(node.querySelector('.Schema').textContent).eql('string');
         expect(node.querySelectorAll('.UiSchema')).to.have.length.of(1);
@@ -540,9 +512,7 @@ describe('Validation', () => {
 
       beforeEach(() => {
         const validator = customizeV6Validator({
-          additionalMetaSchemas: [
-            require('ajv/lib/refs/json-schema-draft-04.json'),
-          ],
+          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-04.json')],
         });
         const withMetaSchema = createFormComponent({
           schema,
@@ -626,9 +596,7 @@ describe('Validation', () => {
 
         it('should render errors', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            "must have required property 'foo'"
-          );
+          expect(node.querySelector('.errors li').textContent).eql("must have required property 'foo'");
         });
       });
 
@@ -662,9 +630,7 @@ describe('Validation', () => {
 
         it('should render errors', () => {
           expect(node.querySelectorAll('.errors li')).to.have.length.of(1);
-          expect(node.querySelector('.errors li').textContent).eql(
-            '.foo must NOT have fewer than 10 characters'
-          );
+          expect(node.querySelector('.errors li').textContent).eql('.foo must NOT have fewer than 10 characters');
         });
 
         it('should trigger the onError handler', () => {
@@ -701,9 +667,7 @@ describe('Validation', () => {
         });
 
         submitForm(node);
-        sinon.assert.calledWithMatch(onError.lastCall, [
-          { property: '.', message: 'Invalid', stack: '. Invalid' },
-        ]);
+        sinon.assert.calledWithMatch(onError.lastCall, [{ property: '.', message: 'Invalid', stack: '. Invalid' }]);
       });
 
       it('should live validate a simple string value when liveValidate is set to true', () => {
@@ -963,13 +927,7 @@ describe('Validation', () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({
-        errors,
-        errorSchema,
-        schema,
-        uiSchema,
-        formContext: { className },
-      }) => (
+      const CustomErrorList = ({ errors, errorSchema, schema, uiSchema, formContext: { className } }) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className={'ErrorSchema'}>{errorSchema.__errors[0]}</div>
@@ -989,13 +947,9 @@ describe('Validation', () => {
           formContext: { className: 'foo' },
         });
         expect(node.querySelectorAll('.CustomErrorList')).to.have.length.of(1);
-        expect(node.querySelector('.CustomErrorList').textContent).eql(
-          '1 custom'
-        );
+        expect(node.querySelector('.CustomErrorList').textContent).eql('1 custom');
         expect(node.querySelectorAll('.ErrorSchema')).to.have.length.of(1);
-        expect(node.querySelector('.ErrorSchema').textContent).eql(
-          'must be string'
-        );
+        expect(node.querySelector('.ErrorSchema').textContent).eql('must be string');
         expect(node.querySelectorAll('.Schema')).to.have.length.of(1);
         expect(node.querySelector('.Schema').textContent).eql('string');
         expect(node.querySelectorAll('.UiSchema')).to.have.length.of(1);
@@ -1028,9 +982,7 @@ describe('Validation', () => {
 
       beforeEach(() => {
         const validator = customizeV8Validator({
-          additionalMetaSchemas: [
-            require('ajv/lib/refs/json-schema-draft-06.json'),
-          ],
+          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
         });
         const withMetaSchema = createFormComponent({
           schema,

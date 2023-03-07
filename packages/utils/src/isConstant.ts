@@ -7,11 +7,6 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @param schema - The schema for a field
  * @returns - True if the `schema` has a single constant value, false otherwise
  */
-export default function isConstant<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
-) {
-  return (
-    (Array.isArray(schema.enum) && schema.enum.length === 1) ||
-    CONST_KEY in schema
-  );
+export default function isConstant<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  return (Array.isArray(schema.enum) && schema.enum.length === 1) || CONST_KEY in schema;
 }

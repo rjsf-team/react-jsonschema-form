@@ -23,10 +23,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 Here's a list of supported alternative widgets for different JSON Schema data types:
@@ -112,10 +109,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## For `number` and `integer` fields
@@ -146,10 +140,7 @@ const uiSchema: UiSchema = {
   foo: { 'ui:widget': 'hidden' },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 Notes:
@@ -174,10 +165,7 @@ const schema: RJSFSchema = {
   format: 'data-url',
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 2. By specifying a `ui:widget` field uiSchema directive as `file`:

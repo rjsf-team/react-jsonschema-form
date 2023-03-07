@@ -17,11 +17,7 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   autofocus,
   disabled,
   formContext,
@@ -41,21 +37,12 @@ export default function RadioWidget<
     onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(
-      id,
-      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
-    );
+    onBlur(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(
-      id,
-      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
-    );
+    onFocus(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions
-  ) as string;
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
   return (
     <Radio.Group
@@ -74,9 +61,7 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={
-              Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1
-            }
+            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
             key={i}
             value={String(i)}
           >

@@ -1,12 +1,7 @@
 import get from 'lodash/get';
 
 import { TestValidatorType } from './types';
-import {
-  createSchemaUtils,
-  getClosestMatchingOption,
-  RJSFSchema,
-  SchemaUtilsType,
-} from '../../src';
+import { createSchemaUtils, getClosestMatchingOption, RJSFSchema, SchemaUtilsType } from '../../src';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption';
 import {
   oneOfData,
@@ -21,23 +16,17 @@ import {
 const firstOption = oneOfSchema.definitions!.first_option_def as RJSFSchema;
 const secondOption = oneOfSchema.definitions!.second_option_def as RJSFSchema;
 
-export default function getClosestMatchingOptionTest(
-  testValidator: TestValidatorType
-) {
+export default function getClosestMatchingOptionTest(testValidator: TestValidatorType) {
   let schemaUtils: SchemaUtilsType;
   beforeAll(() => {
     schemaUtils = createSchemaUtils(testValidator, oneOfSchema);
   });
   describe('calculateIndexScore', () => {
     it('returns 0 when schema is not specified', () => {
-      expect(
-        calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA)
-      ).toEqual(0);
+      expect(calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA)).toEqual(0);
     });
     it('returns 0 when schema.properties is undefined', () => {
-      expect(
-        calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA, {})
-      ).toEqual(0);
+      expect(calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA, {})).toEqual(0);
     });
     it('returns 0 when schema.properties is not an object', () => {
       expect(
@@ -54,39 +43,16 @@ export default function getClosestMatchingOptionTest(
       ).toEqual(0);
     });
     it('returns 0 when formData is empty object', () => {
-      expect(
-        calculateIndexScore(testValidator, oneOfSchema, firstOption, {})
-      ).toEqual(0);
+      expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, {})).toEqual(0);
     });
     it('returns 1 for first option in oneOf schema', () => {
-      expect(
-        calculateIndexScore(
-          testValidator,
-          oneOfSchema,
-          firstOption,
-          ONE_OF_SCHEMA_DATA
-        )
-      ).toEqual(1);
+      expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(1);
     });
     it('returns 8 for second option in oneOf schema', () => {
-      expect(
-        calculateIndexScore(
-          testValidator,
-          oneOfSchema,
-          secondOption,
-          ONE_OF_SCHEMA_DATA
-        )
-      ).toEqual(8);
+      expect(calculateIndexScore(testValidator, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(8);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
-      expect(
-        calculateIndexScore(
-          testValidator,
-          oneOfSchema,
-          { type: 'boolean' },
-          true
-        )
-      ).toEqual(1);
+      expect(calculateIndexScore(testValidator, oneOfSchema, { type: 'boolean' }, true)).toEqual(1);
     });
     it('returns 2 for a schema that has a const matching the formData value', () => {
       expect(
@@ -114,46 +80,23 @@ export default function getClosestMatchingOptionTest(
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [])).toEqual(-1);
     });
     it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(
-        schemaUtils.getClosestMatchingOption(undefined, [
-          { type: 'string' },
-          { type: 'number' },
-        ])
-      ).toEqual(-1);
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }])).toEqual(-1);
     });
     it('oneOfSchema, oneOfData, no options, selectedOption 2, returns 2', () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [], 2)).toEqual(2);
     });
     it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(
-        schemaUtils.getClosestMatchingOption(
-          undefined,
-          [{ type: 'string' }, { type: 'number' }],
-          2
-        )
-      ).toEqual(2);
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 2)).toEqual(2);
     });
     it('returns the first option, which kind of matches the data', () => {
-      expect(
-        getClosestMatchingOption(
-          testValidator,
-          oneOfSchema,
-          { flag: true },
-          ONE_OF_SCHEMA_OPTIONS
-        )
-      ).toEqual(0);
+      expect(getClosestMatchingOption(testValidator, oneOfSchema, { flag: true }, ONE_OF_SCHEMA_OPTIONS)).toEqual(0);
     });
     it('returns the second option, which exactly matches the data', () => {
       // First 3 are mocked false, with the fourth being true for the real second option
       testValidator.setReturnValues({ isValid: [false, false, false, true] });
-      expect(
-        getClosestMatchingOption(
-          testValidator,
-          oneOfSchema,
-          ONE_OF_SCHEMA_DATA,
-          ONE_OF_SCHEMA_OPTIONS
-        )
-      ).toEqual(1);
+      expect(getClosestMatchingOption(testValidator, oneOfSchema, ONE_OF_SCHEMA_DATA, ONE_OF_SCHEMA_OPTIONS)).toEqual(
+        1
+      );
     });
     it('returns the first matching option (i.e. second index) when data is ambiguous', () => {
       testValidator.setReturnValues({
@@ -161,12 +104,7 @@ export default function getClosestMatchingOptionTest(
       });
       const formData = { flag: false };
       expect(
-        getClosestMatchingOption(
-          testValidator,
-          OPTIONAL_ONE_OF_SCHEMA,
-          formData,
-          OPTIONAL_ONE_OF_SCHEMA_ONEOF
-        )
+        getClosestMatchingOption(testValidator, OPTIONAL_ONE_OF_SCHEMA, formData, OPTIONAL_ONE_OF_SCHEMA_ONEOF)
       ).toEqual(1);
     });
     it('returns the third index when data is clear', () => {
@@ -227,14 +165,7 @@ export default function getClosestMatchingOptionTest(
       testValidator.setReturnValues({
         isValid: [false, false, false, false, false, false, false, true],
       });
-      expect(
-        getClosestMatchingOption(
-          testValidator,
-          schema,
-          formData,
-          get(schema, 'items.oneOf')
-        )
-      ).toEqual(1);
+      expect(getClosestMatchingOption(testValidator, schema, formData, get(schema, 'items.oneOf'))).toEqual(1);
     });
   });
 }

@@ -62,33 +62,15 @@ describe('shouldRender()', () => {
     });
 
     it('should detect equivalent props and state', () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 1 } },
-          { myState: { mySubState: 1 } }
-        )
-      ).toBe(false);
+      expect(shouldRender(initial, { myProp: { mySubProp: 1 } }, { myState: { mySubState: 1 } })).toBe(false);
     });
 
     it('should detect diffing props', () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 2 } },
-          { myState: { mySubState: 1 } }
-        )
-      ).toBe(true);
+      expect(shouldRender(initial, { myProp: { mySubProp: 2 } }, { myState: { mySubState: 1 } })).toBe(true);
     });
 
     it('should detect diffing state', () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 1 } },
-          { myState: { mySubState: 2 } }
-        )
-      ).toBe(true);
+      expect(shouldRender(initial, { myProp: { mySubProp: 1 } }, { myState: { mySubState: 2 } })).toBe(true);
     });
 
     it('should handle equivalent function prop', () => {
@@ -97,13 +79,7 @@ describe('shouldRender()', () => {
         props: { myProp: { mySubProp: fn } },
         state: { myState: { mySubState: fn } },
       } as React.Component<MyComponentProps, MyComponentState>;
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: fn } },
-          { myState: { mySubState: fn } }
-        )
-      ).toBe(false);
+      expect(shouldRender(initial, { myProp: { mySubProp: fn } }, { myState: { mySubState: fn } })).toBe(false);
     });
   });
 });

@@ -34,10 +34,7 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## anyOf
@@ -70,10 +67,7 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## allOf
@@ -96,8 +90,5 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```

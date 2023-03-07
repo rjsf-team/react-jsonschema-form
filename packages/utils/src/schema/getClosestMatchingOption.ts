@@ -9,12 +9,7 @@ import getFirstMatchingOption from './getFirstMatchingOption';
 import retrieveSchema from './retrieveSchema';
 import { ONE_OF_KEY, REF_KEY } from '../constants';
 import guessType from '../guessType';
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -48,11 +43,7 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * @param formData - The form data associated with the schema, used to calculate the score
  * @returns - The score a schema against the formData
  */
-export function calculateIndexScore<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(
+export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema?: S,
@@ -69,43 +60,16 @@ export function calculateIndexScore<
             return score;
           }
           if (has(value, REF_KEY)) {
-            const newSchema = retrieveSchema<T, S, F>(
-              validator,
-              value as S,
-              rootSchema,
-              formValue
-            );
-            return (
-              score +
-              calculateIndexScore<T, S, F>(
-                validator,
-                rootSchema,
-                newSchema,
-                formValue || {}
-              )
-            );
+            const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue);
+            return score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue || {});
           }
           if (has(value, ONE_OF_KEY) && formValue) {
             return (
-              score +
-              getClosestMatchingOption<T, S, F>(
-                validator,
-                rootSchema,
-                formValue,
-                get(value, ONE_OF_KEY) as S[]
-              )
+              score + getClosestMatchingOption<T, S, F>(validator, rootSchema, formValue, get(value, ONE_OF_KEY) as S[])
             );
           }
           if (value.type === 'object') {
-            return (
-              score +
-              calculateIndexScore<T, S, F>(
-                validator,
-                rootSchema,
-                value as S,
-                formValue || {}
-              )
-            );
+            return score + calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue || {});
           }
           if (value.type === guessType(formValue)) {
             // If the types match, then we bump the score by one
@@ -165,23 +129,15 @@ export default function getClosestMatchingOption<
   selectedOption = -1
 ): number {
   // Reduce the array of options down to a list of the indexes that are considered matching options
-  const allValidIndexes = options.reduce(
-    (validList: number[], option, index: number) => {
-      const testOptions: S[] = [JUNK_OPTION as S, option];
-      const match = getFirstMatchingOption<T, S, F>(
-        validator,
-        formData,
-        testOptions,
-        rootSchema
-      );
-      // The match is the real option, so add its index to list of valid indexes
-      if (match === 1) {
-        validList.push(index);
-      }
-      return validList;
-    },
-    []
-  );
+  const allValidIndexes = options.reduce((validList: number[], option, index: number) => {
+    const testOptions: S[] = [JUNK_OPTION as S, option];
+    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema);
+    // The match is the real option, so add its index to list of valid indexes
+    if (match === 1) {
+      validList.push(index);
+    }
+    return validList;
+  }, []);
 
   // There is only one valid index, so return it!
   if (allValidIndexes.length === 1) {
@@ -198,19 +154,9 @@ export default function getClosestMatchingOption<
       const { bestScore } = scoreData;
       let option = options[index];
       if (has(option, REF_KEY)) {
-        option = retrieveSchema<T, S, F>(
-          validator,
-          option,
-          rootSchema,
-          formData
-        );
+        option = retrieveSchema<T, S, F>(validator, option, rootSchema, formData);
       }
-      const score = calculateIndexScore(
-        validator,
-        rootSchema,
-        option,
-        formData
-      );
+      const score = calculateIndexScore(validator, rootSchema, option, formData);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };
       }

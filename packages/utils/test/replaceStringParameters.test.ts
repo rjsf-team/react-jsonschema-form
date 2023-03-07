@@ -12,16 +12,12 @@ describe('replaceStringParameters()', () => {
     expect(replaceStringParameters(REPLACEABLE)).toBe(REPLACEABLE);
   });
   it('returns same string as input string when there are no replaceable params', () => {
-    expect(replaceStringParameters(NO_REPLACEABLE, PARAMS)).toEqual(
-      NO_REPLACEABLE
-    );
+    expect(replaceStringParameters(NO_REPLACEABLE, PARAMS)).toEqual(NO_REPLACEABLE);
   });
   it('returns string as input string when there are no replaceable params', () => {
     expect(replaceStringParameters(REPLACEABLE, PARAMS)).toEqual(REPLACED);
   });
   it('returns string with funky strings when replaceable params', () => {
-    expect(replaceStringParameters(REPLACEABLE, FUNKY_PARAMS)).toEqual(
-      REPLACED_FUNKY
-    );
+    expect(replaceStringParameters(REPLACEABLE, FUNKY_PARAMS)).toEqual(REPLACED_FUNKY);
   });
 });

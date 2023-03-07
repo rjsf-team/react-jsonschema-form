@@ -29,9 +29,7 @@ describe('mergeDefaultsWithFormData()', () => {
   });
 
   it('should override non-existing values of the first object with the values from the second', () => {
-    expect(
-      mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-    ).toEqual({ a: { b: { c: 1 } } });
+    expect(mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } })).toEqual({ a: { b: { c: 1 } } });
   });
 
   it('should merge arrays using entries from second', () => {
@@ -39,9 +37,7 @@ describe('mergeDefaultsWithFormData()', () => {
   });
 
   it('should deeply merge arrays with overlapping entries', () => {
-    expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual(
-      [{ a: 1, b: 2 }, { c: 3 }]
-    );
+    expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual([{ a: 1, b: 2 }, { c: 3 }]);
   });
 
   it('should recursively merge deeply nested objects', () => {

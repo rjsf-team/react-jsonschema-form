@@ -19,11 +19,9 @@ export default class Form<
   // ... class implementation
 }
 
-export default function withTheme<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(themeProps: ThemeProps<T, S, F>) {
+export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  themeProps: ThemeProps<T, S, F>
+) {
   // ... function implementation
 }
 
@@ -68,10 +66,7 @@ const formData: FormData = {};
 
 const validator = customizeValidator<FormData>();
 
-render(
-  <Form<FormData> schema={schema} validator={validator} formData={formData} />,
-  document.getElementById('app')
-);
+render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
 ```
 
 ### S
@@ -102,10 +97,7 @@ const schema: MySchema = {
 
 const validator = customizeValidator<any, MySchema>();
 
-render(
-  <Form<any, MySchema> schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 
 // Alternatively since you have the type, you could also use this
 // const validator = customizeValidator<FormData, MySchema>();
@@ -147,11 +139,7 @@ const formContext: FormContext = {
 const validator = customizeValidator<any, RJSFSchema, FormContext>();
 
 render(
-  <Form<any, RJSFSchema, FormContext>
-    schema={schema}
-    validator={validator}
-    formContext={formContext}
-  />,
+  <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
   document.getElementById('app')
 );
 ```
@@ -193,9 +181,7 @@ const ThemedForm = withTheme<FormData, MySchema, FormContext>(theme);
 
 const validator = customizeValidator<FormData, MySchema, FormContext>();
 
-const Demo = () => (
-  <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
-);
+const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
 
 ## Overriding generics in other themes
@@ -232,9 +218,7 @@ const myTheme: ThemeProps = {
 
 const ThemedForm = withTheme(myTheme);
 
-const Demo = () => (
-  <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
-);
+const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
 
 Then you would use the new `generateTheme()` and `generateForm()` functions as follows:
@@ -265,18 +249,12 @@ interface FormContext {
   myCustomWidgetData: object;
 }
 
-const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<
-  FormData,
-  MySchema,
-  FormContext
->();
+const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
 const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
-function MyBaseInputTemplate(
-  props: WidgetProps<FormData, MySchema, FormContext>
-) {
+function MyBaseInputTemplate(props: WidgetProps<FormData, MySchema, FormContext>) {
   return <OldBaseInputTemplate {...props} size='small' />;
 }
 
@@ -295,9 +273,7 @@ const validator = customizeValidator<FormData, MySchema, FormContext>();
 // You could also do since they are effectively the same:
 // const ThemedForm = generateForm<FormData, MySchema, FormContext>(myTheme);
 
-const Demo = () => (
-  <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
-);
+const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
 
 > NOTE: The same approach works for extending `widgets` and `fields` as well.

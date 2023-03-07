@@ -25,12 +25,11 @@ export default function ArrayFieldTitleTemplate<
   if (!title || !displayLabel) {
     return null;
   }
-  const TitleFieldTemplate: TemplatesType<T, S, F>['TitleFieldTemplate'] =
-    getTemplate<'TitleFieldTemplate', T, S, F>(
-      'TitleFieldTemplate',
-      registry,
-      options
-    );
+  const TitleFieldTemplate: TemplatesType<T, S, F>['TitleFieldTemplate'] = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
+    registry,
+    options
+  );
   return (
     <TitleFieldTemplate
       id={titleId<T>(idSchema)}

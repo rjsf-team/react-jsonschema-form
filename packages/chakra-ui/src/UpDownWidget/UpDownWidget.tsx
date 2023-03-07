@@ -8,20 +8,12 @@ import {
   FormControl,
   FormLabel,
 } from '@chakra-ui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getChakra } from '../utils';
 
-export default function UpDownWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
   const {
     id,
     schema,
@@ -39,18 +31,13 @@ export default function UpDownWidget<
   } = props;
 
   const { schemaUtils } = registry;
-  const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) &&
-    (!!label || !!schema.title);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const chakraProps = getChakra({ uiSchema });
 
   const _onChange = (value: string | number) => onChange(value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
     <FormControl
@@ -61,9 +48,7 @@ export default function UpDownWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel ? (
-        <FormLabel htmlFor={id}>{label || schema.title}</FormLabel>
-      ) : null}
+      {displayLabel ? <FormLabel htmlFor={id}>{label || schema.title}</FormLabel> : null}
       <NumberInput
         value={value ?? ''}
         onChange={_onChange}

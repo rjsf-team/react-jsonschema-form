@@ -1,9 +1,4 @@
-import {
-  ArrayFieldTemplateItemType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export default function ArrayFieldItemTemplate<
   T = any,
@@ -24,8 +19,7 @@ export default function ArrayFieldItemTemplate<
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   return (
     <div className='ms-Grid' dir='ltr'>
       <div className='ms-Grid-row'>
@@ -33,10 +27,7 @@ export default function ArrayFieldItemTemplate<
           <div className='ms-Grid-row'>{children}</div>
         </div>
         {hasToolbar && (
-          <div
-            className='ms-Grid-col ms-sm6 ms-md4 ms-lg3'
-            style={{ textAlign: 'right' }}
-          >
+          <div className='ms-Grid-col ms-sm6 ms-md4 ms-lg3' style={{ textAlign: 'right' }}>
             {(hasMoveUp || hasMoveDown) && (
               <MoveUpButton
                 disabled={disabled || readonly || !hasMoveUp}

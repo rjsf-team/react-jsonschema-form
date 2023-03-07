@@ -18,9 +18,7 @@ describe('optionsList()', () => {
       enum: ['Opt1', 'Opt2', 'Opt3'],
     };
 
-    expect(optionsList(enumSchema)).toEqual(
-      enumSchema.enum!.map((opt) => ({ label: opt, value: opt }))
-    );
+    expect(optionsList(enumSchema)).toEqual(enumSchema.enum!.map((opt) => ({ label: opt, value: opt })));
   });
 
   it('generates options and emits a deprecation warning for a schema with enumNames', () => {
@@ -40,9 +38,7 @@ describe('optionsList()', () => {
         return { label: label, value: opt };
       })
     );
-    expect(console.warn).toHaveBeenCalledWith(
-      expect.stringMatching(/The enumNames property is deprecated/)
-    );
+    expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/The enumNames property is deprecated/));
   });
 
   it('should generate options for a oneOf|anyOf schema', () => {

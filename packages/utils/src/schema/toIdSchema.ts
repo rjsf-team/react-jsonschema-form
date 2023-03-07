@@ -1,21 +1,8 @@
 import get from 'lodash/get';
 
-import {
-  ALL_OF_KEY,
-  DEPENDENCIES_KEY,
-  ID_KEY,
-  ITEMS_KEY,
-  PROPERTIES_KEY,
-  REF_KEY,
-} from '../constants';
+import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import isObject from '../isObject';
-import {
-  FormContextType,
-  IdSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types';
+import { FormContextType, IdSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 
 /** Generates an `IdSchema` object for the `schema`, recursively
@@ -29,11 +16,7 @@ import retrieveSchema from './retrieveSchema';
  * @param [idSeparator='_'] - The separator to use for the path segments in the id
  * @returns - The `IdSchema` object for the `schema`
  */
-export default function toIdSchema<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(
+export default function toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   id?: string | null,
@@ -43,32 +26,11 @@ export default function toIdSchema<
   idSeparator = '_'
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(
-      validator,
-      schema,
-      rootSchema,
-      formData
-    );
-    return toIdSchema<T, S, F>(
-      validator,
-      _schema,
-      id,
-      rootSchema,
-      formData,
-      idPrefix,
-      idSeparator
-    );
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
+    return toIdSchema<T, S, F>(validator, _schema, id, rootSchema, formData, idPrefix, idSeparator);
   }
   if (ITEMS_KEY in schema && !get(schema, [ITEMS_KEY, REF_KEY])) {
-    return toIdSchema<T, S, F>(
-      validator,
-      get(schema, ITEMS_KEY) as S,
-      id,
-      rootSchema,
-      formData,
-      idPrefix,
-      idSeparator
-    );
+    return toIdSchema<T, S, F>(validator, get(schema, ITEMS_KEY) as S, id, rootSchema, formData, idPrefix, idSeparator);
   }
   const $id = id || idPrefix;
   const idSchema: IdSchema = { $id } as IdSchema<T>;

@@ -2,12 +2,7 @@ import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
 
-import {
-  createFormComponent,
-  createSandbox,
-  getSelectedOptionValue,
-  setProps,
-} from './test_utils';
+import { createFormComponent, createSandbox, getSelectedOptionValue, setProps } from './test_utils';
 import SchemaField from '../src/components/fields/SchemaField';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 
@@ -770,9 +765,7 @@ describe('oneOf', () => {
       formData: { testProperty: { newKey: { prop2: 'foo' } } },
     });
 
-    const $select = node.querySelector(
-      'select#root_testProperty_newKey__oneof_select'
-    );
+    const $select = node.querySelector('select#root_testProperty_newKey__oneof_select');
 
     expect($select.value).eql('1');
 
@@ -832,12 +825,8 @@ describe('oneOf', () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(
-        1
-      );
-      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(
-        1
-      );
+      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
+      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(1);
     });
   });
 
@@ -1109,9 +1098,7 @@ describe('oneOf', () => {
     const fnId = node.querySelector('select#root_components_0_fn_id');
     expect(getSelectedOptionValue(fnId)).eql('transform');
 
-    const transformerId = node.querySelector(
-      'select#root_components_0_fn_transformer_id'
-    );
+    const transformerId = node.querySelector('select#root_components_0_fn_transformer_id');
     expect(getSelectedOptionValue(transformerId)).eql('to_absolute');
   });
 
@@ -1241,9 +1228,7 @@ describe('oneOf', () => {
 
     sinon.assert.calledWithMatch(onChange.lastCall, {
       formData: {
-        craftTypes: [
-          { keywords: [undefined], title: undefined, daysOfYear: undefined },
-        ],
+        craftTypes: [{ keywords: [undefined], title: undefined, daysOfYear: undefined }],
       },
     });
   });

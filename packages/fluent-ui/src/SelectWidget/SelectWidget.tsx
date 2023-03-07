@@ -88,42 +88,26 @@ export default function SelectWidget<
       if (item.selected) {
         onChange(enumOptionsSelectValue(item.key, valueOrDefault, enumOptions));
       } else {
-        onChange(
-          enumOptionsDeselectValue(item.key, valueOrDefault, enumOptions)
-        );
+        onChange(enumOptionsDeselectValue(item.key, valueOrDefault, enumOptions));
       }
     } else {
       onChange(enumOptionsValueForIndex<S>(item.key, enumOptions, emptyValue));
     }
   };
-  const _onBlur = (e: any) =>
-    onBlur(
-      id,
-      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
-    );
+  const _onBlur = (e: any) => onBlur(id, enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue));
 
-  const _onFocus = (e: any) =>
-    onFocus(
-      id,
-      enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue)
-    );
+  const _onFocus = (e: any) => onFocus(id, enumOptionsValueForIndex<S>(e.target.value, enumOptions, emptyValue));
 
   const newOptions = Array.isArray(enumOptions)
     ? enumOptions.map((option, index) => ({
         key: String(index),
         text: option.label,
-        disabled:
-          Array.isArray(enumDisabled) &&
-          enumDisabled.indexOf(option.value) !== -1,
+        disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1,
       }))
     : [];
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    multiple
-  );
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   return (
     <Dropdown
       id={id}

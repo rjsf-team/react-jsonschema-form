@@ -65,14 +65,9 @@ export function titleId<T = any>(id: IdSchema<T> | string) {
  * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds<T = any>(
-  id: IdSchema<T> | string,
-  includeExamples = false
-) {
+export function ariaDescribedByIds<T = any>(id: IdSchema<T> | string, includeExamples = false) {
   const examples = includeExamples ? ` ${examplesId<T>(id)}` : '';
-  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(
-    id
-  )}${examples}`;
+  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(id)}${examples}`;
 }
 
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget

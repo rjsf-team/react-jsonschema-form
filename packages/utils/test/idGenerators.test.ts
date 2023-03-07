@@ -46,14 +46,10 @@ describe('idGenerators', () => {
     expect(titleId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__title`);
   });
   it('ariaDescribedBy ids are generated for simple id', () => {
-    expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(
-      `${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`
-    );
+    expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);
   });
   it('ariaDescribedBy ids are generated for IdSchema', () => {
-    expect(ariaDescribedByIds(ID_SCHEMA)).toEqual(
-      `${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help`
-    );
+    expect(ariaDescribedByIds(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help`);
   });
   it('ariaDescribedBy ids are generated for simple id with examples', () => {
     expect(ariaDescribedByIds(SIMPLE_ID, true)).toEqual(

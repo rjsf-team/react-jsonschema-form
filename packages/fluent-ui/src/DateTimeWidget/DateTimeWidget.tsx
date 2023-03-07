@@ -22,23 +22,12 @@ export default function DateTimeWidget<
       ...uiProps,
     },
   };
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
-    'BaseInputTemplate',
-    registry,
-    options
-  );
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
 
   const value = utcToLocal(props.value);
   const onChange = (value: any) => {
     props.onChange(localToUTC(value));
   };
   // TODO: rows and columns.
-  return (
-    <BaseInputTemplate
-      {...props}
-      options={options}
-      value={value}
-      onChange={onChange}
-    />
-  );
+  return <BaseInputTemplate {...props} options={options} value={value} onChange={onChange} />;
 }

@@ -70,8 +70,7 @@ export default function UpDownWidget<
   registry,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(Number(value));
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(Number(value));
 
   let { min, max, step } = rangeSpec<S>(schema);
   if (min === undefined) {
@@ -96,10 +95,8 @@ export default function UpDownWidget<
     }
   };
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   const requiredSymbol = required ? '*' : '';
 
@@ -113,12 +110,8 @@ export default function UpDownWidget<
         min={min}
         max={max}
         step={step}
-        incrementButtonAriaLabel={translateString(
-          TranslatableString.IncrementAriaLabel
-        )}
-        decrementButtonAriaLabel={translateString(
-          TranslatableString.DecrementAriaLabel
-        )}
+        incrementButtonAriaLabel={translateString(TranslatableString.IncrementAriaLabel)}
+        decrementButtonAriaLabel={translateString(TranslatableString.DecrementAriaLabel)}
         disabled={disabled || readonly}
         value={value || value === 0 ? value : ''}
         onBlur={_onBlur}

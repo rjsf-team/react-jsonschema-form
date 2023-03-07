@@ -27,10 +27,7 @@ describe('englishStringTranslator', () => {
   });
   it('Parameterized strings return strings with parameters replaced', () => {
     parameterStrings.forEach((enumeration) => {
-      const expected = enumeration
-        .replace('%1', PARAMS[0])
-        .replace('%2', PARAMS[1])
-        .replace('%3', PARAMS[2]);
+      const expected = enumeration.replace('%1', PARAMS[0]).replace('%2', PARAMS[1]).replace('%3', PARAMS[2]);
       expect(englishStringTranslator(enumeration, PARAMS)).toEqual(expected);
     });
   });

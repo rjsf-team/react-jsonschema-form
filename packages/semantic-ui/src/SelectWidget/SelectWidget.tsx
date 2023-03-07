@@ -20,9 +20,7 @@ import { getSemanticProps } from '../util';
  * @param {array} enumDisabled - array of enum option values to disable
  * @returns {*}
  */
-function createDefaultValueOptionsForDropDown<
-  S extends StrictRJSFSchema = RJSFSchema
->(
+function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFSchema>(
   enumOptions?: EnumOptionsType<S>[],
   enumDisabled?: UIOptionsType['enumDisabled']
 ) {
@@ -41,11 +39,9 @@ function createDefaultValueOptionsForDropDown<
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function SelectWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
   const {
     schema,
     uiSchema,
@@ -79,32 +75,15 @@ export default function SelectWidget<
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
-  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
-    enumOptions,
-    enumDisabled
-  );
-  const _onChange = (
-    _: SyntheticEvent<HTMLElement>,
-    { value }: DropdownProps
-  ) =>
-    onChange(
-      enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal)
-    );
+  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(enumOptions, enumDisabled);
+  const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
+    onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));
   // eslint-disable-next-line no-shadow
-  const _onBlur = (
-    _: FocusEvent<HTMLElement>,
-    { target: { value } }: DropdownProps
-  ) => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onFocus = (
-    _: FocusEvent<HTMLElement>,
-    { target: { value } }: DropdownProps
-  ) =>
+  const _onBlur = (_: FocusEvent<HTMLElement>, { target: { value } }: DropdownProps) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const _onFocus = (_: FocusEvent<HTMLElement>, { target: { value } }: DropdownProps) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    multiple
-  );
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
   return (
     <Form.Dropdown

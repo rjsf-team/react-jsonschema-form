@@ -12,10 +12,7 @@ import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
  * @returns - An array with the first value being the object minus the `key` element and the second element being the
  *      value from `object[key]`
  */
-export function splitKeyElementFromObject(
-  key: string,
-  object: GenericObjectType
-) {
+export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
   const value = object[key];
   const remaining = omit(object, [key]);
   return [remaining, value];
@@ -30,9 +27,10 @@ export function splitKeyElementFromObject(
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference exists
  */
-export default function findSchemaDefinition<
-  S extends StrictRJSFSchema = RJSFSchema
->($ref?: string, rootSchema: S = {} as S): S {
+export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+  $ref?: string,
+  rootSchema: S = {} as S
+): S {
   let ref = $ref || '';
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.

@@ -54,12 +54,11 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    T,
-    S,
-    F
-  >('WrapIfAdditionalTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
     return <div className='field-hidden'>{children}</div>;

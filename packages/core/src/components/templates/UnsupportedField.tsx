@@ -1,10 +1,4 @@
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-  UnsupportedFieldProps,
-} from '@rjsf/utils';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString, UnsupportedFieldProps } from '@rjsf/utils';
 import Markdown from 'markdown-to-jsx';
 
 /** The `UnsupportedField` component is used to render a field in the schema is one that is not supported by
@@ -12,11 +6,9 @@ import Markdown from 'markdown-to-jsx';
  *
  * @param props - The `FieldProps` for this template
  */
-function UnsupportedField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: UnsupportedFieldProps<T, S, F>) {
+function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: UnsupportedFieldProps<T, S, F>
+) {
   const { schema, idSchema, reason, registry } = props;
   const { translateString } = registry;
   let translateEnum: TranslatableString = TranslatableString.UnsupportedField;

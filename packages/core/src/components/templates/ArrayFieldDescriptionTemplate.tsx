@@ -24,12 +24,11 @@ export default function ArrayFieldDescriptionTemplate<
   if (!description || !displayLabel) {
     return null;
   }
-  const DescriptionFieldTemplate = getTemplate<
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
-    T,
-    S,
-    F
-  >('DescriptionFieldTemplate', registry, options);
+    registry,
+    options
+  );
   return (
     <DescriptionFieldTemplate
       id={descriptionId<T>(idSchema)}

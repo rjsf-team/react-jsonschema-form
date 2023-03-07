@@ -16,9 +16,7 @@ describe('mergeObjects()', () => {
   });
 
   it('should override non-existing values of the first object with the values from the second', () => {
-    expect(
-      mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })
-    ).toEqual({ a: { b: { c: 1 } } });
+    expect(mergeObjects({ a: { b: undefined } }, { a: { b: { c: 1 } } })).toEqual({ a: { b: { c: 1 } } });
   });
 
   it('should recursively merge deeply nested objects', () => {

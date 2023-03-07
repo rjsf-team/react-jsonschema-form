@@ -11,10 +11,7 @@ import {
 import classNames from 'classnames';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
-import {
-  ConfigConsumer,
-  ConfigConsumerProps,
-} from 'antd/lib/config-provider/context';
+import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -45,29 +42,26 @@ export default function ArrayFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate<
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldTitleTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = 'right', rowGutter = 24 } =
-    formContext as GenericObjectType;
+  const { labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
 
   return (
     <ConfigConsumer>
@@ -99,9 +93,7 @@ export default function ArrayFieldTemplate<
               {(uiOptions.description || schema.description) && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <ArrayFieldDescriptionTemplate
-                    description={
-                      uiOptions.description || schema.description || ''
-                    }
+                    description={uiOptions.description || schema.description || ''}
                     idSchema={idSchema}
                     schema={schema}
                     uiSchema={uiSchema}
@@ -111,14 +103,9 @@ export default function ArrayFieldTemplate<
               )}
               <Col className='row array-item-list' span={24}>
                 {items &&
-                  items.map(
-                    ({
-                      key,
-                      ...itemProps
-                    }: ArrayFieldTemplateItemType<T, S, F>) => (
-                      <ArrayFieldItemTemplate key={key} {...itemProps} />
-                    )
-                  )}
+                  items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                    <ArrayFieldItemTemplate key={key} {...itemProps} />
+                  ))}
               </Col>
 
               {canAdd && (

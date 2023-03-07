@@ -1,11 +1,5 @@
 import { ChangeEvent } from 'react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 

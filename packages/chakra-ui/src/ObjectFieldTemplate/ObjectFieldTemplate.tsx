@@ -31,17 +31,12 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    'DescriptionFieldTemplate',
-    T,
-    S,
-    F
-  >('DescriptionFieldTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -73,9 +68,7 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>
-              {element.content}
-            </GridItem>
+            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (

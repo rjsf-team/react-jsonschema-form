@@ -13,10 +13,7 @@ import { GenericObjectType } from './types';
  * @param obj2 - The second schema object to merge
  * @returns - The merged schema object
  */
-export default function mergeSchemas(
-  obj1: GenericObjectType,
-  obj2: GenericObjectType
-) {
+export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},

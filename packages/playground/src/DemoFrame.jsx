@@ -89,19 +89,13 @@ function DemoFrame(props) {
     const { head } = props;
     body = (
       <>
-        <style
-          dangerouslySetInnerHTML={{ __html: 'label { font-weight: normal; }' }}
-        />
+        <style dangerouslySetInnerHTML={{ __html: 'label { font-weight: normal; }' }} />
         {head}
         {children}
       </>
     );
   } else if (theme === 'chakra-ui') {
-    body = (
-      <FrameContextConsumer>
-        {__createChakraFrameProvider(props)}
-      </FrameContextConsumer>
-    );
+    body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   }
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>

@@ -1,13 +1,7 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
-import {
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types';
+import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import retrieveSchema from './retrieveSchema';
 
@@ -64,13 +58,7 @@ export default function sanitizeDataForNewSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(
-  validator: ValidatorType<T, S, F>,
-  rootSchema: S,
-  newSchema?: S,
-  oldSchema?: S,
-  data: any = {}
-): T {
+>(validator: ValidatorType<T, S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
   // By default, we will clear the form data
   let newFormData;
   // If the new schema is of type object and that object contains a list of properties
@@ -94,20 +82,10 @@ export default function sanitizeDataForNewSchema<
       let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {});
       // Resolve the refs if they exist
       if (has(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          oldKeyedSchema,
-          rootSchema,
-          formValue
-        );
+        oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue);
       }
       if (has(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          newKeyedSchema,
-          rootSchema,
-          formValue
-        );
+        newKeyedSchema = retrieveSchema<T, S, F>(validator, newKeyedSchema, rootSchema, formValue);
       }
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = get(oldKeyedSchema, 'type');
@@ -119,10 +97,7 @@ export default function sanitizeDataForNewSchema<
           delete removeOldSchemaData[key];
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key
-        if (
-          newSchemaTypeForKey === 'object' ||
-          (newSchemaTypeForKey === 'array' && Array.isArray(formValue))
-        ) {
+        if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
             validator,
@@ -155,8 +130,7 @@ export default function sanitizeDataForNewSchema<
           const oldOptionConst = get(oldKeyedSchema, 'const', NO_VALUE);
           if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
-            removeOldSchemaData[key] =
-              oldOptionConst === formValue ? newOptionConst : undefined;
+            removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
           }
         }
       }
@@ -168,11 +142,7 @@ export default function sanitizeDataForNewSchema<
       ...nestedData,
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
-  } else if (
-    get(oldSchema, 'type') === 'array' &&
-    get(newSchema, 'type') === 'array' &&
-    Array.isArray(data)
-  ) {
+  } else if (get(oldSchema, 'type') === 'array' && get(newSchema, 'type') === 'array' && Array.isArray(data)) {
     let oldSchemaItems = get(oldSchema, 'items');
     let newSchemaItems = get(newSchema, 'items');
     // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
@@ -184,20 +154,10 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(newSchemaItems)
     ) {
       if (has(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          oldSchemaItems as S,
-          rootSchema,
-          data as T
-        );
+        oldSchemaItems = retrieveSchema<T, S, F>(validator, oldSchemaItems as S, rootSchema, data as T);
       }
       if (has(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          newSchemaItems as S,
-          rootSchema,
-          data as T
-        );
+        newSchemaItems = retrieveSchema<T, S, F>(validator, newSchemaItems as S, rootSchema, data as T);
       }
       // Now get types and see if they are the same
       const oldSchemaType = get(oldSchemaItems, 'type');
@@ -214,19 +174,13 @@ export default function sanitizeDataForNewSchema<
               oldSchemaItems as S,
               aValue
             );
-            if (
-              itemValue !== undefined &&
-              (maxItems < 0 || newValue.length < maxItems)
-            ) {
+            if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
             }
             return newValue;
           }, []);
         } else {
-          newFormData =
-            maxItems > 0 && data.length > maxItems
-              ? data.slice(0, maxItems)
-              : data;
+          newFormData = maxItems > 0 && data.length > maxItems ? data.slice(0, maxItems) : data;
         }
       }
     } else if (

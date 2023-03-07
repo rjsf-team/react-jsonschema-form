@@ -49,20 +49,9 @@ function dateElementProps(
   return data;
 }
 
-type DateElementProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> = Pick<
+type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
   WidgetProps<T, S, F>,
-  | 'value'
-  | 'name'
-  | 'disabled'
-  | 'readonly'
-  | 'autofocus'
-  | 'registry'
-  | 'onBlur'
-  | 'onFocus'
+  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus'
 > & {
   rootId: string;
   select: (property: keyof DateObject, value: any) => void;
@@ -70,11 +59,7 @@ type DateElementProps<
   range: [number, number];
 };
 
-function DateElement<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   type,
   range,
   value,
@@ -115,11 +100,7 @@ function DateElement<
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   time = false,
   disabled = false,
   readonly = false,
@@ -134,12 +115,9 @@ function AltDateWidget<
   value,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const [state, setState] = useReducer(
-    (state: DateObject, action: Partial<DateObject>) => {
-      return { ...state, ...action };
-    },
-    parseDateString(value, time)
-  );
+  const [state, setState] = useReducer((state: DateObject, action: Partial<DateObject>) => {
+    return { ...state, ...action };
+  }, parseDateString(value, time));
 
   useEffect(() => {
     if (value && value !== toDateString(state, time)) {
@@ -154,12 +132,9 @@ function AltDateWidget<
     }
   }, [state, time, onChange]);
 
-  const handleChange = useCallback(
-    (property: keyof DateObject, value: string) => {
-      setState({ [property]: value });
-    },
-    []
-  );
+  const handleChange = useCallback((property: keyof DateObject, value: string) => {
+    setState({ [property]: value });
+  }, []);
 
   const handleSetNow = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
@@ -187,11 +162,7 @@ function AltDateWidget<
 
   return (
     <ul className='list-inline'>
-      {dateElementProps(
-        state,
-        time,
-        options.yearsRange as [number, number] | undefined
-      ).map((elemProps, i) => (
+      {dateElementProps(state, time, options.yearsRange as [number, number] | undefined).map((elemProps, i) => (
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}
@@ -207,24 +178,16 @@ function AltDateWidget<
           />
         </li>
       ))}
-      {(options.hideNowButton !== 'undefined'
-        ? !options.hideNowButton
-        : true) && (
+      {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
         <li className='list-inline-item'>
           <a href='#' className='btn btn-info btn-now' onClick={handleSetNow}>
             {translateString(TranslatableString.NowLabel)}
           </a>
         </li>
       )}
-      {(options.hideClearButton !== 'undefined'
-        ? !options.hideClearButton
-        : true) && (
+      {(options.hideClearButton !== 'undefined' ? !options.hideClearButton : true) && (
         <li className='list-inline-item'>
-          <a
-            href='#'
-            className='btn btn-warning btn-clear'
-            onClick={handleClear}
-          >
+          <a href='#' className='btn btn-warning btn-clear' onClick={handleClear}>
             {translateString(TranslatableString.ClearLabel)}
           </a>
         </li>

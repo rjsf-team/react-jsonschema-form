@@ -1,11 +1,5 @@
 import { FocusEvent } from 'react';
-import {
-  FormControl,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -18,11 +12,7 @@ import {
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
 
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   schema,
   options,
@@ -39,27 +29,17 @@ export default function RadioWidget<
   const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
 
-  const _onChange = (nextValue: any) =>
-    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+  const _onChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndex = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions
-  ) as string;
+  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
   return (
-    <FormControl
-      mb={1}
-      {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-    >
+    <FormControl mb={1} {...chakraProps} isDisabled={disabled || readonly} isRequired={required} isReadOnly={readonly}>
       <FormLabel htmlFor={id} id={`${id}-label`}>
         {label || schema.title}
       </FormLabel>
@@ -74,9 +54,7 @@ export default function RadioWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled =
-                Array.isArray(enumDisabled) &&
-                enumDisabled.indexOf(option.value) !== -1;
+              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
 
               return (
                 <Radio

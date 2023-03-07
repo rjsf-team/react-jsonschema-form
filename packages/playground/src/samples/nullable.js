@@ -47,8 +47,7 @@ export default {
     },
     bio: {
       'ui:widget': 'textarea',
-      'ui:placeholder':
-        'Leaving this field empty will cause formData property to be `null`',
+      'ui:placeholder': 'Leaving this field empty will cause formData property to be `null`',
       'ui:emptyValue': null,
     },
     password: {

@@ -17,10 +17,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Arrays of objects
@@ -43,10 +40,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## uiSchema for array items
@@ -70,10 +64,7 @@ const uiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## The `additionalItems` keyword
@@ -94,10 +85,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Array item uiSchema options
@@ -123,10 +111,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### `addable` option
@@ -150,10 +135,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### `removable` option
@@ -177,10 +159,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Multiple-choice list
@@ -203,10 +182,7 @@ const schema: RJSFSchema = {
   uniqueItems: true,
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
@@ -229,10 +205,7 @@ const uiSchema: UiSchema = {
   'ui:widget': 'checkboxes',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Custom widgets
@@ -274,12 +247,7 @@ const widgets = {
 };
 
 render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    widgets={widgets}
-    validator={validator}
-  />,
+  <Form schema={schema} uiSchema={uiSchema} widgets={widgets} validator={validator} />,
   document.getElementById('app')
 );
 ```
@@ -305,10 +273,7 @@ const schema: RJSFSchema = {
   uniqueItems: true,
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 You can also specify the maximum number of items in an array using the `maxItems` property.
@@ -339,8 +304,5 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```

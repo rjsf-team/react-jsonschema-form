@@ -34,12 +34,11 @@ export default function FieldTemplate<
   registry,
 }: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    T,
-    S,
-    F
-  >('WrapIfAdditionalTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
@@ -60,21 +59,14 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && (
-          <Form.Label
-            htmlFor={id}
-            className={rawErrors.length > 0 ? 'text-danger' : ''}
-          >
+          <Form.Label htmlFor={id} className={rawErrors.length > 0 ? 'text-danger' : ''}>
             {label}
             {required ? '*' : null}
           </Form.Label>
         )}
         {children}
         {displayLabel && rawDescription && (
-          <Form.Text
-            className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}
-          >
-            {rawDescription}
-          </Form.Text>
+          <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{rawDescription}</Form.Text>
         )}
         {errors}
         {help}

@@ -19,8 +19,7 @@ function transformErrors(errors) {
 export default {
   schema: {
     title: 'Custom validation',
-    description:
-      'This form defines custom validation rules checking that the two passwords match.',
+    description: 'This form defines custom validation rules checking that the two passwords match.',
     type: 'object',
     properties: {
       pass1: {

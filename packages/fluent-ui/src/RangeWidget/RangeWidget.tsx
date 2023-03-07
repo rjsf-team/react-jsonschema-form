@@ -1,12 +1,5 @@
 import { Slider, Label } from '@fluentui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  rangeSpec,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
 const styles_red = {
@@ -41,11 +34,7 @@ const allowedProps = [
   'originFromZero',
 ];
 
-export default function RangeWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   value,
   readonly,
   disabled,

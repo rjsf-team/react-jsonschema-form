@@ -9,9 +9,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @param schema - The schema to check
  * @returns - True if the schema specifies a value that must be true, false otherwise
  */
-export default function schemaRequiresTrueValue<
-  S extends StrictRJSFSchema = RJSFSchema
->(schema: S): boolean {
+export default function schemaRequiresTrueValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
   // Check if const is a truthy value
   if (schema.const) {
     return true;
@@ -34,8 +32,7 @@ export default function schemaRequiresTrueValue<
 
   // Evaluate each subschema in allOf, to see if one of them requires a true value
   if (schema.allOf) {
-    const schemaSome = (subSchema: S['additionalProperties']) =>
-      schemaRequiresTrueValue(subSchema as S);
+    const schemaSome = (subSchema: S['additionalProperties']) => schemaRequiresTrueValue(subSchema as S);
     return schema.allOf.some(schemaSome);
   }
 

@@ -1,10 +1,6 @@
 $(function () {
   function escape(html) {
-    return html
-      .replace(/&/g, '&amp;')
-      .replace(/>/g, '&gt;')
-      .replace(/</g, '&lt;')
-      .replace(/"/g, '&quot;');
+    return html.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
   }
   $('.language-jsx').each(function () {
     var text = escape($(this).text());
@@ -21,9 +17,7 @@ $(function () {
         'https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js',
         'https://unpkg.com/@rjsf/core/dist/react-jsonschema-form.js',
       ],
-      stylesheets: [
-        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-      ],
+      stylesheets: ['//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'],
     };
     var div = $(
       '<div><div class="codepen" data-height="400" data-theme-id="light" data-default-tab="js,result" data-prefill=\'' +

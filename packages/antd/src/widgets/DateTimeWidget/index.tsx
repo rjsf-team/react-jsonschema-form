@@ -24,21 +24,10 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    disabled,
-    formContext,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    placeholder,
-    readonly,
-    value,
-  } = props;
+  const { disabled, formContext, id, onBlur, onChange, onFocus, placeholder, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = (nextValue: any) =>
-    onChange(nextValue && nextValue.toISOString());
+  const handleChange = (nextValue: any) => onChange(nextValue && nextValue.toISOString());
 
   const handleBlur = () => onBlur(id, value);
 

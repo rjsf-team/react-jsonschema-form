@@ -39,18 +39,16 @@ export default function FieldTemplate<
   const semanticProps = getSemanticProps<T, S, F>(otherProps);
   const { wrapLabel, wrapContent } = semanticProps;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    T,
-    S,
-    F
-  >('WrapIfAdditionalTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
-    T,
-    S,
-    F
-  >('DescriptionFieldTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;

@@ -14,9 +14,7 @@ describe('object fields', () => {
         b: { type: 'number', title: 'B' },
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('additionalProperties', () => {
@@ -24,11 +22,7 @@ describe('object fields', () => {
       type: 'object',
       additionalProperties: true,
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

@@ -28,9 +28,7 @@ describe('enumOptionsSelectValue()', () => {
     expect(enumOptionsSelectValue(-1, selected, ALL_OPTIONS)).toBe(selected);
   });
   it('returns the selected array unchanged when index >= length', () => {
-    expect(
-      enumOptionsSelectValue(ALL_OPTIONS.length, selected, ALL_OPTIONS)
-    ).toBe(selected);
+    expect(enumOptionsSelectValue(ALL_OPTIONS.length, selected, ALL_OPTIONS)).toBe(selected);
   });
   it('returns the selected array unchanged when options are missing', () => {
     expect(enumOptionsSelectValue(0, selected)).toBe(selected);

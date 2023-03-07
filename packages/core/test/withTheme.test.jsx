@@ -75,15 +75,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ fields: themeFields }),
-        {
-          schema,
-          uiSchema,
-          fields: userFields,
-          validator,
-        }
-      );
+      let { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
+        schema,
+        uiSchema,
+        fields: userFields,
+        validator,
+      });
       expect(node.querySelectorAll('.string-field')).to.have.length.of(1);
       expect(node.querySelectorAll('.number-field')).to.have.length.of(1);
     });
@@ -111,15 +108,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ fields: themeFields }),
-        {
-          schema,
-          uiSchema,
-          fields: userFields,
-          validator,
-        }
-      );
+      let { node } = createComponent(WrapperClassComponent({ fields: themeFields }), {
+        schema,
+        uiSchema,
+        fields: userFields,
+        validator,
+      });
       expect(node.querySelectorAll('.string-field')).to.have.length.of(0);
       expect(node.querySelectorAll('.form-control')).to.have.length.of(2);
     });
@@ -162,15 +156,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ widgets: themeWidgets }),
-        {
-          schema,
-          uiSchema,
-          widgets: userWidgets,
-          validator,
-        }
-      );
+      let { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
+        schema,
+        uiSchema,
+        widgets: userWidgets,
+        validator,
+      });
       expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(1);
       expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
     });
@@ -191,15 +182,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ widgets: themeWidgets }),
-        {
-          schema,
-          uiSchema,
-          widgets: userWidgets,
-          validator,
-        }
-      );
+      let { node } = createComponent(WrapperClassComponent({ widgets: themeWidgets }), {
+        schema,
+        uiSchema,
+        widgets: userWidgets,
+        validator,
+      });
       expect(node.querySelectorAll('#test-theme-widget')).to.have.length.of(0);
       expect(node.querySelectorAll('#test-user-widget')).to.have.length.of(1);
     });
@@ -224,17 +212,12 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ templates: themeTemplates }),
-        {
-          schema,
-          uiSchema,
-          validator,
-        }
-      );
-      expect(
-        node.querySelectorAll('.with-theme-field-template')
-      ).to.have.length.of(1);
+      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+        schema,
+        uiSchema,
+        validator,
+      });
+      expect(node.querySelectorAll('.with-theme-field-template')).to.have.length.of(1);
     });
 
     it('should use only the user defined template', () => {
@@ -253,31 +236,20 @@ describe('withTheme', () => {
         type: 'object',
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
-      let { node } = createComponent(
-        WrapperClassComponent({ templates: themeTemplates }),
-        {
-          schema,
-          templates: userTemplates,
-          validator,
-        }
-      );
-      expect(
-        node.querySelectorAll('.with-theme-field-template')
-      ).to.have.length.of(0);
-      expect(node.querySelectorAll('.user-field-template')).to.have.length.of(
-        1
-      );
+      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+        schema,
+        templates: userTemplates,
+        validator,
+      });
+      expect(node.querySelectorAll('.with-theme-field-template')).to.have.length.of(0);
+      expect(node.querySelectorAll('.user-field-template')).to.have.length.of(1);
     });
 
     it('should use the withTheme submit button template', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return (
-              <button className='with-theme-button-template'>
-                ThemeSubmit
-              </button>
-            );
+            return <button className='with-theme-button-template'>ThemeSubmit</button>;
           },
         },
       };
@@ -293,28 +265,19 @@ describe('withTheme', () => {
         },
       };
       const uiSchema = {};
-      let { node } = createComponent(
-        WrapperClassComponent({ templates: themeTemplates }),
-        {
-          schema,
-          uiSchema,
-          validator,
-        }
-      );
-      expect(
-        node.querySelectorAll('.with-theme-button-template')
-      ).to.have.length.of(1);
+      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+        schema,
+        uiSchema,
+        validator,
+      });
+      expect(node.querySelectorAll('.with-theme-button-template')).to.have.length.of(1);
     });
 
     it('should use only the user defined submit button', () => {
       const themeTemplates = {
         ButtonTemplates: {
           SubmitButton() {
-            return (
-              <button className='with-theme-button-template'>
-                ThemeSubmit
-              </button>
-            );
+            return <button className='with-theme-button-template'>ThemeSubmit</button>;
           },
         },
       };
@@ -330,20 +293,13 @@ describe('withTheme', () => {
         type: 'object',
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
-      let { node } = createComponent(
-        WrapperClassComponent({ templates: themeTemplates }),
-        {
-          schema,
-          templates: userTemplates,
-          validator,
-        }
-      );
-      expect(
-        node.querySelectorAll('.with-theme-button-template')
-      ).to.have.length.of(0);
-      expect(node.querySelectorAll('.user-button-template')).to.have.length.of(
-        1
-      );
+      let { node } = createComponent(WrapperClassComponent({ templates: themeTemplates }), {
+        schema,
+        templates: userTemplates,
+        validator,
+      });
+      expect(node.querySelectorAll('.with-theme-button-template')).to.have.length.of(0);
+      expect(node.querySelectorAll('.user-button-template')).to.have.length.of(1);
     });
   });
 

@@ -38,8 +38,7 @@ export default {
     firstName: {
       'ui:autofocus': true,
       'ui:emptyValue': '',
-      'ui:placeholder':
-        'ui:emptyValue causes this field to always be valid despite being required',
+      'ui:placeholder': 'ui:emptyValue causes this field to always be valid despite being required',
       'ui:autocomplete': 'family-name',
     },
     lastName: {

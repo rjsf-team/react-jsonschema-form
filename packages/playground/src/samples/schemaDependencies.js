@@ -107,8 +107,7 @@ export default {
   uiSchema: {
     simple: {
       credit_card: {
-        'ui:help':
-          'If you enter anything here then billing_address will be dynamically added to the form.',
+        'ui:help': 'If you enter anything here then billing_address will be dynamically added to the form.',
       },
     },
     conditional: {

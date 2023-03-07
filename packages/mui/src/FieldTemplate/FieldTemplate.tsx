@@ -41,12 +41,11 @@ export default function FieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    T,
-    S,
-    F
-  >('WrapIfAdditionalTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
@@ -66,11 +65,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl
-        fullWidth={true}
-        error={rawErrors.length ? true : false}
-        required={required}
-      >
+      <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
         {displayLabel && rawDescription ? (
           <Typography variant='caption' color='textSecondary'>

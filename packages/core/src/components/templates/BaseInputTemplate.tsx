@@ -60,14 +60,10 @@ export default function BaseInputTemplate<
   }
 
   const _onChange = useCallback(
-    ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-      onChange(value === '' ? options.emptyValue : value),
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
     [onChange, options]
   );
-  const _onBlur = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value),
-    [onBlur, id]
-  );
+  const _onBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value), [onBlur, id]);
   const _onFocus = useCallback(
     ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value),
     [onFocus, id]
@@ -93,11 +89,7 @@ export default function BaseInputTemplate<
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(
-              schema.default && !schema.examples.includes(schema.default)
-                ? ([schema.default] as string[])
-                : []
-            )
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}

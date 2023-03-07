@@ -36,11 +36,10 @@ type ObjectFieldState = {
  *
  * @param props - The `FieldProps` for this template
  */
-class ObjectField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> extends Component<FieldProps<T, S, F>, ObjectFieldState> {
+class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> extends Component<
+  FieldProps<T, S, F>,
+  ObjectFieldState
+> {
   /** Set up the initial state */
   state = {
     wasPropertyKeyModified: false,
@@ -54,9 +53,7 @@ class ObjectField<
    */
   isRequired(name: string) {
     const { schema } = this.props;
-    return (
-      Array.isArray(schema.required) && schema.required.indexOf(name) !== -1
-    );
+    return Array.isArray(schema.required) && schema.required.indexOf(name) !== -1;
   }
 
   /** Returns the `onPropertyChange` handler for the `name` field. Handles the special case where a user is attempting
@@ -68,11 +65,7 @@ class ObjectField<
    * @returns - The onPropertyChange callback for the `name` property
    */
   onPropertyChange = (name: string, addedByAdditionalProperties = false) => {
-    return (
-      value: T | undefined,
-      newErrorSchema?: ErrorSchema<T>,
-      id?: string
-    ) => {
+    return (value: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { formData, onChange, errorSchema } = this.props;
       if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
@@ -122,9 +115,7 @@ class ObjectField<
    */
   getAvailableKey = (preferredKey: string, formData?: T) => {
     const { uiSchema } = this.props;
-    const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(
-      uiSchema
-    );
+    const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema);
 
     let index = 0;
     let newKey = preferredKey;
@@ -215,10 +206,7 @@ class ObjectField<
       let apSchema = schema.additionalProperties;
       if (REF_KEY in apSchema) {
         const { schemaUtils } = registry;
-        apSchema = schemaUtils.retrieveSchema(
-          { $ref: apSchema[REF_KEY] } as S,
-          formData
-        );
+        apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
         type = apSchema.type;
       }
       if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
@@ -278,24 +266,14 @@ class ObjectField<
       );
     }
 
-    const Template = getTemplate<'ObjectFieldTemplate', T, S, F>(
-      'ObjectFieldTemplate',
-      registry,
-      uiOptions
-    );
+    const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
 
     const templateProps = {
       title: uiOptions.title || title,
       description,
       properties: orderedProperties.map((name) => {
-        const addedByAdditionalProperties = has(schema, [
-          PROPERTIES_KEY,
-          name,
-          ADDITIONAL_PROPERTY_FLAG,
-        ]);
-        const fieldUiSchema = addedByAdditionalProperties
-          ? uiSchema.additionalProperties
-          : uiSchema[name];
+        const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
+        const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];
         const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
         const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
 
@@ -315,10 +293,7 @@ class ObjectField<
               formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
-              onChange={this.onPropertyChange(
-                name,
-                addedByAdditionalProperties
-              )}
+              onChange={this.onPropertyChange(name, addedByAdditionalProperties)}
               onBlur={onBlur}
               onFocus={onFocus}
               registry={registry}

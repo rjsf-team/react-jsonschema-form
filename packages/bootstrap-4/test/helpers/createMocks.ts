@@ -1,9 +1,4 @@
-import {
-  createSchemaUtils,
-  englishStringTranslator,
-  WidgetProps,
-  RJSFSchema,
-} from '@rjsf/utils';
+import { createSchemaUtils, englishStringTranslator, WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { getDefaultRegistry } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
@@ -33,9 +28,7 @@ export function mockRegistry() {
   };
 }
 
-export function makeWidgetMockProps(
-  props: Partial<WidgetProps> = {}
-): WidgetProps {
+export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {
   return {
     uiSchema: {},
     schema: mockSchema,

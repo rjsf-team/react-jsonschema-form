@@ -1,17 +1,5 @@
-import {
-  ColorPicker,
-  IColorPickerProps,
-  IColor,
-  getColorFromString,
-  Label,
-} from '@fluentui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ColorPicker, IColorPickerProps, IColor, getColorFromString, Label } from '@fluentui/react';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
 const styles_red = {
@@ -40,11 +28,7 @@ const allowedProps: (keyof IColorPickerProps)[] = [
   'showPreview',
 ];
 
-export default function ColorWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   schema,
   options,

@@ -17,18 +17,7 @@ export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({
-  id,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+>({ id, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
@@ -36,13 +25,9 @@ export default function CheckboxesWidget<
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
-        onChange(
-          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
       } else {
-        onChange(
-          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
       }
     };
 
@@ -55,13 +40,8 @@ export default function CheckboxesWidget<
     <Form.Group>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = enumOptionsIsSelected<S>(
-            option.value,
-            checkboxesValues
-          );
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
+          const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
 
           return (
             <Form.Check

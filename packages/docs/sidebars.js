@@ -22,8 +22,7 @@ const sidebars = {
       type: 'category',
       label: 'JSON Schema',
       link: {
-        description:
-          'Documentation for how to use JSON Schema constructs in react-jsonschema-form.',
+        description: 'Documentation for how to use JSON Schema constructs in react-jsonschema-form.',
         type: 'generated-index',
         title: 'JSON Schema',
         slug: '/json-schema',
@@ -43,8 +42,7 @@ const sidebars = {
       link: {
         type: 'generated-index',
         title: 'Usage',
-        description:
-          'How to use react-jsonschema-form to customize your form behavior and appearance.',
+        description: 'How to use react-jsonschema-form to customize your form behavior and appearance.',
         slug: '/usage',
       },
       items: ['usage/widgets', 'usage/themes', 'usage/validation'],
@@ -55,8 +53,7 @@ const sidebars = {
       link: {
         type: 'generated-index',
         title: 'Advanced Customization',
-        description:
-          'Advanced customization documentation for react-jsonschema-form.',
+        description: 'Advanced customization documentation for react-jsonschema-form.',
         slug: '/advanced-customization',
       },
       items: [
@@ -90,8 +87,7 @@ const sidebars = {
       link: {
         type: 'generated-index',
         title: 'Migration Guides',
-        description:
-          'Guides for upgrading to a major version of react-jsonschema-form.',
+        description: 'Guides for upgrading to a major version of react-jsonschema-form.',
         slug: '/migration-guides',
       },
       items: [

@@ -71,10 +71,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} disabled />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} disabled />, document.getElementById('app'));
 ```
 
 If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`.
@@ -91,10 +88,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} readonly />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} readonly />, document.getElementById('app'));
 ```
 
 If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`.
@@ -144,10 +138,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} idPrefix={'rjsf_prefix'} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} idPrefix={'rjsf_prefix'} />, document.getElementById('app'));
 ```
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
@@ -169,10 +160,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} idSeparator={'/'} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} idSeparator={'/'} />, document.getElementById('app'));
 ```
 
 This will render `<input id="root/first">` instead of `<input
@@ -228,13 +216,9 @@ import validator from '@rjsf/validator-ajv8';
 const schema: RJSFSchema = {
   type: 'string',
 };
-const onError = (errors) =>
-  console.log('I have', errors.length, 'errors to fix');
+const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 
-render(
-  <Form schema={schema} validator={validator} onError={onError} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} onError={onError} />, document.getElementById('app'));
 ```
 
 ## onFocus
@@ -256,10 +240,7 @@ const schema: RJSFSchema = {
 };
 const onSubmit = ({ formData }, e) => console.log('Data submitted: ', formData);
 
-render(
-  <Form schema={schema} validator={validator} onSubmit={onSubmit} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, document.getElementById('app'));
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
@@ -319,16 +300,9 @@ One could use this function to alter one or more of the existing english strings
 Below is an example of changing a few of the english strings to something else:
 
 ```ts
-import {
-  TranslatableString,
-  englishStringTranslator,
-  replaceStringParameters,
-} from '@rjsf/utils';
+import { TranslatableString, englishStringTranslator, replaceStringParameters } from '@rjsf/utils';
 
-function fixupSomeEnglishStrings(
-  stringToTranslate: TranslatableString,
-  params?: string[]
-): string {
+function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?: string[]): string {
   switch (stringToTranslate) {
     case TranslatableString.NewStringDefault:
       return ''; // Use an empty string for the new additionalProperties string default value

@@ -1,10 +1,6 @@
 import Ajv, { Ajv as AjvType } from 'ajv';
 
-import createAjvInstance, {
-  AJV_CONFIG,
-  COLOR_FORMAT_REGEX,
-  DATA_URL_FORMAT_REGEX,
-} from '../src/createAjvInstance';
+import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
 import { CustomValidatorOptionsType } from '../src';
 
 jest.mock('ajv');
@@ -37,18 +33,10 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(2);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('addMetaSchema was not called', () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
@@ -76,34 +64,18 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(4);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('the remaining addFormat() calls were for custom formats', () => {
-      Object.keys(CUSTOM_OPTIONS.customFormats!).forEach(
-        (key: string, i: number) => {
-          expect(ajv.addFormat).toHaveBeenNthCalledWith(
-            3 + i,
-            key,
-            CUSTOM_OPTIONS.customFormats![key]
-          );
-        }
-      );
+      Object.keys(CUSTOM_OPTIONS.customFormats!).forEach((key: string, i: number) => {
+        expect(ajv.addFormat).toHaveBeenNthCalledWith(3 + i, key, CUSTOM_OPTIONS.customFormats![key]);
+      });
     });
     it('addMetaSchema was not called', () => {
-      expect(ajv.addMetaSchema).toHaveBeenCalledWith(
-        CUSTOM_OPTIONS.additionalMetaSchemas
-      );
+      expect(ajv.addMetaSchema).toHaveBeenCalledWith(CUSTOM_OPTIONS.additionalMetaSchemas);
     });
   });
 });

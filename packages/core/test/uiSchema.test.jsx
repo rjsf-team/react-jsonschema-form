@@ -60,9 +60,7 @@ describe('uiSchema', () => {
       expect(bar.classList.contains('class-for-bar')).eql(true);
       expect(bar.classList.contains('another-for-bar')).eql(true);
       expect(baz.classList.contains('class-for-baz')).eql(true);
-      expect(
-        console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)
-      ).to.be.true;
+      expect(console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)).to.be.true;
     });
   });
 
@@ -218,11 +216,7 @@ describe('uiSchema', () => {
           },
           widgets,
         });
-        expect(
-          console.error.calledWithMatch(
-            /ui:widget object is no longer supported/
-          )
-        ).to.be.true;
+        expect(console.error.calledWithMatch(/ui:widget object is no longer supported/)).to.be.true;
       });
 
       it('should cache MergedWidget instance', () => {
@@ -373,9 +367,7 @@ describe('uiSchema', () => {
 
       const CustomWidget = (props) => {
         const { value, options } = props;
-        return (
-          <input type='text' className={options.className} value={value} />
-        );
+        return <input type='text' className={options.className} value={value} />;
       };
 
       describe('direct reference', () => {
@@ -481,9 +473,7 @@ describe('uiSchema', () => {
       it('should have atleast one option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
-        expect(node.querySelectorAll('option:disabled')).to.have.length.of(
-          disabledOptionsLen
-        );
+        expect(node.querySelectorAll('option:disabled')).to.have.length.of(disabledOptionsLen);
         expect(node.querySelectorAll('option:enabled')).to.have.length.of(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen + 1
@@ -513,9 +503,7 @@ describe('uiSchema', () => {
       it('should have atleast one radio option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
-        expect(node.querySelectorAll('input:disabled')).to.have.length.of(
-          disabledOptionsLen
-        );
+        expect(node.querySelectorAll('input:disabled')).to.have.length.of(disabledOptionsLen);
         expect(node.querySelectorAll('input:enabled')).to.have.length.of(
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen
@@ -1673,10 +1661,7 @@ describe('uiSchema', () => {
 
       it('should render boolean option labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        const labels = [].map.call(
-          node.querySelectorAll('.field-radio-group label'),
-          (node) => node.textContent
-        );
+        const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (node) => node.textContent);
 
         expect(labels).eql(['Yes', 'No']);
       });
@@ -1873,10 +1858,7 @@ describe('uiSchema', () => {
       };
       const { node } = createFormComponent({ schema, uiSchema });
 
-      const ids = [].map.call(
-        node.querySelectorAll('input[type=text]'),
-        (node) => node.id
-      );
+      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
       expect(ids).eql(['myform_foo', 'myform_bar']);
     });
 
@@ -1896,10 +1878,7 @@ describe('uiSchema', () => {
         formData: ['foo', 'bar'],
       });
 
-      const ids = [].map.call(
-        node.querySelectorAll('input[type=text]'),
-        (node) => node.id
-      );
+      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
       expect(ids).eql(['myform_0', 'myform_1']);
     });
 
@@ -1936,16 +1915,8 @@ describe('uiSchema', () => {
         ],
       });
 
-      const ids = [].map.call(
-        node.querySelectorAll('input[type=text]'),
-        (node) => node.id
-      );
-      expect(ids).eql([
-        'myform_0_foo',
-        'myform_0_bar',
-        'myform_1_foo',
-        'myform_1_bar',
-      ]);
+      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
+      expect(ids).eql(['myform_0_foo', 'myform_0_bar', 'myform_1_foo', 'myform_1_bar']);
     });
   });
 
@@ -1975,17 +1946,12 @@ describe('uiSchema', () => {
         });
 
         it('should disable an ArrayField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.disabled
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.disabled);
           expect(disabled).eql([true, true]);
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(
-            true
-          );
+          expect(node.querySelector('.array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
@@ -2017,10 +1983,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable an ObjectField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.disabled
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.disabled);
           expect(disabled).eql([true, true]);
         });
       });
@@ -2052,9 +2015,7 @@ describe('uiSchema', () => {
             'ui:disabled': true,
           },
         });
-        expect(
-          node.querySelector('input[type=file]').hasAttribute('disabled')
-        ).eql(true);
+        expect(node.querySelector('input[type=file]').hasAttribute('disabled')).eql(true);
       });
 
       it('should disable a textarea widget', () => {
@@ -2209,10 +2170,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const disabled = [].map.call(
-          node.querySelectorAll('select'),
-          (node) => node.disabled
-        );
+        const disabled = [].map.call(node.querySelectorAll('select'), (node) => node.disabled);
         expect(disabled).eql([true, true, true]);
       });
 
@@ -2228,10 +2186,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const disabled = [].map.call(
-          node.querySelectorAll('select'),
-          (node) => node.disabled
-        );
+        const disabled = [].map.call(node.querySelectorAll('select'), (node) => node.disabled);
         expect(disabled).eql([true, true, true, true, true, true]);
       });
     });
@@ -2263,17 +2218,12 @@ describe('uiSchema', () => {
         });
 
         it('should mark as readonly an ArrayField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.hasAttribute('readonly')
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(
-            true
-          );
+          expect(node.querySelector('.array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
@@ -2305,10 +2255,7 @@ describe('uiSchema', () => {
         });
 
         it('should mark as readonly an ObjectField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.hasAttribute('readonly')
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
         });
       });
@@ -2345,9 +2292,7 @@ describe('uiSchema', () => {
             'ui:readonly': true,
           },
         });
-        expect(
-          node.querySelector('input[type=file]').hasAttribute('disabled')
-        ).eql(true);
+        expect(node.querySelector('input[type=file]').hasAttribute('disabled')).eql(true);
       });
 
       it('should mark as readonly a textarea widget', () => {
@@ -2490,9 +2435,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll('select'), (node) =>
-          node.hasAttribute('disabled')
-        );
+        const readonly = [].map.call(node.querySelectorAll('select'), (node) => node.hasAttribute('disabled'));
         expect(readonly).eql([true, true, true]);
       });
 
@@ -2508,9 +2451,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll('select'), (node) =>
-          node.hasAttribute('disabled')
-        );
+        const readonly = [].map.call(node.querySelectorAll('select'), (node) => node.hasAttribute('disabled'));
         expect(readonly).eql([true, true, true, true, true, true]);
       });
     });
@@ -2537,17 +2478,12 @@ describe('uiSchema', () => {
         });
 
         it('should mark as readonly an ArrayField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.hasAttribute('readonly')
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(
-            true
-          );
+          expect(node.querySelector('.array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
@@ -2578,10 +2514,7 @@ describe('uiSchema', () => {
         });
 
         it('should mark as readonly an ObjectField', () => {
-          const disabled = [].map.call(
-            node.querySelectorAll('[type=text]'),
-            (node) => node.hasAttribute('readonly')
-          );
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
         });
       });
@@ -2618,9 +2551,7 @@ describe('uiSchema', () => {
           },
           uiSchema: {},
         });
-        expect(
-          node.querySelector('input[type=file]').hasAttribute('disabled')
-        ).eql(true);
+        expect(node.querySelector('input[type=file]').hasAttribute('disabled')).eql(true);
       });
 
       it('should mark as readonly a textarea widget', () => {
@@ -2758,9 +2689,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll('select'), (node) =>
-          node.hasAttribute('disabled')
-        );
+        const readonly = [].map.call(node.querySelectorAll('select'), (node) => node.hasAttribute('disabled'));
         expect(readonly).eql([true, true, true]);
       });
 
@@ -2776,9 +2705,7 @@ describe('uiSchema', () => {
           },
         });
 
-        const readonly = [].map.call(node.querySelectorAll('select'), (node) =>
-          node.hasAttribute('disabled')
-        );
+        const readonly = [].map.call(node.querySelectorAll('select'), (node) => node.hasAttribute('disabled'));
         expect(readonly).eql([true, true, true, true, true, true]);
       });
     });

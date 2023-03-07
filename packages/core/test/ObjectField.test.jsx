@@ -73,23 +73,17 @@ describe('ObjectField', () => {
           TitleFieldTemplate: CustomTitleField,
         },
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql(
-        'my object'
-      );
+      expect(node.querySelector('fieldset > #custom').textContent).to.eql('my object');
     });
 
     it('should render a customized description', () => {
-      const CustomDescriptionField = ({ description }) => (
-        <div id='custom'>{description}</div>
-      );
+      const CustomDescriptionField = ({ description }) => <div id='custom'>{description}</div>;
 
       const { node } = createFormComponent({
         schema,
         templates: { DescriptionFieldTemplate: CustomDescriptionField },
       });
-      expect(node.querySelector('fieldset > #custom').textContent).to.eql(
-        'my description'
-      );
+      expect(node.querySelector('fieldset > #custom').textContent).to.eql('my description');
     });
 
     it('should render a default property label', () => {
@@ -101,35 +95,27 @@ describe('ObjectField', () => {
     it('should render a string property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(
-        node.querySelectorAll('.field input[type=text]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=text]')).to.have.length.of(1);
     });
 
     it('should render a boolean property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(
-        node.querySelectorAll('.field input[type=checkbox]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=checkbox]')).to.have.length.of(1);
     });
 
     it('should handle a default object value', () => {
       const { node } = createFormComponent({ schema });
 
       expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(
-        true
-      );
+      expect(node.querySelector('.field input[type=checkbox]').checked).eql(true);
     });
 
     it('should handle required values', () => {
       const { node } = createFormComponent({ schema });
 
       // Required field is <input type="text" required="">
-      expect(
-        node.querySelector('input[type=text]').getAttribute('required')
-      ).eql('');
+      expect(node.querySelector('input[type=text]').getAttribute('required')).eql('');
       expect(node.querySelector('.field-string label').textContent).eql('Foo*');
     });
 
@@ -143,9 +129,7 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(
-        true
-      );
+      expect(node.querySelector('.field input[type=checkbox]').checked).eql(true);
     });
 
     it('should handle object fields change events', () => {
@@ -242,10 +226,7 @@ describe('ObjectField', () => {
           'ui:order': ['baz', 'qux', 'bar', 'foo'],
         },
       });
-      const labels = [].map.call(
-        node.querySelectorAll('.field > label'),
-        (l) => l.textContent
-      );
+      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
     });
@@ -257,10 +238,7 @@ describe('ObjectField', () => {
           'ui:order': ['baz', '*', 'foo'],
         },
       });
-      const labels = [].map.call(
-        node.querySelectorAll('.field > label'),
-        (l) => l.textContent
-      );
+      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'bar', 'qux', 'foo']);
     });
@@ -273,10 +251,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const labels = [].map.call(
-        node.querySelectorAll('.field > label'),
-        (l) => l.textContent
-      );
+      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
     });
@@ -289,9 +264,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(
-        /does not contain properties 'foo', 'qux'/
-      );
+      expect(node.querySelector('.config-error').textContent).to.match(/does not contain properties 'foo', 'qux'/);
     });
 
     it('should throw when more than one wildcard is present', () => {
@@ -302,9 +275,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(
-        /contains more than one wildcard/
-      );
+      expect(node.querySelector('.config-error').textContent).to.match(/contains more than one wildcard/);
     });
 
     it('should order referenced schema definitions', () => {
@@ -325,10 +296,7 @@ describe('ObjectField', () => {
           'ui:order': ['bar', 'foo'],
         },
       });
-      const labels = [].map.call(
-        node.querySelectorAll('.field > label'),
-        (l) => l.textContent
-      );
+      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
 
       expect(labels).eql(['bar', 'foo']);
     });
@@ -358,10 +326,7 @@ describe('ObjectField', () => {
           },
         },
       });
-      const labels = [].map.call(
-        node.querySelectorAll('.field > label'),
-        (l) => l.textContent
-      );
+      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
 
       expect(labels).eql(['bar', 'foo']);
     });
@@ -382,10 +347,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const ids = [].map.call(
-        node.querySelectorAll('input[type=text]'),
-        (node) => node.id
-      );
+      const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
       expect(ids).eql(['root_bar', 'root_foo']);
     });
   });
@@ -504,13 +466,9 @@ describe('ObjectField', () => {
           },
         },
       });
-      const labels = [...node.querySelectorAll('label.control-label')].map(
-        (n) => n.textContent
-      );
+      const labels = [...node.querySelectorAll('label.control-label')].map((n) => n.textContent);
       expect(labels).to.include('property1 Key');
-      const objectTitle = node.querySelector(
-        '.form-additional > fieldset > legend'
-      );
+      const objectTitle = node.querySelector('.form-additional > fieldset > legend');
       expect(objectTitle.textContent).eql('CustomName');
     });
 
@@ -577,9 +535,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']").textContent).eql(
-        'first Key'
-      );
+      expect(node.querySelector("[for='root_first-key']").textContent).eql('first Key');
     });
 
     it('should render a label for the additional property key if additionalProperties is true', () => {
@@ -588,9 +544,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']").textContent).eql(
-        'first Key'
-      );
+      expect(node.querySelector("[for='root_first-key']").textContent).eql('first Key');
     });
 
     it('should not render a label for the additional property key if additionalProperties is false', () => {
@@ -677,9 +631,7 @@ describe('ObjectField', () => {
       const keyInput = node.querySelector('#root_Renamed\\ custom\\ title-key');
       expect(keyInput.value).eql('Renamed custom title');
 
-      const keyInputLabel = node.querySelector(
-        'label[for="root_Renamed\\ custom\\ title-key"]'
-      );
+      const keyInputLabel = node.querySelector('label[for="root_Renamed\\ custom\\ title-key"]');
       expect(keyInputLabel.textContent).eql('Renamed custom title Key');
     });
 
@@ -723,11 +675,7 @@ describe('ObjectField', () => {
         'root'
       );
 
-      expect(Object.keys(onChange.lastCall.args[0].formData)).eql([
-        'first',
-        'newSecond',
-        'third',
-      ]);
+      expect(Object.keys(onChange.lastCall.args[0].formData)).eql(['first', 'newSecond', 'third']);
     });
 
     it('should attach suffix to formData key if new key already exists when key input is renamed', () => {
@@ -834,9 +782,7 @@ describe('ObjectField', () => {
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.object-property-expand button')).not.eql(
-        null
-      );
+      expect(node.querySelector('.object-property-expand button')).not.eql(null);
     });
 
     it('should not have an expand button if expandable is false', () => {
@@ -934,9 +880,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('.object-property-expand button')).not.eql(
-        null
-      );
+      expect(node.querySelector('.object-property-expand button')).not.eql(null);
     });
 
     it('should not provide an expand button if expandable is expliclty false regardless of maxProperties value', () => {
@@ -978,19 +922,11 @@ describe('ObjectField', () => {
         schema,
       });
 
-      expect(
-        node.querySelector(
-          '.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger'
-        )
-      ).eql(null);
+      expect(node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger')).eql(null);
 
       Simulate.click(node.querySelector('.object-property-expand button'));
 
-      expect(
-        node.querySelector(
-          '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'
-        )
-      ).to.not.be.null;
+      expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).to.not.be.null;
     });
 
     it('delete button should delete key-value pair', () => {
@@ -999,11 +935,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
       expect(node.querySelector('#root_first-key').value).to.eql('first');
-      Simulate.click(
-        node.querySelector(
-          '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'
-        )
-      );
+      Simulate.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'));
       expect(node.querySelector('#root_first-key')).to.not.exist;
     });
 
@@ -1012,8 +944,7 @@ describe('ObjectField', () => {
         schema,
         formData: { first: 1, second: 2, third: 3 },
       });
-      const selector =
-        '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
+      const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
       expect(node.querySelectorAll(selector).length).to.eql(3);
       Simulate.click(node.querySelectorAll(selector)[1]);
       expect(node.querySelector('#root_second-key')).to.not.exist;

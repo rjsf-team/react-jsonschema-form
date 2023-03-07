@@ -16,15 +16,11 @@ export default function optionsList<S extends StrictRJSFSchema = RJSFSchema>(
   // Cast the type to include enumNames so the feature still works.
   const schemaWithEnumNames = schema as S & { enumNames?: string[] };
   if (schemaWithEnumNames.enumNames && process.env.NODE_ENV !== 'production') {
-    console.warn(
-      'The enumNames property is deprecated and may be removed in a future major release.'
-    );
+    console.warn('The enumNames property is deprecated and may be removed in a future major release.');
   }
   if (schema.enum) {
     return schema.enum.map((value, i) => {
-      const label =
-        (schemaWithEnumNames.enumNames && schemaWithEnumNames.enumNames[i]) ||
-        String(value);
+      const label = (schemaWithEnumNames.enumNames && schemaWithEnumNames.enumNames[i]) || String(value);
       return { label, value };
     });
   }

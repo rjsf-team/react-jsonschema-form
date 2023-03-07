@@ -46,13 +46,9 @@ export default function CheckboxesWidget<
     (index: number) =>
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       if (checked) {
-        onChange(
-          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
       } else {
-        onChange(
-          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
       }
     };
 
@@ -69,13 +65,8 @@ export default function CheckboxesWidget<
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
-            const checked = enumOptionsIsSelected<S>(
-              option.value,
-              checkboxesValues
-            );
-            const itemDisabled =
-              Array.isArray(enumDisabled) &&
-              enumDisabled.indexOf(option.value) !== -1;
+            const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             const checkbox = (
               <Checkbox
                 id={optionId(id, index)}
@@ -89,13 +80,7 @@ export default function CheckboxesWidget<
                 aria-describedby={ariaDescribedByIds<T>(id)}
               />
             );
-            return (
-              <FormControlLabel
-                control={checkbox}
-                key={index}
-                label={option.label}
-              />
-            );
+            return <FormControlLabel control={checkbox} key={index} label={option.label} />;
           })}
       </FormGroup>
     </>

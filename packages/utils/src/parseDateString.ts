@@ -7,10 +7,7 @@ import { DateObject } from './types';
  * @returns - The date string converted to a `DateObject`
  * @throws - Error when the date cannot be parsed from the string
  */
-export default function parseDateString(
-  dateString?: string,
-  includeTime = true
-): DateObject {
+export default function parseDateString(dateString?: string, includeTime = true): DateObject {
   if (!dateString) {
     return {
       year: -1,

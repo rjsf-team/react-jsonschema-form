@@ -18,10 +18,7 @@ import {
 } from '@rjsf/utils';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
-import {
-  ConfigConsumer,
-  ConfigConsumerProps,
-} from 'antd/lib/config-provider/context';
+import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -54,42 +51,28 @@ export default function ObjectFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    'DescriptionFieldTemplate',
-    T,
-    S,
-    F
-  >('DescriptionFieldTemplate', registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const {
-    colSpan = 24,
-    labelAlign = 'right',
-    rowGutter = 24,
-  } = formContext as GenericObjectType;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
 
-  const findSchema = (element: ObjectFieldTemplatePropertyType): S =>
-    element.content.props.schema;
+  const findSchema = (element: ObjectFieldTemplatePropertyType): S => element.content.props.schema;
 
-  const findSchemaType = (element: ObjectFieldTemplatePropertyType) =>
-    findSchema(element).type;
+  const findSchemaType = (element: ObjectFieldTemplatePropertyType) => findSchema(element).type;
 
-  const findUiSchema = (
-    element: ObjectFieldTemplatePropertyType
-  ): UiSchema<T, S, F> | undefined => element.content.props.uiSchema;
+  const findUiSchema = (element: ObjectFieldTemplatePropertyType): UiSchema<T, S, F> | undefined =>
+    element.content.props.uiSchema;
 
-  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) =>
-    getUiOptions(findUiSchema(element)).field;
+  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).field;
 
-  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) =>
-    getUiOptions(findUiSchema(element)).widget;
+  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).widget;
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType) => {
     const type = findSchemaType(element);

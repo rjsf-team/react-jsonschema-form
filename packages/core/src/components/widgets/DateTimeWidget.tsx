@@ -19,11 +19,7 @@ export default function DateTimeWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { onChange, value, options, registry } = props;
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
-    'BaseInputTemplate',
-    registry,
-    options
-  );
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
   return (
     <BaseInputTemplate
       type='datetime-local'

@@ -96,10 +96,7 @@ describe('FieldTemplate', () => {
     function FieldTemplate(props) {
       return (
         <div>
-          Root Schema:{' '}
-          <span id='root-schema'>
-            {JSON.stringify(props.registry.rootSchema)}
-          </span>
+          Root Schema: <span id='root-schema'>{JSON.stringify(props.registry.rootSchema)}</span>
         </div>
       );
     }
@@ -116,9 +113,7 @@ describe('FieldTemplate', () => {
       });
 
       expect(node.querySelectorAll('#root-schema')).to.have.length.of(1);
-      expect(node.querySelectorAll('#root-schema')[0].innerHTML).to.equal(
-        JSON.stringify(schema)
-      );
+      expect(node.querySelectorAll('#root-schema')[0].innerHTML).to.equal(JSON.stringify(schema));
     });
   });
 });

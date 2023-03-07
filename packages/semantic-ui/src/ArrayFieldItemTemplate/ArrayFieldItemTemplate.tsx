@@ -38,20 +38,16 @@ export default function ArrayFieldItemTemplate<
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
-  const { horizontalButtons = false, wrapItem = false } =
-    uiOptions.semantic as GenericObjectType;
+  const { horizontalButtons = false, wrapItem = false } = uiOptions.semantic as GenericObjectType;
   return (
     <div className='array-item'>
       <MaybeWrap wrap={wrapItem} component={Segment}>
         <Grid
           style={
-            index !== 0
-              ? { ...gridStyle(!horizontalButtons), alignItems: 'center' }
-              : gridStyle(!horizontalButtons)
+            index !== 0 ? { ...gridStyle(!horizontalButtons), alignItems: 'center' } : gridStyle(!horizontalButtons)
           }
         >
           <Grid.Column width={16} verticalAlign='middle'>

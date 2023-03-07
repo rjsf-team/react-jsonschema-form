@@ -12,17 +12,13 @@ import enumOptionsIsSelected from './enumOptionsIsSelected';
  * @returns - A single string index for the first `value` in `allEnumOptions`, if not `multiple`. Otherwise, the list
  *        of indexes for (each of) the value(s) in `value`.
  */
-export default function enumOptionsIndexForValue<
-  S extends StrictRJSFSchema = RJSFSchema
->(
+export default function enumOptionsIndexForValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = [],
   multiple = false
 ): string | string[] | undefined {
   const selectedIndexes: string[] = allEnumOptions
-    .map((opt, index) =>
-      enumOptionsIsSelected(opt.value, value) ? String(index) : undefined
-    )
+    .map((opt, index) => (enumOptionsIsSelected(opt.value, value) ? String(index) : undefined))
     .filter((opt) => typeof opt !== 'undefined') as string[];
   if (!multiple) {
     return selectedIndexes[0];

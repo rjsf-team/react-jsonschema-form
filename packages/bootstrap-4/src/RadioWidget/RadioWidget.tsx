@@ -11,11 +11,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   options,
   value,
@@ -41,9 +37,7 @@ export default function RadioWidget<
     <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           const checked = enumOptionsIsSelected<S>(option.value, value);
 
           const radio = (

@@ -16,10 +16,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 You can also render an object with multiple fields with the below schema:
@@ -41,10 +38,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](./usage/single.md).
@@ -67,10 +61,7 @@ const uiSchema: UiSchema = {
   'ui:classNames': 'custom-css-class',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 To customize object fields in the uiSchema, the structure of the
@@ -103,10 +94,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Form initialization
@@ -134,10 +122,7 @@ const formData = {
   done: true,
 };
 
-render(
-  <Form schema={schema} formData={formData} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} formData={formData} validator={validator} />, document.getElementById('app'));
 ```
 
 > Note: If your form has a single field, pass a single value to `formData`. ex: `formData="Charlie"`

@@ -27,19 +27,9 @@ export default {
     ],
   },
   uiSchema: {
-    'ui:field': ({
-      schema,
-      idSchema: { $id },
-      formData,
-      onChange,
-      ...other
-    }) => {
+    'ui:field': ({ schema, idSchema: { $id }, formData, onChange, ...other }) => {
       const changeHandlerFactory = (fieldName) => (event) => {
-        onChange(
-          formData
-            ? { ...formData, [fieldName]: event.target.value }
-            : { [fieldName]: event.target.value }
-        );
+        onChange(formData ? { ...formData, [fieldName]: event.target.value } : { [fieldName]: event.target.value });
       };
       return (
         <>

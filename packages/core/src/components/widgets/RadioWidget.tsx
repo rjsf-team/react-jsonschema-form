@@ -15,11 +15,7 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   options,
   value,
   required,
@@ -52,11 +48,8 @@ function RadioWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
-          const disabledCls =
-            disabled || itemDisabled || readonly ? 'disabled' : '';
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+          const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = () => onChange(option.value);
 

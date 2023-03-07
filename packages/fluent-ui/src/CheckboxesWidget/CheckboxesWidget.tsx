@@ -45,18 +45,13 @@ export default function CheckboxesWidget<
   const { enumOptions, enumDisabled, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange =
-    (index: number) => (_ev?: FormEvent<HTMLElement>, checked?: boolean) => {
-      if (checked) {
-        onChange(
-          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
-        );
-      } else {
-        onChange(
-          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
-        );
-      }
-    };
+  const _onChange = (index: number) => (_ev?: FormEvent<HTMLElement>, checked?: boolean) => {
+    if (checked) {
+      onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
+    } else {
+      onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
+    }
+  };
 
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
@@ -74,13 +69,8 @@ export default function CheckboxesWidget<
       </Label>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
-          const checked = enumOptionsIsSelected<S>(
-            option.value,
-            checkboxesValues
-          );
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
+          const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           return (
             <Checkbox
               id={optionId(id, index)}

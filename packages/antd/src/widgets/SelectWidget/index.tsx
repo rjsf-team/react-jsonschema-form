@@ -42,14 +42,11 @@ export default function SelectWidget<
 
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const handleChange = (nextValue: any) =>
-    onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+  const handleChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
-  const handleBlur = () =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const handleBlur = () => onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
-  const handleFocus = () =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const handleFocus = () => onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const filterOption = (input: string, option?: DefaultOptionType) => {
     if (option && isString(option.label)) {
@@ -61,11 +58,7 @@ export default function SelectWidget<
 
   const getPopupContainer = (node: any) => node.parentNode;
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    multiple
-  );
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -92,10 +85,7 @@ export default function SelectWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value: optionValue, label: optionLabel }, index) => (
           <Select.Option
-            disabled={
-              Array.isArray(enumDisabled) &&
-              enumDisabled.indexOf(optionValue) !== -1
-            }
+            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1}
             key={String(index)}
             value={String(index)}
           >

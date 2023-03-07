@@ -15,9 +15,7 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex';
  *        unless `selected` is a single value. In that case, if the `valueIndex` value matches `selected`, returns
  *        undefined, otherwise `selected`.
  */
-export default function enumOptionsDeselectValue<
-  S extends StrictRJSFSchema = RJSFSchema
->(
+export default function enumOptionsDeselectValue<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number,
   selected?: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = []

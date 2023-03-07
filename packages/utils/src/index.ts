@@ -20,15 +20,7 @@ import getUiOptions from './getUiOptions';
 import getWidget from './getWidget';
 import guessType from './guessType';
 import hasWidget from './hasWidget';
-import {
-  ariaDescribedByIds,
-  descriptionId,
-  errorId,
-  examplesId,
-  helpId,
-  optionId,
-  titleId,
-} from './idGenerators';
+import { ariaDescribedByIds, descriptionId, errorId, examplesId, helpId, optionId, titleId } from './idGenerators';
 import isConstant from './isConstant';
 import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';

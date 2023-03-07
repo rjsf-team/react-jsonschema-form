@@ -59,29 +59,16 @@ class GeoPosition extends Component {
         <h3>Hey, I'm a custom component</h3>
         <p>
           I'm registered as <code>geo</code> and referenced in
-          <code>uiSchema</code> as the <code>ui:field</code> to use for this
-          schema.
+          <code>uiSchema</code> as the <code>ui:field</code> to use for this schema.
         </p>
         <div className='row'>
           <div className='col-sm-6'>
             <label>Latitude</label>
-            <input
-              className='form-control'
-              type='number'
-              value={lat}
-              step='0.00001'
-              onChange={this.onChange('lat')}
-            />
+            <input className='form-control' type='number' value={lat} step='0.00001' onChange={this.onChange('lat')} />
           </div>
           <div className='col-sm-6'>
             <label>Longitude</label>
-            <input
-              className='form-control'
-              type='number'
-              value={lon}
-              step='0.00001'
-              onChange={this.onChange('lon')}
-            />
+            <input className='form-control' type='number' value={lon} step='0.00001' onChange={this.onChange('lon')} />
           </div>
         </div>
       </div>
@@ -101,10 +88,7 @@ class Editor extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.valid) {
-      return (
-        JSON.stringify(JSON.parse(nextProps.code)) !==
-        JSON.stringify(JSON.parse(this.state.code))
-      );
+      return JSON.stringify(JSON.parse(nextProps.code)) !== JSON.stringify(JSON.parse(this.state.code));
     }
     return false;
   }
@@ -112,9 +96,7 @@ class Editor extends Component {
   onCodeChange = (code) => {
     try {
       const parsedCode = JSON.parse(code);
-      this.setState({ valid: true, code }, () =>
-        this.props.onChange(parsedCode)
-      );
+      this.setState({ valid: true, code }, () => this.props.onChange(parsedCode));
     } catch (err) {
       this.setState({ valid: false, code });
     }
@@ -166,11 +148,7 @@ class Selector extends Component {
       <ul className='nav nav-pills'>
         {Object.keys(samples).map((label, i) => {
           return (
-            <li
-              key={i}
-              role='presentation'
-              className={this.state.current === label ? 'active' : ''}
-            >
+            <li key={i} role='presentation' className={this.state.current === label ? 'active' : ''}>
               <a href='#' onClick={this.onLabelClick(label)}>
                 {label}
               </a>
@@ -198,9 +176,7 @@ function ThemeSelector({ theme, themes, select }) {
       uiSchema={uiSchema}
       formData={theme}
       validator={localValidator}
-      onChange={({ formData }) =>
-        formData && select(formData, themes[formData])
-      }
+      onChange={({ formData }) => formData && select(formData, themes[formData])}
     >
       <div />
     </Form>
@@ -223,9 +199,7 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
       uiSchema={uiSchema}
       formData={subtheme}
       validator={localValidator}
-      onChange={({ formData }) =>
-        formData && select(formData, subthemes[formData])
-      }
+      onChange={({ formData }) => formData && select(formData, subthemes[formData])}
     >
       <div />
     </Form>
@@ -272,18 +246,9 @@ class CopyLink extends Component {
     }
     return (
       <div className='input-group'>
-        <input
-          type='text'
-          ref={(input) => (this.input = input)}
-          className='form-control'
-          defaultValue={shareURL}
-        />
+        <input type='text' ref={(input) => (this.input = input)} className='form-control' defaultValue={shareURL} />
         <span className='input-group-btn'>
-          <button
-            className='btn btn-default'
-            type='button'
-            onClick={this.onCopyClick}
-          >
+          <button className='btn btn-default' type='button' onClick={this.onCopyClick}>
             <i className='glyphicon glyphicon-copy' />
           </button>
         </span>
@@ -295,8 +260,7 @@ class CopyLink extends Component {
 function RawValidatorTest({ validator, schema, formData }) {
   const [rawValidation, setRawValidation] = useState();
   const handleClearClick = () => setRawValidation(undefined);
-  const handleRawClick = () =>
-    setRawValidation(validator.rawValidation(schema, formData));
+  const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
   let displayErrors = 'Validation not run';
   if (rawValidation) {
@@ -309,46 +273,28 @@ function RawValidatorTest({ validator, schema, formData }) {
     <div>
       <details style={{ marginBottom: '10px' }}>
         <summary style={{ display: 'list-item' }}>Raw Ajv Validation</summary>
-        To determine whether a validation issue is really a BUG in Ajv use the
-        button to trigger the raw Ajv validation. This will run your schema and
-        formData through Ajv without involving any react-jsonschema-form
-        specific code. If there is an unexpected error, then{' '}
-        <a
-          href='https://github.com/ajv-validator/ajv/issues/new/choose'
-          target='_blank'
-          rel='noopener'
-        >
+        To determine whether a validation issue is really a BUG in Ajv use the button to trigger the raw Ajv validation.
+        This will run your schema and formData through Ajv without involving any react-jsonschema-form specific code. If
+        there is an unexpected error, then{' '}
+        <a href='https://github.com/ajv-validator/ajv/issues/new/choose' target='_blank' rel='noopener'>
           file an issue
         </a>{' '}
         with Ajv instead.
       </details>
       <div style={{ marginBottom: '10px' }}>
-        <button
-          className='btn btn-default'
-          type='button'
-          onClick={handleRawClick}
-        >
+        <button className='btn btn-default' type='button' onClick={handleRawClick}>
           Raw Validate
         </button>
         {rawValidation && (
           <>
             <span> </span>
-            <button
-              className='btn btn-default'
-              type='button'
-              onClick={handleClearClick}
-            >
+            <button className='btn btn-default' type='button' onClick={handleClearClick}>
               Clear
             </button>
           </>
         )}
       </div>
-      <textarea
-        rows={4}
-        readOnly
-        disabled={!rawValidation}
-        value={displayErrors}
-      />
+      <textarea rows={4} readOnly disabled={!rawValidation} value={displayErrors} />
     </div>
   );
 }
@@ -448,13 +394,9 @@ class Playground extends Component {
     }
   };
 
-  onExtraErrorsEdited = (extraErrors) =>
-    this.setState({ extraErrors, shareURL: null });
+  onExtraErrorsEdited = (extraErrors) => this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (
-    theme,
-    { subthemes, stylesheet, theme: themeObj } = {}
-  ) => {
+  onThemeSelected = (theme, { subthemes, stylesheet, theme: themeObj } = {}) => {
     this.setState({
       theme,
       subthemes,
@@ -485,8 +427,7 @@ class Playground extends Component {
   };
 
   onShare = () => {
-    const { formData, schema, uiSchema, liveSettings, errorSchema, theme } =
-      this.state;
+    const { formData, schema, uiSchema, liveSettings, errorSchema, theme } = this.state;
     const {
       location: { origin, pathname },
     } = document;
@@ -557,11 +498,7 @@ class Playground extends Component {
               </Form>
             </div>
             <div className='col-sm-2'>
-              <ThemeSelector
-                themes={themes}
-                theme={theme}
-                select={this.onThemeSelected}
-              />
+              <ThemeSelector themes={themes} theme={theme} select={this.onThemeSelected} />
               {themes[theme] && themes[theme].subthemes && (
                 <SubthemeSelector
                   subthemes={themes[theme].subthemes}
@@ -569,11 +506,7 @@ class Playground extends Component {
                   select={this.onSubthemeSelected}
                 />
               )}
-              <ValidatorSelector
-                validators={validators}
-                validator={validator}
-                select={this.onValidatorSelected}
-              />
+              <ValidatorSelector validators={validators} validator={validator} select={this.onValidatorSelected} />
               <button
                 title='Click me to submit the form programmatically.'
                 className='btn btn-default'
@@ -598,44 +531,24 @@ class Playground extends Component {
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
             <div className='col-sm-2'>
-              <RawValidatorTest
-                validator={validators[validator]}
-                schema={schema}
-                formData={formData}
-              />
+              <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
             </div>
           </div>
         </div>
         <div className='col-sm-7'>
-          <Editor
-            title='JSONSchema'
-            code={toJson(schema)}
-            onChange={this.onSchemaEdited}
-          />
+          <Editor title='JSONSchema' code={toJson(schema)} onChange={this.onSchemaEdited} />
           <div className='row'>
             <div className='col-sm-6'>
-              <Editor
-                title='UISchema'
-                code={toJson(uiSchema)}
-                onChange={this.onUISchemaEdited}
-              />
+              <Editor title='UISchema' code={toJson(uiSchema)} onChange={this.onUISchemaEdited} />
             </div>
             <div className='col-sm-6'>
-              <Editor
-                title='formData'
-                code={toJson(formData)}
-                onChange={this.onFormDataEdited}
-              />
+              <Editor title='formData' code={toJson(formData)} onChange={this.onFormDataEdited} />
             </div>
           </div>
           {extraErrors && (
             <div className='row'>
               <div className='col'>
-                <Editor
-                  title='extraErrors'
-                  code={toJson(extraErrors || {})}
-                  onChange={this.onExtraErrorsEdited}
-                />
+                <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={this.onExtraErrorsEdited} />
               </div>
             </div>
           )}
@@ -646,17 +559,11 @@ class Playground extends Component {
               <DemoFrame
                 head={
                   <>
-                    <link
-                      rel='stylesheet'
-                      id='theme'
-                      href={this.state.stylesheet || ''}
-                    />
+                    <link rel='stylesheet' id='theme' href={this.state.stylesheet || ''} />
                     {theme === 'antd' && (
                       <div
                         dangerouslySetInnerHTML={{
-                          __html:
-                            document.getElementById('antd-styles-iframe')
-                              .contentDocument.head.innerHTML,
+                          __html: document.getElementById('antd-styles-iframe').contentDocument.head.innerHTML,
                         }}
                       />
                     )}
@@ -685,12 +592,8 @@ class Playground extends Component {
                   fields={{ geo: GeoPosition }}
                   customValidate={validate}
                   validator={validators[validator]}
-                  onBlur={(id, value) =>
-                    console.log(`Touched ${id} with value ${value}`)
-                  }
-                  onFocus={(id, value) =>
-                    console.log(`Focused ${id} with value ${value}`)
-                  }
+                  onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
+                  onFocus={(id, value) => console.log(`Focused ${id} with value ${value}`)}
                   transformErrors={transformErrors}
                   onError={log('errors')}
                   ref={this.playGroundForm}
@@ -701,11 +604,7 @@ class Playground extends Component {
         </div>
         <div className='col-sm-12'>
           <p style={{ textAlign: 'center' }}>
-            Powered by{' '}
-            <a href='https://github.com/rjsf-team/react-jsonschema-form'>
-              react-jsonschema-form
-            </a>
-            .
+            Powered by <a href='https://github.com/rjsf-team/react-jsonschema-form'>react-jsonschema-form</a>.
             {import.meta.env.VITE_SHOW_NETLIFY_BADGE === 'true' && (
               <div style={{ float: 'right' }}>
                 <a href='https://www.netlify.com'>

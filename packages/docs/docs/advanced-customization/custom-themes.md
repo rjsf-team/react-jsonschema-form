@@ -14,9 +14,7 @@ const theme: ThemeProps = { widgets: { test: () => <div>test</div> } };
 
 const ThemedForm = withTheme(theme);
 
-const Demo = () => (
-  <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />
-);
+const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
 
 ## Theme object properties
@@ -72,9 +70,7 @@ function MyArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div>
       {props.items.map((element) => element.children)}
-      {props.canAdd && (
-        <button type='button' onClick={props.onAddClick}></button>
-      )}
+      {props.canAdd && <button type='button' onClick={props.onAddClick}></button>}
     </div>
   );
 }

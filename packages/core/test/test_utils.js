@@ -12,14 +12,7 @@ export function createComponent(Component, props) {
   const onChange = sinon.spy();
   const onError = sinon.spy();
   const onSubmit = sinon.spy();
-  const comp = renderIntoDocument(
-    <Component
-      onSubmit={onSubmit}
-      onError={onError}
-      onChange={onChange}
-      {...props}
-    />
-  );
+  const comp = renderIntoDocument(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />);
   const node = findDOMNode(comp);
   return { comp, node, onChange, onError, onSubmit };
 }
@@ -47,11 +40,8 @@ export function describeRepeated(title, fn) {
     { omitExtraData: true, liveOmit: true },
   ];
   for (let formExtraProps of formExtraPropsList) {
-    const createFormComponentFn = (props) =>
-      createFormComponent({ ...props, ...formExtraProps });
-    describe(title + ' ' + JSON.stringify(formExtraProps), () =>
-      fn(createFormComponentFn)
-    );
+    const createFormComponentFn = (props) => createFormComponent({ ...props, ...formExtraProps });
+    describe(title + ' ' + JSON.stringify(formExtraProps), () => fn(createFormComponentFn));
   }
 }
 
@@ -63,18 +53,12 @@ export function submitForm(node) {
 
 export function getSelectedOptionValue(selectNode) {
   if (selectNode.type !== 'select-one') {
-    throw new Error(
-      `invalid node provided, expected select got ${selectNode.type}`
-    );
+    throw new Error(`invalid node provided, expected select got ${selectNode.type}`);
   }
   const value = selectNode.value;
   const options = [...selectNode.options];
   const selectedOptions = options
-    .filter((option) =>
-      Array.isArray(value)
-        ? value.includes(option.value)
-        : value === option.value
-    )
+    .filter((option) => (Array.isArray(value) ? value.includes(option.value) : value === option.value))
     .map((option) => option.text);
   if (!Array.isArray(value)) {
     return selectedOptions[0];

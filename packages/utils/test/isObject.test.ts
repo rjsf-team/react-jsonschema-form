@@ -6,11 +6,9 @@ const OBJECTS = [{ plain: 'object' }, new Object(), new Map()];
 
 describe('isObject()', () => {
   it('returns false when a non-object is provided', () => {
-    NON_OBJECTS.forEach(
-      (nonObject: string | number | boolean | null | undefined) => {
-        expect(isObject(nonObject)).toBe(false);
-      }
-    );
+    NON_OBJECTS.forEach((nonObject: string | number | boolean | null | undefined) => {
+      expect(isObject(nonObject)).toBe(false);
+    });
   });
   it('returns false when a File is provided', () => {
     const file = new File(['test'], 'test.txt');

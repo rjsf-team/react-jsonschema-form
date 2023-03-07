@@ -1,10 +1,4 @@
-import {
-  errorId,
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { nanoid } from 'nanoid';
 import { Label, List } from 'semantic-ui-react';
 
@@ -36,13 +30,7 @@ export default function FieldErrorTemplate<
   if (errors && errors.length > 0) {
     const id = errorId<T>(idSchema);
     return (
-      <Label
-        id={id}
-        color='red'
-        pointing={pointing || 'above'}
-        size={size || 'small'}
-        basic
-      >
+      <Label id={id} color='red' pointing={pointing || 'above'} size={size || 'small'} basic>
         <List bulleted>
           {errors.map((error) => (
             <List.Item key={nanoid()}>{error}</List.Item>

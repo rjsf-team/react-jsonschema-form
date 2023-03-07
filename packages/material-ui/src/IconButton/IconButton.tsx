@@ -1,16 +1,8 @@
-import IconButton, {
-  IconButtonProps as MuiIconButtonProps,
-} from '@material-ui/core/IconButton';
+import IconButton, { IconButtonProps as MuiIconButtonProps } from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import RemoveIcon from '@material-ui/icons/Remove';
-import {
-  FormContextType,
-  IconButtonProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
+import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 export default function MuiIconButton<
   T = any,
@@ -19,21 +11,15 @@ export default function MuiIconButton<
 >(props: IconButtonProps<T, S, F>) {
   const { icon, color, uiSchema, registry, ...otherProps } = props;
   return (
-    <IconButton
-      {...otherProps}
-      size='small'
-      color={color as MuiIconButtonProps['color']}
-    >
+    <IconButton {...otherProps} size='small' color={color as MuiIconButtonProps['color']}>
       {icon}
     </IconButton>
   );
 }
 
-export function MoveDownButton<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: IconButtonProps<T, S, F>) {
+export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
   const {
     registry: { translateString },
   } = props;
@@ -46,11 +32,9 @@ export function MoveDownButton<
   );
 }
 
-export function MoveUpButton<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: IconButtonProps<T, S, F>) {
+export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
   const {
     registry: { translateString },
   } = props;
@@ -63,11 +47,9 @@ export function MoveUpButton<
   );
 }
 
-export function RemoveButton<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: IconButtonProps<T, S, F>) {
+export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
   const { iconType, ...otherProps } = props;
   const {
     registry: { translateString },
@@ -77,9 +59,7 @@ export function RemoveButton<
       title={translateString(TranslatableString.RemoveButton)}
       {...otherProps}
       color='secondary'
-      icon={
-        <RemoveIcon fontSize={iconType === 'default' ? 'medium' : 'small'} />
-      }
+      icon={<RemoveIcon fontSize={iconType === 'default' ? 'medium' : 'small'} />}
     />
   );
 }

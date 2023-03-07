@@ -9,9 +9,6 @@ import replaceStringParameters from './replaceStringParameters';
  * @param params - The optional list of replaceable parameter values to substitute into the english string
  * @returns - The `stringToTranslate` itself with any replaceable parameter values substituted
  */
-export default function englishStringTranslator(
-  stringToTranslate: TranslatableString,
-  params?: string[]
-): string {
+export default function englishStringTranslator(stringToTranslate: TranslatableString, params?: string[]): string {
   return replaceStringParameters(stringToTranslate, params);
 }

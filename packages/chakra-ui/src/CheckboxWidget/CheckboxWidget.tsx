@@ -15,31 +15,16 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    disabled,
-    readonly,
-    onChange,
-    onBlur,
-    onFocus,
-    label,
-    uiSchema,
-    schema,
-  } = props;
+  const { id, value, disabled, readonly, onChange, onBlur, onFocus, label, uiSchema, schema } = props;
   const chakraProps = getChakra({ uiSchema });
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
-  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(checked);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, value);
-  const _onFocus = ({
-    target: { value },
-  }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
     <FormControl mb={1} {...chakraProps} isRequired={required}>

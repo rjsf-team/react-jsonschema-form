@@ -7,8 +7,7 @@ export default {
     properties: {
       helpText: {
         title: 'A null field',
-        description:
-          'Null fields like this are great for adding extra information',
+        description: 'Null fields like this are great for adding extra information',
         type: 'null',
       },
       firstName: {

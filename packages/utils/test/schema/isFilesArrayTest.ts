@@ -1,9 +1,4 @@
-import {
-  UI_WIDGET_KEY,
-  isFilesArray,
-  RJSFSchema,
-  createSchemaUtils,
-} from '../../src';
+import { UI_WIDGET_KEY, isFilesArray, RJSFSchema, createSchemaUtils } from '../../src';
 import { TestValidatorType } from './types';
 
 export default function isFilesArrayTest(testValidator: TestValidatorType) {

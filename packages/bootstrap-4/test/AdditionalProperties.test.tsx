@@ -12,11 +12,7 @@ describe('AdditionalProperties tests', () => {
     const formData: any = {
       additionalProperty: 'should appear',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} formData={formData} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

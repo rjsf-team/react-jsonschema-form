@@ -24,9 +24,6 @@ describe('enumOptionsIndexForValue()', () => {
     expect(enumOptionsIndexForValue(VALUE, ALL_OPTIONS, true)).toEqual(['1']);
   });
   it("returns index of first value that matches an option's value, multiple", () => {
-    expect(enumOptionsIndexForValue(VALUES, ALL_OPTIONS, true)).toEqual([
-      '0',
-      '1',
-    ]);
+    expect(enumOptionsIndexForValue(VALUES, ALL_OPTIONS, true)).toEqual(['0', '1']);
   });
 });

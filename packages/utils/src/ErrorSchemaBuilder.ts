@@ -38,12 +38,8 @@ export default class ErrorSchemaBuilder<T = any> {
    * @private
    */
   private getOrCreateErrorBlock(pathOfError?: string | string[]) {
-    const hasPath =
-      (Array.isArray(pathOfError) && pathOfError.length > 0) ||
-      typeof pathOfError === 'string';
-    let errorBlock: ErrorSchema = hasPath
-      ? get(this.errorSchema, pathOfError)
-      : this.errorSchema;
+    const hasPath = (Array.isArray(pathOfError) && pathOfError.length > 0) || typeof pathOfError === 'string';
+    let errorBlock: ErrorSchema = hasPath ? get(this.errorSchema, pathOfError) : this.errorSchema;
     if (!errorBlock && pathOfError) {
       errorBlock = {};
       set(this.errorSchema, pathOfError, errorBlock);
@@ -96,9 +92,7 @@ export default class ErrorSchemaBuilder<T = any> {
   setErrors(errorOrList: string | string[], pathOfError?: string | string[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     // Effectively clone the array being given to prevent accidental outside manipulation of the given list
-    const listToAdd = Array.isArray(errorOrList)
-      ? [...errorOrList]
-      : [errorOrList];
+    const listToAdd = Array.isArray(errorOrList) ? [...errorOrList] : [errorOrList];
     set(errorBlock, ERRORS_KEY, listToAdd);
     return this;
   }

@@ -2,12 +2,7 @@ import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
 
-import {
-  createFormComponent,
-  createSandbox,
-  setProps,
-  getSelectedOptionValue,
-} from './test_utils';
+import { createFormComponent, createSandbox, setProps, getSelectedOptionValue } from './test_utils';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 
 describe('anyOf', () => {
@@ -944,9 +939,7 @@ describe('anyOf', () => {
       formData: { testProperty: { newKey: { prop2: 'foo' } } },
     });
 
-    const $select = node.querySelector(
-      'select#root_testProperty_newKey__anyof_select'
-    );
+    const $select = node.querySelector('select#root_testProperty_newKey__anyof_select');
 
     expect($select.value).eql('1');
 
@@ -1003,9 +996,7 @@ describe('anyOf', () => {
 
       expect(node.querySelectorAll('select')).to.have.length.of(1);
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(
-        1
-      );
+      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
     });
 
     it('should not change the selected option when switching order of items for anyOf inside array items', () => {
@@ -1100,9 +1091,7 @@ describe('anyOf', () => {
       const moveDownBtns = node.querySelectorAll('.array-item-move-down');
       Simulate.click(moveDownBtns[0]);
 
-      const strInputs = node.querySelectorAll(
-        'fieldset .field-string input[type=text]'
-      );
+      const strInputs = node.querySelectorAll('fieldset .field-string input[type=text]');
 
       Simulate.change(strInputs[1], { target: { value: 'bar' } });
       expect(strInputs[1].value).eql('bar');
@@ -1272,12 +1261,8 @@ describe('anyOf', () => {
         target: { value: $select.options[1].value },
       });
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(
-        1
-      );
-      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(
-        1
-      );
+      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
+      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(1);
     });
 
     it('should correctly infer the selected option based on value', () => {
@@ -1364,9 +1349,7 @@ describe('anyOf', () => {
       const fnId = node.querySelector('select#root_components_0_fn_id');
       expect(getSelectedOptionValue(fnId)).eql('transform');
 
-      const transformerId = node.querySelector(
-        'select#root_components_0_fn_transformer_id'
-      );
+      const transformerId = node.querySelector('select#root_components_0_fn_transformer_id');
       expect(getSelectedOptionValue(transformerId)).eql('to_absolute');
     });
   });
@@ -1402,9 +1385,7 @@ describe('anyOf', () => {
       });
       Simulate.submit(node);
 
-      let inputs = node.querySelectorAll(
-        '.form-group.field-error input[type=number]'
-      );
+      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
       expect(inputs[0].id).eql('root_userId');
 
       const $select = node.querySelector('select');
@@ -1418,9 +1399,7 @@ describe('anyOf', () => {
       });
       Simulate.submit(node);
 
-      inputs = node.querySelectorAll(
-        '.form-group.field-error input[type=text]'
-      );
+      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs[0].id).eql('root_userId');
     });
     it('should NOT show error on options with different types when hideError: true', () => {
@@ -1437,9 +1416,7 @@ describe('anyOf', () => {
       });
       Simulate.submit(node);
 
-      let inputs = node.querySelectorAll(
-        '.form-group.field-error input[type=number]'
-      );
+      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
       expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector('select');
@@ -1453,9 +1430,7 @@ describe('anyOf', () => {
       });
       Simulate.submit(node);
 
-      inputs = node.querySelectorAll(
-        '.form-group.field-error input[type=text]'
-      );
+      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs).to.have.length.of(0);
     });
   });

@@ -9,13 +9,9 @@ describe('utcToLocal()', () => {
   beforeAll(() => {
     const date = new Date(UTC_DATE);
     // Deal with timezone issues by futzing with the getDate() function to return the UTCDate
-    getDateSpy = jest
-      .spyOn(global.Date.prototype, 'getDate')
-      .mockImplementation(() => date.getUTCDate());
+    getDateSpy = jest.spyOn(global.Date.prototype, 'getDate').mockImplementation(() => date.getUTCDate());
     // Deal with timezone issues by futzing with the getHours() function to return the UTCHours + 2
-    getHoursSpy = jest
-      .spyOn(global.Date.prototype, 'getHours')
-      .mockImplementation(() => date.getUTCHours() + 2);
+    getHoursSpy = jest.spyOn(global.Date.prototype, 'getHours').mockImplementation(() => date.getUTCHours() + 2);
   });
   afterAll(() => {
     getDateSpy.mockRestore();

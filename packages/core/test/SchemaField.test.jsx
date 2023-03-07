@@ -61,9 +61,7 @@ describe('SchemaField', () => {
         schema: { type: 'invalid' },
       });
 
-      expect(node.querySelector('.unsupported-field').textContent).to.contain(
-        'Unknown field type invalid'
-      );
+      expect(node.querySelector('.unsupported-field').textContent).to.contain('Unknown field type invalid');
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
@@ -77,9 +75,7 @@ describe('SchemaField', () => {
         templates,
       });
 
-      expect(node.querySelectorAll('#custom')[0].textContent).to.eql(
-        'Custom UnsupportedField'
-      );
+      expect(node.querySelectorAll('#custom')[0].textContent).to.eql('Custom UnsupportedField');
     });
   });
 
@@ -99,9 +95,7 @@ describe('SchemaField', () => {
         fields,
       });
 
-      expect(
-        node.querySelectorAll('#custom > .field input[type=text]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('#custom > .field input[type=text]')).to.have.length.of(1);
     });
   });
 
@@ -166,12 +160,8 @@ describe('SchemaField', () => {
       expect(registry.rootSchema).eql(schema);
       expect(registry.fields).to.be.an('object');
       expect(registry.fields.SchemaField).eql(SchemaField);
-      expect(registry.templates.TitleFieldTemplate).eql(
-        defaultRegistry.templates.TitleFieldTemplate
-      );
-      expect(registry.templates.DescriptionFieldTemplate).eql(
-        defaultRegistry.templates.DescriptionFieldTemplate
-      );
+      expect(registry.templates.TitleFieldTemplate).eql(defaultRegistry.templates.TitleFieldTemplate);
+      expect(registry.templates.DescriptionFieldTemplate).eql(defaultRegistry.templates.DescriptionFieldTemplate);
     });
 
     it('should use registered custom component for object', () => {
@@ -206,12 +196,7 @@ describe('SchemaField', () => {
 
     it('should not pass ui:classNames or ui:style to child component', () => {
       const CustomSchemaField = function (props) {
-        return (
-          <SchemaField
-            {...props}
-            uiSchema={{ ...props.uiSchema, 'ui:field': undefined }}
-          />
-        );
+        return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
       const schema = {
@@ -231,12 +216,7 @@ describe('SchemaField', () => {
     });
     it('should not pass ui:options { classNames or style } to child component', () => {
       const CustomSchemaField = function (props) {
-        return (
-          <SchemaField
-            {...props}
-            uiSchema={{ ...props.uiSchema, 'ui:field': undefined }}
-          />
-        );
+        return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />;
       };
 
       const schema = {
@@ -313,9 +293,7 @@ describe('SchemaField', () => {
     it('should render description if available from the schema', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('#root_foo__description')).to.have.length.of(
-        1
-      );
+      expect(node.querySelectorAll('#root_foo__description')).to.have.length.of(1);
     });
 
     it('should render description if available from a referenced schema', () => {
@@ -345,15 +323,11 @@ describe('SchemaField', () => {
     it('should not render description if not available from schema', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('#root_bar__description')).to.have.length.of(
-        0
-      );
+      expect(node.querySelectorAll('#root_bar__description')).to.have.length.of(0);
     });
 
     it('should render a customized description field', () => {
-      const CustomDescriptionField = ({ description }) => (
-        <div id='custom'>{description}</div>
-      );
+      const CustomDescriptionField = ({ description }) => <div id='custom'>{description}</div>;
 
       const { node } = createFormComponent({
         schema,
@@ -395,9 +369,7 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form > .form-group > div > .error-detail .text-danger'
-      );
+      const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql('container');
     });
@@ -410,9 +382,7 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .text-danger'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.contain('test');
     });
@@ -429,14 +399,10 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .text-danger'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(0);
 
-      const customMatches = node.querySelectorAll(
-        'form .form-group .form-group .custom-field-error'
-      );
+      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-error');
       expect(customMatches[0].textContent).to.contain('test');
     });
 
@@ -447,12 +413,7 @@ describe('SchemaField', () => {
       const uiSchema = {
         'ui:field': (props) => {
           const { uiSchema, ...fieldProps } = props; //eslint-disable-line
-          return (
-            <SchemaField
-              {...fieldProps}
-              uiSchema={{ foo: { 'ui:FieldErrorTemplate': customFieldError } }}
-            />
-          );
+          return <SchemaField {...fieldProps} uiSchema={{ foo: { 'ui:FieldErrorTemplate': customFieldError } }} />;
         },
       };
 
@@ -463,14 +424,10 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .text-danger'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(0);
 
-      const customMatches = node.querySelectorAll(
-        'form .form-group .form-group .custom-field-error'
-      );
+      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-error');
       expect(customMatches[0].textContent).to.contain('test');
     });
 
@@ -508,9 +465,7 @@ describe('SchemaField', () => {
         });
         Simulate.submit(node);
 
-        const matches = node.querySelectorAll(
-          'form > .form-group > div > .error-detail .text-danger'
-        );
+        const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).to.have.length.of(0);
       });
 
@@ -522,9 +477,7 @@ describe('SchemaField', () => {
         });
         Simulate.submit(node);
 
-        const matches = node.querySelectorAll(
-          'form .form-group .form-group .text-danger'
-        );
+        const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).to.have.length.of(0);
       });
 
@@ -554,9 +507,7 @@ describe('SchemaField', () => {
         'ui:field': (props) => {
           const { uiSchema, ...fieldProps } = props; //eslint-disable-line
           // Pass the children schema in after removing the global one
-          return (
-            <SchemaField {...fieldProps} uiSchema={{ 'ui:hideError': false }} />
-          );
+          return <SchemaField {...fieldProps} uiSchema={{ 'ui:hideError': false }} />;
         },
       };
 
@@ -568,9 +519,7 @@ describe('SchemaField', () => {
         });
         Simulate.submit(node);
 
-        const matches = node.querySelectorAll(
-          'form > .form-group > div > .error-detail .text-danger'
-        );
+        const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).to.have.length.of(0);
       });
 
@@ -582,9 +531,7 @@ describe('SchemaField', () => {
         });
         Simulate.submit(node);
 
-        const matches = node.querySelectorAll(
-          'form .form-group .form-group .text-danger'
-        );
+        const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).to.have.length.of(1);
         expect(matches[0].textContent).to.contain('test');
       });
@@ -609,9 +556,7 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .help-block'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(1);
       expect(matches[0].textContent).to.eql(helpText);
     });
@@ -627,14 +572,10 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .help-block'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(0);
 
-      const customMatches = node.querySelectorAll(
-        'form .form-group .form-group .custom-field-help'
-      );
+      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-help');
       expect(customMatches[0].textContent).to.contain(helpText);
     });
 
@@ -652,14 +593,10 @@ describe('SchemaField', () => {
       });
       Simulate.submit(node);
 
-      const matches = node.querySelectorAll(
-        'form .form-group .form-group .help-block'
-      );
+      const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(0);
 
-      const customMatches = node.querySelectorAll(
-        'form .form-group .form-group .custom-field-help'
-      );
+      const customMatches = node.querySelectorAll('form .form-group .form-group .custom-field-help');
       expect(customMatches[0].textContent).to.contain(helpText);
     });
   });

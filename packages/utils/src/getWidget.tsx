@@ -3,13 +3,7 @@ import ReactIs from 'react-is';
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import {
-  FormContextType,
-  RJSFSchema,
-  Widget,
-  RegistryWidgetsType,
-  StrictRJSFSchema,
-} from './types';
+import { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types';
 import getSchemaType from './getSchemaType';
 
 /** The map of schema types to widget type to widget name
@@ -73,16 +67,13 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
  * @param AWidget - A widget that will be wrapped or one that is already wrapped
  * @returns - The wrapper widget
  */
-function mergeWidgetOptions<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(AWidget: Widget<T, S, F>) {
+function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  AWidget: Widget<T, S, F>
+) {
   let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, 'MergedWidget');
   // cache return value as property of widget for proper react reconciliation
   if (!MergedWidget) {
-    const defaultOptions =
-      (AWidget.defaultProps && AWidget.defaultProps.options) || {};
+    const defaultOptions = (AWidget.defaultProps && AWidget.defaultProps.options) || {};
     MergedWidget = ({ options, ...props }) => {
       return <AWidget options={{ ...defaultOptions, ...options }} {...props} />;
     };
@@ -102,11 +93,7 @@ function mergeWidgetOptions<
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */
-export default function getWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(
+export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: RJSFSchema,
   widget?: Widget<T, S, F> | string,
   registeredWidgets: RegistryWidgetsType<T, S, F> = {}

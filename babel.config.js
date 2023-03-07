@@ -19,10 +19,7 @@ module.exports = {
       },
     ],
   ],
-  plugins: [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-proposal-optional-chaining',
-  ],
+  plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-optional-chaining'],
   ignore,
   sourceMaps: 'inline',
 };

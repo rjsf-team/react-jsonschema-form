@@ -163,9 +163,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         foo: 'test',
       };
 
-      expect(
-        toIdSchema(testValidator, schema, undefined, schema, formData)
-      ).toEqual({
+      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
         $id: 'root',
         foo: { $id: 'root_foo' },
         bar: { $id: 'root_bar' },
@@ -196,9 +194,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         },
       };
 
-      expect(
-        toIdSchema(testValidator, schema, undefined, schema, formData)
-      ).toEqual({
+      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
         $id: 'root',
         obj: {
           $id: 'root_obj',
@@ -224,9 +220,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
 
       const formData = {};
 
-      expect(
-        toIdSchema(testValidator, schema, undefined, schema, formData)
-      ).toEqual({
+      expect(toIdSchema(testValidator, schema, undefined, schema, formData)).toEqual({
         $id: 'root',
         foo: { $id: 'root_foo' },
       });
@@ -245,9 +239,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         $ref: '#/definitions/testdef',
       };
 
-      expect(
-        toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf')
-      ).toEqual({
+      expect(toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf')).toEqual({
         $id: 'rjsf',
         foo: { $id: 'rjsf_foo' },
         bar: { $id: 'rjsf_bar' },
@@ -267,9 +259,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         $ref: '#/definitions/testdef',
       };
 
-      expect(
-        toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf', '/')
-      ).toEqual({
+      expect(toIdSchema(testValidator, schema, undefined, schema, {}, 'rjsf', '/')).toEqual({
         $id: 'rjsf',
         foo: { $id: 'rjsf/foo' },
         bar: { $id: 'rjsf/bar' },
@@ -284,14 +274,7 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         },
       };
       const formData = null;
-      const result = toIdSchema(
-        testValidator,
-        schema,
-        null,
-        {},
-        formData,
-        'rjsf'
-      );
+      const result = toIdSchema(testValidator, schema, null, {}, formData, 'rjsf');
 
       expect(result).toEqual({
         $id: 'rjsf',

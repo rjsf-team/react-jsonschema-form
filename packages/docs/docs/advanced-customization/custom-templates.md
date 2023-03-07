@@ -65,19 +65,13 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div>
       {props.items.map((element) => element.children)}
-      {props.canAdd && (
-        <button type='button' onClick={props.onAddClick}></button>
-      )}
+      {props.canAdd && <button type='button' onClick={props.onAddClick}></button>}
     </div>
   );
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ArrayFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -140,11 +134,7 @@ If you want different behavior for the rendering of the description of an array 
 If you want a different behavior for the rendering of ALL descriptions in the `Form`, see [DescriptionFieldTemplate](#descriptionfieldtemplate)
 
 ```tsx
-import {
-  ArrayFieldDescriptionProps,
-  RJSFSchema,
-  descriptionId,
-} from '@rjsf/utils';
+import { ArrayFieldDescriptionProps, RJSFSchema, descriptionId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -166,11 +156,7 @@ function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ArrayFieldDescriptionTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldDescriptionTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -217,11 +203,7 @@ function ArrayFieldItemTemplate(props: ArrayFieldTemplateItemType) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ArrayFieldItemTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldItemTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -271,11 +253,7 @@ function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ArrayFieldTitleTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldTitleTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -346,18 +324,12 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
     formContext,
     ...rest
   } = props;
-  const onTextChange = ({
-    target: { value: val },
-  }: ChangeEvent<HTMLInputElement>) => {
+  const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
     // Use the options.emptyValue if it is specified and newVal is also an empty string
     onChange(val === '' ? options.emptyValue || '' : val);
   };
-  const onTextBlur = ({
-    target: { value: val },
-  }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
-  const onTextFocus = ({
-    target: { value: val },
-  }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
+  const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
+  const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
   const hasError = rawErrors.length > 0 && !hideError;
@@ -382,11 +354,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ BaseInputTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -442,11 +410,7 @@ function DescriptionFieldTemplate(props: DescriptionFieldProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ DescriptionFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -494,11 +458,7 @@ function ErrorListTemplate(props: ErrorListProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ DescriptionFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -545,11 +505,7 @@ function FieldErrorTemplate(props: FieldErrorProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ FieldErrorTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ FieldErrorTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -585,11 +541,7 @@ function FieldHelpTemplate(props: FieldHelpProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ FieldHelpTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ FieldHelpTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -617,17 +569,7 @@ const schema: RJSFSchema = {
 };
 
 function CustomFieldTemplate(props: FieldTemplateProps) {
-  const {
-    id,
-    classNames,
-    style,
-    label,
-    help,
-    required,
-    description,
-    errors,
-    children,
-  } = props;
+  const { id, classNames, style, label, help, required, description, errors, children } = props;
   return (
     <div className={classNames} style={style}>
       <label htmlFor={id}>
@@ -643,11 +585,7 @@ function CustomFieldTemplate(props: FieldTemplateProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ FieldTemplate: CustomFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ FieldTemplate: CustomFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -726,11 +664,7 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ObjectFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ObjectFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -800,11 +734,7 @@ function TitleFieldTemplate(props: TitleFieldProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ TitleFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ TitleFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -836,21 +766,14 @@ function UnsupportedFieldTemplate(props: UnsupportedFieldProps) {
   const { schema, reason } = props;
   return (
     <div>
-      <FormattedMessage
-        defaultMessage='Unsupported field schema, reason = {reason}'
-        value={{ reason }}
-      />
+      <FormattedMessage defaultMessage='Unsupported field schema, reason = {reason}' value={{ reason }} />
       <pre>{JSON.stringify(schema, null, 2)}</pre>
     </div>
   );
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ UnsupportedFieldTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ UnsupportedFieldTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -877,18 +800,8 @@ const schema: RJSFSchema = {
 };
 
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
-  const {
-    id,
-    label,
-    onKeyChange,
-    onDropPropertyClick,
-    schema,
-    children,
-    uiSchema,
-    registry,
-    classNames,
-    style,
-  } = props;
+  const { id, label, onKeyChange, onDropPropertyClick, schema, children, uiSchema, registry, classNames, style } =
+    props;
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
@@ -917,11 +830,7 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ WrapIfAdditionalTemplate }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ WrapIfAdditionalTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -980,11 +889,7 @@ function AddButton(props: IconButtonProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ButtonTemplates: { AddButton } }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />,
   document.getElementById('app')
 );
 ```
@@ -1014,11 +919,7 @@ function MoveDownButton(props: IconButtonProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ButtonTemplates: { MoveDownButton } }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveDownButton } }} />,
   document.getElementById('app')
 );
 ```
@@ -1048,11 +949,7 @@ function MoveUpButton(props: IconButtonProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ButtonTemplates: { MoveUpButton } }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveUpButton } }} />,
   document.getElementById('app')
 );
 ```
@@ -1082,11 +979,7 @@ function RemoveButton(props: IconButtonProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ButtonTemplates: { RemoveButton } }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { RemoveButton } }} />,
   document.getElementById('app')
 );
 ```
@@ -1100,11 +993,7 @@ The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOpt
 
 ```tsx
 import React from 'react';
-import {
-  getSubmitButtonOptions,
-  RJSFSchema,
-  SubmitButtonProps,
-} from '@rjsf/utils';
+import { getSubmitButtonOptions, RJSFSchema, SubmitButtonProps } from '@rjsf/utils';
 import { FormattedMessage } from 'react-intl';
 import validator from '@rjsf/validator-ajv8';
 
@@ -1126,11 +1015,7 @@ function SubmitButton(props: SubmitButtonProps) {
 }
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ ButtonTemplates: { SubmitButton } }}
-  />,
+  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { SubmitButton } }} />,
   document.getElementById('app')
 );
 ```

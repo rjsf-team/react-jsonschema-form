@@ -21,11 +21,9 @@ const rangeOptions = (start: number, stop: number) => {
   return options;
 };
 
-function DateElement<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
   const { SelectWidget } = props.registry.widgets;
   const value = props.value ? props.value : undefined;
   return (
@@ -33,9 +31,7 @@ function DateElement<
       {...props}
       label={''}
       className='form-control'
-      onChange={(elemValue: WidgetProps<T, S, F>) =>
-        props.select(props.type, elemValue)
-      }
+      onChange={(elemValue: WidgetProps<T, S, F>) => props.select(props.type, elemValue)}
       options={{
         enumOptions: rangeOptions(props.range[0], props.range[1]),
       }}
@@ -52,29 +48,13 @@ interface AltDateStateType extends DateObject {
 }
 
 const readyForChange = (state: AltDateStateType) => {
-  return Object.keys(state).every(
-    (key) => typeof state[key] !== 'undefined' && state[key] !== -1
-  );
+  return Object.keys(state).every((key) => typeof state[key] !== 'undefined' && state[key] !== -1);
 };
 
-function AltDateWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
-  const {
-    autofocus,
-    disabled,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    options,
-    readonly,
-    registry,
-    showTime,
-    value,
-  } = props;
+function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
+  const { autofocus, disabled, id, onBlur, onChange, onFocus, options, readonly, registry, showTime, value } = props;
   const { translateString } = registry;
   const [state, setState] = useState(parseDateString(value, showTime));
   useEffect(() => {
@@ -158,17 +138,12 @@ function AltDateWidget<
       </Box>
       <Box display='flex'>
         {!options.hideNowButton && (
-          <Button
-            onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)}
-            mr='2'
-          >
+          <Button onClick={(e: MouseEvent<HTMLButtonElement>) => handleNow(e)} mr='2'>
             {translateString(TranslatableString.NowLabel)}
           </Button>
         )}
         {!options.hideClearButton && (
-          <Button
-            onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}
-          >
+          <Button onClick={(e: MouseEvent<HTMLButtonElement>) => handleClear(e)}>
             {translateString(TranslatableString.ClearLabel)}
           </Button>
         )}

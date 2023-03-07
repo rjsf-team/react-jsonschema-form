@@ -248,9 +248,7 @@ export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = {
     },
   ],
 };
-export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[
-  ONE_OF_KEY
-] as RJSFSchema[];
+export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[ONE_OF_KEY] as RJSFSchema[];
 export const OPTIONAL_ONE_OF_DATA = { flag: true, inner_obj: { foo: 'bar' } };
 export const SIMPLE_ONE_OF_SCHEMA = {
   oneOf: [

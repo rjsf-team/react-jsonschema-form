@@ -32,15 +32,7 @@ const schema: RJSFSchema = {
 
 const formData = 'a';
 
-render(
-  <Form
-    schema={schema}
-    formData={formData}
-    validator={validator}
-    liveValidate
-  />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} formData={formData} validator={validator} liveValidate />, document.getElementById('app'));
 ```
 
 ## Validate form programmatically
@@ -62,15 +54,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    onError={onError}
-    ref={formRef}
-  />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} onError={onError} ref={formRef} />, document.getElementById('app'));
 
 if (formRef.current.validateForm()) {
   alert('Form is valid');
@@ -95,10 +79,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} noHtml5Validate />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} noHtml5Validate />, document.getElementById('app'));
 ```
 
 ## Custom validation rules
@@ -127,14 +108,7 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    customValidate={customValidate}
-  />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} customValidate={customValidate} />, document.getElementById('app'));
 ```
 
 > Notes:
@@ -170,11 +144,7 @@ const schema: RJSFSchema = {
 };
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    transformErrors={transformErrors}
-  />,
+  <Form schema={schema} validator={validator} transformErrors={transformErrors} />,
   document.getElementById('app')
 );
 ```
@@ -337,10 +307,7 @@ const customFormats = {
 
 const validator = customizeValidator({ customFormats });
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 Format values can be anything AJV’s [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
@@ -383,10 +350,7 @@ const extraErrors: ErrorSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} extraErrors={extraErrors} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />, document.getElementById('app'));
 ```
 
 An important note is that these errors are "display only" and will not block the user from submitting the form again.
@@ -411,10 +375,7 @@ const ajvOptionsOverrides = {
 
 const validator = customizeValidator({ ajvOptionsOverrides });
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Ajv8 validator differences
@@ -446,10 +407,7 @@ const schema: RJSFSchema = {
   format: 'email',
 };
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 If you don't actually need any of the [ajv-formats](https://github.com/ajv-validator/ajv-formats#formats) and want to reduce the memory footprint, then you can turn it off as follows:
@@ -464,10 +422,7 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({ ajvFormatOptions: false });
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 If you only need some of them, you can pass any of the [options](https://github.com/ajv-validator/ajv-formats#options) to the formatter:
@@ -485,10 +440,7 @@ const validator = customizeValidator({ ajvFormatOptions: ['date'] });
 // or
 // const validator = customizeValidator({ ajvFormatOptions: { mode: "fast", formats: ["date"], keywords: true } });
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### AjvClass
@@ -511,10 +463,7 @@ const validator = customizeValidator({ AjvClass: Ajv2019 });
 // or
 // const validator = customizeValidator({ AjvClass: Ajv2020 });
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### Localization (L12n) support
@@ -546,10 +495,7 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, localizer.it);
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 Using a specific locale minimizing the bundle size
@@ -565,10 +511,7 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, spanishLocalizer);
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 An example of a custom `Localizer` implementation:
@@ -585,8 +528,7 @@ function localize_ru(errors: null | ErrorObject[] = []) {
 
     switch (error.keyword) {
       case 'pattern': {
-        outMessage =
-          'должно соответствовать образцу "' + error.params.pattern + '"';
+        outMessage = 'должно соответствовать образцу "' + error.params.pattern + '"';
         break;
       }
       case 'required': {
@@ -607,10 +549,7 @@ const schema: RJSFSchema = {
 
 const validator = customizeValidator({}, localize_ru);
 
-render(
-  <Form schema={schema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
 NOTES:

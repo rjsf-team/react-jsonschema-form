@@ -13,33 +13,19 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: FieldTemplateProps<T, S, F>) {
-  const {
-    id,
-    children,
-    errors,
-    help,
-    rawDescription,
-    hidden,
-    uiSchema,
-    registry,
-  } = props;
+  const { id, children, errors, help, rawDescription, hidden, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    T,
-    S,
-    F
-  >('WrapIfAdditionalTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   // TODO: do this better by not returning the form-group class from master.
   let { classNames = '' } = props;
   classNames = 'ms-Grid-col ms-sm12 ' + classNames.replace('form-group', '');
   return (
     <WrapIfAdditionalTemplate {...props}>
-      <div
-        id={id}
-        className={classNames}
-        style={{ marginBottom: 15, display: hidden ? 'none' : undefined }}
-      >
+      <div id={id} className={classNames} style={{ marginBottom: 15, display: hidden ? 'none' : undefined }}>
         {children}
         {rawDescription && <Text>{rawDescription}</Text>}
         {errors}

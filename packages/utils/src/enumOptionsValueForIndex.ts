@@ -11,21 +11,16 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
  * @returns - The single or list of values specified by the single or list of indexes if they are valid. Otherwise,
  *        `emptyValue` or an empty list.
  */
-export default function enumOptionsValueForIndex<
-  S extends StrictRJSFSchema = RJSFSchema
->(
+export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number | Array<string | number>,
   allEnumOptions: EnumOptionsType<S>[] = [],
   emptyValue?: EnumOptionsType<S>['value']
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   if (Array.isArray(valueIndex)) {
-    return valueIndex
-      .map((index) => enumOptionsValueForIndex(index, allEnumOptions))
-      .filter((val) => val);
+    return valueIndex.map((index) => enumOptionsValueForIndex(index, allEnumOptions)).filter((val) => val);
   }
   // So Number(null) and Number('') both return 0, so use emptyValue for those two values
-  const index =
-    valueIndex === '' || valueIndex === null ? -1 : Number(valueIndex);
+  const index = valueIndex === '' || valueIndex === null ? -1 : Number(valueIndex);
   const option = allEnumOptions[index];
   return option ? option.value : emptyValue;
 }

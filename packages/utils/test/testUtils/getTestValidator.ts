@@ -17,30 +17,21 @@ export default function getTestValidator<T = any>({
     _errorList: errorList,
     validator: {
       validateFormData: jest.fn().mockImplementation(() => {
-        if (
-          Array.isArray(testValidator._data) &&
-          testValidator._data.length > 0
-        ) {
+        if (Array.isArray(testValidator._data) && testValidator._data.length > 0) {
           return testValidator._data.shift();
         }
         return { errors: [], errorSchema: {} };
       }),
       isValid: jest.fn().mockImplementation(() => {
         // console.warn('isValid',  JSON.stringify(args));
-        if (
-          Array.isArray(testValidator._isValid) &&
-          testValidator._isValid.length > 0
-        ) {
+        if (Array.isArray(testValidator._isValid) && testValidator._isValid.length > 0) {
           return testValidator._isValid.shift();
         }
         return true;
       }),
       toErrorList: jest.fn().mockImplementation(() => {
         // console.warn('isValid',  JSON.stringify(args));
-        if (
-          Array.isArray(testValidator._errorList) &&
-          testValidator._errorList.length > 0
-        ) {
+        if (Array.isArray(testValidator._errorList) && testValidator._errorList.length > 0) {
           return testValidator._errorList.shift();
         }
         return [];

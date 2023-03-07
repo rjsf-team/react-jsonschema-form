@@ -1,12 +1,7 @@
 import Button from 'antd/lib/button';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
-import {
-  ArrayFieldTemplateItemType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 const BTN_GRP_STYLE = {
   width: '100%',
@@ -39,8 +34,7 @@ export default function ArrayFieldItemTemplate<
     registry,
     uiSchema,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
   return (

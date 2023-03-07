@@ -27,12 +27,7 @@ describe('orderProperties()', () => {
   it('should handle more complex ordering case correctly', () => {
     const properties = ['foo', 'baz', 'qux', 'bar'];
     const order = ['quux', 'foo', '*', 'corge', 'baz'];
-    expect(orderProperties(properties, order)).toEqual([
-      'foo',
-      'qux',
-      'bar',
-      'baz',
-    ]);
+    expect(orderProperties(properties, order)).toEqual(['foo', 'qux', 'bar', 'baz']);
   });
   it('throws error when * is missing and there is one more prop than ordered', () => {
     const properties = ['foo', 'bar', 'baz'];

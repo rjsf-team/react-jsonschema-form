@@ -28,9 +28,7 @@ describe('hasWidget()', () => {
     expect(hasWidget(schema, 'foo')).toBe(false);
   });
   it('rethrows error', () => {
-    expect(() =>
-      hasWidget({ type: 'null' }, 'foo', { TextWidget: {} as Widget })
-    ).toThrowError(TypeError);
+    expect(() => hasWidget({ type: 'null' }, 'foo', { TextWidget: {} as Widget })).toThrowError(TypeError);
   });
   it('returns true when widget is available', () => {
     expect(hasWidget(schema, 'text')).toBe(true);

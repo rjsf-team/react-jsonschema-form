@@ -1,12 +1,6 @@
 import { FocusEvent, useCallback } from 'react';
 import { Checkbox } from '@fluentui/react';
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
 // Keys of ICheckboxProps from @fluentui/react
@@ -60,10 +54,8 @@ export default function CheckboxWidget<
     [onChange]
   );
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 

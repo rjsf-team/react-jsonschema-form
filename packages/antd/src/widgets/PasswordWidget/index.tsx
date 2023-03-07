@@ -18,18 +18,7 @@ export default function PasswordWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    disabled,
-    formContext,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    options,
-    placeholder,
-    readonly,
-    value,
-  } = props;
+  const { disabled, formContext, id, onBlur, onChange, onFocus, options, placeholder, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const emptyValue = options.emptyValue || '';
@@ -37,11 +26,9 @@ export default function PasswordWidget<
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
     onChange(target.value === '' ? emptyValue : target.value);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.value);
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.value);
 
   return (
     <Input.Password

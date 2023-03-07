@@ -97,9 +97,7 @@ describe('ErrorSchemaBuilder', () => {
       });
     });
     it('setting error string with a new path set errors at the path', () => {
-      expect(
-        builder.setErrors(AN_ERROR, ['another', 'path']).ErrorSchema
-      ).toEqual({
+      expect(builder.setErrors(AN_ERROR, ['another', 'path']).ErrorSchema).toEqual({
         [ERRORS_KEY]: [],
         [STRING_PATH]: {
           [ERRORS_KEY]: [],
@@ -285,9 +283,7 @@ describe('ErrorSchemaBuilder', () => {
       });
     });
     it('resetting error restores things back to the INITIAL_SCHEMA', () => {
-      expect(builder.resetAllErrors(INITIAL_SCHEMA).ErrorSchema).toEqual(
-        INITIAL_SCHEMA
-      );
+      expect(builder.resetAllErrors(INITIAL_SCHEMA).ErrorSchema).toEqual(INITIAL_SCHEMA);
     });
   });
 });

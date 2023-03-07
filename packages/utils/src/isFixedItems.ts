@@ -7,12 +7,6 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @param schema - The schema in which to check for fixed items
  * @returns - True if there are fixed items in the schema, false otherwise
  */
-export default function isFixedItems<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
-) {
-  return (
-    Array.isArray(schema.items) &&
-    schema.items.length > 0 &&
-    schema.items.every((item) => isObject(item))
-  );
+export default function isFixedItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  return Array.isArray(schema.items) && schema.items.length > 0 && schema.items.every((item) => isObject(item));
 }

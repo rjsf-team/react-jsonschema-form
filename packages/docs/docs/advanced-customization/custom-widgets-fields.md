@@ -10,12 +10,7 @@ The API allows to specify your own custom _widget_ and _field_ components:
 You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
 ```tsx
-import {
-  RJSFSchema,
-  UiSchema,
-  WidgetProps,
-  RegistryWidgetsType,
-} from '@rjsf/utils';
+import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -29,11 +24,7 @@ const uiSchema: UiSchema = {
 
 const CustomCheckbox = function (props: WidgetProps) {
   return (
-    <button
-      id='custom'
-      className={props.value ? 'checked' : 'unchecked'}
-      onClick={() => props.onChange(!props.value)}
-    >
+    <button id='custom' className={props.value ? 'checked' : 'unchecked'} onClick={() => props.onChange(!props.value)}>
       {String(props.value)}
     </button>
   );
@@ -44,12 +35,7 @@ const widgets: RegistryWidgetsType = {
 };
 
 render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    validator={validator}
-    widgets={widgets}
-  />,
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
   document.getElementById('app')
 );
 ```
@@ -137,10 +123,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 The following props are passed to custom widget components:
@@ -172,12 +155,7 @@ The following props are passed to custom widget components:
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
 ```tsx
-import {
-  RJSFSchema,
-  UiSchema,
-  WidgetProps,
-  RegistryWidgetsType,
-} from '@rjsf/utils';
+import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const MyCustomWidget = (props: WidgetProps) => {
@@ -205,12 +183,7 @@ const uiSchema: UiSchema = {
 };
 
 render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    validator={validator}
-    widgets={widgets}
-  />,
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
   document.getElementById('app')
 );
 ```
@@ -249,10 +222,7 @@ const uiSchema: UiSchema = {
 };
 
 // renders red on yellow input
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
@@ -270,12 +240,7 @@ You can provide your own field components to a uiSchema for basically any json s
 For example, let's create and register a dumb `geo` component handling a _latitude_ and a _longitude_:
 
 ```tsx
-import {
-  RJSFSchema,
-  UiSchema,
-  FieldProps,
-  RegistryFieldsType,
-} from '@rjsf/utils';
+import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -326,12 +291,7 @@ const fields: RegistryFieldsType = { geo: GeoPosition };
 // Render the form with all the properties we just defined passed
 // as props
 render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    validator={validator}
-    fields={fields}
-  />,
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />,
   document.getElementById('app')
 );
 ```
@@ -402,10 +362,7 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} fields={fields} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
@@ -419,12 +376,7 @@ By default, `ArraySchemaField` is not actually implemented in the `fields` list 
 If you want to customize how the individual items for an array are rendered, provide your implementation of `ArraySchemaField` as a `fields` override.
 
 ```tsx
-import {
-  RJSFSchema,
-  UiSchema,
-  FieldProps,
-  RegistryFieldsType,
-} from '@rjsf/utils';
+import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const CustomArraySchemaField = function (props: FieldProps) {
@@ -442,8 +394,5 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator} fields={fields} />,
-  document.getElementById('app')
-);
+render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```

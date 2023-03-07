@@ -7,9 +7,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @param schema - The schema object to check
  * @returns - True if additional items is allowed, otherwise false
  */
-export default function allowAdditionalItems<
-  S extends StrictRJSFSchema = RJSFSchema
->(schema: S) {
+export default function allowAdditionalItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   if (schema.additionalItems === true) {
     console.warn('additionalItems=true is currently not supported');
   }

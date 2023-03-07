@@ -2,12 +2,7 @@ import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
 
-import {
-  createFormComponent,
-  createSandbox,
-  getSelectedOptionValue,
-  submitForm,
-} from './test_utils';
+import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
 
 describe('BooleanField', () => {
   let sandbox;
@@ -30,9 +25,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(
-      node.querySelectorAll('.field input[type=checkbox]')
-    ).to.have.length.of(1);
+    expect(node.querySelectorAll('.field input[type=checkbox]')).to.have.length.of(1);
   });
 
   it('should render a boolean field with the expected id', () => {
@@ -191,11 +184,7 @@ describe('BooleanField', () => {
 
   it('should pass uiSchema to custom widget', () => {
     const CustomCheckboxWidget = ({ uiSchema }) => {
-      return (
-        <div id='custom-ui-option-value'>
-          {uiSchema.custom_field_key['ui:options'].test}
-        </div>
-      );
+      return <div id='custom-ui-option-value'>{uiSchema.custom_field_key['ui:options'].test}</div>;
     };
 
     const { node } = createFormComponent({
@@ -216,9 +205,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelector('#custom-ui-option-value').textContent).to.eql(
-      'foo'
-    );
+    expect(node.querySelector('#custom-ui-option-value').textContent).to.eql('foo');
   });
 
   it('should render the description using provided description field', () => {
@@ -334,10 +321,7 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
   });
 
@@ -351,10 +335,7 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['No', 'Yes']);
   });
 
@@ -368,13 +349,9 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/))
-      .to.be.true;
+    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
   });
 
   it('should support oneOf titles for radio widgets', () => {
@@ -396,10 +373,7 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
   });
 
@@ -422,10 +396,7 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['No', 'Yes']);
   });
 
@@ -498,13 +469,9 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'select' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field option'),
-      (label) => label.textContent
-    );
+    const labels = [].map.call(node.querySelectorAll('.field option'), (label) => label.textContent);
     expect(labels).eql(['', 'Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/))
-      .to.be.true;
+    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
   });
 
   it('should handle a focus event with checkbox', () => {

@@ -3,12 +3,7 @@ import { act, Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
 import { parseDateString, toDateString, utcToLocal } from '@rjsf/utils';
 
-import {
-  createFormComponent,
-  createSandbox,
-  getSelectedOptionValue,
-  submitForm,
-} from './test_utils';
+import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
 
 describe('StringField', () => {
   let sandbox;
@@ -31,9 +26,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(
-        node.querySelectorAll('.field input[type=text]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field input[type=text]')).to.have.length.of(1);
     });
 
     it('should render a string field with a label', () => {
@@ -67,9 +60,7 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('.field input').value).eql('plop');
-      expect(
-        node.querySelectorAll('.field datalist > option')
-      ).to.have.length.of(0);
+      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(0);
     });
 
     it('should render a string field with examples', () => {
@@ -80,13 +71,9 @@ describe('StringField', () => {
         },
       });
 
-      expect(
-        node.querySelectorAll('.field datalist > option')
-      ).to.have.length.of(3);
+      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
       const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(
-        datalistId
-      );
+      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should render a string with examples that includes the default value', () => {
@@ -97,13 +84,9 @@ describe('StringField', () => {
           examples: ['Chrome', 'Vivaldi'],
         },
       });
-      expect(
-        node.querySelectorAll('.field datalist > option')
-      ).to.have.length.of(3);
+      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
       const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(
-        datalistId
-      );
+      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should render a string with examples that overlaps with the default value', () => {
@@ -114,13 +97,9 @@ describe('StringField', () => {
           examples: ['Firefox', 'Chrome', 'Vivaldi'],
         },
       });
-      expect(
-        node.querySelectorAll('.field datalist > option')
-      ).to.have.length.of(3);
+      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
       const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(
-        datalistId
-      );
+      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should default submit value to undefined', () => {
@@ -199,11 +178,7 @@ describe('StringField', () => {
         target: { value: '' },
       });
 
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        { formData: undefined },
-        'root'
-      );
+      sinon.assert.calledWithMatch(onChange.lastCall, { formData: undefined }, 'root');
     });
 
     it('should handle an empty string change event with custom ui:emptyValue', () => {
@@ -288,9 +263,7 @@ describe('StringField', () => {
         formData: undefined,
       });
 
-      expect(node.querySelector('input').getAttribute('autocomplete')).eql(
-        'family-name'
-      );
+      expect(node.querySelector('input').getAttribute('autocomplete')).eql('family-name');
     });
   });
 
@@ -614,9 +587,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(
-        node.querySelectorAll('.field [type=datetime-local]')
-      ).to.have.length.of(1);
+      expect(node.querySelectorAll('.field [type=datetime-local]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {
@@ -648,9 +619,7 @@ describe('StringField', () => {
         target: { value: newDatetime },
       });
 
-      expect(node.querySelector('[type=datetime-local]').value).eql(
-        utcToLocal(newDatetime)
-      );
+      expect(node.querySelector('[type=datetime-local]').value).eql(utcToLocal(newDatetime));
     });
 
     it('should fill field with data', () => {
@@ -997,19 +966,9 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const ids = [].map.call(
-        node.querySelectorAll('select'),
-        (node) => node.id
-      );
+      const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
 
-      expect(ids).eql([
-        'root_year',
-        'root_month',
-        'root_day',
-        'root_hour',
-        'root_minute',
-        'root_second',
-      ]);
+      expect(ids).eql(['root_year', 'root_month', 'root_day', 'root_hour', 'root_minute', 'root_second']);
     });
 
     it("should render the widgets with the expected options' values", () => {
@@ -1021,10 +980,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const lengths = [].map.call(
-        node.querySelectorAll('select'),
-        (node) => node.length
-      );
+      const lengths = [].map.call(node.querySelectorAll('select'), (node) => node.length);
 
       expect(lengths).eql([
         // from 1900 to current year + 2 (inclusive) + 1 undefined option
@@ -1037,21 +993,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
-      expect(monthOptionsValues).eql([
-        '',
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-      ]);
+      expect(monthOptionsValues).eql(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
     });
 
     it("should render the widgets with the expected options' labels", () => {
@@ -1065,21 +1007,7 @@ describe('StringField', () => {
 
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
-      expect(monthOptionsLabels).eql([
-        'month',
-        '01',
-        '02',
-        '03',
-        '04',
-        '05',
-        '06',
-        '07',
-        '08',
-        '09',
-        '10',
-        '11',
-        '12',
-      ]);
+      expect(monthOptionsLabels).eql(['month', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']);
     });
 
     describe('Action buttons', () => {
@@ -1092,10 +1020,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(
-          node.querySelectorAll('a.btn'),
-          (x) => x.textContent
-        );
+        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x) => x.textContent);
         expect(buttonLabels).eql(['Now', 'Clear']);
       });
 
@@ -1259,15 +1184,9 @@ describe('StringField', () => {
           target: { value: 9 }, // Month index
         });
       });
-      expect(getSelectedOptionValue(node.querySelector('#root_year'))).eql(
-        '2012'
-      );
-      expect(getSelectedOptionValue(node.querySelector('#root_month'))).eql(
-        '10'
-      );
-      expect(getSelectedOptionValue(node.querySelector('#root_day'))).eql(
-        'day'
-      );
+      expect(getSelectedOptionValue(node.querySelector('#root_year'))).eql('2012');
+      expect(getSelectedOptionValue(node.querySelector('#root_month'))).eql('10');
+      expect(getSelectedOptionValue(node.querySelector('#root_day'))).eql('day');
       sinon.assert.notCalled(onChange);
     });
 
@@ -1296,10 +1215,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const ids = [].map.call(
-        node.querySelectorAll('select'),
-        (node) => node.id
-      );
+      const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
 
       expect(ids).eql(['root_year', 'root_month', 'root_day']);
     });
@@ -1313,10 +1229,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const lengths = [].map.call(
-        node.querySelectorAll('select'),
-        (node) => node.length
-      );
+      const lengths = [].map.call(node.querySelectorAll('select'), (node) => node.length);
 
       expect(lengths).eql([
         // from 1900 to current year + 2 (inclusive) + 1 undefined option
@@ -1326,21 +1239,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
-      expect(monthOptionsValues).eql([
-        '',
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-      ]);
+      expect(monthOptionsValues).eql(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
     });
 
     it("should render the widgets with the expected options' labels", () => {
@@ -1354,21 +1253,7 @@ describe('StringField', () => {
 
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsLabels = [].map.call(monthOptions, (o) => o.text);
-      expect(monthOptionsLabels).eql([
-        'month',
-        '01',
-        '02',
-        '03',
-        '04',
-        '05',
-        '06',
-        '07',
-        '08',
-        '09',
-        '10',
-        '11',
-        '12',
-      ]);
+      expect(monthOptionsLabels).eql(['month', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']);
     });
 
     it('should accept a valid date', () => {
@@ -1411,10 +1296,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const buttonLabels = [].map.call(
-          node.querySelectorAll('a.btn'),
-          (x) => x.textContent
-        );
+        const buttonLabels = [].map.call(node.querySelectorAll('a.btn'), (x) => x.textContent);
         expect(buttonLabels).eql(['Now', 'Clear']);
       });
 
@@ -1431,10 +1313,7 @@ describe('StringField', () => {
           Simulate.click(node.querySelector('a.btn-now'));
         });
 
-        const expected = toDateString(
-          parseDateString(new Date().toJSON()),
-          false
-        );
+        const expected = toDateString(parseDateString(new Date().toJSON()), false);
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: expected,

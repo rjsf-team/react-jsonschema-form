@@ -2,13 +2,7 @@ import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
 
-import {
-  createFormComponent,
-  createSandbox,
-  getSelectedOptionValue,
-  setProps,
-  submitForm,
-} from './test_utils';
+import { createFormComponent, createSandbox, getSelectedOptionValue, setProps, submitForm } from './test_utils';
 
 describe('NumberField', () => {
   let sandbox;
@@ -360,9 +354,7 @@ describe('NumberField', () => {
         });
         // "2." is not really a valid number in a input field of type number
         // so we need to use getAttribute("value") instead since .value outputs the empty string
-        expect(node.querySelector('.field input').getAttribute('value')).eql(
-          '2.'
-        );
+        expect(node.querySelector('.field input').getAttribute('value')).eql('2.');
 
         Simulate.change(node.querySelector('input'), {
           target: { value: '2.0' },

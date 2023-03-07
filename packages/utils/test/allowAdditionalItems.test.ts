@@ -25,8 +25,6 @@ describe('allowAdditionalItems()', () => {
   });
   it('calling with schema, having additionalItem: true returns false and warns', () => {
     expect(allowAdditionalItems(schema1)).toBe(false);
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'additionalItems=true is currently not supported'
-    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith('additionalItems=true is currently not supported');
   });
 });

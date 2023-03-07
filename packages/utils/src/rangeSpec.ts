@@ -7,9 +7,7 @@ import { RJSFSchema } from './types';
  * @param schema - The schema from which to extract the range spec
  * @returns - A range specification from the schema
  */
-export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
-) {
+export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   const spec: RangeSpecType = {};
   if (schema.multipleOf) {
     spec.step = schema.multipleOf;

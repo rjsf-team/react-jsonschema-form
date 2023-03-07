@@ -1,9 +1,4 @@
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TitleFieldProps,
-} from '@rjsf/utils';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 import { Label } from '@fluentui/react';
 
 const styles = {
@@ -16,11 +11,10 @@ const styles = {
   ],
 };
 
-export default function TitleField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({ id, title }: TitleFieldProps<T, S, F>) {
+export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  id,
+  title,
+}: TitleFieldProps<T, S, F>) {
   return (
     <Label id={id} styles={styles}>
       {title}

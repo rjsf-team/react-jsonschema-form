@@ -10,11 +10,7 @@ import deepEquals from './deepEquals';
  * @param nextState - The next set of state against which to check
  * @returns - True if the component should be re-rendered, false otherwise
  */
-export default function shouldRender(
-  component: React.Component,
-  nextProps: any,
-  nextState: any
-) {
+export default function shouldRender(component: React.Component, nextProps: any, nextState: any) {
   const { props, state } = component;
   return !deepEquals(props, nextProps) || !deepEquals(state, nextState);
 }

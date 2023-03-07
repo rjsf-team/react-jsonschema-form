@@ -32,11 +32,8 @@ import {
  * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
-class SchemaUtils<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> implements SchemaUtilsType<T, S, F>
+class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  implements SchemaUtilsType<T, S, F>
 {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
@@ -67,16 +64,11 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(
-    validator: ValidatorType<T, S, F>,
-    rootSchema: S
-  ): boolean {
+  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S): boolean {
     if (!validator || !rootSchema) {
       return false;
     }
-    return (
-      this.validator !== validator || !deepEquals(this.rootSchema, rootSchema)
-    );
+    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
@@ -94,13 +86,7 @@ class SchemaUtils<
     formData?: T,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S, F>(
-      this.validator,
-      schema,
-      formData,
-      this.rootSchema,
-      includeUndefinedValues
-    );
+    return getDefaultFormState<T, S, F>(this.validator, schema, formData, this.rootSchema, includeUndefinedValues);
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
@@ -111,12 +97,7 @@ class SchemaUtils<
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return getDisplayLabel<T, S, F>(
-      this.validator,
-      schema,
-      uiSchema,
-      this.rootSchema
-    );
+    return getDisplayLabel<T, S, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 
   /** Determines which of the given `options` provided most closely matches the `formData`.
@@ -130,18 +111,8 @@ class SchemaUtils<
    * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
-  getClosestMatchingOption(
-    formData: T | undefined,
-    options: S[],
-    selectedOption?: number
-  ): number {
-    return getClosestMatchingOption<T, S, F>(
-      this.validator,
-      this.rootSchema,
-      formData,
-      options,
-      selectedOption
-    );
+  getClosestMatchingOption(formData: T | undefined, options: S[], selectedOption?: number): number {
+    return getClosestMatchingOption<T, S, F>(this.validator, this.rootSchema, formData, options, selectedOption);
   }
 
   /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
@@ -152,12 +123,7 @@ class SchemaUtils<
    * @returns - The firstindex of the matched option or 0 if none is available
    */
   getFirstMatchingOption(formData: T | undefined, options: S[]): number {
-    return getFirstMatchingOption<T, S, F>(
-      this.validator,
-      formData,
-      options,
-      this.rootSchema
-    );
+    return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema);
   }
 
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
@@ -169,12 +135,7 @@ class SchemaUtils<
    * @deprecated
    */
   getMatchingOption(formData: T | undefined, options: S[]) {
-    return getMatchingOption<T, S, F>(
-      this.validator,
-      formData,
-      options,
-      this.rootSchema
-    );
+    return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema);
   }
 
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
@@ -184,12 +145,7 @@ class SchemaUtils<
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return isFilesArray<T, S, F>(
-      this.validator,
-      schema,
-      uiSchema,
-      this.rootSchema
-    );
+    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -219,15 +175,8 @@ class SchemaUtils<
    * @param [additionalErrorSchema] - The additional set of errors
    * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
    */
-  mergeValidationData(
-    validationData: ValidationData<T>,
-    additionalErrorSchema?: ErrorSchema<T>
-  ): ValidationData<T> {
-    return mergeValidationData<T, S, F>(
-      this.validator,
-      validationData,
-      additionalErrorSchema
-    );
+  mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T> {
+    return mergeValidationData<T, S, F>(this.validator, validationData, additionalErrorSchema);
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
@@ -239,12 +188,7 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T) {
-    return retrieveSchema<T, S, F>(
-      this.validator,
-      schema,
-      this.rootSchema,
-      rawFormData
-    );
+    return retrieveSchema<T, S, F>(this.validator, schema, this.rootSchema, rawFormData);
   }
 
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
@@ -259,13 +203,7 @@ class SchemaUtils<
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(
-      this.validator,
-      this.rootSchema,
-      newSchema,
-      oldSchema,
-      data
-    );
+    return sanitizeDataForNewSchema(this.validator, this.rootSchema, newSchema, oldSchema, data);
   }
 
   /** Generates an `IdSchema` object for the `schema`, recursively
@@ -277,22 +215,8 @@ class SchemaUtils<
    * @param [idSeparator='_'] - The separator to use for the path segments in the id
    * @returns - The `IdSchema` object for the `schema`
    */
-  toIdSchema(
-    schema: S,
-    id?: string | null,
-    formData?: T,
-    idPrefix = 'root',
-    idSeparator = '_'
-  ): IdSchema<T> {
-    return toIdSchema<T, S, F>(
-      this.validator,
-      schema,
-      id,
-      this.rootSchema,
-      formData,
-      idPrefix,
-      idSeparator
-    );
+  toIdSchema(schema: S, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_'): IdSchema<T> {
+    return toIdSchema<T, S, F>(this.validator, schema, id, this.rootSchema, formData, idPrefix, idSeparator);
   }
 
   /** Generates an `PathSchema` object for the `schema`, recursively
@@ -303,13 +227,7 @@ class SchemaUtils<
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T, S, F>(
-      this.validator,
-      schema,
-      name,
-      this.rootSchema,
-      formData
-    );
+    return toPathSchema<T, S, F>(this.validator, schema, name, this.rootSchema, formData);
   }
 }
 

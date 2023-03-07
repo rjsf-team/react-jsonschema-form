@@ -19,10 +19,7 @@ class TestValidator extends AJV8Validator {
     return super.withIdRefPrefix(schemaNode);
   }
 
-  transformRJSFValidationErrors(
-    errors: ErrorObject[] = [],
-    uiSchema?: UiSchema
-  ): RJSFValidationError[] {
+  transformRJSFValidationErrors(errors: ErrorObject[] = [], uiSchema?: UiSchema): RJSFValidationError[] {
     return super.transformRJSFValidationErrors(errors, uiSchema);
   }
 }
@@ -184,10 +181,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData(
-            { foo: 42, [illFormedKey]: 41 },
-            schema
-          );
+          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -201,9 +195,7 @@ describe('AJV8Validator', () => {
           expect(errorSchema.foo!.__errors).toHaveLength(1);
           expect(errorSchema.foo!.__errors![0]).toEqual('must be string');
           expect(errorSchema[illFormedKey]!.__errors).toHaveLength(1);
-          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual(
-            'must be string'
-          );
+          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual('must be string');
         });
       });
       describe('Validating multipleOf with a float', () => {
@@ -257,10 +249,7 @@ describe('AJV8Validator', () => {
         });
         it('should return an errorSchema', () => {
           expect(errorSchema.price!.__errors).toHaveLength(2);
-          expect(errorSchema.price!.__errors).toEqual([
-            'must be >= 1',
-            'must be multiple of 0.03',
-          ]);
+          expect(errorSchema.price!.__errors).toEqual(['must be >= 1', 'must be multiple of 0.03']);
         });
       });
       describe('Validating required fields', () => {
@@ -284,15 +273,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
         describe('formData is not provided for nested child', () => {
@@ -318,15 +303,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
       });
@@ -413,10 +394,7 @@ describe('AJV8Validator', () => {
           expect(errors[0].message).toEqual(newErrorMessage);
         });
         it('transformErrors function was called with uiSchema', () => {
-          expect(transformErrors).toHaveBeenCalledWith(
-            expect.any(Array),
-            uiSchema
-          );
+          expect(transformErrors).toHaveBeenCalledWith(expect.any(Array), uiSchema);
         });
       });
       describe('Custom validate function', () => {
@@ -448,13 +426,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate,
-              undefined,
-              uiSchema
-            );
+            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -464,16 +436,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(
-              expect.any(Object),
-              expect.any(Object),
-              uiSchema
-            );
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
           });
         });
         describe('formData is missing data', () => {
@@ -486,11 +452,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate
-            );
+            const result = validator.validateFormData(formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -500,9 +462,7 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
         });
       });
@@ -552,16 +512,12 @@ describe('AJV8Validator', () => {
         });
         it('should return an error list', () => {
           expect(errors).toHaveLength(1);
-          expect(errors[0].stack).toEqual(
-            'schema is invalid: data/properties/foo/required must be array'
-          );
+          expect(errors[0].stack).toEqual('schema is invalid: data/properties/foo/required must be array');
         });
         it('should return an errorSchema', () => {
           expect(errorSchema).toEqual({
             $schema: {
-              __errors: [
-                'schema is invalid: data/properties/foo/required must be array',
-              ],
+              __errors: ['schema is invalid: data/properties/foo/required must be array'],
             },
           });
         });
@@ -714,10 +670,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData(
-            { foo: 42, [illFormedKey]: 41 },
-            schema
-          );
+          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -731,9 +684,7 @@ describe('AJV8Validator', () => {
           expect(errorSchema.foo!.__errors).toHaveLength(1);
           expect(errorSchema.foo!.__errors![0]).toEqual('must be string');
           expect(errorSchema[illFormedKey]!.__errors).toHaveLength(1);
-          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual(
-            'must be string'
-          );
+          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual('must be string');
         });
       });
       describe('Validating multipleOf with a float', () => {
@@ -787,10 +738,7 @@ describe('AJV8Validator', () => {
         });
         it('should return an errorSchema', () => {
           expect(errorSchema.price!.__errors).toHaveLength(2);
-          expect(errorSchema.price!.__errors).toEqual([
-            'must be >= 1',
-            'must be multiple of 0.03',
-          ]);
+          expect(errorSchema.price!.__errors).toEqual(['must be >= 1', 'must be multiple of 0.03']);
         });
       });
       describe('Validating required fields', () => {
@@ -814,15 +762,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
         describe('formData is not provided for nested child', () => {
@@ -848,15 +792,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
       });
@@ -944,10 +884,7 @@ describe('AJV8Validator', () => {
           expect(errors[0].message).toEqual(newErrorMessage);
         });
         it('transformErrors function was called with uiSchema', () => {
-          expect(transformErrors).toHaveBeenCalledWith(
-            expect.any(Array),
-            uiSchema
-          );
+          expect(transformErrors).toHaveBeenCalledWith(expect.any(Array), uiSchema);
         });
       });
       describe('Custom validate function', () => {
@@ -979,13 +916,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate,
-              undefined,
-              uiSchema
-            );
+            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -995,16 +926,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(
-              expect.any(Object),
-              expect.any(Object),
-              uiSchema
-            );
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
           });
         });
         describe('formData is missing data', () => {
@@ -1017,11 +942,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate
-            );
+            const result = validator.validateFormData(formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1031,9 +952,7 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
         });
       });
@@ -1083,16 +1002,12 @@ describe('AJV8Validator', () => {
         });
         it('should return an error list', () => {
           expect(errors).toHaveLength(1);
-          expect(errors[0].stack).toEqual(
-            'schema is invalid: data/properties/foo/required must be array'
-          );
+          expect(errors[0].stack).toEqual('schema is invalid: data/properties/foo/required must be array');
         });
         it('should return an errorSchema', () => {
           expect(errorSchema).toEqual({
             $schema: {
-              __errors: [
-                'schema is invalid: data/properties/foo/required must be array',
-              ],
+              __errors: ['schema is invalid: data/properties/foo/required must be array'],
             },
           });
         });
@@ -1245,10 +1160,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData(
-            { foo: 42, [illFormedKey]: 41 },
-            schema
-          );
+          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -1262,9 +1174,7 @@ describe('AJV8Validator', () => {
           expect(errorSchema.foo!.__errors).toHaveLength(1);
           expect(errorSchema.foo!.__errors![0]).toEqual('must be string');
           expect(errorSchema[illFormedKey]!.__errors).toHaveLength(1);
-          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual(
-            'must be string'
-          );
+          expect(errorSchema[illFormedKey]!.__errors![0]).toEqual('must be string');
         });
       });
       describe('Validating multipleOf with a float', () => {
@@ -1318,10 +1228,7 @@ describe('AJV8Validator', () => {
         });
         it('should return an errorSchema', () => {
           expect(errorSchema.price!.__errors).toHaveLength(2);
-          expect(errorSchema.price!.__errors).toEqual([
-            'must be >= 1',
-            'must be multiple of 0.03',
-          ]);
+          expect(errorSchema.price!.__errors).toEqual(['must be >= 1', 'must be multiple of 0.03']);
         });
       });
       describe('Validating required fields', () => {
@@ -1345,15 +1252,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
         describe('formData is not provided for nested child', () => {
@@ -1379,15 +1282,11 @@ describe('AJV8Validator', () => {
           });
           it('should return an error list', () => {
             expect(errors).toHaveLength(1);
-            expect(errors[0].stack).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errors[0].stack).toEqual("must have required property 'pass2'");
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual(
-              "must have required property 'pass2'"
-            );
+            expect(errorSchema.nested!.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
         });
         describe('title is in validation messages at the top level', () => {
@@ -1423,14 +1322,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.lastName!.__errors).toHaveLength(1);
-            expect(errorSchema.lastName!.__errors![0]).toEqual(
-              "must have required property 'Last Name'"
-            );
+            expect(errorSchema.lastName!.__errors![0]).toEqual("must have required property 'Last Name'");
 
             expect(errorSchema.numberOfChildren!.__errors).toHaveLength(1);
-            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual(
-              'must match pattern "\\d+"'
-            );
+            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
         describe('title is in validation message with a nested child', () => {
@@ -1472,16 +1367,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.nested!.lastName!.__errors).toHaveLength(1);
-            expect(errorSchema.nested!.lastName!.__errors![0]).toEqual(
-              "must have required property 'Last Name'"
-            );
+            expect(errorSchema.nested!.lastName!.__errors![0]).toEqual("must have required property 'Last Name'");
 
-            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(
-              1
-            );
-            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual(
-              'must match pattern "\\d+"'
-            );
+            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
         describe('title is in validation message when it is in the uiSchema ui:title field', () => {
@@ -1509,13 +1398,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { firstName: 'a', numberOfChildren: 'aa' };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              undefined,
-              undefined,
-              uiSchema
-            );
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1531,14 +1414,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.lastName!.__errors).toHaveLength(1);
-            expect(errorSchema.lastName!.__errors![0]).toEqual(
-              "must have required property 'uiSchema Last Name'"
-            );
+            expect(errorSchema.lastName!.__errors![0]).toEqual("must have required property 'uiSchema Last Name'");
 
             expect(errorSchema.numberOfChildren!.__errors).toHaveLength(1);
-            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual(
-              'must match pattern "\\d+"'
-            );
+            expect(errorSchema.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
         describe('uiSchema title in validation when defined in nested field', () => {
@@ -1575,13 +1454,7 @@ describe('AJV8Validator', () => {
             const formData = {
               nested: { firstName: 'a', numberOfChildren: 'aa' },
             };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              undefined,
-              undefined,
-              uiSchema
-            );
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1600,12 +1473,8 @@ describe('AJV8Validator', () => {
               "must have required property 'uiSchema Last Name'"
             );
 
-            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(
-              1
-            );
-            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual(
-              'must match pattern "\\d+"'
-            );
+            expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(1);
+            expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
       });
@@ -1709,10 +1578,7 @@ describe('AJV8Validator', () => {
           expect(errors[0].message).toEqual(newErrorMessage);
         });
         it('transformErrors function was called with uiSchema', () => {
-          expect(transformErrors).toHaveBeenCalledWith(
-            expect.any(Array),
-            uiSchema
-          );
+          expect(transformErrors).toHaveBeenCalledWith(expect.any(Array), uiSchema);
         });
       });
       describe('Custom validate function', () => {
@@ -1744,13 +1610,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate,
-              undefined,
-              uiSchema
-            );
+            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1760,16 +1620,10 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
           it('validate function was called with uiSchema', () => {
-            expect(validate).toHaveBeenCalledWith(
-              expect.any(Object),
-              expect.any(Object),
-              uiSchema
-            );
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
           });
         });
         describe('formData is missing data', () => {
@@ -1782,11 +1636,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(
-              formData,
-              schema,
-              validate
-            );
+            const result = validator.validateFormData(formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1796,9 +1646,7 @@ describe('AJV8Validator', () => {
           });
           it('should return an errorSchema', () => {
             expect(errorSchema.pass2!.__errors).toHaveLength(1);
-            expect(errorSchema.pass2!.__errors![0]).toEqual(
-              'passwords don`t match.'
-            );
+            expect(errorSchema.pass2!.__errors![0]).toEqual('passwords don`t match.');
           });
         });
       });
@@ -1848,16 +1696,12 @@ describe('AJV8Validator', () => {
         });
         it('should return an error list', () => {
           expect(errors).toHaveLength(1);
-          expect(errors[0].stack).toEqual(
-            'schema is invalid: data/properties/foo/required must be array'
-          );
+          expect(errors[0].stack).toEqual('schema is invalid: data/properties/foo/required must be array');
         });
         it('should return an errorSchema', () => {
           expect(errorSchema).toEqual({
             $schema: {
-              __errors: [
-                'schema is invalid: data/properties/foo/required must be array',
-              ],
+              __errors: ['schema is invalid: data/properties/foo/required must be array'],
             },
           });
         });
@@ -1889,12 +1733,8 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData(
-        { datasetId: 'some kind of text' },
-        schema
-      );
-      const errMessage =
-        'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
+      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
@@ -1911,10 +1751,7 @@ describe('AJV8Validator', () => {
           },
           localizer
         );
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -1948,10 +1785,7 @@ describe('AJV8Validator', () => {
         validator = new TestValidator({
           additionalMetaSchemas: [metaSchemaDraft6],
         });
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -1977,10 +1811,7 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData(
-          { phone: '800.555.2368' },
-          schema
-        );
+        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
@@ -1993,19 +1824,14 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData(
-            { phone: '800.555.2368' },
-            schema
-          );
+          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
           expect(errors).toHaveLength(1);
         });
         it('should return a validation error about formData', () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('.phone must match format "phone-us"');
         });
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
@@ -2028,9 +1854,7 @@ describe('AJV8Validator', () => {
             expect(errors).toHaveLength(1);
           });
           it('should return a validation error about formData', () => {
-            expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
-            );
+            expect(errors[0].stack).toEqual('.phone must match format "area-code"');
           });
         });
       });
@@ -2061,12 +1885,8 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData(
-        { datasetId: 'some kind of text' },
-        schema
-      );
-      const errMessage =
-        'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
+      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
@@ -2084,10 +1904,7 @@ describe('AJV8Validator', () => {
           },
           localizer
         );
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2122,10 +1939,7 @@ describe('AJV8Validator', () => {
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2019,
         });
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2151,10 +1965,7 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData(
-          { phone: '800.555.2368' },
-          schema
-        );
+        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
@@ -2167,19 +1978,14 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData(
-            { phone: '800.555.2368' },
-            schema
-          );
+          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
           expect(errors).toHaveLength(1);
         });
         it('should return a validation error about formData', () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('.phone must match format "phone-us"');
         });
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
@@ -2202,9 +2008,7 @@ describe('AJV8Validator', () => {
             expect(errors).toHaveLength(1);
           });
           it('should return a validation error about formData', () => {
-            expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
-            );
+            expect(errors[0].stack).toEqual('.phone must match format "area-code"');
           });
         });
       });
@@ -2235,12 +2039,8 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData(
-        { datasetId: 'some kind of text' },
-        schema
-      );
-      const errMessage =
-        'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
+      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
         $schema: { __errors: [errMessage] },
@@ -2258,10 +2058,7 @@ describe('AJV8Validator', () => {
           },
           localizer
         );
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2296,10 +2093,7 @@ describe('AJV8Validator', () => {
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2020,
         });
-        const result = validator.validateFormData(
-          { datasetId: 'some kind of text' },
-          schema
-        );
+        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2325,10 +2119,7 @@ describe('AJV8Validator', () => {
         };
       });
       it('should not return a validation error if unknown string format is used', () => {
-        const result = validator.validateFormData(
-          { phone: '800.555.2368' },
-          schema
-        );
+        const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
@@ -2341,19 +2132,14 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData(
-            { phone: '800.555.2368' },
-            schema
-          );
+          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
           expect(errors).toHaveLength(1);
         });
         it('should return a validation error about formData', () => {
-          expect(errors[0].stack).toEqual(
-            '.phone must match format "phone-us"'
-          );
+          expect(errors[0].stack).toEqual('.phone must match format "phone-us"');
         });
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
@@ -2376,9 +2162,7 @@ describe('AJV8Validator', () => {
             expect(errors).toHaveLength(1);
           });
           it('should return a validation error about formData', () => {
-            expect(errors[0].stack).toEqual(
-              '.phone must match format "area-code"'
-            );
+            expect(errors[0].stack).toEqual('.phone must match format "area-code"');
           });
         });
       });

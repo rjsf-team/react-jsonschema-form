@@ -2,11 +2,7 @@ import Ajv from 'ajv';
 import Ajv2019 from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 
-import createAjvInstance, {
-  AJV_CONFIG,
-  COLOR_FORMAT_REGEX,
-  DATA_URL_FORMAT_REGEX,
-} from '../src/createAjvInstance';
+import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
 import { CustomValidatorOptionsType } from '../src';
 
 jest.mock('ajv');
@@ -48,18 +44,10 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(2);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('addMetaSchema was not called', () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
@@ -68,13 +56,7 @@ describe('createAjvInstance()', () => {
   describe('all defaults except uses the Ajv2019 class', () => {
     let ajv: Ajv;
     beforeAll(() => {
-      ajv = createAjvInstance(
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        Ajv2019
-      );
+      ajv = createAjvInstance(undefined, undefined, undefined, undefined, Ajv2019);
     });
     afterAll(() => {
       (Ajv as unknown as jest.Mock).mockClear();
@@ -93,18 +75,10 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(2);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('addMetaSchema was not called', () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();
@@ -131,43 +105,24 @@ describe('createAjvInstance()', () => {
       });
     });
     it('expect addFormats to be called with the new ajv instance and options', () => {
-      expect(addFormats).toHaveBeenCalledWith(
-        ajv,
-        CUSTOM_OPTIONS.ajvFormatOptions
-      );
+      expect(addFormats).toHaveBeenCalledWith(ajv, CUSTOM_OPTIONS.ajvFormatOptions);
     });
     it('addFormat() was called twice', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(4);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('the remaining addFormat() calls were for custom formats', () => {
-      Object.keys(CUSTOM_OPTIONS.customFormats!).forEach(
-        (key: string, i: number) => {
-          expect(ajv.addFormat).toHaveBeenNthCalledWith(
-            3 + i,
-            key,
-            CUSTOM_OPTIONS.customFormats![key]
-          );
-        }
-      );
+      Object.keys(CUSTOM_OPTIONS.customFormats!).forEach((key: string, i: number) => {
+        expect(ajv.addFormat).toHaveBeenNthCalledWith(3 + i, key, CUSTOM_OPTIONS.customFormats![key]);
+      });
     });
     it('addMetaSchema was not called', () => {
-      expect(ajv.addMetaSchema).toHaveBeenCalledWith(
-        CUSTOM_OPTIONS.additionalMetaSchemas
-      );
+      expect(ajv.addMetaSchema).toHaveBeenCalledWith(CUSTOM_OPTIONS.additionalMetaSchemas);
     });
   });
   describe('disables ajv format', () => {
@@ -189,18 +144,10 @@ describe('createAjvInstance()', () => {
       expect(ajv.addFormat).toHaveBeenCalledTimes(2);
     });
     it('the first addFormat() was for data-url', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        1,
-        'data-url',
-        DATA_URL_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(1, 'data-url', DATA_URL_FORMAT_REGEX);
     });
     it('the second addFormat() was for color', () => {
-      expect(ajv.addFormat).toHaveBeenNthCalledWith(
-        2,
-        'color',
-        COLOR_FORMAT_REGEX
-      );
+      expect(ajv.addFormat).toHaveBeenNthCalledWith(2, 'color', COLOR_FORMAT_REGEX);
     });
     it('addMetaSchema was not called', () => {
       expect(ajv.addMetaSchema).not.toHaveBeenCalled();

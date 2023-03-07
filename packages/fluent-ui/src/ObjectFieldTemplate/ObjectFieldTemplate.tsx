@@ -24,17 +24,12 @@ export default function ObjectFieldTemplate<
   registry,
 }: ObjectFieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    'DescriptionFieldTemplate',
-    T,
-    S,
-    F
-  >('DescriptionFieldTemplate', registry, uiOptions);
   return (
     <>
       {(uiOptions.title || title) && (
@@ -57,9 +52,7 @@ export default function ObjectFieldTemplate<
         />
       )}
       <div className='ms-Grid' dir='ltr'>
-        <div className='ms-Grid-row'>
-          {properties.map((element) => element.content)}
-        </div>
+        <div className='ms-Grid-row'>{properties.map((element) => element.content)}</div>
       </div>
     </>
   );

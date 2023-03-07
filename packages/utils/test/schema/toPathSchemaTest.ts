@@ -89,44 +89,42 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         ],
       };
 
-      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
-        {
-          $name: '',
-          list: {
-            $name: 'list',
-            '0': {
-              $name: 'list.0',
-              a: {
-                $name: 'list.0.a',
-              },
-              b: {
-                $name: 'list.0.b',
-              },
-              c: {
-                $name: 'list.0.c',
-              },
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        list: {
+          $name: 'list',
+          '0': {
+            $name: 'list.0',
+            a: {
+              $name: 'list.0.a',
             },
-            '1': {
-              $name: 'list.1',
-              a: {
-                $name: 'list.1.a',
-              },
-              b: {
-                $name: 'list.1.b',
-              },
+            b: {
+              $name: 'list.0.b',
             },
-            '2': {
-              $name: 'list.2',
-              a: {
-                $name: 'list.2.a',
-              },
-              b: {
-                $name: 'list.2.b',
-              },
+            c: {
+              $name: 'list.0.c',
             },
           },
-        }
-      );
+          '1': {
+            $name: 'list.1',
+            a: {
+              $name: 'list.1.a',
+            },
+            b: {
+              $name: 'list.1.b',
+            },
+          },
+          '2': {
+            $name: 'list.2',
+            a: {
+              $name: 'list.2.a',
+            },
+            b: {
+              $name: 'list.2.b',
+            },
+          },
+        },
+      });
     });
     it('should return a pathSchema for a schema with references', () => {
       const schema: RJSFSchema = {
@@ -164,23 +162,21 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         },
       };
 
-      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
-        {
-          $name: '',
-          billing_address: {
-            $name: 'billing_address',
-            city: {
-              $name: 'billing_address.city',
-            },
-            state: {
-              $name: 'billing_address.state',
-            },
-            street_address: {
-              $name: 'billing_address.street_address',
-            },
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        billing_address: {
+          $name: 'billing_address',
+          city: {
+            $name: 'billing_address.city',
           },
-        }
-      );
+          state: {
+            $name: 'billing_address.state',
+          },
+          street_address: {
+            $name: 'billing_address.street_address',
+          },
+        },
+      });
     });
     it('should return a pathSchema for a schema with references in an array item', () => {
       const schema: RJSFSchema = {
@@ -228,38 +224,36 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         ],
       };
 
-      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
-        {
-          $name: '',
-          address_list: {
-            $name: 'address_list',
-            '0': {
-              $name: 'address_list.0',
-              city: {
-                $name: 'address_list.0.city',
-              },
-              state: {
-                $name: 'address_list.0.state',
-              },
-              street_address: {
-                $name: 'address_list.0.street_address',
-              },
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        address_list: {
+          $name: 'address_list',
+          '0': {
+            $name: 'address_list.0',
+            city: {
+              $name: 'address_list.0.city',
             },
-            '1': {
-              $name: 'address_list.1',
-              city: {
-                $name: 'address_list.1.city',
-              },
-              state: {
-                $name: 'address_list.1.state',
-              },
-              street_address: {
-                $name: 'address_list.1.street_address',
-              },
+            state: {
+              $name: 'address_list.0.state',
+            },
+            street_address: {
+              $name: 'address_list.0.street_address',
             },
           },
-        }
-      );
+          '1': {
+            $name: 'address_list.1',
+            city: {
+              $name: 'address_list.1.city',
+            },
+            state: {
+              $name: 'address_list.1.state',
+            },
+            street_address: {
+              $name: 'address_list.1.street_address',
+            },
+          },
+        },
+      });
     });
     it('should return an pathSchema with different types of arrays', () => {
       const schema: RJSFSchema = {
@@ -423,28 +417,13 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
             name: 'Default name',
           },
         ],
-        defaultsAndMinItems: [
-          'carp',
-          'trout',
-          'bream',
-          'unidentified',
-          'unidentified',
-        ],
+        defaultsAndMinItems: ['carp', 'trout', 'bream', 'unidentified', 'unidentified'],
         nestedList: [['lorem', 'ipsum'], ['dolor']],
-        listOfObjects: [
-          { name: 'name1', id: 123 },
-          { name: 'name2', id: 1234 },
-          { id: 12345 },
-        ],
+        listOfObjects: [{ name: 'name1', id: 123 }, { name: 'name2', id: 1234 }, { id: 12345 }],
         unorderable: ['one', 'two'],
         unremovable: ['one', 'two'],
         noToolbar: ['one', 'two'],
-        fixedNoToolbar: [
-          42,
-          true,
-          'additional item one',
-          'additional item two',
-        ],
+        fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],
       };
 
       const schemaUtils = createSchemaUtils(testValidator, schema);
@@ -639,14 +618,12 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       // Two options per getClosestMatchingOption, the first one is false, the second one makes the lorem value true
       testValidator.setReturnValues({ isValid: [false, true] });
 
-      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
-        {
-          $name: '',
-          lorem: {
-            $name: 'lorem',
-          },
-        }
-      );
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        lorem: {
+          $name: 'lorem',
+        },
+      });
     });
     it('should return a pathSchema for a schema with anyOf', () => {
       const schema: RJSFSchema = {
@@ -676,14 +653,12 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       // the second ones make the ipsum value true
       testValidator.setReturnValues({ isValid: [false, false, false, true] });
 
-      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual(
-        {
-          $name: '',
-          ipsum: {
-            $name: 'ipsum',
-          },
-        }
-      );
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        ipsum: {
+          $name: 'ipsum',
+        },
+      });
     });
   });
 }

@@ -46,34 +46,27 @@ export default function ArrayFieldTemplate<
   const { horizontalButtons, wrapItem } = semanticProps;
   const semantic = { horizontalButtons, wrapItem };
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldDescriptionTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate<
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
-    T,
-    S,
-    F
-  >('ArrayFieldTitleTemplate', registry, uiOptions);
+    registry,
+    uiOptions
+  );
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <div
-      className={cleanClassNames([
-        className,
-        isFixedItems<S>(schema) ? '' : 'sortable-form-fields',
-      ])}
-    >
+    <div className={cleanClassNames([className, isFixedItems<S>(schema) ? '' : 'sortable-form-fields'])}>
       <ArrayFieldTitleTemplate
         idSchema={idSchema}
         title={uiOptions.title || title}
@@ -92,29 +85,17 @@ export default function ArrayFieldTemplate<
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className='row array-item-list'>
           {items &&
-            items.map(
-              ({
-                key,
-                uiSchema: itemUiSchema = {},
-                ...props
-              }: ArrayFieldTemplateItemType<T, S, F>) => {
-                // Merge in the semantic props from the ArrayFieldTemplate into each of the items
-                const mergedUiSchema = {
-                  ...itemUiSchema,
-                  [UI_OPTIONS_KEY]: {
-                    ...itemUiSchema[UI_OPTIONS_KEY],
-                    semantic,
-                  },
-                };
-                return (
-                  <ArrayFieldItemTemplate
-                    key={key}
-                    {...props}
-                    uiSchema={mergedUiSchema}
-                  />
-                );
-              }
-            )}
+            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldTemplateItemType<T, S, F>) => {
+              // Merge in the semantic props from the ArrayFieldTemplate into each of the items
+              const mergedUiSchema = {
+                ...itemUiSchema,
+                [UI_OPTIONS_KEY]: {
+                  ...itemUiSchema[UI_OPTIONS_KEY],
+                  semantic,
+                },
+              };
+              return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
+            })}
         </div>
         {canAdd && (
           <div
@@ -124,12 +105,7 @@ export default function ArrayFieldTemplate<
               textAlign: 'right',
             }}
           >
-            <AddButton
-              onClick={onAddClick}
-              disabled={disabled || readonly}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
+            <AddButton onClick={onAddClick} disabled={disabled || readonly} uiSchema={uiSchema} registry={registry} />
           </div>
         )}
       </div>

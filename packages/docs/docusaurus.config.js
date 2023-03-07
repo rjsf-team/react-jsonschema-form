@@ -40,8 +40,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
+          editUrl: 'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
         },
         blog: false,
         theme: {

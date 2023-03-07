@@ -33,11 +33,8 @@ const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
-export default class AJV8Validator<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> implements ValidatorType<T, S, F>
+export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  implements ValidatorType<T, S, F>
 {
   /** The AJV instance to use for all validations
    *
@@ -57,20 +54,8 @@ export default class AJV8Validator<
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    */
   constructor(options: CustomValidatorOptionsType, localizer?: Localizer) {
-    const {
-      additionalMetaSchemas,
-      customFormats,
-      ajvOptionsOverrides,
-      ajvFormatOptions,
-      AjvClass,
-    } = options;
-    this.ajv = createAjvInstance(
-      additionalMetaSchemas,
-      customFormats,
-      ajvOptionsOverrides,
-      ajvFormatOptions,
-      AjvClass
-    );
+    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass } = options;
+    this.ajv = createAjvInstance(additionalMetaSchemas, customFormats, ajvOptionsOverrides, ajvFormatOptions, AjvClass);
     this.localizer = localizer;
   }
 
@@ -137,12 +122,7 @@ export default class AJV8Validator<
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
       if (key !== ERRORS_KEY) {
-        acc = acc.concat(
-          this.toErrorList((errorSchema as GenericObjectType)[key], [
-            ...fieldPath,
-            key,
-          ])
-        );
+        acc = acc.concat(this.toErrorList((errorSchema as GenericObjectType)[key], [...fieldPath, key]));
       }
       return acc;
     }, errorList);
@@ -191,9 +171,7 @@ export default class AJV8Validator<
       }
       return {
         ...acc,
-        [key]: this.unwrapErrorHandler(
-          (errorHandler as GenericObjectType)[key]
-        ),
+        [key]: this.unwrapErrorHandler((errorHandler as GenericObjectType)[key]),
       };
     }, {} as ErrorSchema<T>);
   }
@@ -209,35 +187,20 @@ export default class AJV8Validator<
     uiSchema?: UiSchema<T, S, F>
   ): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
-      const {
-        instancePath,
-        keyword,
-        params,
-        schemaPath,
-        parentSchema,
-        ...rest
-      } = e;
+      const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
       let { message = '' } = rest;
       let property = instancePath.replace(/\//g, '.');
       let stack = `${property} ${message}`.trim();
 
       if ('missingProperty' in params) {
-        property = property
-          ? `${property}.${params.missingProperty}`
-          : params.missingProperty;
+        property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
         const currentProperty: string = params.missingProperty;
-        const uiSchemaTitle = getUiOptions(
-          get(uiSchema, `${property.replace(/^\./, '')}`)
-        ).title;
+        const uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
 
         if (uiSchemaTitle) {
           message = message.replace(currentProperty, uiSchemaTitle);
         } else {
-          const parentSchemaTitle = get(parentSchema, [
-            PROPERTIES_KEY,
-            currentProperty,
-            'title',
-          ]);
+          const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
 
           if (parentSchemaTitle) {
             message = message.replace(currentProperty, parentSchemaTitle);
@@ -246,9 +209,7 @@ export default class AJV8Validator<
 
         stack = message;
       } else {
-        const uiSchemaTitle = getUiOptions(
-          get(uiSchema, `${property.replace(/^\./, '')}`)
-        ).title;
+        const uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
 
         if (uiSchemaTitle) {
           stack = `'${uiSchemaTitle}' ${message}`.trim();
@@ -279,10 +240,7 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data   * @param schema
    * @param formData - The form data to validate
    */
-  rawValidation<Result = any>(
-    schema: RJSFSchema,
-    formData?: T
-  ): { errors?: Result[]; validationError?: Error } {
+  rawValidation<Result = any>(schema: RJSFSchema, formData?: T): { errors?: Result[]; validationError?: Error } {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     if (schema['$id']) {
@@ -359,25 +317,11 @@ export default class AJV8Validator<
     }
 
     // Include form data with undefined values, which is required for custom validation.
-    const newFormData = getDefaultFormState<T, S, F>(
-      this,
-      schema,
-      formData,
-      schema,
-      true
-    ) as T;
+    const newFormData = getDefaultFormState<T, S, F>(this, schema, formData, schema, true) as T;
 
-    const errorHandler = customValidate(
-      newFormData,
-      this.createErrorHandler(newFormData),
-      uiSchema
-    );
+    const errorHandler = customValidate(newFormData, this.createErrorHandler(newFormData), uiSchema);
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    return mergeValidationData<T, S, F>(
-      this,
-      { errors, errorSchema },
-      userErrorSchema
-    );
+    return mergeValidationData<T, S, F>(this, { errors, errorSchema }, userErrorSchema);
   }
 
   /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
@@ -390,11 +334,7 @@ export default class AJV8Validator<
     for (const key in node) {
       const realObj: GenericObjectType = node;
       const value = realObj[key];
-      if (
-        key === REF_KEY &&
-        typeof value === 'string' &&
-        value.startsWith('#')
-      ) {
+      if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
         realObj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {
         realObj[key] = this.withIdRefPrefix(value);

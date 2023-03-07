@@ -7,12 +7,7 @@ import RangeWidget from '../RangeWidget/RangeWidget';
 import SelectWidget from '../SelectWidget/SelectWidget';
 import TextareaWidget from '../TextareaWidget/TextareaWidget';
 import UpDownWidget from '../UpDownWidget/UpDownWidget';
-import {
-  FormContextType,
-  RegistryWidgetsType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export function generateWidgets<
   T = any,

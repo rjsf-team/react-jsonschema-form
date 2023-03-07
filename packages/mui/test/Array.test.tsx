@@ -12,9 +12,7 @@ describe('array fields', () => {
         type: 'string',
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('fixed array', () => {
@@ -29,9 +27,7 @@ describe('array fields', () => {
         },
       ],
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('checkboxes', () => {
@@ -43,9 +39,7 @@ describe('array fields', () => {
       },
       uniqueItems: true,
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('array icons', () => {
@@ -55,11 +49,7 @@ describe('array fields', () => {
         type: 'string',
       },
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} formData={['a', 'b']} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} formData={['a', 'b']} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('no errors', () => {
@@ -71,9 +61,7 @@ describe('array fields', () => {
         },
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
   test('empty errors array', () => {
@@ -89,11 +77,7 @@ describe('array fields', () => {
     const extraErrors = {
       name: { __errors: errors },
     } as unknown as ErrorSchema;
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} extraErrors={extraErrors} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} extraErrors={extraErrors} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

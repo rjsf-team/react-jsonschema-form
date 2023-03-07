@@ -49,14 +49,11 @@ export default function BaseInputTemplate<
 
   const handleTextChange = onChangeOverride
     ? onChangeOverride
-    : ({ target }: ChangeEvent<HTMLInputElement>) =>
-        onChange(target.value === '' ? options.emptyValue : target.value);
+    : ({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.value);
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.value);
 
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
@@ -97,11 +94,7 @@ export default function BaseInputTemplate<
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(
-              schema.default && !schema.examples.includes(schema.default)
-                ? ([schema.default] as string[])
-                : []
-            )
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example) => {
               return <option key={example} value={example} />;
             })}

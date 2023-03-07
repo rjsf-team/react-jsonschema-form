@@ -46,49 +46,32 @@ const registry: Registry = {
 };
 
 const uiOptions: UIOptionsType = {
-  ArrayFieldDescriptionTemplate:
-    CustomTemplate as unknown as UIOptionsType['ArrayFieldDescriptionTemplate'],
-  ArrayFieldItemTemplate:
-    CustomTemplate as unknown as UIOptionsType['ArrayFieldItemTemplate'],
-  ArrayFieldTemplate:
-    CustomTemplate as unknown as UIOptionsType['ArrayFieldTemplate'],
-  ArrayFieldTitleTemplate:
-    CustomTemplate as unknown as UIOptionsType['ArrayFieldTitleTemplate'],
-  BaseInputTemplate:
-    CustomTemplate as unknown as UIOptionsType['BaseInputTemplate'],
-  DescriptionFieldTemplate:
-    CustomTemplate as unknown as UIOptionsType['DescriptionFieldTemplate'],
-  ErrorListTemplate:
-    CustomTemplate as unknown as UIOptionsType['ErrorListTemplate'],
-  FieldErrorTemplate:
-    CustomTemplate as unknown as UIOptionsType['FieldErrorTemplate'],
-  FieldHelpTemplate:
-    CustomTemplate as unknown as UIOptionsType['FieldHelpTemplate'],
+  ArrayFieldDescriptionTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldDescriptionTemplate'],
+  ArrayFieldItemTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldItemTemplate'],
+  ArrayFieldTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTemplate'],
+  ArrayFieldTitleTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTitleTemplate'],
+  BaseInputTemplate: CustomTemplate as unknown as UIOptionsType['BaseInputTemplate'],
+  DescriptionFieldTemplate: CustomTemplate as unknown as UIOptionsType['DescriptionFieldTemplate'],
+  ErrorListTemplate: CustomTemplate as unknown as UIOptionsType['ErrorListTemplate'],
+  FieldErrorTemplate: CustomTemplate as unknown as UIOptionsType['FieldErrorTemplate'],
+  FieldHelpTemplate: CustomTemplate as unknown as UIOptionsType['FieldHelpTemplate'],
   FieldTemplate: CustomTemplate as unknown as UIOptionsType['FieldTemplate'],
-  ObjectFieldTemplate:
-    CustomTemplate as unknown as UIOptionsType['ObjectFieldTemplate'],
-  TitleFieldTemplate:
-    CustomTemplate as unknown as UIOptionsType['TitleFieldTemplate'],
-  UnsupportedFieldTemplate:
-    CustomTemplate as unknown as UIOptionsType['UnsupportedFieldTemplate'],
-  WrapIfAdditionalTemplate:
-    CustomTemplate as unknown as UIOptionsType['WrapIfAdditionalTemplate'],
+  ObjectFieldTemplate: CustomTemplate as unknown as UIOptionsType['ObjectFieldTemplate'],
+  TitleFieldTemplate: CustomTemplate as unknown as UIOptionsType['TitleFieldTemplate'],
+  UnsupportedFieldTemplate: CustomTemplate as unknown as UIOptionsType['UnsupportedFieldTemplate'],
+  WrapIfAdditionalTemplate: CustomTemplate as unknown as UIOptionsType['WrapIfAdditionalTemplate'],
 };
 
-const KEYS = Object.keys(registry.templates).filter(
-  (k) => k !== 'ButtonTemplates'
-);
+const KEYS = Object.keys(registry.templates).filter((k) => k !== 'ButtonTemplates');
 
 describe('getTemplate', () => {
   it('returns the ButtonTemplates from the registry', () => {
-    expect(getTemplate<'ButtonTemplates'>('ButtonTemplates', registry)).toBe(
-      registry.templates.ButtonTemplates
-    );
+    expect(getTemplate<'ButtonTemplates'>('ButtonTemplates', registry)).toBe(registry.templates.ButtonTemplates);
   });
   it('returns the ButtonTemplates from the registry even with uiOptions', () => {
-    expect(
-      getTemplate<'ButtonTemplates'>('ButtonTemplates', registry, uiOptions)
-    ).toBe(registry.templates.ButtonTemplates);
+    expect(getTemplate<'ButtonTemplates'>('ButtonTemplates', registry, uiOptions)).toBe(
+      registry.templates.ButtonTemplates
+    );
   });
   it('returns the template from registry', () => {
     KEYS.forEach((key) => {
@@ -99,9 +82,7 @@ describe('getTemplate', () => {
   it('returns the template from uiOptions when available', () => {
     KEYS.forEach((key) => {
       const name = key as keyof TemplatesType;
-      expect(getTemplate<typeof name>(name, registry, uiOptions)).toBe(
-        CustomTemplate
-      );
+      expect(getTemplate<typeof name>(name, registry, uiOptions)).toBe(CustomTemplate);
     });
   });
 });
