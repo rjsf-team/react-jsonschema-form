@@ -1,6 +1,6 @@
-import { ChangeEvent, FocusEvent } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { ChangeEvent, FocusEvent } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -9,7 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -45,13 +45,10 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
-  multiple = typeof multiple === "undefined" ? false : !!multiple;
+  multiple = typeof multiple === 'undefined' ? false : !!multiple;
 
-  const emptyValue = multiple ? [] : "";
-  const isEmpty =
-    typeof value === "undefined" ||
-    (multiple && value.length < 1) ||
-    (!multiple && value === emptyValue);
+  const emptyValue = multiple ? [] : '';
+  const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
@@ -59,11 +56,7 @@ export default function SelectWidget<
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    multiple
-  );
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
   return (
     <TextField
@@ -93,8 +86,7 @@ export default function SelectWidget<
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i: number) => {
-          const disabled: boolean =
-            Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+          const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
           return (
             <MenuItem key={i} value={String(i)} disabled={disabled}>
               {label}

@@ -1,12 +1,5 @@
-import { FocusEvent } from "react";
-import {
-  CheckboxGroup,
-  Checkbox,
-  FormLabel,
-  FormControl,
-  Text,
-  Stack,
-} from "@chakra-ui/react";
+import { FocusEvent } from 'react';
+import { CheckboxGroup, Checkbox, FormLabel, FormControl, Text, Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -17,8 +10,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function CheckboxesWidget<
   T = any,
@@ -46,17 +39,11 @@ export default function CheckboxesWidget<
 
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: FocusEvent<HTMLInputElement | any>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    true
-  ) as string[];
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   return (
     <FormControl
@@ -71,22 +58,15 @@ export default function CheckboxesWidget<
         {label || schema.title}
       </FormLabel>
       <CheckboxGroup
-        onChange={(option) =>
-          onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))
-        }
+        onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         defaultValue={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        <Stack direction={row ? "row" : "column"}>
+        <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const checked = enumOptionsIsSelected<S>(
-                option.value,
-                checkboxesValues
-              );
-              const itemDisabled =
-                Array.isArray(enumDisabled) &&
-                enumDisabled.indexOf(option.value) !== -1;
+              const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
                   key={index}

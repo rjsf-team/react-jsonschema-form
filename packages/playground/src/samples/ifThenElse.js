@@ -1,43 +1,43 @@
 export default {
   schema: {
-    type: "object",
+    type: 'object',
     properties: {
       animal: {
-        enum: ["Cat", "Fish"],
+        enum: ['Cat', 'Fish'],
       },
     },
     allOf: [
       {
         if: {
-          properties: { animal: { const: "Cat" } },
+          properties: { animal: { const: 'Cat' } },
         },
         then: {
           properties: {
-            food: { type: "string", enum: ["meat", "grass", "fish"] },
+            food: { type: 'string', enum: ['meat', 'grass', 'fish'] },
           },
-          required: ["food"],
+          required: ['food'],
         },
       },
       {
         if: {
-          properties: { animal: { const: "Fish" } },
+          properties: { animal: { const: 'Fish' } },
         },
         then: {
           properties: {
             food: {
-              type: "string",
-              enum: ["insect", "worms"],
+              type: 'string',
+              enum: ['insect', 'worms'],
             },
             water: {
-              type: "string",
-              enum: ["lake", "sea"],
+              type: 'string',
+              enum: ['lake', 'sea'],
             },
           },
-          required: ["food", "water"],
+          required: ['food', 'water'],
         },
       },
       {
-        required: ["animal"],
+        required: ['animal'],
       },
     ],
   },

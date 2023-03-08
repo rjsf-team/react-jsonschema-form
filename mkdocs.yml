@@ -7,7 +7,6 @@ extra_javascript: [main.js]
 nav:
   - Introduction: index.md
 
-
 markdown_extensions:
   - toc:
       permalink: true

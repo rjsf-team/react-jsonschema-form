@@ -1,9 +1,5 @@
-import { FormEvent, FocusEvent } from "react";
-import {
-  ChoiceGroup,
-  IChoiceGroupOption,
-  IChoiceGroupProps,
-} from "@fluentui/react";
+import { FormEvent, FocusEvent } from 'react';
+import { ChoiceGroup, IChoiceGroupOption, IChoiceGroupProps } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -13,27 +9,23 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+} from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 const allowedProps: (keyof IChoiceGroupProps)[] = [
-  "componentRef",
-  "options",
-  "defaultSelectedKey",
-  "selectedKey",
-  "onChange",
-  "label",
-  "onChanged",
-  "theme",
-  "styles",
-  "ariaLabelledBy",
+  'componentRef',
+  'options',
+  'defaultSelectedKey',
+  'selectedKey',
+  'onChange',
+  'label',
+  'onChanged',
+  'theme',
+  'styles',
+  'ariaLabelledBy',
 ];
 
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   schema,
   options,
@@ -48,10 +40,7 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  function _onChange(
-    _ev?: FormEvent<HTMLElement | HTMLInputElement>,
-    option?: IChoiceGroupOption
-  ): void {
+  function _onChange(_ev?: FormEvent<HTMLElement | HTMLInputElement>, option?: IChoiceGroupOption): void {
     if (option) {
       onChange(option.key);
     }
@@ -68,17 +57,12 @@ export default function RadioWidget<
         name: id,
         id: optionId(id, index),
         text: option.label,
-        disabled:
-          Array.isArray(enumDisabled) &&
-          enumDisabled.indexOf(option.value) !== -1,
-        "aria-describedby": ariaDescribedByIds<T>(id),
+        disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1,
+        'aria-describedby': ariaDescribedByIds<T>(id),
       }))
     : [];
 
-  const selectedIndex = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions
-  ) as string;
+  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (

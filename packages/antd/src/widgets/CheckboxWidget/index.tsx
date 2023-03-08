@@ -1,5 +1,5 @@
-import { FocusEvent } from "react";
-import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { FocusEvent } from 'react';
+import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,7 +7,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -19,28 +19,14 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    autofocus,
-    disabled,
-    formContext,
-    id,
-    label,
-    onBlur,
-    onChange,
-    onFocus,
-    readonly,
-    value,
-  } = props;
+  const { autofocus, disabled, formContext, id, label, onBlur, onChange, onFocus, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = ({ target }: CheckboxChangeEvent) =>
-    onChange(target.checked);
+  const handleChange = ({ target }: CheckboxChangeEvent) => onChange(target.checked);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.checked);
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.checked);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -52,7 +38,7 @@ export default function CheckboxWidget<
   return (
     <Checkbox
       autoFocus={autofocus}
-      checked={typeof value === "undefined" ? false : value}
+      checked={typeof value === 'undefined' ? false : value}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={id}

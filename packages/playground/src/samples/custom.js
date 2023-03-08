@@ -1,19 +1,19 @@
 export default {
   schema: {
-    title: "A localisation form",
-    type: "object",
-    required: ["lat", "lon"],
+    title: 'A localisation form',
+    type: 'object',
+    required: ['lat', 'lon'],
     properties: {
       lat: {
-        type: "number",
+        type: 'number',
       },
       lon: {
-        type: "number",
+        type: 'number',
       },
     },
   },
   uiSchema: {
-    "ui:field": "geo",
+    'ui:field': 'geo',
   },
   formData: {
     lat: 0,

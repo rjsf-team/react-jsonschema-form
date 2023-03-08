@@ -1,11 +1,5 @@
-import {
-  errorId,
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
-import { FormErrorMessage, List, ListItem } from "@chakra-ui/react";
+import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { FormErrorMessage, List, ListItem } from '@chakra-ui/react';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *

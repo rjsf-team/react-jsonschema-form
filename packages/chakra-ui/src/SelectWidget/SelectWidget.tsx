@@ -1,5 +1,5 @@
-import { FocusEvent } from "react";
-import { FormControl, FormLabel } from "@chakra-ui/react";
+import { FocusEvent } from 'react';
+import { FormControl, FormLabel } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   EnumOptionsType,
@@ -9,15 +9,13 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
-import { OptionsOrGroups, Select } from "chakra-react-select";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
+import { OptionsOrGroups, Select } from 'chakra-react-select';
 
-export default function SelectWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
   const {
     schema,
     id,
@@ -52,9 +50,7 @@ export default function SelectWidget<
   };
 
   const _onChange = (e: any) => {
-    return onChange(
-      enumOptionsValueForIndex<S>(e.value, enumOptions, emptyValue)
-    );
+    return onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, emptyValue));
   };
 
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
@@ -64,27 +60,20 @@ export default function SelectWidget<
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const _valueLabelMap: any = {};
-  const displayEnumOptions: OptionsOrGroups<any, any> = Array.isArray(
-    enumOptions
-  )
+  const displayEnumOptions: OptionsOrGroups<any, any> = Array.isArray(enumOptions)
     ? enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
         _valueLabelMap[index] = label || String(value);
         return {
           label,
           value: String(index),
-          isDisabled:
-            Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          isDisabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       })
     : [];
 
-  const isMultiple = typeof multiple !== "undefined" && Boolean(enumOptions);
-  const selectedIndex = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    isMultiple
-  );
+  const isMultiple = typeof multiple !== 'undefined' && Boolean(enumOptions);
+  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
   const formValue: any = isMultiple
     ? ((selectedIndex as string[]) || []).map((i: string) => {
         return {
@@ -93,7 +82,7 @@ export default function SelectWidget<
         };
       })
     : {
-        label: _valueLabelMap[selectedIndex as string] || "",
+        label: _valueLabelMap[selectedIndex as string] || '',
         selectedIndex,
       };
 
@@ -106,11 +95,7 @@ export default function SelectWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {(label || schema.title) && (
-        <FormLabel htmlFor={isMultiple ? undefined : id}>
-          {label || schema.title}
-        </FormLabel>
-      )}
+      {(label || schema.title) && <FormLabel htmlFor={isMultiple ? undefined : id}>{label || schema.title}</FormLabel>}
       <Select
         inputId={id}
         name={id}

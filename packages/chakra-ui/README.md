@@ -39,7 +39,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Optional Chakra UI Theme properties](#optional-chakra-ui-theme-properties)
-    - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
+  - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -89,14 +89,14 @@ yarn add @rjsf/chakra-ui @rjsf/core
 ## Usage
 
 ```js
-import Form from "@rjsf/chakra-ui";
+import Form from '@rjsf/chakra-ui';
 ```
 
 or
 
 ```js
-import { withTheme } from "@rjsf/core";
-import { Theme as ChakraUITheme } from "@rjsf/chakra-ui";
+import { withTheme } from '@rjsf/core';
+import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
 
 // Make modifications to the theme with your own fields and widgets
 

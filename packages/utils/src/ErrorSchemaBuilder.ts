@@ -1,9 +1,9 @@
-import cloneDeep from "lodash/cloneDeep";
-import get from "lodash/get";
-import set from "lodash/set";
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
-import { ErrorSchema } from "./types";
-import { ERRORS_KEY } from "./constants";
+import { ErrorSchema } from './types';
+import { ERRORS_KEY } from './constants';
 
 /** The `ErrorSchemaBuilder<T>` is used to build an `ErrorSchema<T>` since the definition of the `ErrorSchema` type is
  * designed for reading information rather than writing it. Use this class to add, replace or clear errors in an error
@@ -38,12 +38,8 @@ export default class ErrorSchemaBuilder<T = any> {
    * @private
    */
   private getOrCreateErrorBlock(pathOfError?: string | string[]) {
-    const hasPath =
-      (Array.isArray(pathOfError) && pathOfError.length > 0) ||
-      typeof pathOfError === "string";
-    let errorBlock: ErrorSchema = hasPath
-      ? get(this.errorSchema, pathOfError)
-      : this.errorSchema;
+    const hasPath = (Array.isArray(pathOfError) && pathOfError.length > 0) || typeof pathOfError === 'string';
+    let errorBlock: ErrorSchema = hasPath ? get(this.errorSchema, pathOfError) : this.errorSchema;
     if (!errorBlock && pathOfError) {
       errorBlock = {};
       set(this.errorSchema, pathOfError, errorBlock);
@@ -96,9 +92,7 @@ export default class ErrorSchemaBuilder<T = any> {
   setErrors(errorOrList: string | string[], pathOfError?: string | string[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     // Effectively clone the array being given to prevent accidental outside manipulation of the given list
-    const listToAdd = Array.isArray(errorOrList)
-      ? [...errorOrList]
-      : [errorOrList];
+    const listToAdd = Array.isArray(errorOrList) ? [...errorOrList] : [errorOrList];
     set(errorBlock, ERRORS_KEY, listToAdd);
     return this;
   }

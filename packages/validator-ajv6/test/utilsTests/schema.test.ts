@@ -12,8 +12,8 @@ import {
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
   toPathSchemaTest,
-} from "@rjsf/utils/test/schema";
-import getTestValidator from "./getTestValidator";
+} from '@rjsf/utils/test/schema';
+import getTestValidator from './getTestValidator';
 
 const testValidator = getTestValidator({});
 

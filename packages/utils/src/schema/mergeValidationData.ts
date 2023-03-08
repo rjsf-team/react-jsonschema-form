@@ -1,14 +1,7 @@
-import isEmpty from "lodash/isEmpty";
+import isEmpty from 'lodash/isEmpty';
 
-import mergeObjects from "../mergeObjects";
-import {
-  ErrorSchema,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidationData,
-  ValidatorType,
-} from "../types";
+import mergeObjects from '../mergeObjects';
+import { ErrorSchema, FormContextType, RJSFSchema, StrictRJSFSchema, ValidationData, ValidatorType } from '../types';
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
  * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
@@ -36,11 +29,7 @@ export default function mergeValidationData<
   let errors = validator.toErrorList(additionalErrorSchema);
   let errorSchema = additionalErrorSchema;
   if (!isEmpty(oldErrorSchema)) {
-    errorSchema = mergeObjects(
-      oldErrorSchema,
-      additionalErrorSchema,
-      true
-    ) as ErrorSchema<T>;
+    errorSchema = mergeObjects(oldErrorSchema, additionalErrorSchema, true) as ErrorSchema<T>;
     errors = [...oldErrors].concat(errors);
   }
   return { errorSchema, errors };

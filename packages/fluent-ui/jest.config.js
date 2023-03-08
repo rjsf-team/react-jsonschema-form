@@ -1,15 +1,11 @@
 module.exports = {
   moduleNameMapper: {
-    "office-ui-fabric-react/lib/": "office-ui-fabric-react/lib-commonjs/",
-    "^react$": "<rootDir>/node_modules/react",
-    "^react-dom$": "<rootDir>/node_modules/react-dom",
+    'office-ui-fabric-react/lib/': 'office-ui-fabric-react/lib-commonjs/',
+    '^react$': '<rootDir>/node_modules/react',
+    '^react-dom$': '<rootDir>/node_modules/react-dom',
   },
-  testEnvironment: "jsdom",
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
-    "browsers": [
-      "chrome",
-      "firefox",
-      "safari"
-    ]
-  }
+    browsers: ['chrome', 'firefox', 'safari'],
+  },
 };

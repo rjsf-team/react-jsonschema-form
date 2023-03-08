@@ -1,4 +1,4 @@
-import getTestValidator from "./testUtils/getTestValidator";
+import getTestValidator from './testUtils/getTestValidator';
 import {
   getDefaultFormStateTest,
   getDisplayLabelTest,
@@ -12,7 +12,7 @@ import {
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
   toPathSchemaTest,
-} from "./schema";
+} from './schema';
 
 const testValidator = getTestValidator({});
 

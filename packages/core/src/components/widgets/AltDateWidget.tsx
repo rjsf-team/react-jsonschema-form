@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useReducer } from "react";
+import { MouseEvent, useCallback, useEffect, useReducer } from 'react';
 import {
   ariaDescribedByIds,
   parseDateString,
@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 function rangeOptions(start: number, stop: number) {
   const options = [];
@@ -32,37 +32,26 @@ function dateElementProps(
   const { year, month, day, hour, minute, second } = state;
   const data = [
     {
-      type: "year",
+      type: 'year',
       range: yearsRange,
       value: year,
     },
-    { type: "month", range: [1, 12], value: month },
-    { type: "day", range: [1, 31], value: day },
+    { type: 'month', range: [1, 12], value: month },
+    { type: 'day', range: [1, 31], value: day },
   ] as { type: string; range: [number, number]; value: number | undefined }[];
   if (time) {
     data.push(
-      { type: "hour", range: [0, 23], value: hour },
-      { type: "minute", range: [0, 59], value: minute },
-      { type: "second", range: [0, 59], value: second }
+      { type: 'hour', range: [0, 23], value: hour },
+      { type: 'minute', range: [0, 59], value: minute },
+      { type: 'second', range: [0, 59], value: second }
     );
   }
   return data;
 }
 
-type DateElementProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> = Pick<
+type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
   WidgetProps<T, S, F>,
-  | "value"
-  | "name"
-  | "disabled"
-  | "readonly"
-  | "autofocus"
-  | "registry"
-  | "onBlur"
-  | "onFocus"
+  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus'
 > & {
   rootId: string;
   select: (property: keyof DateObject, value: any) => void;
@@ -70,11 +59,7 @@ type DateElementProps<
   range: [number, number];
 };
 
-function DateElement<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   type,
   range,
   value,
@@ -88,14 +73,14 @@ function DateElement<
   onBlur,
   onFocus,
 }: DateElementProps<T, S, F>) {
-  const id = rootId + "_" + type;
+  const id = rootId + '_' + type;
   const { SelectWidget } = registry.widgets;
   return (
     <SelectWidget
-      schema={{ type: "integer" } as S}
+      schema={{ type: 'integer' } as S}
       id={id}
       name={name}
-      className="form-control"
+      className='form-control'
       options={{ enumOptions: rangeOptions(range[0], range[1]) }}
       placeholder={type}
       value={value}
@@ -106,7 +91,7 @@ function DateElement<
       onBlur={onBlur}
       onFocus={onFocus}
       registry={registry}
-      label=""
+      label=''
       aria-describedby={ariaDescribedByIds<T>(rootId)}
     />
   );
@@ -115,11 +100,7 @@ function DateElement<
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   time = false,
   disabled = false,
   readonly = false,
@@ -134,12 +115,9 @@ function AltDateWidget<
   value,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const [state, setState] = useReducer(
-    (state: DateObject, action: Partial<DateObject>) => {
-      return { ...state, ...action };
-    },
-    parseDateString(value, time)
-  );
+  const [state, setState] = useReducer((state: DateObject, action: Partial<DateObject>) => {
+    return { ...state, ...action };
+  }, parseDateString(value, time));
 
   useEffect(() => {
     if (value && value !== toDateString(state, time)) {
@@ -154,12 +132,9 @@ function AltDateWidget<
     }
   }, [state, time, onChange]);
 
-  const handleChange = useCallback(
-    (property: keyof DateObject, value: string) => {
-      setState({ [property]: value });
-    },
-    []
-  );
+  const handleChange = useCallback((property: keyof DateObject, value: string) => {
+    setState({ [property]: value });
+  }, []);
 
   const handleSetNow = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
@@ -179,20 +154,16 @@ function AltDateWidget<
       if (disabled || readonly) {
         return;
       }
-      setState(parseDateString("", time));
+      setState(parseDateString('', time));
       onChange(undefined);
     },
     [disabled, readonly, time, onChange]
   );
 
   return (
-    <ul className="list-inline">
-      {dateElementProps(
-        state,
-        time,
-        options.yearsRange as [number, number] | undefined
-      ).map((elemProps, i) => (
-        <li className="list-inline-item" key={i}>
+    <ul className='list-inline'>
+      {dateElementProps(state, time, options.yearsRange as [number, number] | undefined).map((elemProps, i) => (
+        <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}
             name={name}
@@ -207,24 +178,16 @@ function AltDateWidget<
           />
         </li>
       ))}
-      {(options.hideNowButton !== "undefined"
-        ? !options.hideNowButton
-        : true) && (
-        <li className="list-inline-item">
-          <a href="#" className="btn btn-info btn-now" onClick={handleSetNow}>
+      {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
+        <li className='list-inline-item'>
+          <a href='#' className='btn btn-info btn-now' onClick={handleSetNow}>
             {translateString(TranslatableString.NowLabel)}
           </a>
         </li>
       )}
-      {(options.hideClearButton !== "undefined"
-        ? !options.hideClearButton
-        : true) && (
-        <li className="list-inline-item">
-          <a
-            href="#"
-            className="btn btn-warning btn-clear"
-            onClick={handleClear}
-          >
+      {(options.hideClearButton !== 'undefined' ? !options.hideClearButton : true) && (
+        <li className='list-inline-item'>
+          <a href='#' className='btn btn-warning btn-clear' onClick={handleClear}>
             {translateString(TranslatableString.ClearLabel)}
           </a>
         </li>

@@ -7,17 +7,14 @@ import {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import classNames from "classnames";
-import Col from "antd/lib/col";
-import Row from "antd/lib/row";
-import {
-  ConfigConsumer,
-  ConfigConsumerProps,
-} from "antd/lib/config-provider/context";
+} from '@rjsf/utils';
+import classNames from 'classnames';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
+import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: "8px",
+  paddingBottom: '8px',
 };
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
@@ -45,39 +42,36 @@ export default function ArrayFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
+    'ArrayFieldDescriptionTemplate',
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
+    'ArrayFieldTitleTemplate',
+    registry,
+    uiOptions
+  );
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = "right", rowGutter = 24 } =
-    formContext as GenericObjectType;
+  const { labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
 
   return (
     <ConfigConsumer>
       {(configProps: ConfigConsumerProps) => {
         const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls("form");
+        const prefixCls = getPrefixCls('form');
         const labelClsBasic = `${prefixCls}-item-label`;
         const labelColClassName = classNames(
           labelClsBasic,
-          labelAlign === "left" && `${labelClsBasic}-left`
+          labelAlign === 'left' && `${labelClsBasic}-left`
           // labelCol.className,
         );
 
@@ -99,9 +93,7 @@ export default function ArrayFieldTemplate<
               {(uiOptions.description || schema.description) && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <ArrayFieldDescriptionTemplate
-                    description={
-                      uiOptions.description || schema.description || ""
-                    }
+                    description={uiOptions.description || schema.description || ''}
                     idSchema={idSchema}
                     schema={schema}
                     uiSchema={uiSchema}
@@ -109,24 +101,19 @@ export default function ArrayFieldTemplate<
                   />
                 </Col>
               )}
-              <Col className="row array-item-list" span={24}>
+              <Col className='row array-item-list' span={24}>
                 {items &&
-                  items.map(
-                    ({
-                      key,
-                      ...itemProps
-                    }: ArrayFieldTemplateItemType<T, S, F>) => (
-                      <ArrayFieldItemTemplate key={key} {...itemProps} />
-                    )
-                  )}
+                  items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                    <ArrayFieldItemTemplate key={key} {...itemProps} />
+                  ))}
               </Col>
 
               {canAdd && (
                 <Col span={24}>
-                  <Row gutter={rowGutter} justify="end">
-                    <Col flex="192px">
+                  <Row gutter={rowGutter} justify='end'>
+                    <Col flex='192px'>
                       <AddButton
-                        className="array-item-add"
+                        className='array-item-add'
                         disabled={disabled || readonly}
                         onClick={onAddClick}
                         uiSchema={uiSchema}

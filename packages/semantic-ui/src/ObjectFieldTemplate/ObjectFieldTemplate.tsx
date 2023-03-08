@@ -1,4 +1,4 @@
-import { Grid } from "semantic-ui-react";
+import { Grid } from 'semantic-ui-react';
 import {
   FormContextType,
   ObjectFieldTemplateProps,
@@ -9,7 +9,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -37,17 +37,12 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -77,13 +72,13 @@ export default function ObjectFieldTemplate<
       )}
       {properties.map((prop) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
-        <Grid.Column width={16} verticalAlign="middle">
+        <Grid.Column width={16} verticalAlign='middle'>
           <Grid.Row>
             <div
               style={{
-                marginTop: "1rem",
-                position: "relative",
-                textAlign: "right",
+                marginTop: '1rem',
+                position: 'relative',
+                textAlign: 'right',
               }}
             >
               <AddButton

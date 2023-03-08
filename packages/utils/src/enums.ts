@@ -6,63 +6,63 @@
  */
 export enum TranslatableString {
   /** Fallback title of an array item, used by ArrayField */
-  ArrayItemTitle = "Item",
+  ArrayItemTitle = 'Item',
   /** Missing items reason, used by ArrayField */
-  MissingItems = "Missing items definition",
+  MissingItems = 'Missing items definition',
   /** Yes label, used by BooleanField */
-  YesLabel = "Yes",
+  YesLabel = 'Yes',
   /** No label, used by BooleanField */
-  NoLabel = "No",
+  NoLabel = 'No',
   /** Close label, used by ErrorList */
-  CloseLabel = "Close",
+  CloseLabel = 'Close',
   /** Errors label, used by ErrorList */
-  ErrorsLabel = "Errors",
+  ErrorsLabel = 'Errors',
   /** New additionalProperties string default value, used by ObjectField */
-  NewStringDefault = "New Value",
+  NewStringDefault = 'New Value',
   /** Add button title, used by AddButton */
-  AddButton = "Add",
+  AddButton = 'Add',
   /** Add button title, used by AddButton */
-  AddItemButton = "Add Item",
+  AddItemButton = 'Add Item',
   /** Move down button title, used by IconButton */
-  MoveDownButton = "Move down",
+  MoveDownButton = 'Move down',
   /** Move up button title, used by IconButton */
-  MoveUpButton = "Move up",
+  MoveUpButton = 'Move up',
   /** Remove button title, used by IconButton */
-  RemoveButton = "Remove",
+  RemoveButton = 'Remove',
   /** Now label, used by AltDateWidget */
-  NowLabel = "Now",
+  NowLabel = 'Now',
   /** Clear label, used by AltDateWidget */
-  ClearLabel = "Clear",
+  ClearLabel = 'Clear',
   /** Aria date label, used by DateWidget */
-  AriaDateLabel = "Select a date",
+  AriaDateLabel = 'Select a date',
   /** Decrement button aria label, used by UpDownWidget */
-  DecrementAriaLabel = "Decrease value by 1",
+  DecrementAriaLabel = 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
-  IncrementAriaLabel = "Increase value by 1",
+  IncrementAriaLabel = 'Increase value by 1',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
-  UnknownFieldType = "Unknown field type %1",
+  UnknownFieldType = 'Unknown field type %1',
   /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField */
-  OptionPrefix = "Option %1",
+  OptionPrefix = 'Option %1',
   /** Option prefix, where %1 and %2 will be replaced by the schema title and option index, respectively as provided by
    * MultiSchemaField
    */
-  TitleOptionPrefix = "%1 option %2",
+  TitleOptionPrefix = '%1 option %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
-  KeyLabel = "%1 Key",
+  KeyLabel = '%1 Key',
   // Strings with replaceable parameters AND/OR that support markdown and html
   /** Unsupported field schema, used by UnsupportedField */
-  UnsupportedField = "Unsupported field schema.",
+  UnsupportedField = 'Unsupported field schema.',
   /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */
-  UnsupportedFieldWithId = "Unsupported field schema for field <code>%1</code>.",
+  UnsupportedFieldWithId = 'Unsupported field schema for field <code>%1</code>.',
   /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField */
-  UnsupportedFieldWithReason = "Unsupported field schema: <em>%1</em>.",
+  UnsupportedFieldWithReason = 'Unsupported field schema: <em>%1</em>.',
   /** Unsupported field schema, where %1 and %2 will be replaced by the idSchema.$id and reason strings, respectively,
    * as provided by UnsupportedField
    */
-  UnsupportedFieldWithIdAndReason = "Unsupported field schema for field <code>%1</code>: <em>%2</em>.",
+  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field <code>%1</code>: <em>%2</em>.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
-  FilesInfo = "<strong>%1</strong> (%2, %3 bytes)",
+  FilesInfo = '<strong>%1</strong> (%2, %3 bytes)',
 }

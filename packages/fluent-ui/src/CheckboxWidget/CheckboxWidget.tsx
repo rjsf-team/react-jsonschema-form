@@ -1,36 +1,30 @@
-import { FocusEvent, useCallback } from "react";
-import { Checkbox } from "@fluentui/react";
-import {
-  ariaDescribedByIds,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from "@rjsf/utils";
-import _pick from "lodash/pick";
+import { FocusEvent, useCallback } from 'react';
+import { Checkbox } from '@fluentui/react';
+import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import _pick from 'lodash/pick';
 
 // Keys of ICheckboxProps from @fluentui/react
 export const allowedProps = [
-  "ariaDescribedBy",
-  "ariaLabel",
-  "ariaPositionInSet",
-  "ariaSetSize",
-  "boxSide",
-  "checked",
-  "checkmarkIconProps",
-  "className",
-  "componentRef",
-  "defaultChecked",
-  "defaultIndeterminate",
-  "disabled",
-  "indeterminate",
-  "inputProps",
-  "keytipProps",
-  "label",
-  "onChange",
-  "onRenderLabel",
-  "styles",
-  "theme",
+  'ariaDescribedBy',
+  'ariaLabel',
+  'ariaPositionInSet',
+  'ariaSetSize',
+  'boxSide',
+  'checked',
+  'checkmarkIconProps',
+  'className',
+  'componentRef',
+  'defaultChecked',
+  'defaultIndeterminate',
+  'disabled',
+  'indeterminate',
+  'inputProps',
+  'keytipProps',
+  'label',
+  'onChange',
+  'onRenderLabel',
+  'styles',
+  'theme',
 ];
 
 export default function CheckboxWidget<
@@ -60,10 +54,8 @@ export default function CheckboxWidget<
     [onChange]
   );
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
@@ -77,7 +69,7 @@ export default function CheckboxWidget<
         autoFocus={autofocus}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        checked={typeof value === "undefined" ? false : value}
+        checked={typeof value === 'undefined' ? false : value}
         onChange={_onChange}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id)}

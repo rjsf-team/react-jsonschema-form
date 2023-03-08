@@ -8,19 +8,17 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
-import isObject from "lodash/isObject";
+} from '@rjsf/utils';
+import isObject from 'lodash/isObject';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
  *
  * @param props - The `FieldProps` for this template
  */
-function BooleanField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: FieldProps<T, S, F>) {
+function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldProps<T, S, F>
+) {
   const {
     schema,
     name,
@@ -39,7 +37,7 @@ function BooleanField<
   } = props;
   const { title } = schema;
   const { widgets, formContext, translateString } = registry;
-  const { widget = "checkbox", ...options } = getUiOptions<T, S, F>(uiSchema);
+  const { widget = 'checkbox', ...options } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
@@ -64,11 +62,7 @@ function BooleanField<
     // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
     const schemaWithEnumNames = schema as S & { enumNames?: string[] };
     const enums = schema.enum ?? [true, false];
-    if (
-      !schemaWithEnumNames.enumNames &&
-      enums.length === 2 &&
-      enums.every((v: any) => typeof v === "boolean")
-    ) {
+    if (!schemaWithEnumNames.enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
       enumOptions = [
         {
           value: enums[0],

@@ -5,8 +5,8 @@ import {
   getUiOptions,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import Form from "react-bootstrap/Form";
+} from '@rjsf/utils';
+import Form from 'react-bootstrap/Form';
 
 export default function FieldTemplate<
   T = any,
@@ -34,14 +34,13 @@ export default function FieldTemplate<
   registry,
 }: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
-    T,
-    S,
-    F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
   if (hidden) {
-    return <div className="hidden">{children}</div>;
+    return <div className='hidden'>{children}</div>;
   }
   return (
     <WrapIfAdditionalTemplate
@@ -60,21 +59,14 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && (
-          <Form.Label
-            htmlFor={id}
-            className={rawErrors.length > 0 ? "text-danger" : ""}
-          >
+          <Form.Label htmlFor={id} className={rawErrors.length > 0 ? 'text-danger' : ''}>
             {label}
-            {required ? "*" : null}
+            {required ? '*' : null}
           </Form.Label>
         )}
         {children}
         {displayLabel && rawDescription && (
-          <Form.Text
-            className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
-          >
-            {rawDescription}
-          </Form.Text>
+          <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{rawDescription}</Form.Text>
         )}
         {errors}
         {help}

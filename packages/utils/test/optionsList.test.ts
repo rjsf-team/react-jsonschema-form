@@ -1,9 +1,9 @@
-import { RJSFSchema, optionsList } from "../src";
+import { RJSFSchema, optionsList } from '../src';
 
-describe("optionsList()", () => {
+describe('optionsList()', () => {
   let consoleWarnSpy: jest.SpyInstance;
   beforeAll(() => {
-    consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
   });
   afterAll(() => {
     consoleWarnSpy.mockRestore();
@@ -12,26 +12,24 @@ describe("optionsList()", () => {
     consoleWarnSpy.mockClear();
   });
 
-  it("should generate options for an enum schema", () => {
+  it('should generate options for an enum schema', () => {
     const enumSchema: RJSFSchema = {
-      type: "string",
-      enum: ["Opt1", "Opt2", "Opt3"],
+      type: 'string',
+      enum: ['Opt1', 'Opt2', 'Opt3'],
     };
 
-    expect(optionsList(enumSchema)).toEqual(
-      enumSchema.enum!.map((opt) => ({ label: opt, value: opt }))
-    );
+    expect(optionsList(enumSchema)).toEqual(enumSchema.enum!.map((opt) => ({ label: opt, value: opt })));
   });
 
-  it("generates options and emits a deprecation warning for a schema with enumNames", () => {
+  it('generates options and emits a deprecation warning for a schema with enumNames', () => {
     const enumSchema: RJSFSchema = {
-      type: "string",
-      enum: ["Opt1", "Opt2", "Opt3"],
+      type: 'string',
+      enum: ['Opt1', 'Opt2', 'Opt3'],
     };
 
     const enumNameSchema = {
       ...enumSchema,
-      enumNames: ["Option1", "Option2", "Option3"],
+      enumNames: ['Option1', 'Option2', 'Option3'],
     };
 
     expect(optionsList(enumNameSchema)).toEqual(
@@ -40,29 +38,27 @@ describe("optionsList()", () => {
         return { label: label, value: opt };
       })
     );
-    expect(console.warn).toHaveBeenCalledWith(
-      expect.stringMatching(/The enumNames property is deprecated/)
-    );
+    expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/The enumNames property is deprecated/));
   });
 
-  it("should generate options for a oneOf|anyOf schema", () => {
+  it('should generate options for a oneOf|anyOf schema', () => {
     const oneOfSchema = {
-      title: "string",
+      title: 'string',
       oneOf: [
         {
-          const: "Option1",
-          title: "Option1 title",
-          description: "Option1 description",
+          const: 'Option1',
+          title: 'Option1 title',
+          description: 'Option1 description',
         },
         {
-          const: "Option2",
-          title: "Option2 title",
-          description: "Option2 description",
+          const: 'Option2',
+          title: 'Option2 title',
+          description: 'Option2 description',
         },
         {
-          const: "Option3",
-          title: "Option3 title",
-          description: "Option3 description",
+          const: 'Option3',
+          title: 'Option3 title',
+          description: 'Option3 description',
         },
       ],
     };
@@ -86,13 +82,13 @@ describe("optionsList()", () => {
       }))
     );
   });
-  it("should generate options for a oneOf schema uses value as fallback title", () => {
+  it('should generate options for a oneOf schema uses value as fallback title', () => {
     const oneOfSchema = {
-      title: "string",
+      title: 'string',
       oneOf: [
         {
-          const: "Option",
-          description: "Option description",
+          const: 'Option',
+          description: 'Option description',
         },
       ],
     };

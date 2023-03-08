@@ -1,14 +1,8 @@
-import {
-  englishStringTranslator,
-  FormContextType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { englishStringTranslator, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import fields from "./components/fields";
-import templates from "./components/templates";
-import widgets from "./components/widgets";
+import fields from './components/fields';
+import templates from './components/templates';
+import widgets from './components/widgets';
 
 /** The default registry consists of all the fields, templates and widgets provided in the core implementation,
  * plus an empty `rootSchema` and `formContext. We omit schemaUtils here because it cannot be defaulted without a
@@ -18,7 +12,7 @@ export default function getDefaultRegistry<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(): Omit<Registry<T, S, F>, "schemaUtils"> {
+>(): Omit<Registry<T, S, F>, 'schemaUtils'> {
   return {
     fields: fields<T, S, F>(),
     templates: templates<T, S, F>(),

@@ -1,11 +1,5 @@
-import rangeSpec from "./rangeSpec";
-import {
-  FormContextType,
-  InputPropsType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UIOptionsType,
-} from "./types";
+import rangeSpec from './rangeSpec';
+import { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types';
 
 /** Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
  *
@@ -26,7 +20,7 @@ export default function getInputProps<
   autoDefaultStepAny = true
 ): InputPropsType {
   const inputProps: InputPropsType = {
-    type: defaultType || "text",
+    type: defaultType || 'text',
     ...rangeSpec(schema),
   };
 
@@ -35,16 +29,16 @@ export default function getInputProps<
     inputProps.type = options.inputType;
   } else if (!defaultType) {
     // If the schema is of type number or integer, set the input type to number
-    if (schema.type === "number") {
-      inputProps.type = "number";
+    if (schema.type === 'number') {
+      inputProps.type = 'number';
       // Only add step if one isn't already defined and we are auto-defaulting the "any" step
       if (autoDefaultStepAny && inputProps.step === undefined) {
         // Setting step to 'any' fixes a bug in Safari where decimals are not
         // allowed in number inputs
-        inputProps.step = "any";
+        inputProps.step = 'any';
       }
-    } else if (schema.type === "integer") {
-      inputProps.type = "number";
+    } else if (schema.type === 'integer') {
+      inputProps.type = 'number';
       // Only add step if one isn't already defined
       if (inputProps.step === undefined) {
         // Since this is integer, you always want to step up or down in multiples of 1

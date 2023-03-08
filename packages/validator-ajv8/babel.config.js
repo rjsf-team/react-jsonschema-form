@@ -1,3 +1,3 @@
-const defaultConfig = require('../validator-ajv6/babel.config')
+const defaultConfig = require('../validator-ajv6/babel.config');
 
-module.exports = defaultConfig
+module.exports = defaultConfig;

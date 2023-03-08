@@ -1,5 +1,5 @@
-import { Ajv, ErrorObject } from "ajv";
-import toPath from "lodash/toPath";
+import { Ajv, ErrorObject } from 'ajv';
+import toPath from 'lodash/toPath';
 import {
   CustomValidator,
   ErrorSchema,
@@ -20,22 +20,19 @@ import {
   mergeValidationData,
   ERRORS_KEY,
   REF_KEY,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import { CustomValidatorOptionsType } from "./types";
-import createAjvInstance from "./createAjvInstance";
+import { CustomValidatorOptionsType } from './types';
+import createAjvInstance from './createAjvInstance';
 
-const ROOT_SCHEMA_PREFIX = "__rjsf_rootSchema";
+const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 
 /** `ValidatorType` implementation that uses the AJV 6 validation mechanism.
  *
  * @deprecated in favor of the `@rjsf/validator-ajv8
  */
-export default class AJV6Validator<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> implements ValidatorType<T, S, F>
+export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  implements ValidatorType<T, S, F>
 {
   /** The AJV instance to use for all validations
    *
@@ -48,13 +45,8 @@ export default class AJV6Validator<
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
    */
   constructor(options: CustomValidatorOptionsType) {
-    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides } =
-      options;
-    this.ajv = createAjvInstance(
-      additionalMetaSchemas,
-      customFormats,
-      ajvOptionsOverrides
-    );
+    const { additionalMetaSchemas, customFormats, ajvOptionsOverrides } = options;
+    this.ajv = createAjvInstance(additionalMetaSchemas, customFormats, ajvOptionsOverrides);
   }
 
   /** Transforms a ajv validation errors list:
@@ -85,7 +77,7 @@ export default class AJV6Validator<
 
         // If the property is at the root (.level1) then toPath creates
         // an empty array element at the first index. Remove it.
-        if (path.length > 0 && path[0] === "") {
+        if (path.length > 0 && path[0] === '') {
           path.splice(0, 1);
         }
         if (message) {
@@ -109,7 +101,7 @@ export default class AJV6Validator<
     if (ERRORS_KEY in errorSchema) {
       errorList = errorList.concat(
         errorSchema.__errors!.map((message: string) => {
-          const property = `.${fieldPath.join(".")}`;
+          const property = `.${fieldPath.join('.')}`;
           return {
             property,
             message,
@@ -120,12 +112,7 @@ export default class AJV6Validator<
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
       if (key !== ERRORS_KEY) {
-        acc = acc.concat(
-          this.toErrorList((errorSchema as GenericObjectType)[key], [
-            ...fieldPath,
-            key,
-          ])
-        );
+        acc = acc.concat(this.toErrorList((errorSchema as GenericObjectType)[key], [...fieldPath, key]));
       }
       return acc;
     }, errorList);
@@ -167,16 +154,14 @@ export default class AJV6Validator<
    */
   private unwrapErrorHandler(errorHandler: FormValidation<T>): ErrorSchema<T> {
     return Object.keys(errorHandler).reduce((acc, key) => {
-      if (key === "addError") {
+      if (key === 'addError') {
         return acc;
       } else if (key === ERRORS_KEY) {
         return { ...acc, [key]: (errorHandler as GenericObjectType)[key] };
       }
       return {
         ...acc,
-        [key]: this.unwrapErrorHandler(
-          (errorHandler as GenericObjectType)[key]
-        ),
+        [key]: this.unwrapErrorHandler((errorHandler as GenericObjectType)[key]),
       };
     }, {} as ErrorSchema<T>);
   }
@@ -187,9 +172,7 @@ export default class AJV6Validator<
    * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
    * @private
    */
-  private transformRJSFValidationErrors(
-    errors: ErrorObject[] = []
-  ): RJSFValidationError[] {
+  private transformRJSFValidationErrors(errors: ErrorObject[] = []): RJSFValidationError[] {
     return errors.map((e: ErrorObject) => {
       const { dataPath, keyword, message, params, schemaPath } = e;
       const property = `${dataPath}`;
@@ -212,10 +195,7 @@ export default class AJV6Validator<
    * @param schema - The schema against which to validate the form data   * @param schema
    * @param formData - The form data to validate
    */
-  rawValidation<Result = any>(
-    schema: RJSFSchema,
-    formData?: T
-  ): { errors?: Result[]; validationError?: Error } {
+  rawValidation<Result = any>(schema: RJSFSchema, formData?: T): { errors?: Result[]; validationError?: Error } {
     let validationError: Error | undefined = undefined;
     try {
       this.ajv.validate(schema, formData);
@@ -256,14 +236,12 @@ export default class AJV6Validator<
     let errors = this.transformRJSFValidationErrors(rawErrors.errors);
 
     const noProperMetaSchema =
-      validationError &&
-      validationError.message &&
-      validationError.message.includes("no schema with key or ref ");
+      validationError && validationError.message && validationError.message.includes('no schema with key or ref ');
 
     if (noProperMetaSchema) {
       errors = [...errors, { stack: validationError!.message }];
     }
-    if (typeof transformErrors === "function") {
+    if (typeof transformErrors === 'function') {
       errors = transformErrors(errors, uiSchema);
     }
 
@@ -280,30 +258,16 @@ export default class AJV6Validator<
       };
     }
 
-    if (typeof customValidate !== "function") {
+    if (typeof customValidate !== 'function') {
       return { errors, errorSchema };
     }
 
     // Include form data with undefined values, which is required for custom validation.
-    const newFormData = getDefaultFormState<T, S, F>(
-      this,
-      schema,
-      formData,
-      rootSchema,
-      true
-    ) as T;
+    const newFormData = getDefaultFormState<T, S, F>(this, schema, formData, rootSchema, true) as T;
 
-    const errorHandler = customValidate(
-      newFormData,
-      this.createErrorHandler(newFormData),
-      uiSchema
-    );
+    const errorHandler = customValidate(newFormData, this.createErrorHandler(newFormData), uiSchema);
     const userErrorSchema = this.unwrapErrorHandler(errorHandler);
-    return mergeValidationData<T, S, F>(
-      this,
-      { errors, errorSchema },
-      userErrorSchema
-    );
+    return mergeValidationData<T, S, F>(this, { errors, errorSchema }, userErrorSchema);
   }
 
   /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
@@ -316,11 +280,7 @@ export default class AJV6Validator<
     for (const key in node) {
       const realObj: { [k: string]: any } = node;
       const value = realObj[key];
-      if (
-        key === REF_KEY &&
-        typeof value === "string" &&
-        value.startsWith("#")
-      ) {
+      if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
         realObj[key] = ROOT_SCHEMA_PREFIX + value;
       } else {
         realObj[key] = this.withIdRefPrefix(value);

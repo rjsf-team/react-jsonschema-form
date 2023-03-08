@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react";
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { ChangeEvent, FocusEvent } from 'react';
+import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -8,8 +8,8 @@ import {
   getInputProps,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { getChakra } from "../utils";
+} from '@rjsf/utils';
+import { getChakra } from '../utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -41,15 +41,11 @@ export default function BaseInputTemplate<
   const { schemaUtils } = registry;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, value);
+    onChange(value === '' ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const displayLabel =
-    schemaUtils.getDisplayLabel(schema, uiSchema) &&
-    (!!label || !!schema.title);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   return (
     <FormControl
@@ -68,7 +64,7 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={id}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -81,11 +77,7 @@ export default function BaseInputTemplate<
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(
-              schema.default && !schema.examples.includes(schema.default)
-                ? ([schema.default] as string[])
-                : []
-            )
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}

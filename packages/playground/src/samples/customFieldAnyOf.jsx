@@ -1,103 +1,93 @@
 export default {
   schema: {
-    title: "Location",
-    type: "object",
+    title: 'Location',
+    type: 'object',
     anyOf: [
       {
-        title: "City",
+        title: 'City',
         properties: {
           city: {
-            type: "string",
+            type: 'string',
           },
         },
-        required: ["city"],
+        required: ['city'],
       },
       {
-        title: "Coordinates",
+        title: 'Coordinates',
         properties: {
           lat: {
-            type: "number",
+            type: 'number',
           },
           lon: {
-            type: "number",
+            type: 'number',
           },
         },
-        required: ["lat", "lon"],
+        required: ['lat', 'lon'],
       },
     ],
   },
   uiSchema: {
-    "ui:field": ({
-      schema,
-      idSchema: { $id },
-      formData,
-      onChange,
-      ...other
-    }) => {
+    'ui:field': ({ schema, idSchema: { $id }, formData, onChange, ...other }) => {
       const changeHandlerFactory = (fieldName) => (event) => {
-        onChange(
-          formData
-            ? { ...formData, [fieldName]: event.target.value }
-            : { [fieldName]: event.target.value }
-        );
+        onChange(formData ? { ...formData, [fieldName]: event.target.value } : { [fieldName]: event.target.value });
       };
       return (
         <>
           <h4>Location</h4>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex' }}>
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "50%",
-                margin: "1rem",
+                display: 'flex',
+                flexDirection: 'column',
+                width: '50%',
+                margin: '1rem',
               }}
             >
-              <div className="form-group field field-string">
-                <label className="control-label" htmlFor={`${$id}-city`}>
+              <div className='form-group field field-string'>
+                <label className='control-label' htmlFor={`${$id}-city`}>
                   City
                 </label>
                 <input
-                  className="form-control"
+                  className='form-control'
                   id={`${$id}-city`}
-                  required=""
-                  placeholder=""
-                  type="text"
-                  value={formData?.city || ""}
-                  onChange={changeHandlerFactory("city")}
+                  required=''
+                  placeholder=''
+                  type='text'
+                  value={formData?.city || ''}
+                  onChange={changeHandlerFactory('city')}
                 />
               </div>
             </div>
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "50%",
-                margin: "1rem",
+                display: 'flex',
+                flexDirection: 'column',
+                width: '50%',
+                margin: '1rem',
               }}
             >
-              <div className="form-group field field-string">
-                <label className="control-label" htmlFor={`${$id}-lat`}>
+              <div className='form-group field field-string'>
+                <label className='control-label' htmlFor={`${$id}-lat`}>
                   Latitude
                 </label>
                 <input
-                  className="form-control"
+                  className='form-control'
                   id={`${$id}-lat`}
-                  type="number"
+                  type='number'
                   value={formData?.lat || 0}
-                  onChange={changeHandlerFactory("lat")}
+                  onChange={changeHandlerFactory('lat')}
                 />
               </div>
-              <div className="form-group field field-string">
-                <label className="control-label" htmlFor={`${$id}-lon`}>
+              <div className='form-group field field-string'>
+                <label className='control-label' htmlFor={`${$id}-lon`}>
                   Longitude
                 </label>
                 <input
-                  className="form-control"
+                  className='form-control'
                   id={`${$id}-lon`}
-                  type="number"
+                  type='number'
                   value={formData?.lon || 0}
-                  onChange={changeHandlerFactory("lon")}
+                  onChange={changeHandlerFactory('lon')}
                 />
               </div>
             </div>

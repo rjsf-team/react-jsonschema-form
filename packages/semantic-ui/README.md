@@ -39,8 +39,8 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Optional Semantic UI Theme properties](#optional-semantic-ui-theme-properties)
-    - [Semantic Widget Optional Properties](#semantic-widget-optional-properties)
-    - [Custom Semantic Widget Properties](#custom-semantic-widget-properties)
+  - [Semantic Widget Optional Properties](#semantic-widget-optional-properties)
+  - [Custom Semantic Widget Properties](#custom-semantic-widget-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -98,30 +98,33 @@ const Form = withTheme(SemanticUITheme);
 ```
 
 ## Optional Semantic UI Theme properties
+
 - To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
 
 #### Semantic Widget Optional Properties
- - [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
- - [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
- - [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
- - [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
- - [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
+
+- [Semantic props for TextWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for CheckboxWidget](https://react.semantic-ui.com/modules/checkbox/)
+- [Semantic props for SelectWidget](https://react.semantic-ui.com/modules/dropdown/)
+- [Semantic props for RangeWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for RadioWidget](https://react.semantic-ui.com/addons/radio/)
+- [Semantic props for PasswordWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for UpDownWidget](https://react.semantic-ui.com/elements/input/)
+- [Semantic props for TextAreaWidget](https://react.semantic-ui.com/addons/text-area/)
 
 #### Custom Semantic Widget Properties
 
 Below are the current default options for all widgets:
+
 ```json
 {
-  "ui:options":  {
+  "ui:options": {
     "semantic": {
       "fluid": true,
       "inverted": false,
       "errorOptions": {
         "size": "small",
-        "pointing": "above",
+        "pointing": "above"
       }
     }
   }

@@ -1,12 +1,7 @@
-import { CSSProperties } from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import {
-  ArrayFieldTemplateItemType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { CSSProperties } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export default function ArrayFieldItemTemplate<
   T = any,
@@ -27,27 +22,26 @@ export default function ArrayFieldItemTemplate<
     registry,
     uiSchema,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
   return (
     <div>
-      <Row className="mb-2  d-flex align-items-center">
-        <Col xs="9" lg="9">
+      <Row className='mb-2  d-flex align-items-center'>
+        <Col xs='9' lg='9'>
           {children}
         </Col>
-        <Col xs="3" lg="3" className="py-4">
+        <Col xs='3' lg='3' className='py-4'>
           {hasToolbar && (
-            <div className="d-flex flex-row">
+            <div className='d-flex flex-row'>
               {(hasMoveUp || hasMoveDown) && (
-                <div className="m-0 p-0">
+                <div className='m-0 p-0'>
                   <MoveUpButton
-                    className="array-item-move-up"
+                    className='array-item-move-up'
                     style={btnStyle}
                     disabled={disabled || readonly || !hasMoveUp}
                     onClick={onReorderClick(index, index - 1)}
@@ -57,7 +51,7 @@ export default function ArrayFieldItemTemplate<
                 </div>
               )}
               {(hasMoveUp || hasMoveDown) && (
-                <div className="m-0 p-0">
+                <div className='m-0 p-0'>
                   <MoveDownButton
                     style={btnStyle}
                     disabled={disabled || readonly || !hasMoveDown}
@@ -68,7 +62,7 @@ export default function ArrayFieldItemTemplate<
                 </div>
               )}
               {hasRemove && (
-                <div className="m-0 p-0">
+                <div className='m-0 p-0'>
                   <RemoveButton
                     style={btnStyle}
                     disabled={disabled || readonly}

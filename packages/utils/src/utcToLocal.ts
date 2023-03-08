@@ -1,4 +1,4 @@
-import pad from "./pad";
+import pad from './pad';
 
 /** Converts a UTC date string into a local Date format
  *
@@ -7,7 +7,7 @@ import pad from "./pad";
  */
 export default function utcToLocal(jsonDate: string) {
   if (!jsonDate) {
-    return "";
+    return '';
   }
 
   // required format of `'yyyy-MM-ddThh:mm' followed by optional ':ss' or ':ss.SSS'

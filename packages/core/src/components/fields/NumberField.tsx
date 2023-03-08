@@ -1,11 +1,5 @@
-import { useState, useCallback } from "react";
-import {
-  asNumber,
-  FieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { useState, useCallback } from 'react';
+import { asNumber, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -36,11 +30,9 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-function NumberField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: FieldProps<T, S, F>) {
+function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldProps<T, S, F>
+) {
   const { registry, onChange, formData, value: initialValue } = props;
   const [lastValue, setLastValue] = useState(initialValue);
   const { StringField } = registry.fields;
@@ -52,13 +44,13 @@ function NumberField<
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>["value"]) => {
+    (value: FieldProps<T, S, F>['value']) => {
       // Cache the original value in component state
       setLastValue(value);
 
       // Normalize decimals that don't start with a zero character in advance so
       // that the rest of the normalization logic is simpler
-      if (`${value}`.charAt(0) === ".") {
+      if (`${value}`.charAt(0) === '.') {
         value = `0${value}`;
       }
 
@@ -66,8 +58,8 @@ function NumberField<
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof value === "string" && value.match(trailingCharMatcherWithPrefix)
-          ? asNumber(value.replace(trailingCharMatcher, ""))
+        typeof value === 'string' && value.match(trailingCharMatcherWithPrefix)
+          ? asNumber(value.replace(trailingCharMatcher, ''))
           : asNumber(value);
 
       onChange(processed as unknown as T);
@@ -75,11 +67,11 @@ function NumberField<
     [onChange]
   );
 
-  if (typeof lastValue === "string" && typeof value === "number") {
+  if (typeof lastValue === 'string' && typeof value === 'number') {
     // Construct a regular expression that checks for a string that consists
     // of the formData value suffixed with zero or one '.' characters and zero
     // or more '0' characters
-    const re = new RegExp(`${value}`.replace(".", "\\.") + "\\.?0*$");
+    const re = new RegExp(`${value}`.replace('.', '\\.') + '\\.?0*$');
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI

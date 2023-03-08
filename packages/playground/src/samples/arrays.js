@@ -2,162 +2,162 @@ export default {
   schema: {
     definitions: {
       Thing: {
-        type: "object",
+        type: 'object',
         properties: {
           name: {
-            type: "string",
-            default: "Default name",
+            type: 'string',
+            default: 'Default name',
           },
         },
       },
     },
-    type: "object",
+    type: 'object',
     properties: {
       listOfStrings: {
-        type: "array",
-        title: "A list of strings",
+        type: 'array',
+        title: 'A list of strings',
         items: {
-          type: "string",
-          default: "bazinga",
+          type: 'string',
+          default: 'bazinga',
         },
       },
       multipleChoicesList: {
-        type: "array",
-        title: "A multiple choices list",
+        type: 'array',
+        title: 'A multiple choices list',
         items: {
-          type: "string",
-          enum: ["foo", "bar", "fuzz", "qux"],
+          type: 'string',
+          enum: ['foo', 'bar', 'fuzz', 'qux'],
         },
         uniqueItems: true,
       },
       fixedItemsList: {
-        type: "array",
-        title: "A list of fixed items",
+        type: 'array',
+        title: 'A list of fixed items',
         items: [
           {
-            title: "A string value",
-            type: "string",
-            default: "lorem ipsum",
+            title: 'A string value',
+            type: 'string',
+            default: 'lorem ipsum',
           },
           {
-            title: "a boolean value",
-            type: "boolean",
+            title: 'a boolean value',
+            type: 'boolean',
           },
         ],
         additionalItems: {
-          title: "Additional item",
-          type: "number",
+          title: 'Additional item',
+          type: 'number',
         },
       },
       minItemsList: {
-        type: "array",
-        title: "A list with a minimal number of items",
+        type: 'array',
+        title: 'A list with a minimal number of items',
         minItems: 3,
         items: {
-          $ref: "#/definitions/Thing",
+          $ref: '#/definitions/Thing',
         },
       },
       defaultsAndMinItems: {
-        type: "array",
-        title: "List and item level defaults",
+        type: 'array',
+        title: 'List and item level defaults',
         minItems: 5,
-        default: ["carp", "trout", "bream"],
+        default: ['carp', 'trout', 'bream'],
         items: {
-          type: "string",
-          default: "unidentified",
+          type: 'string',
+          default: 'unidentified',
         },
       },
       nestedList: {
-        type: "array",
-        title: "Nested list",
+        type: 'array',
+        title: 'Nested list',
         items: {
-          type: "array",
-          title: "Inner list",
+          type: 'array',
+          title: 'Inner list',
           items: {
-            type: "string",
-            default: "lorem ipsum",
+            type: 'string',
+            default: 'lorem ipsum',
           },
         },
       },
       unorderable: {
-        title: "Unorderable items",
-        type: "array",
+        title: 'Unorderable items',
+        type: 'array',
         items: {
-          type: "string",
-          default: "lorem ipsum",
+          type: 'string',
+          default: 'lorem ipsum',
         },
       },
       unremovable: {
-        title: "Unremovable items",
-        type: "array",
+        title: 'Unremovable items',
+        type: 'array',
         items: {
-          type: "string",
-          default: "lorem ipsum",
+          type: 'string',
+          default: 'lorem ipsum',
         },
       },
       noToolbar: {
-        title: "No add, remove and order buttons",
-        type: "array",
+        title: 'No add, remove and order buttons',
+        type: 'array',
         items: {
-          type: "string",
-          default: "lorem ipsum",
+          type: 'string',
+          default: 'lorem ipsum',
         },
       },
       fixedNoToolbar: {
-        title: "Fixed array without buttons",
-        type: "array",
+        title: 'Fixed array without buttons',
+        type: 'array',
         items: [
           {
-            title: "A number",
-            type: "number",
+            title: 'A number',
+            type: 'number',
             default: 42,
           },
           {
-            title: "A boolean",
-            type: "boolean",
+            title: 'A boolean',
+            type: 'boolean',
             default: false,
           },
         ],
         additionalItems: {
-          title: "A string",
-          type: "string",
-          default: "lorem ipsum",
+          title: 'A string',
+          type: 'string',
+          default: 'lorem ipsum',
         },
       },
     },
   },
   uiSchema: {
     listOfStrings: {
-      items: { "ui:emptyValue": "" },
+      items: { 'ui:emptyValue': '' },
     },
     multipleChoicesList: {
-      "ui:widget": "checkboxes",
+      'ui:widget': 'checkboxes',
     },
     fixedItemsList: {
-      items: [{ "ui:widget": "textarea" }, { "ui:widget": "select" }],
+      items: [{ 'ui:widget': 'textarea' }, { 'ui:widget': 'select' }],
       additionalItems: {
-        "ui:widget": "updown",
+        'ui:widget': 'updown',
       },
     },
     unorderable: {
-      "ui:options": {
+      'ui:options': {
         orderable: false,
       },
     },
     unremovable: {
-      "ui:options": {
+      'ui:options': {
         removable: false,
       },
     },
     noToolbar: {
-      "ui:options": {
+      'ui:options': {
         addable: false,
         orderable: false,
         removable: false,
       },
     },
     fixedNoToolbar: {
-      "ui:options": {
+      'ui:options': {
         addable: false,
         orderable: false,
         removable: false,
@@ -165,13 +165,13 @@ export default {
     },
   },
   formData: {
-    listOfStrings: ["foo", "bar"],
-    multipleChoicesList: ["foo", "bar"],
-    fixedItemsList: ["Some text", true, 123],
-    nestedList: [["lorem", "ipsum"], ["dolor"]],
-    unorderable: ["one", "two"],
-    unremovable: ["one", "two"],
-    noToolbar: ["one", "two"],
-    fixedNoToolbar: [42, true, "additional item one", "additional item two"],
+    listOfStrings: ['foo', 'bar'],
+    multipleChoicesList: ['foo', 'bar'],
+    fixedItemsList: ['Some text', true, 123],
+    nestedList: [['lorem', 'ipsum'], ['dolor']],
+    unorderable: ['one', 'two'],
+    unremovable: ['one', 'two'],
+    noToolbar: ['one', 'two'],
+    fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],
   },
 };

@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import { Form } from "semantic-ui-react";
+import { ChangeEvent } from 'react';
+import { Form } from 'semantic-ui-react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
@@ -12,8 +12,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { getSemanticProps } from '../util';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -41,11 +41,7 @@ export default function CheckboxesWidget<
     rawErrors = [],
     registry,
   } = props;
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
-    registry,
-    options
-  );
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
   const { enumOptions, enumDisabled, inline } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
   const { title } = schema;
@@ -62,13 +58,9 @@ export default function CheckboxesWidget<
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
       // eslint-disable-next-line no-shadow
       if (checked) {
-        onChange(
-          enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
       } else {
-        onChange(
-          enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions)
-        );
+        onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
       }
     };
 
@@ -78,24 +70,13 @@ export default function CheckboxesWidget<
   return (
     <>
       {title && (
-        <TitleFieldTemplate
-          id={titleId<T>(id)}
-          title={title}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
+        <TitleFieldTemplate id={titleId<T>(id)} title={title} schema={schema} uiSchema={uiSchema} registry={registry} />
       )}
       <Form.Group id={id} name={id} {...inlineOption}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const checked = enumOptionsIsSelected<S>(
-              option.value,
-              checkboxesValues
-            );
-            const itemDisabled =
-              Array.isArray(enumDisabled) &&
-              enumDisabled.indexOf(option.value) !== -1;
+            const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             return (
               <Form.Checkbox
                 id={optionId(id, index)}

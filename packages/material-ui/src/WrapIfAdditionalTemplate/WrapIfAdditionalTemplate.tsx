@@ -1,8 +1,8 @@
-import { CSSProperties, FocusEvent } from "react";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
+import { CSSProperties, FocusEvent } from 'react';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -46,7 +46,7 @@ export default function WrapIfAdditionalTemplate<
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
 
   if (!additional) {
@@ -57,18 +57,10 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onKeyChange(target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
   return (
-    <Grid
-      container
-      key={`${id}-key`}
-      alignItems="center"
-      spacing={2}
-      className={classNames}
-      style={style}
-    >
+    <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
       <Grid item xs>
         <FormControl fullWidth={true} required={required}>
           <InputLabel>{keyLabel}</InputLabel>
@@ -78,7 +70,7 @@ export default function WrapIfAdditionalTemplate<
             id={`${id}-key`}
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
-            type="text"
+            type='text'
           />
         </FormControl>
       </Grid>
@@ -87,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
       </Grid>
       <Grid item={true}>
         <RemoveButton
-          iconType="default"
+          iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
