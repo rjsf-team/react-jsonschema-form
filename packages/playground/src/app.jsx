@@ -9,7 +9,7 @@ import isEqualWith from 'lodash/isEqualWith';
 
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
-import { GeoPosition, CopyLink, ThemeSelector } from './components';
+import { GeoPosition, CopyLink, ThemeSelector, Selector } from './components';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -85,41 +85,6 @@ class Editor extends Component {
           options={monacoEditorOptions}
         />
       </div>
-    );
-  }
-}
-
-class Selector extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { current: 'Simple' };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shouldRender(this, nextProps, nextState);
-  }
-
-  onLabelClick = (label) => {
-    return (event) => {
-      event.preventDefault();
-      this.setState({ current: label });
-      setTimeout(() => this.props.onSelected(samples[label]), 0);
-    };
-  };
-
-  render() {
-    return (
-      <ul className='nav nav-pills'>
-        {Object.keys(samples).map((label, i) => {
-          return (
-            <li key={i} role='presentation' className={this.state.current === label ? 'active' : ''}>
-              <a href='#' onClick={this.onLabelClick(label)}>
-                {label}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
     );
   }
 }
