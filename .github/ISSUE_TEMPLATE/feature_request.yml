@@ -9,7 +9,7 @@ body:
     attributes:
       label: Prerequisites
       options:
-        - label: I have read the [documentation](https://react-jsonschema-form.readthedocs.io/)
+        - label: I have read the [documentation](https://rjsf-team.github.io/react-jsonschema-form/docs)
           required: true
   - type: dropdown
     id: theme
