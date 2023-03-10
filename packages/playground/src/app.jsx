@@ -528,7 +528,7 @@ class Playground extends Component {
                 Prog. Validate
               </button>
               <button
-                title='Click me to validate the form programmatically.'
+                title='Click me to reset the form programmatically.'
                 className='btn btn-default'
                 type='button'
                 onClick={() => this.playGroundForm.current.reset()}
