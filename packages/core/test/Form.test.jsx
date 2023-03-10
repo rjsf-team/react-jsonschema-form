@@ -16,6 +16,7 @@ import {
   describeRepeated,
   submitForm,
 } from './test_utils';
+import widgetsSchema from './widgets_schema';
 
 describeRepeated('Form common', (createFormComponent) => {
   let sandbox;
@@ -3910,6 +3911,75 @@ describe('Form omitExtraData and liveOmit', () => {
 
       expect(node.querySelector('#root_0')).to.exist;
       expect(node.querySelector('#root_1').getAttribute('value')).to.eq('test');
+    });
+  });
+
+  describe('Calling reset from ref object', () => {
+    const schema = {
+      title: 'Test form',
+      type: 'string',
+    };
+    it('Reset button test', () => {
+      let child = null;
+      const props = {
+        ref: (instance) => (child = instance),
+        schema,
+      };
+      const { node } = createFormComponent(props);
+      expect(child.reset).to.exist;
+      expect(node.querySelector('input')).to.exist;
+      Simulate.change(node.querySelector('input'), { target: { value: 'Some Value' } });
+      child.reset();
+      expect(node.querySelector('input').getAttribute('value')).to.eq('');
+    });
+    it('Reset button test with default value', () => {
+      const schemaWithDefault = {
+        ...schema,
+        default: 'Some-Value',
+      };
+      let child = null;
+      const props = {
+        ref: (instance) => (child = instance),
+        schema: schemaWithDefault,
+      };
+      const { node } = createFormComponent(props);
+      const input = node.querySelector('input');
+      expect(child.reset).to.exist;
+      expect(input).to.exist;
+      expect(input.getAttribute('value')).to.eq('Some-Value');
+      child.reset();
+      expect(input.getAttribute('value')).to.eq('Some-Value');
+      Simulate.change(input, { target: { value: 'Changed value' } });
+      Simulate.change(input, { target: { value: 'Changed value' } });
+      child.reset();
+      expect(input.getAttribute('value')).to.eq('Some-Value');
+    });
+
+    it('Reset button test with complex schema', () => {
+      const schema = widgetsSchema;
+      let child = null;
+      const props = {
+        ref: (instance) => (child = instance),
+        schema,
+      };
+      const { node } = createFormComponent(props);
+      const checkbox = node.querySelector('input[type="checkbox"]');
+      const input = node.querySelector('input[type="text"]');
+      expect(child.reset).to.exist;
+      expect(checkbox).to.exist;
+      expect(input).to.exist;
+      expect(checkbox.checked).to.eq(true);
+      expect(input.getAttribute('value')).to.eq('');
+      child.reset();
+      expect(checkbox.checked).to.eq(true);
+      expect(input.getAttribute('value')).to.eq('');
+      Simulate.change(checkbox, { target: { checked: false } });
+      Simulate.change(input, { target: { value: 'Changed value' } });
+      expect(checkbox.checked).to.eq(false);
+      expect(input.getAttribute('value')).to.eq('Changed value');
+      child.reset();
+      expect(input.getAttribute('value')).to.eq('');
+      expect(checkbox.checked).to.eq(true);
     });
   });
 });
