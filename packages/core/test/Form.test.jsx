@@ -3915,11 +3915,11 @@ describe('Form omitExtraData and liveOmit', () => {
   });
 
   describe('Calling reset from ref object', () => {
-    const schema = {
-      title: 'Test form',
-      type: 'string',
-    };
     it('Reset button test', () => {
+      const schema = {
+        title: 'Test form',
+        type: 'string',
+      };
       let child = null;
       const props = {
         ref: (instance) => (child = instance),
@@ -3932,9 +3932,35 @@ describe('Form omitExtraData and liveOmit', () => {
       child.reset();
       expect(node.querySelector('input').getAttribute('value')).to.eq('');
     });
+
+    it('Clear errors', () => {
+      const schema = {
+        title: 'Test form',
+        type: 'number',
+      };
+      let child = null;
+      const props = {
+        ref: (instance) => (child = instance),
+        schema,
+      };
+      const { node, comp } = createFormComponent(props);
+      expect(child.reset).to.exist;
+      expect(node.querySelector('input')).to.exist;
+      Simulate.change(node.querySelector('input'), { target: { value: 'Some Value' } });
+      expect(comp.state.errors).to.have.length(0);
+      Simulate.submit(node);
+      expect(comp.state.errors).to.have.length(1);
+      expect(node.querySelector('.errors')).to.exist;
+      child.reset();
+      expect(node.querySelector('.errors')).not.to.exist;
+      expect(node.querySelector('input').getAttribute('value')).to.eq('');
+      expect(comp.state.errors).to.have.length(0);
+    });
+
     it('Reset button test with default value', () => {
       const schemaWithDefault = {
-        ...schema,
+        title: 'Test form',
+        type: 'string',
         default: 'Some-Value',
       };
       let child = null;
@@ -3949,7 +3975,6 @@ describe('Form omitExtraData and liveOmit', () => {
       expect(input.getAttribute('value')).to.eq('Some-Value');
       child.reset();
       expect(input.getAttribute('value')).to.eq('Some-Value');
-      Simulate.change(input, { target: { value: 'Changed value' } });
       Simulate.change(input, { target: { value: 'Changed value' } });
       child.reset();
       expect(input.getAttribute('value')).to.eq('Some-Value');

@@ -540,15 +540,22 @@ export default class Form<
    */
   reset = () => {
     const { onChange } = this.props;
-    const { schemaUtils } = this.state;
-    const newState = this.getStateFromProps(this.props, this.props.formData);
+    const newState = this.getStateFromProps(this.props, undefined);
     const newFormData = newState.formData;
+    const resetErrors = (): ValidationData<T> => ({
+      errors: [],
+      errorSchema: {},
+    });
+    const errors = resetErrors();
     const state = {
       formData: newFormData,
-      errorSchema: newState.errorSchema,
-      errors: schemaUtils.getValidator().toErrorList(newState.errorSchema),
-    };
-    this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }));
+      errorSchema: errors.errorSchema,
+      errors: errors.errors,
+      schemaValidationErrors: errors.errors,
+      schemaValidationErrorSchema: errors.errorSchema,
+    } as FormState<T, S, F>;
+
+    this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
