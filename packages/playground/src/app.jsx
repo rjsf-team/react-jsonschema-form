@@ -9,7 +9,7 @@ import isEqualWith from 'lodash/isEqualWith';
 
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
-import { GeoPosition, CopyLink, ThemeSelector, Selector } from './components';
+import { GeoPosition, CopyLink, ThemeSelector, Selector, ValidatorSelector } from './components';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -106,29 +106,6 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
       formData={subtheme}
       validator={localValidator}
       onChange={({ formData }) => formData && select(formData, subthemes[formData])}
-    >
-      <div />
-    </Form>
-  );
-}
-
-function ValidatorSelector({ validator, validators, select }) {
-  const schema = {
-    type: 'string',
-    enum: Object.keys(validators),
-  };
-  const uiSchema = {
-    'ui:placeholder': 'Select validator',
-  };
-  return (
-    <Form
-      className='form_rjsf_validatorSelector'
-      idPrefix='rjsf_validatorSelector'
-      schema={schema}
-      uiSchema={uiSchema}
-      formData={validator}
-      validator={localValidator}
-      onChange={({ formData }) => formData && select(formData)}
     >
       <div />
     </Form>
