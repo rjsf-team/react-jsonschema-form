@@ -14,7 +14,6 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true, // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
     alias: {
-      '~': path.resolve(__dirname, './src'),
       // The following is needed to allow the material ui v4 and v5 themes to properly load the css
       '@mui/styles': path.resolve('./node_modules', '@mui/styles'),
       '@material-ui/styles': path.resolve('./node_modules', '@material-ui/styles'),
