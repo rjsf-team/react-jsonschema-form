@@ -9,7 +9,7 @@ import isEqualWith from 'lodash/isEqualWith';
 
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
-import { GeoPosition, CopyLink, ThemeSelector } from '~/components';
+import { GeoPosition, CopyLink, ThemeSelector } from './components';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
