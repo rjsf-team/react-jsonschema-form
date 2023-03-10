@@ -536,7 +536,10 @@ export default class Form<
   };
 
   /**
-   * Callback function to handle reset form data. Reset all fields with default values.
+   * Callback function to handle reset form data.
+   * - Reset all fields with default values.
+   * - Reset validations and errors
+   *
    */
   reset = () => {
     const { onChange } = this.props;
