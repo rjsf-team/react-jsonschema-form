@@ -9,6 +9,7 @@ import isEqualWith from 'lodash/isEqualWith';
 
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
+import { GeoPosition, CopyLink, ThemeSelector } from '~/components';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -38,43 +39,6 @@ const monacoEditorOptions = {
   },
   automaticLayout: true,
 };
-
-class GeoPosition extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { ...props.formData };
-  }
-
-  onChange(name) {
-    return (event) => {
-      this.setState({ [name]: parseFloat(event.target.value) });
-      setTimeout(() => this.props.onChange(this.state), 0);
-    };
-  }
-
-  render() {
-    const { lat, lon } = this.state;
-    return (
-      <div className='geo'>
-        <h3>Hey, I'm a custom component</h3>
-        <p>
-          I'm registered as <code>geo</code> and referenced in
-          <code>uiSchema</code> as the <code>ui:field</code> to use for this schema.
-        </p>
-        <div className='row'>
-          <div className='col-sm-6'>
-            <label>Latitude</label>
-            <input className='form-control' type='number' value={lat} step='0.00001' onChange={this.onChange('lat')} />
-          </div>
-          <div className='col-sm-6'>
-            <label>Longitude</label>
-            <input className='form-control' type='number' value={lon} step='0.00001' onChange={this.onChange('lon')} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
 class Editor extends Component {
   constructor(props) {
@@ -160,29 +124,6 @@ class Selector extends Component {
   }
 }
 
-function ThemeSelector({ theme, themes, select }) {
-  const schema = {
-    type: 'string',
-    enum: Object.keys(themes),
-  };
-  const uiSchema = {
-    'ui:placeholder': 'Select theme',
-  };
-  return (
-    <Form
-      className='form_rjsf_themeSelector'
-      idPrefix='rjsf_themeSelector'
-      schema={schema}
-      uiSchema={uiSchema}
-      formData={theme}
-      validator={localValidator}
-      onChange={({ formData }) => formData && select(formData, themes[formData])}
-    >
-      <div />
-    </Form>
-  );
-}
-
 function SubthemeSelector({ subtheme, subthemes, select }) {
   const schema = {
     type: 'string',
@@ -227,34 +168,6 @@ function ValidatorSelector({ validator, validators, select }) {
       <div />
     </Form>
   );
-}
-
-class CopyLink extends Component {
-  onCopyClick = (event) => {
-    this.input.select();
-    document.execCommand('copy');
-  };
-
-  render() {
-    const { shareURL, onShare } = this.props;
-    if (!shareURL) {
-      return (
-        <button className='btn btn-default' type='button' onClick={onShare}>
-          Share
-        </button>
-      );
-    }
-    return (
-      <div className='input-group'>
-        <input type='text' ref={(input) => (this.input = input)} className='form-control' defaultValue={shareURL} />
-        <span className='input-group-btn'>
-          <button className='btn btn-default' type='button' onClick={this.onCopyClick}>
-            <i className='glyphicon glyphicon-copy' />
-          </button>
-        </span>
-      </div>
-    );
-  }
 }
 
 function RawValidatorTest({ validator, schema, formData }) {
