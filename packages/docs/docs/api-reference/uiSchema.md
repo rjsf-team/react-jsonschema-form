@@ -92,7 +92,7 @@ NOTE: The properties specific to array items can be found [here](../usage/arrays
 
 ### widget
 
-The `ui:field` property overrides the `Widget` implementation used for rendering any field in the form's hierarchy.
+The `ui:widget` property overrides the `Widget` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a widget that is used to look up an implementation from the `widgets` list or an actual one-off `Widget` component implementation itself.
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields) for more information about how to use this property.
