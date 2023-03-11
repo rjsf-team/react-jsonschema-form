@@ -545,17 +545,12 @@ export default class Form<
     const { onChange } = this.props;
     const newState = this.getStateFromProps(this.props, undefined);
     const newFormData = newState.formData;
-    const resetErrors = (): ValidationData<T> => ({
-      errors: [],
-      errorSchema: {},
-    });
-    const errors = resetErrors();
     const state = {
       formData: newFormData,
-      errorSchema: errors.errorSchema,
-      errors: errors.errors,
-      schemaValidationErrors: errors.errors,
-      schemaValidationErrorSchema: errors.errorSchema,
+      errorSchema: {},
+      errors: [] as unknown,
+      schemaValidationErrors: [] as unknown,
+      schemaValidationErrorSchema: {},
     } as FormState<T, S, F>;
 
     this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
