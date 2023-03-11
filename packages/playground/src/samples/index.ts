@@ -6,7 +6,6 @@ import enumObjects from './enumObjects';
 import nested from './nested';
 import numbers from './numbers';
 import simple from './simple';
-import widgets from './widgets';
 import ordering from './ordering';
 import references from './references';
 import custom from './custom';
@@ -37,7 +36,6 @@ export const samples = Object.freeze({
   Nested: nested,
   Arrays: arrays,
   Numbers: numbers,
-  Widgets: widgets,
   Ordering: ordering,
   References: references,
   Custom: custom,
