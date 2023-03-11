@@ -1,6 +1,6 @@
 import { createRef, Component } from 'react';
 
-import { samples } from './samples';
+import { samples } from '../samples';
 import 'react-app-polyfill/ie11';
 import Form, { withTheme } from '@rjsf/core';
 import { shouldRender } from '@rjsf/utils';
