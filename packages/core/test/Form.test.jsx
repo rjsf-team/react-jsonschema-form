@@ -16,7 +16,7 @@ import {
   describeRepeated,
   submitForm,
 } from './test_utils';
-import widgetsSchema from './widgets_schema';
+import widgetsSchema from './widgets_schema.json';
 
 describeRepeated('Form common', (createFormComponent) => {
   let sandbox;
