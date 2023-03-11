@@ -139,7 +139,15 @@ export default {
       'ui:readonly': true,
     },
     widgetOptions: {
-      'ui:widget': ({ value, onChange, options }) => {
+      'ui:widget': ({
+        value,
+        onChange,
+        options,
+      }: {
+        value: any;
+        onChange: (value: any) => void;
+        options: { backgroundColor: string };
+      }) => {
         const { backgroundColor } = options;
         return (
           <input
@@ -155,7 +163,15 @@ export default {
       },
     },
     selectWidgetOptions: {
-      'ui:widget': ({ value, onChange, options }) => {
+      'ui:widget': ({
+        value,
+        onChange,
+        options,
+      }: {
+        value: any;
+        onChange: (value: any) => void;
+        options: { enumOptions: { label: string; value: any }[]; backgroundColor: string };
+      }) => {
         const { enumOptions, backgroundColor } = options;
         return (
           <select
