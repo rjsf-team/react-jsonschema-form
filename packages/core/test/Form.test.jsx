@@ -3915,7 +3915,7 @@ describe('Form omitExtraData and liveOmit', () => {
   });
 
   describe('Calling reset from ref object', () => {
-    it('Reset button test', () => {
+    it('Reset API test', () => {
       const schema = {
         title: 'Test form',
         type: 'string',
