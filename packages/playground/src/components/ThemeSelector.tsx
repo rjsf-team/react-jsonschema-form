@@ -1,7 +1,7 @@
 import Form from '@rjsf/core';
 import localValidator from '@rjsf/validator-ajv8';
 
-export const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args: any[]) => void }> = ({
+const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args: any[]) => void }> = ({
   theme,
   themes,
   select,
@@ -29,3 +29,5 @@ export const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args
     </Form>
   );
 };
+
+export default ThemeSelector;

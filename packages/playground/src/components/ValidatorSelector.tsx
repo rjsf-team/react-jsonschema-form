@@ -1,7 +1,7 @@
 import Form from '@rjsf/core';
 import localValidator from '@rjsf/validator-ajv8';
 
-export const ValidatorSelector: React.FC<{ validator: string; validators: any; select: (validator: any) => void }> = ({
+const ValidatorSelector: React.FC<{ validator: string; validators: any; select: (validator: any) => void }> = ({
   validator,
   validators,
   select,
@@ -29,3 +29,5 @@ export const ValidatorSelector: React.FC<{ validator: string; validators: any; s
     </Form>
   );
 };
+
+export default ValidatorSelector;

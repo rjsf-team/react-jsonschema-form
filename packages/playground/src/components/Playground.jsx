@@ -9,16 +9,14 @@ import isEqualWith from 'lodash/isEqualWith';
 
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
-import {
-  GeoPosition,
-  CopyLink,
-  ThemeSelector,
-  Selector,
-  ValidatorSelector,
-  SubthemeSelector,
-  RawValidatorTest,
-  Editor,
-} from './components';
+import CopyLink from './CopyLink';
+import GeoPosition from './GeoPosition';
+import ThemeSelector from './ThemeSelector';
+import Selector from './Selector';
+import ValidatorSelector from './ValidatorSelector';
+import SubthemeSelector from './SubthemeSelector';
+import RawValidatorTest from './RawValidatorTest';
+import Editor from './Editor';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
@@ -42,7 +40,7 @@ const liveSettingsSchema = {
   },
 };
 
-class Playground extends Component {
+export class Playground extends Component {
   constructor(props) {
     super(props);
 
@@ -222,7 +220,7 @@ class Playground extends Component {
     }
 
     return (
-      <div className='container-fluid'>
+      <>
         <div className='page-header'>
           <h1>react-jsonschema-form</h1>
           <div className='row'>
@@ -354,19 +352,7 @@ class Playground extends Component {
             )}
           </ErrorBoundary>
         </div>
-        <div className='col-sm-12'>
-          <p style={{ textAlign: 'center' }}>
-            Powered by <a href='https://github.com/rjsf-team/react-jsonschema-form'>react-jsonschema-form</a>.
-            {import.meta.env.VITE_SHOW_NETLIFY_BADGE === 'true' && (
-              <div style={{ float: 'right' }}>
-                <a href='https://www.netlify.com'>
-                  <img src='https://www.netlify.com/img/global/badges/netlify-color-accent.svg' />
-                </a>
-              </div>
-            )}
-          </p>
-        </div>
-      </div>
+      </>
     );
   }
 }

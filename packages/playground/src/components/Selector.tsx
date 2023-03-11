@@ -2,7 +2,7 @@ import { memo, useState, type MouseEvent } from 'react';
 // @ts-ignore
 import { samples } from '../samples';
 
-export const Selector: React.FC<{ onSelected: (data: any) => void }> = memo(({ onSelected }) => {
+const Selector: React.FC<{ onSelected: (data: any) => void }> = memo(({ onSelected }) => {
   const [current, setCurrent] = useState<string>('Simple');
 
   function onLabelClick(label: string) {
@@ -27,3 +27,5 @@ export const Selector: React.FC<{ onSelected: (data: any) => void }> = memo(({ o
     </ul>
   );
 });
+
+export default Selector;

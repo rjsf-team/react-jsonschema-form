@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const RawValidatorTest: React.FC<{ validator: any; schema: object; formData: object }> = ({
+const RawValidatorTest: React.FC<{ validator: any; schema: object; formData: object }> = ({
   validator,
   schema,
   formData,
@@ -45,3 +45,5 @@ export const RawValidatorTest: React.FC<{ validator: any; schema: object; formDa
     </div>
   );
 };
+
+export default RawValidatorTest;

@@ -14,7 +14,7 @@ interface Props {
   ) => void;
 }
 
-export const SubthemeSelector: React.FC<Props> = ({ subtheme, subthemes, select }) => {
+const SubthemeSelector: React.FC<Props> = ({ subtheme, subthemes, select }) => {
   const schema = {
     type: 'string',
     enum: Object.keys(subthemes),
@@ -38,3 +38,5 @@ export const SubthemeSelector: React.FC<Props> = ({ subtheme, subthemes, select 
     </Form>
   );
 };
+
+export default SubthemeSelector;

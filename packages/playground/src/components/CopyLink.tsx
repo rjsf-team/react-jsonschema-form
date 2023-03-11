@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export const CopyLink: React.FC<{ shareUrl: string; onShare: () => void }> = ({ shareUrl, onShare }) => {
+const CopyLink: React.FC<{ shareUrl: string; onShare: () => void }> = ({ shareUrl, onShare }) => {
   const input = useRef<HTMLInputElement>(null);
 
   function onCopyClick() {
@@ -27,3 +27,5 @@ export const CopyLink: React.FC<{ shareUrl: string; onShare: () => void }> = ({ 
     </div>
   );
 };
+
+export default CopyLink;

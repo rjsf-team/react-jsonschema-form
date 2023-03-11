@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const GeoPosition: React.FC = () => {
+const GeoPosition: React.FC = () => {
   const [lat, setLat] = useState<number>(0);
   const [lon, setLon] = useState<number>(0);
 
@@ -36,3 +36,5 @@ export const GeoPosition: React.FC = () => {
     </div>
   );
 };
+
+export default GeoPosition;

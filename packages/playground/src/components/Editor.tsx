@@ -8,7 +8,7 @@ const monacoEditorOptions = {
   automaticLayout: true,
 };
 
-export const Editor: React.FC<{ title: string; code: string; onChange: (code: string) => void }> = memo(
+const Editor: React.FC<{ title: string; code: string; onChange: (code: string) => void }> = memo(
   ({ title, code: initialCode, onChange }) => {
     const [valid, setValid] = useState(true);
     const [code, setCode] = useState(initialCode);
@@ -48,3 +48,5 @@ export const Editor: React.FC<{ title: string; code: string; onChange: (code: st
     );
   }
 );
+
+export default Editor;
