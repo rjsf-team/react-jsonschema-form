@@ -1,10 +1,10 @@
 import { useState, useRef, useCallback, cloneElement } from 'react';
 import { CssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { create } from 'jss';
+import createCache, { type EmotionCache } from '@emotion/cache';
+import { create, type Jss } from 'jss';
 import { jssPreset, StylesProvider } from '@material-ui/core/styles';
-import Frame, { FrameContextConsumer } from 'react-frame-component';
+import Frame, { type FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 
 /*
@@ -33,14 +33,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-function DemoFrame(props) {
-  const { children, classes, theme, ...other } = props;
-  const [state, setState] = useState({
-    ready: false,
-  });
-  const instanceRef = useRef();
+const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => {
+  const { children, head, theme, ...frameProps } = props;
 
-  const handleRef = useCallback((ref) => {
+  const [jss, setJss] = useState<Jss>();
+  const [ready, setReady] = useState(false);
+  const [sheetsManager, setSheetsManager] = useState(new Map());
+  const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
+  const [container, setContainer] = useState();
+  const [window, setWindow] = useState();
+
+  const instanceRef = useRef<any>();
+
+  const handleRef = useCallback((ref: any) => {
     instanceRef.current = {
       contentDocument: ref ? ref.node.contentDocument : null,
       contentWindow: ref ? ref.node.contentWindow : null,
@@ -48,45 +53,55 @@ function DemoFrame(props) {
   }, []);
 
   const onContentDidMount = () => {
-    setState({
-      ready: true,
-      jss: create({
+    setReady(true);
+    setJss(
+      create({
         plugins: jssPreset().plugins,
         insertionPoint: instanceRef.current.contentWindow['demo-frame-jss'],
-      }),
-      sheetsManager: new Map(),
-      emotionCache: createCache({
+      })
+    );
+    setSheetsManager(new Map());
+    setEmotionCache(
+      createCache({
         key: 'css',
         prepend: true,
         container: instanceRef.current.contentWindow['demo-frame-jss'],
-      }),
-      container: instanceRef.current.contentDocument.body,
-      window: () => instanceRef.current.contentWindow,
-    });
+      })
+    );
+    setContainer(instanceRef.current.contentDocument.body);
+    setWindow(() => instanceRef.current.contentWindow);
   };
   let body = children;
   if (theme === 'material-ui-4') {
-    body = state.ready ? (
-      <StylesProvider jss={state.jss} sheetsManager={state.sheetsManager}>
-        {cloneElement(children, {
-          container: state.container,
-          window: state.window,
-        })}
+    body = ready ? (
+      <StylesProvider jss={jss} sheetsManager={sheetsManager}>
+        {cloneElement(
+          // @ts-ignore
+          children,
+          {
+            container: container,
+            window: window,
+          }
+        )}
       </StylesProvider>
     ) : null;
   } else if (theme === 'material-ui-5') {
-    body = state.ready ? (
-      <CacheProvider value={state.emotionCache}>
+    body = ready ? (
+      <CacheProvider value={emotionCache}>
         <CssBaseline />
-        {cloneElement(children, {
-          container: state.container,
-          window: state.window,
-        })}
+        {cloneElement(
+          // @ts-ignore
+          children,
+          {
+            container: container,
+            window: window,
+          }
+        )}
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluent-ui') {
     // TODO: find a better way to render fluent-ui in an iframe, if we need to do so.
-    const { head } = props;
+
     body = (
       <>
         <style dangerouslySetInnerHTML={{ __html: 'label { font-weight: normal; }' }} />
@@ -98,11 +113,11 @@ function DemoFrame(props) {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   }
   return (
-    <Frame ref={handleRef} contentDidMount={onContentDidMount} {...other}>
+    <Frame ref={handleRef} contentDidMount={onContentDidMount} {...frameProps}>
       <div id='demo-frame-jss' />
       {body}
     </Frame>
   );
-}
+};
 
 export default DemoFrame;
