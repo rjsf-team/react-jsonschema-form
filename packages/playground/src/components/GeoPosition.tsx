@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
-const GeoPosition: React.FC = () => {
+const GeoPosition: React.FC = memo(() => {
   const [lat, setLat] = useState<number>(0);
   const [lon, setLon] = useState<number>(0);
 
@@ -35,6 +35,6 @@ const GeoPosition: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default GeoPosition;

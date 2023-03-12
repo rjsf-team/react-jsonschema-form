@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Form from '@rjsf/core';
 import localValidator from '@rjsf/validator-ajv8';
 
@@ -14,7 +15,7 @@ interface Props {
   ) => void;
 }
 
-const SubthemeSelector: React.FC<Props> = ({ subtheme, subthemes, select }) => {
+const SubthemeSelector: React.FC<Props> = memo(({ subtheme, subthemes, select }) => {
   const schema = {
     type: 'string',
     enum: Object.keys(subthemes),
@@ -37,6 +38,6 @@ const SubthemeSelector: React.FC<Props> = ({ subtheme, subthemes, select }) => {
       <div />
     </Form>
   );
-};
+});
 
 export default SubthemeSelector;
