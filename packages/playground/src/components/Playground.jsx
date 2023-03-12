@@ -51,7 +51,7 @@ export class Playground extends Component {
     const { schema, uiSchema, formData, validate } = samples.Simple;
     this.playGroundForm = createRef();
     this.state = {
-      form: false,
+      showForm: false,
       schema,
       uiSchema,
       formData,
@@ -86,7 +86,7 @@ export class Playground extends Component {
       // initialize theme
       this.onThemeSelected(theme, themes[theme]);
 
-      this.setState({ form: true });
+      this.setState({ showForm: true });
     }
   }
 
@@ -106,10 +106,10 @@ export class Playground extends Component {
     this.onThemeSelected(theme, themes[theme]);
 
     // force resetting form component instance
-    this.setState({ form: false }, () =>
+    this.setState({ showForm: false }, () =>
       this.setState({
         ...data,
-        form: true,
+        showForm: true,
         ArrayFieldTemplate,
         ObjectFieldTemplate,
         uiSchema,
@@ -305,7 +305,7 @@ export class Playground extends Component {
         </div>
         <div className='col-sm-5'>
           <ErrorBoundary>
-            {this.state.form && (
+            {this.state.showForm && (
               <DemoFrame
                 head={
                   <>
