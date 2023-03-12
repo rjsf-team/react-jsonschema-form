@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.3.0
+
+## @rjsf/core
+
+- `Reset` function added for `Programmatically Reset` action. `Reset` function will reset form data and validation errors. Form data will set to default values.
+
+## Dev / docs / playground
+
+- Added `Programmatically Reset` button to clear states which are form data and validation errors.
+
 # 5.2.1
 
 ## @rjsf/antd

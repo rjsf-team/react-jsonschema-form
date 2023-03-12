@@ -535,6 +535,27 @@ export default class Form<
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
   };
 
+  /**
+   * Callback function to handle reset form data.
+   * - Reset all fields with default values.
+   * - Reset validations and errors
+   *
+   */
+  reset = () => {
+    const { onChange } = this.props;
+    const newState = this.getStateFromProps(this.props, undefined);
+    const newFormData = newState.formData;
+    const state = {
+      formData: newFormData,
+      errorSchema: {},
+      errors: [] as unknown,
+      schemaValidationErrors: [] as unknown,
+      schemaValidationErrorSchema: {},
+    } as FormState<T, S, F>;
+
+    this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
+  };
+
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
    * was provided.
    *
