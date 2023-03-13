@@ -15,7 +15,7 @@ body:
           required: true
         - label: I have read the [documentation](https://rjsf-team.github.io/react-jsonschema-form/docs)
           required: true
-        - label: Ideally, I'm providing a [sample JSFiddle](https://jsfiddle.net/n1k0/f2y3fq7L/6/) or a [shared playground link](https://rjsf-team.github.io/react-jsonschema-form/) demonstrating the issue.
+        - label: Ideally, I'm providing a [sample JSFiddle](https://jsfiddle.net), [Codesandbox.io](https://codesandbox.io) or preferably a [shared playground link](https://rjsf-team.github.io/react-jsonschema-form/) demonstrating the issue.
           required: false
   - type: dropdown
     id: theme
