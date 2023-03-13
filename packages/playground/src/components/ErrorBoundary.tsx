@@ -1,13 +1,24 @@
 import { Component } from 'react';
 
-class ErrorBoundary extends Component {
-  constructor(props) {
+type Props = {};
+
+type State =
+  | {
+      hasError: false;
+      error: null;
+    }
+  | { hasError: true; error: Error };
+
+type Error = { message: string; [key: string]: unknown };
+
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
   /** Update state so the next render will show the fallback UI. */
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     return { hasError: true, error: error };
   }
 
@@ -28,6 +39,7 @@ class ErrorBoundary extends Component {
         </div>
       );
     }
+
     return this.props.children;
   }
 }
