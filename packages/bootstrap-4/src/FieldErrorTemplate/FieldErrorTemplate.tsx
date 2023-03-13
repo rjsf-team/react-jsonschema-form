@@ -1,12 +1,5 @@
-import React from "react";
-import {
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  errorId,
-} from "@rjsf/utils";
-import ListGroup from "react-bootstrap/ListGroup";
+import { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema, errorId } from '@rjsf/utils';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -24,11 +17,11 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <ListGroup as="ul" id={id}>
+    <ListGroup as='ul' id={id}>
       {errors.map((error, i) => {
         return (
-          <ListGroup.Item as="li" key={i} className="border-0 m-0 p-0">
-            <small className="m-0 text-danger">{error}</small>
+          <ListGroup.Item as='li' key={i} className='border-0 m-0 p-0'>
+            <small className='m-0 text-danger'>{error}</small>
           </ListGroup.Item>
         );
       })}

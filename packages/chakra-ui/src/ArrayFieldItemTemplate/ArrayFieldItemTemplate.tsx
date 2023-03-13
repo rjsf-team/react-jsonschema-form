@@ -1,11 +1,6 @@
-import React, { useMemo } from "react";
-import { Box, ButtonGroup, HStack } from "@chakra-ui/react";
-import {
-  ArrayFieldTemplateItemType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { useMemo } from 'react';
+import { Box, ButtonGroup, HStack } from '@chakra-ui/react';
+import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export default function ArrayFieldItemTemplate<
   T = any,
@@ -26,26 +21,16 @@ export default function ArrayFieldItemTemplate<
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
-  const onRemoveClick = useMemo(
-    () => onDropIndexClick(index),
-    [index, onDropIndexClick]
-  );
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const onRemoveClick = useMemo(() => onDropIndexClick(index), [index, onDropIndexClick]);
 
-  const onArrowUpClick = useMemo(
-    () => onReorderClick(index, index - 1),
-    [index, onReorderClick]
-  );
+  const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
 
-  const onArrowDownClick = useMemo(
-    () => onReorderClick(index, index + 1),
-    [index, onReorderClick]
-  );
+  const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
 
   return (
-    <HStack alignItems={"flex-end"} py={1}>
-      <Box w="100%">{children}</Box>
+    <HStack alignItems={'flex-end'} py={1}>
+      <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>
           <ButtonGroup isAttached mb={1}>

@@ -1,8 +1,8 @@
-import jsonpointer from "jsonpointer";
-import omit from "lodash/omit";
+import jsonpointer from 'jsonpointer';
+import omit from 'lodash/omit';
 
-import { REF_KEY } from "./constants";
-import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from "./types";
+import { REF_KEY } from './constants';
+import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
  * location, the `object` minus the `key: value` and in the second location the `value`.
@@ -12,10 +12,7 @@ import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from "./types";
  * @returns - An array with the first value being the object minus the `key` element and the second element being the
  *      value from `object[key]`
  */
-export function splitKeyElementFromObject(
-  key: string,
-  object: GenericObjectType
-) {
+export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
   const value = object[key];
   const remaining = omit(object, [key]);
   return [remaining, value];
@@ -30,11 +27,12 @@ export function splitKeyElementFromObject(
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference exists
  */
-export default function findSchemaDefinition<
-  S extends StrictRJSFSchema = RJSFSchema
->($ref?: string, rootSchema: S = {} as S): S {
-  let ref = $ref || "";
-  if (ref.startsWith("#")) {
+export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+  $ref?: string,
+  rootSchema: S = {} as S
+): S {
+  let ref = $ref || '';
+  if (ref.startsWith('#')) {
     // Decode URI fragment representation.
     ref = decodeURIComponent(ref.substring(1));
   } else {

@@ -1,37 +1,37 @@
 name: ❔ Question
 description: Ask a Question
-title: "<title>"
+title: '<title>'
 labels: [question, needs triage]
-assignees: 
+assignees:
   - rjsf-team/reviewers
 body:
-- type: checkboxes
-  attributes:
-    label: Prerequisites
-    options:
-    - label: I have read the [documentation](https://react-jsonschema-form.readthedocs.io/)
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I have read the [documentation](https://rjsf-team.github.io/react-jsonschema-form/docs)
+          required: true
+  - type: dropdown
+    id: theme
+    attributes:
+      label: What theme are you using?
+      options:
+        - core
+        - antd
+        - bootstrap-4
+        - chakra-ui
+        - fluent-ui
+        - material-ui
+        - mui
+        - semantic-ui
+        - utils
+        - validator-ajv6
+        - validator-ajv8
+        - other
+    validations:
       required: true
-- type: dropdown
-  id: theme
-  attributes:
-    label: What theme are you using?
-    options:
-      - core
-      - antd
-      - bootstrap-4
-      - chakra-ui
-      - fluent-ui
-      - material-ui
-      - mui
-      - semantic-ui
-      - utils
-      - validator-ajv6
-      - validator-ajv8
-      - other
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: What is your question?
-  validations:
-    required: false
+  - type: textarea
+    attributes:
+      label: What is your question?
+    validations:
+      required: false

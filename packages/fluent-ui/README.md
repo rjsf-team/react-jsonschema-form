@@ -70,7 +70,10 @@ yarn add @fluentui/react @rjsf/core
 For the Fluent UI grid to work, add the following CSS tag to the main HTML page:
 
 ```html
-<link rel="stylesheet" href="//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+<link
+  rel="stylesheet"
+  href="//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"
+/>
 ```
 
 ### Installation

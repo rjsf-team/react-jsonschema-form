@@ -1,4 +1,4 @@
-import React from "react";
+import { ElementType } from 'react';
 import {
   UiSchema,
   GenericObjectType,
@@ -7,13 +7,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-export type SemanticPropsTypes<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> = {
+export type SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
   options?: UIOptionsType<T, S, F>;
@@ -34,7 +30,7 @@ export type SemanticErrorPropsType<
 
 export type WrapProps = GenericObjectType & {
   wrap: boolean;
-  component?: React.ElementType;
+  component?: ElementType;
 };
 
 /**
@@ -48,11 +44,7 @@ export type WrapProps = GenericObjectType & {
  * @param {Object?} params.defaultContextProps
  * @returns {any}
  */
-export function getSemanticProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   formContext = {} as F,
   uiSchema = {},
   options = {},
@@ -90,23 +82,14 @@ export function getSemanticErrorProps<
   formContext = {} as F,
   uiSchema = {},
   options = {},
-  defaultProps = { size: "small", pointing: "above" },
+  defaultProps = { size: 'small', pointing: 'above' },
 }: SemanticErrorPropsType<T, S, F>) {
-  const formContextProps =
-    formContext.semantic && formContext.semantic.errorOptions;
-  const semanticOptions: GenericObjectType = getUiOptions<T, S, F>(uiSchema)
-    .semantic as GenericObjectType;
+  const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
+  const semanticOptions: GenericObjectType = getUiOptions<T, S, F>(uiSchema).semantic as GenericObjectType;
   const schemaProps = semanticOptions && semanticOptions.errorOptions;
-  const optionProps =
-    options.semantic && (options.semantic as GenericObjectType).errorOptions;
+  const optionProps = options.semantic && (options.semantic as GenericObjectType).errorOptions;
 
-  return Object.assign(
-    {},
-    { ...defaultProps },
-    schemaProps,
-    optionProps,
-    formContextProps
-  );
+  return Object.assign({}, { ...defaultProps }, schemaProps, optionProps, formContextProps);
 }
 
 /**
@@ -118,22 +101,16 @@ export function getSemanticErrorProps<
  * @param {Array} omit
  * @returns {string}
  */
-export function cleanClassNames(
-  classNameArr: Array<string | undefined>,
-  omit: string[] = []
-) {
+export function cleanClassNames(classNameArr: Array<string | undefined>, omit: string[] = []) {
   // Split each arg on whitespace, and add it to an array. Skip false-y args
   // like "" and undefined.
   const classList = classNameArr
     .filter(Boolean)
-    .reduce<string[]>(
-      (previous, current) => previous.concat(current!.trim().split(/\s+/)),
-      []
-    );
+    .reduce<string[]>((previous, current) => previous.concat(current!.trim().split(/\s+/)), []);
 
   // Remove any class names from omit, and make the rest unique before
   // returning them as a string
-  return [...new Set(classList.filter((cn) => !omit.includes(cn)))].join(" ");
+  return [...new Set(classList.filter((cn) => !omit.includes(cn)))].join(' ');
 }
 
 /**
@@ -144,10 +121,6 @@ export function cleanClassNames(
  * @returns {*}
  * @constructor
  */
-export function MaybeWrap({
-  wrap,
-  component: Component = "div",
-  ...props
-}: WrapProps) {
+export function MaybeWrap({ wrap, component: Component = 'div', ...props }: WrapProps) {
   return wrap ? <Component {...props} /> : props.children;
 }

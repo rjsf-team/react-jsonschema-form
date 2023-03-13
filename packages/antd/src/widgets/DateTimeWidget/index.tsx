@@ -1,5 +1,4 @@
-import React from "react";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,12 +6,12 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import DatePicker from "../../components/DatePicker";
+import DatePicker from '../../components/DatePicker';
 
 const DATE_PICKER_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `DateTimeWidget` component uses the `BaseInputTemplate` changing the type to `datetime-local` and transforms
@@ -25,21 +24,10 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    disabled,
-    formContext,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    placeholder,
-    readonly,
-    value,
-  } = props;
+  const { disabled, formContext, id, onBlur, onChange, onFocus, placeholder, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = (nextValue: any) =>
-    onChange(nextValue && nextValue.toISOString());
+  const handleChange = (nextValue: any) => onChange(nextValue && nextValue.toISOString());
 
   const handleBlur = () => onBlur(id, value);
 

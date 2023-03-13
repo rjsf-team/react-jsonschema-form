@@ -1,12 +1,5 @@
-import React from "react";
-import {
-  errorId,
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
-import { List } from "@fluentui/react";
+import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { List } from '@fluentui/react';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *

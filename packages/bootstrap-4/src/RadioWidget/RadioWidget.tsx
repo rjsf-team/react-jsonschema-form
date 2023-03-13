@@ -1,5 +1,5 @@
-import React from "react";
-import Form from "react-bootstrap/Form";
+import { ChangeEvent, FocusEvent } from 'react';
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   enumOptionsIsSelected,
@@ -9,13 +9,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   options,
   value,
@@ -28,26 +24,20 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({
-    target: { value },
-  }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const inline = Boolean(options && options.inline);
 
   return (
-    <Form.Group className="mb-0">
+    <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           const checked = enumOptionsIsSelected<S>(option.value, value);
 
           const radio = (
@@ -57,7 +47,7 @@ export default function RadioWidget<
               id={optionId(id, index)}
               key={index}
               name={id}
-              type="radio"
+              type='radio'
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}

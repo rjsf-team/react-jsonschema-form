@@ -1,10 +1,10 @@
-import { getSemanticErrorProps, getSemanticProps } from "../src/util";
+import { getSemanticErrorProps, getSemanticProps } from '../src/util';
 
-describe("util js functions", () => {
-  describe("getSemanticProps", () => {
-    test("defaultSchemaProps should be returned", () => {
+describe('util js functions', () => {
+  describe('getSemanticProps', () => {
+    test('defaultSchemaProps should be returned', () => {
       const uiSchema = {
-        "ui:options": {},
+        'ui:options': {},
       };
       expect(
         getSemanticProps({
@@ -17,9 +17,9 @@ describe("util js functions", () => {
       });
     });
 
-    test("semantic props if passed should overwrite defaultSchemaProps", () => {
+    test('semantic props if passed should overwrite defaultSchemaProps', () => {
       const uiSchema = {
-        "ui:options": {
+        'ui:options': {
           semantic: {
             wrapItem: true,
             horizontalButtons: true,
@@ -37,9 +37,9 @@ describe("util js functions", () => {
       });
     });
 
-    test("semantic props if passed should overwrite defaultSchemaProps but only the keys that match", () => {
+    test('semantic props if passed should overwrite defaultSchemaProps but only the keys that match', () => {
       const uiSchema = {
-        "ui:options": {
+        'ui:options': {
           semantic: {
             horizontalButtons: true,
           },
@@ -56,9 +56,9 @@ describe("util js functions", () => {
       });
     });
 
-    test("formContext semantic props if passed should overwrite ui:options", () => {
+    test('formContext semantic props if passed should overwrite ui:options', () => {
       const uiSchema = {
-        "ui:options": {
+        'ui:options': {
           semantic: {
             wrapItem: true,
             inverted: false,
@@ -86,28 +86,28 @@ describe("util js functions", () => {
     });
   });
 
-  describe("getSemanticErrorProps", () => {
-    test("default semantic errorOptions props should be returned", () => {
+  describe('getSemanticErrorProps', () => {
+    test('default semantic errorOptions props should be returned', () => {
       const uiSchema = {
-        "ui:options": {},
+        'ui:options': {},
       };
       expect(getSemanticErrorProps({ uiSchema })).toEqual({
-        size: "small",
-        pointing: "above",
+        size: 'small',
+        pointing: 'above',
       });
     });
 
-    test("semantic errorOptions props if passed should overwrite defaultSchemaProps", () => {
+    test('semantic errorOptions props if passed should overwrite defaultSchemaProps', () => {
       const uiSchema = {
-        "ui:options": {
+        'ui:options': {
           semantic: {
-            errorOptions: { size: "large" },
+            errorOptions: { size: 'large' },
           },
         },
       };
       expect(getSemanticErrorProps({ uiSchema })).toEqual({
-        size: "large",
-        pointing: "above",
+        size: 'large',
+        pointing: 'above',
       });
     });
   });

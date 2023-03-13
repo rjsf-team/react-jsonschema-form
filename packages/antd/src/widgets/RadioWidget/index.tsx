@@ -1,5 +1,5 @@
-import React from "react";
-import Radio, { RadioChangeEvent } from "antd/lib/radio";
+import { FocusEvent } from 'react';
+import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -10,18 +10,14 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   autofocus,
   disabled,
   formContext,
@@ -40,22 +36,13 @@ export default function RadioWidget<
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
     onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(
-      id,
-      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
-    );
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
 
-  const handleFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(
-      id,
-      enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue)
-    );
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions
-  ) as string;
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
   return (
     <Radio.Group
@@ -74,9 +61,7 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={
-              Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1
-            }
+            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
             key={i}
             value={String(i)}
           >

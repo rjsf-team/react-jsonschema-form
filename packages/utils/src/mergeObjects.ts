@@ -1,5 +1,5 @@
-import isObject from "./isObject";
-import { GenericObjectType } from "./types";
+import isObject from './isObject';
+import { GenericObjectType } from './types';
 
 /** Recursively merge deeply nested objects.
  *
@@ -13,7 +13,7 @@ import { GenericObjectType } from "./types";
 export default function mergeObjects(
   obj1: GenericObjectType,
   obj2: GenericObjectType,
-  concatArrays: boolean | "preventDuplicates" = false
+  concatArrays: boolean | 'preventDuplicates' = false
 ) {
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1 ? obj1[key] : {},
@@ -22,7 +22,7 @@ export default function mergeObjects(
       acc[key] = mergeObjects(left, right, concatArrays);
     } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
       let toMerge = right;
-      if (concatArrays === "preventDuplicates") {
+      if (concatArrays === 'preventDuplicates') {
         toMerge = right.reduce((result, value) => {
           if (!left.includes(value)) {
             result.push(value);

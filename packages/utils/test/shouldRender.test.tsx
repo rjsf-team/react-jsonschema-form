@@ -1,5 +1,5 @@
-import React from "react";
-import { shouldRender } from "../src";
+import React from 'react';
+import { shouldRender } from '../src';
 
 type VoidFunc = () => void;
 type MyComponentProps = {
@@ -20,8 +20,8 @@ type MyComponentState = {
       };
 };
 
-describe("shouldRender()", () => {
-  describe("single level comparison checks", () => {
+describe('shouldRender()', () => {
+  describe('single level comparison checks', () => {
     let initial: React.Component<MyComponentProps, MyComponentState>;
     beforeAll(() => {
       initial = {
@@ -30,19 +30,19 @@ describe("shouldRender()", () => {
       } as React.Component<MyComponentProps, MyComponentState>;
     });
 
-    it("should detect equivalent props and state", () => {
+    it('should detect equivalent props and state', () => {
       expect(shouldRender(initial, { myProp: 1 }, { myState: 1 })).toBe(false);
     });
 
-    it("should detect diffing props", () => {
+    it('should detect diffing props', () => {
       expect(shouldRender(initial, { myProp: 2 }, { myState: 1 })).toBe(true);
     });
 
-    it("should detect diffing state", () => {
+    it('should detect diffing state', () => {
       expect(shouldRender(initial, { myProp: 1 }, { myState: 2 })).toBe(true);
     });
 
-    it("should handle equivalent function prop", () => {
+    it('should handle equivalent function prop', () => {
       const fn = () => {};
       initial = {
         props: { myProp: fn },
@@ -52,7 +52,7 @@ describe("shouldRender()", () => {
     });
   });
 
-  describe("nested levels comparison checks", () => {
+  describe('nested levels comparison checks', () => {
     let initial: React.Component<MyComponentProps, MyComponentState>;
     beforeAll(() => {
       initial = {
@@ -61,49 +61,25 @@ describe("shouldRender()", () => {
       } as React.Component<MyComponentProps, MyComponentState>;
     });
 
-    it("should detect equivalent props and state", () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 1 } },
-          { myState: { mySubState: 1 } }
-        )
-      ).toBe(false);
+    it('should detect equivalent props and state', () => {
+      expect(shouldRender(initial, { myProp: { mySubProp: 1 } }, { myState: { mySubState: 1 } })).toBe(false);
     });
 
-    it("should detect diffing props", () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 2 } },
-          { myState: { mySubState: 1 } }
-        )
-      ).toBe(true);
+    it('should detect diffing props', () => {
+      expect(shouldRender(initial, { myProp: { mySubProp: 2 } }, { myState: { mySubState: 1 } })).toBe(true);
     });
 
-    it("should detect diffing state", () => {
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: 1 } },
-          { myState: { mySubState: 2 } }
-        )
-      ).toBe(true);
+    it('should detect diffing state', () => {
+      expect(shouldRender(initial, { myProp: { mySubProp: 1 } }, { myState: { mySubState: 2 } })).toBe(true);
     });
 
-    it("should handle equivalent function prop", () => {
+    it('should handle equivalent function prop', () => {
       const fn = () => {};
       initial = {
         props: { myProp: { mySubProp: fn } },
         state: { myState: { mySubState: fn } },
       } as React.Component<MyComponentProps, MyComponentState>;
-      expect(
-        shouldRender(
-          initial,
-          { myProp: { mySubProp: fn } },
-          { myState: { mySubState: fn } }
-        )
-      ).toBe(false);
+      expect(shouldRender(initial, { myProp: { mySubProp: fn } }, { myState: { mySubState: fn } })).toBe(false);
     });
   });
 });

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FieldTemplateProps,
   FormContextType,
@@ -7,9 +6,9 @@ import {
   descriptionId,
   getTemplate,
   getUiOptions,
-} from "@rjsf/utils";
-import { Form } from "semantic-ui-react";
-import { getSemanticProps, MaybeWrap } from "../util";
+} from '@rjsf/utils';
+import { Form } from 'semantic-ui-react';
+import { getSemanticProps, MaybeWrap } from '../util';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -40,21 +39,19 @@ export default function FieldTemplate<
   const semanticProps = getSemanticProps<T, S, F>(otherProps);
   const { wrapLabel, wrapContent } = semanticProps;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
-    T,
-    S,
-    F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
-    return <div style={{ display: "none" }}>{children}</div>;
+    return <div style={{ display: 'none' }}>{children}</div>;
   }
 
   return (
@@ -68,11 +65,11 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       {...otherProps}
     >
-      <Form.Group key={id} widths="equal" grouped>
-        <MaybeWrap wrap={wrapContent} className="sui-field-content">
+      <Form.Group key={id} widths='equal' grouped>
+        <MaybeWrap wrap={wrapContent} className='sui-field-content'>
           {children}
           {displayLabel && rawDescription && (
-            <MaybeWrap wrap={wrapLabel} className="sui-field-label">
+            <MaybeWrap wrap={wrapLabel} className='sui-field-label'>
               {rawDescription && (
                 <DescriptionFieldTemplate
                   id={descriptionId<T>(id)}

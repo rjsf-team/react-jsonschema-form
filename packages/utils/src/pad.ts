@@ -7,7 +7,7 @@
 export default function pad(num: number, width: number) {
   let s = String(num);
   while (s.length < width) {
-    s = "0" + s;
+    s = '0' + s;
   }
   return s;
 }

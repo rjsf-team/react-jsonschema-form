@@ -1,8 +1,7 @@
-import React from "react";
-import classNames from "classnames";
-import isObject from "lodash/isObject";
-import isNumber from "lodash/isNumber";
-import isString from "lodash/isString";
+import classNames from 'classnames';
+import isObject from 'lodash/isObject';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 import {
   FormContextType,
   GenericObjectType,
@@ -16,16 +15,13 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
-} from "@rjsf/utils";
-import Col from "antd/lib/col";
-import Row from "antd/lib/row";
-import {
-  ConfigConsumer,
-  ConfigConsumerProps,
-} from "antd/lib/config-provider/context";
+} from '@rjsf/utils';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
+import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
 
 const DESCRIPTION_COL_STYLE = {
-  paddingBottom: "8px",
+  paddingBottom: '8px',
 };
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -55,42 +51,28 @@ export default function ObjectFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const {
-    colSpan = 24,
-    labelAlign = "right",
-    rowGutter = 24,
-  } = formContext as GenericObjectType;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
 
-  const findSchema = (element: ObjectFieldTemplatePropertyType): S =>
-    element.content.props.schema;
+  const findSchema = (element: ObjectFieldTemplatePropertyType): S => element.content.props.schema;
 
-  const findSchemaType = (element: ObjectFieldTemplatePropertyType) =>
-    findSchema(element).type;
+  const findSchemaType = (element: ObjectFieldTemplatePropertyType) => findSchema(element).type;
 
-  const findUiSchema = (
-    element: ObjectFieldTemplatePropertyType
-  ): UiSchema<T, S, F> | undefined => element.content.props.uiSchema;
+  const findUiSchema = (element: ObjectFieldTemplatePropertyType): UiSchema<T, S, F> | undefined =>
+    element.content.props.uiSchema;
 
-  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) =>
-    getUiOptions(findUiSchema(element)).field;
+  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).field;
 
-  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) =>
-    getUiOptions(findUiSchema(element)).widget;
+  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType) => getUiOptions(findUiSchema(element)).widget;
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType) => {
     const type = findSchemaType(element);
@@ -99,9 +81,9 @@ export default function ObjectFieldTemplate<
 
     const defaultColSpan =
       properties.length < 2 || // Single or no field in object.
-      type === "object" ||
-      type === "array" ||
-      widget === "textarea"
+      type === 'object' ||
+      type === 'array' ||
+      widget === 'textarea'
         ? 24
         : 12;
 
@@ -127,11 +109,11 @@ export default function ObjectFieldTemplate<
     <ConfigConsumer>
       {(configProps: ConfigConsumerProps) => {
         const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls("form");
+        const prefixCls = getPrefixCls('form');
         const labelClsBasic = `${prefixCls}-item-label`;
         const labelColClassName = classNames(
           labelClsBasic,
-          labelAlign === "left" && `${labelClsBasic}-left`
+          labelAlign === 'left' && `${labelClsBasic}-left`
           // labelCol.className,
         );
 
@@ -172,10 +154,10 @@ export default function ObjectFieldTemplate<
 
             {canExpand(schema, uiSchema, formData) && (
               <Col span={24}>
-                <Row gutter={rowGutter} justify="end">
-                  <Col flex="192px">
+                <Row gutter={rowGutter} justify='end'>
+                  <Col flex='192px'>
                     <AddButton
-                      className="object-property-expand"
+                      className='object-property-expand'
                       disabled={disabled || readonly}
                       onClick={onAddClick(schema)}
                       uiSchema={uiSchema}

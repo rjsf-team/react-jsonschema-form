@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getTemplate,
   getUiOptions,
@@ -7,7 +6,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -33,23 +32,21 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
+    'ArrayFieldDescriptionTemplate',
     registry,
     uiOptions
   );
-  const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
+    registry,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
+    'ArrayFieldTitleTemplate',
+    registry,
+    uiOptions
+  );
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -71,17 +68,15 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         registry={registry}
       />
-      <div className="row array-item-list">
+      <div className='row array-item-list'>
         {items &&
-          items.map(
-            ({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            )
-          )}
+          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} />
+          ))}
       </div>
       {canAdd && (
         <AddButton
-          className="array-item-add"
+          className='array-item-add'
           onClick={onAddClick}
           disabled={disabled || readonly}
           uiSchema={uiSchema}

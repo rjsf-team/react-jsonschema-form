@@ -1,19 +1,13 @@
-import React from "react";
-import {
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
-import { nanoid } from "nanoid";
-import { Label, List } from "semantic-ui-react";
+import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { nanoid } from 'nanoid';
+import { Label, List } from 'semantic-ui-react';
 
-import { getSemanticErrorProps } from "../util";
+import { getSemanticErrorProps } from '../util';
 
 const DEFAULT_OPTIONS = {
   options: {
-    pointing: "above",
-    size: "small",
+    pointing: 'above',
+    size: 'small',
   },
 };
 
@@ -34,15 +28,9 @@ export default function FieldErrorTemplate<
   });
   const { pointing, size } = options;
   if (errors && errors.length > 0) {
-    const id = `${idSchema.$id}__error`;
+    const id = errorId<T>(idSchema);
     return (
-      <Label
-        id={id}
-        color="red"
-        pointing={pointing || "above"}
-        size={size || "small"}
-        basic
-      >
+      <Label id={id} color='red' pointing={pointing || 'above'} size={size || 'small'} basic>
         <List bulleted>
           {errors.map((error) => (
             <List.Item key={nanoid()}>{error}</List.Item>

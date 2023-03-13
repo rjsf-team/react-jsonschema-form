@@ -1,498 +1,388 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/react";
-import renderer from "react-test-renderer";
-import { UiSchema, RJSFSchema, ErrorSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv8";
 
-import Form from "../src/index";
+import renderer from 'react-test-renderer';
+import { UiSchema, RJSFSchema, ErrorSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 
-describe("single fields", () => {
-  describe("string field", () => {
-    test("regular", () => {
+import Form from '../src/index';
+
+describe('single fields', () => {
+  describe('string field', () => {
+    test('regular', () => {
       const schema: RJSFSchema = {
-        type: "string",
+        type: 'string',
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format email", () => {
+    test('format email', () => {
       const schema: RJSFSchema = {
-        type: "string",
-        format: "email",
+        type: 'string',
+        format: 'email',
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format uri", () => {
+    test('format uri', () => {
       const schema: RJSFSchema = {
-        type: "string",
-        format: "uri",
+        type: 'string',
+        format: 'uri',
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
-    test("format data-url", () => {
+    test('format data-url', () => {
       const schema: RJSFSchema = {
-        type: "string",
-        format: "data-url",
+        type: 'string',
+        format: 'data-url',
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
-  test("string field with placeholder", () => {
+  test('string field with placeholder', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:placeholder": "placeholder",
+      'ui:placeholder': 'placeholder',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("number field", () => {
+  test('number field', () => {
     const schema: RJSFSchema = {
-      type: "number",
+      type: 'number',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("number field 0", () => {
+  test('number field 0', () => {
     const schema: RJSFSchema = {
-      type: "number",
+      type: 'number',
     };
     const formData = 0;
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} formData={formData} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("null field", () => {
+  test('null field', () => {
     const schema: RJSFSchema = {
-      type: "null",
+      type: 'null',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("unsupported field", () => {
+  test('unsupported field', () => {
     const schema: RJSFSchema = {
       type: undefined,
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format color", () => {
+  test('format color', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      format: "color",
+      type: 'string',
+      format: 'color',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format date", () => {
+  test('format date', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      format: "date",
+      type: 'string',
+      format: 'date',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("format datetime", () => {
+  test('format datetime', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      format: "datetime",
+      type: 'string',
+      format: 'datetime',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("password field", () => {
+  test('password field', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "password",
+      'ui:widget': 'password',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("up/down field", () => {
+  test('up/down field', () => {
     const schema: RJSFSchema = {
-      type: "number",
+      type: 'number',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "updown",
+      'ui:widget': 'updown',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("textarea field", () => {
+  test('textarea field', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "textarea",
+      'ui:widget': 'textarea',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field", () => {
+  test('select field', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      enum: ["foo", "bar"],
+      type: 'string',
+      enum: ['foo', 'bar'],
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field multiple choice", () => {
+  test('select field multiple choice', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["foo", "bar", "fuzz", "qux"],
+        type: 'string',
+        enum: ['foo', 'bar', 'fuzz', 'qux'],
       },
       uniqueItems: true,
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field multiple choice with labels", () => {
+  test('select field multiple choice with labels', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "number",
+        type: 'number',
         anyOf: [
           {
             enum: [1],
-            title: "Blue",
+            title: 'Blue',
           },
           {
             enum: [2],
-            title: "Red",
+            title: 'Red',
           },
           {
             enum: [3],
-            title: "Green",
+            title: 'Green',
           },
         ],
       },
       uniqueItems: true,
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field single choice enumDisabled", () => {
+  test('select field single choice enumDisabled', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      enum: ["foo", "bar"],
+      type: 'string',
+      enum: ['foo', 'bar'],
     };
     const uiSchema = {
-      "ui:enumDisabled": ["bar"],
+      'ui:enumDisabled': ['bar'],
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field multiple choice enumDisabled", () => {
+  test('select field multiple choice enumDisabled', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["foo", "bar", "fuzz", "qux"],
+        type: 'string',
+        enum: ['foo', 'bar', 'fuzz', 'qux'],
       },
       uniqueItems: true,
     };
     const uiSchema = {
-      "ui:enumDisabled": ["bar"],
+      'ui:enumDisabled': ['bar'],
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field single choice formData", () => {
+  test('select field single choice formData', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      enum: ["foo", "bar"],
+      type: 'string',
+      enum: ['foo', 'bar'],
     };
-    const formData = "bar";
-    const tree = renderer
-      .create(
-        <Form schema={schema} formData={formData} validator={validator} />
-      )
-      .toJSON();
+    const formData = 'bar';
+    const tree = renderer.create(<Form schema={schema} formData={formData} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("select field multiple choice formData", () => {
+  test('select field multiple choice formData', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["foo", "bar", "fuzz", "qux"],
+        type: 'string',
+        enum: ['foo', 'bar', 'fuzz', 'qux'],
       },
       uniqueItems: true,
     };
-    const formData = ["foo", "bar"];
-    const tree = renderer
-      .create(
-        <Form schema={schema} formData={formData} validator={validator} />
-      )
-      .toJSON();
+    const formData = ['foo', 'bar'];
+    const tree = renderer.create(<Form schema={schema} formData={formData} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field", () => {
+  test('checkbox field', () => {
     const schema: RJSFSchema = {
-      type: "boolean",
+      type: 'boolean',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkbox field with label", () => {
+  test('checkbox field with label', () => {
     const schema: RJSFSchema = {
-      type: "boolean",
-      title: "test",
+      type: 'boolean',
+      title: 'test',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("checkboxes field", () => {
+  test('checkboxes field', () => {
     const schema: RJSFSchema = {
-      type: "array",
+      type: 'array',
       items: {
-        type: "string",
-        enum: ["foo", "bar", "fuzz", "qux"],
+        type: 'string',
+        enum: ['foo', 'bar', 'fuzz', 'qux'],
       },
       uniqueItems: true,
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "checkboxes",
+      'ui:widget': 'checkboxes',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("radio field", () => {
+  test('radio field', () => {
     const schema: RJSFSchema = {
-      type: "boolean",
+      type: 'boolean',
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "radio",
+      'ui:widget': 'radio',
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("slider field", () => {
+  test('slider field', () => {
     const schema: RJSFSchema = {
-      type: "integer",
+      type: 'integer',
       minimum: 42,
       maximum: 100,
     };
     const uiSchema: UiSchema = {
-      "ui:widget": "range",
+      'ui:widget': 'range',
     };
     const tree = renderer
-      .create(
-        <Form
-          schema={schema}
-          validator={validator}
-          uiSchema={uiSchema}
-          formData={75}
-        />
-      )
+      .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("hidden field", () => {
+  test('hidden field', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
-        "my-field": {
-          type: "string",
+        'my-field': {
+          type: 'string',
         },
       },
     };
     const uiSchema: UiSchema = {
-      "my-field": {
-        "ui:widget": "hidden",
+      'my-field': {
+        'ui:widget': 'hidden',
       },
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("field with description", () => {
+  test('field with description', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
-        "my-field": {
-          type: "string",
-          description: "some description",
+        'my-field': {
+          type: 'string',
+          description: 'some description',
         },
       },
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("field with description in uiSchema", () => {
+  test('field with description in uiSchema', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
-        "my-field": {
-          type: "string",
-          description: "some description",
+        'my-field': {
+          type: 'string',
+          description: 'some description',
         },
       },
     };
     const uiSchema: UiSchema = {
-      "my-field": {
-        "ui:description": "some other description",
+      'my-field': {
+        'ui:description': 'some other description',
       },
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("title field", () => {
+  test('title field', () => {
     const schema: RJSFSchema = {
-      type: "object",
+      type: 'object',
       properties: {
         title: {
-          type: "string",
+          type: 'string',
         },
       },
     };
     const uiSchema: UiSchema = {
-      "ui:title": "Titre 1",
+      'ui:title': 'Titre 1',
       title: {
-        "ui:title": "Titre 2",
+        'ui:title': 'Titre 2',
       },
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("hidden label", () => {
+  test('hidden label', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:options": {
+      'ui:options': {
         label: false,
       },
     };
-    const tree = renderer
-      .create(
-        <Form schema={schema} validator={validator} uiSchema={uiSchema} />
-      )
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("using custom tagName", () => {
+  test('using custom tagName', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} tagName="div" />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} tagName='div' />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("schema examples", () => {
+  test('schema examples', () => {
     const schema: RJSFSchema = {
-      type: "string",
-      examples: ["Firefox", "Chrome", "Opera", "Vivaldi", "Safari"],
+      type: 'string',
+      examples: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
     };
-    const tree = renderer
-      .create(<Form schema={schema} validator={validator} />)
-      .toJSON();
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
-  test("help and error display", () => {
+  test('help and error display', () => {
     const schema: RJSFSchema = {
-      type: "string",
+      type: 'string',
     };
     const uiSchema: UiSchema = {
-      "ui:help": "help me!",
+      'ui:help': 'help me!',
     };
-    const extraErrors: ErrorSchema = { __errors: ["an error"] } as ErrorSchema;
+    const extraErrors: ErrorSchema = { __errors: ['an error'] } as ErrorSchema;
     const tree = renderer
-      .create(
-        <Form
-          schema={schema}
-          uiSchema={uiSchema}
-          validator={validator}
-          extraErrors={extraErrors}
-        />
-      )
+      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

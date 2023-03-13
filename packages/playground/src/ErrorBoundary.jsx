@@ -1,6 +1,6 @@
-import React from "react";
+import { Component } from 'react';
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -13,16 +13,16 @@ class ErrorBoundary extends React.Component {
 
   resetErrorBoundary = () => {
     this.setState({ hasError: false, error: null });
-  }
+  };
 
   /** You can render any custom fallback UI */
   render() {
     if (this.state.hasError) {
       return (
-        <div className="alert alert-danger">
+        <div className='alert alert-danger'>
           <p>The following error was encountered:</p>
           <pre>{this.state.error.message}</pre>
-          <button className="btn" onClick={this.resetErrorBoundary}>
+          <button className='btn' onClick={this.resetErrorBoundary}>
             Refresh Form
           </button>
         </div>

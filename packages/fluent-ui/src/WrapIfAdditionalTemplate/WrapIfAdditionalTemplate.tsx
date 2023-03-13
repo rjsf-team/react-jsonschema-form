@@ -1,10 +1,4 @@
-import React from "react";
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+import { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 
 export default function WrapIfAdditionalTemplate<
   T = any,

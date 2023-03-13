@@ -1,7 +1,7 @@
-import get from "lodash/get";
+import get from 'lodash/get';
 
-import isObject from "./isObject";
-import { GenericObjectType } from "../src";
+import isObject from './isObject';
+import { GenericObjectType } from '../src';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *
@@ -17,10 +17,7 @@ import { GenericObjectType } from "../src";
  * @param [formData] - The form data into which the defaults will be merged
  * @returns - The resulting merged form data with defaults
  */
-export default function mergeDefaultsWithFormData<T = any>(
-  defaults?: T,
-  formData?: T
-): T | undefined {
+export default function mergeDefaultsWithFormData<T = any>(defaults?: T, formData?: T): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
     const mapped = formData.map((value, idx) => {
@@ -34,10 +31,7 @@ export default function mergeDefaultsWithFormData<T = any>(
   if (isObject(formData)) {
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
     return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
-      acc[key as keyof T] = mergeDefaultsWithFormData<T>(
-        defaults ? get(defaults, key) : {},
-        get(formData, key)
-      );
+      acc[key as keyof T] = mergeDefaultsWithFormData<T>(defaults ? get(defaults, key) : {}, get(formData, key));
       return acc;
     }, acc);
   }

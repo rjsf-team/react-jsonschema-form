@@ -1,10 +1,5 @@
-import getMatchingOption from "./getMatchingOption";
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from "../types";
+import getMatchingOption from './getMatchingOption';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches.
@@ -19,11 +14,6 @@ export default function getFirstMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(
-  validator: ValidatorType<T, S, F>,
-  formData: T | undefined,
-  options: S[],
-  rootSchema: S
-): number {
+>(validator: ValidatorType<T, S, F>, formData: T | undefined, options: S[], rootSchema: S): number {
   return getMatchingOption<T, S, F>(validator, formData, options, rootSchema);
 }

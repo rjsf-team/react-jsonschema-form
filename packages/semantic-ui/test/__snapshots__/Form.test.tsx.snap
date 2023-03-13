@@ -1361,18 +1361,27 @@ exports[`single fields string field format data-url 1`] = `
       className="grouped equal width fields"
     >
       <div>
-        <p>
-          <input
-            aria-describedby="root__error root__description root__help"
-            autoFocus={false}
-            defaultValue=""
-            disabled={false}
-            id="root"
-            name="root"
-            onChange={[Function]}
-            type="file"
-          />
-        </p>
+        <div
+          className="field"
+        >
+          <div
+            className="ui fluid input"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              disabled={false}
+              id="root"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              type="file"
+              value=""
+            />
+          </div>
+        </div>
       </div>
       
     </div>
@@ -1697,19 +1706,17 @@ exports[`single fields unsupported field 1`] = `
         className="unsupported-field"
       >
         <p>
-          Unsupported field schema
           <span>
-             for
-             field 
+            Unsupported field schema for field 
             <code>
               root
             </code>
-          </span>
-          <em>
             : 
-            Unknown field type undefined
-          </em>
-          .
+            <em>
+              Unknown field type undefined
+            </em>
+            .
+          </span>
         </p>
         <pre>
           {}

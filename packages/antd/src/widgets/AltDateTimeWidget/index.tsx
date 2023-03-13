@@ -1,12 +1,6 @@
-import React from "react";
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from "@rjsf/utils";
+import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
-import _AltDateWidget from "../AltDateWidget";
+import _AltDateWidget from '../AltDateWidget';
 
 export default function AltDateTimeWidget<
   T = any,

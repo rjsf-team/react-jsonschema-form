@@ -1,6 +1,5 @@
-import React from "react";
-import FormControl from "@mui/material/FormControl";
-import Typography from "@mui/material/Typography";
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -8,7 +7,7 @@ import {
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -42,15 +41,14 @@ export default function FieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
-    T,
-    S,
-    F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
-    return <div style={{ display: "none" }}>{children}</div>;
+    return <div style={{ display: 'none' }}>{children}</div>;
   }
   return (
     <WrapIfAdditionalTemplate
@@ -67,14 +65,10 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl
-        fullWidth={true}
-        error={rawErrors.length ? true : false}
-        required={required}
-      >
+      <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
         {displayLabel && rawDescription ? (
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant='caption' color='textSecondary'>
             {rawDescription}
           </Typography>
         ) : null}

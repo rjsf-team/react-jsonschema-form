@@ -1,13 +1,13 @@
-import React, { useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -19,9 +19,10 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
+    name, // remove this from ...rest
     value,
     readonly,
     disabled,
@@ -29,6 +30,7 @@ export default function BaseInputTemplate<
     onBlur,
     onFocus,
     onChange,
+    onChangeOverride,
     options,
     schema,
     uiSchema,
@@ -42,7 +44,7 @@ export default function BaseInputTemplate<
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
   if (!id) {
-    console.log("No id for", props);
+    console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const inputProps = {
@@ -51,25 +53,19 @@ export default function BaseInputTemplate<
   };
 
   let inputValue;
-  if (inputProps.type === "number" || inputProps.type === "integer") {
-    inputValue = value || value === 0 ? value : "";
+  if (inputProps.type === 'number' || inputProps.type === 'integer') {
+    inputValue = value || value === 0 ? value : '';
   } else {
-    inputValue = value == null ? "" : value;
+    inputValue = value == null ? '' : value;
   }
 
   const _onChange = useCallback(
-    ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(value === "" ? options.emptyValue : value),
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
     [onChange, options]
   );
-  const _onBlur = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onBlur(id, value),
-    [onBlur, id]
-  );
+  const _onBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value), [onBlur, id]);
   const _onFocus = useCallback(
-    ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-      onFocus(id, value),
+    ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value),
     [onFocus, id]
   );
 
@@ -78,14 +74,14 @@ export default function BaseInputTemplate<
       <input
         id={id}
         name={id}
-        className="form-control"
+        className='form-control'
         readOnly={readonly}
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
         {...inputProps}
         list={schema.examples ? examplesId<T>(id) : undefined}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
@@ -93,11 +89,7 @@ export default function BaseInputTemplate<
       {Array.isArray(schema.examples) && (
         <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(
-              schema.default && !schema.examples.includes(schema.default)
-                ? ([schema.default] as string[])
-                : []
-            )
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}

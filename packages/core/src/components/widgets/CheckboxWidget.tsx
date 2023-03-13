@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -8,18 +8,14 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
+function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   schema,
   uiSchema,
   options,
@@ -34,37 +30,33 @@ function CheckboxWidget<
   onChange,
   registry,
 }: WidgetProps<T, S, F>) {
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, options);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options
+  );
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(event.target.checked),
+    (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
     [onChange]
   );
 
   const handleBlur = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) =>
-      onBlur(id, event.target.checked),
+    (event: FocusEvent<HTMLInputElement>) => onBlur(id, event.target.checked),
     [onBlur, id]
   );
 
   const handleFocus = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) =>
-      onFocus(id, event.target.checked),
+    (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.checked),
     [onFocus, id]
   );
 
   return (
-    <div className={`checkbox ${disabled || readonly ? "disabled" : ""}`}>
+    <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
       {schema.description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
@@ -76,10 +68,10 @@ function CheckboxWidget<
       )}
       <label>
         <input
-          type="checkbox"
+          type='checkbox'
           id={id}
           name={id}
-          checked={typeof value === "undefined" ? false : value}
+          checked={typeof value === 'undefined' ? false : value}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}

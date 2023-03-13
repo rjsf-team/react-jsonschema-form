@@ -1,5 +1,5 @@
-import React from "react";
-import Form from "react-bootstrap/Form";
+import { ChangeEvent, FocusEvent } from 'react';
+import Form from 'react-bootstrap/Form';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -8,7 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function SelectWidget<
   T = any,
@@ -32,12 +32,9 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
-  const emptyValue = multiple ? [] : "";
+  const emptyValue = multiple ? [] : '';
 
-  function getValue(
-    event: React.FocusEvent | React.ChangeEvent | any,
-    multiple?: boolean
-  ) {
+  function getValue(event: FocusEvent | ChangeEvent | any, multiple?: boolean) {
     if (multiple) {
       return [].slice
         .call(event.target.options as any)
@@ -47,61 +44,43 @@ export default function SelectWidget<
       return event.target.value;
     }
   }
-  const selectedIndexes = enumOptionsIndexForValue<S>(
-    value,
-    enumOptions,
-    multiple
-  );
+  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
   return (
     <Form.Control
-      as="select"
-      bsPrefix="custom-select"
+      as='select'
+      bsPrefix='custom-select'
       id={id}
       name={id}
-      value={
-        typeof selectedIndexes === "undefined" ? emptyValue : selectedIndexes
-      }
+      value={typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes}
       required={required}
       multiple={multiple}
       disabled={disabled || readonly}
       autoFocus={autofocus}
-      className={rawErrors.length > 0 ? "is-invalid" : ""}
+      className={rawErrors.length > 0 ? 'is-invalid' : ''}
       onBlur={
         onBlur &&
-        ((event: React.FocusEvent) => {
+        ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onBlur(
-            id,
-            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
-          );
+          onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
         })
       }
       onFocus={
         onFocus &&
-        ((event: React.FocusEvent) => {
+        ((event: FocusEvent) => {
           const newValue = getValue(event, multiple);
-          onFocus(
-            id,
-            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
-          );
+          onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
         })
       }
-      onChange={(event: React.ChangeEvent) => {
+      onChange={(event: ChangeEvent) => {
         const newValue = getValue(event, multiple);
-        onChange(
-          enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue)
-        );
+        onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {!multiple && schema.default === undefined && (
-        <option value="">{placeholder}</option>
-      )}
+      {!multiple && schema.default === undefined && <option value=''>{placeholder}</option>}
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
-        const disabled: any =
-          Array.isArray(enumDisabled) &&
-          (enumDisabled as any).indexOf(value) != -1;
+        const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (
           <option key={i} id={label} value={String(i)} disabled={disabled}>
             {label}

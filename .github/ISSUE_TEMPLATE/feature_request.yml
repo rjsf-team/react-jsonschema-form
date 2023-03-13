@@ -1,52 +1,52 @@
 name: 🚀 Feature
 description: File a Feature
-title: "<title>"
+title: '<title>'
 labels: [feature, needs triage]
-assignees: 
+assignees:
   - rjsf-team/reviewers
 body:
-- type: checkboxes
-  attributes:
-    label: Prerequisites
-    options:
-    - label: I have read the [documentation](https://react-jsonschema-form.readthedocs.io/)
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I have read the [documentation](https://rjsf-team.github.io/react-jsonschema-form/docs)
+          required: true
+  - type: dropdown
+    id: theme
+    attributes:
+      label: What theme are you using?
+      options:
+        - core
+        - antd
+        - bootstrap-4
+        - chakra-ui
+        - fluent-ui
+        - material-ui
+        - mui
+        - semantic-ui
+        - utils
+        - validator-ajv6
+        - validator-ajv8
+        - other
+    validations:
       required: true
-- type: dropdown
-  id: theme
-  attributes:
-    label: What theme are you using?
-    options:
-      - core
-      - antd
-      - bootstrap-4
-      - chakra-ui
-      - fluent-ui
-      - material-ui
-      - mui
-      - semantic-ui
-      - utils
-      - validator-ajv6
-      - validator-ajv8
-      - other
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Is your feature request related to a problem? Please describe.
-    description: A clear and concise description of what the problem is.
-    placeholder: |
-      Ex. I'm always frustrated when [...]
-  validations:
-    required: false
-- type: textarea
-  attributes:
-    label: Describe the solution you'd like
-    description: A clear and concise description of what you want to happen.
-  validations:
-    required: false
-- type: textarea
-  attributes:
-    label: Describe alternatives you've considered
-    description: A clear and concise description of any alternative solutions or features you've considered.
-  validations:
-    required: false
+  - type: textarea
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of what the problem is.
+      placeholder: |
+        Ex. I'm always frustrated when [...]
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false

@@ -1,108 +1,106 @@
-import React from "react";
-
 export default {
   schema: {
-    title: "Widgets",
-    type: "object",
+    title: 'Widgets',
+    type: 'object',
     properties: {
       stringFormats: {
-        type: "object",
-        title: "String formats",
+        type: 'object',
+        title: 'String formats',
         properties: {
           email: {
-            type: "string",
-            format: "email",
+            type: 'string',
+            format: 'email',
           },
           uri: {
-            type: "string",
-            format: "uri",
+            type: 'string',
+            format: 'uri',
           },
         },
       },
       boolean: {
-        type: "object",
-        title: "Boolean field",
+        type: 'object',
+        title: 'Boolean field',
         properties: {
           default: {
-            type: "boolean",
-            title: "checkbox (default)",
-            description: "This is the checkbox-description",
+            type: 'boolean',
+            title: 'checkbox (default)',
+            description: 'This is the checkbox-description',
           },
           radio: {
-            type: "boolean",
-            title: "radio buttons",
-            description: "This is the radio-description",
+            type: 'boolean',
+            title: 'radio buttons',
+            description: 'This is the radio-description',
           },
           select: {
-            type: "boolean",
-            title: "select box",
-            description: "This is the select-description",
+            type: 'boolean',
+            title: 'select box',
+            description: 'This is the select-description',
           },
         },
       },
       string: {
-        type: "object",
-        title: "String field",
+        type: 'object',
+        title: 'String field',
         properties: {
           default: {
-            type: "string",
-            title: "text input (default)",
+            type: 'string',
+            title: 'text input (default)',
           },
           textarea: {
-            type: "string",
-            title: "textarea",
+            type: 'string',
+            title: 'textarea',
           },
           placeholder: {
-            type: "string",
+            type: 'string',
           },
           color: {
-            type: "string",
-            title: "color picker",
-            default: "#151ce6",
+            type: 'string',
+            title: 'color picker',
+            default: '#151ce6',
           },
         },
       },
       secret: {
-        type: "string",
+        type: 'string',
         default: "I'm a hidden string.",
       },
       disabled: {
-        type: "string",
-        title: "A disabled field",
-        default: "I am disabled.",
+        type: 'string',
+        title: 'A disabled field',
+        default: 'I am disabled.',
       },
       readonly: {
-        type: "string",
-        title: "A readonly field",
-        default: "I am read-only.",
+        type: 'string',
+        title: 'A readonly field',
+        default: 'I am read-only.',
       },
       readonly2: {
-        type: "string",
-        title: "Another readonly field",
-        default: "I am also read-only.",
+        type: 'string',
+        title: 'Another readonly field',
+        default: 'I am also read-only.',
         readOnly: true,
       },
       widgetOptions: {
-        title: "Custom widget with options",
-        type: "string",
-        default: "I am yellow",
+        title: 'Custom widget with options',
+        type: 'string',
+        default: 'I am yellow',
       },
       selectWidgetOptions: {
-        title: "Custom select widget with options",
-        type: "string",
-        enum: ["foo", "bar"],
+        title: 'Custom select widget with options',
+        type: 'string',
+        enum: ['foo', 'bar'],
       },
       selectWidgetOptions2: {
-        title: "Custom select widget with options, overriding the enum titles.",
-        type: "string",
+        title: 'Custom select widget with options, overriding the enum titles.',
+        type: 'string',
         oneOf: [
           {
-            const: "foo",
-            title: "Foo",
+            const: 'foo',
+            title: 'Foo',
           },
           {
-            const: "bar",
-            title: "Bar",
+            const: 'bar',
+            title: 'Bar',
           },
         ],
       },
@@ -111,57 +109,57 @@ export default {
   uiSchema: {
     boolean: {
       radio: {
-        "ui:widget": "radio",
+        'ui:widget': 'radio',
       },
       select: {
-        "ui:widget": "select",
+        'ui:widget': 'select',
       },
     },
     string: {
       textarea: {
-        "ui:widget": "textarea",
-        "ui:options": {
+        'ui:widget': 'textarea',
+        'ui:options': {
           rows: 5,
         },
       },
       placeholder: {
-        "ui:placeholder": "This is a placeholder",
+        'ui:placeholder': 'This is a placeholder',
       },
       color: {
-        "ui:widget": "color",
+        'ui:widget': 'color',
       },
     },
     secret: {
-      "ui:widget": "hidden",
+      'ui:widget': 'hidden',
     },
     disabled: {
-      "ui:disabled": true,
+      'ui:disabled': true,
     },
     readonly: {
-      "ui:readonly": true,
+      'ui:readonly': true,
     },
     widgetOptions: {
-      "ui:widget": ({ value, onChange, options }) => {
+      'ui:widget': ({ value, onChange, options }) => {
         const { backgroundColor } = options;
         return (
           <input
-            className="form-control"
+            className='form-control'
             onChange={(event) => onChange(event.target.value)}
             style={{ backgroundColor }}
             value={value}
           />
         );
       },
-      "ui:options": {
-        backgroundColor: "yellow",
+      'ui:options': {
+        backgroundColor: 'yellow',
       },
     },
     selectWidgetOptions: {
-      "ui:widget": ({ value, onChange, options }) => {
+      'ui:widget': ({ value, onChange, options }) => {
         const { enumOptions, backgroundColor } = options;
         return (
           <select
-            className="form-control"
+            className='form-control'
             style={{ backgroundColor }}
             value={value}
             onChange={(event) => onChange(event.target.value)}
@@ -176,15 +174,15 @@ export default {
           </select>
         );
       },
-      "ui:options": {
-        backgroundColor: "pink",
+      'ui:options': {
+        backgroundColor: 'pink',
       },
     },
   },
   formData: {
     stringFormats: {
-      email: "chuck@norris.net",
-      uri: "http://chucknorris.com/",
+      email: 'chuck@norris.net',
+      uri: 'http://chucknorris.com/',
     },
     boolean: {
       default: true,
@@ -192,8 +190,8 @@ export default {
       select: true,
     },
     string: {
-      default: "Hello...",
-      textarea: "... World",
+      default: 'Hello...',
+      textarea: '... World',
     },
     secret: "I'm a hidden string.",
   },

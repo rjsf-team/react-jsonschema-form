@@ -7,9 +7,9 @@ function validate({ pass1, pass2 }, errors) {
 
 function transformErrors(errors) {
   return errors.map((error) => {
-    if (error.name === "minimum" && error.property === "instance.age") {
+    if (error.name === 'minimum' && error.property === 'instance.age') {
       return Object.assign({}, error, {
-        message: "You need to be 18 because of some legal thing",
+        message: 'You need to be 18 because of some legal thing',
       });
     }
     return error;
@@ -18,31 +18,30 @@ function transformErrors(errors) {
 
 export default {
   schema: {
-    title: "Custom validation",
-    description:
-      "This form defines custom validation rules checking that the two passwords match.",
-    type: "object",
+    title: 'Custom validation',
+    description: 'This form defines custom validation rules checking that the two passwords match.',
+    type: 'object',
     properties: {
       pass1: {
-        title: "Password",
-        type: "string",
+        title: 'Password',
+        type: 'string',
         minLength: 3,
       },
       pass2: {
-        title: "Repeat password",
-        type: "string",
+        title: 'Repeat password',
+        type: 'string',
         minLength: 3,
       },
       age: {
-        title: "Age",
-        type: "number",
+        title: 'Age',
+        type: 'number',
         minimum: 18,
       },
     },
   },
   uiSchema: {
-    pass1: { "ui:widget": "password" },
-    pass2: { "ui:widget": "password" },
+    pass1: { 'ui:widget': 'password' },
+    pass2: { 'ui:widget': 'password' },
   },
   formData: {},
   validate,

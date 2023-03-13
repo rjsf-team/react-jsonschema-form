@@ -1,2 +1,2 @@
-export { default } from "./BaseInputTemplate";
-export * from "./BaseInputTemplate";
+export { default } from './BaseInputTemplate';
+export * from './BaseInputTemplate';

@@ -1,14 +1,7 @@
-import React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import List from "@material-ui/core/List";
-import {
-  errorId,
-  FieldErrorProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import ListItem from '@material-ui/core/ListItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import List from '@material-ui/core/List';
+import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *

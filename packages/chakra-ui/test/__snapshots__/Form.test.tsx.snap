@@ -4778,10 +4778,14 @@ exports[`single fields slider field 1`] = `
 
 exports[`single fields string field format data-url 1`] = `
 .emotion-1 {
+  margin-bottom: 1px;
+}
+
+.emotion-3 {
   margin-top: 3px;
 }
 
-.emotion-2 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4823,26 +4827,35 @@ exports[`single fields string field format data-url 1`] = `
       role="group"
     >
       <div>
-        <p>
+        <div
+          className="chakra-form-control emotion-1"
+          role="group"
+        >
           <input
             aria-describedby="root__error root__description root__help"
             autoFocus={false}
-            defaultValue=""
+            className="chakra-input emotion-0"
             disabled={false}
             id="root"
             name="root"
+            onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
             type="file"
+            value=""
           />
-        </p>
+        </div>
       </div>
     </div>
   </div>
   <div
-    className="emotion-1"
+    className="emotion-3"
   >
     <button
-      className="chakra-button emotion-2"
+      className="chakra-button emotion-4"
       disabled={false}
       type="submit"
     >
@@ -5483,19 +5496,17 @@ exports[`single fields unsupported field 1`] = `
         className="unsupported-field"
       >
         <p>
-          Unsupported field schema
           <span>
-             for
-             field 
+            Unsupported field schema for field 
             <code>
               root
             </code>
-          </span>
-          <em>
             : 
-            Unknown field type undefined
-          </em>
-          .
+            <em>
+              Unknown field type undefined
+            </em>
+            .
+          </span>
         </p>
         <pre>
           {}

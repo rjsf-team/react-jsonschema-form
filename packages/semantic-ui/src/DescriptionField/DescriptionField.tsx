@@ -1,10 +1,4 @@
-import React from "react";
-import {
-  DescriptionFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `DescriptionField` is the template to use to render the description of a field
  *
@@ -20,7 +14,7 @@ export default function DescriptionField<
     return null;
   }
   return (
-    <p id={id} className="sui-description">
+    <p id={id} className='sui-description'>
       {description}
     </p>
   );

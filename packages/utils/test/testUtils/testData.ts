@@ -1,194 +1,194 @@
-import { EnumOptionsType, ONE_OF_KEY, RJSFSchema } from "../../src";
+import { EnumOptionsType, ONE_OF_KEY, RJSFSchema } from '../../src';
 
 export const oneOfData = {
-  name: "second_option",
+  name: 'second_option',
   flag: true,
   inner_spec: {
-    name: "inner_spec",
+    name: 'inner_spec',
     special_spec: {
-      name: "special_spec",
-      cpg_params: "blah",
+      name: 'special_spec',
+      cpg_params: 'blah',
     },
   },
 };
 export const oneOfSchema: RJSFSchema = {
-  type: "object",
-  title: "Testing OneOfs",
+  type: 'object',
+  title: 'Testing OneOfs',
   definitions: {
     special_spec_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "special_spec",
+          type: 'string',
+          default: 'special_spec',
           readOnly: true,
         },
         cpg_params: {
-          type: "string",
+          type: 'string',
         },
       },
-      required: ["name"],
+      required: ['name'],
     },
     inner_first_choice_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "inner_first_choice",
+          type: 'string',
+          default: 'inner_first_choice',
           readOnly: true,
         },
         params: {
-          type: "string",
+          type: 'string',
         },
       },
-      required: ["name", "params"],
+      required: ['name', 'params'],
       additionalProperties: false,
     },
     inner_second_choice_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "inner_second_choice",
+          type: 'string',
+          default: 'inner_second_choice',
           readOnly: true,
         },
         enumeration: {
-          type: "string",
-          enum: ["enum_1", "enum_2", "enum_3"],
+          type: 'string',
+          enum: ['enum_1', 'enum_2', 'enum_3'],
         },
         params: {
-          type: "string",
-          default: "",
+          type: 'string',
+          default: '',
         },
       },
-      required: ["name", "enumeration"],
+      required: ['name', 'enumeration'],
       additionalProperties: false,
     },
     inner_spec_2_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "inner_spec_2",
+          type: 'string',
+          default: 'inner_spec_2',
           readOnly: true,
         },
         inner_one_of: {
           oneOf: [
             {
-              $ref: "#/definitions/inner_first_choice_def",
-              title: "inner_first_choice",
+              $ref: '#/definitions/inner_first_choice_def',
+              title: 'inner_first_choice',
             },
             {
-              $ref: "#/definitions/inner_second_choice_def",
-              title: "inner_second_choice",
+              $ref: '#/definitions/inner_second_choice_def',
+              title: 'inner_second_choice',
             },
           ],
         },
       },
-      required: ["name", "inner_one_of"],
+      required: ['name', 'inner_one_of'],
     },
     first_option_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "first_option",
+          type: 'string',
+          default: 'first_option',
           readOnly: true,
         },
         flag: {
-          type: "boolean",
+          type: 'boolean',
           default: false,
         },
         inner_spec: {
-          $ref: "#/definitions/inner_spec_2_def",
+          $ref: '#/definitions/inner_spec_2_def',
         },
         unlabeled_options: {
           oneOf: [
             {
-              type: "integer",
+              type: 'integer',
             },
             {
-              type: "array",
+              type: 'array',
               items: {
-                type: "integer",
+                type: 'integer',
               },
             },
           ],
         },
       },
-      required: ["name", "inner_spec"],
+      required: ['name', 'inner_spec'],
       additionalProperties: false,
     },
     inner_spec_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "inner_spec",
+          type: 'string',
+          default: 'inner_spec',
           readOnly: true,
         },
         inner_one_of: {
           oneOf: [
             {
-              $ref: "#/definitions/inner_first_choice_def",
-              title: "inner_first_choice",
+              $ref: '#/definitions/inner_first_choice_def',
+              title: 'inner_first_choice',
             },
             {
-              $ref: "#/definitions/inner_second_choice_def",
-              title: "inner_second_choice",
+              $ref: '#/definitions/inner_second_choice_def',
+              title: 'inner_second_choice',
             },
           ],
         },
         special_spec: {
-          $ref: "#/definitions/special_spec_def",
+          $ref: '#/definitions/special_spec_def',
         },
       },
-      required: ["name"],
+      required: ['name'],
     },
     second_option_def: {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "second_option",
+          type: 'string',
+          default: 'second_option',
           readOnly: true,
         },
         flag: {
-          type: "boolean",
+          type: 'boolean',
           default: false,
         },
         inner_spec: {
-          $ref: "#/definitions/inner_spec_def",
+          $ref: '#/definitions/inner_spec_def',
         },
         unique_to_second: {
-          type: "integer",
+          type: 'integer',
         },
         labeled_options: {
           oneOf: [
             {
-              type: "string",
+              type: 'string',
             },
             {
-              type: "array",
+              type: 'array',
               items: {
-                type: "string",
+                type: 'string',
               },
             },
           ],
         },
       },
-      required: ["name", "inner_spec"],
+      required: ['name', 'inner_spec'],
       additionalProperties: false,
     },
   },
   oneOf: [
     {
-      $ref: "#/definitions/first_option_def",
-      title: "first option",
+      $ref: '#/definitions/first_option_def',
+      title: 'first option',
     },
     {
-      $ref: "#/definitions/second_option_def",
-      title: "second option",
+      $ref: '#/definitions/second_option_def',
+      title: 'second option',
     },
   ],
 };
@@ -198,48 +198,48 @@ export const SECOND_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[1];
 export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = {
   oneOf: [
     {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "first_option",
+          type: 'string',
+          default: 'first_option',
           readOnly: true,
         },
       },
       additionalProperties: false,
     },
     {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "second_option",
+          type: 'string',
+          default: 'second_option',
           readOnly: true,
         },
         flag: {
-          type: "boolean",
+          type: 'boolean',
           default: false,
         },
       },
       additionalProperties: false,
     },
     {
-      type: "object",
+      type: 'object',
       properties: {
         name: {
-          type: "string",
-          default: "third_option",
+          type: 'string',
+          default: 'third_option',
           readOnly: true,
         },
         flag: {
-          type: "boolean",
+          type: 'boolean',
           default: false,
         },
         inner_obj: {
-          type: "object",
+          type: 'object',
           properties: {
             foo: {
-              type: "string",
+              type: 'string',
             },
           },
         },
@@ -248,31 +248,29 @@ export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = {
     },
   ],
 };
-export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[
-  ONE_OF_KEY
-] as RJSFSchema[];
-export const OPTIONAL_ONE_OF_DATA = { flag: true, inner_obj: { foo: "bar" } };
+export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[ONE_OF_KEY] as RJSFSchema[];
+export const OPTIONAL_ONE_OF_DATA = { flag: true, inner_obj: { foo: 'bar' } };
 export const SIMPLE_ONE_OF_SCHEMA = {
   oneOf: [
     {}, // object with no type should take the type from its parent schema
-    { type: "string" },
-    { type: "array", items: { type: "string" } },
+    { type: 'string' },
+    { type: 'array', items: { type: 'string' } },
   ],
 } as RJSFSchema;
 export const FIRST_OPTION_ONE_OF_DATA = {
   flag: true,
   inner_spec: {
-    name: "inner_spec_2",
+    name: 'inner_spec_2',
     special_spec: undefined,
   },
-  name: "first_option",
+  name: 'first_option',
   unique_to_second: undefined,
 };
 export const ONE_OF_SCHEMA_DATA = { ...oneOfData, unique_to_second: 5 };
 
 export const ALL_OPTIONS: EnumOptionsType[] = [
-  { value: "foo", label: "Foo" },
-  { value: "bar", label: "Bar" },
-  { value: "baz", label: "Baz" },
-  { value: "boo", label: "Boo" },
+  { value: 'foo', label: 'Foo' },
+  { value: 'bar', label: 'Bar' },
+  { value: 'baz', label: 'Baz' },
+  { value: 'boo', label: 'Boo' },
 ];

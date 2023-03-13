@@ -40,8 +40,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
+          editUrl: 'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
         },
         blog: false,
         theme: {
@@ -108,7 +107,8 @@ const config = {
               {
                 label: 'Quickstart',
                 to: 'quickstart',
-              },          {
+              },
+              {
                 to: '/api-reference',
                 label: 'API Reference',
               },
@@ -133,6 +133,25 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+      },
+      algolia: {
+        // The application ID provided by Algolia
+        appId: 'LRQC6J0BO6',
+        // Public API key: it is safe to commit it
+        apiKey: 'ab28c5ea429f2a16f7360d8a55a25f88',
+        indexName: 'react-jsonschema-form',
+        // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
+        replaceSearchResultPathname: {
+          from: '/react-jsonschema-form/docs/',
+          to: '/',
+        },
+        // We will need to tune `contextualSearch` and `searchParameters` to handle search for versioned docs
+        // Optional: see doc section -- https://docusaurus.io/docs/search#contextual-search
+        contextualSearch: true,
+        // Optional: Algolia search parameters
+        searchParameters: {},
+        // Optional: path for search page that enabled by default (`false` to disable it)
+        searchPagePath: 'search',
       },
     }),
 };

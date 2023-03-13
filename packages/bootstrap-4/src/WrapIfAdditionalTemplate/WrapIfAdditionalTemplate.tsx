@@ -1,16 +1,16 @@
-import React from "react";
-
+import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WrapIfAdditionalTemplateProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 
 export default function WrapIfAdditionalTemplate<
   T = any,
@@ -31,9 +31,10 @@ export default function WrapIfAdditionalTemplate<
   uiSchema,
   registry,
 }: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
-  const { RemoveButton } = registry.templates.ButtonTemplates;
-  const keyLabel = `${label} Key`; // i18n ?
+  const { RemoveButton } = templates.ButtonTemplates;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
@@ -44,8 +45,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onKeyChange(target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
   const keyId = `${id}-key`;
 
   return (
@@ -60,15 +60,15 @@ export default function WrapIfAdditionalTemplate<
             id={keyId}
             name={keyId}
             onBlur={!readonly ? handleBlur : undefined}
-            type="text"
+            type='text'
           />
         </Form.Group>
       </Col>
       <Col xs={5}>{children}</Col>
-      <Col xs={2} className="py-4">
+      <Col xs={2} className='py-4'>
         <RemoveButton
-          iconType="block"
-          className="w-100"
+          iconType='block'
+          className='w-100'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}

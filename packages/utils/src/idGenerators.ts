@@ -1,7 +1,7 @@
-import isString from "lodash/isString";
+import isString from 'lodash/isString';
 
-import { IdSchema } from "./types";
-import { ID_KEY } from "./constants";
+import { IdSchema } from './types';
+import { ID_KEY } from './constants';
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
  *
@@ -18,7 +18,7 @@ function idGenerator<T = any>(id: IdSchema<T> | string, suffix: string) {
  * @returns - The consistent id for the field description element from the given `id`
  */
 export function descriptionId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, "description");
+  return idGenerator<T>(id, 'description');
 }
 
 /** Return a consistent `id` for the field error element
@@ -27,7 +27,7 @@ export function descriptionId<T = any>(id: IdSchema<T> | string) {
  * @returns - The consistent id for the field error element from the given `id`
  */
 export function errorId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, "error");
+  return idGenerator<T>(id, 'error');
 }
 
 /** Return a consistent `id` for the field examples element
@@ -36,7 +36,7 @@ export function errorId<T = any>(id: IdSchema<T> | string) {
  * @returns - The consistent id for the field examples element from the given `id`
  */
 export function examplesId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, "examples");
+  return idGenerator<T>(id, 'examples');
 }
 
 /** Return a consistent `id` for the field help element
@@ -45,7 +45,7 @@ export function examplesId<T = any>(id: IdSchema<T> | string) {
  * @returns - The consistent id for the field help element from the given `id`
  */
 export function helpId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, "help");
+  return idGenerator<T>(id, 'help');
 }
 
 /** Return a consistent `id` for the field title element
@@ -54,7 +54,7 @@ export function helpId<T = any>(id: IdSchema<T> | string) {
  * @returns - The consistent id for the field title element from the given `id`
  */
 export function titleId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, "title");
+  return idGenerator<T>(id, 'title');
 }
 
 /** Return a list of element ids that contain additional information about the field that can be used to as the aria
@@ -65,14 +65,9 @@ export function titleId<T = any>(id: IdSchema<T> | string) {
  * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds<T = any>(
-  id: IdSchema<T> | string,
-  includeExamples = false
-) {
-  const examples = includeExamples ? ` ${examplesId<T>(id)}` : "";
-  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(
-    id
-  )}${examples}`;
+export function ariaDescribedByIds<T = any>(id: IdSchema<T> | string, includeExamples = false) {
+  const examples = includeExamples ? ` ${examplesId<T>(id)}` : '';
+  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(id)}${examples}`;
 }
 
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget

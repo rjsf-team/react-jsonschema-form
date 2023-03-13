@@ -1,5 +1,4 @@
-import React from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from '@chakra-ui/react';
 import {
   canExpand,
   descriptionId,
@@ -10,7 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = any,
@@ -32,24 +31,19 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
   return (
-    <React.Fragment>
+    <>
       {(uiOptions.title || title) && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
@@ -74,15 +68,13 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>
-              {element.content}
-            </GridItem>
+            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <GridItem justifySelf="flex-end">
+          <GridItem justifySelf='flex-end'>
             <AddButton
-              className="object-property-expand"
+              className='object-property-expand'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
               uiSchema={uiSchema}
@@ -91,6 +83,6 @@ export default function ObjectFieldTemplate<
           </GridItem>
         )}
       </Grid>
-    </React.Fragment>
+    </>
   );
 }

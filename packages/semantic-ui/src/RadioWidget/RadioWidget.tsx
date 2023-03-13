@@ -1,4 +1,4 @@
-import React from "react";
+import { FormEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIsSelected,
@@ -8,20 +8,18 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-} from "@rjsf/utils";
-import { CheckboxProps, Form, Radio } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+} from '@rjsf/utils';
+import { CheckboxProps, Form, Radio } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
   const {
     id,
     value,
@@ -42,13 +40,8 @@ export default function RadioWidget<
     options,
     uiSchema,
   });
-  const _onChange = (
-    _: React.FormEvent<HTMLInputElement>,
-    { value: eventValue }: CheckboxProps
-  ) => {
-    return onChange(
-      enumOptionsValueForIndex<S>(eventValue!, enumOptions, emptyValue)
-    );
+  const _onChange = (_: FormEvent<HTMLInputElement>, { value: eventValue }: CheckboxProps) => {
+    return onChange(enumOptionsValueForIndex<S>(eventValue!, enumOptions, emptyValue));
   };
 
   const _onBlur = () => onBlur(id, value);
@@ -59,9 +52,7 @@ export default function RadioWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled =
-            Array.isArray(enumDisabled) &&
-            enumDisabled.indexOf(option.value) !== -1;
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           return (
             <Form.Field
               required={required}

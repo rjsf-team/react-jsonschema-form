@@ -1,11 +1,5 @@
-import React from "react";
-import {
-  DescriptionFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
-import { Text } from "@chakra-ui/react";
+import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { Text } from '@chakra-ui/react';
 
 export default function DescriptionField<
   T = any,
@@ -16,7 +10,7 @@ export default function DescriptionField<
     return null;
   }
 
-  if (typeof description === "string") {
+  if (typeof description === 'string') {
     return (
       <Text id={id} mt={2} mb={4}>
         {description}

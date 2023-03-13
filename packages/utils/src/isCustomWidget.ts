@@ -1,10 +1,5 @@
-import getUiOptions from "./getUiOptions";
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-} from "./types";
+import getUiOptions from './getUiOptions';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types';
 
 /** Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
  *
@@ -18,8 +13,7 @@ export default function isCustomWidget<
 >(uiSchema: UiSchema<T, S, F> = {}) {
   return (
     // TODO: Remove the `&& uiSchema['ui:widget'] !== 'hidden'` once we support hidden widgets for arrays.
-    // https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/#hidden-widgets
-    "widget" in getUiOptions<T, S, F>(uiSchema) &&
-    getUiOptions<T, S, F>(uiSchema)["widget"] !== "hidden"
+    // https://rjsf-team.github.io/react-jsonschema-form/docs/usage/widgets/#hidden-widgets
+    'widget' in getUiOptions<T, S, F>(uiSchema) && getUiOptions<T, S, F>(uiSchema)['widget'] !== 'hidden'
   );
 }

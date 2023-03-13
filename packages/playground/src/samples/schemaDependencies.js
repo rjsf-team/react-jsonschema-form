@@ -1,102 +1,102 @@
 export default {
   schema: {
-    title: "Schema dependencies",
-    description: "These samples are best viewed without live validation.",
-    type: "object",
+    title: 'Schema dependencies',
+    description: 'These samples are best viewed without live validation.',
+    type: 'object',
     properties: {
       simple: {
-        src: "https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies",
-        title: "Simple",
-        type: "object",
+        src: 'https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies',
+        title: 'Simple',
+        type: 'object',
         properties: {
           name: {
-            type: "string",
+            type: 'string',
           },
           credit_card: {
-            type: "number",
+            type: 'number',
           },
         },
-        required: ["name"],
+        required: ['name'],
         dependencies: {
           credit_card: {
             properties: {
               billing_address: {
-                type: "string",
+                type: 'string',
               },
             },
-            required: ["billing_address"],
+            required: ['billing_address'],
           },
         },
       },
       conditional: {
-        title: "Conditional",
-        $ref: "#/definitions/person",
+        title: 'Conditional',
+        $ref: '#/definitions/person',
       },
       arrayOfConditionals: {
-        title: "Array of conditionals",
-        type: "array",
+        title: 'Array of conditionals',
+        type: 'array',
         items: {
-          $ref: "#/definitions/person",
+          $ref: '#/definitions/person',
         },
       },
       fixedArrayOfConditionals: {
-        title: "Fixed array of conditionals",
-        type: "array",
+        title: 'Fixed array of conditionals',
+        type: 'array',
         items: [
           {
-            title: "Primary person",
-            $ref: "#/definitions/person",
+            title: 'Primary person',
+            $ref: '#/definitions/person',
           },
         ],
         additionalItems: {
-          title: "Additional person",
-          $ref: "#/definitions/person",
+          title: 'Additional person',
+          $ref: '#/definitions/person',
         },
       },
     },
     definitions: {
       person: {
-        title: "Person",
-        type: "object",
+        title: 'Person',
+        type: 'object',
         properties: {
-          "Do you have any pets?": {
-            type: "string",
-            enum: ["No", "Yes: One", "Yes: More than one"],
-            default: "No",
+          'Do you have any pets?': {
+            type: 'string',
+            enum: ['No', 'Yes: One', 'Yes: More than one'],
+            default: 'No',
           },
         },
-        required: ["Do you have any pets?"],
+        required: ['Do you have any pets?'],
         dependencies: {
-          "Do you have any pets?": {
+          'Do you have any pets?': {
             oneOf: [
               {
                 properties: {
-                  "Do you have any pets?": {
-                    enum: ["No"],
+                  'Do you have any pets?': {
+                    enum: ['No'],
                   },
                 },
               },
               {
                 properties: {
-                  "Do you have any pets?": {
-                    enum: ["Yes: One"],
+                  'Do you have any pets?': {
+                    enum: ['Yes: One'],
                   },
-                  "How old is your pet?": {
-                    type: "number",
+                  'How old is your pet?': {
+                    type: 'number',
                   },
                 },
-                required: ["How old is your pet?"],
+                required: ['How old is your pet?'],
               },
               {
                 properties: {
-                  "Do you have any pets?": {
-                    enum: ["Yes: More than one"],
+                  'Do you have any pets?': {
+                    enum: ['Yes: More than one'],
                   },
-                  "Do you want to get rid of any?": {
-                    type: "boolean",
+                  'Do you want to get rid of any?': {
+                    type: 'boolean',
                   },
                 },
-                required: ["Do you want to get rid of any?"],
+                required: ['Do you want to get rid of any?'],
               },
             ],
           },
@@ -107,63 +107,62 @@ export default {
   uiSchema: {
     simple: {
       credit_card: {
-        "ui:help":
-          "If you enter anything here then billing_address will be dynamically added to the form.",
+        'ui:help': 'If you enter anything here then billing_address will be dynamically added to the form.',
       },
     },
     conditional: {
-      "Do you want to get rid of any?": {
-        "ui:widget": "radio",
+      'Do you want to get rid of any?': {
+        'ui:widget': 'radio',
       },
     },
     arrayOfConditionals: {
       items: {
-        "Do you want to get rid of any?": {
-          "ui:widget": "radio",
+        'Do you want to get rid of any?': {
+          'ui:widget': 'radio',
         },
       },
     },
     fixedArrayOfConditionals: {
       items: {
-        "Do you want to get rid of any?": {
-          "ui:widget": "radio",
+        'Do you want to get rid of any?': {
+          'ui:widget': 'radio',
         },
       },
       additionalItems: {
-        "Do you want to get rid of any?": {
-          "ui:widget": "radio",
+        'Do you want to get rid of any?': {
+          'ui:widget': 'radio',
         },
       },
     },
   },
   formData: {
     simple: {
-      name: "Randy",
+      name: 'Randy',
     },
     conditional: {
-      "Do you have any pets?": "No",
+      'Do you have any pets?': 'No',
     },
     arrayOfConditionals: [
       {
-        "Do you have any pets?": "Yes: One",
-        "How old is your pet?": 6,
+        'Do you have any pets?': 'Yes: One',
+        'How old is your pet?': 6,
       },
       {
-        "Do you have any pets?": "Yes: More than one",
-        "Do you want to get rid of any?": false,
+        'Do you have any pets?': 'Yes: More than one',
+        'Do you want to get rid of any?': false,
       },
     ],
     fixedArrayOfConditionals: [
       {
-        "Do you have any pets?": "No",
+        'Do you have any pets?': 'No',
       },
       {
-        "Do you have any pets?": "Yes: One",
-        "How old is your pet?": 6,
+        'Do you have any pets?': 'Yes: One',
+        'How old is your pet?': 6,
       },
       {
-        "Do you have any pets?": "Yes: More than one",
-        "Do you want to get rid of any?": true,
+        'Do you have any pets?': 'Yes: More than one',
+        'Do you want to get rid of any?': true,
       },
     ],
   },

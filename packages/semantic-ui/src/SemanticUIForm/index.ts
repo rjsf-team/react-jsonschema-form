@@ -1,2 +1,2 @@
-export { default } from "./SemanticUIForm";
-export * from "./SemanticUIForm";
+export { default } from './SemanticUIForm';
+export * from './SemanticUIForm';

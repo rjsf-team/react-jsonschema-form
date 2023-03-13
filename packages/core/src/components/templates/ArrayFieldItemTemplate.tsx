@@ -1,10 +1,5 @@
-import React, { CSSProperties } from "react";
-import {
-  ArrayFieldTemplateItemType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { CSSProperties } from 'react';
+import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -30,24 +25,23 @@ export default function ArrayFieldItemTemplate<
     registry,
     uiSchema,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } =
-    registry.templates.ButtonTemplates;
+  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
     paddingRight: 6,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
   return (
     <div className={className}>
-      <div className={hasToolbar ? "col-xs-9" : "col-xs-12"}>{children}</div>
+      <div className={hasToolbar ? 'col-xs-9' : 'col-xs-12'}>{children}</div>
       {hasToolbar && (
-        <div className="col-xs-3 array-item-toolbox">
+        <div className='col-xs-3 array-item-toolbox'>
           <div
-            className="btn-group"
+            className='btn-group'
             style={{
-              display: "flex",
-              justifyContent: "space-around",
+              display: 'flex',
+              justifyContent: 'space-around',
             }}
           >
             {(hasMoveUp || hasMoveDown) && (

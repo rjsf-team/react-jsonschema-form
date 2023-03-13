@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component, MouseEvent } from 'react';
 import {
   getTemplate,
   getWidget,
@@ -14,13 +14,14 @@ import {
   IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   UiSchema,
   ITEMS_KEY,
-} from "@rjsf/utils";
-import get from "lodash/get";
-import isObject from "lodash/isObject";
-import set from "lodash/set";
-import { nanoid } from "nanoid";
+} from '@rjsf/utils';
+import get from 'lodash/get';
+import isObject from 'lodash/isObject';
+import set from 'lodash/set';
+import { nanoid } from 'nanoid';
 
 /** Type used to represent the keyed form data used in the state */
 type KeyedFormDataType<T> = { key: string; item: T };
@@ -59,9 +60,7 @@ function generateKeyedFormData<T>(formData: T[]): KeyedFormDataType<T>[] {
  * @param keyedFormData - The `KeyedFormDataType` to be converted
  * @returns - The inner `formData` item(s) in the `keyedFormData`
  */
-function keyedToPlainFormData<T>(
-  keyedFormData: KeyedFormDataType<T> | KeyedFormDataType<T>[]
-): T[] {
+function keyedToPlainFormData<T>(keyedFormData: KeyedFormDataType<T> | KeyedFormDataType<T>[]): T[] {
   if (Array.isArray(keyedFormData)) {
     return keyedFormData.map((keyedItem) => keyedItem.item);
   }
@@ -71,11 +70,10 @@ function keyedToPlainFormData<T>(
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
  * and fixed array, allowing user to add and remove elements from the array data.
  */
-class ArrayField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> extends Component<FieldProps<T[], S, F>, ArrayFieldState<T>> {
+class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> extends Component<
+  FieldProps<T[], S, F>,
+  ArrayFieldState<T>
+> {
   /** Constructs an `ArrayField` from the `props`, generating the initial keyed data from the `formData`
    *
    * @param props - The `FieldProps` for this template
@@ -96,11 +94,7 @@ class ArrayField<
    * @param nextProps - The next set of props data
    * @param prevState - The previous set of state data
    */
-  static getDerivedStateFromProps<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any
-  >(
+  static getDerivedStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     nextProps: Readonly<FieldProps<T[], S, F>>,
     prevState: Readonly<ArrayFieldState<T>>
   ) {
@@ -110,9 +104,7 @@ class ArrayField<
         updatedKeyedFormData: false,
       };
     }
-    const nextFormData = Array.isArray(nextProps.formData)
-      ? nextProps.formData
-      : [];
+    const nextFormData = Array.isArray(nextProps.formData) ? nextProps.formData : [];
     const previousKeyedFormData = prevState.keyedFormData || [];
     const newKeyedFormData =
       nextFormData.length === previousKeyedFormData.length
@@ -132,11 +124,12 @@ class ArrayField<
    * the description from the schema.items, and finally the string "Item"
    */
   get itemTitle() {
-    const { schema } = this.props;
+    const { schema, registry } = this.props;
+    const { translateString } = registry;
     return get(
       schema,
-      [ITEMS_KEY, "title"],
-      get(schema, [ITEMS_KEY, "description"], "Item")
+      [ITEMS_KEY, 'title'],
+      get(schema, [ITEMS_KEY, 'description'], translateString(TranslatableString.ArrayItemTitle))
     );
   }
 
@@ -150,10 +143,10 @@ class ArrayField<
     if (Array.isArray(itemSchema.type)) {
       // While we don't yet support composite/nullable jsonschema types, it's
       // future-proof to check for requirement against these.
-      return !itemSchema.type.includes("null");
+      return !itemSchema.type.includes('null');
     }
     // All non-null array item types are inherently required by design
-    return itemSchema.type !== "null";
+    return itemSchema.type !== 'null';
   }
 
   /** Determines whether more items can be added to the array. If the uiSchema indicates the array doesn't allow adding
@@ -279,11 +272,7 @@ class ArrayField<
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () =>
-          onChange(
-            keyedToPlainFormData(newKeyedFormData),
-            newErrorSchema as ErrorSchema<T[]>
-          )
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
       );
     };
   };
@@ -296,14 +285,14 @@ class ArrayField<
    * @param newIndex - The index to where the item is to be moved
    */
   onReorderClick = (index: number, newIndex: number) => {
-    return (event: React.MouseEvent<HTMLButtonElement>) => {
+    return (event: MouseEvent<HTMLButtonElement>) => {
       if (event) {
         event.preventDefault();
         event.currentTarget.blur();
       }
       const { onChange, errorSchema } = this.props;
       let newErrorSchema: ErrorSchema<T>;
-      if (this.props.errorSchema) {
+      if (errorSchema) {
         newErrorSchema = {};
         for (const idx in errorSchema) {
           const i = parseInt(idx);
@@ -333,11 +322,7 @@ class ArrayField<
         {
           keyedFormData: newKeyedFormData,
         },
-        () =>
-          onChange(
-            keyedToPlainFormData(newKeyedFormData),
-            newErrorSchema as ErrorSchema<T[]>
-          )
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
       );
     };
   };
@@ -354,7 +339,7 @@ class ArrayField<
       const newFormData = arrayData.map((item: T, i: number) => {
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
-        const jsonValue = typeof value === "undefined" ? null : value;
+        const jsonValue = typeof value === 'undefined' ? null : value;
         return index === i ? jsonValue : item;
       });
       onChange(
@@ -379,21 +364,20 @@ class ArrayField<
    */
   render() {
     const { schema, uiSchema, idSchema, registry } = this.props;
-    const { schemaUtils } = registry;
+    const { schemaUtils, translateString } = registry;
     if (!(ITEMS_KEY in schema)) {
       const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-      const UnsupportedFieldTemplate = getTemplate<
-        "UnsupportedFieldTemplate",
-        T[],
-        S,
-        F
-      >("UnsupportedFieldTemplate", registry, uiOptions);
+      const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
+        'UnsupportedFieldTemplate',
+        registry,
+        uiOptions
+      );
 
       return (
         <UnsupportedFieldTemplate
           schema={schema}
           idSchema={idSchema}
-          reason="Missing items definition"
+          reason={translateString(TranslatableString.MissingItems)}
           registry={registry}
         />
       );
@@ -431,16 +415,14 @@ class ArrayField<
       onBlur,
       onFocus,
       idPrefix,
-      idSeparator = "_",
+      idSeparator = '_',
       rawErrors,
     } = this.props;
     const { keyedFormData } = this.state;
     const title = schema.title === undefined ? name : schema.title;
     const { schemaUtils, formContext } = registry;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-    const _schemaItems: S = isObject(schema.items)
-      ? (schema.items as S)
-      : ({} as S);
+    const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
     const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
     const canAdd = this.canAddItem(formData);
@@ -451,17 +433,9 @@ class ArrayField<
         // While we are actually dealing with a single item of type T, the types require a T[], so cast
         const itemCast = item as unknown as T[];
         const itemSchema = schemaUtils.retrieveSchema(_schemaItems, itemCast);
-        const itemErrorSchema = errorSchema
-          ? (errorSchema[index] as ErrorSchema<T[]>)
-          : undefined;
+        const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
         const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = schemaUtils.toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          itemCast,
-          idPrefix,
-          idSeparator
-        );
+        const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
         return this.renderArrayFieldItem({
           key,
           index,
@@ -496,11 +470,7 @@ class ArrayField<
       registry,
     };
 
-    const Template = getTemplate<"ArrayFieldTemplate", T[], S, F>(
-      "ArrayFieldTemplate",
-      registry,
-      uiOptions
-    );
+    const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
     return <Template {...arrayProps} />;
   }
 
@@ -532,6 +502,7 @@ class ArrayField<
     return (
       <Widget
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -577,11 +548,12 @@ class ArrayField<
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
     const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
-    const { widget = "select", ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const { widget = 'select', ...options } = getUiOptions<T[], S, F>(uiSchema);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -623,12 +595,13 @@ class ArrayField<
     } = this.props;
     const title = schema.title || name;
     const { widgets, formContext } = registry;
-    const { widget = "files", ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const { widget = 'files', ...options } = getUiOptions<T[], S, F>(uiSchema);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     return (
       <Widget
         options={options}
         id={idSchema.$id}
+        name={name}
         multiple
         onChange={this.onSelectChange}
         onBlur={onBlur}
@@ -644,7 +617,7 @@ class ArrayField<
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
-        label=""
+        label=''
       />
     );
   }
@@ -658,7 +631,7 @@ class ArrayField<
       formData = [],
       errorSchema,
       idPrefix,
-      idSeparator = "_",
+      idSeparator = '_',
       idSchema,
       name,
       disabled = false,
@@ -675,9 +648,7 @@ class ArrayField<
     const title = schema.title || name;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { schemaUtils, formContext } = registry;
-    const _schemaItems: S[] = isObject(schema.items)
-      ? (schema.items as S[])
-      : ([] as S[]);
+    const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
       schemaUtils.retrieveSchema(item, formData[index] as unknown as T[])
     );
@@ -695,7 +666,7 @@ class ArrayField<
     const canAdd = this.canAddItem(items) && !!additionalSchema;
     const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
       canAdd,
-      className: "field field-array field-array-fixed-items",
+      className: 'field field-array field-array-fixed-items',
       disabled,
       idSchema,
       formData,
@@ -709,21 +680,13 @@ class ArrayField<
             ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
             : itemSchemas[index];
         const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = schemaUtils.toIdSchema(
-          itemSchema,
-          itemIdPrefix,
-          itemCast,
-          idPrefix,
-          idSeparator
-        );
+        const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
           ? uiSchema.items[index]
           : uiSchema.items || {};
-        const itemErrorSchema = errorSchema
-          ? (errorSchema[index] as ErrorSchema<T[]>)
-          : undefined;
+        const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({
           key,
@@ -756,11 +719,7 @@ class ArrayField<
       rawErrors,
     };
 
-    const Template = getTemplate<"ArrayFieldTemplate", T[], S, F>(
-      "ArrayFieldTemplate",
-      registry,
-      uiOptions
-    );
+    const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
     return <Template {...arrayProps} />;
   }
 
@@ -783,8 +742,8 @@ class ArrayField<
     itemIdSchema: IdSchema<T[]>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
-    onBlur: FieldProps<T[], S, F>["onBlur"];
-    onFocus: FieldProps<T[], S, F>["onFocus"];
+    onBlur: FieldProps<T[], S, F>['onBlur'];
+    onFocus: FieldProps<T[], S, F>['onFocus'];
     rawErrors?: string[];
     totalItems: number;
   }) {
@@ -807,23 +766,12 @@ class ArrayField<
       rawErrors,
       totalItems,
     } = props;
-    const {
-      disabled,
-      hideError,
-      idPrefix,
-      idSeparator,
-      readonly,
-      uiSchema,
-      registry,
-      formContext,
-    } = this.props;
+    const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
     const {
       fields: { ArraySchemaField, SchemaField },
     } = registry;
     const ItemSchemaField = ArraySchemaField || SchemaField;
-    const { orderable = true, removable = true } = getUiOptions<T[], S, F>(
-      uiSchema
-    );
+    const { orderable = true, removable = true } = getUiOptions<T[], S, F>(uiSchema);
     const has: { [key: string]: boolean } = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
@@ -857,7 +805,7 @@ class ArrayField<
           rawErrors={rawErrors}
         />
       ),
-      className: "array-item",
+      className: 'array-item',
       disabled,
       canAdd,
       hasToolbar: has.toolbar,

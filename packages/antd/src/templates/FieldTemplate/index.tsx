@@ -1,5 +1,4 @@
-import React from "react";
-import Form from "antd/lib/form";
+import Form from 'antd/lib/form';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -8,7 +7,7 @@ import {
   getTemplate,
   getUiOptions,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -55,15 +54,14 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
-    T,
-    S,
-    F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
-    return <div className="field-hidden">{children}</div>;
+    return <div className='field-hidden'>{children}</div>;
   }
 
   return (
@@ -81,20 +79,20 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      {id === "root" ? (
+      {id === 'root' ? (
         children
       ) : (
         <Form.Item
           colon={colon}
           extra={rawDescription && description}
-          hasFeedback={schema.type !== "array" && schema.type !== "object"}
+          hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
           htmlFor={id}
           label={displayLabel && label}
           labelCol={labelCol}
           required={required}
           style={wrapperStyle}
-          validateStatus={rawErrors?.length ? "error" : undefined}
+          validateStatus={rawErrors?.length ? 'error' : undefined}
           wrapperCol={wrapperCol}
         >
           {children}

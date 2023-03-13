@@ -1,18 +1,21 @@
-import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
-  ariaDescribedByIds,
   dataURItoBlob,
+  getTemplate,
   FormContextType,
+  Registry,
   RJSFSchema,
   StrictRJSFSchema,
+  TranslatableString,
   WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
+import Markdown from 'markdown-to-jsx';
 
 function addNameToDataURL(dataURL: string, name: string) {
   if (dataURL === null) {
     return null;
   }
-  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
+  return dataURL.replace(';base64', `;name=${encodeURIComponent(name)};base64`);
 }
 
 type FileInfoType = {
@@ -28,7 +31,7 @@ function processFile(file: File): Promise<FileInfoType> {
     const reader = new window.FileReader();
     reader.onerror = reject;
     reader.onload = (event) => {
-      if (typeof event.target?.result === "string") {
+      if (typeof event.target?.result === 'string') {
         resolve({
           dataURL: addNameToDataURL(event.target.result, name),
           name,
@@ -52,21 +55,24 @@ function processFiles(files: FileList) {
   return Promise.all(Array.from(files).map(processFile));
 }
 
-function FilesInfo({
+function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   filesInfo,
+  registry,
 }: {
   filesInfo: { name: string; size: number; type: string }[];
+  registry: Registry<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
     return null;
   }
+  const { translateString } = registry;
   return (
-    <ul className="file-info">
+    <ul className='file-info'>
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type } = fileInfo;
         return (
           <li key={key}>
-            <strong>{name}</strong> ({type}, {size} bytes)
+            <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
           </li>
         );
       })}
@@ -76,7 +82,7 @@ function FilesInfo({
 
 function extractFileInfo(dataURLs: string[]) {
   return dataURLs
-    .filter((dataURL) => typeof dataURL !== "undefined")
+    .filter((dataURL) => dataURL)
     .map((dataURL) => {
       const { blob, name } = dataURItoBlob(dataURL);
       return {
@@ -91,27 +97,16 @@ function extractFileInfo(dataURLs: string[]) {
  *  The `FileWidget` is a widget for rendering file upload fields.
  *  It is typically used with a string property with data-url format.
  */
-function FileWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({
-  multiple,
-  id,
-  readonly,
-  disabled,
-  onChange,
-  value,
-  autofocus = false,
-  options,
-}: WidgetProps<T, S, F>) {
+function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
+  const { disabled, readonly, multiple, onChange, value, options, registry } = props;
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
   const extractedFilesInfo = useMemo(
-    () =>
-      Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value]),
+    () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])),
     [value]
   );
-  const [filesInfo, setFilesInfo] =
-    useState<FileInfoType[]>(extractedFilesInfo);
+  const [filesInfo, setFilesInfo] = useState<FileInfoType[]>(extractedFilesInfo);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -133,21 +128,15 @@ function FileWidget<
 
   return (
     <div>
-      <p>
-        <input
-          id={id}
-          name={id}
-          type="file"
-          disabled={readonly || disabled}
-          onChange={handleChange}
-          defaultValue=""
-          autoFocus={autofocus}
-          multiple={multiple}
-          accept={options.accept ? String(options.accept) : undefined}
-          aria-describedby={ariaDescribedByIds<T>(id)}
-        />
-      </p>
-      <FilesInfo filesInfo={filesInfo} />
+      <BaseInputTemplate
+        {...props}
+        disabled={disabled || readonly}
+        type='file'
+        onChangeOverride={handleChange}
+        value=''
+        accept={options.accept ? String(options.accept) : undefined}
+      />
+      <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} />
     </div>
   );
 }

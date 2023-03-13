@@ -1,29 +1,34 @@
-import React, { Component } from "react";
-import MonacoEditor from "@monaco-editor/react";
-import { samples } from "./samples";
-import "react-app-polyfill/ie11";
-import Form, { withTheme } from "@rjsf/core";
-import { shouldRender } from "@rjsf/utils";
-import localValidator from "@rjsf/validator-ajv8";
-import isEqualWith from "lodash/isEqualWith";
+import { useState, createRef, Component } from 'react';
+import MonacoEditor from '@monaco-editor/react';
+import { samples } from './samples';
+import 'react-app-polyfill/ie11';
+import Form, { withTheme } from '@rjsf/core';
+import { shouldRender } from '@rjsf/utils';
+import localValidator from '@rjsf/validator-ajv8';
+import isEqualWith from 'lodash/isEqualWith';
 
-import DemoFrame from "./DemoFrame";
-import ErrorBoundary from "./ErrorBoundary";
+import DemoFrame from './DemoFrame';
+import ErrorBoundary from './ErrorBoundary';
 
 const log = (type) => console.log.bind(console, type);
 const toJson = (val) => JSON.stringify(val, null, 2);
 
 const liveSettingsSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    liveValidate: { type: "boolean", title: "Live validation" },
-    disable: { type: "boolean", title: "Disable whole form" },
-    readonly: { type: "boolean", title: "Readonly whole form" },
-    omitExtraData: { type: "boolean", title: "Omit extra data" },
-    liveOmit: { type: "boolean", title: "Live omit" },
-    noValidate: { type: "boolean", title: "Disable validation" },
-    focusOnFirstError: { type: "boolean", title: "Focus on 1st Error" },
-    showErrorList:{ type: "string", "default": "top", title: "Show Error List", enum:[false,"top","bottom"] }
+    liveValidate: { type: 'boolean', title: 'Live validation' },
+    disable: { type: 'boolean', title: 'Disable whole form' },
+    readonly: { type: 'boolean', title: 'Readonly whole form' },
+    omitExtraData: { type: 'boolean', title: 'Omit extra data' },
+    liveOmit: { type: 'boolean', title: 'Live omit' },
+    noValidate: { type: 'boolean', title: 'Disable validation' },
+    focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+    showErrorList: {
+      type: 'string',
+      default: 'top',
+      title: 'Show Error List',
+      enum: [false, 'top', 'bottom'],
+    },
   },
 };
 
@@ -50,33 +55,20 @@ class GeoPosition extends Component {
   render() {
     const { lat, lon } = this.state;
     return (
-      <div className="geo">
+      <div className='geo'>
         <h3>Hey, I'm a custom component</h3>
         <p>
           I'm registered as <code>geo</code> and referenced in
-          <code>uiSchema</code> as the <code>ui:field</code> to use for this
-          schema.
+          <code>uiSchema</code> as the <code>ui:field</code> to use for this schema.
         </p>
-        <div className="row">
-          <div className="col-sm-6">
+        <div className='row'>
+          <div className='col-sm-6'>
             <label>Latitude</label>
-            <input
-              className="form-control"
-              type="number"
-              value={lat}
-              step="0.00001"
-              onChange={this.onChange("lat")}
-            />
+            <input className='form-control' type='number' value={lat} step='0.00001' onChange={this.onChange('lat')} />
           </div>
-          <div className="col-sm-6">
+          <div className='col-sm-6'>
             <label>Longitude</label>
-            <input
-              className="form-control"
-              type="number"
-              value={lon}
-              step="0.00001"
-              onChange={this.onChange("lon")}
-            />
+            <input className='form-control' type='number' value={lon} step='0.00001' onChange={this.onChange('lon')} />
           </div>
         </div>
       </div>
@@ -96,10 +88,7 @@ class Editor extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.valid) {
-      return (
-        JSON.stringify(JSON.parse(nextProps.code)) !==
-        JSON.stringify(JSON.parse(this.state.code))
-      );
+      return JSON.stringify(JSON.parse(nextProps.code)) !== JSON.stringify(JSON.parse(this.state.code));
     }
     return false;
   }
@@ -107,9 +96,7 @@ class Editor extends Component {
   onCodeChange = (code) => {
     try {
       const parsedCode = JSON.parse(code);
-      this.setState({ valid: true, code }, () =>
-        this.props.onChange(parsedCode)
-      );
+      this.setState({ valid: true, code }, () => this.props.onChange(parsedCode));
     } catch (err) {
       this.setState({ valid: false, code });
     }
@@ -117,18 +104,18 @@ class Editor extends Component {
 
   render() {
     const { title } = this.props;
-    const icon = this.state.valid ? "ok" : "remove";
-    const cls = this.state.valid ? "valid" : "invalid";
+    const icon = this.state.valid ? 'ok' : 'remove';
+    const cls = this.state.valid ? 'valid' : 'invalid';
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
+      <div className='panel panel-default'>
+        <div className='panel-heading'>
           <span className={`${cls} glyphicon glyphicon-${icon}`} />
-          {" " + title}
+          {' ' + title}
         </div>
         <MonacoEditor
-          language="json"
+          language='json'
           value={this.state.code}
-          theme="vs-light"
+          theme='vs-light'
           onChange={this.onCodeChange}
           height={400}
           options={monacoEditorOptions}
@@ -141,7 +128,7 @@ class Editor extends Component {
 class Selector extends Component {
   constructor(props) {
     super(props);
-    this.state = { current: "Simple" };
+    this.state = { current: 'Simple' };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -158,15 +145,11 @@ class Selector extends Component {
 
   render() {
     return (
-      <ul className="nav nav-pills">
+      <ul className='nav nav-pills'>
         {Object.keys(samples).map((label, i) => {
           return (
-            <li
-              key={i}
-              role="presentation"
-              className={this.state.current === label ? "active" : ""}
-            >
-              <a href="#" onClick={this.onLabelClick(label)}>
+            <li key={i} role='presentation' className={this.state.current === label ? 'active' : ''}>
+              <a href='#' onClick={this.onLabelClick(label)}>
                 {label}
               </a>
             </li>
@@ -179,23 +162,21 @@ class Selector extends Component {
 
 function ThemeSelector({ theme, themes, select }) {
   const schema = {
-    type: "string",
+    type: 'string',
     enum: Object.keys(themes),
   };
   const uiSchema = {
-    "ui:placeholder": "Select theme",
+    'ui:placeholder': 'Select theme',
   };
   return (
     <Form
-      className="form_rjsf_themeSelector"
-      idPrefix="rjsf_themeSelector"
+      className='form_rjsf_themeSelector'
+      idPrefix='rjsf_themeSelector'
       schema={schema}
       uiSchema={uiSchema}
       formData={theme}
       validator={localValidator}
-      onChange={({ formData }) =>
-        formData && select(formData, themes[formData])
-      }
+      onChange={({ formData }) => formData && select(formData, themes[formData])}
     >
       <div />
     </Form>
@@ -204,23 +185,21 @@ function ThemeSelector({ theme, themes, select }) {
 
 function SubthemeSelector({ subtheme, subthemes, select }) {
   const schema = {
-    type: "string",
+    type: 'string',
     enum: Object.keys(subthemes),
   };
   const uiSchema = {
-    "ui:placeholder": "Select subtheme",
+    'ui:placeholder': 'Select subtheme',
   };
   return (
     <Form
-      className="form_rjsf_subthemeSelector"
-      idPrefix="rjsf_subthemeSelector"
+      className='form_rjsf_subthemeSelector'
+      idPrefix='rjsf_subthemeSelector'
       schema={schema}
       uiSchema={uiSchema}
       formData={subtheme}
       validator={localValidator}
-      onChange={({ formData }) =>
-        formData && select(formData, subthemes[formData])
-      }
+      onChange={({ formData }) => formData && select(formData, subthemes[formData])}
     >
       <div />
     </Form>
@@ -229,16 +208,16 @@ function SubthemeSelector({ subtheme, subthemes, select }) {
 
 function ValidatorSelector({ validator, validators, select }) {
   const schema = {
-    type: "string",
+    type: 'string',
     enum: Object.keys(validators),
   };
   const uiSchema = {
-    "ui:placeholder": "Select validator",
+    'ui:placeholder': 'Select validator',
   };
   return (
     <Form
-      className="form_rjsf_validatorSelector"
-      idPrefix="rjsf_validatorSelector"
+      className='form_rjsf_validatorSelector'
+      idPrefix='rjsf_validatorSelector'
       schema={schema}
       uiSchema={uiSchema}
       formData={validator}
@@ -253,33 +232,24 @@ function ValidatorSelector({ validator, validators, select }) {
 class CopyLink extends Component {
   onCopyClick = (event) => {
     this.input.select();
-    document.execCommand("copy");
+    document.execCommand('copy');
   };
 
   render() {
     const { shareURL, onShare } = this.props;
     if (!shareURL) {
       return (
-        <button className="btn btn-default" type="button" onClick={onShare}>
+        <button className='btn btn-default' type='button' onClick={onShare}>
           Share
         </button>
       );
     }
     return (
-      <div className="input-group">
-        <input
-          type="text"
-          ref={(input) => (this.input = input)}
-          className="form-control"
-          defaultValue={shareURL}
-        />
-        <span className="input-group-btn">
-          <button
-            className="btn btn-default"
-            type="button"
-            onClick={this.onCopyClick}
-          >
-            <i className="glyphicon glyphicon-copy" />
+      <div className='input-group'>
+        <input type='text' ref={(input) => (this.input = input)} className='form-control' defaultValue={shareURL} />
+        <span className='input-group-btn'>
+          <button className='btn btn-default' type='button' onClick={this.onCopyClick}>
+            <i className='glyphicon glyphicon-copy' />
           </button>
         </span>
       </div>
@@ -288,41 +258,37 @@ class CopyLink extends Component {
 }
 
 function RawValidatorTest({ validator, schema, formData }) {
-  const [rawValidation, setRawValidation] = React.useState();
+  const [rawValidation, setRawValidation] = useState();
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
-  let displayErrors = "Validation not run";
+  let displayErrors = 'Validation not run';
   if (rawValidation) {
     displayErrors =
-      rawValidation.errors || rawValidation.validationError ?
-        JSON.stringify(rawValidation, null, 2) :
-        "No AJV errors encountered";
+      rawValidation.errors || rawValidation.validationError
+        ? JSON.stringify(rawValidation, null, 2)
+        : 'No AJV errors encountered';
   }
   return (
     <div>
-      <details style={{ marginBottom: "10px" }}>
-        <summary style={{ display: "list-item" }}>Raw Ajv Validation</summary>
+      <details style={{ marginBottom: '10px' }}>
+        <summary style={{ display: 'list-item' }}>Raw Ajv Validation</summary>
         To determine whether a validation issue is really a BUG in Ajv use the button to trigger the raw Ajv validation.
-        This will run your schema and formData through Ajv without involving any react-jsonschema-form specific code.
-        If there is an unexpected error, then <a href="https://github.com/ajv-validator/ajv/issues/new/choose" target="_blank" rel="noopener">file an issue</a> with Ajv instead.
+        This will run your schema and formData through Ajv without involving any react-jsonschema-form specific code. If
+        there is an unexpected error, then{' '}
+        <a href='https://github.com/ajv-validator/ajv/issues/new/choose' target='_blank' rel='noopener'>
+          file an issue
+        </a>{' '}
+        with Ajv instead.
       </details>
-      <div style={{ marginBottom: "10px" }}>
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={handleRawClick}
-        >
+      <div style={{ marginBottom: '10px' }}>
+        <button className='btn btn-default' type='button' onClick={handleRawClick}>
           Raw Validate
         </button>
         {rawValidation && (
           <>
-            <span>{" "}</span>
-            <button
-              className="btn btn-default"
-              type="button"
-              onClick={handleClearClick}
-            >
+            <span> </span>
+            <button className='btn btn-default' type='button' onClick={handleClearClick}>
               Clear
             </button>
           </>
@@ -338,11 +304,11 @@ class Playground extends Component {
     super(props);
 
     // set default theme
-    const theme = "default";
-    const validator = "AJV8";
+    const theme = 'default';
+    const validator = 'AJV8';
     // initialize state with Simple data sample
     const { schema, uiSchema, formData, validate } = samples.Simple;
-    this.playGroundForm = React.createRef();
+    this.playGroundForm = createRef();
     this.state = {
       form: false,
       schema,
@@ -353,7 +319,7 @@ class Playground extends Component {
       validator,
       subtheme: null,
       liveSettings: {
-        showErrorList:'top',
+        showErrorList: 'top',
         validate: false,
         disable: false,
         readonly: false,
@@ -369,11 +335,11 @@ class Playground extends Component {
     const { themes } = this.props;
     const { theme } = this.state;
     const hash = document.location.hash.match(/#(.*)/);
-    if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
+    if (hash && typeof hash[1] === 'string' && hash[1].length > 0) {
       try {
         this.load(JSON.parse(atob(hash[1])));
       } catch (err) {
-        alert("Unable to load form setup data.");
+        alert('Unable to load form setup data.');
       }
     } else {
       // initialize theme
@@ -416,23 +382,21 @@ class Playground extends Component {
   onUISchemaEdited = (uiSchema) => this.setState({ uiSchema, shareURL: null });
 
   onFormDataEdited = (formData) => {
-    if (!isEqualWith(formData, this.state.formData, (newValue, oldValue) => {
-      // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
-      // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
-      // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
-      return JSON.stringify(oldValue) === JSON.stringify(newValue);
-    })) {
+    if (
+      !isEqualWith(formData, this.state.formData, (newValue, oldValue) => {
+        // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+        // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+        // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+        return JSON.stringify(oldValue) === JSON.stringify(newValue);
+      })
+    ) {
       this.setState({ formData, shareURL: null });
     }
   };
 
-  onExtraErrorsEdited = (extraErrors) =>
-    this.setState({ extraErrors, shareURL: null });
+  onExtraErrorsEdited = (extraErrors) => this.setState({ extraErrors, shareURL: null });
 
-  onThemeSelected = (
-    theme,
-    { subthemes, stylesheet, theme: themeObj } = {}
-  ) => {
+  onThemeSelected = (theme, { subthemes, stylesheet, theme: themeObj } = {}) => {
     this.setState({
       theme,
       subthemes,
@@ -455,16 +419,15 @@ class Playground extends Component {
 
   setLiveSettings = ({ formData }) => this.setState({ liveSettings: formData });
 
-  onFormDataChange = ({ formData = "" }, id) => {
+  onFormDataChange = ({ formData = '' }, id) => {
     if (id) {
-      console.log("Field changed, id: ", id);
+      console.log('Field changed, id: ', id);
     }
     return this.setState({ formData, shareURL: null });
   };
 
   onShare = () => {
-    const { formData, schema, uiSchema, liveSettings, errorSchema, theme } =
-      this.state;
+    const { formData, schema, uiSchema, liveSettings, errorSchema, theme } = this.state;
     const {
       location: { origin, pathname },
     } = document;
@@ -516,16 +479,16 @@ class Playground extends Component {
     }
 
     return (
-      <div className="container-fluid">
-        <div className="page-header">
+      <div className='container-fluid'>
+        <div className='page-header'>
           <h1>react-jsonschema-form</h1>
-          <div className="row">
-            <div className="col-sm-6">
+          <div className='row'>
+            <div className='col-sm-6'>
               <Selector onSelected={this.load} />
             </div>
-            <div className="col-sm-2">
+            <div className='col-sm-2'>
               <Form
-                idPrefix="rjsf_options"
+                idPrefix='rjsf_options'
                 schema={liveSettingsSchema}
                 formData={liveSettings}
                 validator={localValidator}
@@ -534,12 +497,8 @@ class Playground extends Component {
                 <div />
               </Form>
             </div>
-            <div className="col-sm-2">
-              <ThemeSelector
-                themes={themes}
-                theme={theme}
-                select={this.onThemeSelected}
-              />
+            <div className='col-sm-2'>
+              <ThemeSelector themes={themes} theme={theme} select={this.onThemeSelected} />
               {themes[theme] && themes[theme].subthemes && (
                 <SubthemeSelector
                   subthemes={themes[theme].subthemes}
@@ -547,97 +506,80 @@ class Playground extends Component {
                   select={this.onSubthemeSelected}
                 />
               )}
-              <ValidatorSelector
-                validators={validators}
-                validator={validator}
-                select={this.onValidatorSelected}
-              />
+              <ValidatorSelector validators={validators} validator={validator} select={this.onValidatorSelected} />
               <button
-                title="Click me to submit the form programmatically."
-                className="btn btn-default"
-                type="button"
+                title='Click me to submit the form programmatically.'
+                className='btn btn-default'
+                type='button'
                 onClick={() => this.playGroundForm.current.submit()}
               >
                 Prog. Submit
               </button>
               <span> </span>
               <button
-                title="Click me to validate the form programmatically."
-                className="btn btn-default"
-                type="button"
+                title='Click me to validate the form programmatically.'
+                className='btn btn-default'
+                type='button'
                 onClick={() => {
                   const valid = this.playGroundForm.current.validateForm();
-                  alert(valid ? "Form is valid" : "Form has errors");
+                  alert(valid ? 'Form is valid' : 'Form has errors');
                 }}
               >
                 Prog. Validate
               </button>
-              <div style={{ marginTop: "5px" }} />
+              <button
+                title='Click me to reset the form programmatically.'
+                className='btn btn-default'
+                type='button'
+                onClick={() => this.playGroundForm.current.reset()}
+              >
+                Prog. Reset
+              </button>
+              <span> </span>
+              <div style={{ marginTop: '5px' }} />
               <CopyLink shareURL={this.state.shareURL} onShare={this.onShare} />
             </div>
-            <div className="col-sm-2">
+            <div className='col-sm-2'>
               <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
             </div>
           </div>
         </div>
-        <div className="col-sm-7">
-          <Editor
-            title="JSONSchema"
-            code={toJson(schema)}
-            onChange={this.onSchemaEdited}
-          />
-          <div className="row">
-            <div className="col-sm-6">
-              <Editor
-                title="UISchema"
-                code={toJson(uiSchema)}
-                onChange={this.onUISchemaEdited}
-              />
+        <div className='col-sm-7'>
+          <Editor title='JSONSchema' code={toJson(schema)} onChange={this.onSchemaEdited} />
+          <div className='row'>
+            <div className='col-sm-6'>
+              <Editor title='UISchema' code={toJson(uiSchema)} onChange={this.onUISchemaEdited} />
             </div>
-            <div className="col-sm-6">
-              <Editor
-                title="formData"
-                code={toJson(formData)}
-                onChange={this.onFormDataEdited}
-              />
+            <div className='col-sm-6'>
+              <Editor title='formData' code={toJson(formData)} onChange={this.onFormDataEdited} />
             </div>
           </div>
           {extraErrors && (
-            <div className="row">
-              <div className="col">
-                <Editor
-                  title="extraErrors"
-                  code={toJson(extraErrors || {})}
-                  onChange={this.onExtraErrorsEdited}
-                />
+            <div className='row'>
+              <div className='col'>
+                <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={this.onExtraErrorsEdited} />
               </div>
             </div>
           )}
         </div>
-        <div className="col-sm-5">
+        <div className='col-sm-5'>
           <ErrorBoundary>
             {this.state.form && (
               <DemoFrame
                 head={
-                  <React.Fragment>
-                    <link
-                      rel="stylesheet"
-                      id="theme"
-                      href={this.state.stylesheet || ""}
-                    />
-                    {theme === "antd" && (
+                  <>
+                    <link rel='stylesheet' id='theme' href={this.state.stylesheet || ''} />
+                    {theme === 'antd' && (
                       <div
                         dangerouslySetInnerHTML={{
-                          __html:
-                            document.getElementById("antd-styles-iframe")
-                              .contentDocument.head.innerHTML,
+                          __html: document.getElementById('antd-styles-iframe').contentDocument.head.innerHTML,
                         }}
                       />
                     )}
-                  </React.Fragment>
+                  </>
                 }
                 style={{
-                  width: "100%",
+                  width: '100%',
                   height: 1000,
                   border: 0,
                 }}
@@ -652,38 +594,30 @@ class Playground extends Component {
                   onChange={this.onFormDataChange}
                   noHtml5Validate={true}
                   onSubmit={({ formData }, e) => {
-                    console.log("submitted formData", formData);
-                    console.log("submit event", e);
-                    window.alert("Form submitted");
+                    console.log('submitted formData', formData);
+                    console.log('submit event', e);
+                    window.alert('Form submitted');
                   }}
                   fields={{ geo: GeoPosition }}
                   customValidate={validate}
                   validator={validators[validator]}
-                  onBlur={(id, value) =>
-                    console.log(`Touched ${id} with value ${value}`)
-                  }
-                  onFocus={(id, value) =>
-                    console.log(`Focused ${id} with value ${value}`)
-                  }
+                  onBlur={(id, value) => console.log(`Touched ${id} with value ${value}`)}
+                  onFocus={(id, value) => console.log(`Focused ${id} with value ${value}`)}
                   transformErrors={transformErrors}
-                  onError={log("errors")}
+                  onError={log('errors')}
                   ref={this.playGroundForm}
                 />
               </DemoFrame>
             )}
           </ErrorBoundary>
         </div>
-        <div className="col-sm-12">
-          <p style={{ textAlign: "center" }}>
-            Powered by{" "}
-            <a href="https://github.com/rjsf-team/react-jsonschema-form">
-              react-jsonschema-form
-            </a>
-            .
-            {import.meta.env.VITE_SHOW_NETLIFY_BADGE === "true" && (
-              <div style={{ float: "right" }}>
-                <a href="https://www.netlify.com">
-                  <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" />
+        <div className='col-sm-12'>
+          <p style={{ textAlign: 'center' }}>
+            Powered by <a href='https://github.com/rjsf-team/react-jsonschema-form'>react-jsonschema-form</a>.
+            {import.meta.env.VITE_SHOW_NETLIFY_BADGE === 'true' && (
+              <div style={{ float: 'right' }}>
+                <a href='https://www.netlify.com'>
+                  <img src='https://www.netlify.com/img/global/badges/netlify-color-accent.svg' />
                 </a>
               </div>
             )}

@@ -1,5 +1,4 @@
-import React from "react";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -7,12 +6,12 @@ import {
   StrictRJSFSchema,
   WidgetProps,
   GenericObjectType,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-import DatePicker from "../../components/DatePicker";
+import DatePicker from '../../components/DatePicker';
 
 const DATE_PICKER_STYLE = {
-  width: "100%",
+  width: '100%',
 };
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
@@ -20,26 +19,13 @@ const DATE_PICKER_STYLE = {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function DateWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
-  const {
-    disabled,
-    formContext,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    placeholder,
-    readonly,
-    value,
-  } = props;
+export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>
+) {
+  const { disabled, formContext, id, onBlur, onChange, onFocus, placeholder, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = (nextValue: any) =>
-    onChange(nextValue && nextValue.format("YYYY-MM-DD"));
+  const handleChange = (nextValue: any) => onChange(nextValue && nextValue.format('YYYY-MM-DD'));
 
   const handleBlur = () => onBlur(id, value);
 

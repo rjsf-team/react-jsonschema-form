@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getWidget,
   getUiOptions,
@@ -8,19 +7,18 @@ import {
   EnumOptionsType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import isObject from "lodash/isObject";
+  TranslatableString,
+} from '@rjsf/utils';
+import isObject from 'lodash/isObject';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
  *
  * @param props - The `FieldProps` for this template
  */
-function BooleanField<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: FieldProps<T, S, F>) {
+function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldProps<T, S, F>
+) {
   const {
     schema,
     name,
@@ -38,9 +36,11 @@ function BooleanField<
     rawErrors,
   } = props;
   const { title } = schema;
-  const { widgets, formContext } = registry;
-  const { widget = "checkbox", ...options } = getUiOptions<T, S, F>(uiSchema);
+  const { widgets, formContext, translateString } = registry;
+  const { widget = 'checkbox', ...options } = getUiOptions<T, S, F>(uiSchema);
   const Widget = getWidget(schema, widget, widgets);
+  const yes = translateString(TranslatableString.YesLabel);
+  const no = translateString(TranslatableString.NoLabel);
 
   let enumOptions: EnumOptionsType<S>[] | undefined;
 
@@ -51,7 +51,7 @@ function BooleanField<
           if (isObject(option)) {
             return {
               ...option,
-              title: option.title || (option.const === true ? "Yes" : "No"),
+              title: option.title || (option.const === true ? yes : no),
             };
           }
           return undefined;
@@ -62,19 +62,15 @@ function BooleanField<
     // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
     const schemaWithEnumNames = schema as S & { enumNames?: string[] };
     const enums = schema.enum ?? [true, false];
-    if (
-      !schemaWithEnumNames.enumNames &&
-      enums.length === 2 &&
-      enums.every((v: any) => typeof v === "boolean")
-    ) {
+    if (!schemaWithEnumNames.enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
       enumOptions = [
         {
           value: enums[0],
-          label: enums[0] ? "Yes" : "No",
+          label: enums[0] ? yes : no,
         },
         {
           value: enums[1],
-          label: enums[1] ? "Yes" : "No",
+          label: enums[1] ? yes : no,
         },
       ];
     } else {
@@ -92,6 +88,7 @@ function BooleanField<
       schema={schema}
       uiSchema={uiSchema}
       id={idSchema.$id}
+      name={name}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}

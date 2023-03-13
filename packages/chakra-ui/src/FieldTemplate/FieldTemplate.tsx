@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FieldTemplateProps,
   FormContextType,
@@ -6,8 +5,8 @@ import {
   getUiOptions,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
-import { Text, FormControl } from "@chakra-ui/react";
+} from '@rjsf/utils';
+import { Text, FormControl } from '@chakra-ui/react';
 
 export default function FieldTemplate<
   T = any,
@@ -36,15 +35,14 @@ export default function FieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<
-    "WrapIfAdditionalTemplate",
-    T,
-    S,
-    F
-  >("WrapIfAdditionalTemplate", registry, uiOptions);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
 
   if (hidden) {
-    return <div style={{ display: "none" }}>{children}</div>;
+    return <div style={{ display: 'none' }}>{children}</div>;
   }
 
   return (
@@ -62,14 +60,9 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl
-        isRequired={required}
-        isInvalid={rawErrors && rawErrors.length > 0}
-      >
+      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0}>
         {children}
-        {displayLabel && rawDescription ? (
-          <Text mt={2}>{rawDescription}</Text>
-        ) : null}
+        {displayLabel && rawDescription ? <Text mt={2}>{rawDescription}</Text> : null}
         {errors}
         {help}
       </FormControl>

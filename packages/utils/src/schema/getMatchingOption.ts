@@ -1,9 +1,4 @@
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from "../types";
+import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
  * Deprecated, use `getFirstMatchingOption()` instead.
@@ -19,12 +14,7 @@ export default function getMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(
-  validator: ValidatorType<T, S, F>,
-  formData: T | undefined,
-  options: S[],
-  rootSchema: S
-): number {
+>(validator: ValidatorType<T, S, F>, formData: T | undefined, options: S[], rootSchema: S): number {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.
   if (formData === undefined) {

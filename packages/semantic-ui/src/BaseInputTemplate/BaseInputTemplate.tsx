@@ -1,15 +1,15 @@
-import React from "react";
-import { Form } from "semantic-ui-react";
-import { getSemanticProps } from "../util";
+import { ChangeEvent } from 'react';
+import { Form } from 'semantic-ui-react';
+import { getSemanticProps } from '../util';
 import {
   ariaDescribedByIds,
+  BaseInputTemplateProps,
   examplesId,
   getInputProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  WidgetProps,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -21,7 +21,7 @@ export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     placeholder,
@@ -31,6 +31,7 @@ export default function BaseInputTemplate<
     readonly,
     disabled,
     onChange,
+    onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
@@ -49,10 +50,8 @@ export default function BaseInputTemplate<
     options,
   });
   const { schemaUtils } = registry;
-  const _onChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value);
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
@@ -71,9 +70,9 @@ export default function BaseInputTemplate<
         disabled={disabled || readonly}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...semanticProps}
-        value={value || value === 0 ? value : ""}
+        value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
-        onChange={_onChange}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
@@ -81,11 +80,7 @@ export default function BaseInputTemplate<
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
-            .concat(
-              schema.default && !schema.examples.includes(schema.default)
-                ? ([schema.default] as string[])
-                : []
-            )
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example) => {
               return <option key={example} value={example} />;
             })}

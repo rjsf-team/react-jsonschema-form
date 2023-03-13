@@ -1,12 +1,6 @@
-import { UI_WIDGET_KEY } from "../constants";
-import {
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-  ValidatorType,
-} from "../types";
-import retrieveSchema from "./retrieveSchema";
+import { UI_WIDGET_KEY } from '../constants';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema, ValidatorType } from '../types';
+import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
  *
@@ -16,26 +10,18 @@ import retrieveSchema from "./retrieveSchema";
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @returns - True if schema/uiSchema contains an array of files, otherwise false
  */
-export default function isFilesArray<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(
+export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S
 ) {
-  if (uiSchema[UI_WIDGET_KEY] === "files") {
+  if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }
   if (schema.items) {
-    const itemsSchema = retrieveSchema<T, S, F>(
-      validator,
-      schema.items as S,
-      rootSchema
-    );
-    return itemsSchema.type === "string" && itemsSchema.format === "data-url";
+    const itemsSchema = retrieveSchema<T, S, F>(validator, schema.items as S, rootSchema);
+    return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }
   return false;
 }

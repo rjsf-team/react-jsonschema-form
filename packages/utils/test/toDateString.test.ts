@@ -1,7 +1,7 @@
-import { toDateString } from "../src";
+import { toDateString } from '../src';
 
-describe("toDateString()", () => {
-  it("should transform an object to a valid json datetime if time=true", () => {
+describe('toDateString()', () => {
+  it('should transform an object to a valid json datetime if time=true', () => {
     expect(
       toDateString({
         year: 2016,
@@ -11,10 +11,10 @@ describe("toDateString()", () => {
         minute: 1,
         second: 30,
       })
-    ).toEqual("2016-04-05T14:01:30.000Z");
+    ).toEqual('2016-04-05T14:01:30.000Z');
   });
 
-  it("should transform an object to a valid date string if time=false", () => {
+  it('should transform an object to a valid date string if time=false', () => {
     expect(
       toDateString(
         {
@@ -24,6 +24,6 @@ describe("toDateString()", () => {
         },
         false
       )
-    ).toEqual("2016-04-05");
+    ).toEqual('2016-04-05');
   });
 });

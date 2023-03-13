@@ -1,10 +1,4 @@
-import React from "react";
-import {
-  DescriptionFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export default function DescriptionField<
   T = any,
@@ -14,7 +8,7 @@ export default function DescriptionField<
   if (description) {
     return (
       <div>
-        <div id={id} className="mb-3">
+        <div id={id} className='mb-3'>
           {description}
         </div>
       </div>
