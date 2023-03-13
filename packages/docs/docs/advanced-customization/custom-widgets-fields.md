@@ -46,8 +46,8 @@ This allows you to create a reusable customized form class with your custom fiel
 import { RegistryFieldsType, RegistryWidgetsType } from '@rjsf/utils';
 import { FormProps } from '@rjsf/core';
 
-const customFields: RegistryWidgetsType = { StringField: CustomString };
-const customWidgets: RegistryFieldsType = { CheckboxWidget: CustomCheckbox };
+const customFields: RegistryFieldsType = { StringField: CustomString };
+const customWidgets: RegistryWidgetsType = { CheckboxWidget: CustomCheckbox };
 
 function MyForm(props: FormProps) {
   return <Form fields={customFields} widgets={customWidgets} {...props} />;
