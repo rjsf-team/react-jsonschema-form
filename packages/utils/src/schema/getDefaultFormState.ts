@@ -105,6 +105,7 @@ function maybeAddDefaultToObject<T = any>(
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @param [_recurseList=[]] - The list of ref names currently being recursed, used to prevent infinite recursion
+ * @param [required] - Optional flag, if true, indicates this schema was required in the parent schema.
  * @returns - The resulting `formData` with all the defaults provided
  */
 export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -114,7 +115,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   rootSchema: S = {} as S,
   rawFormData?: T,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
-  _recurseList: string[] = []
+  _recurseList: string[] = [],
+  required = false
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -138,7 +140,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rootSchema,
         formData as T,
         includeUndefinedValues,
-        _recurseList.concat(refName!)
+        _recurseList.concat(refName!),
+        required
       );
     }
   } else if (DEPENDENCIES_KEY in schema) {
@@ -150,7 +153,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       rootSchema,
       formData as T,
       includeUndefinedValues,
-      _recurseList
+      _recurseList,
+      required
     );
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
@@ -214,7 +218,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           rootSchema,
           get(formData, [key]),
           includeUndefinedValues === true,
-          _recurseList
+          _recurseList,
+          schema.required?.includes(key)
         );
         maybeAddDefaultToObject<T>(acc, key, computedDefault, includeUndefinedValues, schema.required);
         return acc;
@@ -241,7 +246,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             rootSchema,
             get(formData, [key]),
             includeUndefinedValues === true,
-            _recurseList
+            _recurseList,
+            schema.required?.includes(key)
           );
           maybeAddDefaultToObject<T>(objectDefaults as GenericObjectType, key, computedDefault, includeUndefinedValues);
         });
@@ -272,7 +278,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           );
         }) as T[];
       }
-      if (schema.minItems) {
+      if (required && schema.minItems) {
         if (!isMultiSelect<T, S, F>(validator, schema, rootSchema)) {
           const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
           if (schema.minItems > defaultsLength) {

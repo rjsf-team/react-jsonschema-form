@@ -38,6 +38,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
+      it('test an object with an optional array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalArray: {
+              type: 'array',
+              minItems: 2,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, undefined, schema)
+        ).toEqual({});
+      });
+      it('test an object with a required array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 2,
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, undefined, schema)
+        ).toEqual({ requiredArray: [undefined, undefined] });
+      });
       it('test an object with an optional property that has a nested required property', () => {
         const schema: RJSFSchema = {
           type: 'object',
