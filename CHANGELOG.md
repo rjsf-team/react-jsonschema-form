@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - `Reset` function added for `Programmatically Reset` action. `Reset` function will reset form data and validation errors. Form data will set to default values.
 
+## @rjsf/fluent-ui
+
+- Fix RadioWidget's onChange return value.
+
 ## Dev / docs / playground
 
 - Added `Programmatically Reset` button to clear states which are form data and validation errors.

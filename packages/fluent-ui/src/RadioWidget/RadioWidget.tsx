@@ -42,7 +42,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   function _onChange(_ev?: FormEvent<HTMLElement | HTMLInputElement>, option?: IChoiceGroupOption): void {
     if (option) {
-      onChange(option.key);
+      onChange(enumOptionsValueForIndex<S>(option.key, enumOptions, emptyValue));
     }
   }
 
