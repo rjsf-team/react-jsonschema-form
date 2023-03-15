@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
+import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 
 import SchemaField from '../src/components/fields/SchemaField';
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
@@ -394,6 +395,7 @@ describe('ObjectField', () => {
     });
   });
 
+  // TODO label with additionalProperties and arrays
   describe('additionalProperties', () => {
     const schema = {
       type: 'object',
@@ -712,6 +714,35 @@ describe('ObjectField', () => {
         formData,
         uiSchema: {
           'ui:duplicateKeySuffixSeparator': '_',
+        },
+      });
+
+      const textNode = node.querySelector('#root_first-key');
+      Simulate.blur(textNode, {
+        target: { value: 'second' },
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { second: 2, second_1: 1 },
+        },
+        'root'
+      );
+    });
+
+    it('uses a global custom separator between the duplicate key name and the suffix', () => {
+      const formData = {
+        first: 1,
+        second: 2,
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: {
+          [UI_GLOBAL_OPTIONS_KEY]: {
+            duplicateKeySuffixSeparator: '_',
+          },
         },
       });
 

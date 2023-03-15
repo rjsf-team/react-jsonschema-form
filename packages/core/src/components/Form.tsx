@@ -25,6 +25,7 @@ import {
   shouldRender,
   TemplatesType,
   UiSchema,
+  UI_GLOBAL_OPTIONS_KEY,
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
@@ -634,7 +635,7 @@ export default class Form<
 
   /** Returns the registry for the form */
   getRegistry(): Registry<T, S, F> {
-    const { translateString: customTranslateString } = this.props;
+    const { translateString: customTranslateString, uiSchema = {} } = this.props;
     const { schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
@@ -652,6 +653,7 @@ export default class Form<
       formContext: this.props.formContext || formContext,
       schemaUtils,
       translateString: customTranslateString || translateString,
+      globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
     };
   }
 

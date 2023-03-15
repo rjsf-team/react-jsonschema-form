@@ -18,6 +18,7 @@ import {
   UiSchema,
   ITEMS_KEY,
 } from '@rjsf/utils';
+import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
@@ -157,8 +158,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    * @returns - True if the item is addable otherwise false
    */
   canAddItem(formItems: any[]) {
-    const { schema, uiSchema } = this.props;
-    let { addable } = getUiOptions<T[], S, F>(uiSchema);
+    const { schema, uiSchema, registry } = this.props;
+    let { addable } = getUiOptions<T[], S, F>(uiSchema, registry.globalUiOptions);
     if (addable !== false) {
       // if ui:options.addable was not explicitly set to false, we can add
       // another item if we have not exceeded maxItems yet
@@ -237,6 +238,40 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   onAddIndexClick = (index: number) => {
     return (event: MouseEvent) => {
       this._handleAddClick(event, index);
+    };
+  };
+
+  /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
+   * keyed form data at the `index` into the next position in the state, and then returning `onChange()` with the plain
+   * form data converted from the keyed data
+   *
+   * @param index - The index at which the copy button is clicked
+   */
+  onCopyIndexClick = (index: number) => {
+    return (event: MouseEvent) => {
+      if (event) {
+        event.preventDefault();
+      }
+
+      const { onChange } = this.props;
+      const { keyedFormData } = this.state;
+      const newKeyedFormDataRow: KeyedFormDataType<T> = {
+        key: generateRowId(),
+        item: cloneDeep(keyedFormData[index].item),
+      };
+      const newKeyedFormData = [...keyedFormData];
+      if (index !== undefined) {
+        newKeyedFormData.splice(index + 1, 0, newKeyedFormDataRow);
+      } else {
+        newKeyedFormData.push(newKeyedFormDataRow);
+      }
+      this.setState(
+        {
+          keyedFormData: newKeyedFormData,
+          updatedKeyedFormData: true,
+        },
+        () => onChange(keyedToPlainFormData(newKeyedFormData))
+      );
     };
   };
 
@@ -734,8 +769,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     name: string;
     canAdd: boolean;
     canRemove?: boolean;
-    canMoveUp?: boolean;
-    canMoveDown?: boolean;
+    canMoveUp: boolean;
+    canMoveDown: boolean;
     itemSchema: S;
     itemData: T[];
     itemUiSchema: UiSchema<T[], S, F>;
@@ -753,8 +788,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       name,
       canAdd,
       canRemove = true,
-      canMoveUp = true,
-      canMoveDown = true,
+      canMoveUp,
+      canMoveDown,
       itemSchema,
       itemData,
       itemUiSchema,
@@ -769,12 +804,14 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
     const {
       fields: { ArraySchemaField, SchemaField },
+      globalUiOptions,
     } = registry;
     const ItemSchemaField = ArraySchemaField || SchemaField;
-    const { orderable = true, removable = true } = getUiOptions<T[], S, F>(uiSchema);
+    const { orderable = true, removable = true, copyable = false } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const has: { [key: string]: boolean } = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
+      copy: canAdd && copyable,
       remove: removable && canRemove,
       toolbar: false,
     };
@@ -808,6 +845,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       className: 'array-item',
       disabled,
       canAdd,
+      hasCopy: has.copy,
       hasToolbar: has.toolbar,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
@@ -816,6 +854,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       totalItems,
       key,
       onAddIndexClick: this.onAddIndexClick,
+      onCopyIndexClick: this.onCopyIndexClick,
       onDropIndexClick: this.onDropIndexClick,
       onReorderClick: this.onReorderClick,
       readonly,

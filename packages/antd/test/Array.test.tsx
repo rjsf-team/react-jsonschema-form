@@ -1,5 +1,5 @@
 import renderer from 'react-test-renderer';
-import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
+import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import '../__mocks__/matchMedia.mock';
@@ -62,7 +62,12 @@ describe('array fields', () => {
         type: 'string',
       },
     };
-    const tree = renderer.create(<Form schema={schema} validator={validator} formData={['a', 'b']} />).toJSON();
+    const uiSchema: UiSchema = {
+      'ui:options': { copyable: true },
+    };
+    const tree = renderer
+      .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 

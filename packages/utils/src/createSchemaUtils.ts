@@ -2,6 +2,7 @@ import deepEquals from './deepEquals';
 import {
   ErrorSchema,
   FormContextType,
+  GlobalUISchemaOptions,
   IdSchema,
   PathSchema,
   RJSFSchema,
@@ -94,10 +95,11 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param schema - The schema for which the display label flag is desired
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
+   * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
    * @returns - True if the label should be displayed or false if it should not
    */
-  getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return getDisplayLabel<T, S, F>(this.validator, schema, uiSchema, this.rootSchema);
+  getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {
+    return getDisplayLabel<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, globalOptions);
   }
 
   /** Determines which of the given `options` provided most closely matches the `formData`.

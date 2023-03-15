@@ -237,6 +237,8 @@ export interface TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema,
     SubmitButton: ComponentType<SubmitButtonProps<T, S, F>>;
     /** The template to use for the Add button used for AdditionalProperties and Array items */
     AddButton: ComponentType<IconButtonProps<T, S, F>>;
+    /** The template to use for the Copy button used for Array items */
+    CopyButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Down button used for Array items */
     MoveDownButton: ComponentType<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Up button used for Array items */
@@ -245,6 +247,26 @@ export interface TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema,
     RemoveButton: ComponentType<IconButtonProps<T, S, F>>;
   };
 }
+
+/** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
+ * widget level when no field-level value of the option is provided.
+ */
+export type GlobalUISchemaOptions = {
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be added to (defaults to true) */
+  addable?: boolean;
+  /** Flag, if set to `true`, will mark array fields as being able to be copied (defaults to false) */
+  copyable?: boolean;
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be ordered (defaults to true) */
+  orderable?: boolean;
+  /** Flag, if set to `false`, will mark array fields as NOT being able to be removed (defaults to true) */
+  removable?: boolean;
+  /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
+  label?: boolean;
+  /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
+   * This option allows you to change the separator between the original key name and the integer. Default is "-"
+   */
+  duplicateKeySuffixSeparator?: string;
+};
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
  * context, schema utils and templates.
@@ -272,6 +294,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   schemaUtils: SchemaUtilsType<T, S>;
   /** The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets */
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
+  /** The optional global UI Options that are available for all templates, fields and widgets to access */
+  globalUiOptions?: GlobalUISchemaOptions;
 }
 
 /** The properties that are passed to a Field implementation */
@@ -467,6 +491,8 @@ export type ArrayFieldTemplateItemType<
   disabled: boolean;
   /** A boolean value stating whether new items can be added to the array */
   canAdd: boolean;
+  /** A boolean value stating whether the array item can be copied, assumed false if missing */
+  hasCopy: boolean;
   /** A boolean value stating whether the array item can be moved down */
   hasMoveDown: boolean;
   /** A boolean value stating whether the array item can be moved up */
@@ -481,6 +507,8 @@ export type ArrayFieldTemplateItemType<
   totalItems: number;
   /** Returns a function that adds a new item at `index` */
   onAddIndexClick: (index: number) => (event?: any) => void;
+  /** Returns a function that copyies the item at `index` into the position at `index + 1` */
+  onCopyIndexClick: (index: number) => (event?: any) => void;
   /** Returns a function that removes the item at `index` */
   onDropIndexClick: (index: number) => (event?: any) => void;
   /** Returns a function that swaps the items at `index` with `newIndex` */
@@ -743,62 +771,51 @@ type MakeUIType<Type> = {
  */
 type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Partial<
   Omit<TemplatesType<T, S, F>, 'ButtonTemplates'>
-> & {
-  /** Any classnames that the user wants to be applied to a field in the ui */
-  classNames?: string;
-  /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
-  style?: StyleHTMLAttributes<any>;
-  /** We know that for title, it will be a string, if it is provided */
-  title?: string;
-  /** We know that for description, it will be a string, if it is provided */
-  description?: string;
-  /** We know that for placeholder, it will be a string, if it is provided */
-  placeholder?: string;
-  /** Used to add text next to a field to guide the end user in filling it in */
-  help?: string;
-  /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
-  autofocus?: boolean;
-  /** Use to mark the field as supporting auto complete on a text input or textarea input */
-  autocomplete?: HTMLInputElement['autocomplete'];
-  /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
-  disabled?: boolean;
-  /** The default value to use when an input for a field is empty */
-  emptyValue?: any;
-  /** Will disable any of the enum options specified in the array (by value) */
-  enumDisabled?: Array<string | number | boolean>;
-  /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
-   * hierarchy
-   */
-  hideError?: boolean;
-  /** Flag, if set to `true`, will mark all child widgets from a given field as read-only */
-  readonly?: boolean;
-  /** This property allows you to reorder the properties that are shown for a particular object */
-  order?: string[];
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be added to (defaults to true) */
-  addable?: boolean;
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be ordered (defaults to true) */
-  orderable?: boolean;
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be removed (defaults to true) */
-  removable?: boolean;
-  /** Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row */
-  inline?: boolean;
-  /** Used to change the input type (for example, `tel` or `email`) for an <input> */
-  inputType?: string;
-  /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
-  label?: boolean;
-  /** Provides a means to set the initial height of a textarea widget */
-  rows?: number;
-  /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
-  submitButtonOptions?: UISchemaSubmitButtonOptions;
-  /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
-   * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
-   */
-  widget?: Widget<T, S, F> | string;
-  /** When using `additionalProperties`, key collision is prevented by appending a unique integer to the duplicate key.
-   * This option allows you to change the separator between the original key name and the integer. Default is "-"
-   */
-  duplicateKeySuffixSeparator?: string;
-};
+> &
+  GlobalUISchemaOptions & {
+    /** Any classnames that the user wants to be applied to a field in the ui */
+    classNames?: string;
+    /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
+    style?: StyleHTMLAttributes<any>;
+    /** We know that for title, it will be a string, if it is provided */
+    title?: string;
+    /** We know that for description, it will be a string, if it is provided */
+    description?: string;
+    /** We know that for placeholder, it will be a string, if it is provided */
+    placeholder?: string;
+    /** Used to add text next to a field to guide the end user in filling it in */
+    help?: string;
+    /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
+    autofocus?: boolean;
+    /** Use to mark the field as supporting auto complete on a text input or textarea input */
+    autocomplete?: HTMLInputElement['autocomplete'];
+    /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
+    disabled?: boolean;
+    /** The default value to use when an input for a field is empty */
+    emptyValue?: any;
+    /** Will disable any of the enum options specified in the array (by value) */
+    enumDisabled?: Array<string | number | boolean>;
+    /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
+     * hierarchy
+     */
+    hideError?: boolean;
+    /** Flag, if set to `true`, will mark all child widgets from a given field as read-only */
+    readonly?: boolean;
+    /** This property allows you to reorder the properties that are shown for a particular object */
+    order?: string[];
+    /** Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row */
+    inline?: boolean;
+    /** Used to change the input type (for example, `tel` or `email`) for an <input> */
+    inputType?: string;
+    /** Provides a means to set the initial height of a textarea widget */
+    rows?: number;
+    /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
+    submitButtonOptions?: UISchemaSubmitButtonOptions;
+    /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
+     * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
+     */
+    widget?: Widget<T, S, F> | string;
+  };
 
 /** The type that represents the Options potentially provided by `ui:options` */
 export type UIOptionsType<
@@ -819,7 +836,11 @@ export type UiSchema<
   F extends FormContextType = any
 > = GenericObjectType &
   MakeUIType<UIOptionsBaseType<T, S, F>> & {
-    /** Allows the form to generate a unique prefix for the `Form`'s root prefix */
+    /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
+     * Registry for use everywhere.
+     */
+    'ui:globalOptions'?: GlobalUISchemaOptions;
+    /** Allows the form to generate a unique prefix for the `Form`'s root prefix, deprecated in favor of  */
     'ui:rootFieldId'?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
@@ -948,9 +969,10 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param schema - The schema for which the display label flag is desired
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
+   * @param [globalOptions={}] - The Global UI Schema from which to get any fallback `xxx` options
    * @returns - True if the label should be displayed or false if it should not
    */
-  getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>): boolean;
+  getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
   /** Determines which of the given `options` provided most closely matches the `formData`.
    * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *

@@ -51,6 +51,41 @@ describe('SchemaField', () => {
         formContext: {},
         schemaUtils,
         translateString: englishStringTranslator,
+        globalUiOptions: undefined,
+      });
+    });
+    it('should provide expected registry with globalUiOptions as prop', () => {
+      let receivedProps;
+      const schema = {
+        type: 'object',
+        definitions: {
+          a: { type: 'string' },
+        },
+      };
+      const schemaUtils = createSchemaUtils(validator, schema);
+
+      createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:globalOptions': { copyable: true },
+          'ui:field': (props) => {
+            receivedProps = props;
+            return null;
+          },
+        },
+      });
+
+      const { registry } = receivedProps;
+      const defaultRegistry = getDefaultRegistry();
+      expect(registry).eql({
+        fields: defaultRegistry.fields,
+        templates: defaultRegistry.templates,
+        widgets: defaultRegistry.widgets,
+        rootSchema: schema,
+        formContext: {},
+        schemaUtils,
+        translateString: englishStringTranslator,
+        globalUiOptions: { copyable: true },
       });
     });
   });
@@ -249,6 +284,24 @@ describe('SchemaField', () => {
     it('should render label by default', () => {
       const { node } = createFormComponent({ schema });
       expect(node.querySelectorAll('label')).to.have.length.of(1);
+    });
+
+    it('should render label if ui:globaLOptions label is set to true', () => {
+      const uiSchema = {
+        'ui:globalOptions': { label: true },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelectorAll('label')).to.have.length.of(1);
+    });
+
+    it('should not render label if ui:globalOptions label is set to false', () => {
+      const uiSchema = {
+        'ui:globalOptions': { label: false },
+      };
+
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelectorAll('label')).to.have.length.of(0);
     });
 
     it('should render label if ui:options label is set to true', () => {

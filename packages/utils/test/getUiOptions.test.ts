@@ -1,4 +1,4 @@
-import { UIOptionsType, UiSchema, getUiOptions } from '../src';
+import { GlobalUISchemaOptions, UIOptionsType, UiSchema, getUiOptions } from '../src';
 
 const uiSchema: UiSchema = {
   widgetText: {
@@ -8,6 +8,9 @@ const uiSchema: UiSchema = {
     'ui:widget': {
       component: 'radio',
     },
+  },
+  arrayObject: {
+    'ui:addable': true,
   },
   optionsObject: {
     'ui:options': {
@@ -25,9 +28,15 @@ const uiSchema: UiSchema = {
   },
 };
 
+const globalOptions: GlobalUISchemaOptions = {
+  addable: false,
+  copyable: true,
+};
+
 const results: { [key: string]: UIOptionsType } = {
   widgetText: { widget: 'select' },
   widgetObject: {},
+  arrayObject: { addable: true, copyable: true },
   optionsObject: { widget: 'hidden', disabled: true },
   multiOptions: {
     submitButtonProps: { norender: true },
@@ -47,6 +56,10 @@ describe('getUiOptions()', () => {
   });
   it('returns empty options with no uiSchema', () => {
     expect(getUiOptions()).toEqual({});
+  });
+  it('returns array object as options', () => {
+    expect(getUiOptions(uiSchema.arrayObject, globalOptions)).toEqual(results.arrayObject);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
   it('returns widget text as options', () => {
     expect(getUiOptions(uiSchema.widgetText)).toEqual(results.widgetText);

@@ -50,7 +50,7 @@ export default function CheckboxesWidget<
     formContext,
     uiSchema,
     defaultSchemaProps: {
-      inverted: false,
+      inverted: 'false',
     },
   });
   const _onChange =

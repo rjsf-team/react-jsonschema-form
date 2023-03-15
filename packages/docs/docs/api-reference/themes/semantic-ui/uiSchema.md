@@ -106,7 +106,7 @@ wrapContent: wrap all inputs  field content in a div, for custom styling
 wrapLabel: wrap all labels in a div, for custom styling via CSS
 ```
 
-```jsx
+```tsx
 <Form
   formContext={{
     semantic: {

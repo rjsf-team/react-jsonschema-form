@@ -49,7 +49,19 @@ Be sure to pay attention to the hierarchical intersection to these other types: 
 
 ## Exceptions to the equivalence
 
-There are 3 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
+There are 4 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
+
+### ui:globalOptions
+
+The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the Registry for use everywhere.
+
+```ts
+import { UiSchema } from '@rjsf/utils';
+
+const uiSchema: UiSchema = {
+  'ui:globalOptions': { copyable: true },
+};
+```
 
 ### ui:rootFieldId
 
@@ -259,7 +271,8 @@ const uiSchema: UiSchema = {
 
 ### label
 
-Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` in the `ui:options` uiSchema directive.
+Field labels are rendered by default.
+Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -268,6 +281,22 @@ import validator from '@rjsf/validator-ajv8';
 const schema: RJSFSchema = { type: 'string' };
 const uiSchema: UiSchema = {
   'ui:options': {
+    label: false,
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
     label: false,
   },
 };
@@ -391,8 +420,21 @@ const uiSchema: UiSchema = {
 
 ## `duplicateKeySuffixSeparator` option
 
-When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key. For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
-You can use `ui:duplicateKeySuffixSeparator` to override the default separator, `"-"` with a string of your choice.
+When using `additionalProperties`, key collision is prevented by appending a unique integer suffix to the duplicate key.
+For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
+You can use `ui:duplicateKeySuffixSeparator` to override the default separator, `"-"` with a string of your choice on a per-field basis.
+
+You can also set this into the `ui:globalOptions` to have the same separator used everywhere.
+
+```ts
+import { UiSchema } from '@rjsf/utils';
+
+const uiSchema = {
+  'ui:globalOptions': {
+    duplicateKeySuffixSeparator: '_'
+  }
+};
+```
 
 ## Theme Options
 
