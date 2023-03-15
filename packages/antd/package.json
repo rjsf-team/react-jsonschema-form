@@ -39,7 +39,8 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "lodash": "^4.17.15",
-    "lodash-es": "^4.17.15"
+    "lodash-es": "^4.17.15",
+    "rc-picker": "^2.6.11"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.8.0",
