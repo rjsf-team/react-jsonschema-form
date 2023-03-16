@@ -311,6 +311,7 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 
 - [uiSchema={}]: UiSchema<T, S, F> - The UI Schema from which to get any `ui:xxx` options
 - [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+
 #### Returns
 
 - UIOptionsType<T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`

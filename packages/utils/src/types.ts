@@ -252,13 +252,13 @@ export interface TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema,
  * widget level when no field-level value of the option is provided.
  */
 export type GlobalUISchemaOptions = {
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be added to (defaults to true) */
+  /** Flag, if set to `false`, new items cannot be added to array fields, unless overridden (defaults to true) */
   addable?: boolean;
-  /** Flag, if set to `true`, will mark array fields as being able to be copied (defaults to false) */
+  /** Flag, if set to `true`, array items can be copied (defaults to false) */
   copyable?: boolean;
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be ordered (defaults to true) */
+  /** Flag, if set to `false`, array items cannot be ordered (defaults to true) */
   orderable?: boolean;
-  /** Flag, if set to `false`, will mark array fields as NOT being able to be removed (defaults to true) */
+  /** Flag, if set to `false`, array items will not be removable (defaults to true) */
   removable?: boolean;
   /** Field labels are rendered by default. Labels may be omitted by setting the `label` option to `false` */
   label?: boolean;
@@ -507,7 +507,7 @@ export type ArrayFieldTemplateItemType<
   totalItems: number;
   /** Returns a function that adds a new item at `index` */
   onAddIndexClick: (index: number) => (event?: any) => void;
-  /** Returns a function that copyies the item at `index` into the position at `index + 1` */
+  /** Returns a function that copies the item at `index` into the position at `index + 1` */
   onCopyIndexClick: (index: number) => (event?: any) => void;
   /** Returns a function that removes the item at `index` */
   onDropIndexClick: (index: number) => (event?: any) => void;
@@ -840,7 +840,7 @@ export type UiSchema<
      * Registry for use everywhere.
      */
     'ui:globalOptions'?: GlobalUISchemaOptions;
-    /** Allows the form to generate a unique prefix for the `Form`'s root prefix, deprecated in favor of  */
+    /** Allows the form to generate a unique prefix for the `Form`'s root prefix  */
     'ui:rootFieldId'?: string;
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself

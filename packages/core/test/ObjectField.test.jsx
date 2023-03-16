@@ -395,7 +395,6 @@ describe('ObjectField', () => {
     });
   });
 
-  // TODO label with additionalProperties and arrays
   describe('additionalProperties', () => {
     const schema = {
       type: 'object',

@@ -811,7 +811,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const has: { [key: string]: boolean } = {
       moveUp: orderable && canMoveUp,
       moveDown: orderable && canMoveDown,
-      copy: canAdd && copyable,
+      copy: copyable && canAdd,
       remove: removable && canRemove,
       toolbar: false,
     };

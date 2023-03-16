@@ -159,7 +159,7 @@ const schema: RJSFSchema = {
 
 const uiSchema: UiSchema = {
   'ui:options': {
-    removable: true,
+    copyable: true,
   },
 };
 

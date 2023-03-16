@@ -53,7 +53,7 @@ There are 4 properties that exist in a `UiSchema` that will not be found in an i
 
 ### ui:globalOptions
 
-The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the Registry for use everywhere.
+The set of globally relevant `UiSchema` options that are read from the root-level `UiSchema` and stored in the `registry` for use everywhere.
 
 ```ts
 import { UiSchema } from '@rjsf/utils';
@@ -424,7 +424,7 @@ When using `additionalProperties`, key collision is prevented by appending a uni
 For example, when you add a key named `myKey` to a form where `myKey` is already defined, then your new key will become `myKey-1`.
 You can use `ui:duplicateKeySuffixSeparator` to override the default separator, `"-"` with a string of your choice on a per-field basis.
 
-You can also set this into the `ui:globalOptions` to have the same separator used everywhere.
+You can also set this in the `ui:globalOptions` to have the same separator used everywhere.
 
 ```ts
 import { UiSchema } from '@rjsf/utils';
