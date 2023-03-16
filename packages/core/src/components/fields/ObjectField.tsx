@@ -17,6 +17,7 @@ import {
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
+import Markdown from 'markdown-to-jsx';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
@@ -114,8 +115,8 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The name of the next available key from `preferredKey`
    */
   getAvailableKey = (preferredKey: string, formData?: T) => {
-    const { uiSchema } = this.props;
-    const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema);
+    const { uiSchema, registry } = this.props;
+    const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
 
     let index = 0;
     let newKey = preferredKey;
@@ -242,13 +243,13 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       registry,
     } = this.props;
 
-    const { fields, formContext, schemaUtils } = registry;
+    const { fields, formContext, schemaUtils, translateString } = registry;
     const { SchemaField } = fields;
     const schema: S = schemaUtils.retrieveSchema(rawSchema, formData);
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const { properties: schemaProperties = {} } = schema;
 
-    const title = schema.title === undefined ? name : schema.title;
+    const title = uiOptions.title || (schema.title === undefined ? name : schema.title);
     const description = uiOptions.description || schema.description;
     let orderedProperties: string[];
     try {
@@ -258,8 +259,9 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       return (
         <div>
           <p className='config-error' style={{ color: 'red' }}>
-            Invalid {name || 'root'} object field configuration:
-            <em>{(err as Error).message}</em>.
+            <Markdown>
+              {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
+            </Markdown>
           </p>
           <pre>{JSON.stringify(schema)}</pre>
         </div>
@@ -269,7 +271,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
 
     const templateProps = {
-      title: uiOptions.title || title,
+      title,
       description,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);

@@ -26,6 +26,11 @@ const ExposedArrayKeyTemplate = function (props) {
                 Up
               </button>
             )}
+            {element.hasCopy && (
+              <button className='array-item-copy' onClick={element.onCopyIndexClick(element.index)}>
+                Copy
+              </button>
+            )}
             {element.hasRemove && (
               <button className='array-item-remove' onClick={element.onDropIndexClick(element.index)}>
                 Remove
@@ -677,6 +682,19 @@ describe('ArrayField', () => {
       expect(moveDownBtns[1].disabled).eql(true);
     });
 
+    it('should not show move up/down buttons if global orderable is false', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:globalOptions': { orderable: false } },
+      });
+      const moveUpBtns = node.querySelector('.array-item-move-up');
+      const moveDownBtns = node.querySelector('.array-item-move-down');
+
+      expect(moveUpBtns).to.be.null;
+      expect(moveDownBtns).to.be.null;
+    });
+
     it('should not show move up/down buttons if orderable is false', () => {
       const { node } = createFormComponent({
         schema,
@@ -754,6 +772,17 @@ describe('ArrayField', () => {
       expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
+    it('should not show remove button if global removable is false', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:globalOptions': { removable: false } },
+      });
+      const dropBtn = node.querySelector('.array-item-remove');
+
+      expect(dropBtn).to.be.null;
+    });
+
     it('should not show remove button if removable is false', () => {
       const { node } = createFormComponent({
         schema,
@@ -799,6 +828,66 @@ describe('ArrayField', () => {
       Simulate.click(dropBtns[0]);
 
       expect(node.querySelectorAll('.has-error .error-detail')).to.have.length.of(0);
+    });
+
+    it('should not show copy button by default', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+      });
+      const dropBtn = node.querySelector('.array-item-copy');
+
+      expect(dropBtn).to.be.null;
+    });
+
+    it('should show copy button if global options copyable is true', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:globalOptions': { copyable: true } },
+      });
+      const dropBtn = node.querySelector('.array-item-copy');
+
+      expect(dropBtn).not.to.be.null;
+    });
+
+    it('should show copy button if copyable is true', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:options': { copyable: true } },
+      });
+      const dropBtn = node.querySelector('.array-item-copy');
+
+      expect(dropBtn).not.to.be.null;
+    });
+
+    it('should show copy button if ui:copyable is true', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:copyable': true },
+      });
+      const dropBtn = node.querySelector('.array-item-copy');
+
+      expect(dropBtn).not.to.be.null;
+    });
+
+    it('should copy a field in the list just below the item clicked', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: ['foo', 'bar'],
+        uiSchema: { 'ui:copyable': true },
+      });
+      const copyBtns = node.querySelectorAll('.array-item-copy');
+
+      Simulate.click(copyBtns[0]);
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      expect(inputs).to.have.length.of(3);
+      expect(inputs[0].value).eql('foo');
+      expect(inputs[1].value).eql('foo');
+      expect(inputs[2].value).eql('bar');
     });
 
     it('should handle cleared field values in the array', () => {
@@ -1708,6 +1797,14 @@ describe('ArrayField', () => {
 
     it('should not have an add button if additionalItems is not set', () => {
       const { node } = createFormComponent({ schema });
+      expect(node.querySelector('.array-item-add button')).to.be.null;
+    });
+
+    it('should not have an add button if global addable is false', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': { addable: false } },
+      });
       expect(node.querySelector('.array-item-add button')).to.be.null;
     });
 

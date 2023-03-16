@@ -12,17 +12,19 @@ export default function ArrayFieldItemTemplate<
     children,
     disabled,
     hasToolbar,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
     index,
+    onCopyIndexClick,
     onDropIndexClick,
     onReorderClick,
     readonly,
     registry,
     uiSchema,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
@@ -56,6 +58,17 @@ export default function ArrayFieldItemTemplate<
                     style={btnStyle}
                     disabled={disabled || readonly || !hasMoveDown}
                     onClick={onReorderClick(index, index + 1)}
+                    uiSchema={uiSchema}
+                    registry={registry}
+                  />
+                </div>
+              )}
+              {hasCopy && (
+                <div className='m-0 p-0'>
+                  <CopyButton
+                    style={btnStyle}
+                    disabled={disabled || readonly}
+                    onClick={onCopyIndexClick(index)}
                     uiSchema={uiSchema}
                     registry={registry}
                   />

@@ -2,7 +2,14 @@ import { UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants';
 import getSchemaType from '../getSchemaType';
 import getUiOptions from '../getUiOptions';
 import isCustomWidget from '../isCustomWidget';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema, ValidatorType } from '../types';
+import {
+  FormContextType,
+  GlobalUISchemaOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidatorType,
+} from '../types';
 import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
 
@@ -13,14 +20,21 @@ import isMultiSelect from './isMultiSelect';
  * @param schema - The schema for which the display label flag is desired
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, schema: S, uiSchema: UiSchema<T, S, F> = {}, rootSchema?: S): boolean {
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+>(
+  validator: ValidatorType<T, S, F>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F> = {},
+  rootSchema?: S,
+  globalOptions?: GlobalUISchemaOptions
+): boolean {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
   let displayLabel = !!label;
   const schemaType = getSchemaType<S>(schema);

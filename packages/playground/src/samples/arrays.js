@@ -87,6 +87,14 @@ export default {
           default: 'lorem ipsum',
         },
       },
+      copyable: {
+        title: 'Copyable items',
+        type: 'array',
+        items: {
+          type: 'string',
+          default: 'lorem ipsum',
+        },
+      },
       unremovable: {
         title: 'Unremovable items',
         type: 'array',
@@ -144,6 +152,11 @@ export default {
         orderable: false,
       },
     },
+    copyable: {
+      'ui:options': {
+        copyable: true,
+      },
+    },
     unremovable: {
       'ui:options': {
         removable: false,
@@ -170,6 +183,7 @@ export default {
     fixedItemsList: ['Some text', true, 123],
     nestedList: [['lorem', 'ipsum'], ['dolor']],
     unorderable: ['one', 'two'],
+    copyable: ['one', 'two'],
     unremovable: ['one', 'two'],
     noToolbar: ['one', 'two'],
     fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],

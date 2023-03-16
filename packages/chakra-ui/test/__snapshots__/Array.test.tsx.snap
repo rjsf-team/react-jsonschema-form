@@ -250,15 +250,15 @@ exports[`array fields array icons 1`] = `
   vertical-align: middle;
 }
 
-.emotion-30 {
+.emotion-34 {
   justify-self: flex-end;
 }
 
-.emotion-31 {
+.emotion-35 {
   margin-top: 2px;
 }
 
-.emotion-32 {
+.emotion-36 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -287,7 +287,7 @@ exports[`array fields array icons 1`] = `
   width: auto;
 }
 
-.emotion-33 {
+.emotion-37 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -302,7 +302,7 @@ exports[`array fields array icons 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-35 {
+.emotion-39 {
   margin-top: 3px;
 }
 
@@ -408,6 +408,26 @@ exports[`array fields array icons 1`] = `
                     >
                       <path
                         d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Copy"
+                    className="chakra-button emotion-11"
+                    disabled={false}
+                    onClick={[Function]}
+                    title="Copy"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="chakra-icon emotion-12"
+                      focusable={false}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
                         fill="currentColor"
                       />
                     </svg>
@@ -524,6 +544,26 @@ exports[`array fields array icons 1`] = `
                     </svg>
                   </button>
                   <button
+                    aria-label="Copy"
+                    className="chakra-button emotion-11"
+                    disabled={false}
+                    onClick={[Function]}
+                    title="Copy"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="chakra-icon emotion-12"
+                      focusable={false}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
                     aria-label="Remove"
                     className="chakra-button emotion-11"
                     disabled={false}
@@ -551,19 +591,19 @@ exports[`array fields array icons 1`] = `
             </div>
           </div>
           <div
-            className="emotion-30"
+            className="emotion-34"
           >
             <div
-              className="emotion-31"
+              className="emotion-35"
             >
               <button
-                className="chakra-button array-item-add emotion-32"
+                className="chakra-button array-item-add emotion-36"
                 disabled={false}
                 onClick={[Function]}
                 type="button"
               >
                 <span
-                  className="chakra-button__icon emotion-33"
+                  className="chakra-button__icon emotion-37"
                 >
                   <svg
                     aria-hidden={true}
@@ -586,10 +626,10 @@ exports[`array fields array icons 1`] = `
     </div>
   </div>
   <div
-    className="emotion-35"
+    className="emotion-39"
   >
     <button
-      className="chakra-button emotion-32"
+      className="chakra-button emotion-36"
       disabled={false}
       type="submit"
     >

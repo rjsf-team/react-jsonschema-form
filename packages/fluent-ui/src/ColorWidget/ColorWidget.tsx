@@ -7,7 +7,7 @@ const styles_red = {
   color: 'rgb(164, 38, 44)',
   fontSize: 12,
   fontWeight: 'normal' as any,
-  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;`,
+  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif`,
 };
 
 const allowedProps: (keyof IColorPickerProps)[] = [

@@ -41,7 +41,7 @@ export default function CheckboxWidget<
     formContext,
     uiSchema,
     defaultSchemaProps: {
-      inverted: false,
+      inverted: 'false',
     },
   });
   // Because an unchecked checkbox will cause html5 validation to fail, only add

@@ -1,6 +1,7 @@
 import Button, { ButtonProps, ButtonType } from 'antd/lib/button';
 import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
 import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
+import CopyOutlined from '@ant-design/icons/CopyOutlined';
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
 import PlusCircleOutlined from '@ant-design/icons/PlusCircleOutlined';
 import {
@@ -41,6 +42,15 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       icon={<PlusCircleOutlined />}
     />
   );
+}
+
+export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: AntdIconButtonProps<T, S, F>
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon={<CopyOutlined />} />;
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

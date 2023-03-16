@@ -114,8 +114,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils } = registry;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const { formContext, schemaUtils, globalUiOptions } = registry;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -153,7 +153,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     return null;
   }
 
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components

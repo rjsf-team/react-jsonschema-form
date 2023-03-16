@@ -8,7 +8,7 @@ const BTN_GRP_STYLE = {
 };
 
 const BTN_STYLE = {
-  width: 'calc(100% / 3)',
+  width: 'calc(100% / 4)',
 };
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
@@ -23,18 +23,20 @@ export default function ArrayFieldItemTemplate<
   const {
     children,
     disabled,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
     hasToolbar,
     index,
+    onCopyIndexClick,
     onDropIndexClick,
     onReorderClick,
     readonly,
     registry,
     uiSchema,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
   return (
@@ -57,6 +59,15 @@ export default function ArrayFieldItemTemplate<
               <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
+                style={BTN_STYLE}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            )}
+            {hasCopy && (
+              <CopyButton
+                disabled={disabled || readonly}
+                onClick={onCopyIndexClick(index)}
                 style={BTN_STYLE}
                 uiSchema={uiSchema}
                 registry={registry}

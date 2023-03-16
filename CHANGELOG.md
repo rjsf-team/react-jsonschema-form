@@ -18,32 +18,63 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.3.0
 
+## @rjsf/antd
+
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+
+## @rjsf/bootstrap-4
+
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+
+## @rjsf/chakra-ui
+
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+
 ## @rjsf/core
 
 - `Reset` function added for `Programmatically Reset` action. `Reset` function will reset form data and validation errors. Form data will set to default values.
 - Implemented a new `TimeWidget` that works for all themes
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+- Also added the missing translation for the `InvalidObjectField` error in `ObjectField`
+- Added support for the handling of the global UiSchema options in `Form`, `ArrayField`, `ObjectField` and `SchemaField`
 
 ## @rjsf/fluent-ui
 
 - Fix `RadioWidget`'s onChange return value.
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
 
 ## @rjsf/material-ui
 
 - Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
 
 ## @rjsf/mui
 
 - Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+
+## @rjsf/semantic-ui
+
+- Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
 
 ## @rjsf/utils
 
 - Updated the widget matrix used by `getWidget()` to support the `time` to `TimeWidget` mapping
+- Added a new `TranslatableString` enums `CopyButton` and `InvalidObjectField` that localizes the information extracted from `ObjectField` as markdown
+- Updated the `ArrayFieldTemplateItemType` to add support for copying array items
+- Refactored `UIOptionsBaseType` to extract the `addable`, `orderable`, `removable`, `label` and `duplicateKeySuffixSeparator` into a new `GlobalUISchemaOptions` type that adds `copyable`
+  - Extended `UIOptionsBaseType` from `GlobalUISchemaOptions`
+  - In `UiSchema` added a new optional `ui:globalOptions` prop of type `GlobalUISchemaOptions` and a new `UI_GLOBAL_OPTIONS_KEY` constant
+  - Added a new optional prop `globalUiOptions` object of type `GlobalUISchemaOptions` in `Registry` as well as `CopyButton` in `ButtonTemplates`
+- Updated `getUiOptions()` and `getDisplayLabel()` (and its `SchemaUtilsType` counterpart) to take an optional `GlobalUISchemaOptions` parameter that is used to include global options into the returned `uiOptions`
 
 ## Dev / docs / playground
 
 - Updated the playground to add a `Programmatically Reset` button to clear states which are form data and validation errors.
 - Updated the `Date & time` example to show off the new `TimeWidget`.
 - Updated the `custom-widgets-fields` and `widgets` documentation to mention the new `TimeWidget` and its support for the `time` format.
+- Updated the documentation for `custom-templates`, `internals`, `uiSchema`, `utility-functions` and `arrays` for the new copy array feature as well as the global UI Schema options support
+- Updated the `arrays` example to add examples for the new `copyable` feature
 
 # 5.2.1
 

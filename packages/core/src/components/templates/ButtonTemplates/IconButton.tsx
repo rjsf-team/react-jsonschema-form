@@ -11,6 +11,22 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
   );
 }
 
+export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <IconButton
+      title={translateString(TranslatableString.CopyButton)}
+      className='array-item-copy'
+      {...props}
+      icon='copy'
+    />
+  );
+}
+
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
 ) {

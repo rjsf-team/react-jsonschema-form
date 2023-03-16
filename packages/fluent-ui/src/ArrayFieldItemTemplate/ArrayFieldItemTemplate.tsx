@@ -9,17 +9,19 @@ export default function ArrayFieldItemTemplate<
     children,
     disabled,
     hasToolbar,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
     index,
+    onCopyIndexClick,
     onDropIndexClick,
     onReorderClick,
     readonly,
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   return (
     <div className='ms-Grid' dir='ltr'>
       <div className='ms-Grid-row'>
@@ -40,6 +42,14 @@ export default function ArrayFieldItemTemplate<
               <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onReorderClick(index, index + 1)}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            )}
+            {hasCopy && (
+              <CopyButton
+                disabled={disabled || readonly}
+                onClick={onCopyIndexClick(index)}
                 uiSchema={uiSchema}
                 registry={registry}
               />

@@ -2,7 +2,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 
 import SubmitButton from './SubmitButton';
 import AddButton from './AddButton';
-import { RemoveButton, MoveDownButton, MoveUpButton } from './IconButton';
+import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
 
 function buttonTemplates<
   T = any,
@@ -12,6 +12,7 @@ function buttonTemplates<
   return {
     SubmitButton,
     AddButton,
+    CopyButton,
     MoveDownButton,
     MoveUpButton,
     RemoveButton,

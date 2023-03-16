@@ -26,6 +26,7 @@ const registry: Registry = {
     BaseInputTemplate: FakeTemplate,
     ButtonTemplates: {
       AddButton: FakeTemplate,
+      CopyButton: FakeTemplate,
       MoveDownButton: FakeTemplate,
       MoveUpButton: FakeTemplate,
       RemoveButton: FakeTemplate,

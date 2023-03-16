@@ -90,6 +90,9 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ## Array item uiSchema options
 
+Any of these options can be set globally if they are contained within the `ui:globalOptions` block.
+They can also be overridden on a per-field basis inside a `ui:options` block as shown below.
+
 ### `orderable` option
 
 Array items are orderable by default, and react-jsonschema-form renders move up/down buttons alongside them. The uiSchema `orderable` options allows you to disable ordering:
@@ -138,6 +141,31 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### `copyable` option
+
+A copy button is **NOT** shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance.
+You can turn this **ON** with the `copyable` option in `uiSchema`:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  items: {
+    type: 'string',
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    copyable: true,
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### `removable` option
 
 A remove button is shown by default for an item if `items` contains a schema object, or the item is an `additionalItems` instance. You can turn this off with the `removable` option in `uiSchema`:
@@ -168,7 +196,7 @@ The default behavior for array fields is a list of text inputs with add/remove b
 
 Example:
 
-```jsx
+```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 

@@ -366,7 +366,7 @@ exports[`single fields checkboxes field 1`] = `
       style={
         Object {
           "color": "rgb(164, 38, 44)",
-          "fontFamily": "\\"Segoe UI\\", \\"Segoe UI Web (West European)\\", \\"Segoe UI\\", -apple-system, BlinkMacSystemFont, Roboto, \\"Helvetica Neue\\", sans-serif;",
+          "fontFamily": "\\"Segoe UI\\", \\"Segoe UI Web (West European)\\", \\"Segoe UI\\", -apple-system, BlinkMacSystemFont, Roboto, \\"Helvetica Neue\\", sans-serif",
           "fontSize": 12,
           "fontWeight": "normal",
         }

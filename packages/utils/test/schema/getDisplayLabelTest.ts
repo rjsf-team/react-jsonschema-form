@@ -3,6 +3,20 @@ import { TestValidatorType } from './types';
 
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
   describe('getDisplayLabel()', () => {
+    it('with global uiSchema "label" set to true', () => {
+      expect(getDisplayLabel(testValidator, { type: 'string' }, {}, undefined, { label: true })).toEqual(true);
+    });
+    it('with global uiSchema "label" set to false', () => {
+      const schema: RJSFSchema = { type: 'string' };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+      expect(schemaUtils.getDisplayLabel(schema, {}, { label: false })).toEqual(false);
+    });
+    it('with local uiSchema "label" set to true', () => {
+      expect(getDisplayLabel(testValidator, { type: 'string' }, { 'ui:options': { label: true } })).toEqual(true);
+    });
+    it('with local uiSchema "label" set to false', () => {
+      expect(getDisplayLabel(testValidator, { type: 'string' }, { 'ui:label': false })).toEqual(false);
+    });
     it('object type', () => {
       expect(getDisplayLabel(testValidator, { type: 'object' })).toEqual(false);
     });
