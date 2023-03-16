@@ -64,50 +64,60 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
 
   const playGroundFormRef = useRef<any>(null);
 
+  const onThemeSelected = useCallback(
+    (theme: string, { stylesheet, theme: themeObj }: { stylesheet?: any; theme?: any }) => {
+      setTheme(theme);
+      setSubtheme(null);
+      setFormComponent(withTheme(themeObj));
+      setStylesheet(stylesheet);
+    },
+    [setTheme, setSubtheme, setFormComponent, setStylesheet, withTheme]
+  );
+
+  const load = useCallback(
+    (data: any) => {
+      // Reset the ArrayFieldTemplate whenever you load new data
+      const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
+      // uiSchema is missing on some examples. Provide a default to
+      // clear the field in all cases.
+      const { uiSchema = {} } = data;
+
+      const { theme: dataTheme = theme } = data;
+
+      onThemeSelected(dataTheme, themes[dataTheme]);
+
+      // force resetting form component instance
+      setShowForm(false);
+
+      setUiSchema(uiSchema);
+      setExtraErrors(extraErrors);
+      setTheme(dataTheme);
+      setArrayFieldTemplate(ArrayFieldTemplate);
+      setObjectFieldTemplate(ObjectFieldTemplate);
+      setShowForm(true);
+    },
+    [onThemeSelected, setShowForm, setUiSchema, setExtraErrors, setTheme, setArrayFieldTemplate, setObjectFieldTemplate]
+  );
+
   useEffect(() => {
     const hash = document.location.hash.match(/#(.*)/);
+
     if (hash && typeof hash[1] === 'string' && hash[1].length > 0) {
       try {
         load(JSON.parse(atob(hash[1])));
-      } catch (err) {
+      } catch (error) {
         alert('Unable to load form setup data.');
+        console.error(error);
       }
-    } else {
-      // initialize theme
-      onThemeSelected(theme, themes[theme]);
 
-      setShowForm(true);
+      return;
     }
-  }, []);
 
-  const load = (data: any) => {
-    // Reset the ArrayFieldTemplate whenever you load new data
-    const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
-    // uiSchema is missing on some examples. Provide a default to
-    // clear the field in all cases.
-    const { uiSchema = {} } = data;
+    // initialize theme
+    onThemeSelected(theme, themes[theme]);
 
-    const { theme: dataTheme = theme } = data;
-
-    onThemeSelected(dataTheme, themes[dataTheme]);
-
-    // force resetting form component instance
-    setShowForm(false);
-
-    setUiSchema(uiSchema);
-    setExtraErrors(extraErrors);
-    setTheme(dataTheme);
-    setArrayFieldTemplate(ArrayFieldTemplate);
-    setObjectFieldTemplate(ObjectFieldTemplate);
     setShowForm(true);
-  };
-
-  const onThemeSelected = (theme: string, { stylesheet, theme: themeObj }: { stylesheet?: any; theme?: any }) => {
-    setTheme(theme);
-    setSubtheme(null);
-    setFormComponent(withTheme(themeObj));
-    setStylesheet(stylesheet);
-  };
+  }, [onThemeSelected, load, setShowForm]);
 
   const onSubthemeSelected = (subtheme: any, { stylesheet }: { stylesheet: any }) => {
     setSubtheme(subtheme);
