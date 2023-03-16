@@ -693,6 +693,52 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields format time 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="field"
+      >
+        <div
+          className="ui fluid input"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            type="time"
+            value=""
+          />
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields help and error display 1`] = `
 <form
   className="ui form rjsf"

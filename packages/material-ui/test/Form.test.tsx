@@ -108,6 +108,14 @@ describe('single fields', () => {
     const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
+  test('format time', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      format: 'time',
+    };
+    const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
   test('password field', () => {
     const schema: RJSFSchema = {
       type: 'string',

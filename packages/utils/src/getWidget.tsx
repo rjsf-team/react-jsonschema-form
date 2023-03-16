@@ -33,6 +33,7 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
     'date-time': 'DateTimeWidget',
     'alt-date': 'AltDateWidget',
     'alt-datetime': 'AltDateTimeWidget',
+    time: 'TimeWidget',
     color: 'ColorWidget',
     file: 'FileWidget',
   },

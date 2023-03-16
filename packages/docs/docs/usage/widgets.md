@@ -78,15 +78,14 @@ The built-in string field also supports the JSON Schema `format` property, and w
 - `data-url`: By default, an `input[type=file]` element is used; in case the string is part of an array, multiple files will be handled automatically (see [File widgets](#file-widgets)).
 - `date`: By default, an `input[type=date]` element is used;
 - `date-time`: By default, an `input[type=datetime-local]` element is used.
+- `time`: By default an `input[type=time]` element is used;
 
 ![](https://i.imgur.com/xqu6Lcp.png)
 
-Please note that, even though they are standardized, `datetime-local` and `date` input elements are not yet supported by Firefox and IE. If you plan on targeting these platforms, two alternative widgets are available:
+Please note that, even though they are standardized, `datetime-local`, `date` and `time` input elements are not supported by IE. If you plan on targeting IE, two alternative widgets are available:
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
-
-> **Firefox 57 - 66**: Firefox partially supporting `date` and `time` input types, but not `datetime-local`, `month` or `week`
 
 ![](https://i.imgur.com/VF5tY60.png)
 
