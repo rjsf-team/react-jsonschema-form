@@ -1,8 +1,9 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect, type ComponentType } from 'react';
 import 'react-app-polyfill/ie11';
-import Form, { withTheme } from '@rjsf/core';
-import localValidator from '@rjsf/validator-ajv8';
 import isEqualWith from 'lodash/isEqualWith';
+import Form, { withTheme, type FormProps } from '@rjsf/core';
+import { type ArrayFieldTemplateProps, type ObjectFieldTemplateProps } from '@rjsf/utils';
+import localValidator from '@rjsf/validator-ajv8';
 
 import { samples } from '../samples';
 import DemoFrame from './DemoFrame';
@@ -57,9 +58,9 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
     omitExtraData: false,
     liveOmit: false,
   });
-  const [FormComponent, setFormComponent] = useState<any>(withTheme({}));
-  const [ArrayFieldTemplate, setArrayFieldTemplate] = useState<any>();
-  const [ObjectFieldTemplate, setObjectFieldTemplate] = useState<any>();
+  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+  const [ArrayFieldTemplate, setArrayFieldTemplate] = useState<ComponentType<ArrayFieldTemplateProps>>();
+  const [ObjectFieldTemplate, setObjectFieldTemplate] = useState<ComponentType<ObjectFieldTemplateProps>>();
 
   const playGroundFormRef = useRef<any>(null);
 
