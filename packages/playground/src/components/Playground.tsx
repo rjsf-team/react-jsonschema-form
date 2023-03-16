@@ -99,7 +99,7 @@ const Editors: React.FC<EditorsProps> = ({
         setShareURL(null);
       }
     },
-    [formData]
+    [formData, setFormData, setShareURL]
   );
 
   const onExtraErrorsEdited = useCallback(
