@@ -36,6 +36,12 @@
     "dayjs": "^1.8.0",
     "react": "^16.14.0 || >=17"
   },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15",
+    "rc-picker": "^2.6.11"
+  },
   "devDependencies": {
     "@ant-design/icons": "^4.8.0",
     "@babel/cli": "^7.20.7",
@@ -59,8 +65,6 @@
     "dayjs": "^1.11.7",
     "dts-cli": "^1.6.3",
     "eslint": "^8.33.0",
-    "lodash": "^4.17.15",
-    "lodash-es": "^4.17.15",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
