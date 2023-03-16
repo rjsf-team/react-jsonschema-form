@@ -233,7 +233,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
   );
 
   const handleSetLiveSettings = useCallback(
-    ({ formData }: { formData: any }) => {
+    ({ formData }: IChangeEvent<any, RJSFSchema, any>) => {
       setLiveSettings(formData);
     },
     [setLiveSettings]
