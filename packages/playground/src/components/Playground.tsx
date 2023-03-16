@@ -27,7 +27,7 @@ import Editor from './Editor';
 const log = (type: string) => console.log.bind(console, type);
 const toJson = (val: unknown) => JSON.stringify(val, null, 2);
 
-const liveSettingsSchema = {
+const liveSettingsSchema: RJSFSchema = {
   type: 'object',
   properties: {
     liveValidate: { type: 'boolean', title: 'Live validation' },
@@ -296,10 +296,10 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
           <div className='col-sm-2'>
             <Form
               idPrefix='rjsf_options'
-              schema={liveSettingsSchema as any}
+              schema={liveSettingsSchema}
               formData={liveSettings}
               validator={localValidator}
-              onChange={handleSetLiveSettings as any}
+              onChange={handleSetLiveSettings}
             >
               <div />
             </Form>
