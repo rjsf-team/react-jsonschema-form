@@ -216,15 +216,15 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
         </div>
       </div>
       <Editors
-        extraErrors={extraErrors},
         formData={formData}
-        schema={schema}
-        setExtraErrors={setExtraErrors}
         setFormData={setFormData}
+        schema={schema}
         setSchema={setSchema}
-        setShareURL={setShareURL}
-        setUiSchema={setUiSchema}
         uiSchema={uiSchema}
+        setUiSchema={setUiSchema}
+        extraErrors={extraErrors}
+        setExtraErrors={setExtraErrors}
+        setShareURL={setShareURL}
       />
       <div className='col-sm-5'>
         <ErrorBoundary>
