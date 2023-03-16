@@ -45,6 +45,92 @@ const liveSettingsSchema = {
   },
 };
 
+type EditorsProps = {
+  schema: unknown;
+  setSchema: React.Dispatch<React.SetStateAction<object>>;
+  uiSchema: unknown;
+  setUiSchema: React.Dispatch<React.SetStateAction<object>>;
+  formData: unknown;
+  setFormData: React.Dispatch<React.SetStateAction<object>>;
+  extraErrors: unknown;
+  setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
+  setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+const Editors: React.FC<EditorsProps> = ({
+  extraErrors,
+  formData,
+  schema,
+  uiSchema,
+  setExtraErrors,
+  setFormData,
+  setSchema,
+  setShareURL,
+  setUiSchema,
+}) => {
+  const onSchemaEdited = useCallback(
+    (newSchema) => {
+      setSchema(newSchema);
+      setShareURL(null);
+    },
+    [setSchema, setShareURL]
+  );
+
+  const onUISchemaEdited = useCallback(
+    (newUiSchema) => {
+      setUiSchema(newUiSchema);
+      setShareURL(null);
+    },
+    [setUiSchema, setShareURL]
+  );
+
+  const onFormDataEdited = useCallback(
+    (newFormData) => {
+      if (
+        !isEqualWith(newFormData, formData, (newValue, oldValue) => {
+          // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+          // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+          // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+          return JSON.stringify(oldValue) === JSON.stringify(newValue);
+        })
+      ) {
+        setFormData(newFormData);
+        setShareURL(null);
+      }
+    },
+    [formData]
+  );
+
+  const onExtraErrorsEdited = useCallback(
+    (newExtraErrors) => {
+      setExtraErrors(newExtraErrors);
+      setShareURL(null);
+    },
+    [setExtraErrors, setShareURL]
+  );
+
+  return (
+    <div className='col-sm-7'>
+      <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+      <div className='row'>
+        <div className='col-sm-6'>
+          <Editor title='UISchema' code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+        </div>
+        <div className='col-sm-6'>
+          <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+        </div>
+      </div>
+      {extraErrors && (
+        <div className='row'>
+          <div className='col'>
+            <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={onExtraErrorsEdited} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 interface LiveSettings {
   showErrorList: false | 'top' | 'bottom';
   [key: string]: any;
@@ -312,89 +398,3 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
 };
 
 export default Playground;
-
-type EditorsProps = {
-  schema: unknown;
-  setSchema: React.Dispatch<React.SetStateAction<object>>;
-  uiSchema: unknown;
-  setUiSchema: React.Dispatch<React.SetStateAction<object>>;
-  formData: unknown;
-  setFormData: React.Dispatch<React.SetStateAction<object>>;
-  extraErrors: unknown;
-  setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
-  setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-const Editors: React.FC<EditorsProps> = ({
-  extraErrors,
-  formData,
-  schema,
-  uiSchema,
-  setExtraErrors,
-  setFormData,
-  setSchema,
-  setShareURL,
-  setUiSchema,
-}) => {
-  const onSchemaEdited = useCallback(
-    (newSchema) => {
-      setSchema(newSchema);
-      setShareURL(null);
-    },
-    [setSchema, setShareURL]
-  );
-
-  const onUISchemaEdited = useCallback(
-    (newUiSchema) => {
-      setUiSchema(newUiSchema);
-      setShareURL(null);
-    },
-    [setUiSchema, setShareURL]
-  );
-
-  const onFormDataEdited = useCallback(
-    (newFormData) => {
-      if (
-        !isEqualWith(newFormData, formData, (newValue, oldValue) => {
-          // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
-          // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
-          // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
-          return JSON.stringify(oldValue) === JSON.stringify(newValue);
-        })
-      ) {
-        setFormData(newFormData);
-        setShareURL(null);
-      }
-    },
-    [formData]
-  );
-
-  const onExtraErrorsEdited = useCallback(
-    (newExtraErrors) => {
-      setExtraErrors(newExtraErrors);
-      setShareURL(null);
-    },
-    [setExtraErrors, setShareURL]
-  );
-
-  return (
-    <div className='col-sm-7'>
-      <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
-      <div className='row'>
-        <div className='col-sm-6'>
-          <Editor title='UISchema' code={toJson(uiSchema)} onChange={onUISchemaEdited} />
-        </div>
-        <div className='col-sm-6'>
-          <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
-        </div>
-      </div>
-      {extraErrors && (
-        <div className='row'>
-          <div className='col'>
-            <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={onExtraErrorsEdited} />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
