@@ -1,8 +1,14 @@
-import { useCallback, useState, useRef, useEffect, type ComponentType } from 'react';
+import { useCallback, useState, useRef, useEffect, type ComponentType, type FormEvent } from 'react';
 import 'react-app-polyfill/ie11';
 import isEqualWith from 'lodash/isEqualWith';
-import Form, { withTheme, type FormProps } from '@rjsf/core';
-import { type ArrayFieldTemplateProps, type ObjectFieldTemplateProps } from '@rjsf/utils';
+import Form, { withTheme, type IChangeEvent, type FormProps } from '@rjsf/core';
+import {
+  type ErrorSchema,
+  type TemplatesType,
+  type ArrayFieldTemplateProps,
+  type ObjectFieldTemplateProps,
+  type RJSFSchema,
+} from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import { samples } from '../samples';
@@ -39,18 +45,23 @@ const liveSettingsSchema = {
   },
 };
 
+interface LiveSettings {
+  showErrorList: false | 'top' | 'bottom';
+  [key: string]: any;
+}
+
 export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes, validators }) => {
   const [schema, setSchema] = useState<object>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<object>(samples.Simple.uiSchema);
   const [formData, setFormData] = useState<object>(samples.Simple.formData);
-  const [extraErrors, setExtraErrors] = useState<unknown>();
+  const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
   const [showForm, setShowForm] = useState(false);
-  const [liveSettings, setLiveSettings] = useState({
+  const [liveSettings, setLiveSettings] = useState<LiveSettings>({
     showErrorList: 'top',
     validate: false,
     disable: false,
@@ -119,32 +130,51 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
     setShowForm(true);
   }, [onThemeSelected, load, setShowForm]);
 
-  const onSubthemeSelected = (subtheme: any, { stylesheet }: { stylesheet: any }) => {
-    setSubtheme(subtheme);
-    setStylesheet(stylesheet);
-  };
+  const onSubthemeSelected = useCallback(
+    (subtheme: any, { stylesheet }: { stylesheet: any }) => {
+      setSubtheme(subtheme);
+      setStylesheet(stylesheet);
+    },
+    [setSubtheme, setStylesheet]
+  );
 
-  const onValidatorSelected = (validator: string) => {
-    setValidator(validator);
-  };
+  const onValidatorSelected = useCallback(
+    (validator: string) => {
+      setValidator(validator);
+    },
+    [setValidator]
+  );
 
-  const handleSetLiveSettings = ({ formData }: { formData: any }) => {
-    setLiveSettings(formData);
-  };
+  const handleSetLiveSettings = useCallback(
+    ({ formData }: { formData: any }) => {
+      setLiveSettings(formData);
+    },
+    [setLiveSettings]
+  );
 
-  const onFormDataChange = ({ formData = '' }, id: string) => {
-    if (id) {
-      console.log('Field changed, id: ', id);
-    }
+  const onFormDataChange = useCallback(
+    ({ formData }: IChangeEvent<any, RJSFSchema, any>, id?: string) => {
+      if (id) {
+        console.log('Field changed, id: ', id);
+      }
 
-    setFormData(formData as any);
-    setShareURL(null);
-  };
+      setFormData(formData);
+      setShareURL(null);
+    },
+    [setFormData, setShareURL]
+  );
 
-  const onShare = () => {
+  const onFormDataSubmit = useCallback(({ formData }: IChangeEvent<any, RJSFSchema, any>, event: FormEvent<any>) => {
+    console.log('submitted formData', formData);
+    console.log('submit event', event);
+    window.alert('Form submitted');
+  }, []);
+
+  const onShare = useCallback(() => {
     const {
       location: { origin, pathname },
     } = document;
+
     try {
       const hash = btoa(
         JSON.stringify({
@@ -157,21 +187,16 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       );
 
       setShareURL(`${origin}${pathname}#${hash}`);
-    } catch (err) {
+    } catch (error) {
       setShareURL(null);
+      console.error(error);
     }
-  };
+  }, [setShareURL]);
 
-  let templateProps: any = {};
-  if (ArrayFieldTemplate) {
-    templateProps.ArrayFieldTemplate = ArrayFieldTemplate;
-  }
-  if (ObjectFieldTemplate) {
-    templateProps.ObjectFieldTemplate = ObjectFieldTemplate;
-  }
-  if (extraErrors) {
-    templateProps.extraErrors = extraErrors;
-  }
+  const templateProps: Partial<TemplatesType> = {
+    ArrayFieldTemplate,
+    ObjectFieldTemplate,
+  };
 
   return (
     <>
@@ -264,18 +289,15 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
               <FormComponent
                 {...templateProps}
                 {...liveSettings}
+                extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
-                onChange={onFormDataChange}
                 noHtml5Validate={true}
-                onSubmit={({ formData }: { formData: string }, e: any) => {
-                  console.log('submitted formData', formData);
-                  console.log('submit event', e);
-                  window.alert('Form submitted');
-                }}
                 fields={{ geo: GeoPosition }}
                 validator={validators[validator]}
+                onChange={onFormDataChange}
+                onSubmit={onFormDataSubmit}
                 onBlur={(id: string, value: string) => console.log(`Touched ${id} with value ${value}`)}
                 onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
                 onError={log('errors')}
@@ -299,7 +321,7 @@ type EditorsProps = {
   formData: unknown;
   setFormData: React.Dispatch<React.SetStateAction<object>>;
   extraErrors: unknown;
-  setExtraErrors: React.Dispatch<React.SetStateAction<unknown>>;
+  setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
@@ -314,34 +336,46 @@ const Editors: React.FC<EditorsProps> = ({
   setShareURL,
   setUiSchema,
 }) => {
-  const onSchemaEdited = useCallback((newSchema) => {
-    setSchema(newSchema);
-    setShareURL(null);
-  }, []);
-
-  const onUISchemaEdited = useCallback((newUiSchema) => {
-    setUiSchema(newUiSchema);
-    setShareURL(null);
-  }, []);
-
-  const onFormDataEdited = useCallback((newFormData) => {
-    if (
-      !isEqualWith(newFormData, formData, (newValue, oldValue) => {
-        // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
-        // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
-        // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
-        return JSON.stringify(oldValue) === JSON.stringify(newValue);
-      })
-    ) {
-      setFormData(newFormData);
+  const onSchemaEdited = useCallback(
+    (newSchema) => {
+      setSchema(newSchema);
       setShareURL(null);
-    }
-  }, [formData]);
+    },
+    [setSchema, setShareURL]
+  );
 
-  const onExtraErrorsEdited = useCallback((newExtraErrors) => {
-    setExtraErrors(newExtraErrors);
-    setShareURL(null);
-  }, []);
+  const onUISchemaEdited = useCallback(
+    (newUiSchema) => {
+      setUiSchema(newUiSchema);
+      setShareURL(null);
+    },
+    [setUiSchema, setShareURL]
+  );
+
+  const onFormDataEdited = useCallback(
+    (newFormData) => {
+      if (
+        !isEqualWith(newFormData, formData, (newValue, oldValue) => {
+          // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
+          // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
+          // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
+          return JSON.stringify(oldValue) === JSON.stringify(newValue);
+        })
+      ) {
+        setFormData(newFormData);
+        setShareURL(null);
+      }
+    },
+    [formData]
+  );
+
+  const onExtraErrorsEdited = useCallback(
+    (newExtraErrors) => {
+      setExtraErrors(newExtraErrors);
+      setShareURL(null);
+    },
+    [setExtraErrors, setShareURL]
+  );
 
   return (
     <div className='col-sm-7'>
