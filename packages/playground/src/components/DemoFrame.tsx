@@ -45,14 +45,17 @@ const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => 
 
   const instanceRef = useRef<any>();
 
-  const handleRef = useCallback((ref: any) => {
-    instanceRef.current = {
-      contentDocument: ref ? ref.node.contentDocument : null,
-      contentWindow: ref ? ref.node.contentWindow : null,
-    };
-  }, []);
+  const handleRef = useCallback(
+    (ref: any) => {
+      instanceRef.current = {
+        contentDocument: ref ? ref.node.contentDocument : null,
+        contentWindow: ref ? ref.node.contentWindow : null,
+      };
+    },
+    [instanceRef]
+  );
 
-  const onContentDidMount = () => {
+  const onContentDidMount = useCallback(() => {
     setReady(true);
     setJss(
       create({
@@ -70,7 +73,8 @@ const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => 
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);
-  };
+  }, [setReady, setJss, setSheetsManager, setEmotionCache, setContainer, setWindow]);
+
   let body = children;
   if (theme === 'material-ui-4') {
     body = ready ? (
@@ -112,6 +116,7 @@ const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => 
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   }
+
   return (
     <Frame ref={handleRef} contentDidMount={onContentDidMount} {...frameProps}>
       <div id='demo-frame-jss' />
