@@ -169,7 +169,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       setFormComponent(withTheme(themeObj));
       setStylesheet(stylesheet);
     },
-    [setTheme, setSubtheme, setFormComponent, setStylesheet, withTheme]
+    [setTheme, setSubtheme, setFormComponent, setStylesheet]
   );
 
   const load = useCallback(
