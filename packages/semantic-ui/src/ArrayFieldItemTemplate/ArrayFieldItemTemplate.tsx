@@ -12,7 +12,7 @@ import { MaybeWrap } from '../util';
 
 const gridStyle = (vertical: boolean) => ({
   display: 'grid',
-  gridTemplateColumns: `1fr ${vertical ? 65 : 110}px`,
+  gridTemplateColumns: `1fr ${vertical ? 65 : 150}px`,
 });
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
@@ -28,28 +28,26 @@ export default function ArrayFieldItemTemplate<
     children,
     disabled,
     hasToolbar,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
     index,
+    onCopyIndexClick,
     onDropIndexClick,
     onReorderClick,
     readonly,
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
-  const { horizontalButtons = false, wrapItem = false } = uiOptions.semantic as GenericObjectType;
+  const { horizontalButtons = true, wrapItem = false } = uiOptions.semantic as GenericObjectType;
   return (
     <div className='array-item'>
       <MaybeWrap wrap={wrapItem} component={Segment}>
-        <Grid
-          style={
-            index !== 0 ? { ...gridStyle(!horizontalButtons), alignItems: 'center' } : gridStyle(!horizontalButtons)
-          }
-        >
+        <Grid style={{ ...gridStyle(!horizontalButtons), alignItems: 'center' }}>
           <Grid.Column width={16} verticalAlign='middle'>
             {children}
           </Grid.Column>
@@ -71,6 +69,15 @@ export default function ArrayFieldItemTemplate<
                       className='array-item-move-down'
                       disabled={disabled || readonly || !hasMoveDown}
                       onClick={onReorderClick(index, index + 1)}
+                      uiSchema={uiSchema}
+                      registry={registry}
+                    />
+                  )}
+                  {hasCopy && (
+                    <CopyButton
+                      className='array-item-copy'
+                      disabled={disabled || readonly}
+                      onClick={onCopyIndexClick(index)}
                       uiSchema={uiSchema}
                       registry={registry}
                     />

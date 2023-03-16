@@ -11,17 +11,21 @@ export default function ArrayFieldItemTemplate<
     children,
     disabled,
     hasToolbar,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
     index,
+    onCopyIndexClick,
     onDropIndexClick,
     onReorderClick,
     readonly,
     uiSchema,
     registry,
   } = props;
-  const { MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
+
   const onRemoveClick = useMemo(() => onDropIndexClick(index), [index, onDropIndexClick]);
 
   const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
@@ -46,6 +50,14 @@ export default function ArrayFieldItemTemplate<
               <MoveDownButton
                 disabled={disabled || readonly || !hasMoveDown}
                 onClick={onArrowDownClick}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            )}
+            {hasCopy && (
+              <CopyButton
+                disabled={disabled || readonly}
+                onClick={onCopyClick}
                 uiSchema={uiSchema}
                 registry={registry}
               />

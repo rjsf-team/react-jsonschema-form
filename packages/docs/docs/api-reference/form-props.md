@@ -257,7 +257,7 @@ When this prop is set to `top` or `bottom`, a list of errors (or the custom erro
 
 It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work.
 
-```jsx
+```tsx
 <Form
   tagName="div"
   ...
@@ -266,7 +266,7 @@ It's possible to change the default `form` tag name to a different HTML tag, whi
 
 You can also provide a class/function component.
 
-```jsx
+```tsx
 const CustomForm = props => <form {...props} style={...} className={...} />
 // ...
 <Form

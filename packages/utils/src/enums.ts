@@ -23,6 +23,8 @@ export enum TranslatableString {
   AddButton = 'Add',
   /** Add button title, used by AddButton */
   AddItemButton = 'Add Item',
+  /** Copy button title, used by IconButton */
+  CopyButton = 'Copy',
   /** Move down button title, used by IconButton */
   MoveDownButton = 'Move down',
   /** Move up button title, used by IconButton */
@@ -51,6 +53,8 @@ export enum TranslatableString {
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel = '%1 Key',
   // Strings with replaceable parameters AND/OR that support markdown and html
+  /** Invalid object field configuration as provided by the ObjectField */
+  InvalidObjectField = 'Invalid "%1" object field configuration: <em>%2</em>.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField = 'Unsupported field schema.',
   /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */

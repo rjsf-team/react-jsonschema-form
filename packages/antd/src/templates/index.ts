@@ -5,7 +5,7 @@ import ArrayFieldTemplate from './ArrayFieldTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
-import { AddButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
+import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
@@ -24,6 +24,7 @@ export function generateTemplates<
     BaseInputTemplate,
     ButtonTemplates: {
       AddButton,
+      CopyButton,
       MoveDownButton,
       MoveUpButton,
       RemoveButton,

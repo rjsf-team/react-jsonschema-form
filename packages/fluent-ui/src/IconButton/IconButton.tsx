@@ -13,6 +13,15 @@ export default function FluentIconButton<
   return <IconButton disabled={props.disabled} onClick={props.onClick} iconProps={iconProps} color='secondary' />;
 }
 
+export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return <FluentIconButton<T, S, F> title={translateString(TranslatableString.CopyButton)} {...props} icon='Copy' />;
+}
+
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
 ) {

@@ -305,14 +305,16 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 ### getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
+Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 
 #### Parameters
 
 - [uiSchema={}]: UiSchema<T, S, F> - The UI Schema from which to get any `ui:xxx` options
+- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
 
 #### Returns
 
-- UIOptionsType<T, S, F> An object containing all of the `ui:xxx` options with the stripped off
+- UIOptionsType<T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
 
 ### getTemplate<Name extends keyof TemplatesType<T, S, F>, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
@@ -721,6 +723,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
 
 #### Returns
 

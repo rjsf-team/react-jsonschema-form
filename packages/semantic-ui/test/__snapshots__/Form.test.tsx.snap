@@ -17,7 +17,7 @@ exports[`single fields checkbox field 1`] = `
       >
         <div
           className="ui checkbox"
-          inverted={false}
+          inverted="false"
           onBlur={[Function]}
           onChange={[Function]}
           onClick={[Function]}
@@ -74,7 +74,7 @@ exports[`single fields checkbox field with label 1`] = `
       >
         <div
           className="ui checkbox"
-          inverted={false}
+          inverted="false"
           onBlur={[Function]}
           onChange={[Function]}
           onClick={[Function]}
@@ -136,7 +136,7 @@ exports[`single fields checkboxes field 1`] = `
         >
           <div
             className="ui checkbox"
-            inverted={false}
+            inverted="false"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
@@ -168,7 +168,7 @@ exports[`single fields checkboxes field 1`] = `
         >
           <div
             className="ui checkbox"
-            inverted={false}
+            inverted="false"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
@@ -200,7 +200,7 @@ exports[`single fields checkboxes field 1`] = `
         >
           <div
             className="ui checkbox"
-            inverted={false}
+            inverted="false"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
@@ -232,7 +232,7 @@ exports[`single fields checkboxes field 1`] = `
         >
           <div
             className="ui checkbox"
-            inverted={false}
+            inverted="false"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
@@ -1646,7 +1646,7 @@ exports[`single fields textarea field 1`] = `
           autoFocus={false}
           disabled={false}
           id="root"
-          inverted={false}
+          inverted="false"
           name="root"
           onBlur={[Function]}
           onChange={[Function]}

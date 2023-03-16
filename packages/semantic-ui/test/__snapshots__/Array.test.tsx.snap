@@ -80,8 +80,9 @@ exports[`array fields array icons 1`] = `
                 className="ui grid"
                 style={
                   Object {
+                    "alignItems": "center",
                     "display": "grid",
-                    "gridTemplateColumns": "1fr 65px",
+                    "gridTemplateColumns": "1fr 150px",
                   }
                 }
               >
@@ -124,7 +125,7 @@ exports[`array fields array icons 1`] = `
                   className="column"
                 >
                   <div
-                    className="ui mini vertical buttons"
+                    className="ui mini buttons"
                   >
                     <button
                       className="ui icon disabled button array-item-move-up"
@@ -147,6 +148,17 @@ exports[`array fields array icons 1`] = `
                       <i
                         aria-hidden="true"
                         className="angle down icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon button array-item-copy"
+                      onClick={[Function]}
+                      title="Copy"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="copy icon"
                         onClick={[Function]}
                       />
                     </button>
@@ -174,7 +186,7 @@ exports[`array fields array icons 1`] = `
                   Object {
                     "alignItems": "center",
                     "display": "grid",
-                    "gridTemplateColumns": "1fr 65px",
+                    "gridTemplateColumns": "1fr 150px",
                   }
                 }
               >
@@ -217,7 +229,7 @@ exports[`array fields array icons 1`] = `
                   className="column"
                 >
                   <div
-                    className="ui mini vertical buttons"
+                    className="ui mini buttons"
                   >
                     <button
                       className="ui icon button array-item-move-up"
@@ -240,6 +252,17 @@ exports[`array fields array icons 1`] = `
                       <i
                         aria-hidden="true"
                         className="angle down icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                    <button
+                      className="ui icon button array-item-copy"
+                      onClick={[Function]}
+                      title="Copy"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="copy icon"
                         onClick={[Function]}
                       />
                     </button>
@@ -498,8 +521,9 @@ exports[`array fields fixed array 1`] = `
                 className="ui grid"
                 style={
                   Object {
+                    "alignItems": "center",
                     "display": "grid",
-                    "gridTemplateColumns": "1fr 65px",
+                    "gridTemplateColumns": "1fr 150px",
                   }
                 }
               >
@@ -549,7 +573,7 @@ exports[`array fields fixed array 1`] = `
                   Object {
                     "alignItems": "center",
                     "display": "grid",
-                    "gridTemplateColumns": "1fr 65px",
+                    "gridTemplateColumns": "1fr 150px",
                   }
                 }
               >

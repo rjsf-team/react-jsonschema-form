@@ -112,6 +112,7 @@ The following props are part of each element in `items`:
 - `children`: The html for the item's content.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array item is disabled.
+- `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
 - `hasRemove`: A boolean value stating whether the array item can be removed.
@@ -214,6 +215,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array item is disabled.
 - `canAdd`: A boolean value stating whether new items can be added to the array.
+- `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
 - `hasRemove`: A boolean value stating whether the array item can be removed.

@@ -25,3 +25,4 @@ export const RJSF_ADDITONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';
+export const UI_GLOBAL_OPTIONS_KEY = 'ui:globalOptions';

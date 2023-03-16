@@ -1,6 +1,7 @@
 import IconButton, { IconButtonProps as MuiIconButtonProps } from '@mui/material/IconButton';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import CopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
@@ -14,6 +15,21 @@ export default function MuiIconButton<
     <IconButton {...otherProps} size='small' color={color as MuiIconButtonProps['color']}>
       {icon}
     </IconButton>
+  );
+}
+
+export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: IconButtonProps<T, S, F>
+) {
+  const {
+    registry: { translateString },
+  } = props;
+  return (
+    <MuiIconButton
+      title={translateString(TranslatableString.CopyButton)}
+      {...props}
+      icon={<CopyIcon fontSize='small' />}
+    />
   );
 }
 

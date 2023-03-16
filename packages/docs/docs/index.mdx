@@ -32,7 +32,7 @@ $ npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8 --save
 
 Then import the dependencies as follows:
 
-```js
+```ts
 import validator from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 ```
@@ -51,7 +51,7 @@ Source maps are available at [this url](https://unpkg.com/@rjsf/core/dist/core.c
 
 You'll also need to alias the default export property to use the Form component:
 
-```js
+```ts
 const Form = JSONSchemaForm.default;
 // or
 const { default: Form } = JSONSchemaForm;

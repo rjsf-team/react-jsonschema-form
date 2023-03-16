@@ -41,7 +41,7 @@ export default function ArrayFieldTemplate<
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     formContext,
-    defaultSchemaProps: { horizontalButtons: false, wrapItem: false },
+    defaultSchemaProps: { horizontalButtons: true, wrapItem: false },
   });
   const { horizontalButtons, wrapItem } = semanticProps;
   const semantic = { horizontalButtons, wrapItem };
