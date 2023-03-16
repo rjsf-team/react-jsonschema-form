@@ -317,8 +317,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
               onClick={() => playGroundFormRef.current.submit()}
             >
               Prog. Submit
-            </button>
-            <span> </span>
+            </button>{' '}
             <button
               title='Click me to validate the form programmatically.'
               className='btn btn-default'
@@ -329,8 +328,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
               }}
             >
               Prog. Validate
-            </button>
-            <span> </span>
+            </button>{' '}
             <button
               title='Click me to reset the form programmatically.'
               className='btn btn-default'
