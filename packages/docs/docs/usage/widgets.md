@@ -82,8 +82,7 @@ The built-in string field also supports the JSON Schema `format` property, and w
 
 ![](https://i.imgur.com/xqu6Lcp.png)
 
-Please note that, even though they are standardized, `datetime-local`, `date` and `time` input elements are not yet supported by IE.
-If you plan on targeting this platforms, two alternative widgets are available:
+Please note that, even though they are standardized, `datetime-local`, `date` and `time` input elements are not supported by IE. If you plan on targeting IE, two alternative widgets are available:
 
 - `alt-datetime`: Six `select` elements are used to select the year, the month, the day, the hour, the minute and the second;
 - `alt-date`: Three `select` elements are used to select the year, month and the day.
