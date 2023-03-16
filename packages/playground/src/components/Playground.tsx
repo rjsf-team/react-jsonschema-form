@@ -2,12 +2,13 @@ import { useCallback, useState, useRef, useEffect, type ComponentType, type Form
 import 'react-app-polyfill/ie11';
 import isEqualWith from 'lodash/isEqualWith';
 import Form, { withTheme, type IChangeEvent, type FormProps } from '@rjsf/core';
-import {
-  type ErrorSchema,
-  type TemplatesType,
-  type ArrayFieldTemplateProps,
-  type ObjectFieldTemplateProps,
-  type RJSFSchema,
+import type {
+  ErrorSchema,
+  TemplatesType,
+  ArrayFieldTemplateProps,
+  ObjectFieldTemplateProps,
+  RJSFSchema,
+  UiSchema,
 } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
@@ -46,13 +47,13 @@ const liveSettingsSchema = {
 };
 
 type EditorsProps = {
-  schema: unknown;
-  setSchema: React.Dispatch<React.SetStateAction<object>>;
-  uiSchema: unknown;
-  setUiSchema: React.Dispatch<React.SetStateAction<object>>;
-  formData: unknown;
-  setFormData: React.Dispatch<React.SetStateAction<object>>;
-  extraErrors: unknown;
+  schema: RJSFSchema;
+  setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
+  uiSchema: UiSchema;
+  setUiSchema: React.Dispatch<React.SetStateAction<UiSchema>>;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  extraErrors: ErrorSchema | undefined;
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
 };
@@ -137,9 +138,9 @@ interface LiveSettings {
 }
 
 export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes, validators }) => {
-  const [schema, setSchema] = useState<object>(samples.Simple.schema);
-  const [uiSchema, setUiSchema] = useState<object>(samples.Simple.uiSchema);
-  const [formData, setFormData] = useState<object>(samples.Simple.formData);
+  const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema);
+  const [formData, setFormData] = useState<any>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
