@@ -717,6 +717,47 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      className="ant-input"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder=""
+      style={
+        Object {
+          "width": "100%",
+        }
+      }
+      type="time"
+      value=""
+    />
+  </div>
+  <button
+    className="ant-btn ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields help and error display 1`] = `
 <form
   className="rjsf"

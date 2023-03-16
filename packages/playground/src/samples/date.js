@@ -16,6 +16,10 @@ export default {
             type: 'string',
             format: 'date',
           },
+          time: {
+            type: 'string',
+            format: 'time',
+          },
         },
       },
       alternative: {

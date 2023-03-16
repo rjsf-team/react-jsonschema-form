@@ -864,6 +864,133 @@ describe('StringField', () => {
     });
   });
 
+  describe('TimeWidget', () => {
+    it('should render a time field', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+      });
+
+      expect(node.querySelectorAll('.field [type=time]')).to.have.length.of(1);
+    });
+
+    it('should assign a default value', () => {
+      const time = '01:10:00';
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+          default: time,
+        },
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: time,
+      });
+    });
+
+    it('should reflect the change into the dom', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+      });
+
+      const newTime = '11:10';
+
+      Simulate.change(node.querySelector('[type=time]'), {
+        target: { value: newTime },
+      });
+
+      expect(node.querySelector('[type=time]').value).eql(`${newTime}:00`);
+    });
+
+    it('should fill field with data', () => {
+      const time = '13:10:00';
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        formData: time,
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: time,
+      });
+    });
+
+    it('should render the widget with the expected id', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+      });
+
+      expect(node.querySelector('[type=time]').id).eql('root');
+    });
+
+    it('should reject an invalid entered time', () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        liveValidate: true,
+      });
+
+      Simulate.change(node.querySelector('[type=time]'), {
+        target: { value: 'invalid' },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['must match format "time"'] },
+        errors: [
+          {
+            message: 'must match format "time"',
+            name: 'format',
+            params: { format: 'time' },
+            property: '',
+            schemaPath: '#/format',
+            stack: 'must match format "time"',
+          },
+        ],
+      });
+    });
+
+    it('should render customized TimeWidget', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        widgets: {
+          TimeWidget: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector('#custom')).to.exist;
+    });
+
+    it('should allow overriding of BaseInputTemplate', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        templates: {
+          BaseInputTemplate: CustomWidget,
+        },
+      });
+
+      expect(node.querySelector('#custom')).to.exist;
+    });
+  });
+
   describe('AltDateTimeWidget', () => {
     const uiSchema = { 'ui:widget': 'alt-datetime' };
 

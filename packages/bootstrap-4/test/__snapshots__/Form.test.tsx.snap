@@ -544,6 +544,54 @@ exports[`single fields format datetime 1`] = `
 </form>
 `;
 
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="time"
+        value=""
+      />
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields help and error display 1`] = `
 <form
   className="rjsf"
