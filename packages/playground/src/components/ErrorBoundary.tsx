@@ -28,11 +28,14 @@ class ErrorBoundary extends Component<Props, State> {
 
   /** You can render any custom fallback UI */
   render() {
-    if (this.state.hasError) {
+    const { children } = this.props;
+    const { error, hasError } = this.state;
+
+    if (hasError) {
       return (
         <div className='alert alert-danger'>
           <p>The following error was encountered:</p>
-          <pre>{this.state.error.message}</pre>
+          <pre>{error.message}</pre>
           <button className='btn' onClick={this.resetErrorBoundary}>
             Refresh Form
           </button>
@@ -40,7 +43,7 @@ class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+    return children;
   }
 }
 
