@@ -336,7 +336,7 @@ const Editors: React.FC<EditorsProps> = ({
       setFormData(newFormData);
       setShareURL(null);
     }
-  }, []);
+  }, [formData]);
 
   const onExtraErrorsEdited = useCallback((newExtraErrors) => {
     setExtraErrors(newExtraErrors);
