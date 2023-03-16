@@ -25,5 +25,5 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
         return { ...options, ...value };
       }
       return { ...options, [key.substring(3)]: value };
-    }, globalOptions);
+    }, { ...globalOptions });
 }
