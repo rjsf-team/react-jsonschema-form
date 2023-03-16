@@ -16,6 +16,7 @@ import RangeWidget from './RangeWidget';
 import SelectWidget from './SelectWidget';
 import TextareaWidget from './TextareaWidget';
 import TextWidget from './TextWidget';
+import TimeWidget from './TimeWidget';
 import URLWidget from './URLWidget';
 import UpDownWidget from './UpDownWidget';
 
@@ -25,24 +26,25 @@ function widgets<
   F extends FormContextType = any
 >(): RegistryWidgetsType<T, S, F> {
   return {
+    AltDateWidget,
+    AltDateTimeWidget,
+    CheckboxWidget,
+    CheckboxesWidget,
+    ColorWidget,
+    DateWidget,
+    DateTimeWidget,
+    EmailWidget,
+    FileWidget,
+    HiddenWidget,
     PasswordWidget,
     RadioWidget,
-    UpDownWidget,
     RangeWidget,
     SelectWidget,
     TextWidget,
-    DateWidget,
-    DateTimeWidget,
-    AltDateWidget,
-    AltDateTimeWidget,
-    EmailWidget,
-    URLWidget,
     TextareaWidget,
-    HiddenWidget,
-    ColorWidget,
-    FileWidget,
-    CheckboxWidget,
-    CheckboxesWidget,
+    TimeWidget,
+    UpDownWidget,
+    URLWidget,
   };
 }
 

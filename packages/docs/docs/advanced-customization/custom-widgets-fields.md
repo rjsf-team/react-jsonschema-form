@@ -88,6 +88,7 @@ The default widgets you can override are:
 - `SelectWidget`
 - `TextareaWidget`
 - `TextWidget`
+- `TimeWidget`
 - `UpDownWidget`
 - `URLWidget`
 

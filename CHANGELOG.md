@@ -21,14 +21,29 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - `Reset` function added for `Programmatically Reset` action. `Reset` function will reset form data and validation errors. Form data will set to default values.
+- Implemented a new `TimeWidget` that works for all themes
 
 ## @rjsf/fluent-ui
 
-- Fix RadioWidget's onChange return value.
+- Fix `RadioWidget`'s onChange return value.
+
+## @rjsf/material-ui
+
+- Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
+
+## @rjsf/mui
+
+- Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
+
+## @rjsf/utils
+
+- Updated the widget matrix used by `getWidget()` to support the `time` to `TimeWidget` mapping
 
 ## Dev / docs / playground
 
-- Added `Programmatically Reset` button to clear states which are form data and validation errors.
+- Updated the playground to add a `Programmatically Reset` button to clear states which are form data and validation errors.
+- Updated the `Date & time` example to show off the new `TimeWidget`.
+- Updated the `custom-widgets-fields` and `widgets` documentation to mention the new `TimeWidget` and its support for the `time` format.
 
 # 5.2.1
 

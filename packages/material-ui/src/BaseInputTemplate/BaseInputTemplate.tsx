@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 
-const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file'];
+const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
