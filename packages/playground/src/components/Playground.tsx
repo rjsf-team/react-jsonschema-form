@@ -1,11 +1,10 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
-
-import { samples } from '../samples';
 import 'react-app-polyfill/ie11';
 import Form, { withTheme } from '@rjsf/core';
 import localValidator from '@rjsf/validator-ajv8';
 import isEqualWith from 'lodash/isEqualWith';
 
+import { samples } from '../samples';
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
 import CopyLink from './CopyLink';
