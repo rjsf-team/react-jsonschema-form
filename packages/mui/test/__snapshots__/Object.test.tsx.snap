@@ -469,7 +469,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 24px);
+  max-width: calc(133% - 32px);
   position: absolute;
   left: 0;
   top: 0;

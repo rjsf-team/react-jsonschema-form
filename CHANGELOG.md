@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
+- Fixed `package.json` to properly add required dependencies explicitly which were installed implicitly
 
 ## @rjsf/bootstrap-4
 
