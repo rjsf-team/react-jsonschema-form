@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.3.1
+
+## @rjsf/core
+
+- Updated `AltDateWidget` to remove an infinite loop caused by two conflicting effects by merging them with additional checking of original `value` against the current value, fixing [#3516](https://github.com/rjsf-team/react-jsonschema-form/issues/3516)
+
 # 5.3.0
 
 ## @rjsf/antd
