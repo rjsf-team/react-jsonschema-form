@@ -28,3 +28,9 @@ export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';
 export const UI_GLOBAL_OPTIONS_KEY = 'ui:globalOptions';
+
+export const DefaultFormStateBehavior = {
+  Legacy: 0,
+  IgnoreMinItems: 1,
+  RequiredMinItemsPopulated: 2,
+} as const;

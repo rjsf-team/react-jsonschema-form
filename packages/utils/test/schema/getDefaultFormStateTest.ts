@@ -38,36 +38,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
-      it('test an object with an optional array property with minItems', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            optionalArray: {
-              type: 'array',
-              minItems: 2,
-            },
-          },
-        };
-        expect(
-          computeDefaults(testValidator, schema, undefined, schema)
-        ).toEqual({});
-      });
-      it('test an object with a required array property with minItems', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            requiredArray: {
-              type: 'array',
-              items: { type: 'string' },
-              minItems: 2,
-            },
-          },
-          required: ['requiredArray'],
-        };
-        expect(
-          computeDefaults(testValidator, schema, undefined, schema)
-        ).toEqual({ requiredArray: [undefined, undefined] });
-      });
       it('test an object with an optional property that has a nested required property', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -296,21 +266,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual(false);
       });
 
-      const noneValues = [null, undefined, NaN];
-      noneValues.forEach((noneValue) => {
-        it('should overwrite existing form data that is equal to a none value', () => {
-          expect(
-            getDefaultFormState(
-              testValidator,
-              {
-                type: 'number',
-                default: 1,
-              },
-              noneValue
-            ),
-            `for noneValue ${noneValue}`
-          ).toEqual(1);
-        });
+      it.each([null, undefined, NaN])('should overwrite existing form data that is equal to a %s', (noneValue) => {
+        expect(
+          getDefaultFormState(
+            testValidator,
+            {
+              type: 'number',
+              default: 1,
+            },
+            noneValue
+          ),
+        ).toEqual(1);
       });
     });
     describe('nested default', () => {

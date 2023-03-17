@@ -80,14 +80,23 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
+   * @param [behaviorBitFlags=0] Optional bitwise flags to set which behavior is chosen for certain edge cases.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | 'excludeObjectChildren' = false
+    includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
+    behaviorBitFlags = 0
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S, F>(this.validator, schema, formData, this.rootSchema, includeUndefinedValues);
+    return getDefaultFormState<T, S, F>(
+      this.validator,
+      schema,
+      formData,
+      this.rootSchema,
+      includeUndefinedValues,
+      behaviorBitFlags
+    );
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`

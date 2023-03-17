@@ -181,6 +181,10 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
+  /** Optional feature flags, if provided, specify different behavior that can be enabled. This enables differing behavior within
+   * the library for differing interpreations of edge cases without breaking existing behavior.
+   */
+  featureFlags?: { defaultFormStateFeatures?: number; };
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`

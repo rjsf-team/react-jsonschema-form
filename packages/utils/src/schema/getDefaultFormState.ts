@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY } from '../constants';
+import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY, DefaultFormStateBehavior } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -105,6 +105,7 @@ function maybeAddDefaultToObject<T = any>(
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @param [_recurseList=[]] - The list of ref names currently being recursed, used to prevent infinite recursion
+ * @param [behaviorBitFlags=0] Optional bitwise flags to set which behavior is chosen for certain edge cases.
  * @param [required] - Optional flag, if true, indicates this schema was required in the parent schema.
  * @returns - The resulting `formData` with all the defaults provided
  */
@@ -116,6 +117,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   rawFormData?: T,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
   _recurseList: string[] = [],
+  behaviorBitFlags = 0,
   required = false
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -141,7 +143,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         formData as T,
         includeUndefinedValues,
         _recurseList.concat(refName!),
-        required
+        behaviorBitFlags
       );
     }
   } else if (DEPENDENCIES_KEY in schema) {
@@ -154,7 +156,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       formData as T,
       includeUndefinedValues,
       _recurseList,
-      required
+      behaviorBitFlags
     );
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
@@ -165,7 +167,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rootSchema,
         formData as T,
         includeUndefinedValues,
-        _recurseList
+        _recurseList,
+        behaviorBitFlags
       )
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
@@ -200,13 +203,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     ] as S;
   }
 
-  // Not defaults defined for this node, fallback to generic typed ones.
-  if (typeof defaults === 'undefined') {
+  // No defaults defined for this node, fallback to generic typed ones.
+  if (defaults === undefined) {
     defaults = schema.default as unknown as T;
   }
 
   switch (getSchemaType<S>(schema)) {
-    // We need to recur for object schema inner default values.
+    // We need to recurse for object schema inner default values.
     case 'object': {
       const objectDefaults = Object.keys(schema.properties || {}).reduce((acc: GenericObjectType, key: string) => {
         // Compute the defaults for this node, with the parent defaults we might
@@ -219,7 +222,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           get(formData, [key]),
           includeUndefinedValues === true,
           _recurseList,
-          schema.required?.includes(key)
+          behaviorBitFlags,
         );
         maybeAddDefaultToObject<T>(acc, key, computedDefault, includeUndefinedValues, schema.required);
         return acc;
@@ -247,6 +250,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             get(formData, [key]),
             includeUndefinedValues === true,
             _recurseList,
+            behaviorBitFlags,
             schema.required?.includes(key)
           );
           maybeAddDefaultToObject<T>(objectDefaults as GenericObjectType, key, computedDefault, includeUndefinedValues);
@@ -254,12 +258,21 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       }
       return objectDefaults;
     }
-    case 'array':
+    case 'array': {
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
           const schemaItem: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Fallback, idx);
-          return computeDefaults<T, S, F>(validator, schemaItem, item, rootSchema, undefined, undefined, _recurseList);
+          return computeDefaults<T, S, F>(
+            validator,
+            schemaItem,
+            item,
+            rootSchema,
+            undefined,
+            undefined,
+            _recurseList,
+            behaviorBitFlags
+          );
         }) as T[];
       }
 
@@ -274,19 +287,39 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             rootSchema,
             item,
             undefined,
-            _recurseList
+            _recurseList,
+            behaviorBitFlags
           );
         }) as T[];
       }
-      if (required && schema.minItems) {
-        if (!isMultiSelect<T, S, F>(validator, schema, rootSchema)) {
-          const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
-          if (schema.minItems > defaultsLength) {
-            const defaultEntries: T[] = (defaults || []) as T[];
-            // populate the array with the defaults
-            const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
-            const fillerDefault = fillerSchema.default;
-            const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
+
+      if (
+        !schema.minItems ||
+        behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItems
+      ) {
+        return defaults;
+      }
+
+      if (!isMultiSelect<T, S, F>(validator, schema, rootSchema)) {
+        const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
+        if (schema.minItems > defaultsLength) {
+          const defaultEntries: T[] = (defaults || []) as T[];
+          // populate the array with the defaults
+          const fillerSchema: S = getInnerSchemaForArrayItem<S>(
+            schema,
+            AdditionalItemsHandling.Invert
+          );
+          const fillerDefault = fillerSchema.default;
+          if (
+            behaviorBitFlags === DefaultFormStateBehavior.Legacy ||
+            (required &&
+              fillerDefault &&
+              behaviorBitFlags &
+              DefaultFormStateBehavior.RequiredMinItemsPopulated)
+          ) {
+            const fillerEntries: T[] = new Array(
+              schema.minItems - defaultsLength
+            ).fill(
               computeDefaults<any, S, F>(
                 validator,
                 fillerSchema,
@@ -294,16 +327,22 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
                 rootSchema,
                 undefined,
                 undefined,
-                _recurseList
+                _recurseList,
+                behaviorBitFlags
               )
             ) as T[];
             // then fill up the rest with either the item default or empty, up to minItems
             return defaultEntries.concat(fillerEntries);
           }
+
+          // otherwise just return default entries
+          return defaultEntries;
         }
-        return defaults ? defaults : [];
       }
+    }
+    return defaults ? defaults : [];
   }
+
   return defaults;
 }
 
@@ -317,6 +356,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
+ * @param [behaviorBitFlags=0] Optional bitwise flags to set which behavior is chosen for certain edge cases.
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -328,14 +368,27 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  includeUndefinedValues: boolean | 'excludeObjectChildren' = false
+  includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
+  behaviorBitFlags = 0
 ) {
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);
   }
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData);
-  const defaults = computeDefaults<T, S, F>(validator, schema, undefined, rootSchema, formData, includeUndefinedValues);
-  if (typeof formData === 'undefined' || formData === null || (typeof formData === 'number' && isNaN(formData))) {
+  const defaults = computeDefaults<T, S, F>(
+    validator,
+    schema,
+    undefined,
+    rootSchema,
+    formData,
+    includeUndefinedValues,
+    undefined,
+    behaviorBitFlags
+  );
+  if (formData === undefined ||
+    formData === null ||
+    (typeof formData === "number" && isNaN(formData))
+  ) {
     // No form data? Use schema defaults.
     return defaults;
   }
