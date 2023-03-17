@@ -8600,8 +8600,7 @@ exports[`single fields slider field 1`] = `
           }
         />
         <span
-          className="MuiSlider-thumb MuiSlider-thumbSizeMedium MuiSlider-thumbColorPrimary emotion-5"
-          data-focusvisible={false}
+          className="MuiSlider-thumb MuiSlider-thumbSizeMedium MuiSlider-thumbColorPrimary MuiSlider-thumb MuiSlider-thumbSizeMedium MuiSlider-thumbColorPrimary emotion-5"
           data-index={0}
           onMouseLeave={[Function]}
           onMouseOver={[Function]}
@@ -11077,7 +11076,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             style={
               Object {
                 "height": 500,
-                "overflow": null,
+                "overflow": undefined,
               }
             }
             value=""
