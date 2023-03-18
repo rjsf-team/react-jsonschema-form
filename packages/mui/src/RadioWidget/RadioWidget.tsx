@@ -28,6 +28,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   disabled,
   readonly,
   label,
+  uiSchema,
+  registry,
   onChange,
   onBlur,
   onFocus,
@@ -43,11 +45,16 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions);
 
+  const { schemaUtils } = registry;
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
+      {displayLabel && (
+        <FormLabel required={required} htmlFor={id}>
+          {label || schema.title}
+        </FormLabel>
+      )}
       <RadioGroup
         id={id}
         name={id}

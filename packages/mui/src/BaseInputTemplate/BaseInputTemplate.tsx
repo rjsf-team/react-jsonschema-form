@@ -79,7 +79,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={displayLabel ? label || schema.title : false}
+        label={displayLabel ? label || schema.title : ''}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
