@@ -71,7 +71,7 @@ To specify a uiSchema that applies to array items, specify the semantic uiSchema
 
 ```
 wrapItem: wrap each array item in a Segment
-horizontalButtons: horizontal buttons instead of the default vertical
+horizontalButtons: vertical buttons instead of the default horizontal
 ```
 
 ```tsx
@@ -89,7 +89,7 @@ const uiSchema: UiSchema = {
   'ui:options': {
     semantic: {
       wrapItem: true,
-      horizontalButtons: true,
+      horizontalButtons: false,
     },
   },
 };

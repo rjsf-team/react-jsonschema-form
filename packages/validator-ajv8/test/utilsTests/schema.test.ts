@@ -19,6 +19,7 @@ import getTestValidator from './getTestValidator';
 
 const testValidator = getTestValidator({});
 
+// NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 getDefaultFormStateTest(testValidator);
 getDisplayLabelTest(testValidator);
 getClosestMatchingOptionTest(testValidator);
@@ -34,6 +35,7 @@ toPathSchemaTest(testValidator);
 
 const testValidator2019 = getTestValidator({ AjvClass: Ajv2019 });
 
+// NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 getDefaultFormStateTest(testValidator2019);
 getDisplayLabelTest(testValidator2019);
 getClosestMatchingOptionTest(testValidator2019);
@@ -49,6 +51,7 @@ toPathSchemaTest(testValidator2019);
 
 const testValidator2020 = getTestValidator({ AjvClass: Ajv2020 });
 
+// NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 getDefaultFormStateTest(testValidator2020);
 getDisplayLabelTest(testValidator2020);
 getClosestMatchingOptionTest(testValidator2020);

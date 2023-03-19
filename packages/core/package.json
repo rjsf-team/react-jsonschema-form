@@ -9,7 +9,6 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
-    "start": "dts watch",
     "test": "dts test",
     "test:debug": "node --inspect-brk node_modules/.bin/dts test",
     "test:watch": "dts test --watch",

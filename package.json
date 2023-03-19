@@ -16,7 +16,7 @@
     "cs-format": "lerna run cs-format",
     "build": "lerna run --stream build",
     "build-serial": "lerna run --concurrency 1 --stream build",
-    "start": "lerna run start --stream --parallel",
+    "start": "echo 'use \"npm run build\" from main directory and then \"npm start\" in the playground package'",
     "pre-commit:husky": "lerna run --concurrency 1 --stream precommit",
     "prepare": "husky install",
     "format": "prettier --write .",
