@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
@@ -52,9 +52,9 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/register": "^7.21.0",
-    "@rjsf/utils": "^5.3.0",
-    "@rjsf/validator-ajv6": "^5.3.0",
-    "@rjsf/validator-ajv8": "^5.3.0",
+    "@rjsf/utils": "^5.3.1",
+    "@rjsf/validator-ajv6": "^5.3.1",
+    "@rjsf/validator-ajv8": "^5.3.1",
     "@types/lodash": "^4.14.191",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
