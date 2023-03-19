@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useReducer } from 'react';
+import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import {
   ariaDescribedByIds,
   parseDateString,
@@ -115,22 +115,22 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   value,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
+  const [lastValue, setLastValue] = useState(value);
   const [state, setState] = useReducer((state: DateObject, action: Partial<DateObject>) => {
     return { ...state, ...action };
   }, parseDateString(value, time));
 
   useEffect(() => {
-    if (value && value !== toDateString(state, time)) {
+    const stateValue = toDateString(state, time);
+    if (readyForChange(state) && stateValue !== value) {
+      // The user changed the date to a new valid data via the comboboxes, so call onChange
+      onChange(stateValue);
+    } else if (lastValue !== value) {
+      // We got a new value in the props
+      setLastValue(value);
       setState(parseDateString(value, time));
     }
-  }, [value, state, time]);
-
-  useEffect(() => {
-    if (readyForChange(state)) {
-      // Only propagate to parent state if we have a complete date{time}
-      onChange(toDateString(state, time));
-    }
-  }, [state, time, onChange]);
+  }, [time, value, onChange, state, lastValue]);
 
   const handleChange = useCallback((property: keyof DateObject, value: string) => {
     setState({ [property]: value });
@@ -142,8 +142,8 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       if (disabled || readonly) {
         return;
       }
-      const nowDateObj = parseDateString(new Date().toJSON(), time);
-      setState(nowDateObj);
+      const nextState = parseDateString(new Date().toJSON(), time);
+      onChange(toDateString(nextState, time));
     },
     [disabled, readonly, time]
   );
@@ -154,10 +154,9 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       if (disabled || readonly) {
         return;
       }
-      setState(parseDateString('', time));
       onChange(undefined);
     },
-    [disabled, readonly, time, onChange]
+    [disabled, readonly, onChange]
   );
 
   return (
