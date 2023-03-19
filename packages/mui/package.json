@@ -9,7 +9,6 @@
     "dist"
   ],
   "scripts": {
-    "start": "dts watch",
     "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",

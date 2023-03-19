@@ -16,6 +16,7 @@ import {
 
 const testValidator = getTestValidator({});
 
+// NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 getDefaultFormStateTest(testValidator);
 getDisplayLabelTest(testValidator);
 getClosestMatchingOptionTest(testValidator);

@@ -2,15 +2,21 @@
 
 ## Development server
 
-When developing, run the following from the root-level directory:
+We are using `Vite` to power our `playground`, which caches all the built `@rjsf/*` distributions.
+In order to test the `playground` locally after a new clone or fresh pull from `main`, run the following from the root directory of the monorepo:
 
 ```bash
 npm install
 npm run build
+cd packages/playground
 npm start
 ```
 
-All packages will be live-built, and a live development server showcasing components with hot reload enabled will then run at [localhost:8080](http://localhost:8080).
+This will start the live development server showcasing components at [localhost:8080](http://localhost:8080).
+
+Whenever you make changes to source code, stop the running playground and return to the root directory and rerun `npm run build`.
+Thanks to `nx` caching, this should only rebuild what is necessary.
+After the build is complete, return to the root of the `playground` and restart the server via `npm start`.
 
 ### First time step
 
@@ -32,6 +38,8 @@ When building in environments with limited memory, such as Netlify, it's recomme
 All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
 Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
 
+You can also run `npm cs-format` within any package directory you are changing.
+
 ## Documentation
 
 We use [Docusaurus](https://docusaurus.io/) to build our documentation. To run documentation locally, run:
@@ -45,8 +53,10 @@ Documentation will be served on [localhost:3000](http://localhost:3000).
 
 ## Tests
 
+You can run all tests from the root directory OR from `packages` subdirectory using the following command:
+
 ```bash
-npm test
+npm run test
 ```
 
 ### Code coverage
@@ -59,6 +69,8 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
+
+> NOTE: All three of these directories share the same tests for verifying `validator` based APIs. See the documentation in the `getTestValidator()` functions for more information. 
 
 ## Releasing
 

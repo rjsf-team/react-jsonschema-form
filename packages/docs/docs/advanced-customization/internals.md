@@ -79,7 +79,9 @@ You can use the reference to get your `Form` component and call the `submit` met
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
 
 ```tsx
+import { createRef } from 'react';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { Form } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const onSubmit = ({ formData }) => console.log('Data submitted: ', formData);
@@ -89,17 +91,17 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
+const formRef = createRef<Form>();
+
 render(
   <Form
     schema={schema}
     validator={validator}
     onSubmit={onSubmit}
-    ref={(form) => {
-      yourForm = form;
-    }}
+    ref={formRef}
   />,
   document.getElementById('app')
 );
 
-yourForm.submit();
+formRef.current.submit();
 ```
