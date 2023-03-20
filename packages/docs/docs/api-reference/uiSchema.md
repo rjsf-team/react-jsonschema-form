@@ -228,6 +228,24 @@ const uiSchema: UiSchema = {
 };
 ```
 
+### filePreview
+
+The `FileWidget` can be configured to show a preview of an image or a download link for non-images using this flag.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  format: 'data-url',
+};
+const uiSchema: UiSchema = {
+  'ui:options': {
+    filePreview: true,
+  },
+};
+```
+
 ### help
 
 Sometimes it's convenient to add text next to a field to guide the end user filling it. This is the purpose of the `ui:help` uiSchema directive:

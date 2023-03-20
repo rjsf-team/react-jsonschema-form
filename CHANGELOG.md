@@ -22,9 +22,18 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added the ability to use a tooltip for a description
 
+## @rjsf/core
+
+- Updated `FileWidget` to show a preview of images and a download link for non-images when the `filePreview` options is set to true in the `UiSchema`
+
+## @rjsf/utils
+
+- Updated the `UiSchema` to support the optional `filePreview?: boolean` option and to add a new `TranslatableString.PreviewLabel` to the `enums`
+
 ## Dev / docs / playground
 
 - Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
+- Updated the `uiSchema` documentation to add the `filePreview` option
 
 # 5.3.1
 

@@ -37,6 +37,8 @@ export enum TranslatableString {
   ClearLabel = 'Clear',
   /** Aria date label, used by DateWidget */
   AriaDateLabel = 'Select a date',
+  /** File preview label, used by FileWidget */
+  PreviewLabel = 'Preview',
   /** Decrement button aria label, used by UpDownWidget */
   DecrementAriaLabel = 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
