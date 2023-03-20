@@ -1,6 +1,6 @@
 import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
 import toPath from 'lodash/toPath';
-import isObject from 'lodash/isObject';
+import isPlainObject from 'lodash/isPlainObject';
 import clone from 'lodash/clone';
 import {
   CustomValidator,
@@ -122,7 +122,10 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     }
     return Object.keys(errorSchema).reduce((acc, key) => {
       if (key !== ERRORS_KEY) {
-        acc = acc.concat(this.toErrorList((errorSchema as GenericObjectType)[key], [...fieldPath, key]));
+        const childSchema = (errorSchema as GenericObjectType)[key];
+        if (isPlainObject(childSchema)) {
+          acc = acc.concat(this.toErrorList(childSchema, [...fieldPath, key]));
+        }
       }
       return acc;
     }, errorList);
@@ -148,7 +151,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
         return { ...acc, [key]: this.createErrorHandler(value) };
       }, handler);
     }
-    if (isObject(formData)) {
+    if (isPlainObject(formData)) {
       const formObject: GenericObjectType = formData as GenericObjectType;
       return Object.keys(formObject).reduce((acc, key) => {
         return { ...acc, [key]: this.createErrorHandler(formObject[key]) };
@@ -166,13 +169,16 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     return Object.keys(errorHandler).reduce((acc, key) => {
       if (key === 'addError') {
         return acc;
-      } else if (key === ERRORS_KEY) {
-        return { ...acc, [key]: (errorHandler as GenericObjectType)[key] };
+      } else {
+        const childSchema = (errorHandler as GenericObjectType)[key];
+        if (isPlainObject(childSchema)) {
+          return {
+            ...acc,
+            [key]: this.unwrapErrorHandler(childSchema),
+          };
+        }
+        return { ...acc, [key]: childSchema };
       }
-      return {
-        ...acc,
-        [key]: this.unwrapErrorHandler((errorHandler as GenericObjectType)[key]),
-      };
     }, {} as ErrorSchema<T>);
   }
 
@@ -404,7 +410,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     if (Array.isArray(schemaNode)) {
       return this.withIdRefPrefixArray([...schemaNode]);
     }
-    if (isObject(schemaNode)) {
+    if (isPlainObject(schemaNode)) {
       return this.withIdRefPrefixObject(clone<S>(schemaNode));
     }
     return schemaNode;

@@ -30,6 +30,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `UiSchema` to support the optional `filePreview?: boolean` option and to add a new `TranslatableString.PreviewLabel` to the `enums`
 
+## @rjsf/validator-ajv8
+
+- Improve `toErrorList()` and `unwrapErrorHandler()` by ensuring objects before recursing
+
 ## Dev / docs / playground
 
 - Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
