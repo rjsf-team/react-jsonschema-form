@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { act, Simulate } from 'react-dom/test-utils';
 import sinon from 'sinon';
-import { parseDateString, toDateString, utcToLocal } from '@rjsf/utils';
+import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
 
@@ -2010,6 +2010,44 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('#custom')).to.exist;
+    });
+
+    it('should render the file widget with preview attribute', () => {
+      const formData =
+        'data:image/png;name=test.png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+mSkUqDmYQcchQnSyIijhqFYpQIdQKrTqYXPoHTRqSFBdHwbXg4M9i1cHFWVcHV0EQ/AFxdXFSdJESv0sKLWK847iH97735e47QGhUmG53jQO64VjpZELK5lalyCvCECHQjCvMNudkOYXA8XWPEN/v4jwruO7P0aflbQaEJOJZZloO8Qbx9KZjct4nFllJ0YjPiccsuiDxI9dVn984Fz0WeKZoZdLzxCKxVOxgtYNZydKJp4hjmm5QvpD1WeO8xVmv1FjrnvyF0byxssx1WsNIYhFLkCFBRQ1lVOAgTrtBio00nScC/EOeXyaXSq4yGDkWUIUOxfOD/8Hv3tqFyQk/KZoAul9c92MEiOwCzbrrfh+7bvMECD8DV0bbX20AM5+k19ta7Ajo3wYurtuaugdc7gCDT6ZiKZ4UpiUUCsD7GX1TDhi4BXrX/L61znH6AGSoV6kb4OAQGC1S9nrAu3s6+/ZvTat/PyV4cojSYDGVAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH5wMUAgM6setlnQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAWSURBVAjXY/z//z8DAwMTAwMDAwMDACQGAwG9HuO6AAAAAElFTkSuQmCC';
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        uiSchema: {
+          'ui:options': { filePreview: true },
+        },
+        formData,
+      });
+
+      const preview = node.querySelector('img.file-preview');
+      expect(preview).to.exist;
+      expect(preview.src).eql(formData);
+    });
+
+    it('should render the file widget with download link', () => {
+      const formData = 'data:text/plain;name=file1.txt;base64,x=';
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        uiSchema: {
+          'ui:options': { filePreview: true },
+        },
+        formData,
+      });
+
+      const download = node.querySelector('a.file-download');
+      expect(download).to.exist;
+      expect(download.href).eql(formData);
+      expect(download.textContent).eql(TranslatableString.PreviewLabel);
     });
   });
 

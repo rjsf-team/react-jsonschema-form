@@ -1,8 +1,8 @@
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
   dataURItoBlob,
-  getTemplate,
   FormContextType,
+  getTemplate,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
@@ -55,12 +55,41 @@ function processFiles(files: FileList) {
   return Promise.all(Array.from(files).map(processFile));
 }
 
+function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  fileInfo,
+  registry,
+}: {
+  fileInfo: FileInfoType;
+  registry: Registry<T, S, F>;
+}) {
+  const { translateString } = registry;
+  const { dataURL, type, name } = fileInfo;
+  if (!dataURL) {
+    return null;
+  }
+
+  if (type.indexOf('image') !== -1) {
+    return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
+  }
+
+  return (
+    <>
+      {' '}
+      <a download={`preview-${name}`} href={dataURL} className='file-download'>
+        {translateString(TranslatableString.PreviewLabel)}
+      </a>
+    </>
+  );
+}
+
 function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   filesInfo,
   registry,
+  preview,
 }: {
-  filesInfo: { name: string; size: number; type: string }[];
+  filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
+  preview?: boolean;
 }) {
   if (filesInfo.length === 0) {
     return null;
@@ -73,6 +102,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
         return (
           <li key={key}>
             <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
+            {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />}
           </li>
         );
       })}
@@ -86,6 +116,7 @@ function extractFileInfo(dataURLs: string[]) {
     .map((dataURL) => {
       const { blob, name } = dataURItoBlob(dataURL);
       return {
+        dataURL,
         name: name,
         size: blob.size,
         type: blob.type,
@@ -136,7 +167,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         value=''
         accept={options.accept ? String(options.accept) : undefined}
       />
-      <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} />
+      <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} preview={options.filePreview} />
     </div>
   );
 }
