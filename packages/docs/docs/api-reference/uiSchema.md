@@ -431,12 +431,13 @@ import { UiSchema } from '@rjsf/utils';
 
 const uiSchema = {
   'ui:globalOptions': {
-    duplicateKeySuffixSeparator: '_'
-  }
+    duplicateKeySuffixSeparator: '_',
+  },
 };
 ```
 
 ## Theme Options
 
-[Semantic UI](themes/semantic-ui/uiSchema.md)
-[Chakra UI](themes/chakra-ui/uiSchema.md)
+[AntD Customization](themes/antd/uiSchema.md)
+[Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
+[Semantic-UI Customization](themes/semantic-ui/uiSchema.md)

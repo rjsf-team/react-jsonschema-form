@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.4.0
+
+## @rjsf/antd
+
+- Added the ability to use a tooltip for a description
+
+## Dev / docs / playground
+
+- Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
+
 # 5.3.1
 
 ## @rjsf/core

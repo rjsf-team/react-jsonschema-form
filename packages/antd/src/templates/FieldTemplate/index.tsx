@@ -51,6 +51,7 @@ export default function FieldTemplate<
     labelCol = VERTICAL_LABEL_COL,
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
+    descriptionLocation = 'below',
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -62,6 +63,20 @@ export default function FieldTemplate<
 
   if (hidden) {
     return <div className='field-hidden'>{children}</div>;
+  }
+
+  // check to see if there is rawDescription(string) before using description(ReactNode)
+  // to prevent showing a blank description area
+  const descriptionNode = rawDescription ? description : undefined;
+  const descriptionProps: GenericObjectType = {};
+  switch (descriptionLocation) {
+    case 'tooltip':
+      descriptionProps.tooltip = descriptionNode;
+      break;
+    case 'below':
+    default:
+      descriptionProps.extra = descriptionNode;
+      break;
   }
 
   return (
@@ -84,7 +99,6 @@ export default function FieldTemplate<
       ) : (
         <Form.Item
           colon={colon}
-          extra={rawDescription && description}
           hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
           help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
           htmlFor={id}
@@ -94,6 +108,7 @@ export default function FieldTemplate<
           style={wrapperStyle}
           validateStatus={rawErrors?.length ? 'error' : undefined}
           wrapperCol={wrapperCol}
+          {...descriptionProps}
         >
           {children}
         </Form.Item>

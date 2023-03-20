@@ -309,4 +309,19 @@ describe('single fields', () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
+  // antd specific tests
+  test('descriptionLocation tooltip in formContext', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        'my-field': {
+          type: 'string',
+          description: 'some description',
+        },
+      },
+    };
+    const formContext = { descriptionLocation: 'tooltip' };
+    const tree = renderer.create(<Form schema={schema} validator={validator} formContext={formContext} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

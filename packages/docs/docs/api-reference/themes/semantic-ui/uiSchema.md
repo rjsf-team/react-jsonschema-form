@@ -1,4 +1,4 @@
-# uiSchema Options for Semantic-UI
+# Semantic-UI Customization
 
 There are various options to pass to semantic theme fields.
 
