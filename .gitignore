@@ -137,13 +137,4 @@ coverage
 venv
 *.orig
 out/
-packages/antd/package-lock.json
-packages/bootstrap-4/package-lock.json
-packages/chakra-ui/package-lock.json
-packages/core/package-lock.json
-packages/fluent-ui/package-lock.json
-packages/material-ui/package-lock.json
-packages/mui/package-lock.json
-packages/semantic-ui/package-lock.json
-packages/validator-ajv6/package-lock.json
-packages/validator-ajv8/package-lock.json
+
