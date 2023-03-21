@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -12,7 +12,18 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "precommit": "lint-staged",
+    "cs-check": "prettier -l \"{src, docs}/**/*.(ts?(x)|md|css)\"",
+    "cs-format": "prettier \"{src, docs}/**/*.(ts?(x)|md|css)\" --write"
+  },
+  "lint-staged": {
+    "src/**/*.(ts?(x)|css)": [
+      "prettier --write"
+    ],
+    "docs/**/*.md": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@docusaurus/core": "^2.3.1",

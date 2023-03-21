@@ -1,4 +1,4 @@
-# uiSchema Options for Chakra-UI
+# Chakra-UI Customization
 
 When using `@rjsf/chakra-ui` there are a couple of ways to customize the feel of the form.
 

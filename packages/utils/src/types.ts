@@ -803,6 +803,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     readonly?: boolean;
     /** This property allows you to reorder the properties that are shown for a particular object */
     order?: string[];
+    /** Flag, if set to `true`, will cause the `FileWidget` to show a preview (with download for non-image files) */
+    filePreview?: boolean;
     /** Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row */
     inline?: boolean;
     /** Used to change the input type (for example, `tel` or `email`) for an <input> */

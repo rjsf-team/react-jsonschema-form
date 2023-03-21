@@ -16,6 +16,54 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.4.0
+
+## @rjsf/antd
+
+- Added the ability to use a tooltip for a description
+
+## @rjsf/core
+
+- Updated `FileWidget` to show a preview of images and a download link for non-images when the `filePreview` options is set to true in the `UiSchema`
+
+## @rjsf/utils
+
+- Updated the `UiSchema` to support the optional `filePreview?: boolean` option and to add a new `TranslatableString.PreviewLabel` to the `enums`
+
+## @rjsf/validator-ajv8
+
+- Improve `toErrorList()` and `unwrapErrorHandler()` by ensuring objects before recursing
+
+## Dev / docs / playground
+
+- Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
+- Updated the `uiSchema` documentation to add the `filePreview` option
+
+# 5.3.1
+
+## @rjsf/core
+
+- Updated `AltDateWidget` to remove an infinite loop caused by two conflicting effects by merging them with additional checking of original `value` against the current value, fixing [#3516](https://github.com/rjsf-team/react-jsonschema-form/issues/3516)
+
+## @rjsf/utils
+
+- Updated the documentation of `getTestValidator()` and the `schema.test.ts` file to help developers
+
+## @rjsf/validator-ajv6
+
+- Updated the documentation of `getTestValidator()` and the `schema.test.ts` file to help developers
+
+## @rjsf/validator-ajv8
+
+- Updated the documentation of `getTestValidator()` and the `schema.test.ts` file to help developers
+
+## Dev / docs / playground
+
+- Updated the `internals` documentation to use a React ref in the example, fixing [#3520](https://github.com/rjsf-team/react-jsonschema-form/issues/3520)
+- Updated the `contributing` documentation to describe the new development process needed for a `Vite` playground, fixing [#3478](https://github.com/rjsf-team/react-jsonschema-form/issues/3478)
+  - Also fixed the `package.json` files to remove `npm start` in the subdirectories and change the root one to describe the new process
+- Updated the `semantic-ui/uiSchema` documentation to switch the default for `horizontalButtons` to be true per changes made in `5.3.0`
+
 # 5.3.0
 
 ## @rjsf/antd
