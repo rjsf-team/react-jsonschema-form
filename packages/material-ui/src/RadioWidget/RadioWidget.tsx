@@ -45,8 +45,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const row = options ? options.inline : false;
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions);
 
-  const { schemaUtils } = registry;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
+  const { schemaUtils, globalUiOptions } = registry;
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   return (
     <>

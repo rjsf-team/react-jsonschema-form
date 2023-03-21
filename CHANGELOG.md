@@ -48,18 +48,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
 - Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
--"ui:options" : {"label" : false}
--Updated `BaseInputTemplate` label={displayLabel ? label || schema.title : false } to label={displayLabel ? label || schema.title : ''} 
--Updated `RadioWidget.tsx` added property disableLabel and use it to hide label if label = 'false'
+-Updated `BaseInputTemplate` to fix issue where returning false for the label needed to be changed to an empty string
+-Updated `RadioWidget.tsx` added property `disableLabel` and use it to hide label if label = 'false'
 
 
 ## @rjsf/mui
 
 - Updated `BaseInputTemplate` so that it shrinks a `time` formatted input
 - Added support to make a copy of an array item directly after the item selected to be copied (feature is off by default), fixing [#1261](https://github.com/rjsf-team/react-jsonschema-form/issues/1261) and [#1712](https://github.com/rjsf-team/react-jsonschema-form/issues/1712)
--"ui:options" : {"label" : false}
--Updated `BaseInputTemplate` label={displayLabel ? label || schema.title : false } to label={displayLabel ? label || schema.title : ''} 
--Updated `RadioWidget.tsx` added property disableLabel and use it to hide label if label = 'false'
+-Updated `BaseInputTemplate` to fix issue where returning false for the label needed to be changed to an empty string
+-Updated `RadioWidget.tsx` added property `disableLabel` and use it to hide label if label = 'false'
 
 ## @rjsf/semantic-ui
 
