@@ -41,15 +41,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/chakra-ui
 
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value #3511
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
 
 ## @rjsf/material-ui
 
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value #3511
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
 
 ## @rjsf/mui
 
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value #3511
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
 
 # 5.3.1
 
