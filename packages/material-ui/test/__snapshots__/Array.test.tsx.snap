@@ -869,7 +869,7 @@ exports[`array fields empty errors array 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-19"
+    className="MuiBox-root MuiBox-root-21"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -893,9 +893,6 @@ exports[`array fields empty errors array 1`] = `
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>
@@ -1079,6 +1076,171 @@ exports[`array fields fixed array 1`] = `
 </form>
 `;
 
+exports[`array fields has errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
+  >
+    <div
+      className="MuiBox-root MuiBox-root-18"
+    >
+      <h6
+        className="MuiTypography-root MuiTypography-h6"
+      >
+        Errors
+      </h6>
+      <ul
+        className="MuiList-root MuiList-dense MuiList-padding"
+      >
+        <li
+          className="MuiListItem-root MuiListItem-dense MuiListItem-gutters"
+          disabled={false}
+        >
+          <div
+            className="MuiListItemIcon-root"
+          >
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-colorError"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+              />
+            </svg>
+          </div>
+          <div
+            className="MuiListItemText-root MuiListItemText-dense"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
+            >
+              .name Bad input
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string field-error has-error has-danger"
+          >
+            <div
+              className="MuiFormControl-root MuiFormControl-fullWidth"
+            >
+              <div
+                aria-describedby="root_name__error root_name__description root_name__help"
+                className="MuiFormControl-root MuiTextField-root"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-error Mui-error"
+                  data-shrink={false}
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={true}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    disabled={false}
+                    id="root_name"
+                    name="root_name"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <ul
+                className="MuiList-root MuiList-dense"
+              >
+                <li
+                  className="MuiListItem-root MuiListItem-dense"
+                  disabled={false}
+                >
+                  <p
+                    className="MuiFormHelperText-root Mui-error"
+                    id="root_name__error"
+                  >
+                    Bad input
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-19"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields no errors 1`] = `
 <form
   className="rjsf"
@@ -1155,7 +1317,7 @@ exports[`array fields no errors 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-18"
+    className="MuiBox-root MuiBox-root-20"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1179,6 +1341,9 @@ exports[`array fields no errors 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
