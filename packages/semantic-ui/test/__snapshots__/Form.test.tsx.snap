@@ -1700,7 +1700,7 @@ exports[`single fields title field 1`] = `
             <label
               htmlFor="root_title"
             >
-              title
+              Titre 2
             </label>
             <div
               className="ui fluid input"

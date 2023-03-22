@@ -686,6 +686,10 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   onFocus: (id: string, value: any) => void;
   /** The computed label for this widget, as a string */
   label: string;
+  /** A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where
+   * you don't want to clutter the UI
+   */
+  displayLabel?: boolean;
   /** A boolean value stating if the widget can accept multiple values */
   multiple?: boolean;
   /** An array of strings listing all generated error messages from encountered errors for this widget */

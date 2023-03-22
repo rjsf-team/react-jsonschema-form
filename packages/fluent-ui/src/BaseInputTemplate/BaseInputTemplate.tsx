@@ -63,6 +63,7 @@ export default function BaseInputTemplate<
   readonly,
   disabled,
   label,
+  displayLabel = true,
   value,
   onChange,
   onChangeOverride,
@@ -74,17 +75,13 @@ export default function BaseInputTemplate<
   type,
   rawErrors,
   multiline,
-  registry,
-  uiSchema,
 }: BaseInputTemplateProps<T, S, F>) {
-  const { schemaUtils } = registry;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (

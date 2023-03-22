@@ -32,6 +32,8 @@ export default function CheckboxesWidget<
     value,
     autofocus,
     readonly,
+    label,
+    displayLabel,
     onChange,
     onBlur,
     onFocus,
@@ -44,7 +46,6 @@ export default function CheckboxesWidget<
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
   const { enumOptions, enumDisabled, inline } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
-  const { title } = schema;
   const semanticProps = getSemanticProps<T, S, F>({
     options,
     formContext,
@@ -69,8 +70,8 @@ export default function CheckboxesWidget<
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <>
-      {title && (
-        <TitleFieldTemplate id={titleId<T>(id)} title={title} schema={schema} uiSchema={uiSchema} registry={registry} />
+      {displayLabel && !!label && (
+        <TitleFieldTemplate id={titleId<T>(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
       )}
       <Form.Group id={id} name={id} {...inlineOption}>
         {Array.isArray(enumOptions) &&

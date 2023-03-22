@@ -17,10 +17,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   props: WidgetProps<T, S, F>
 ) {
   const {
-    schema,
     id,
     options,
     label,
+    displayLabel = true,
     placeholder,
     multiple,
     required,
@@ -95,7 +95,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {(label || schema.title) && <FormLabel htmlFor={isMultiple ? undefined : id}>{label || schema.title}</FormLabel>}
+      {displayLabel && !!label && <FormLabel htmlFor={isMultiple ? undefined : id}>{label}</FormLabel>}
       <Select
         inputId={id}
         name={id}

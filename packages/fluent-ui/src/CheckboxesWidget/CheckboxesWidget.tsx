@@ -30,6 +30,7 @@ export default function CheckboxesWidget<
 >({
   schema,
   label,
+  displayLabel = true,
   id,
   disabled,
   options,
@@ -63,10 +64,12 @@ export default function CheckboxesWidget<
 
   return (
     <>
-      <Label>
-        {label || schema.title}
-        {required && <span style={styles_red}>&nbsp;*</span>}
-      </Label>
+      {displayLabel && (
+        <Label>
+          {label || schema.title}
+          {required && <span style={styles_red}>&nbsp;*</span>}
+        </Label>
+      )}
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);

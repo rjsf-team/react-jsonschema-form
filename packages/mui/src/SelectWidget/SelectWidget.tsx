@@ -26,6 +26,7 @@ export default function SelectWidget<
   name, // remove this from textFieldProps
   options,
   label,
+  displayLabel = true,
   required,
   disabled,
   placeholder,
@@ -62,7 +63,7 @@ export default function SelectWidget<
     <TextField
       id={id}
       name={id}
-      label={label || schema.title}
+      label={displayLabel && (label || schema.title)}
       value={isEmpty ? emptyValue : selectedIndexes}
       required={required}
       disabled={disabled || readonly}

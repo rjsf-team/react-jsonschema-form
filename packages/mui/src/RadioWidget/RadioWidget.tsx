@@ -28,6 +28,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   disabled,
   readonly,
   label,
+  displayLabel = true,
   onChange,
   onBlur,
   onFocus,
@@ -45,9 +46,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
+      {displayLabel && (
+        <FormLabel required={required} htmlFor={id}>
+          {label || schema.title}
+        </FormLabel>
+      )}
       <RadioGroup
         id={id}
         name={id}

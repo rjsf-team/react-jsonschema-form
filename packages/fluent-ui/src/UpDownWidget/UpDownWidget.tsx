@@ -61,6 +61,7 @@ export default function UpDownWidget<
   readonly,
   disabled,
   label,
+  displayLabel = true,
   value,
   onChange,
   onBlur,
@@ -104,7 +105,7 @@ export default function UpDownWidget<
 
   return (
     <>
-      <Label htmlFor={id}>{label + requiredSymbol}</Label>
+      {displayLabel && <Label htmlFor={id}>{label + requiredSymbol}</Label>}
       <SpinButton
         id={id}
         min={min}

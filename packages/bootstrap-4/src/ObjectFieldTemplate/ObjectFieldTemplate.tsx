@@ -45,20 +45,20 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
   return (
     <>
-      {(uiOptions.title || title) && (
+      {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
-          title={uiOptions.title || title}
+          title={title}
           required={required}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      {(uiOptions.description || description) && (
+      {description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(idSchema)}
-          description={uiOptions.description || description!}
+          description={description}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

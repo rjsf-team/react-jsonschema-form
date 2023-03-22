@@ -137,7 +137,6 @@ exports[`single fields checkbox field 1`] = `
             onMouseLeave={[Function]}
             onMouseUp={[Function]}
           />
-          
         </label>
       </div>
     </div>
@@ -333,11 +332,6 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-2 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -347,7 +341,7 @@ exports[`single fields checkboxes field 1`] = `
   flex-direction: column;
 }
 
-.emotion-3>*:not(style)~*:not(style) {
+.emotion-2>*:not(style)~*:not(style) {
   margin-top: 0.5rem;
   -webkit-margin-end: 0px;
   margin-inline-end: 0px;
@@ -356,7 +350,7 @@ exports[`single fields checkboxes field 1`] = `
   margin-inline-start: 0px;
 }
 
-.emotion-4 {
+.emotion-3 {
   cursor: pointer;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -370,13 +364,13 @@ exports[`single fields checkboxes field 1`] = `
   position: relative;
 }
 
-.emotion-4[disabled],
-.emotion-4[aria-disabled=true],
-.emotion-4[data-disabled] {
+.emotion-3[disabled],
+.emotion-3[aria-disabled=true],
+.emotion-3[data-disabled] {
   cursor: not-allowed;
 }
 
-.emotion-5 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -399,16 +393,16 @@ exports[`single fields checkboxes field 1`] = `
   flex-shrink: 0;
 }
 
-.emotion-6 {
+.emotion-5 {
   -webkit-margin-start: 0.5rem;
   margin-inline-start: 0.5rem;
 }
 
-.emotion-20 {
+.emotion-19 {
   margin-top: 3px;
 }
 
-.emotion-21 {
+.emotion-20 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -453,16 +447,11 @@ exports[`single fields checkboxes field 1`] = `
         className="chakra-form-control emotion-1"
         role="group"
       >
-        <label
-          className="chakra-form__label emotion-2"
-          htmlFor="root"
-          id="root-label"
-        />
         <div
-          className="chakra-stack emotion-3"
+          className="chakra-stack emotion-2"
         >
           <label
-            className="chakra-checkbox emotion-4"
+            className="chakra-checkbox emotion-3"
             onClick={[Function]}
           >
             <input
@@ -495,14 +484,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
+              className="chakra-checkbox__control emotion-4"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-6"
+              className="chakra-checkbox__label emotion-5"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -514,7 +503,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-4"
+            className="chakra-checkbox emotion-3"
             onClick={[Function]}
           >
             <input
@@ -547,14 +536,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
+              className="chakra-checkbox__control emotion-4"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-6"
+              className="chakra-checkbox__label emotion-5"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -566,7 +555,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-4"
+            className="chakra-checkbox emotion-3"
             onClick={[Function]}
           >
             <input
@@ -599,14 +588,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
+              className="chakra-checkbox__control emotion-4"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-6"
+              className="chakra-checkbox__label emotion-5"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -618,7 +607,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-4"
+            className="chakra-checkbox emotion-3"
             onClick={[Function]}
           >
             <input
@@ -651,14 +640,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
+              className="chakra-checkbox__control emotion-4"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-6"
+              className="chakra-checkbox__label emotion-5"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -674,10 +663,10 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <div
-    className="emotion-20"
+    className="emotion-19"
   >
     <button
-      className="chakra-button emotion-21"
+      className="chakra-button emotion-20"
       disabled={false}
       type="submit"
     >
@@ -1996,12 +1985,7 @@ exports[`single fields radio field 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-2 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-4 {
+.emotion-3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2011,7 +1995,7 @@ exports[`single fields radio field 1`] = `
   flex-direction: column;
 }
 
-.emotion-4>*:not(style)~*:not(style) {
+.emotion-3>*:not(style)~*:not(style) {
   margin-top: 0.5rem;
   -webkit-margin-end: 0px;
   margin-inline-end: 0px;
@@ -2020,7 +2004,7 @@ exports[`single fields radio field 1`] = `
   margin-inline-start: 0px;
 }
 
-.emotion-5 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2033,7 +2017,7 @@ exports[`single fields radio field 1`] = `
   cursor: pointer;
 }
 
-.emotion-6 {
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2051,7 +2035,7 @@ exports[`single fields radio field 1`] = `
   flex-shrink: 0;
 }
 
-.emotion-7 {
+.emotion-6 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -2060,11 +2044,11 @@ exports[`single fields radio field 1`] = `
   margin-inline-start: 0.5rem;
 }
 
-.emotion-11 {
+.emotion-10 {
   margin-top: 3px;
 }
 
-.emotion-12 {
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2109,11 +2093,6 @@ exports[`single fields radio field 1`] = `
         className="chakra-form-control emotion-1"
         role="group"
       >
-        <label
-          className="chakra-form__label emotion-2"
-          htmlFor="root"
-          id="root-label"
-        />
         <div
           aria-describedby="root__error root__description root__help"
           className="chakra-radio-group emotion-0"
@@ -2122,10 +2101,10 @@ exports[`single fields radio field 1`] = `
           role="radiogroup"
         >
           <div
-            className="chakra-stack emotion-4"
+            className="chakra-stack emotion-3"
           >
             <label
-              className="chakra-radio emotion-5"
+              className="chakra-radio emotion-4"
             >
               <input
                 checked={false}
@@ -2158,7 +2137,7 @@ exports[`single fields radio field 1`] = `
               />
               <span
                 aria-hidden={true}
-                className="chakra-radio__control emotion-6"
+                className="chakra-radio__control emotion-5"
                 disabled={false}
                 onMouseDown={[Function]}
                 onMouseEnter={[Function]}
@@ -2166,7 +2145,7 @@ exports[`single fields radio field 1`] = `
                 onMouseUp={[Function]}
               />
               <span
-                className="chakra-radio__label emotion-7"
+                className="chakra-radio__label emotion-6"
                 onMouseDown={[Function]}
                 onTouchStart={[Function]}
               >
@@ -2174,7 +2153,7 @@ exports[`single fields radio field 1`] = `
               </span>
             </label>
             <label
-              className="chakra-radio emotion-5"
+              className="chakra-radio emotion-4"
             >
               <input
                 checked={false}
@@ -2207,7 +2186,7 @@ exports[`single fields radio field 1`] = `
               />
               <span
                 aria-hidden={true}
-                className="chakra-radio__control emotion-6"
+                className="chakra-radio__control emotion-5"
                 disabled={false}
                 onMouseDown={[Function]}
                 onMouseEnter={[Function]}
@@ -2215,7 +2194,7 @@ exports[`single fields radio field 1`] = `
                 onMouseUp={[Function]}
               />
               <span
-                className="chakra-radio__label emotion-7"
+                className="chakra-radio__label emotion-6"
                 onMouseDown={[Function]}
                 onTouchStart={[Function]}
               >
@@ -2228,10 +2207,10 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <div
-    className="emotion-11"
+    className="emotion-10"
   >
     <button
-      className="chakra-button emotion-12"
+      className="chakra-button emotion-11"
       disabled={false}
       type="submit"
     >
@@ -5494,7 +5473,7 @@ exports[`single fields title field 1`] = `
                   htmlFor="root_title"
                   id="root_title-label"
                 >
-                  title
+                  Titre 2
                 </label>
                 <input
                   aria-describedby="root_title__error root_title__description root_title__help"

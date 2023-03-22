@@ -24,6 +24,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   disabled,
   readonly,
   label,
+  displayLabel = true,
   autofocus = false,
   onBlur,
   onFocus,
@@ -54,13 +55,14 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     (event: FocusEvent<HTMLInputElement>) => onFocus(id, event.target.checked),
     [onFocus, id]
   );
+  const description = options.description ?? schema.description;
 
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
-      {schema.description && (
+      {displayLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
-          description={schema.description}
+          description={description}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -80,7 +82,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
           onFocus={handleFocus}
           aria-describedby={ariaDescribedByIds<T>(id)}
         />
-        <span>{label}</span>
+        {displayLabel && <span>{label}</span>}
       </label>
     </div>
   );

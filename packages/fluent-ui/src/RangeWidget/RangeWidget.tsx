@@ -43,6 +43,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onChange,
   required,
   label,
+  displayLabel = true,
   id,
 }: WidgetProps<T, S, F>) {
   const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };
@@ -52,10 +53,12 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (
     <>
-      <Label>
-        {label || schema.title}
-        {required && <span style={styles_red}>&nbsp;*</span>}
-      </Label>
+      {displayLabel && (
+        <Label>
+          {label || schema.title}
+          {required && <span style={styles_red}>&nbsp;*</span>}
+        </Label>
+      )}
       <Slider
         disabled={disabled || readonly}
         min={sliderProps.min}

@@ -20,7 +20,7 @@ export default function ArrayFieldTitleTemplate<
   F extends FormContextType = any
 >(props: ArrayFieldTitleProps<T, S, F>) {
   const { idSchema, title, schema, uiSchema, required, registry } = props;
-  const options = getUiOptions<T, S, F>(uiSchema);
+  const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
   if (!title || !displayLabel) {
     return null;

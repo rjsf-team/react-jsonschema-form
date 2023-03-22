@@ -87,12 +87,14 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   id,
   required,
   label,
+  displayLabel = true,
   value,
   onChange,
   onBlur,
   onFocus,
   options,
   placeholder,
+  schema,
   registry,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
@@ -114,7 +116,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       placeholder={placeholder}
       ariaLabel={translateString(TranslatableString.AriaDateLabel)}
       isRequired={required}
-      label={label}
+      label={displayLabel ? label || schema.title : undefined}
       onSelectDate={_onSelectDate}
       onBlur={_onBlur}
       onFocus={_onFocus}

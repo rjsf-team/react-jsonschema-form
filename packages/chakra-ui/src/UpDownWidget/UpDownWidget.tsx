@@ -16,22 +16,18 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const {
     id,
-    schema,
     uiSchema,
     readonly,
     disabled,
     label,
+    displayLabel = true,
     value,
     onChange,
     onBlur,
     onFocus,
     rawErrors,
     required,
-    registry,
   } = props;
-
-  const { schemaUtils } = registry;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -48,7 +44,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel ? <FormLabel htmlFor={id}>{label || schema.title}</FormLabel> : null}
+      {displayLabel && !!label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       <NumberInput
         value={value ?? ''}
         onChange={_onChange}

@@ -14,15 +14,12 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   uiSchema,
   onChange,
   label,
+  displayLabel = true,
   id,
-  registry,
 }: WidgetProps<T, S, F>) {
-  const { schemaUtils } = registry;
   const chakraProps = getChakra({ uiSchema });
 
   const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
-
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = (value: undefined | number) => onChange(value === undefined ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
@@ -30,7 +27,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <FormControl mb={1} {...chakraProps}>
-      {displayLabel ? <FormLabel htmlFor={id}>{label || schema.title}</FormLabel> : null}
+      {displayLabel && !!label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       <Slider
         {...sliderWidgetProps}
         id={id}

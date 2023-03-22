@@ -1,6 +1,8 @@
 import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
+  descriptionId,
+  getTemplate,
   WidgetProps,
   schemaRequiresTrueValue,
   StrictRJSFSchema,
@@ -14,26 +16,55 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, disabled, readonly, label, schema, autofocus, onChange, onBlur, onFocus } = props;
+  const {
+    id,
+    value,
+    disabled,
+    readonly,
+    label,
+    displayLabel = true,
+    schema,
+    autofocus,
+    options,
+    onChange,
+    onBlur,
+    onFocus,
+    registry,
+    uiSchema,
+  } = props;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options
+  );
 
   const _onChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
   const _onBlur = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onBlur(id, checked);
   const _onFocus = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onFocus(id, checked);
 
-  const desc = label || schema.description;
+  const description = options.description || schema.description;
   return (
     <Form.Group
       className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
+      {displayLabel && !!description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
       <Form.Check
         id={id}
         name={id}
-        label={desc}
+        label={displayLabel && !!label ? label : undefined}
         checked={typeof value === 'undefined' ? false : value}
         required={required}
         disabled={disabled || readonly}

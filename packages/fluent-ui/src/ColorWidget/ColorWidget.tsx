@@ -35,6 +35,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   value,
   required,
   label,
+  displayLabel = true,
   onChange,
 }: WidgetProps<T, S, F>) {
   const updateColor = (_ev: any, colorObj: IColor) => {
@@ -45,10 +46,12 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <Label>
-        {label || schema.title}
-        {required && <span style={styles_red}>&nbsp;*</span>}
-      </Label>
+      {displayLabel && (
+        <Label>
+          {label || schema.title}
+          {required && <span style={styles_red}>&nbsp;*</span>}
+        </Label>
+      )}
       <ColorPicker
         color={getColorFromString(value) as any}
         onChange={updateColor}

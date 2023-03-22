@@ -21,14 +21,57 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Added the ability to use a tooltip for a description
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
+
+## @rjsf/bootstrap-4
+
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
+
+## @rjsf/chakra-ui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget` and `SelectWidget` to hide labels when `displayLabel` is true (including globally)
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
 
 ## @rjsf/core
 
 - Updated `FileWidget` to show a preview of images and a download link for non-images when the `filePreview` options is set to true in the `UiSchema`
+- Updated `ArrayField`, `BooleanField`, `MultiSelectField` and `StringField` to pass `label` (read from `uiSchema.title` || `schema.title` || `name`) and `displayLabel` down to all of the `Widgets` they render, fixing #827, #2636, #2399 and #3531
+- Updated `ObjectField`, `ObjectFieldTemplate`, `ArrayFieldDescriptionTemplate`, `ArrayFieldTitleTemplate` and `CheckboxWidget` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+
+## @rjsf/fluent-ui
+
+- Updated `FieldTemplate` and `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `ColorWidget`, `DateWidget`, `RadioWidget`, `RangeWidget`, `SelectWidget` and `UpDownWidget` to hide labels when `displayLabel` is true (including globally)
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
+
+## @rjsf/material-ui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `RangeWidget` and `SelectWidget` to hide labels when `displayLabel` is true (including globally)
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
+
+## @rjsf/mui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `RangeWidget` and `SelectWidget` to hide labels when `displayLabel` is true (including globally)
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
+
+## @rjsf/semantic-ui
+- 
+- Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing #3231
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget` and `TextareaWidget` to hide labels when `displayLabel` is true (including globally)
+- Updated `CheckboxWidget` to show the `description` appropriately, fixing #2791
 
 ## @rjsf/utils
 
 - Updated the `UiSchema` to support the optional `filePreview?: boolean` option and to add a new `TranslatableString.PreviewLabel` to the `enums`
+- Updated the `WidgetProps` to add an optional `displayLabel?: boolean` field to better support hiding labels
 
 ## @rjsf/validator-ajv8
 
@@ -38,18 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
 - Updated the `uiSchema` documentation to add the `filePreview` option
-
-## @rjsf/chakra-ui
-
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
-
-## @rjsf/material-ui
-
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
-
-## @rjsf/mui
-
-- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+- Updated the `widgets` documentation to add the new `displayLabel` optional prop
 
 # 5.3.1
 

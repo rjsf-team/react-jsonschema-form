@@ -68,6 +68,7 @@ export default function SelectWidget<
   id,
   options,
   label,
+  displayLabel = true,
   required,
   disabled,
   readonly,
@@ -111,7 +112,7 @@ export default function SelectWidget<
   return (
     <Dropdown
       id={id}
-      label={label || schema.title}
+      label={displayLabel ? label || schema.title : undefined}
       multiSelect={multiple}
       defaultSelectedKey={multiple ? undefined : selectedIndexes}
       defaultSelectedKeys={multiple ? (selectedIndexes as string[]) : undefined}

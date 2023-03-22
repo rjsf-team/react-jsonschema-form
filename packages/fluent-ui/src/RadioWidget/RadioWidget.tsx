@@ -32,6 +32,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   value,
   required,
   label,
+  displayLabel = true,
   onChange,
   onBlur,
   onFocus,
@@ -74,7 +75,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={_onChange}
       onFocus={_onFocus}
       onBlur={_onBlur}
-      label={label || schema.title}
+      label={displayLabel ? label || schema.title : undefined}
       required={required}
       selectedKey={selectedIndex}
       {...uiProps}

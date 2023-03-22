@@ -68,7 +68,6 @@ exports[`array fields array 1`] = `
         </span>
       </button>
     </span>
-    
   </div>
   <div>
     <br />
@@ -547,7 +546,6 @@ exports[`array fields array icons 1`] = `
         </span>
       </button>
     </span>
-    
   </div>
   <div>
     <br />
@@ -756,7 +754,6 @@ exports[`array fields empty errors array 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -930,7 +927,6 @@ exports[`array fields fixed array 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1045,7 +1041,6 @@ exports[`array fields no errors 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />

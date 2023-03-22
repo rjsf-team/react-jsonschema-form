@@ -47,24 +47,22 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const fieldTitle = uiOptions.title || title;
-  const fieldDescription = uiOptions.description || description;
   return (
     <>
-      {fieldTitle && (
+      {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
-          title={fieldTitle}
+          title={title}
           required={required}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      {fieldDescription && (
+      {description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(idSchema)}
-          description={fieldDescription}
+          description={description}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

@@ -150,7 +150,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       uiSchema,
     } = this.props;
 
-    const { widgets, fields, translateString } = registry;
+    const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
     const { SchemaField: _SchemaField } = fields;
     const { selectedOption, retrievedOptions } = this.state;
     const {
@@ -160,10 +160,11 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       autocomplete,
       title = schema.title,
       ...uiOptions
-    } = getUiOptions<T, S, F>(uiSchema);
+    } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
+    const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
     const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
     let optionSchema: S;
@@ -204,7 +205,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             placeholder={placeholder}
             autocomplete={autocomplete}
             autofocus={autofocus}
-            label=''
+            label={title ?? name}
+            displayLabel={displayLabel}
           />
         </div>
         {option !== null && <_SchemaField {...this.props} schema={optionSchema!} />}

@@ -20,15 +20,14 @@ export default function TextareaWidget<
     disabled,
     autofocus,
     label,
+    displayLabel = true,
     readonly,
     onBlur,
     onFocus,
     onChange,
     options,
     schema,
-    uiSchema,
     formContext,
-    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
@@ -36,19 +35,17 @@ export default function TextareaWidget<
     options,
     defaultSchemaProps: { inverted: 'false' },
   });
-  const { schemaUtils } = registry;
   // eslint-disable-next-line no-shadow
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange && onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <Form.TextArea
       id={id}
       key={id}
       name={id}
-      label={displayLabel ? label || schema.title : false}
+      label={displayLabel && (label || schema.title)}
       placeholder={placeholder}
       autoFocus={autofocus}
       required={required}

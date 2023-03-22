@@ -12,6 +12,7 @@ export default function TextareaWidget<
   placeholder,
   value,
   label,
+  displayLabel = true,
   disabled,
   autofocus,
   readonly,
@@ -19,15 +20,11 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
-  schema,
   uiSchema,
   required,
   rawErrors,
-  registry,
 }: WidgetProps<T, S, F>) {
   const chakraProps = getChakra({ uiSchema });
-  const { schemaUtils } = registry;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -43,7 +40,7 @@ export default function TextareaWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel ? <FormLabel htmlFor={id}>{label || schema.title}</FormLabel> : null}
+      {displayLabel && !!label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       <Textarea
         id={id}
         name={id}

@@ -14,13 +14,13 @@ import { getChakra } from '../utils';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
-  schema,
   options,
   value,
   required,
   disabled,
   readonly,
   label,
+  displayLabel = true,
   onChange,
   onBlur,
   onFocus,
@@ -40,9 +40,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <FormControl mb={1} {...chakraProps} isDisabled={disabled || readonly} isRequired={required} isReadOnly={readonly}>
-      <FormLabel htmlFor={id} id={`${id}-label`}>
-        {label || schema.title}
-      </FormLabel>
+      {displayLabel && !!label && (
+        <FormLabel htmlFor={id} id={`${id}-label`}>
+          {label}
+        </FormLabel>
+      )}
       <RadioGroup
         onChange={_onChange}
         onBlur={_onBlur}

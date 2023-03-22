@@ -2497,7 +2497,7 @@ exports[`single fields title field 1`] = `
                   htmlFor="root_title"
                   id="root_title-label"
                 >
-                  title
+                  Titre 2
                 </label>
                 <div
                   className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"

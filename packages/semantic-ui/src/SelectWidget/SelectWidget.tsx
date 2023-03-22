@@ -49,6 +49,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     id,
     options,
     label,
+    displayLabel = true,
     required,
     disabled,
     readonly,
@@ -90,7 +91,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       key={id}
       id={id}
       name={id}
-      label={label || schema.title}
+      label={displayLabel && (label || schema.title)}
       multiple={typeof multiple === 'undefined' ? false : multiple}
       value={typeof value === 'undefined' ? emptyValue : selectedIndexes}
       error={rawErrors.length > 0}

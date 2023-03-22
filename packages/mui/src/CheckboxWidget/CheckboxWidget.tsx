@@ -3,6 +3,8 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   ariaDescribedByIds,
+  descriptionId,
+  getTemplate,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -20,7 +22,27 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const { schema, id, value, disabled, readonly, label, autofocus, onChange, onBlur, onFocus } = props;
+  const {
+    schema,
+    id,
+    value,
+    disabled,
+    readonly,
+    label = '',
+    displayLabel = true,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    registry,
+    options,
+    uiSchema,
+  } = props;
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options
+  );
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -29,24 +51,36 @@ export default function CheckboxWidget<
   const _onChange = (_: any, checked: boolean) => onChange(checked);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const description = options.description ?? schema.description;
 
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          id={id}
-          name={id}
-          checked={typeof value === 'undefined' ? false : Boolean(value)}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          aria-describedby={ariaDescribedByIds<T>(id)}
+    <>
+      {displayLabel && !!description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
         />
-      }
-      label={label || ''}
-    />
+      )}
+      <FormControlLabel
+        control={
+          <Checkbox
+            id={id}
+            name={id}
+            checked={typeof value === 'undefined' ? false : Boolean(value)}
+            required={required}
+            disabled={disabled || readonly}
+            autoFocus={autofocus}
+            onChange={_onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+            aria-describedby={ariaDescribedByIds<T>(id)}
+          />
+        }
+        label={displayLabel && label}
+      />
+    </>
   );
 }

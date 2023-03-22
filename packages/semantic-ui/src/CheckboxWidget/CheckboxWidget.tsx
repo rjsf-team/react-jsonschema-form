@@ -1,6 +1,8 @@
 import { FormEvent } from 'react';
 import {
   ariaDescribedByIds,
+  descriptionId,
+  getTemplate,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -25,7 +27,8 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
-    label,
+    label = '',
+    displayLabel = true,
     autofocus,
     onChange,
     onBlur,
@@ -35,6 +38,7 @@ export default function CheckboxWidget<
     schema,
     uiSchema,
     rawErrors = [],
+    registry,
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     options,
@@ -44,6 +48,11 @@ export default function CheckboxWidget<
       inverted: 'false',
     },
   });
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options
+  );
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -52,21 +61,34 @@ export default function CheckboxWidget<
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
   const checked = value == 'true' || value == true;
+  const description = options.description ?? schema.description;
+
   return (
-    <Form.Checkbox
-      id={id}
-      name={id}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      {...semanticProps}
-      checked={typeof value === 'undefined' ? false : checked}
-      error={rawErrors.length > 0}
-      onChange={_onChange}
-      onBlur={_onBlur}
-      onFocus={_onFocus}
-      required={required}
-      label={label || ''}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-    />
+    <>
+      {displayLabel && !!description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <Form.Checkbox
+        id={id}
+        name={id}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        {...semanticProps}
+        checked={typeof value === 'undefined' ? false : checked}
+        error={rawErrors.length > 0}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        required={required}
+        label={displayLabel && label}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+      />
+    </>
   );
 }

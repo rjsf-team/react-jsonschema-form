@@ -120,11 +120,11 @@ export default function ObjectFieldTemplate<
         return (
           <fieldset id={idSchema.$id}>
             <Row gutter={rowGutter}>
-              {(uiOptions.title || title) && (
+              {title && (
                 <Col className={labelColClassName} span={24}>
                   <TitleFieldTemplate
                     id={titleId<T>(idSchema)}
-                    title={uiOptions.title || title}
+                    title={title}
                     required={required}
                     schema={schema}
                     uiSchema={uiSchema}
@@ -132,11 +132,11 @@ export default function ObjectFieldTemplate<
                   />
                 </Col>
               )}
-              {(uiOptions.description || description) && (
+              {description && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <DescriptionFieldTemplate
                     id={descriptionId<T>(idSchema)}
-                    description={uiOptions.description || description!}
+                    description={description}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
