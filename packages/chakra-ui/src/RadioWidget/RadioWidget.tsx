@@ -36,7 +36,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) as string;
+  const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
 
   return (
     <FormControl mb={1} {...chakraProps} isDisabled={disabled || readonly} isRequired={required} isReadOnly={readonly}>

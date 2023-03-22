@@ -39,6 +39,18 @@ should change the heading of the (upcoming) version to include a major version b
 - Added a new `AntD Customization` documentation with references to it in the `form-props` and `uiSchema` documentation
 - Updated the `uiSchema` documentation to add the `filePreview` option
 
+## @rjsf/chakra-ui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+
+## @rjsf/material-ui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+
+## @rjsf/mui
+
+- Fix: MUI radio widget initializes as uncontrolled when schema has no default value, fixing [#3511](https://github.com/rjsf-team/react-jsonschema-form/issues/3511)
+
 # 5.3.1
 
 ## @rjsf/core

@@ -41,7 +41,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions);
+  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? null;
 
   return (
     <>
