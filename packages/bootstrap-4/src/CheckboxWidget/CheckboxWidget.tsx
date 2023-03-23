@@ -3,6 +3,7 @@ import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
+  labelValue,
   WidgetProps,
   schemaRequiresTrueValue,
   StrictRJSFSchema,
@@ -22,7 +23,7 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    displayLabel = true,
+    hideLabel,
     schema,
     autofocus,
     options,
@@ -52,7 +53,7 @@ export default function CheckboxWidget<
       className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {displayLabel && !!description && (
+      {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}
@@ -64,7 +65,7 @@ export default function CheckboxWidget<
       <Form.Check
         id={id}
         name={id}
-        label={displayLabel && !!label ? label : undefined}
+        label={labelValue(label, hideLabel || !label)}
         checked={typeof value === 'undefined' ? false : value}
         required={required}
         disabled={disabled || readonly}

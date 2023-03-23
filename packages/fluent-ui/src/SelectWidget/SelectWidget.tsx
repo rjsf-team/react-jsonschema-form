@@ -6,6 +6,7 @@ import {
   enumOptionsIndexForValue,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
+  labelValue,
   WidgetProps,
   StrictRJSFSchema,
   RJSFSchema,
@@ -64,11 +65,10 @@ export default function SelectWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({
-  schema,
   id,
   options,
   label,
-  displayLabel = true,
+  hideLabel,
   required,
   disabled,
   readonly,
@@ -112,7 +112,7 @@ export default function SelectWidget<
   return (
     <Dropdown
       id={id}
-      label={displayLabel ? label || schema.title : undefined}
+      label={labelValue(label, hideLabel)}
       multiSelect={multiple}
       defaultSelectedKey={multiple ? undefined : selectedIndexes}
       defaultSelectedKeys={multiple ? (selectedIndexes as string[]) : undefined}

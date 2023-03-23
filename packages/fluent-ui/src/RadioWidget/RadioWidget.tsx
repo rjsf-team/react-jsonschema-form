@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -27,12 +28,11 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
-  schema,
   options,
   value,
   required,
   label,
-  displayLabel = true,
+  hideLabel,
   onChange,
   onBlur,
   onFocus,
@@ -75,7 +75,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={_onChange}
       onFocus={_onFocus}
       onBlur={_onBlur}
-      label={displayLabel ? label || schema.title : undefined}
+      label={labelValue(label, hideLabel || !label)}
       required={required}
       selectedKey={selectedIndex}
       {...uiProps}

@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
+  labelValue,
   WidgetProps,
   schemaRequiresTrueValue,
   StrictRJSFSchema,
@@ -26,7 +27,7 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     label,
-    displayLabel = true,
+    hideLabel,
     registry,
     options,
     uiSchema,
@@ -50,7 +51,7 @@ export default function CheckboxWidget<
 
   return (
     <FormControl mb={1} {...chakraProps} isRequired={required}>
-      {displayLabel && !!description && (
+      {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}
@@ -69,7 +70,7 @@ export default function CheckboxWidget<
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        {displayLabel && !!label && <Text>{label}</Text>}
+        {labelValue(<Text>{label}</Text>, hideLabel || !label)}
       </Checkbox>
     </FormControl>
   );

@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
   examplesId,
+  labelValue,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -63,7 +64,7 @@ export default function BaseInputTemplate<
   readonly,
   disabled,
   label,
-  displayLabel = true,
+  hideLabel,
   value,
   onChange,
   onChangeOverride,
@@ -90,7 +91,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={displayLabel ? label || schema.title : undefined}
+        label={labelValue(label, hideLabel)}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}

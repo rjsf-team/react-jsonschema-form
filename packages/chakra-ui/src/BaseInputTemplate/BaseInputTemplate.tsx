@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
   examplesId,
+  labelValue,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -21,7 +22,7 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
-    displayLabel = true,
+    hideLabel,
     schema,
     uiSchema,
     onChange,
@@ -53,10 +54,11 @@ export default function BaseInputTemplate<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel && !!label && (
+      {labelValue(
         <FormLabel htmlFor={id} id={`${id}-label`}>
           {label}
-        </FormLabel>
+        </FormLabel>,
+        hideLabel || !label
       )}
       <Input
         id={id}

@@ -140,7 +140,7 @@ The following props are passed to custom widget components:
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
-- `displayLabel`: Flag, defaulting to true, which indicats whether to display the label; customized via `label` in the `UiSchema`;
+- `hideLabel`: A boolean value, if true, will cause the label to be hidden. This is useful for nested fields where you don't want to clutter the UI. Customized via `label` in the `UiSchema`;
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;

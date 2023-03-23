@@ -5,6 +5,7 @@ import {
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -29,7 +30,7 @@ export default function CheckboxesWidget<
     onFocus,
     required,
     label,
-    displayLabel = true,
+    hideLabel,
     uiSchema,
     rawErrors = [],
   } = props;
@@ -54,10 +55,11 @@ export default function CheckboxesWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel && !!label && (
+      {labelValue(
         <FormLabel htmlFor={id} id={`${id}-label`}>
           {label}
-        </FormLabel>
+        </FormLabel>,
+        hideLabel || !label
       )}
       <CheckboxGroup
         onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}

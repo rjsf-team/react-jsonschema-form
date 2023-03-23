@@ -1,6 +1,7 @@
 import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
+  labelValue,
   pad,
   FormContextType,
   RJSFSchema,
@@ -87,14 +88,13 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   id,
   required,
   label,
-  displayLabel = true,
+  hideLabel,
   value,
   onChange,
   onBlur,
   onFocus,
   options,
   placeholder,
-  schema,
   registry,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
@@ -116,7 +116,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       placeholder={placeholder}
       ariaLabel={translateString(TranslatableString.AriaDateLabel)}
       isRequired={required}
-      label={displayLabel ? label || schema.title : undefined}
+      label={labelValue(label, hideLabel)}
       onSelectDate={_onSelectDate}
       onBlur={_onBlur}
       onFocus={_onFocus}

@@ -552,7 +552,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         hideError={hideError}
         required={required}
         label={label}
-        displayLabel={displayLabel}
+        hideLabel={!displayLabel}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
@@ -604,7 +604,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         readonly={readonly}
         required={required}
         label={label}
-        displayLabel={displayLabel}
+        hideLabel={!displayLabel}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
@@ -656,7 +656,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         autofocus={autofocus}
         rawErrors={rawErrors}
         label={label}
-        displayLabel={displayLabel}
+        hideLabel={!displayLabel}
       />
     );
   }

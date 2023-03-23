@@ -9,6 +9,7 @@ import {
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   WidgetProps,
@@ -26,9 +27,8 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({
-  schema,
   label,
-  displayLabel = true,
+  hideLabel,
   id,
   disabled,
   options,
@@ -60,10 +60,11 @@ export default function CheckboxesWidget<
 
   return (
     <>
-      {displayLabel && (
+      {labelValue(
         <FormLabel required={required} htmlFor={id}>
-          {label || schema.title}
-        </FormLabel>
+          {label || undefined}
+        </FormLabel>,
+        hideLabel
       )}
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&

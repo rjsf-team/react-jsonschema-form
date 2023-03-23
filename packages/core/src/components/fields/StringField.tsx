@@ -51,7 +51,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       id={idSchema.$id}
       name={name}
       label={label}
-      displayLabel={displayLabel}
+      hideLabel={!displayLabel}
       value={formData}
       onChange={onChange}
       onBlur={onBlur}

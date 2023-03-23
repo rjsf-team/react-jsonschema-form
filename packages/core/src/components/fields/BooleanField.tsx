@@ -98,7 +98,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       onFocus={onFocus}
       onBlur={onBlur}
       label={label}
-      displayLabel={displayLabel}
+      hideLabel={!displayLabel}
       value={formData}
       required={required}
       disabled={disabled}

@@ -665,6 +665,7 @@ exports[`single fields format color 1`] = `
   >
     <label
       className="ms-Label root-61"
+      htmlFor="root"
     />
     <div
       aria-label="Color picker, Red 255 Green 255 Blue 255 Alpha 100% selected."
@@ -2260,6 +2261,7 @@ exports[`single fields slider field 1`] = `
   >
     <label
       className="ms-Label root-61"
+      htmlFor="root"
     />
     <div
       className="ms-Slider ms-Slider-enabled ms-Slider-row root-141"
@@ -3076,9 +3078,7 @@ exports[`single fields up/down field 1`] = `
     <label
       className="ms-Label root-61"
       htmlFor="root"
-    >
-      
-    </label>
+    />
     <div
       className="css-94"
     >

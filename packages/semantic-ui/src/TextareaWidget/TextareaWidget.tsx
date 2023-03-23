@@ -1,5 +1,12 @@
 import { ChangeEvent } from 'react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 
@@ -20,13 +27,12 @@ export default function TextareaWidget<
     disabled,
     autofocus,
     label,
-    displayLabel = true,
+    hideLabel,
     readonly,
     onBlur,
     onFocus,
     onChange,
     options,
-    schema,
     formContext,
     rawErrors = [],
   } = props;
@@ -45,7 +51,7 @@ export default function TextareaWidget<
       id={id}
       key={id}
       name={id}
-      label={displayLabel && (label || schema.title)}
+      label={labelValue(label || undefined, hideLabel, false)}
       placeholder={placeholder}
       autoFocus={autofocus}
       required={required}

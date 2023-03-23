@@ -8,26 +8,21 @@ import {
   FormControl,
   FormLabel,
 } from '@chakra-ui/react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { getChakra } from '../utils';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
 ) {
-  const {
-    id,
-    uiSchema,
-    readonly,
-    disabled,
-    label,
-    displayLabel = true,
-    value,
-    onChange,
-    onBlur,
-    onFocus,
-    rawErrors,
-    required,
-  } = props;
+  const { id, uiSchema, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } =
+    props;
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -44,7 +39,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel && !!label && <FormLabel htmlFor={id}>{label}</FormLabel>}
+      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
       <NumberInput
         value={value ?? ''}
         onChange={_onChange}

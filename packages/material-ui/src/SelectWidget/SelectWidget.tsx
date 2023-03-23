@@ -5,6 +5,7 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  labelValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -26,7 +27,7 @@ export default function SelectWidget<
   name, // remove this from textFieldProps
   options,
   label,
-  displayLabel = true,
+  hideLabel,
   required,
   disabled,
   readonly,
@@ -63,7 +64,7 @@ export default function SelectWidget<
     <TextField
       id={id}
       name={id}
-      label={displayLabel && (label || schema.title)}
+      label={labelValue(label, hideLabel || !label, false)}
       value={isEmpty ? emptyValue : selectedIndexes}
       required={required}
       disabled={disabled || readonly}

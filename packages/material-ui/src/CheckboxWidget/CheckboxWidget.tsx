@@ -5,6 +5,7 @@ import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
+  labelValue,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -29,7 +30,7 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label = '',
-    displayLabel = true,
+    hideLabel,
     autofocus,
     onChange,
     onBlur,
@@ -55,7 +56,7 @@ export default function CheckboxWidget<
 
   return (
     <>
-      {displayLabel && !!description && (
+      {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}
@@ -79,7 +80,7 @@ export default function CheckboxWidget<
             aria-describedby={ariaDescribedByIds<T>(id)}
           />
         }
-        label={displayLabel && label}
+        label={labelValue(label, hideLabel, false)}
       />
     </>
   );

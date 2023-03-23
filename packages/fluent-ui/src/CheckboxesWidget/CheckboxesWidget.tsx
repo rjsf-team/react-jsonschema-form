@@ -1,11 +1,12 @@
 import { FormEvent, FocusEvent } from 'react';
-import { Checkbox, Label } from '@fluentui/react';
+import { Checkbox } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -13,24 +14,17 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import _pick from 'lodash/pick';
-import { allowedProps } from '../CheckboxWidget';
 
-const styles_red = {
-  // TODO: get this color from theme.
-  color: 'rgb(164, 38, 44)',
-  fontSize: 12,
-  fontWeight: 'normal' as any,
-  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif`,
-};
+import FluentLabel, { styles_red } from '../FluentLabel/FluentLabel';
+import { allowedProps } from '../CheckboxWidget';
 
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({
-  schema,
   label,
-  displayLabel = true,
+  hideLabel,
   id,
   disabled,
   options,
@@ -64,12 +58,7 @@ export default function CheckboxesWidget<
 
   return (
     <>
-      {displayLabel && (
-        <Label>
-          {label || schema.title}
-          {required && <span style={styles_red}>&nbsp;*</span>}
-        </Label>
-      )}
+      {labelValue(<FluentLabel label={label || undefined} required={required} />, hideLabel)}
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);

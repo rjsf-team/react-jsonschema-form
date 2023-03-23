@@ -206,7 +206,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             autocomplete={autocomplete}
             autofocus={autofocus}
             label={title ?? name}
-            displayLabel={displayLabel}
+            hideLabel={!displayLabel}
           />
         </div>
         {option !== null && <_SchemaField {...this.props} schema={optionSchema!} />}

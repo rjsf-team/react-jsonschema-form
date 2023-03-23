@@ -33,7 +33,7 @@ export default function CheckboxesWidget<
     autofocus,
     readonly,
     label,
-    displayLabel,
+    hideLabel,
     onChange,
     onBlur,
     onFocus,
@@ -70,7 +70,7 @@ export default function CheckboxesWidget<
   const inlineOption = inline ? { inline: true } : { grouped: true };
   return (
     <>
-      {displayLabel && !!label && (
+      {!hideLabel && !!label && (
         <TitleFieldTemplate id={titleId<T>(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
       )}
       <Form.Group id={id} name={id} {...inlineOption}>

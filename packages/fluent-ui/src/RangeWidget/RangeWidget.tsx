@@ -1,14 +1,16 @@
-import { Slider, Label } from '@fluentui/react';
-import { ariaDescribedByIds, FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { Slider } from '@fluentui/react';
+import {
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  rangeSpec,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
-const styles_red = {
-  // TODO: get this color from theme.
-  color: 'rgb(164, 38, 44)',
-  fontSize: 12,
-  fontWeight: 'normal' as any,
-  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif`,
-};
+import FluentLabel from '../FluentLabel/FluentLabel';
 
 // Keys of ISliderProps from @fluentui/react
 const allowedProps = [
@@ -43,22 +45,17 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onChange,
   required,
   label,
-  displayLabel = true,
+  hideLabel,
   id,
 }: WidgetProps<T, S, F>) {
   const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const _onChange = (value: number) => onChange(value);
 
-  const uiProps = _pick((options.props as object) || {}, allowedProps);
+  const uiProps = { id, ..._pick((options.props as object) || {}, allowedProps) };
   return (
     <>
-      {displayLabel && (
-        <Label>
-          {label || schema.title}
-          {required && <span style={styles_red}>&nbsp;*</span>}
-        </Label>
-      )}
+      {labelValue(<FluentLabel label={label || undefined} required={required} id={id} />, hideLabel)}
       <Slider
         disabled={disabled || readonly}
         min={sliderProps.min}

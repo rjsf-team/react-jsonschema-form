@@ -6,6 +6,7 @@ import {
   BaseInputTemplateProps,
   examplesId,
   getInputProps,
+  labelValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -26,7 +27,7 @@ export default function BaseInputTemplate<
     id,
     placeholder,
     label,
-    displayLabel = true,
+    hideLabel,
     value,
     required,
     readonly,
@@ -62,7 +63,7 @@ export default function BaseInputTemplate<
         name={id}
         placeholder={placeholder}
         {...inputProps}
-        label={displayLabel && (label || schema.title)}
+        label={labelValue(label || undefined, hideLabel, false)}
         required={required}
         autoFocus={autofocus}
         disabled={disabled || readonly}
