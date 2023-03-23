@@ -3,6 +3,7 @@ import {
   ariaDescribedByIds,
   descriptionId,
   getTemplate,
+  labelValue,
   schemaRequiresTrueValue,
   FormContextType,
   RJSFSchema,
@@ -82,7 +83,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
           onFocus={handleFocus}
           aria-describedby={ariaDescribedByIds<T>(id)}
         />
-        {!hideLabel && <span>{label}</span>}
+        {labelValue(<span>{label}</span>, hideLabel)}
       </label>
     </div>
   );
