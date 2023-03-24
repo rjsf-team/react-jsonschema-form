@@ -11,6 +11,7 @@ export default function SubmitButton<
   if (norender) {
     return null;
   }
+
   return (
     <div>
       <button type='submit' {...submitButtonProps} className={`btn btn-info ${submitButtonProps.className || ''}`}>

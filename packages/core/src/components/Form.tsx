@@ -350,6 +350,7 @@ export default class Form<
       props.idPrefix,
       props.idSeparator
     );
+
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema,
@@ -815,7 +816,7 @@ export default class Form<
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} />}
+        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} disabled={disabled} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );

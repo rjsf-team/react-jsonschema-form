@@ -2711,6 +2711,52 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelectorAll('input:disabled')).to.have.length.of(2);
     });
+
+    it('should disable the submit button', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        disabled: true,
+      });
+
+      expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']:disabled")).to.exist;
+    });
+
+    it('disabling the submit button via ui:schema props is still possible', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:submitButtonOptions': { props: { disabled: true } } },
+      });
+
+      expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']:disabled")).to.exist;
+    });
+
+    it('if both ui:submitButtonProps and the main form disabled props are provided, and either of them are true, the button will be disabled', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
+        disabled: true,
+      });
+
+      expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']:disabled")).to.exist;
+    });
+
+    it('if both ui:submitButtonProps and the main form disabled props are provided, but false, then submit button will not be disabled', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
+        disabled: false,
+      });
+
+      expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']:disabled")).not.to.exist;
+    });
   });
 
   describe('Form readonly prop', () => {
