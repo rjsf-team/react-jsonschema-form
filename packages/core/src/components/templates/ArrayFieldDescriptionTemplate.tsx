@@ -19,7 +19,7 @@ export default function ArrayFieldDescriptionTemplate<
   F extends FormContextType = any
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { idSchema, description, registry, schema, uiSchema } = props;
-  const options = getUiOptions<T, S, F>(uiSchema);
+  const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
   if (!description || !displayLabel) {
     return null;

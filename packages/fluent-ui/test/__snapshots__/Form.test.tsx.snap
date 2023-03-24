@@ -49,7 +49,6 @@ exports[`single fields checkbox field 1`] = `
         </div>
       </label>
     </div>
-    
   </div>
   <div>
     <br />
@@ -144,7 +143,6 @@ exports[`single fields checkbox field with label 1`] = `
         </span>
       </label>
     </div>
-    
   </div>
   <div>
     <br />
@@ -493,7 +491,6 @@ exports[`single fields field with description 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -612,7 +609,6 @@ exports[`single fields field with description in uiSchema 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -669,6 +665,7 @@ exports[`single fields format color 1`] = `
   >
     <label
       className="ms-Label root-61"
+      htmlFor="root"
     />
     <div
       aria-label="Color picker, Red 255 Green 255 Blue 255 Alpha 100% selected."
@@ -1485,7 +1482,6 @@ exports[`single fields hidden field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1569,7 +1565,6 @@ exports[`single fields hidden label 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2266,6 +2261,7 @@ exports[`single fields slider field 1`] = `
   >
     <label
       className="ms-Label root-61"
+      htmlFor="root"
     />
     <div
       className="ms-Slider ms-Slider-enabled ms-Slider-row root-141"
@@ -2919,7 +2915,7 @@ exports[`single fields title field 1`] = `
                 htmlFor="root_title"
                 id="TextFieldLabel147"
               >
-                title
+                Titre 2
               </label>
               <div
                 className="ms-TextField-fieldGroup fieldGroup-43"
@@ -2950,7 +2946,6 @@ exports[`single fields title field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3083,9 +3078,7 @@ exports[`single fields up/down field 1`] = `
     <label
       className="ms-Label root-61"
       htmlFor="root"
-    >
-      
-    </label>
+    />
     <div
       className="css-94"
     >

@@ -6,6 +6,7 @@ import {
   BaseInputTemplateProps,
   examplesId,
   getInputProps,
+  labelValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -26,6 +27,7 @@ export default function BaseInputTemplate<
     id,
     placeholder,
     label,
+    hideLabel,
     value,
     required,
     readonly,
@@ -40,7 +42,6 @@ export default function BaseInputTemplate<
     uiSchema,
     formContext,
     type,
-    registry,
     rawErrors = [],
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -49,12 +50,10 @@ export default function BaseInputTemplate<
     formContext,
     options,
   });
-  const { schemaUtils } = registry;
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
 
   return (
     <>
@@ -64,7 +63,7 @@ export default function BaseInputTemplate<
         name={id}
         placeholder={placeholder}
         {...inputProps}
-        label={displayLabel ? label || schema.title : false}
+        label={labelValue(label || undefined, hideLabel, false)}
         required={required}
         autoFocus={autofocus}
         disabled={disabled || readonly}

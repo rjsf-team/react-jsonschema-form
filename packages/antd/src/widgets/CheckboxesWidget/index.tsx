@@ -4,7 +4,9 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  getTemplate,
   optionId,
+  titleId,
   FormContextType,
   WidgetProps,
   RJSFSchema,
@@ -21,8 +23,25 @@ export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ autofocus, disabled, formContext, id, onBlur, onChange, onFocus, options, readonly, value }: WidgetProps<T, S, F>) {
+>({
+  autofocus,
+  disabled,
+  formContext,
+  id,
+  label,
+  hideLabel,
+  onBlur,
+  onChange,
+  onFocus,
+  options,
+  readonly,
+  registry,
+  schema,
+  uiSchema,
+  value,
+}: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
@@ -45,29 +64,42 @@ export default function CheckboxesWidget<
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
-    <Checkbox.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      name={id}
-      onChange={!readonly ? handleChange : undefined}
-      value={selectedIndexes}
-      {...extraProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-    >
-      {Array.isArray(enumOptions) &&
-        enumOptions.map((option, i) => (
-          <span key={i}>
-            <Checkbox
-              id={optionId(id, i)}
-              name={id}
-              autoFocus={i === 0 ? autofocus : false}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
-              value={String(i)}
-            >
-              {option.label}
-            </Checkbox>
-            {!inline && <br />}
-          </span>
-        ))}
-    </Checkbox.Group>
+    <>
+      {!hideLabel && !!label && (
+        <div>
+          <TitleFieldTemplate
+            id={titleId<T>(id)}
+            title={label}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
+      )}
+      <Checkbox.Group
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        name={id}
+        onChange={!readonly ? handleChange : undefined}
+        value={selectedIndexes}
+        {...extraProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+      >
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, i) => (
+            <span key={i}>
+              <Checkbox
+                id={optionId(id, i)}
+                name={id}
+                autoFocus={i === 0 ? autofocus : false}
+                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
+                value={String(i)}
+              >
+                {option.label}
+              </Checkbox>
+              {!inline && <br />}
+            </span>
+          ))}
+      </Checkbox.Group>
+    </>
   ) : null;
 }

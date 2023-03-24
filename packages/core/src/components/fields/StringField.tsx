@@ -33,13 +33,15 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     rawErrors,
   } = props;
   const { title, format } = schema;
-  const { widgets, formContext, schemaUtils } = registry;
+  const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
   const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
     defaultWidget = format;
   }
-  const { widget = defaultWidget, placeholder = '', ...options } = getUiOptions<T, S, F>(uiSchema);
+  const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const label = uiTitle ?? title ?? name;
   const Widget = getWidget<T, S, F>(schema, widget, widgets);
   return (
     <Widget
@@ -48,7 +50,8 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       uiSchema={uiSchema}
       id={idSchema.$id}
       name={name}
-      label={title === undefined ? name : title}
+      label={label}
+      hideLabel={!displayLabel}
       value={formData}
       onChange={onChange}
       onBlur={onBlur}

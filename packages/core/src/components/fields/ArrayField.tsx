@@ -529,11 +529,11 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
       name,
     } = this.props;
-    const { widgets, formContext } = registry;
-    const title = schema.title || name;
-
-    const { widget, ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const { widgets, formContext, globalUiOptions, schemaUtils } = registry;
+    const { widget, title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+    const label = uiTitle ?? schema.title ?? name;
+    const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
     return (
       <Widget
         id={idSchema.$id}
@@ -551,7 +551,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         readonly={readonly}
         hideError={hideError}
         required={required}
-        label={title}
+        label={label}
+        hideLabel={!displayLabel}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
@@ -579,12 +580,13 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
       name,
     } = this.props;
-    const { widgets, schemaUtils, formContext } = registry;
+    const { widgets, schemaUtils, formContext, globalUiOptions } = registry;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
-    const title = schema.title || name;
     const enumOptions = optionsList(itemsSchema);
-    const { widget = 'select', ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+    const label = uiTitle ?? schema.title ?? name;
+    const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
     return (
       <Widget
         id={idSchema.$id}
@@ -601,7 +603,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         disabled={disabled}
         readonly={readonly}
         required={required}
-        label={title}
+        label={label}
+        hideLabel={!displayLabel}
         placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
@@ -628,10 +631,11 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       formData: items = [],
       rawErrors,
     } = this.props;
-    const title = schema.title || name;
-    const { widgets, formContext } = registry;
-    const { widget = 'files', ...options } = getUiOptions<T[], S, F>(uiSchema);
+    const { widgets, formContext, globalUiOptions, schemaUtils } = registry;
+    const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+    const label = uiTitle ?? schema.title ?? name;
+    const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
     return (
       <Widget
         options={options}
@@ -643,7 +647,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         onFocus={onFocus}
         schema={schema}
         uiSchema={uiSchema}
-        title={title}
         value={items}
         disabled={disabled}
         readonly={readonly}
@@ -652,7 +655,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
-        label=''
+        label={label}
+        hideLabel={!displayLabel}
       />
     );
   }

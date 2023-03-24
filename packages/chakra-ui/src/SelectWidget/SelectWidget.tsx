@@ -5,6 +5,7 @@ import {
   EnumOptionsType,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  labelValue,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -17,10 +18,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   props: WidgetProps<T, S, F>
 ) {
   const {
-    schema,
     id,
     options,
     label,
+    hideLabel,
     placeholder,
     multiple,
     required,
@@ -95,7 +96,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {(label || schema.title) && <FormLabel htmlFor={isMultiple ? undefined : id}>{label || schema.title}</FormLabel>}
+      {labelValue(<FormLabel htmlFor={isMultiple ? undefined : id}>{label}</FormLabel>, hideLabel || !label)}
       <Select
         inputId={id}
         name={id}

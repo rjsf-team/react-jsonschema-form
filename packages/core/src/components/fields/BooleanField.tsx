@@ -36,14 +36,19 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     rawErrors,
   } = props;
   const { title } = schema;
-  const { widgets, formContext, translateString } = registry;
-  const { widget = 'checkbox', ...options } = getUiOptions<T, S, F>(uiSchema);
+  const { widgets, formContext, translateString, globalUiOptions } = registry;
+  const {
+    widget = 'checkbox',
+    title: uiTitle,
+    // Unlike the other fields, don't use `getDisplayLabel()` since it always returns false for the boolean type
+    label: displayLabel = true,
+    ...options
+  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget(schema, widget, widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
-
   let enumOptions: EnumOptionsType<S>[] | undefined;
-
+  const label = uiTitle ?? title ?? name;
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList<S>({
       oneOf: schema.oneOf
@@ -92,7 +97,8 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      label={title === undefined ? name : title}
+      label={label}
+      hideLabel={!displayLabel}
       value={formData}
       required={required}
       disabled={disabled}

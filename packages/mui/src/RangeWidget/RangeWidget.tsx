@@ -1,7 +1,15 @@
 import { FocusEvent } from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import Slider from '@mui/material/Slider';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, rangeSpec } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  rangeSpec,
+} from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -11,7 +19,8 @@ import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, Widg
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
 ) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, id } = props;
+  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
+    props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
   const _onChange = (_: any, value?: number | number[]) => {
@@ -22,9 +31,12 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
+      {labelValue(
+        <FormLabel required={required} htmlFor={id}>
+          {label || undefined}
+        </FormLabel>,
+        hideLabel
+      )}
       <Slider
         disabled={disabled || readonly}
         onChange={_onChange}

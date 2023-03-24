@@ -1,14 +1,15 @@
-import { ColorPicker, IColorPickerProps, IColor, getColorFromString, Label } from '@fluentui/react';
-import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ColorPicker, IColorPickerProps, IColor, getColorFromString } from '@fluentui/react';
+import {
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import _pick from 'lodash/pick';
 
-const styles_red = {
-  // TODO: get this color from theme.
-  color: 'rgb(164, 38, 44)',
-  fontSize: 12,
-  fontWeight: 'normal' as any,
-  fontFamily: `"Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif`,
-};
+import FluentLabel from '../FluentLabel/FluentLabel';
 
 const allowedProps: (keyof IColorPickerProps)[] = [
   'componentRef',
@@ -30,25 +31,22 @@ const allowedProps: (keyof IColorPickerProps)[] = [
 
 export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
-  schema,
   options,
   value,
   required,
   label,
+  hideLabel,
   onChange,
 }: WidgetProps<T, S, F>) {
   const updateColor = (_ev: any, colorObj: IColor) => {
     onChange(colorObj.hex);
   };
 
-  const uiProps = _pick((options.props as object) || {}, allowedProps);
+  const uiProps = { id, ..._pick((options.props as object) || {}, allowedProps) };
 
   return (
     <>
-      <Label>
-        {label || schema.title}
-        {required && <span style={styles_red}>&nbsp;*</span>}
-      </Label>
+      {labelValue(<FluentLabel label={label || undefined} required={required} id={id} />, hideLabel)}
       <ColorPicker
         color={getColorFromString(value) as any}
         onChange={updateColor}

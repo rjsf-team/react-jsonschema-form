@@ -5,6 +5,7 @@ import {
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -29,9 +30,9 @@ export default function CheckboxesWidget<
     onFocus,
     required,
     label,
+    hideLabel,
     uiSchema,
     rawErrors = [],
-    schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
@@ -54,9 +55,12 @@ export default function CheckboxesWidget<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      <FormLabel htmlFor={id} id={`${id}-label`}>
-        {label || schema.title}
-      </FormLabel>
+      {labelValue(
+        <FormLabel htmlFor={id} id={`${id}-label`}>
+          {label}
+        </FormLabel>,
+        hideLabel || !label
+      )}
       <CheckboxGroup
         onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         defaultValue={selectedIndexes}

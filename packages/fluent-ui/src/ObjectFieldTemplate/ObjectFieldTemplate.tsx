@@ -32,7 +32,7 @@ export default function ObjectFieldTemplate<
   );
   return (
     <>
-      {(uiOptions.title || title) && (
+      {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
           title={title}
@@ -42,12 +42,12 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      {(uiOptions.description || description) && (
+      {description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(idSchema)}
           schema={schema}
           uiSchema={uiSchema}
-          description={uiOptions.description || description!}
+          description={description}
           registry={registry}
         />
       )}

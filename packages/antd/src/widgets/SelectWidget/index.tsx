@@ -3,6 +3,8 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  getTemplate,
+  titleId,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -29,6 +31,8 @@ export default function SelectWidget<
   disabled,
   formContext = {} as F,
   id,
+  label,
+  hideLabel,
   multiple,
   onBlur,
   onChange,
@@ -36,9 +40,13 @@ export default function SelectWidget<
   options,
   placeholder,
   readonly,
+  registry,
+  schema,
+  uiSchema,
   value,
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
 
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -66,32 +74,37 @@ export default function SelectWidget<
     name: id,
   };
   return (
-    <Select
-      autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      getPopupContainer={getPopupContainer}
-      id={id}
-      mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={SELECT_STYLE}
-      value={selectedIndexes}
-      {...extraProps}
-      filterOption={filterOption}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-    >
-      {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: optionValue, label: optionLabel }, index) => (
-          <Select.Option
-            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1}
-            key={String(index)}
-            value={String(index)}
-          >
-            {optionLabel}
-          </Select.Option>
-        ))}
-    </Select>
+    <>
+      {!hideLabel && !!label && (
+        <TitleFieldTemplate id={titleId<T>(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
+      )}
+      <Select
+        autoFocus={autofocus}
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        getPopupContainer={getPopupContainer}
+        id={id}
+        mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={SELECT_STYLE}
+        value={selectedIndexes}
+        {...extraProps}
+        filterOption={filterOption}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+      >
+        {Array.isArray(enumOptions) &&
+          enumOptions.map(({ value: optionValue, label: optionLabel }, index) => (
+            <Select.Option
+              disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1}
+              key={String(index)}
+              value={String(index)}
+            >
+              {optionLabel}
+            </Select.Option>
+          ))}
+      </Select>
+    </>
   );
 }

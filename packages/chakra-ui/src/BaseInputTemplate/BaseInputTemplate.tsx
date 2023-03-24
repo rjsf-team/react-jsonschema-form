@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
   examplesId,
+  labelValue,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -21,6 +22,7 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
+    hideLabel,
     schema,
     uiSchema,
     onChange,
@@ -34,18 +36,14 @@ export default function BaseInputTemplate<
     autofocus,
     placeholder,
     disabled,
-    registry,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const chakraProps = getChakra({ uiSchema });
-  const { schemaUtils } = registry;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
-
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema) && (!!label || !!schema.title);
 
   return (
     <FormControl
@@ -56,11 +54,12 @@ export default function BaseInputTemplate<
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {displayLabel ? (
+      {labelValue(
         <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label || schema.title}
-        </FormLabel>
-      ) : null}
+          {label}
+        </FormLabel>,
+        hideLabel || !label
+      )}
       <Input
         id={id}
         name={id}

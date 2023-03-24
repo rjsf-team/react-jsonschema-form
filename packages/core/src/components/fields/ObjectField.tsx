@@ -243,14 +243,14 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       registry,
     } = this.props;
 
-    const { fields, formContext, schemaUtils, translateString } = registry;
+    const { fields, formContext, schemaUtils, translateString, globalUiOptions } = registry;
     const { SchemaField } = fields;
     const schema: S = schemaUtils.retrieveSchema(rawSchema, formData);
-    const uiOptions = getUiOptions<T, S, F>(uiSchema);
+    const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const { properties: schemaProperties = {} } = schema;
 
-    const title = uiOptions.title || (schema.title === undefined ? name : schema.title);
-    const description = uiOptions.description || schema.description;
+    const title = uiOptions.title ?? schema.title ?? name;
+    const description = uiOptions.description ?? schema.description;
     let orderedProperties: string[];
     try {
       const properties = Object.keys(schemaProperties);
@@ -271,8 +271,9 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
 
     const templateProps = {
-      title,
-      description,
+      // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+      title: uiOptions.label === false ? '' : title,
+      description: uiOptions.label === false ? undefined : description,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
         const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];

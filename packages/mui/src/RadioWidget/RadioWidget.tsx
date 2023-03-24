@@ -7,6 +7,7 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  labelValue,
   optionId,
   FormContextType,
   RJSFSchema,
@@ -21,13 +22,13 @@ import {
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
-  schema,
   options,
   value,
   required,
   disabled,
   readonly,
   label,
+  hideLabel,
   onChange,
   onBlur,
   onFocus,
@@ -45,9 +46,12 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
-        {label || schema.title}
-      </FormLabel>
+      {labelValue(
+        <FormLabel required={required} htmlFor={id}>
+          {label || undefined}
+        </FormLabel>,
+        hideLabel
+      )}
       <RadioGroup
         id={id}
         name={id}

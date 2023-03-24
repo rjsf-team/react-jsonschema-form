@@ -11705,7 +11705,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
                   htmlFor="root_title"
                   id="root_title-label"
                 >
-                  title
+                  Titre 2
                 </label>
                 <div
                   className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-9"
@@ -11735,7 +11735,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
                       className="emotion-12"
                     >
                       <span>
-                        title
+                        Titre 2
                       </span>
                     </legend>
                   </fieldset>

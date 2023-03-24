@@ -1,8 +1,9 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { Label, SpinButton } from '@fluentui/react';
+import { SpinButton } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
+  labelValue,
   rangeSpec,
   RJSFSchema,
   StrictRJSFSchema,
@@ -10,6 +11,8 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import _pick from 'lodash/pick';
+
+import FluentLabel from '../FluentLabel/FluentLabel';
 
 // Keys of ISpinButtonProps from @fluentui/react
 const allowedProps = [
@@ -61,6 +64,7 @@ export default function UpDownWidget<
   readonly,
   disabled,
   label,
+  hideLabel,
   value,
   onChange,
   onBlur,
@@ -98,13 +102,11 @@ export default function UpDownWidget<
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const requiredSymbol = required ? '*' : '';
-
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
     <>
-      <Label htmlFor={id}>{label + requiredSymbol}</Label>
+      {labelValue(<FluentLabel label={label || undefined} required={required} id={id} />, hideLabel)}
       <SpinButton
         id={id}
         min={min}

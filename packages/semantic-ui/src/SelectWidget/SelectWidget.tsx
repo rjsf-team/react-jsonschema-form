@@ -3,6 +3,7 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  labelValue,
   EnumOptionsType,
   FormContextType,
   RJSFSchema,
@@ -43,12 +44,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   props: WidgetProps<T, S, F>
 ) {
   const {
-    schema,
     uiSchema,
     formContext,
     id,
     options,
     label,
+    hideLabel,
     required,
     disabled,
     readonly,
@@ -90,7 +91,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       key={id}
       id={id}
       name={id}
-      label={label || schema.title}
+      label={labelValue(label || undefined, hideLabel, false)}
       multiple={typeof multiple === 'undefined' ? false : multiple}
       value={typeof value === 'undefined' ? emptyValue : selectedIndexes}
       error={rawErrors.length > 0}

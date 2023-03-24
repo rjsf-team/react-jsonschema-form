@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
   examplesId,
+  labelValue,
   FormContextType,
   getInputProps,
   RJSFSchema,
@@ -63,6 +64,7 @@ export default function BaseInputTemplate<
   readonly,
   disabled,
   label,
+  hideLabel,
   value,
   onChange,
   onChangeOverride,
@@ -74,17 +76,13 @@ export default function BaseInputTemplate<
   type,
   rawErrors,
   multiline,
-  registry,
-  uiSchema,
 }: BaseInputTemplateProps<T, S, F>) {
-  const { schemaUtils } = registry;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
   return (
@@ -93,7 +91,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={displayLabel ? label || schema.title : undefined}
+        label={labelValue(label, hideLabel)}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}

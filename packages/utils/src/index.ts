@@ -25,6 +25,7 @@ import isConstant from './isConstant';
 import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';
 import isObject from './isObject';
+import labelValue from './labelValue';
 import localToUTC from './localToUTC';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
@@ -79,6 +80,7 @@ export {
   isCustomWidget,
   isFixedItems,
   isObject,
+  labelValue,
   localToUTC,
   mergeDefaultsWithFormData,
   mergeObjects,

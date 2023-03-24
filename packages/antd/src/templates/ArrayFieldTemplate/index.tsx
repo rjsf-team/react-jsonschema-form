@@ -93,7 +93,7 @@ export default function ArrayFieldTemplate<
               {(uiOptions.description || schema.description) && (
                 <Col span={24} style={DESCRIPTION_COL_STYLE}>
                   <ArrayFieldDescriptionTemplate
-                    description={uiOptions.description || schema.description || ''}
+                    description={uiOptions.description || schema.description}
                     idSchema={idSchema}
                     schema={schema}
                     uiSchema={uiSchema}
