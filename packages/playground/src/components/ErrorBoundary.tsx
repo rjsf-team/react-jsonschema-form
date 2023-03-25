@@ -1,6 +1,8 @@
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 
-type Props = {};
+type Props = {
+  children: ReactNode;
+};
 
 type State =
   | {

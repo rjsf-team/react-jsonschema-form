@@ -6,9 +6,9 @@ const GeoPosition: React.FC = memo(() => {
 
   return (
     <div className='geo'>
-      <h3>Hey, I'm a custom component</h3>
+      <h3>Hey, I&apos;m a custom component</h3>
       <p>
-        I'm registered as <code>geo</code> and referenced in
+        I&apos;m registered as <code>geo</code> and referenced in
         <code>uiSchema</code> as the <code>ui:field</code> to use for this schema.
       </p>
       <div className='row'>

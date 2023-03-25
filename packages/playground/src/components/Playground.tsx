@@ -1,8 +1,8 @@
-import { useCallback, useState, useRef, useEffect, type ComponentType, type FormEvent } from 'react';
+import { useCallback, useState, useRef, useEffect, ComponentType, FormEvent } from 'react';
 import 'react-app-polyfill/ie11';
 import isEqualWith from 'lodash/isEqualWith';
-import Form, { withTheme, type IChangeEvent, type FormProps } from '@rjsf/core';
-import type {
+import Form, { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
+import {
   ErrorSchema,
   TemplatesType,
   ArrayFieldTemplateProps,
@@ -194,7 +194,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       setObjectFieldTemplate(ObjectFieldTemplate);
       setShowForm(true);
     },
-    [onThemeSelected, setShowForm, setUiSchema, setExtraErrors, setTheme, setArrayFieldTemplate, setObjectFieldTemplate]
+    [theme, onThemeSelected, themes]
   );
 
   useEffect(() => {
@@ -215,7 +215,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
     onThemeSelected(theme, themes[theme]);
 
     setShowForm(true);
-  }, [onThemeSelected, load, setShowForm]);
+  }, [onThemeSelected, load, setShowForm, theme, themes]);
 
   const onSubthemeSelected = useCallback(
     (subtheme: any, { stylesheet }: { stylesheet: any }) => {
@@ -278,7 +278,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       setShareURL(null);
       console.error(error);
     }
-  }, [setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema]);
 
   const templateProps: Partial<TemplatesType> = {
     ArrayFieldTemplate,
@@ -366,8 +366,9 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
                   {theme === 'antd' && (
                     <div
                       dangerouslySetInnerHTML={{
-                        // @ts-ignore
-                        __html: document.getElementById('antd-styles-iframe')?.contentDocument.head.innerHTML,
+                        __html:
+                          (document.getElementById('antd-styles-iframe') as HTMLIFrameElement)?.contentDocument?.head
+                            .innerHTML || '',
                       }}
                     />
                   )}

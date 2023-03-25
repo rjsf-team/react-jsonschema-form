@@ -15,7 +15,9 @@ const Editor: React.FC<{ title: string; code: string; onChange: (code: string) =
 
     const onCodeChange = useCallback(
       (code: string | undefined) => {
-        if (!code) return;
+        if (!code) {
+          return;
+        }
 
         try {
           const parsedCode = JSON.parse(code);

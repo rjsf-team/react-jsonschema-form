@@ -8,8 +8,8 @@
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "prepublishOnly": "npm run build:lib",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production vite build",
-    "cs-check": "prettier -l \"src/**/*.js\"",
-    "cs-format": "prettier \"src/**/*.js\" --write",
+    "cs-check": "prettier -l \"src/**/*.ts?(x)\"",
+    "cs-format": "prettier \"src/**/*.ts?(x)\" --write",
     "build": "rimraf build && cross-env NODE_ENV=production vite build",
     "lint": "eslint src",
     "precommit": "lint-staged",
@@ -19,7 +19,7 @@
     "preview": "vite preview"
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "src/**/*.ts?(x)": [
       "eslint --fix",
       "prettier --write"
     ]

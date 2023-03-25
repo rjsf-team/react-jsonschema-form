@@ -20,7 +20,7 @@ const RawValidatorTest: React.FC<{ validator: any; schema: object; formData: obj
           To determine whether a validation issue is really a BUG in Ajv use the button to trigger the raw Ajv
           validation. This will run your schema and formData through Ajv without involving any react-jsonschema-form
           specific code. If there is an unexpected error, then{' '}
-          <a href='https://github.com/ajv-validator/ajv/issues/new/choose' target='_blank' rel='noopener'>
+          <a href='https://github.com/ajv-validator/ajv/issues/new/choose' target='_blank' rel='noreferrer'>
             file an issue
           </a>{' '}
           with Ajv instead.

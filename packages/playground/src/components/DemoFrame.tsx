@@ -1,10 +1,10 @@
-import { useState, useRef, useCallback, cloneElement } from 'react';
+import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode } from 'react';
 import { CssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
-import createCache, { type EmotionCache } from '@emotion/cache';
-import { create, type Jss } from 'jss';
+import createCache, { EmotionCache } from '@emotion/cache';
+import { create, Jss } from 'jss';
 import { jssPreset, StylesProvider } from '@material-ui/core/styles';
-import Frame, { type FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
+import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 
 /*
@@ -33,7 +33,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => {
+interface DemoFrameProps extends FrameComponentProps {
+  theme: string;
+  /** override children to be ReactElement to avoid Typescript issue. In this case we don't need to worry about
+   * children being of the other valid ReactNode types, undefined and string as it always contains an RJSF `Form`
+   */
+  children: ReactElement;
+}
+
+export default function DemoFrame(props: DemoFrameProps) {
   const { children, head, theme, ...frameProps } = props;
 
   const [jss, setJss] = useState<Jss>();
@@ -73,34 +81,26 @@ const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => 
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);
-  }, [setReady, setJss, setSheetsManager, setEmotionCache, setContainer, setWindow]);
+  }, []);
 
-  let body = children;
+  let body: ReactNode = children;
   if (theme === 'material-ui-4') {
     body = ready ? (
       <StylesProvider jss={jss} sheetsManager={sheetsManager}>
-        {cloneElement(
-          // @ts-ignore
-          children,
-          {
-            container: container,
-            window: window,
-          }
-        )}
+        {cloneElement(children, {
+          container: container,
+          window: window,
+        })}
       </StylesProvider>
     ) : null;
   } else if (theme === 'material-ui-5') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssBaseline />
-        {cloneElement(
-          // @ts-ignore
-          children,
-          {
-            container: container,
-            window: window,
-          }
-        )}
+        {cloneElement(children, {
+          container: container,
+          window: window,
+        })}
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluent-ui') {
@@ -118,11 +118,9 @@ const DemoFrame: React.FC<{ theme: string } & FrameComponentProps> = (props) => 
   }
 
   return (
-    <Frame ref={handleRef} contentDidMount={onContentDidMount} {...frameProps}>
+    <Frame ref={handleRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
       <div id='demo-frame-jss' />
       {body}
     </Frame>
   );
-};
-
-export default DemoFrame;
+}
