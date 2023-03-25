@@ -11,6 +11,9 @@ import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 
+import Layout from './layout';
+import Playground from './components';
+
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
@@ -113,9 +116,6 @@ const themes = {
     theme: SuiTheme,
   },
 };
-
-import Layout from './layout';
-import Playground from './components';
 
 const App: React.FC = () => {
   return (
