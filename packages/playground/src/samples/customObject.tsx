@@ -1,4 +1,9 @@
-function ObjectFieldTemplate({ TitleField, properties, title, description }) {
+const ObjectFieldTemplate: React.FC<{
+  TitleField: React.FC<{ title: string }>;
+  title: string;
+  properties: any[];
+  description: string;
+}> = ({ TitleField, properties, title, description }) => {
   return (
     <div>
       <TitleField title={title} />
@@ -12,7 +17,7 @@ function ObjectFieldTemplate({ TitleField, properties, title, description }) {
       {description}
     </div>
   );
-}
+};
 
 export default {
   schema: {

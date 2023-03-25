@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.4.1
+
+## Dev / docs / playground
+
+- Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
+
 # 5.4.0
 
 ## @rjsf/antd

@@ -1,8 +1,13 @@
-function ArrayFieldTemplate(props) {
+const ArrayFieldTemplate: React.FC<{ className: string; items?: any[]; canAdd?: boolean; onAddClick: () => void }> = ({
+  className,
+  items,
+  canAdd,
+  onAddClick,
+}) => {
   return (
-    <div className={props.className}>
-      {props.items &&
-        props.items.map((element) => (
+    <div className={className}>
+      {items &&
+        items.map((element) => (
           <div key={element.key} className={element.className}>
             <div>{element.children}</div>
             {element.hasMoveDown && (
@@ -16,10 +21,10 @@ function ArrayFieldTemplate(props) {
           </div>
         ))}
 
-      {props.canAdd && (
+      {canAdd && (
         <div className='row'>
           <p className='col-xs-3 col-xs-offset-9 array-item-add text-right'>
-            <button onClick={props.onAddClick} type='button'>
+            <button onClick={onAddClick} type='button'>
               Custom +
             </button>
           </p>
@@ -27,7 +32,7 @@ function ArrayFieldTemplate(props) {
       )}
     </div>
   );
-}
+};
 
 export default {
   schema: {

@@ -31,7 +31,7 @@ import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
 
-export const samples = {
+export const samples = Object.freeze({
   Simple: simple,
   'UI Options': options,
   Nested: nested,
@@ -64,4 +64,6 @@ export const samples = {
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,
-};
+} as const);
+
+export type Sample = keyof typeof samples;

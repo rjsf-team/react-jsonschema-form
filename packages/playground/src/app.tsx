@@ -1,4 +1,3 @@
-import { render } from 'react-dom';
 import { Theme as MuiV4Theme } from '@rjsf/material-ui';
 import { Theme as MuiV5Theme } from '@rjsf/mui';
 import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
@@ -12,7 +11,8 @@ import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 
-import Playground from './app';
+import Layout from './layout';
+import Playground from './components';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
@@ -117,4 +117,12 @@ const themes = {
   },
 };
 
-render(<Playground themes={themes} validators={validators} />, document.getElementById('app'));
+const App: React.FC = () => {
+  return (
+    <Layout>
+      <Playground themes={themes} validators={validators} />
+    </Layout>
+  );
+};
+
+export default App;
