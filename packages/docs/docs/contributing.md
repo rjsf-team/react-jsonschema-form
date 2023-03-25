@@ -6,39 +6,39 @@ We are using `Vite` to power our `playground`, which caches all the built `@rjsf
 In order to test the `playground` locally after a new clone or fresh pull from `main`, run the following from the root directory of the monorepo:
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm build
 cd packages/playground
-npm start
+pnpm start
 ```
 
 This will start the live development server showcasing components at [localhost:8080](http://localhost:8080).
 
-Whenever you make changes to source code, stop the running playground and return to the root directory and rerun `npm run build`.
+Whenever you make changes to source code, stop the running playground and return to the root directory and rerun `pnpm build`.
 Thanks to `nx` caching, this should only rebuild what is necessary.
-After the build is complete, return to the root of the `playground` and restart the server via `npm start`.
+After the build is complete, return to the root of the `playground` and restart the server via `pnpm start`.
 
 ### First time step
 
-If this is the first time you have cloned the repo, run the `npm run prepare` script that will set up `husky` to provide a git precommit hook that will format and lint any code you have added to a PR.
+If this is the first time you have cloned the repo, run the `pnpm prepare` script that will set up `husky` to provide a git precommit hook that will format and lint any code you have added to a PR.
 
 ### Optional development process
 
-With the large number of packages, sometimes running `npm run build` or `npm start` from the root directory will overwhelm an underpowered computer.
-If that is the situation for you, you can instead use `npm run build-serial` to build the packages one at a time instead of all at once.
-Also, if you are only working on one package, you can `npm run build` and `npm run test` from within the subdirectory.
-Finally, you can simply `npm start` inside of the `playground` directory to test changes if you have already built all of your packages, without needing to watch all of the packages via the root directory `npm start`.
+With the large number of packages, sometimes running `pnpm build` or `pnpm start` from the root directory will overwhelm an underpowered computer.
+If that is the situation for you, you can instead use `pnpm build-serial` to build the packages one at a time instead of all at once.
+Also, if you are only working on one package, you can `pnpm build` and `pnpm test` from within the subdirectory.
+Finally, you can simply `pnpm start` inside of the `playground` directory to test changes if you have already built all of your packages, without needing to watch all of the packages via the root directory `yarn start`.
 
 ## Cloud builds
 
-When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially.
+When building in environments with limited memory, such as Netlify, it's recommended to use `pnpm build-serial` that builds the packages serially.
 
 ## Coding style
 
 All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
 Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `npm cs-format` within any package directory you are changing.
+You can also run `pnpm cs-format` within any package directory you are changing.
 
 ## Documentation
 
@@ -56,7 +56,7 @@ Documentation will be served on [localhost:3000](http://localhost:3000).
 You can run all tests from the root directory OR from `packages` subdirectory using the following command:
 
 ```bash
-npm run test
+pnpm test
 ```
 
 ### Snapshot testing
@@ -84,7 +84,7 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `npm run test` from the root directory to update all the snapshots.
+Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `pnpm test` from the root directory to update all the snapshots.
 If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
 For example:
 
@@ -120,7 +120,7 @@ See the `antd` `Form.test.tsx` for a specific example of this.
 ### Code coverage
 
 Code coverage reports are currently available only for the `@rjsf/core` theme package.
-They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
+They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `pnpm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 #### Utils and validator-ajvX code coverage
@@ -138,16 +138,16 @@ For instance if you are about to create the new `5.100.10` branch, then you woul
 ```bash
 git checkout -b rc5.100.10
 git push
-npx lerna version
-npm run post-versioning
+pnpx lerna version
+pnpm post-versioning
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The `npx lerna version` command will create a new version tag and push it to GitHub.
+The `pnpx lerna version` command will create a new version tag and push it to GitHub.
 
-The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
-It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.
-Finally, it creates and pushes a new commit with those `package.json` and `package-lock.json` files up to GitHub.
+The `pnpm post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
+It will then clean up the `node_modules` directories and rerun `pnpm install` to update the `pnpm-lock.yaml` file.
+Finally, it creates and pushes a new commit with those `package.json` and `pnpm-lock.yaml` files up to GitHub.
 
 > NOTE: this command will take a while, be patient
 
@@ -178,5 +178,5 @@ If you need to manually publish the latest playground to [https://rjsf-team.gith
 
 ```bash
 cd packages/playground
-npm run publish-to-gh-pages
+pnpm publish-to-gh-pages
 ```

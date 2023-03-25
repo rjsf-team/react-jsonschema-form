@@ -512,7 +512,7 @@ describe('Validation', () => {
 
       beforeEach(() => {
         const validator = customizeV6Validator({
-          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-04.json')],
+          additionalMetaSchemas: [require('@rjsf/validator-ajv6/node_modules/ajv/lib/refs/json-schema-draft-04.json')],
         });
         const withMetaSchema = createFormComponent({
           schema,
@@ -982,7 +982,7 @@ describe('Validation', () => {
 
       beforeEach(() => {
         const validator = customizeV8Validator({
-          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+          additionalMetaSchemas: [require('@rjsf/validator-ajv6/node_modules/ajv/lib/refs/json-schema-draft-06.json')],
         });
         const withMetaSchema = createFormComponent({
           schema,

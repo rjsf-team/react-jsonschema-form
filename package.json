@@ -6,7 +6,6 @@
     "node": ">=14"
   },
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "publish": "lerna publish",
     "changed": "lerna changed",
     "test": "lerna run --concurrency 2 --stream test",
@@ -31,6 +30,7 @@
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
+  "packageManager": "pnpm@7.30.3",
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.8",
     "@nrwl/nx-cloud": "^15.3.5",

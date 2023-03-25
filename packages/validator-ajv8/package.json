@@ -46,7 +46,7 @@
     "@babel/plugin-transform-react-jsx": "^7.22.3",
     "@babel/preset-env": "^7.22.4",
     "@babel/preset-react": "^7.22.3",
-    "@rjsf/utils": "^5.8.1",
+    "@rjsf/utils": "workspace:*",
     "@types/jest-expect-message": "^1.1.0",
     "@types/json-schema": "^7.0.12",
     "@types/lodash": "^4.14.195",

@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.8.2
+
+## Dev / docs / playground
+
+- Use pnpm workspaces instead of npm, which should reduce install times and simplify monorepo management with Lerna.
+
 # 5.8.1
 
 ## Dev / docs / playground

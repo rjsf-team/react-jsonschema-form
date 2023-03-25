@@ -122,6 +122,7 @@ site
 dist
 dist-temp
 lib
+package-lock.json
 yarn.lock
 
 # IDE
