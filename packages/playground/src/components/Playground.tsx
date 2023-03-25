@@ -337,15 +337,6 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
             >
               Prog. Reset
             </button>
-            <span> </span>
-            <button
-              title='Click me to reset the form programmatically.'
-              className='btn btn-default'
-              type='button'
-              onClick={() => playGroundFormRef.current.reset()}
-            >
-              Prog. Reset
-            </button>
             <div style={{ marginTop: '5px' }} />
             <CopyLink shareURL={shareURL} onShare={onShare} />
           </div>
