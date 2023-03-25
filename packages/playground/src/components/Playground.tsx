@@ -233,14 +233,14 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
   );
 
   const handleSetLiveSettings = useCallback(
-    ({ formData }: IChangeEvent<any, RJSFSchema, any>) => {
+    ({ formData }: IChangeEvent) => {
       setLiveSettings(formData);
     },
     [setLiveSettings]
   );
 
   const onFormDataChange = useCallback(
-    ({ formData }: IChangeEvent<any, RJSFSchema, any>, id?: string) => {
+    ({ formData }: IChangeEvent, id?: string) => {
       if (id) {
         console.log('Field changed, id: ', id);
       }
@@ -251,7 +251,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
     [setFormData, setShareURL]
   );
 
-  const onFormDataSubmit = useCallback(({ formData }: IChangeEvent<any, RJSFSchema, any>, event: FormEvent<any>) => {
+  const onFormDataSubmit = useCallback(({ formData }: IChangeEvent, event: FormEvent<any>) => {
     console.log('submitted formData', formData);
     console.log('submit event', event);
     window.alert('Form submitted');

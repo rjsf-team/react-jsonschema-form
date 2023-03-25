@@ -1,15 +1,16 @@
 import { memo } from 'react';
-import Form from '@rjsf/core';
+import Form, { IChangeEvent } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args: any[]) => void }> = memo(
   ({ theme, themes, select }) => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'string',
       enum: Object.keys(themes),
     };
 
-    const uiSchema = {
+    const uiSchema: UiSchema = {
       'ui:placeholder': 'Select theme',
     };
 
@@ -21,7 +22,7 @@ const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args: any[]
         uiSchema={uiSchema}
         formData={theme}
         validator={localValidator}
-        onChange={({ formData }: { formData: any }) => formData && select(formData, themes[formData])}
+        onChange={({ formData }: IChangeEvent) => formData && select(formData, themes[formData])}
       >
         <div />
       </Form>

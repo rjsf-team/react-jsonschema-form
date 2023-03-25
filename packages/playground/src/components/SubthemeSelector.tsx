@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import Form from '@rjsf/core';
+import Form, { IChangeEvent } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 interface Props {
@@ -16,12 +17,12 @@ interface Props {
 }
 
 const SubthemeSelector: React.FC<Props> = memo(({ subtheme, subthemes, select }) => {
-  const schema = {
+  const schema: RJSFSchema = {
     type: 'string',
     enum: Object.keys(subthemes),
   };
 
-  const uiSchema = {
+  const uiSchema: UiSchema = {
     'ui:placeholder': 'Select subtheme',
   };
 
@@ -33,7 +34,7 @@ const SubthemeSelector: React.FC<Props> = memo(({ subtheme, subthemes, select })
       uiSchema={uiSchema}
       formData={subtheme}
       validator={localValidator}
-      onChange={({ formData }: { formData: any }) => formData && select(formData, subthemes[formData])}
+      onChange={({ formData }: IChangeEvent) => formData && select(formData, subthemes[formData])}
     >
       <div />
     </Form>

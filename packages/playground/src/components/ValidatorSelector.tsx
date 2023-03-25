@@ -1,15 +1,16 @@
 import { memo } from 'react';
-import Form from '@rjsf/core';
+import Form, { IChangeEvent } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 const ValidatorSelector: React.FC<{ validator: string; validators: any; select: (validator: any) => void }> = memo(
   ({ validator, validators, select }) => {
-    const schema = {
+    const schema: RJSFSchema = {
       type: 'string',
       enum: Object.keys(validators),
     };
 
-    const uiSchema = {
+    const uiSchema: UiSchema = {
       'ui:placeholder': 'Select validator',
     };
 
@@ -21,7 +22,7 @@ const ValidatorSelector: React.FC<{ validator: string; validators: any; select: 
         uiSchema={uiSchema}
         formData={validator}
         validator={localValidator}
-        onChange={({ formData }: { formData: any }) => formData && select(formData)}
+        onChange={({ formData }: IChangeEvent) => formData && select(formData)}
       >
         <div />
       </Form>
