@@ -32,13 +32,15 @@ exports[`object fields additionalProperties 1`] = `
           }
         >
           <div
-            className="ms-Grid-row"
+            className="ms-TextField root-111"
           >
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg5"
             >
-              <div
-                className="ms-TextField root-54"
+              <label
+                className="ms-Label root-122"
+                htmlFor="root_foo"
+                id="TextFieldLabel15"
               >
                 <div
                   className="ms-TextField-wrapper"
@@ -76,42 +78,27 @@ exports[`object fields additionalProperties 1`] = `
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg5"
             >
               <div
-                className="ms-TextField root-54"
+                className="ms-TextField-fieldGroup fieldGroup-112"
               >
-                <div
-                  className="ms-TextField-wrapper"
-                >
-                  <label
-                    className="ms-Label root-65"
-                    htmlFor="root_foo"
-                    id="TextFieldLabel14"
-                  >
-                    foo
-                  </label>
-                  <div
-                    className="ms-TextField-fieldGroup fieldGroup-55"
-                  >
-                    <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
-                      aria-invalid={false}
-                      aria-labelledby="TextFieldLabel14"
-                      autoFocus={false}
-                      className="ms-TextField-field field-56"
-                      disabled={false}
-                      id="root_foo"
-                      name="root_foo"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onInput={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value="foo"
-                    />
-                  </div>
-                </div>
+                <input
+                  aria-describedby="root_foo__error root_foo__description root_foo__help"
+                  aria-invalid={false}
+                  aria-labelledby="TextFieldLabel15"
+                  autoFocus={false}
+                  className="ms-TextField-field field-113"
+                  disabled={false}
+                  id="root_foo"
+                  name="root_foo"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value="foo"
+                />
               </div>
               
             </div>
@@ -216,7 +203,7 @@ exports[`object fields additionalProperties 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-66"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -227,15 +214,15 @@ exports[`object fields additionalProperties 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-67"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-68"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-70"
-              id="id__21"
+              className="ms-Button-label label-127"
+              id="id__18"
             >
               Submit
             </span>
@@ -278,27 +265,27 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="ms-TextField root-54"
+            className="ms-TextField root-111"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-65"
+                className="ms-Label root-122"
                 htmlFor="root_a"
                 id="TextFieldLabel2"
               >
                 A
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-55"
+                className="ms-TextField-fieldGroup fieldGroup-112"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   aria-invalid={false}
                   aria-labelledby="TextFieldLabel2"
                   autoFocus={false}
-                  className="ms-TextField-field field-56"
+                  className="ms-TextField-field field-113"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -326,27 +313,27 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="ms-TextField root-54"
+            className="ms-TextField root-111"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-65"
+                className="ms-Label root-122"
                 htmlFor="root_b"
-                id="TextFieldLabel5"
+                id="TextFieldLabel7"
               >
                 B
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-55"
+                className="ms-TextField-fieldGroup fieldGroup-112"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel5"
+                  aria-labelledby="TextFieldLabel7"
                   autoFocus={false}
-                  className="ms-TextField-field field-56"
+                  className="ms-TextField-field field-113"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -375,7 +362,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-66"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -386,15 +373,15 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-67"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-68"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-70"
-              id="id__6"
+              className="ms-Button-label label-127"
+              id="id__10"
             >
               Submit
             </span>

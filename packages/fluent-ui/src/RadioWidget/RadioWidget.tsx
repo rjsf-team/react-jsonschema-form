@@ -20,7 +20,6 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
   'selectedKey',
   'onChange',
   'label',
-  'onChanged',
   'theme',
   'styles',
   'ariaLabelledBy',
