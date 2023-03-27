@@ -97,19 +97,21 @@ import Form from '../src';
 formTests(Form);
 
 describe('Theme specific tests', () => {
-  const schema: RJSFSchema = {
-    type: 'object',
-    properties: {
-      name: {
-        type: 'string',
+  it("test a theme-specific option", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
       },
-    },
-  };
-  const uiSchema: UiSchema = {
-    // Enable the theme specific feature
-  };
-  const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
-  expect(tree).toMatchSnapshot();
+    };
+    const uiSchema: UiSchema = {
+      // Enable the theme specific feature
+    };
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  })
 });
 ```
 
