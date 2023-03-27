@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 
 const monacoEditorOptions = {
@@ -8,50 +8,49 @@ const monacoEditorOptions = {
   automaticLayout: true,
 };
 
-const Editor: React.FC<{ title: string; code: string; onChange: (code: string) => void }> = memo(
-  ({ title, code: initialCode, onChange }) => {
-    const [valid, setValid] = useState(true);
-    const [code, setCode] = useState(initialCode);
+interface EditorProps {
+  title: string;
+  code: string;
+  onChange: (code: string) => void;
+}
 
-    const onCodeChange = useCallback(
-      (code: string | undefined) => {
-        if (!code) {
-          return;
-        }
+export default function Editor({ title, code, onChange }: EditorProps) {
+  const [valid, setValid] = useState(true);
 
-        try {
-          const parsedCode = JSON.parse(code);
-          setValid(true);
-          setCode(code);
-          onChange(parsedCode);
-        } catch (err) {
-          setValid(false);
-          setCode(code);
-        }
-      },
-      [setValid, setCode, onChange]
-    );
+  const onCodeChange = useCallback(
+    (code: string | undefined) => {
+      if (!code) {
+        return;
+      }
 
-    const icon = valid ? 'ok' : 'remove';
-    const cls = valid ? 'valid' : 'invalid';
+      try {
+        const parsedCode = JSON.parse(code);
+        setValid(true);
+        onChange(parsedCode);
+      } catch (err) {
+        setValid(false);
+      }
+    },
+    [setValid, onChange]
+  );
 
-    return (
-      <div className='panel panel-default'>
-        <div className='panel-heading'>
-          <span className={`${cls} glyphicon glyphicon-${icon}`} />
-          {' ' + title}
-        </div>
-        <MonacoEditor
-          language='json'
-          value={code}
-          theme='vs-light'
-          onChange={onCodeChange}
-          height={400}
-          options={monacoEditorOptions}
-        />
+  const icon = valid ? 'ok' : 'remove';
+  const cls = valid ? 'valid' : 'invalid';
+
+  return (
+    <div className='panel panel-default'>
+      <div className='panel-heading'>
+        <span className={`${cls} glyphicon glyphicon-${icon}`} />
+        {' ' + title}
       </div>
-    );
-  }
-);
-
-export default Editor;
+      <MonacoEditor
+        language='json'
+        value={code}
+        theme='vs-light'
+        onChange={onCodeChange}
+        height={400}
+        options={monacoEditorOptions}
+      />
+    </div>
+  );
+}

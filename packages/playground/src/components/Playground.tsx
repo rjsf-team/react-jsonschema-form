@@ -9,6 +9,7 @@ import {
   ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
+  ValidatorType,
 } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
@@ -17,7 +18,7 @@ import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
 import CopyLink from './CopyLink';
 import GeoPosition from './GeoPosition';
-import ThemeSelector from './ThemeSelector';
+import ThemeSelector, { ThemesType } from './ThemeSelector';
 import Selector from './Selector';
 import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
@@ -58,7 +59,7 @@ type EditorsProps = {
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const Editors: React.FC<EditorsProps> = ({
+function Editors({
   extraErrors,
   formData,
   schema,
@@ -68,7 +69,7 @@ const Editors: React.FC<EditorsProps> = ({
   setSchema,
   setShareURL,
   setUiSchema,
-}) => {
+}: EditorsProps) {
   const onSchemaEdited = useCallback(
     (newSchema) => {
       setSchema(newSchema);
@@ -130,14 +131,20 @@ const Editors: React.FC<EditorsProps> = ({
       )}
     </div>
   );
-};
+}
 
 interface LiveSettings {
   showErrorList: false | 'top' | 'bottom';
   [key: string]: any;
 }
 
-export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes, validators }) => {
+export interface PlaygroundProps {
+  themes: { [themeName: string]: ThemesType };
+  validators: { [validatorName: string]: ValidatorType };
+}
+
+export default function Playground({ themes, validators }: PlaygroundProps) {
+  const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema);
   const [formData, setFormData] = useState<any>(samples.Simple.formData);
@@ -163,7 +170,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
   const playGroundFormRef = useRef<any>(null);
 
   const onThemeSelected = useCallback(
-    (theme: string, { stylesheet, theme: themeObj }: { stylesheet?: any; theme?: any }) => {
+    (theme: string, { stylesheet, theme: themeObj }: ThemesType) => {
       setTheme(theme);
       setSubtheme(null);
       setFormComponent(withTheme(themeObj));
@@ -178,16 +185,15 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
       // uiSchema is missing on some examples. Provide a default to
       // clear the field in all cases.
-      const { uiSchema = {} } = data;
-
-      const { theme: dataTheme = theme } = data;
+      const { schema, uiSchema = {}, formData, theme: dataTheme = theme } = data;
 
       onThemeSelected(dataTheme, themes[dataTheme]);
 
       // force resetting form component instance
       setShowForm(false);
-
+      setSchema(schema);
       setUiSchema(uiSchema);
+      setFormData(formData);
       setExtraErrors(extraErrors);
       setTheme(dataTheme);
       setArrayFieldTemplate(ArrayFieldTemplate);
@@ -200,9 +206,10 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
   useEffect(() => {
     const hash = document.location.hash.match(/#(.*)/);
 
-    if (hash && typeof hash[1] === 'string' && hash[1].length > 0) {
+    if (hash && typeof hash[1] === 'string' && hash[1].length > 0 && !loaded) {
       try {
         load(JSON.parse(atob(hash[1])));
+        setLoaded(true);
       } catch (error) {
         alert('Unable to load form setup data.');
         console.error(error);
@@ -215,7 +222,7 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
     onThemeSelected(theme, themes[theme]);
 
     setShowForm(true);
-  }, [onThemeSelected, load, setShowForm, theme, themes]);
+  }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
 
   const onSubthemeSelected = useCallback(
     (subtheme: any, { stylesheet }: { stylesheet: any }) => {
@@ -306,8 +313,8 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
           </div>
           <div className='col-sm-2'>
             <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
-            {themes[theme] && themes[theme].subthemes && (
-              <SubthemeSelector subthemes={themes[theme].subthemes} subtheme={subtheme} select={onSubthemeSelected} />
+            {themes[theme] && themes[theme].subthemes && subtheme && (
+              <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
             )}
             <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
             <button
@@ -404,6 +411,4 @@ export const Playground: React.FC<{ themes: any; validators: any }> = ({ themes,
       </div>
     </>
   );
-};
-
-export default Playground;
+}
