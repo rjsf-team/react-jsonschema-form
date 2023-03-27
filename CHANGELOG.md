@@ -18,9 +18,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.4.1
 
+## @rjsf/core
+
+- Updated `FileWidget` to pass false for `required` once a value has been specified, fixing [#3504](https://github.com/rjsf-team/react-jsonschema-form/issues/3504)
+- Updated `ObjectField` to pass the `errorSchema` to the `ObjectFieldTemplate` to allow custom templates access to the errors
+
+## @rjsf/utils
+
+- Added `errorSchema` as an optional prop on `ObjectFieldTemplateProps`
+
 ## Dev / docs / playground
 
 - Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
+- Updated the `custom-templates` documentation to add `errorSchema` to the props for `ObjectFieldTemplate`
 
 # 5.4.0
 

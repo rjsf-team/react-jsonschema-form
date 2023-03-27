@@ -131,7 +131,7 @@ function extractFileInfo(dataURLs: string[]) {
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
 ) {
-  const { disabled, readonly, multiple, onChange, value, options, registry } = props;
+  const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
   const extractedFilesInfo = useMemo(
     () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])),
@@ -163,6 +163,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         {...props}
         disabled={disabled || readonly}
         type='file'
+        required={value ? false : required} // this turns off HTML required validation when a value exists
         onChangeOverride={handleChange}
         value=''
         accept={options.accept ? String(options.accept) : undefined}
