@@ -1276,6 +1276,231 @@ exports[`array fields fixed array 1`] = `
 </form>
 `;
 
+exports[`array fields has errors 1`] = `
+.emotion-0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.emotion-2 {
+  list-style-type: none;
+}
+
+.emotion-4 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: red.500;
+}
+
+.emotion-6 {
+  display: grid;
+  grid-gap: 6px;
+  margin-bottom: 4px;
+}
+
+.emotion-9 {
+  margin-bottom: 1px;
+}
+
+.emotion-10 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="chakra-alert emotion-0"
+    role="alert"
+  >
+    <div
+      className="chakra-alert__title emotion-1"
+    >
+      Errors
+    </div>
+    <ul
+      className="emotion-2"
+      role="list"
+    >
+      <li
+        className="emotion-1"
+      >
+        <svg
+          className="chakra-icon chakra-icon emotion-4"
+          focusable={false}
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"
+            fill="currentColor"
+          />
+        </svg>
+        .name Bad input
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-1"
+      role="group"
+    >
+      
+      <div
+        className="emotion-6"
+      >
+        <div
+          className="emotion-1"
+        >
+          <div
+            className="form-group field field-string field-error has-error has-danger"
+          >
+            <div
+              className="chakra-form-control emotion-1"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-9"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-10"
+                  data-invalid=""
+                  htmlFor="root_name"
+                  id="root_name-label"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
+                  aria-invalid={true}
+                  autoFocus={false}
+                  className="chakra-input emotion-1"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <ul
+                className="emotion-2"
+                role="list"
+              >
+                <li
+                  className="emotion-1"
+                >
+                  <div
+                    aria-live="polite"
+                    className="chakra-form__error-message emotion-14"
+                    id="root_name__error"
+                  >
+                    Bad input
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-15"
+  >
+    <button
+      className="chakra-button emotion-16"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`array fields no errors 1`] = `
 .emotion-1 {
   display: grid;

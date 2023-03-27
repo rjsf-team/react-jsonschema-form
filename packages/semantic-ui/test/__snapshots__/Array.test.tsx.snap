@@ -630,6 +630,104 @@ exports[`array fields fixed array 1`] = `
 </form>
 `;
 
+exports[`array fields has errors 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ui negative message"
+  >
+    <div
+      className="header"
+    >
+      Errors
+    </div>
+    <ul
+      className="list"
+    >
+      <li
+        className="content"
+      >
+        .name Bad input
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string field-error has-error has-danger"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="error field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_name__error root_name__description root_name__help"
+                aria-invalid={true}
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root_name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          
+          <div
+            className="ui red pointing above small basic label"
+            id="root_name__error"
+            onClick={[Function]}
+          >
+            <div
+              className="ui bulleted list"
+              role="list"
+            >
+              <div
+                className="item"
+                onClick={[Function]}
+                role="listitem"
+              >
+                Bad input
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`array fields no errors 1`] = `
 <form
   className="ui form rjsf"

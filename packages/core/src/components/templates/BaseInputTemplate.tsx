@@ -38,6 +38,8 @@ export default function BaseInputTemplate<
     registry,
     rawErrors,
     type,
+    hideLabel, // remove this from ...rest
+    hideError, // remove this from ...rest
     ...rest
   } = props;
 

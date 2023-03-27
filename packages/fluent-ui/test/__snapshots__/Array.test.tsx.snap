@@ -719,19 +719,19 @@ exports[`array fields empty errors array 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-91"
+                className="ms-Label root-102"
                 htmlFor="root_name"
-                id="TextFieldLabel62"
+                id="TextFieldLabel69"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-90"
+                className="ms-TextField-fieldGroup fieldGroup-103"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel62"
+                  aria-labelledby="TextFieldLabel69"
                   autoFocus={false}
                   className="ms-TextField-field field-57"
                   disabled={false}
@@ -780,7 +780,7 @@ exports[`array fields empty errors array 1`] = `
           >
             <span
               className="ms-Button-label label-52"
-              id="id__63"
+              id="id__70"
             >
               Submit
             </span>
@@ -965,6 +965,182 @@ exports[`array fields fixed array 1`] = `
 </form>
 `;
 
+exports[`array fields has errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-90"
+  >
+    <div
+      className="ms-MessageBar-content content-91"
+    >
+      <div
+        aria-hidden={true}
+        className="ms-MessageBar-icon iconContainer-92"
+      >
+        <i
+          aria-hidden={true}
+          className="icon-100"
+          data-icon-name="ErrorBadge"
+        >
+          
+        </i>
+      </div>
+      <div
+        aria-live="assertive"
+        className="ms-MessageBar-text text-94"
+        id="MessageBar54"
+        role="status"
+      >
+        <span
+          className="ms-MessageBar-innerText innerText-95"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
+    style={
+      Object {
+        "display": undefined,
+        "marginBottom": 15,
+      }
+    }
+  >
+    
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
+          id="root_name"
+          style={
+            Object {
+              "display": undefined,
+              "marginBottom": 15,
+            }
+          }
+        >
+          <div
+            className="ms-TextField root-55"
+          >
+            <div
+              className="ms-TextField-wrapper"
+            >
+              <label
+                className="ms-Label root-102"
+                htmlFor="root_name"
+                id="TextFieldLabel57"
+              >
+                name
+              </label>
+              <div
+                className="ms-TextField-fieldGroup fieldGroup-101"
+              >
+                <input
+                  aria-describedby="TextFieldDescription56"
+                  aria-invalid={true}
+                  aria-labelledby="TextFieldLabel57"
+                  autoFocus={false}
+                  className="ms-TextField-field field-57"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <span
+              id="TextFieldDescription56"
+            >
+              <div
+                role="alert"
+              />
+            </span>
+          </div>
+          
+          <div
+            className="ms-List"
+            id="root_name__error"
+            role="list"
+          >
+            <div
+              className="ms-List-surface"
+              role="presentation"
+            >
+              <div
+                className="ms-List-page"
+                role="presentation"
+                style={Object {}}
+              >
+                <div
+                  className="ms-List-cell"
+                  data-automationid="ListCell"
+                  data-list-index={0}
+                  role="listitem"
+                >
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-50"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-42"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-43"
+          >
+            <span
+              className="ms-Button-label label-52"
+              id="id__58"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
 exports[`array fields no errors 1`] = `
 <form
   className="rjsf"
@@ -1006,19 +1182,19 @@ exports[`array fields no errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-91"
+                className="ms-Label root-102"
                 htmlFor="root_name"
-                id="TextFieldLabel56"
+                id="TextFieldLabel63"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-90"
+                className="ms-TextField-fieldGroup fieldGroup-103"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel56"
+                  aria-labelledby="TextFieldLabel63"
                   autoFocus={false}
                   className="ms-TextField-field field-57"
                   disabled={false}
@@ -1067,7 +1243,7 @@ exports[`array fields no errors 1`] = `
           >
             <span
               className="ms-Button-label label-52"
-              id="id__57"
+              id="id__64"
             >
               Submit
             </span>
