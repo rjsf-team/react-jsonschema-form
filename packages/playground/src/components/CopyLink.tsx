@@ -1,6 +1,11 @@
-import { memo, useRef } from 'react';
+import { useRef } from 'react';
 
-const CopyLink: React.FC<{ shareURL: string | null; onShare: () => void }> = memo(({ shareURL, onShare }) => {
+interface CopyLinkProps {
+  shareURL: string | null;
+  onShare: () => void;
+}
+
+export default function CopyLink({ shareURL, onShare }: CopyLinkProps) {
   const input = useRef<HTMLInputElement>(null);
 
   function onCopyClick() {
@@ -26,6 +31,4 @@ const CopyLink: React.FC<{ shareURL: string | null; onShare: () => void }> = mem
       </span>
     </div>
   );
-});
-
-export default CopyLink;
+}

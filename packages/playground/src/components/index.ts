@@ -1,1 +1,4 @@
-export { Playground as default } from './Playground';
+import Playground, { PlaygroundProps } from './Playground';
+
+export type { PlaygroundProps };
+export default Playground;
