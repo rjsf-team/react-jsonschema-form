@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-xs-5 form-additional"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_foo-key"
+              >
+                foo Key
+              </label>
+              <input
+                className="form-control"
+                defaultValue="foo"
+                id="root_foo-key"
+                onBlur={[Function]}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="form-additional form-group col-xs-5"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_foo"
+            >
+              foo
+            </label>
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_foo"
+              label="foo"
+              name="root_foo"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+          <div
+            className="col-xs-2"
+          >
+            <button
+              className="btn btn-danger array-item-remove btn-block"
+              disabled={false}
+              onClick={[Function]}
+              style={
+                Object {
+                  "border": "0",
+                }
+              }
+              title="Remove"
+              type="button"
+            >
+              <i
+                className="glyphicon glyphicon-remove"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_a"
+        >
+          A
+        </label>
+        <input
+          aria-describedby="root_a__error root_a__description root_a__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_a"
+          label="A"
+          name="root_a"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group field field-number"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_b"
+        >
+          B
+        </label>
+        <input
+          aria-describedby="root_b__error root_b__description root_b__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_b"
+          label="B"
+          name="root_b"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          step="any"
+          type="number"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

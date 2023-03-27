@@ -27,8 +27,6 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   onChange,
   id,
 }: WidgetProps<T, S, F>) {
-  // Generating a unique field name to identify this set of radio buttons
-  const name = Math.random().toString();
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
   const handleBlur = useCallback(
@@ -59,7 +57,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                 type='radio'
                 id={optionId(id, i)}
                 checked={checked}
-                name={name}
+                name={id}
                 required={required}
                 value={String(i)}
                 disabled={disabled || itemDisabled || readonly}
