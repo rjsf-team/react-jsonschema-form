@@ -1,33 +1,34 @@
-import { memo } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-const ValidatorSelector: React.FC<{ validator: string; validators: any; select: (validator: any) => void }> = memo(
-  ({ validator, validators, select }) => {
-    const schema: RJSFSchema = {
-      type: 'string',
-      enum: Object.keys(validators),
-    };
+interface ValidatorSelectorProps {
+  validator: string;
+  validators: GenericObjectType;
+  select: (validator: string) => void;
+}
 
-    const uiSchema: UiSchema = {
-      'ui:placeholder': 'Select validator',
-    };
+export default function ValidatorSelector({ validator, validators, select }: ValidatorSelectorProps) {
+  const schema: RJSFSchema = {
+    type: 'string',
+    enum: Object.keys(validators),
+  };
 
-    return (
-      <Form
-        className='form_rjsf_validatorSelector'
-        idPrefix='rjsf_validatorSelector'
-        schema={schema}
-        uiSchema={uiSchema}
-        formData={validator}
-        validator={localValidator}
-        onChange={({ formData }: IChangeEvent) => formData && select(formData)}
-      >
-        <div />
-      </Form>
-    );
-  }
-);
+  const uiSchema: UiSchema = {
+    'ui:placeholder': 'Select validator',
+  };
 
-export default ValidatorSelector;
+  return (
+    <Form
+      className='form_rjsf_validatorSelector'
+      idPrefix='rjsf_validatorSelector'
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={validator}
+      validator={localValidator}
+      onChange={({ formData }: IChangeEvent) => formData && select(formData)}
+    >
+      <div />
+    </Form>
+  );
+}

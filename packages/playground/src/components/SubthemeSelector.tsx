@@ -1,22 +1,22 @@
-import { memo } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-interface Props {
-  subtheme: any;
-  subthemes: any;
-  select: (
-    subtheme: any,
-    {
-      stylesheet,
-    }: {
-      stylesheet: any;
-    }
-  ) => void;
+interface SubthemeTypes {
+  stylesheet: string;
 }
 
-const SubthemeSelector: React.FC<Props> = memo(({ subtheme, subthemes, select }) => {
+export interface SubthemesType {
+  [subtheme: string]: SubthemeTypes;
+}
+
+interface SubthemeSelectorProps {
+  subtheme: string;
+  subthemes: SubthemesType;
+  select: (subthemeName: string, subtheme: SubthemeTypes) => void;
+}
+
+export default function SubthemeSelector({ subtheme, subthemes, select }: SubthemeSelectorProps) {
   const schema: RJSFSchema = {
     type: 'string',
     enum: Object.keys(subthemes),
@@ -39,6 +39,4 @@ const SubthemeSelector: React.FC<Props> = memo(({ subtheme, subthemes, select })
       <div />
     </Form>
   );
-});
-
-export default SubthemeSelector;
+}

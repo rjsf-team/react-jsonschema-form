@@ -1,33 +1,41 @@
-import { memo } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
+import { SubthemesType } from './SubthemeSelector';
 
-const ThemeSelector: React.FC<{ theme: any; themes: any; select: (...args: any[]) => void }> = memo(
-  ({ theme, themes, select }) => {
-    const schema: RJSFSchema = {
-      type: 'string',
-      enum: Object.keys(themes),
-    };
+export interface ThemesType {
+  theme: any;
+  stylesheet: string;
+  subthemes?: SubthemesType;
+}
 
-    const uiSchema: UiSchema = {
-      'ui:placeholder': 'Select theme',
-    };
+interface ThemeSelectorProps {
+  theme: string;
+  themes: { [themeName: string]: ThemesType };
+  select: (themeName: string, theme: ThemesType) => void;
+}
 
-    return (
-      <Form
-        className='form_rjsf_themeSelector'
-        idPrefix='rjsf_themeSelector'
-        schema={schema}
-        uiSchema={uiSchema}
-        formData={theme}
-        validator={localValidator}
-        onChange={({ formData }: IChangeEvent) => formData && select(formData, themes[formData])}
-      >
-        <div />
-      </Form>
-    );
-  }
-);
+export default function ThemeSelector({ theme, themes, select }: ThemeSelectorProps) {
+  const schema: RJSFSchema = {
+    type: 'string',
+    enum: Object.keys(themes),
+  };
 
-export default ThemeSelector;
+  const uiSchema: UiSchema = {
+    'ui:placeholder': 'Select theme',
+  };
+
+  return (
+    <Form
+      className='form_rjsf_themeSelector'
+      idPrefix='rjsf_themeSelector'
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={theme}
+      validator={localValidator}
+      onChange={({ formData }: IChangeEvent) => formData && select(formData, themes[formData])}
+    >
+      <div />
+    </Form>
+  );
+}

@@ -12,13 +12,13 @@ import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 
 import Layout from './layout';
-import Playground from './components';
+import Playground, { PlaygroundProps } from './components';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 
-const validators = {
+const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
   AJV8_es: esV8Validator,
   AJV8_2019,
@@ -26,7 +26,7 @@ const validators = {
   'AJV6 (deprecated)': v6Validator,
 };
 
-const themes = {
+const themes: PlaygroundProps['themes'] = {
   default: {
     stylesheet: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
     theme: {},
@@ -117,12 +117,10 @@ const themes = {
   },
 };
 
-const App: React.FC = () => {
+export default function App() {
   return (
     <Layout>
       <Playground themes={themes} validators={validators} />
     </Layout>
   );
-};
-
-export default App;
+}
