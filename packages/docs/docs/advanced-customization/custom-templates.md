@@ -696,6 +696,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
 - `idSchema`: An object containing the id for this object & ids for its properties.
+- `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
 - `formData`: The form data for the object.
 - `formContext`: The `formContext` object that you passed to Form.
 - `registry`: The `registry` object.

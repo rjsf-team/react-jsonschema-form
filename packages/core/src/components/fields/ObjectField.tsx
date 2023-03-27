@@ -318,6 +318,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       required,
       idSchema,
       uiSchema,
+      errorSchema,
       schema,
       formData,
       formContext,
