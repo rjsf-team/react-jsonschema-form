@@ -607,6 +607,8 @@ export type ObjectFieldTemplateProps<
   uiSchema?: UiSchema<T, S, F>;
   /** An object containing the id for this object & ids for its properties */
   idSchema: IdSchema<T>;
+  /** The optional validation errors in the form of an `ErrorSchema` */
+  errorSchema?: ErrorSchema<T>;
   /** The form data for the object */
   formData?: T;
   /** The `formContext` object that was passed to Form */
@@ -929,7 +931,7 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    */
   rawValidation<Result = any>(schema: S, formData?: T): { errors?: Result[]; validationError?: Error };

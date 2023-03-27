@@ -1,4 +1,4 @@
-const Footer: React.FC = () => {
+export default function Footer() {
   return (
     <div className='col-sm-12'>
       <p style={{ textAlign: 'center' }}>
@@ -13,6 +13,4 @@ const Footer: React.FC = () => {
       </p>
     </div>
   );
-};
-
-export default Footer;
+}
