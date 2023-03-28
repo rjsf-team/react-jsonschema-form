@@ -83,7 +83,7 @@ This will make all widgets have an id prefixed with `myform`.
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself.
 
-See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields#custom-field-components) for more information about how to use this property.
+See [Custom Widgets and Fields](https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields) for more information about how to use this property.
 
 ### ui:fieldReplacesAnyOrOneOf
 
