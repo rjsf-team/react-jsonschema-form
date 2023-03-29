@@ -674,3 +674,2270 @@ exports[`array fields no errors 1`] = `
   </div>
 </form>
 `;
+
+exports[`with title and description array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        Test field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="row array-item-list"
+      />
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        Test field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                Test item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a test item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="Test item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="a"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                Test item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a test item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="Test item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="b"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      Test field
+    </label>
+    <p
+      className="field-description"
+      id="root__description"
+    >
+      a test description
+    </p>
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        a
+      </option>
+      <option
+        value="1"
+      >
+        b
+      </option>
+      <option
+        value="2"
+      >
+        c
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-fixed-items"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        Test field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                Test item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a test item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="Test item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                Test item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a test item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="Test item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      />
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="My Item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="a"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="My Item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="b"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      My Field
+    </label>
+    <p
+      className="field-description"
+      id="root__description"
+    >
+      a fancier description
+    </p>
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        a
+      </option>
+      <option
+        value="1"
+      >
+        b
+      </option>
+      <option
+        value="2"
+      >
+        c
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-fixed-items"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="My Item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="My Item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      />
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="My Item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="a"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="My Item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="b"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      My Field
+    </label>
+    <p
+      className="field-description"
+      id="root__description"
+    >
+      a fancier description
+    </p>
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        a
+      </option>
+      <option
+        value="1"
+      >
+        b
+      </option>
+      <option
+        value="2"
+      >
+        c
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-fixed-items"
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_0"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_0__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="My Item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_1"
+              >
+                My Item
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </label>
+              <p
+                className="field-description"
+                id="root_1__description"
+              >
+                a fancier item description
+              </p>
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="My Item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      />
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-of-string"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="Test item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="a"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="Test item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="b"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                Object {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default array-item-move-up"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-move-down"
+                disabled={true}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-default array-item-copy"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Copy"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-copy"
+                />
+              </button>
+              <button
+                className="btn btn-danger array-item-remove"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      Test field
+    </label>
+    <p
+      className="field-description"
+      id="root__description"
+    >
+      a test description
+    </p>
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        a
+      </option>
+      <option
+        value="1"
+      >
+        b
+      </option>
+      <option
+        value="2"
+      >
+        c
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <fieldset
+      className="field field-array field-array-fixed-items"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label="Test item"
+                name="root_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label="Test item"
+                name="root_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info undefined"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

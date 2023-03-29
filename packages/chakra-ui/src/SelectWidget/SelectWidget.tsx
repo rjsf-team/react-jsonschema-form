@@ -96,7 +96,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {labelValue(<FormLabel htmlFor={isMultiple ? undefined : id}>{label}</FormLabel>, hideLabel || !label)}
+      {labelValue(
+        <FormLabel htmlFor={id} id={`${id}-label`}>
+          {label}
+        </FormLabel>,
+        hideLabel || !label
+      )}
       <Select
         inputId={id}
         name={id}
