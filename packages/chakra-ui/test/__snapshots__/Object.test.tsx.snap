@@ -443,3 +443,2005 @@ exports[`object fields object 1`] = `
   </div>
 </form>
 `;
+
+exports[`object fields with title and description additionalProperties 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-gap: 2px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-10 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-bottom: 1px;
+}
+
+.emotion-18 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+  padding: 0px;
+}
+
+.emotion-19 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-20 {
+  justify-self: flex-end;
+}
+
+.emotion-21 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-margin-end: 0.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.emotion-24 {
+  margin-top: 3px;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          Test field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string emotion-7"
+          >
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-10"
+                  htmlFor="root_foo-key"
+                  id="root_foo-key-label"
+                >
+                  foo Key
+                </label>
+                <input
+                  className="chakra-input emotion-11"
+                  defaultValue="foo"
+                  disabled={false}
+                  id="root_foo-key"
+                  name="root_foo-key"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <div
+                  className="chakra-form-control emotion-11"
+                  role="group"
+                >
+                  <label
+                    className="chakra-form__label emotion-10"
+                    htmlFor="root_foo"
+                    id="root_foo-label"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="chakra-input emotion-0"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <button
+                aria-label="Remove"
+                className="chakra-button emotion-18"
+                disabled={false}
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="chakra-icon emotion-19"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.452 7.5H4.547a.5.5 0 00-.5.545l1.287 14.136A2 2 0 007.326 24h9.347a2 2 0 001.992-1.819L19.95 8.045a.5.5 0 00-.129-.382.5.5 0 00-.369-.163zm-9.2 13a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zm5 0a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zM22 4h-4.75a.25.25 0 01-.25-.25V2.5A2.5 2.5 0 0014.5 0h-5A2.5 2.5 0 007 2.5v1.25a.25.25 0 01-.25.25H2a1 1 0 000 2h20a1 1 0 000-2zM9 3.75V2.5a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1.25a.25.25 0 01-.25.25h-5.5A.25.25 0 019 3.75z"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-20"
+        >
+          <button
+            className="chakra-button object-property-expand emotion-21"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="chakra-button__icon emotion-22"
+            >
+              <svg
+                aria-hidden={true}
+                className="chakra-icon emotion-19"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-24"
+  >
+    <button
+      className="chakra-button emotion-21"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both additionalProperties 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-gap: 2px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-10 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-bottom: 1px;
+}
+
+.emotion-18 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+  padding: 0px;
+}
+
+.emotion-19 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-20 {
+  justify-self: flex-end;
+}
+
+.emotion-21 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-margin-end: 0.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.emotion-24 {
+  margin-top: 3px;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          My Field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string emotion-7"
+          >
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-10"
+                  htmlFor="root_foo-key"
+                  id="root_foo-key-label"
+                >
+                  foo Key
+                </label>
+                <input
+                  className="chakra-input emotion-11"
+                  defaultValue="foo"
+                  disabled={false}
+                  id="root_foo-key"
+                  name="root_foo-key"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <div
+                  className="chakra-form-control emotion-11"
+                  role="group"
+                >
+                  <label
+                    className="chakra-form__label emotion-10"
+                    htmlFor="root_foo"
+                    id="root_foo-label"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="chakra-input emotion-0"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <button
+                aria-label="Remove"
+                className="chakra-button emotion-18"
+                disabled={false}
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="chakra-icon emotion-19"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.452 7.5H4.547a.5.5 0 00-.5.545l1.287 14.136A2 2 0 007.326 24h9.347a2 2 0 001.992-1.819L19.95 8.045a.5.5 0 00-.129-.382.5.5 0 00-.369-.163zm-9.2 13a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zm5 0a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zM22 4h-4.75a.25.25 0 01-.25-.25V2.5A2.5 2.5 0 0014.5 0h-5A2.5 2.5 0 007 2.5v1.25a.25.25 0 01-.25.25H2a1 1 0 000 2h20a1 1 0 000-2zM9 3.75V2.5a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1.25a.25.25 0 01-.25.25h-5.5A.25.25 0 019 3.75z"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-20"
+        >
+          <button
+            className="chakra-button object-property-expand emotion-21"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="chakra-button__icon emotion-22"
+            >
+              <svg
+                aria-hidden={true}
+                className="chakra-icon emotion-19"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-24"
+  >
+    <button
+      className="chakra-button emotion-21"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both object 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-8 {
+  margin-bottom: 1px;
+}
+
+.emotion-9 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-top: 2px;
+}
+
+.emotion-18 {
+  margin-top: 3px;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          My Field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_a"
+                  id="root_a-label"
+                >
+                  My Item A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                a fancier item A description
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-number"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_b"
+                  id="root_b-label"
+                >
+                  My Item B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                a fancier item B description
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-18"
+  >
+    <button
+      className="chakra-button emotion-19"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-gap: 2px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-10 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-bottom: 1px;
+}
+
+.emotion-18 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+  padding: 0px;
+}
+
+.emotion-19 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-20 {
+  justify-self: flex-end;
+}
+
+.emotion-21 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-margin-end: 0.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.emotion-24 {
+  margin-top: 3px;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          My Field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string emotion-7"
+          >
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-10"
+                  htmlFor="root_foo-key"
+                  id="root_foo-key-label"
+                >
+                  foo Key
+                </label>
+                <input
+                  className="chakra-input emotion-11"
+                  defaultValue="foo"
+                  disabled={false}
+                  id="root_foo-key"
+                  name="root_foo-key"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <div
+                  className="chakra-form-control emotion-11"
+                  role="group"
+                >
+                  <label
+                    className="chakra-form__label emotion-10"
+                    htmlFor="root_foo"
+                    id="root_foo-label"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="chakra-input emotion-0"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <button
+                aria-label="Remove"
+                className="chakra-button emotion-18"
+                disabled={false}
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="chakra-icon emotion-19"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.452 7.5H4.547a.5.5 0 00-.5.545l1.287 14.136A2 2 0 007.326 24h9.347a2 2 0 001.992-1.819L19.95 8.045a.5.5 0 00-.129-.382.5.5 0 00-.369-.163zm-9.2 13a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zm5 0a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zM22 4h-4.75a.25.25 0 01-.25-.25V2.5A2.5 2.5 0 0014.5 0h-5A2.5 2.5 0 007 2.5v1.25a.25.25 0 01-.25.25H2a1 1 0 000 2h20a1 1 0 000-2zM9 3.75V2.5a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1.25a.25.25 0 01-.25.25h-5.5A.25.25 0 019 3.75z"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-20"
+        >
+          <button
+            className="chakra-button object-property-expand emotion-21"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="chakra-button__icon emotion-22"
+            >
+              <svg
+                aria-hidden={true}
+                className="chakra-icon emotion-19"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-24"
+  >
+    <button
+      className="chakra-button emotion-21"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema object 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-8 {
+  margin-bottom: 1px;
+}
+
+.emotion-9 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-top: 2px;
+}
+
+.emotion-18 {
+  margin-top: 3px;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          My Field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_a"
+                  id="root_a-label"
+                >
+                  My Item A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                a fancier item A description
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-number"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_b"
+                  id="root_b-label"
+                >
+                  My Item B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                a fancier item B description
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-18"
+  >
+    <button
+      className="chakra-button emotion-19"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description object 1`] = `
+.emotion-1 {
+  margin-top: 1px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  border: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+}
+
+.emotion-4 {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-5 {
+  display: grid;
+  grid-gap: 2px;
+  margin-bottom: 4px;
+}
+
+.emotion-8 {
+  margin-bottom: 1px;
+}
+
+.emotion-9 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-11 {
+  margin-top: 2px;
+}
+
+.emotion-18 {
+  margin-top: 3px;
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      <div
+        className="emotion-1"
+        id="root__title"
+      >
+        <h5
+          className="chakra-heading emotion-0"
+        >
+          Test field
+        </h5>
+        <hr
+          aria-orientation="horizontal"
+          className="chakra-divider emotion-3"
+        />
+      </div>
+      <p
+        className="chakra-text emotion-4"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="emotion-5"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_a"
+                  id="root_a-label"
+                >
+                  A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                A description
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-number"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-8"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-9"
+                  htmlFor="root_b"
+                  id="root_b-label"
+                >
+                  B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+              <p
+                className="chakra-text emotion-11"
+              >
+                B description
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-18"
+  >
+    <button
+      className="chakra-button emotion-19"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+.emotion-1 {
+  display: grid;
+  grid-gap: 6px;
+  margin-bottom: 4px;
+}
+
+.emotion-3 {
+  display: grid;
+  grid-gap: 2px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-6 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-7 {
+  margin-bottom: 1px;
+}
+
+.emotion-13 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+  padding: 0px;
+}
+
+.emotion-14 {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.emotion-15 {
+  justify-self: flex-end;
+}
+
+.emotion-16 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+.emotion-17 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-margin-end: 0.5rem;
+  margin-inline-end: 0.5rem;
+}
+
+.emotion-19 {
+  margin-top: 3px;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      
+      <div
+        className="emotion-1"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string emotion-3"
+          >
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <label
+                  className="chakra-form__label emotion-6"
+                  htmlFor="root_foo-key"
+                  id="root_foo-key-label"
+                >
+                  foo Key
+                </label>
+                <input
+                  className="chakra-input emotion-7"
+                  defaultValue="foo"
+                  disabled={false}
+                  id="root_foo-key"
+                  name="root_foo-key"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <div
+                className="chakra-form-control emotion-0"
+                role="group"
+              >
+                <div
+                  className="chakra-form-control emotion-7"
+                  role="group"
+                >
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="chakra-input emotion-0"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="emotion-0"
+            >
+              <button
+                aria-label="Remove"
+                className="chakra-button emotion-13"
+                disabled={false}
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="chakra-icon emotion-14"
+                  focusable={false}
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M19.452 7.5H4.547a.5.5 0 00-.5.545l1.287 14.136A2 2 0 007.326 24h9.347a2 2 0 001.992-1.819L19.95 8.045a.5.5 0 00-.129-.382.5.5 0 00-.369-.163zm-9.2 13a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zm5 0a.75.75 0 01-1.5 0v-9a.75.75 0 011.5 0zM22 4h-4.75a.25.25 0 01-.25-.25V2.5A2.5 2.5 0 0014.5 0h-5A2.5 2.5 0 007 2.5v1.25a.25.25 0 01-.25.25H2a1 1 0 000 2h20a1 1 0 000-2zM9 3.75V2.5a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1.25a.25.25 0 01-.25.25h-5.5A.25.25 0 019 3.75z"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-15"
+        >
+          <button
+            className="chakra-button object-property-expand emotion-16"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="chakra-button__icon emotion-17"
+            >
+              <svg
+                aria-hidden={true}
+                className="chakra-icon emotion-14"
+                focusable={false}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-19"
+  >
+    <button
+      className="chakra-button emotion-16"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off object 1`] = `
+.emotion-1 {
+  display: grid;
+  grid-gap: 6px;
+  margin-bottom: 4px;
+}
+
+.emotion-4 {
+  margin-bottom: 1px;
+}
+
+.emotion-10 {
+  margin-top: 3px;
+}
+
+.emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  vertical-align: middle;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: auto;
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="chakra-form-control emotion-0"
+      role="group"
+    >
+      
+      <div
+        className="emotion-1"
+      >
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="emotion-0"
+        >
+          <div
+            className="form-group field field-number"
+          >
+            <div
+              className="chakra-form-control emotion-0"
+              role="group"
+            >
+              <div
+                className="chakra-form-control emotion-4"
+                role="group"
+              >
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="chakra-input emotion-0"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="emotion-10"
+  >
+    <button
+      className="chakra-button emotion-11"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
