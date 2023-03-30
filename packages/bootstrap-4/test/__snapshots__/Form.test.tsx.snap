@@ -1185,6 +1185,438 @@ exports[`single fields select field 1`] = `
 </form>
 `;
 
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={Array []}
+      >
+        <option
+          disabled={false}
+          id="foo"
+          value="0"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          id="bar"
+          value="1"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          id="fuzz"
+          value="2"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          id="qux"
+          value="3"
+        >
+          qux
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={Array []}
+      >
+        <option
+          disabled={false}
+          id="foo"
+          value="0"
+        >
+          foo
+        </option>
+        <option
+          disabled={true}
+          id="bar"
+          value="1"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          id="fuzz"
+          value="2"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          id="qux"
+          value="3"
+        >
+          qux
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={
+          Array [
+            "0",
+            "1",
+          ]
+        }
+      >
+        <option
+          disabled={false}
+          id="foo"
+          value="0"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          id="bar"
+          value="1"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          id="fuzz"
+          value="2"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          id="qux"
+          value="3"
+        >
+          qux
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={Array []}
+      >
+        <option
+          disabled={false}
+          id="Blue"
+          value="0"
+        >
+          Blue
+        </option>
+        <option
+          disabled={false}
+          id="Red"
+          value="1"
+        >
+          Red
+        </option>
+        <option
+          disabled={false}
+          id="Green"
+          value="2"
+        >
+          Green
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value=""
+      >
+        <option
+          value=""
+        >
+          
+        </option>
+        <option
+          disabled={false}
+          id="foo"
+          value="0"
+        >
+          foo
+        </option>
+        <option
+          disabled={true}
+          id="bar"
+          value="1"
+        >
+          bar
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      >
+        
+      </label>
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="custom-select"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="1"
+      >
+        <option
+          value=""
+        >
+          
+        </option>
+        <option
+          disabled={false}
+          id="foo"
+          value="0"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          id="bar"
+          value="1"
+        >
+          bar
+        </option>
+      </select>
+      
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields slider field 1`] = `
 <form
   className="rjsf"

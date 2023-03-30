@@ -13,7 +13,7 @@ export default function SubmitButton<
   }
   return (
     <div>
-      <button type='submit' {...submitButtonProps} className={`btn btn-info ${submitButtonProps.className}`}>
+      <button type='submit' {...submitButtonProps} className={`btn btn-info ${submitButtonProps.className || ''}`}>
         {submitText}
       </button>
     </div>
