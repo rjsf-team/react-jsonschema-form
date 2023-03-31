@@ -16,12 +16,41 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.4.1
+# 5.5.0
+
+## @rjsf/antd
+
+- Updated tests to use centralized snapshots from `core`
+
+## @rjsf/bootstrap-4
+
+- Updated tests to use centralized snapshots from `core`
+
+## @rjsf/chakra-ui
+
+- Updated tests to use centralized snapshots from `core`
 
 ## @rjsf/core
 
 - Updated `FileWidget` to pass false for `required` once a value has been specified, fixing [#3504](https://github.com/rjsf-team/react-jsonschema-form/issues/3504)
 - Updated `ObjectField` to pass the `errorSchema` to the `ObjectFieldTemplate` to allow custom templates access to the errors
+- Centralized snapshot tests from each theme into `core`, adding snapshots tests for `core` as well
+
+## @rjsf/fluent-ui
+
+- Updated tests to use centralized snapshots from `core`
+
+## @rjsf/material-ui
+
+- Updated tests to use centralized snapshots from `core`
+
+## @rjsf/mui
+
+- Updated tests to use centralized snapshots from `core`
+
+## @rjsf/semantic-ui
+
+- Updated tests to use centralized snapshots from `core`
 
 ## @rjsf/utils
 

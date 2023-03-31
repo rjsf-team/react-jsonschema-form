@@ -1,0 +1,1747 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="checkbox "
+    >
+      <label>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          checked={false}
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="checkbox"
+        />
+        <span>
+          
+        </span>
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="checkbox "
+    >
+      <label>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          checked={false}
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="checkbox"
+        />
+        <span>
+          test
+        </span>
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="checkboxes"
+      id="root"
+    >
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="0"
+            />
+            <span>
+              foo
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="1"
+            />
+            <span>
+              bar
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="2"
+            />
+            <span>
+              fuzz
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-3"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="3"
+            />
+            <span>
+              qux
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <p
+          className="field-description"
+          id="root_my-field__description"
+        >
+          some description
+        </p>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <p
+          className="field-description"
+          id="root_my-field__description"
+        >
+          some other description
+        </p>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="color"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="date"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="datetime-local"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="time"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="panel panel-danger errors"
+  >
+    <div
+      className="panel-heading"
+    >
+      <h3
+        className="panel-title"
+      >
+        Errors
+      </h3>
+    </div>
+    <ul
+      className="list-group"
+    >
+      <li
+        className="list-group-item text-danger"
+      >
+        . an error
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
+    <div>
+      <ul
+        className="error-detail bs-callout bs-callout-info"
+        id="root__error"
+      >
+        <li
+          className="text-danger"
+        >
+          an error
+        </li>
+      </ul>
+    </div>
+    <p
+      className="help-block"
+      id="root__help"
+    >
+      help me!
+    </p>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="hidden"
+      >
+        <input
+          id="root_my-field"
+          name="root_my-field"
+          type="hidden"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-null"
+  />
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      step="any"
+      type="number"
+      value={0}
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      step="any"
+      type="number"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="password"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="field-radio-group"
+      id="root"
+    >
+      <div
+        className="radio "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="0"
+            />
+            <span>
+              Yes
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="radio "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="1"
+            />
+            <span>
+              No
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help root__examples"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      list="root__examples"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
+    <datalist
+      id="root__examples"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={false}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      value=""
+    >
+      <option
+        value=""
+      >
+        
+      </option>
+      <option
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        value="1"
+      >
+        bar
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        value="1"
+      >
+        bar
+      </option>
+      <option
+        value="2"
+      >
+        fuzz
+      </option>
+      <option
+        value="3"
+      >
+        qux
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        disabled={false}
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        disabled={true}
+        value="1"
+      >
+        bar
+      </option>
+      <option
+        disabled={false}
+        value="2"
+      >
+        fuzz
+      </option>
+      <option
+        disabled={false}
+        value="3"
+      >
+        qux
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={
+        Array [
+          "0",
+          "1",
+        ]
+      }
+    >
+      <option
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        value="1"
+      >
+        bar
+      </option>
+      <option
+        value="2"
+      >
+        fuzz
+      </option>
+      <option
+        value="3"
+      >
+        qux
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      value={Array []}
+    >
+      <option
+        value="0"
+      >
+        Blue
+      </option>
+      <option
+        value="1"
+      >
+        Red
+      </option>
+      <option
+        value="2"
+      >
+        Green
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={false}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      value=""
+    >
+      <option
+        value=""
+      >
+        
+      </option>
+      <option
+        disabled={false}
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        disabled={true}
+        value="1"
+      >
+        bar
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={false}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      value="1"
+    >
+      <option
+        value=""
+      >
+        
+      </option>
+      <option
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        value="1"
+      >
+        bar
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-integer"
+  >
+    <div
+      className="field-range-wrapper"
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        label=""
+        max={100}
+        min={42}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="range"
+        value={75}
+      />
+      <span
+        className="range-view"
+      >
+        75
+      </span>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div>
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        label=""
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="file"
+        value=""
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="email"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="url"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder="placeholder"
+      readOnly={false}
+      type="text"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <textarea
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        Titre 1
+      </legend>
+      <div
+        className="form-group field field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_title"
+        >
+          Titre 2
+        </label>
+        <input
+          aria-describedby="root_title__error root_title__description root_title__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_title"
+          label="Titre 2"
+          name="root_title"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="unsupported-field"
+    >
+      <p>
+        <span>
+          Unsupported field schema for field 
+          <code>
+            root
+          </code>
+          : 
+          <em>
+            Unknown field type undefined
+          </em>
+          .
+        </span>
+      </p>
+      <pre>
+        {}
+      </pre>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="number"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <input
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      label=""
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      placeholder=""
+      readOnly={false}
+      type="text"
+      value=""
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+`;
