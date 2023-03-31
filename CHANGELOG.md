@@ -50,6 +50,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `FileWidget` to pass false for `required` once a value has been specified, fixing [#3504](https://github.com/rjsf-team/react-jsonschema-form/issues/3504)
 - Updated `ObjectField` to pass the `errorSchema` to the `ObjectFieldTemplate` to allow custom templates access to the errors
 - Centralized snapshot tests from each theme into `core`, adding snapshots tests for `core` as well
+- Updated `Form` to include the top `disabled` property in the `ui:submitButtonOptions` so the submit button will be disabled when the whole form is disabled. Fixes [#3264](https://github.com/rjsf-team/react-jsonschema-form/issues/3264). 
 
 ## @rjsf/fluent-ui
 
@@ -75,7 +76,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
 - Updated the `custom-templates` documentation to add `errorSchema` to the props for `ObjectFieldTemplate`
-
+- Fixes bug where the 'Disable whole form' button did not work.
 # 5.4.0
 
 ## @rjsf/antd
