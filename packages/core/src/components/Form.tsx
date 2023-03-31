@@ -296,7 +296,20 @@ export default class Form<
   getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
-    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
+    const rawUiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
+
+    const uiSchema = props.disabled
+      ? {
+          ...rawUiSchema,
+          'ui:submitButtonOptions': {
+            ...rawUiSchema['ui:submitButtonOptions'],
+            props: {
+              ...rawUiSchema['ui:submitButtonOptions']?.props,
+              disabled: true,
+            },
+          },
+        }
+      : rawUiSchema;
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
@@ -345,7 +358,7 @@ export default class Form<
     }
     const idSchema = schemaUtils.toIdSchema(
       retrievedSchema,
-      uiSchema['ui:rootFieldId'],
+      rawUiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
       props.idSeparator
@@ -816,7 +829,8 @@ export default class Form<
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} disabled={disabled} />}
+
+        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );

@@ -724,9 +724,6 @@ export type SubmitButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   registry: Registry<T, S, F>;
-
-  /*Direct control as to whether the submit button should be disabled */
-  disabled: boolean;
 };
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
