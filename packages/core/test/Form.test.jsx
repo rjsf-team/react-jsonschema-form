@@ -2723,7 +2723,7 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.querySelector("button[type='submit']:disabled")).to.exist;
     });
 
-    it('disabling the submit button via ui:schema props is still possible', () => {
+    it('disabling the submit button via ui:schema - ui:submitButtonOptions props is still possible', () => {
       const { node } = createFormComponent({
         schema,
         formData,
@@ -2731,6 +2731,18 @@ describeRepeated('Form common', (createFormComponent) => {
       });
 
       expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']:disabled")).to.exist;
+    });
+
+    it('disabling the submit button via ui:schema - ui:options, submitButtonOptions props is still possible', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:options': { submitButtonOptions: { submitText: 'hello', props: { disabled: true } } } },
+      });
+
+      expect(node.querySelector("button[type='submit']")).to.exist;
+      expect(node.querySelector("button[type='submit']").textContent).to.eql('hello');
       expect(node.querySelector("button[type='submit']:disabled")).to.exist;
     });
 
