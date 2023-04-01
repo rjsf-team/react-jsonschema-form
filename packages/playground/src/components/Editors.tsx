@@ -11,11 +11,11 @@ const monacoEditorOptions = {
   automaticLayout: true,
 };
 
-interface EditorProps {
+type EditorProps = {
   title: string;
   code: string;
   onChange: (code: string) => void;
-}
+};
 
 function Editor({ title, code, onChange }: EditorProps) {
   const [valid, setValid] = useState(true);
