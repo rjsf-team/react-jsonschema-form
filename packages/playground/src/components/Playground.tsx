@@ -1,7 +1,8 @@
 import { useCallback, useState, useRef, useEffect, ComponentType, FormEvent } from 'react';
 import 'react-app-polyfill/ie11';
 import isEqualWith from 'lodash/isEqualWith';
-import Form, { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
+
+import { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
 import {
   ErrorSchema,
   TemplatesType,
@@ -11,41 +12,17 @@ import {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import localValidator from '@rjsf/validator-ajv8';
 
 import { samples } from '../samples';
+import Header from './Header';
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
-import CopyLink from './CopyLink';
 import GeoPosition from './GeoPosition';
-import ThemeSelector, { ThemesType } from './ThemeSelector';
-import Selector from './Selector';
-import ValidatorSelector from './ValidatorSelector';
-import SubthemeSelector from './SubthemeSelector';
-import RawValidatorTest from './RawValidatorTest';
+import { ThemesType } from './ThemeSelector';
 import Editor from './Editor';
 
 const log = (type: string) => console.log.bind(console, type);
 const toJson = (val: unknown) => JSON.stringify(val, null, 2);
-
-const liveSettingsSchema: RJSFSchema = {
-  type: 'object',
-  properties: {
-    liveValidate: { type: 'boolean', title: 'Live validation' },
-    disable: { type: 'boolean', title: 'Disable whole form' },
-    readonly: { type: 'boolean', title: 'Readonly whole form' },
-    omitExtraData: { type: 'boolean', title: 'Omit extra data' },
-    liveOmit: { type: 'boolean', title: 'Live omit' },
-    noValidate: { type: 'boolean', title: 'Disable validation' },
-    focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
-    showErrorList: {
-      type: 'string',
-      default: 'top',
-      title: 'Show Error List',
-      enum: [false, 'top', 'bottom'],
-    },
-  },
-};
 
 type EditorsProps = {
   schema: RJSFSchema;
@@ -133,7 +110,7 @@ function Editors({
   );
 }
 
-interface LiveSettings {
+export interface LiveSettings {
   showErrorList: false | 'top' | 'bottom';
   [key: string]: any;
 }
@@ -224,28 +201,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     setShowForm(true);
   }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
 
-  const onSubthemeSelected = useCallback(
-    (subtheme: any, { stylesheet }: { stylesheet: any }) => {
-      setSubtheme(subtheme);
-      setStylesheet(stylesheet);
-    },
-    [setSubtheme, setStylesheet]
-  );
-
-  const onValidatorSelected = useCallback(
-    (validator: string) => {
-      setValidator(validator);
-    },
-    [setValidator]
-  );
-
-  const handleSetLiveSettings = useCallback(
-    ({ formData }: IChangeEvent) => {
-      setLiveSettings(formData);
-    },
-    [setLiveSettings]
-  );
-
   const onFormDataChange = useCallback(
     ({ formData }: IChangeEvent, id?: string) => {
       if (id) {
@@ -264,29 +219,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     window.alert('Form submitted');
   }, []);
 
-  const onShare = useCallback(() => {
-    const {
-      location: { origin, pathname },
-    } = document;
-
-    try {
-      const hash = btoa(
-        JSON.stringify({
-          formData,
-          schema,
-          uiSchema,
-          theme,
-          liveSettings,
-        })
-      );
-
-      setShareURL(`${origin}${pathname}#${hash}`);
-    } catch (error) {
-      setShareURL(null);
-      console.error(error);
-    }
-  }, [formData, liveSettings, schema, theme, uiSchema]);
-
   const templateProps: Partial<TemplatesType> = {
     ArrayFieldTemplate,
     ObjectFieldTemplate,
@@ -294,64 +226,26 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   return (
     <>
-      <div className='page-header'>
-        <h1>react-jsonschema-form</h1>
-        <div className='row'>
-          <div className='col-sm-6'>
-            <Selector onSelected={load} />
-          </div>
-          <div className='col-sm-2'>
-            <Form
-              idPrefix='rjsf_options'
-              schema={liveSettingsSchema}
-              formData={liveSettings}
-              validator={localValidator}
-              onChange={handleSetLiveSettings}
-            >
-              <div />
-            </Form>
-          </div>
-          <div className='col-sm-2'>
-            <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
-            {themes[theme] && themes[theme].subthemes && subtheme && (
-              <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
-            )}
-            <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
-            <button
-              title='Click me to submit the form programmatically.'
-              className='btn btn-default'
-              type='button'
-              onClick={() => playGroundFormRef.current.submit()}
-            >
-              Prog. Submit
-            </button>{' '}
-            <button
-              title='Click me to validate the form programmatically.'
-              className='btn btn-default'
-              type='button'
-              onClick={() => {
-                const valid = playGroundFormRef.current.validateForm();
-                alert(valid ? 'Form is valid' : 'Form has errors');
-              }}
-            >
-              Prog. Validate
-            </button>{' '}
-            <button
-              title='Click me to reset the form programmatically.'
-              className='btn btn-default'
-              type='button'
-              onClick={() => playGroundFormRef.current.reset()}
-            >
-              Prog. Reset
-            </button>
-            <div style={{ marginTop: '5px' }} />
-            <CopyLink shareURL={shareURL} onShare={onShare} />
-          </div>
-          <div className='col-sm-2'>
-            <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
-          </div>
-        </div>
-      </div>
+      <Header
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        shareURL={shareURL}
+        themes={themes}
+        theme={theme}
+        subtheme={subtheme}
+        validators={validators}
+        validator={validator}
+        liveSettings={liveSettings}
+        playGroundFormRef={playGroundFormRef}
+        load={load}
+        onThemeSelected={onThemeSelected}
+        setSubtheme={setSubtheme}
+        setStylesheet={setStylesheet}
+        setValidator={setValidator}
+        setLiveSettings={setLiveSettings}
+        setShareURL={setShareURL}
+      />
       <Editors
         formData={formData}
         setFormData={setFormData}
