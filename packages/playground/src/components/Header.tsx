@@ -9,7 +9,11 @@ import Selector from './Selector';
 import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
-import { LiveSettings } from './Playground';
+
+export interface LiveSettings {
+  showErrorList: false | 'top' | 'bottom';
+  [key: string]: any;
+}
 
 const liveSettingsSchema: RJSFSchema = {
   type: 'object',
