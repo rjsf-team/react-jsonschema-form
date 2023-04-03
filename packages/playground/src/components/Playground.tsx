@@ -21,10 +21,6 @@ import Editors from './Editors';
 
 const log = (type: string) => console.log.bind(console, type);
 
-export interface LiveSettings {
-  showErrorList: false | 'top' | 'bottom';
-  [key: string]: any;
-}
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
