@@ -12,7 +12,7 @@ import {
 } from '@rjsf/utils';
 
 import { samples } from '../samples';
-import Header from './Header';
+import Header, { LiveSettings } from './Header';
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
