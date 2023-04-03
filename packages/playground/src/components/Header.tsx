@@ -10,25 +10,6 @@ import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
 
-const liveSettingsSchema: RJSFSchema = {
-  type: 'object',
-  properties: {
-    liveValidate: { type: 'boolean', title: 'Live validation' },
-    disable: { type: 'boolean', title: 'Disable whole form' },
-    readonly: { type: 'boolean', title: 'Readonly whole form' },
-    omitExtraData: { type: 'boolean', title: 'Omit extra data' },
-    liveOmit: { type: 'boolean', title: 'Live omit' },
-    noValidate: { type: 'boolean', title: 'Disable validation' },
-    focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
-    showErrorList: {
-      type: 'string',
-      default: 'top',
-      title: 'Show Error List',
-      enum: [false, 'top', 'bottom'],
-    },
-  },
-};
-
 const HeaderButton: React.FC<
   {
     title: string;
@@ -66,6 +47,25 @@ function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: React.Mutable
     </>
   );
 }
+
+const liveSettingsSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    liveValidate: { type: 'boolean', title: 'Live validation' },
+    disable: { type: 'boolean', title: 'Disable whole form' },
+    readonly: { type: 'boolean', title: 'Readonly whole form' },
+    omitExtraData: { type: 'boolean', title: 'Omit extra data' },
+    liveOmit: { type: 'boolean', title: 'Live omit' },
+    noValidate: { type: 'boolean', title: 'Disable validation' },
+    focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+    showErrorList: {
+      type: 'string',
+      default: 'top',
+      title: 'Show Error List',
+      enum: [false, 'top', 'bottom'],
+    },
+  },
+};
 
 export interface LiveSettings {
   showErrorList: false | 'top' | 'bottom';
