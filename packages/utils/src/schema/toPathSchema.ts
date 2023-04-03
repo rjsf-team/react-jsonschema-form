@@ -32,7 +32,7 @@ import retrieveSchema from './retrieveSchema';
 function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
-  name = '',
+  name: string,
   rootSchema?: S,
   formData?: T,
   _recurseList: S[] = []
