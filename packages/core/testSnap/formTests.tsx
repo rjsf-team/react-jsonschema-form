@@ -13,7 +13,7 @@ export type FormRenderCustomOptions = {
   selectMulti?: TestRendererOptions;
   slider?: TestRendererOptions;
   textarea?: TestRendererOptions;
-}
+};
 
 export default function formTests(Form: ComponentType<FormProps>, customOptions: FormRenderCustomOptions = {}) {
   describe('single fields', () => {
@@ -22,7 +22,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         const schema: RJSFSchema = {
           type: 'string',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
         expect(tree).toMatchSnapshot();
       });
       test('format email', () => {
@@ -30,7 +30,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           type: 'string',
           format: 'email',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
         expect(tree).toMatchSnapshot();
       });
       test('format uri', () => {
@@ -38,7 +38,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           type: 'string',
           format: 'uri',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
         expect(tree).toMatchSnapshot();
       });
       test('format data-url', () => {
@@ -46,7 +46,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           type: 'string',
           format: 'data-url',
         };
-        const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+        const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
         expect(tree).toMatchSnapshot();
       });
     });
@@ -57,14 +57,14 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:placeholder': 'placeholder',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('number field', () => {
       const schema: RJSFSchema = {
         type: 'number',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('number field 0', () => {
@@ -72,21 +72,21 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'number',
       };
       const formData = 0;
-      const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('null field', () => {
       const schema: RJSFSchema = {
         type: 'null',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('unsupported field', () => {
       const schema: RJSFSchema = {
         type: undefined,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('format color', () => {
@@ -94,7 +94,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         format: 'color',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('format date', () => {
@@ -102,7 +102,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         format: 'date',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('format datetime', () => {
@@ -110,7 +110,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         format: 'datetime',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('format time', () => {
@@ -118,7 +118,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         format: 'time',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('password field', () => {
@@ -128,7 +128,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:widget': 'password',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('up/down field', () => {
@@ -138,7 +138,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:widget': 'updown',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('textarea field', () => {
@@ -148,7 +148,9 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:widget': 'textarea',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>, customOptions.textarea).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions.textarea)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field', () => {
@@ -156,7 +158,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         enum: ['foo', 'bar'],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field multiple choice', () => {
@@ -219,7 +221,9 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:enumDisabled': ['bar'],
       };
-      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field single choice formData', () => {
@@ -241,14 +245,16 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         uniqueItems: true,
       };
       const formData = ['foo', 'bar'];
-      const tree = renderer.create(<Form schema={schema} formData={formData} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions.selectMulti)
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('checkbox field', () => {
       const schema: RJSFSchema = {
         type: 'boolean',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('checkbox field with label', () => {
@@ -256,7 +262,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'boolean',
         title: 'test',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('checkboxes field', () => {
@@ -271,7 +277,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:widget': 'checkboxes',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('radio field', () => {
@@ -281,7 +287,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const uiSchema = {
         'ui:widget': 'radio',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('slider field', () => {
@@ -294,7 +300,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         'ui:widget': 'range',
       };
       const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75}/>, customOptions.slider)
+        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />, customOptions.slider)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -312,7 +318,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           'ui:widget': 'hidden',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('field with description', () => {
@@ -325,7 +331,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           },
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('field with description in uiSchema', () => {
@@ -343,7 +349,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           'ui:description': 'some other description',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('title field', () => {
@@ -361,7 +367,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           'ui:title': 'Titre 2',
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('hidden label', () => {
@@ -373,14 +379,14 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
           label: false,
         },
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('using custom tagName', () => {
       const schema: RJSFSchema = {
         type: 'string',
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} tagName='div'/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} tagName='div' />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('schema examples', () => {
@@ -388,7 +394,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
         type: 'string',
         examples: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator}/>).toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('help and error display', () => {
@@ -401,7 +407,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
       const errors: string[] = ['an error'];
       const extraErrors = { __errors: errors } as ErrorSchema;
       const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors}/>)
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
     });

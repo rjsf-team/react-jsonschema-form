@@ -21,7 +21,6 @@ import Editors from './Editors';
 
 const log = (type: string) => console.log.bind(console, type);
 
-
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
   validators: { [validatorName: string]: ValidatorType };

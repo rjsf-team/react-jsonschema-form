@@ -7,36 +7,36 @@ import { FormProps } from '../src';
 
 const titleAndDesc = {
   title: 'Test field',
-  description: 'a test description'
+  description: 'a test description',
 };
 
 const itemTitleAndDesc = {
   title: 'Test item',
-  description: 'a test item description'
+  description: 'a test item description',
 };
 
 const uiTitleAndDesc: UiSchema = {
   'ui:options': {
     title: 'My Field',
-    description: 'a fancier description'
+    description: 'a fancier description',
   },
   items: {
     'ui:options': {
       title: 'My Item',
-      description: 'a fancier item description'
-    }
-  }
+      description: 'a fancier item description',
+    },
+  },
 };
 
 const labelsOff: UiSchema = {
-  'ui:globalOptions': { label: false }
+  'ui:globalOptions': { label: false },
 };
 
 export const CHECKBOXES_CUSTOMIZE = 'checkboxes';
 
 export type ArrayRenderCustomOptions = {
   checkboxes?: TestRendererOptions;
-}
+};
 
 export default function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayRenderCustomOptions = {}) {
   describe('array fields', () => {
@@ -74,9 +74,7 @@ export default function arrayTests(Form: ComponentType<FormProps>, customOptions
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />, customOptions.checkboxes)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.checkboxes).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('array icons', () => {
@@ -181,9 +179,7 @@ export default function arrayTests(Form: ComponentType<FormProps>, customOptions
         },
         uniqueItems: true,
       };
-      const tree = renderer
-        .create(<Form schema={schema} validator={validator} />, customOptions.checkboxes)
-        .toJSON();
+      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.checkboxes).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('array icons', () => {

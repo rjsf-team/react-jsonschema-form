@@ -94,12 +94,7 @@ const schema: RJSFSchema = {
 const formRef = createRef<Form>();
 
 render(
-  <Form
-    schema={schema}
-    validator={validator}
-    onSubmit={onSubmit}
-    ref={formRef}
-  />,
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={formRef} />,
   document.getElementById('app')
 );
 

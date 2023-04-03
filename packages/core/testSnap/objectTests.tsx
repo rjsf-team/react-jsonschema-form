@@ -7,31 +7,30 @@ import { FormProps } from '../src';
 
 const titleAndDesc = {
   title: 'Test field',
-  description: 'a test description'
+  description: 'a test description',
 };
 
 const uiTitleAndDesc: UiSchema = {
   'ui:options': {
     title: 'My Field',
-    description: 'a fancier description'
+    description: 'a fancier description',
   },
   a: {
     'ui:options': {
       title: 'My Item A',
-      description: 'a fancier item A description'
-    }
+      description: 'a fancier item A description',
+    },
   },
   b: {
     'ui:options': {
       title: 'My Item B',
-      description: 'a fancier item B description'
-    }
-  }
-
+      description: 'a fancier item B description',
+    },
+  },
 };
 
 const labelsOff: UiSchema = {
-  'ui:globalOptions': { label: false }
+  'ui:globalOptions': { label: false },
 };
 
 export default function arrayTests(Form: ComponentType<FormProps>) {
@@ -95,7 +94,9 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
           type: 'object',
           additionalProperties: true,
         };
-        const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
+        const tree = renderer
+          .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />)
+          .toJSON();
         expect(tree).toMatchSnapshot();
       });
     });
@@ -118,7 +119,9 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
           ...titleAndDesc,
           additionalProperties: true,
         };
-        const tree = renderer.create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
+        const tree = renderer
+          .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />)
+          .toJSON();
         expect(tree).toMatchSnapshot();
       });
     });
@@ -141,7 +144,9 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
           ...titleAndDesc,
           additionalProperties: true,
         };
-        const tree = renderer.create(<Form schema={schema} uiSchema={labelsOff} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
+        const tree = renderer
+          .create(<Form schema={schema} uiSchema={labelsOff} validator={validator} formData={{ foo: 'foo' }} />)
+          .toJSON();
         expect(tree).toMatchSnapshot();
       });
     });
