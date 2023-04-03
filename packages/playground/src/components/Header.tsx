@@ -10,11 +10,6 @@ import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
 
-export interface LiveSettings {
-  showErrorList: false | 'top' | 'bottom';
-  [key: string]: any;
-}
-
 const liveSettingsSchema: RJSFSchema = {
   type: 'object',
   properties: {
@@ -70,6 +65,11 @@ function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: React.Mutable
       </HeaderButton>
     </>
   );
+}
+
+export interface LiveSettings {
+  showErrorList: false | 'top' | 'bottom';
+  [key: string]: any;
 }
 
 type HeaderProps = {
