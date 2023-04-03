@@ -198,7 +198,7 @@ export default function retrieveSchema<
         deep: false,
       } as Options) as S;
     } catch (e) {
-      console.warn('could not merge subschemas in allOf:\n' + e);
+      console.warn('could not merge subschemas in allOf:\n', e);
       const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
       return resolvedSchemaWithoutAllOf as S;
     }

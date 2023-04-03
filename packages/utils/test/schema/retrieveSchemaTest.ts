@@ -1,10 +1,13 @@
-import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG } from '../../src';
+import get from 'lodash/get';
+
+import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG, PROPERTIES_KEY } from '../../src';
 import {
   resolveSchema,
   stubExistingAdditionalProperties,
   withDependentProperties,
   withExactlyOneSubschema,
 } from '../../src/schema/retrieveSchema';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
@@ -37,7 +40,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
     });
-
     it('should `resolve` a schema which contains definitions not in `#/definitions`', () => {
       const address: RJSFSchema = {
         type: 'object',
@@ -58,7 +60,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ...address,
       });
     });
-
     it('should give an error when JSON pointer is not in a URI encoded format', () => {
       const address: RJSFSchema = {
         type: 'object',
@@ -76,7 +77,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
     });
-
     it('should give an error when JSON pointer does not point to anything', () => {
       const schema: RJSFSchema = {
         $ref: '#/definitions/schemas/address',
@@ -85,7 +85,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
     });
-
     it('should `resolve` escaped JSON Pointers', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/a~0complex~1name' };
       const address: RJSFSchema = { type: 'string' };
@@ -95,7 +94,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a definition', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -127,7 +125,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a type and definition', () => {
       const schema: RJSFSchema = {
         type: 'string',
@@ -153,7 +150,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with oneOf', () => {
       const oneOf: RJSFSchema[] = [
         {
@@ -182,7 +178,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with anyOf', () => {
       const anyOf: RJSFSchema[] = [
         {
@@ -211,7 +206,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should handle null formData for schema which contains additionalProperties', () => {
       const schema: RJSFSchema = {
         additionalProperties: {
@@ -226,8 +220,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {},
       });
     });
-
-    it('should priorize local definitions over foreign ones', () => {
+    it('should prioritize local definitions over foreign ones', () => {
       const schema: RJSFSchema = {
         $ref: '#/definitions/address',
         title: 'foo',
@@ -241,6 +234,23 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
         ...address,
         title: 'foo',
+      });
+    });
+    it('recursive ref should resolve once', () => {
+      const result = retrieveSchema(testValidator, RECURSIVE_REF, RECURSIVE_REF);
+      expect(result).toEqual({
+        definitions: RECURSIVE_REF.definitions,
+        ...(RECURSIVE_REF.definitions!['@enum'] as RJSFSchema),
+      });
+    });
+    it('recursive allof ref should resolve once', () => {
+      const result = retrieveSchema(
+        testValidator,
+        get(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
+        RECURSIVE_REF_ALLOF
+      );
+      expect(result).toEqual({
+        ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
       });
     });
 
@@ -859,7 +869,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
-        expect(consoleWarnSpy).toBeCalledWith(expect.stringMatching(/could not merge subschemas in allOf/));
+        expect(consoleWarnSpy).toBeCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error)
+        );
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {

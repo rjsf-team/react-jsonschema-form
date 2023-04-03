@@ -274,3 +274,66 @@ export const ALL_OPTIONS: EnumOptionsType[] = [
   { value: 'baz', label: 'Baz' },
   { value: 'boo', label: 'Boo' },
 ];
+
+export const RECURSIVE_REF_ALLOF: RJSFSchema = {
+  definitions: {
+    '@enum': {
+      type: 'object',
+      properties: {
+        name: {
+          title: 'Name',
+          type: 'string',
+          default: '',
+        },
+        _id: {
+          title: 'Value',
+          type: 'number',
+        },
+        children: {
+          title: 'Subvalues',
+          type: 'array',
+          items: {
+            allOf: [
+              {
+                $ref: '#/definitions/@enum',
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  type: 'object',
+  properties: {
+    value: {
+      type: 'array',
+      items: {
+        allOf: [
+          {
+            $ref: '#/definitions/@enum',
+          },
+        ],
+      },
+      minItems: 1,
+    },
+  },
+};
+
+export const RECURSIVE_REF: RJSFSchema = {
+  definitions: {
+    '@enum': {
+      type: 'object',
+      properties: {
+        name: {
+          title: 'Name',
+          type: 'string',
+          default: '',
+        },
+        children: {
+          $ref: '#/definitions/@enum',
+        },
+      },
+    },
+  },
+  $ref: '#/definitions/@enum',
+};

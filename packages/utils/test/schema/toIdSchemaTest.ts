@@ -1,4 +1,5 @@
 import { toIdSchema, RJSFSchema, createSchemaUtils } from '../../src';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function toIdSchemaTest(testValidator: TestValidatorType) {
@@ -274,12 +275,48 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         },
       };
       const formData = null;
-      const result = toIdSchema(testValidator, schema, null, {}, formData, 'rjsf');
+      const result = toIdSchema(testValidator, schema, undefined, {}, formData, 'rjsf');
 
       expect(result).toEqual({
         $id: 'rjsf',
         foo: { $id: 'rjsf_foo' },
         bar: { $id: 'rjsf_bar' },
+      });
+    });
+    it('should handle recursive ref to two levels', () => {
+      const result = toIdSchema(testValidator, RECURSIVE_REF, undefined, RECURSIVE_REF);
+      expect(result).toEqual({
+        $id: 'root',
+        name: {
+          $id: 'root_name',
+        },
+        children: {
+          $id: 'root_children',
+          name: {
+            $id: 'root_children_name',
+          },
+          children: {
+            $id: 'root_children_children',
+          },
+        },
+      });
+    });
+    it('should handle recursive allof ref to one level', () => {
+      const result = toIdSchema(testValidator, RECURSIVE_REF_ALLOF, null, RECURSIVE_REF_ALLOF);
+      expect(result).toEqual({
+        $id: 'root',
+        value: {
+          $id: 'root_value',
+          _id: {
+            $id: 'root_value__id',
+          },
+          children: {
+            $id: 'root_value_children',
+          },
+          name: {
+            $id: 'root_value_name',
+          },
+        },
       });
     });
   });
