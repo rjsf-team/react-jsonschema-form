@@ -3,7 +3,6 @@ import 'react-app-polyfill/ie11';
 import { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
 import {
   ErrorSchema,
-  TemplatesType,
   ArrayFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
@@ -125,11 +124,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     window.alert('Form submitted');
   }, []);
 
-  const templateProps: Partial<TemplatesType> = {
-    ArrayFieldTemplate,
-    ObjectFieldTemplate,
-  };
-
   return (
     <>
       <Header
@@ -189,8 +183,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               theme={theme}
             >
               <FormComponent
-                {...templateProps}
                 {...liveSettings}
+                ArrayFieldTemplate={ArrayFieldTemplate}
+                ObjectFieldTemplate={ObjectFieldTemplate}
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}
