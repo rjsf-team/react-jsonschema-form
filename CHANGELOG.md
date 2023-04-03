@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.5.1
+
+## Dev / playground
+
+- Refactored some parts of `playground` to make it cleaner
+- Formatted the entire monorepo which included 6 unformatted files outside of `playground`
+
 # 5.5.0
 
 ## @rjsf/antd
