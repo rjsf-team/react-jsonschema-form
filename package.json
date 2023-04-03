@@ -43,7 +43,7 @@
     "jest-environment-jsdom": "^27.5.1",
     "lerna": "^6.6.1",
     "lint-staged": "^13.2.0",
-    "nx": "^15.9.1",
+    "nx": "^15.9.2",
     "prettier": "^2.8.7",
     "ts-jest": "^27.1.5",
     "tslib": "^2.5.0",

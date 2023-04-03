@@ -19,12 +19,6 @@ exports[`single fields checkbox field 1`] = `
   position: relative;
 }
 
-.emotion-2[disabled],
-.emotion-2[aria-disabled=true],
-.emotion-2[data-disabled] {
-  cursor: not-allowed;
-}
-
 .emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -104,6 +98,7 @@ exports[`single fields checkbox field 1`] = `
           <input
             aria-describedby="root__error root__description root__help"
             aria-disabled={false}
+            aria-invalid={false}
             checked={false}
             className="chakra-checkbox__input"
             disabled={false}
@@ -114,6 +109,8 @@ exports[`single fields checkbox field 1`] = `
             onFocus={[Function]}
             onKeyDown={[Function]}
             onKeyUp={[Function]}
+            readOnly={false}
+            required={false}
             style={
               Object {
                 "border": "0px",
@@ -172,12 +169,6 @@ exports[`single fields checkbox field with label 1`] = `
   align-items: center;
   vertical-align: top;
   position: relative;
-}
-
-.emotion-2[disabled],
-.emotion-2[aria-disabled=true],
-.emotion-2[data-disabled] {
-  cursor: not-allowed;
 }
 
 .emotion-3 {
@@ -264,6 +255,7 @@ exports[`single fields checkbox field with label 1`] = `
           <input
             aria-describedby="root__error root__description root__help"
             aria-disabled={false}
+            aria-invalid={false}
             checked={false}
             className="chakra-checkbox__input"
             disabled={false}
@@ -274,6 +266,8 @@ exports[`single fields checkbox field with label 1`] = `
             onFocus={[Function]}
             onKeyDown={[Function]}
             onKeyUp={[Function]}
+            readOnly={false}
+            required={false}
             style={
               Object {
                 "border": "0px",
@@ -364,12 +358,6 @@ exports[`single fields checkboxes field 1`] = `
   position: relative;
 }
 
-.emotion-3[disabled],
-.emotion-3[aria-disabled=true],
-.emotion-3[data-disabled] {
-  cursor: not-allowed;
-}
-
 .emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -456,6 +444,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <input
               aria-disabled={false}
+              aria-invalid={false}
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
@@ -466,6 +455,8 @@ exports[`single fields checkboxes field 1`] = `
               onFocus={[Function]}
               onKeyDown={[Function]}
               onKeyUp={[Function]}
+              readOnly={false}
+              required={false}
               style={
                 Object {
                   "border": "0px",
@@ -508,6 +499,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <input
               aria-disabled={false}
+              aria-invalid={false}
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
@@ -518,6 +510,8 @@ exports[`single fields checkboxes field 1`] = `
               onFocus={[Function]}
               onKeyDown={[Function]}
               onKeyUp={[Function]}
+              readOnly={false}
+              required={false}
               style={
                 Object {
                   "border": "0px",
@@ -560,6 +554,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <input
               aria-disabled={false}
+              aria-invalid={false}
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
@@ -570,6 +565,8 @@ exports[`single fields checkboxes field 1`] = `
               onFocus={[Function]}
               onKeyDown={[Function]}
               onKeyUp={[Function]}
+              readOnly={false}
+              required={false}
               style={
                 Object {
                   "border": "0px",
@@ -612,6 +609,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <input
               aria-disabled={false}
+              aria-invalid={false}
               checked={false}
               className="chakra-checkbox__input"
               disabled={false}
@@ -622,6 +620,8 @@ exports[`single fields checkboxes field 1`] = `
               onFocus={[Function]}
               onKeyDown={[Function]}
               onKeyUp={[Function]}
+              readOnly={false}
+              required={false}
               style={
                 Object {
                   "border": "0px",
@@ -5746,10 +5746,9 @@ exports[`single fields up/down field 1`] = `
             <div
               className="emotion-5"
               disabled={false}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
+              onPointerDown={[Function]}
+              onPointerLeave={[Function]}
+              onPointerUp={[Function]}
               role="button"
               tabIndex={-1}
             >
@@ -5767,10 +5766,9 @@ exports[`single fields up/down field 1`] = `
             <div
               className="emotion-5"
               disabled={false}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
+              onPointerDown={[Function]}
+              onPointerLeave={[Function]}
+              onPointerUp={[Function]}
               role="button"
               tabIndex={-1}
             >
