@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import MonacoEditor from '@monaco-editor/react';
+import { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import isEqualWith from 'lodash/isEqualWith';
-
-import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 
 const monacoEditorOptions = {
   minimap: {
