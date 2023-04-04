@@ -27,7 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Refactored some parts of `playground` to make it cleaner
 - Formatted the entire monorepo which included 6 unformatted files outside of `playground`
 - Removed `react-app-polyfill` package from `playgound`. This ends IE11 support
-- Fix a handful of broken docs links
+- Fix a handful of broken docs links, fixing [#3553](https://github.com/rjsf-team/react-jsonschema-form/issues/3553)
 
 # 5.5.0
 
