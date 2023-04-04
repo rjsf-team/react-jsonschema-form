@@ -20,7 +20,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 - Added protections against infinite recursion of `$ref`s for the `toIdSchema()`, `toPathSchema()` and `getDefaultFormState()` functions, fixing [#3560](https://github.com/rjsf-team/react-jsonschema-form/issues/3560)
-- Updated `getDefaultFormState()` to handle object-based `additionalProperties` with defaults using `formData` in addition to values contained in a `default` object, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593) 
+- Updated `getDefaultFormState()` to handle object-based `additionalProperties` with defaults using `formData` in addition to values contained in a `default` object, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593)
+- Updated internal helper `withExactlyOneSubschema()` inside of `retrieveSchema()` to use the `isValid()` function rather than `validateFormData()` when determining the one-of branch 
 
 ## Dev / docs / playground
 
