@@ -97,7 +97,7 @@ import Form from '../src';
 formTests(Form);
 
 describe('Theme specific tests', () => {
-  it("test a theme-specific option", () => {
+  it('test a theme-specific option', () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -111,7 +111,7 @@ describe('Theme specific tests', () => {
     };
     const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
     expect(tree).toMatchSnapshot();
-  })
+  });
 });
 ```
 

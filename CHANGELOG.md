@@ -16,6 +16,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.5.1
+
+## Dev / playground
+
+- Refactored some parts of `playground` to make it cleaner
+- Formatted the entire monorepo which included 6 unformatted files outside of `playground`
+- Removed `react-app-polyfill` package from `playgound`. This ends IE11 support
+
 # 5.5.0
 
 ## @rjsf/antd
@@ -68,7 +76,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added the ability to use a tooltip for a description
 - Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing [#3231](https://github.com/rjsf-team/react-jsonschema-form/issues/3231)
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
-- Updated `CheckboxesWidget` and `SelectWidget` to show the `label` using the `TitleFieldTemplate`, fixing  [#2134](https://github.com/rjsf-team/react-jsonschema-form/issues/2134)
+- Updated `CheckboxesWidget` and `SelectWidget` to show the `label` using the `TitleFieldTemplate`, fixing [#2134](https://github.com/rjsf-team/react-jsonschema-form/issues/2134)
 
 ## @rjsf/bootstrap-4
 
@@ -112,7 +120,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
 
 ## @rjsf/semantic-ui
-- 
+
+-
 - Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing [#3231](https://github.com/rjsf-team/react-jsonschema-form/issues/3231)
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget` and `TextareaWidget` to hide labels when `hideLabel` is true using the new `labelValue()` helper (including globally)
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)

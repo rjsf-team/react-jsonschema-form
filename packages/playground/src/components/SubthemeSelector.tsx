@@ -1,30 +1,45 @@
+import { useCallback, useMemo } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
-interface SubthemeTypes {
+const uiSchema: UiSchema = {
+  'ui:placeholder': 'Select subtheme',
+};
+
+interface SubthemeType {
   stylesheet: string;
 }
 
 export interface SubthemesType {
-  [subtheme: string]: SubthemeTypes;
+  [subtheme: string]: SubthemeType;
 }
 
 interface SubthemeSelectorProps {
   subtheme: string;
   subthemes: SubthemesType;
-  select: (subthemeName: string, subtheme: SubthemeTypes) => void;
+  select: (subthemeName: string, subtheme: SubthemeType) => void;
 }
 
 export default function SubthemeSelector({ subtheme, subthemes, select }: SubthemeSelectorProps) {
-  const schema: RJSFSchema = {
-    type: 'string',
-    enum: Object.keys(subthemes),
-  };
+  const schema: RJSFSchema = useMemo(
+    () => ({
+      type: 'string',
+      enum: Object.keys(subthemes),
+    }),
+    [subthemes]
+  );
 
-  const uiSchema: UiSchema = {
-    'ui:placeholder': 'Select subtheme',
-  };
+  const handleChange = useCallback(
+    ({ formData }: IChangeEvent) => {
+      if (!formData) {
+        return;
+      }
+
+      return select(formData, subthemes[formData]);
+    },
+    [select, subthemes]
+  );
 
   return (
     <Form
@@ -34,7 +49,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
       uiSchema={uiSchema}
       formData={subtheme}
       validator={localValidator}
-      onChange={({ formData }: IChangeEvent) => formData && select(formData, subthemes[formData])}
+      onChange={handleChange}
     >
       <div />
     </Form>
