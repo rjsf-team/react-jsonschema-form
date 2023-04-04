@@ -86,7 +86,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customArray.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
+Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -681,7 +681,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customObject.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
+Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
@@ -992,7 +992,7 @@ render(
 The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOptions` capabilities in the `uiSchema` but it can also be fully customized as you see fit.
 
 > NOTE: However you choose to implement this, making it something other than a `submit` type `button` may result in the `Form` not submitting when pressed.
-> You could also choose to provide your own submit button as the [children prop](../api-reference/form-props#children) of the `Form` should you so choose.
+> You could also choose to provide your own submit button as the [children prop](../api-reference/form-props.md#children) of the `Form` should you so choose.
 
 ```tsx
 import React from 'react';

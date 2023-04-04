@@ -83,7 +83,7 @@ This will make all widgets have an id prefixed with `myform`.
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself.
 
-See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields#custom-field-components) for more information about how to use this property.
+See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
 ### ui:fieldReplacesAnyOrOneOf
 
@@ -100,14 +100,14 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-NOTE: The properties specific to array items can be found [here](../usage/arrays#array-item-uiSchema-options)
+NOTE: The properties specific to array items can be found [here](../usage/arrays.md#array-item-uiSchema-options)
 
 ### widget
 
 The `ui:widget` property overrides the `Widget` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a widget that is used to look up an implementation from the `widgets` list or an actual one-off `Widget` component implementation itself.
 
-See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields) for more information about how to use this property.
+See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information about how to use this property.
 
 ### classNames
 
@@ -456,6 +456,6 @@ const uiSchema = {
 
 ## Theme Options
 
-[AntD Customization](themes/antd/uiSchema.md)
-[Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
-[Semantic-UI Customization](themes/semantic-ui/uiSchema.md)
+- [AntD Customization](themes/antd/uiSchema.md)
+- [Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
+- [Semantic-UI Customization](themes/semantic-ui/uiSchema.md)
