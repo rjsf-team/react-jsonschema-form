@@ -214,27 +214,32 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         maybeAddDefaultToObject<T>(acc, key, computedDefault, includeUndefinedValues, schema.required);
         return acc;
       }, {}) as T;
-      if (schema.additionalProperties && isObject(defaults)) {
-        const additionalPropertiesSchema = isObject(schema.additionalProperties) ? schema.additionalProperties : {}; // as per spec additionalProperties may be either schema or boolean
-        Object.keys(defaults as GenericObjectType)
-          .filter((key) => !schema.properties || !schema.properties[key])
-          .forEach((key) => {
-            const computedDefault = computeDefaults(
-              validator,
-              additionalPropertiesSchema as S,
-              get(defaults, [key]),
-              rootSchema,
-              get(formData, [key]),
-              includeUndefinedValues === true,
-              _recurseList
-            );
-            maybeAddDefaultToObject<T>(
-              objectDefaults as GenericObjectType,
-              key,
-              computedDefault,
-              includeUndefinedValues
-            );
-          });
+      if (schema.additionalProperties) {
+        // as per spec additionalProperties may be either schema or boolean
+        const additionalPropertiesSchema = isObject(schema.additionalProperties) ? schema.additionalProperties : {};
+        const keys = new Set<string>();
+        if (isObject(defaults)) {
+          Object.keys(defaults as GenericObjectType)
+            .filter((key) => !schema.properties || !schema.properties[key])
+            .forEach((key) => keys.add(key));
+        }
+        if (isObject(formData)) {
+          Object.keys(formData as GenericObjectType)
+            .filter((key) => !schema.properties || !schema.properties[key])
+            .forEach((key) => keys.add(key));
+        }
+        keys.forEach((key) => {
+          const computedDefault = computeDefaults(
+            validator,
+            additionalPropertiesSchema as S,
+            get(defaults, [key]),
+            rootSchema,
+            get(formData, [key]),
+            includeUndefinedValues === true,
+            _recurseList
+          );
+          maybeAddDefaultToObject<T>(objectDefaults as GenericObjectType, key, computedDefault, includeUndefinedValues);
+        });
       }
       return objectDefaults;
     }
