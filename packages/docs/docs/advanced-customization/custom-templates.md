@@ -843,7 +843,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `children`: The children of the component, typically specified by the `FieldTemplate`.
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
-- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema#classnames) defined in your uiSchema.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
 - `required`: A boolean value stating if the field is required.
