@@ -113,7 +113,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
   return (
     <Box>
-      <Box display='flex' flexWrap='wrap' alignItems='center' justify='center'>
+      <Box display='flex' flexWrap='wrap' alignItems='center'>
         {dateElementProps().map((elemProps: any, i) => {
           const elemId = id + '_' + elemProps.type;
           return (
