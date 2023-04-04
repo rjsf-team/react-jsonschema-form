@@ -183,8 +183,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
             >
               <FormComponent
                 {...liveSettings}
-                ArrayFieldTemplate={ArrayFieldTemplate}
-                ObjectFieldTemplate={ObjectFieldTemplate}
+                templates={{ ArrayFieldTemplate, ObjectFieldTemplate }}
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}

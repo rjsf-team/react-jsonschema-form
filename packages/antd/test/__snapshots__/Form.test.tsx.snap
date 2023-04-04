@@ -713,7 +713,7 @@ exports[`single fields format date 1`] = `
   >
     <div
       className="ant-picker"
-      onMouseUp={[Function]}
+      onClick={[Function]}
       style={
         Object {
           "width": "100%",
@@ -790,7 +790,7 @@ exports[`single fields format datetime 1`] = `
   >
     <div
       className="ant-picker"
-      onMouseUp={[Function]}
+      onClick={[Function]}
       style={
         Object {
           "width": "100%",
