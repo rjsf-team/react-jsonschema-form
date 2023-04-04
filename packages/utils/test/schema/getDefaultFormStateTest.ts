@@ -1,5 +1,6 @@
 import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
 import { computeDefaults } from '../../src/schema/getDefaultFormState';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
@@ -171,6 +172,45 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 'bar',
         });
       });
+      it('test an object with additionalProperties type object with and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                    default: 'localhost',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                    default: 389,
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(computeDefaults(testValidator, schema, undefined, schema, { test: { foo: 'x', newKey: {} } })).toEqual({
+          test: {
+            newKey: {
+              host: 'localhost',
+              port: 389,
+            },
+          },
+        });
+      });
       it('test computeDefaults handles an invalid property schema', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -181,6 +221,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(computeDefaults(testValidator, schema, undefined, schema, undefined, 'excludeObjectChildren')).toEqual(
           {}
         );
+      });
+      it('test with a recursive schema', () => {
+        expect(computeDefaults(testValidator, RECURSIVE_REF, undefined, RECURSIVE_REF)).toEqual({
+          name: '',
+        });
+      });
+      it('test with a recursive allof schema', () => {
+        expect(computeDefaults(testValidator, RECURSIVE_REF_ALLOF, undefined, RECURSIVE_REF_ALLOF)).toEqual({
+          value: [undefined],
+        });
       });
     });
     describe('root default', () => {

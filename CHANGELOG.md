@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.5.1
 
+## @rjsf/utils
+- Added protections against infinite recursion of `$ref`s for the `toIdSchema()`, `toPathSchema()` and `getDefaultFormState()` functions, fixing [#3560](https://github.com/rjsf-team/react-jsonschema-form/issues/3560)
+- Updated `getDefaultFormState()` to handle object-based `additionalProperties` with defaults using `formData` in addition to values contained in a `default` object, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593) 
+
 ## Dev / playground
 
 - Refactored some parts of `playground` to make it cleaner

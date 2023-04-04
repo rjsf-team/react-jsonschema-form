@@ -1,4 +1,5 @@
 import { toPathSchema, RJSFSchema, createSchemaUtils } from '../../src';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
@@ -657,6 +658,33 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         $name: '',
         ipsum: {
           $name: 'ipsum',
+        },
+      });
+    });
+    it('should handle recursive ref to one level', () => {
+      const result = toPathSchema(testValidator, RECURSIVE_REF, undefined, RECURSIVE_REF);
+      expect(result).toEqual({
+        $name: '',
+        name: {
+          $name: 'name',
+        },
+        children: {
+          $name: 'children',
+          name: {
+            $name: 'children.name',
+          },
+          children: {
+            $name: 'children.children',
+          },
+        },
+      });
+    });
+    it('should handle recursive allof ref to one level, based on formData', () => {
+      const result = toPathSchema(testValidator, RECURSIVE_REF_ALLOF, undefined, RECURSIVE_REF_ALLOF);
+      expect(result).toEqual({
+        $name: '',
+        value: {
+          $name: 'value',
         },
       });
     });
