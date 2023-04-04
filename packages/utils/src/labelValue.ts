@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 /** Helper function that will return the value to use for a widget `label` based on `hideLabel`. The `fallback` is used
  * as the return value from the function when `hideLabel` is true. Due to the implementation of theme components, it
  * may be necessary to return something other than `undefined` to cause the theme component to not render a label. Some
- * themes require may `false` and others may require and empty string.
+ * themes require may `false` and others may require an empty string.
  *
  * @param [label] - The label string or component to render when not hidden
  * @param [hideLabel] - Flag, if true, will cause the label to be hidden

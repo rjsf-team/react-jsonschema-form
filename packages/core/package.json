@@ -4,8 +4,8 @@
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
-    "cs-check": "prettier -l \"{src,test}/**/*.[jt]s?(x)\"",
-    "cs-format": "prettier \"{src,test}/**/*.[jt]s?(x)\" --write",
+    "cs-check": "prettier -l \"{src,test,testSnap}/**/*.[jt]s?(x)\"",
+    "cs-format": "prettier \"{src,test,testSnap}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
@@ -16,7 +16,7 @@
     "test-coverage": "dts test --coverage"
   },
   "lint-staged": {
-    "{src,test}/**/*.[jt]s?(x)": [
+    "{src,test,testSnap}/**/*.[jt]s?(x)": [
       "eslint --fix",
       "prettier --write"
     ]
