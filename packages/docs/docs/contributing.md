@@ -68,7 +68,7 @@ In order to support the various themes, the code for the tests are actually func
 - `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
 - `[customOptions]`: { [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
 
-There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with it's own definition of `customOptions`
+There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
 
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
@@ -148,7 +148,7 @@ Note that if you are releasing a new major version, you should bump the peer dep
 Then, make a PR to main. Merge the PR into main -- make sure you use "merge commit", not squash and merge, so that
 the original commit where the tag was based on is still present in the main branch.
 
-Then, create a release in the Github "Releases" tab, select the new tag that you have added,
+Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
 and add a description of the changes in the new release. You can copy
 the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
 

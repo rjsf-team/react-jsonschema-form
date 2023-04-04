@@ -233,7 +233,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ### Customizing widgets' text input
 
-All the widgets that render a text input use the `BaseInputTemplate` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInputTemplate` component in the `templates` property of `Form` (see [Custom Templates](advanced-customization/custom-templates#baseinputtemplate)).
+All the widgets that render a text input use the `BaseInputTemplate` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInputTemplate` component in the `templates` property of `Form` (see [Custom Templates](./custom-templates.md#baseinputtemplate)).
 
 ## Custom field components
 
@@ -305,12 +305,12 @@ render(
 A field component will always be passed the following props:
 
 - `schema`: The JSON subschema object for this field;
-- `uiSchema`: The [uiSchema](#the-uischema-object) for this field;
+- `uiSchema`: The [uiSchema](../api-reference/uiSchema.md) for this field;
 - `idSchema`: The tree of unique ids for every child field;
 - `formData`: The data for this field;
 - `errorSchema`: The tree of errors for this field and its children;
 - `registry`: A [registry](#the-registry-object) object (read next).
-- `formContext`: A [formContext](#the-formcontext-object) object (read next).
+- `formContext`: A [formContext](../api-reference/form-props.md#formcontext) object (read next).
 - `required`: The required status of this field;
 - `disabled`: A boolean value stating if the field is disabled;
 - `readonly`: A boolean value stating if the field is read-only;
@@ -328,9 +328,9 @@ A field component will always be passed the following props:
 The `registry` is an object containing the registered core, theme and custom fields and widgets as well as the root schema, form context, schema utils.
 
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
-- `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-widget-components), if any;
-- `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](#schema-definitions-and-references);
-- `formContext`: The [formContext](#the-formcontext-object) that was passed to `Form`;
+- `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
+- `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../usage/definitions.md);
+- `formContext`: The [formContext](../api-reference/form-props.md#formcontext) that was passed to `Form`;
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and `SchemaField` components.
