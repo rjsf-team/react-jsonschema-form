@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Refactored some parts of `playground` to make it cleaner
 - Formatted the entire monorepo which included 6 unformatted files outside of `playground`
+- Removed `react-app-polyfill` package from `playgound`. This ends IE11 support
 
 # 5.5.0
 

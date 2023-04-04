@@ -68,7 +68,6 @@
     "lodash": "^4.17.21",
     "monaco-editor": "^0.36.1",
     "react": ">=17",
-    "react-app-polyfill": "^3.0.0",
     "react-bootstrap": "^1.6.5",
     "react-dom": "^17.0.2",
     "react-frame-component": "^4.1.1",

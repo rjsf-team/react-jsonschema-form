@@ -1,5 +1,4 @@
 import { useCallback, useState, useRef, useEffect, ComponentType, FormEvent } from 'react';
-import 'react-app-polyfill/ie11';
 import { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
 import {
   ErrorSchema,
