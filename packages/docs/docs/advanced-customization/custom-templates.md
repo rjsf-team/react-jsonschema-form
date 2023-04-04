@@ -86,7 +86,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customArray.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
+Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customArray.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for another example.
 
 The following props are passed to each `ArrayFieldTemplate`:
 
@@ -380,7 +380,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
-- `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
+- `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
@@ -607,10 +607,10 @@ If you want to handle the rendering of each element yourself, you can use the pr
 The following props are passed to a custom field template component:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
-- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
-- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionField`](#custom-descriptions) defined).
+- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -681,7 +681,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-Please see the [customObject.jsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.jsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
+Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/playground/src/samples/customObject.tsx) from the [playground](https://rjsf-team.github.io/react-jsonschema-form/) for a better example.
 
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
@@ -843,7 +843,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `children`: The children of the component, typically specified by the `FieldTemplate`.
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
-- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](#custom-css-class-names) defined in your uiSchema.
+- `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
 - `required`: A boolean value stating if the field is required.
@@ -992,7 +992,7 @@ render(
 The `SubmitButton` is already very customizable via the `UISchemaSubmitButtonOptions` capabilities in the `uiSchema` but it can also be fully customized as you see fit.
 
 > NOTE: However you choose to implement this, making it something other than a `submit` type `button` may result in the `Form` not submitting when pressed.
-> You could also choose to provide your own submit button as the [children prop](../api-reference/form-props#children) of the `Form` should you so choose.
+> You could also choose to provide your own submit button as the [children prop](../api-reference/form-props.md#children) of the `Form` should you so choose.
 
 ```tsx
 import React from 'react';

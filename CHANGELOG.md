@@ -22,11 +22,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Added protections against infinite recursion of `$ref`s for the `toIdSchema()`, `toPathSchema()` and `getDefaultFormState()` functions, fixing [#3560](https://github.com/rjsf-team/react-jsonschema-form/issues/3560)
 - Updated `getDefaultFormState()` to handle object-based `additionalProperties` with defaults using `formData` in addition to values contained in a `default` object, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593) 
 
-## Dev / playground
+## Dev / docs / playground
 
 - Refactored some parts of `playground` to make it cleaner
+  - This includes fixing the spelling of the `disabled` flag being passed into the `Form` from the incorrect `disable` spelling
 - Formatted the entire monorepo which included 6 unformatted files outside of `playground`
 - Removed `react-app-polyfill` package from `playgound`. This ends IE11 support
+- Fix a handful of broken docs links, fixing [#3553](https://github.com/rjsf-team/react-jsonschema-form/issues/3553)
 
 # 5.5.0
 

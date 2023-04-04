@@ -269,7 +269,7 @@ const schema: RJSFSchema = {
 return <Form schema={schema} validator={validator} />;
 ```
 
-NOTE: This syntax works only for the `@rjsf/validator-ajv6` validator; if you only use the `draft-04` schema and you want to use the `@rjsf/validator-ajv8` you can do the following:
+NOTE: This syntax works only for the `@rjsf/validator-ajv6` validator; if you only use the `draft-04` schema, and you want to use the `@rjsf/validator-ajv8` you can do the following:
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
@@ -289,7 +289,7 @@ return <Form schema={schema} validator={validator} />;
 ### customFormats
 
 [Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited.
-react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](docs/usage/widgets.md).
+react-jsonschema-form adds two formats, `color` and `data-url`, to support certain [alternative widgets](./widgets.md).
 To add formats of your own, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`:
 
 ```tsx

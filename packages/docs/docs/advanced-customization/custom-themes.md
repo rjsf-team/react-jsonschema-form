@@ -28,7 +28,7 @@ you can essentially redefine the default Form by simply doing `const Form = with
 
 ### Widgets and fields
 
-**widgets** and **fields** should be in the same format as shown [here](/advanced-customization/#custom-widgets-and-fields).
+**widgets** and **fields** should be in the same format as shown [here](./custom-widgets-fields.md).
 
 Example theme with custom widget:
 
@@ -60,7 +60,7 @@ The above can be similarly done for **fields** and **templates**.
 
 ### Templates
 
-Each template should be passed into the theme object via the **templates** object just as you would into the rjsf Form component. Here is an example of how to use a custom [ArrayFieldTemplate](/advanced-customization/#array-field-template) and [ErrorListTemplate](/advanced-customization/#error-list-template) in the theme object:
+Each template should be passed into the theme object via the **templates** object just as you would into the rjsf Form component. Here is an example of how to use a custom [ArrayFieldTemplate](./custom-templates.md#arrayfieldtemplate) and [ErrorListTemplate](./custom-templates.md#errorlisttemplate) in the theme object:
 
 ```tsx
 import { ArrayFieldTemplateProps, ErrorListProps } from '@rjsf/utils';
