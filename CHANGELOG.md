@@ -76,7 +76,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
 - Updated the `custom-templates` documentation to add `errorSchema` to the props for `ObjectFieldTemplate`
-- Fixes bug where the 'Disable whole form' button did not work.
 # 5.4.0
 
 ## @rjsf/antd

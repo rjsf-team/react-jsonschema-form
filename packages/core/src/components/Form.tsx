@@ -28,6 +28,8 @@ import {
   UI_GLOBAL_OPTIONS_KEY,
   ValidationData,
   ValidatorType,
+  SUBMIT_BTN_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -296,20 +298,7 @@ export default class Form<
   getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
-    const rawUiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
-
-    const uiSchema = props.disabled
-      ? {
-          ...rawUiSchema,
-          'ui:submitButtonOptions': {
-            ...rawUiSchema['ui:submitButtonOptions'],
-            props: {
-              ...rawUiSchema['ui:submitButtonOptions']?.props,
-              disabled: true,
-            },
-          },
-        }
-      : rawUiSchema;
+    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
@@ -358,7 +347,7 @@ export default class Form<
     }
     const idSchema = schemaUtils.toIdSchema(
       retrievedSchema,
-      rawUiSchema['ui:rootFieldId'],
+      uiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
       props.idSeparator
@@ -795,6 +784,12 @@ export default class Form<
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || 'form';
 
+    let { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions = {} } = getUiOptions<T, S, F>(uiSchema);
+    if (disabled) {
+      submitOptions = { ...submitOptions, props: { ...submitOptions.props, disabled: true } };
+    }
+    const submitUiSchema = { [UI_OPTIONS_KEY]: { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions } };
+
     return (
       <FormTag
         className={className ? className : 'rjsf'}
@@ -830,7 +825,7 @@ export default class Form<
           readonly={readonly}
         />
 
-        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} />}
+        {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );
