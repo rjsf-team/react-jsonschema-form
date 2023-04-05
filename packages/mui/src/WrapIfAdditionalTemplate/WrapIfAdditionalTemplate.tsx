@@ -1,8 +1,6 @@
 import { CSSProperties, FocusEvent } from 'react';
-import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -62,17 +60,17 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
       <Grid item xs>
-        <FormControl fullWidth={true} required={required}>
-          <InputLabel>{keyLabel}</InputLabel>
-          <Input
-            defaultValue={label}
-            disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
-            onBlur={!readonly ? handleBlur : undefined}
-            type='text'
-          />
-        </FormControl>
+        <TextField
+          fullWidth={true}
+          required={required}
+          label={keyLabel}
+          defaultValue={label}
+          disabled={disabled || readonly}
+          id={`${id}-key`}
+          name={`${id}-key`}
+          onBlur={!readonly ? handleBlur : undefined}
+          type='text'
+        />
       </Grid>
       <Grid item={true} xs>
         {children}
