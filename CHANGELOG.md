@@ -18,6 +18,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.5.1
 
+## @rjsf/core
+- Updated `Form` to include the top `disabled` property in the `ui:submitButtonOptions` so the submit button will be disabled when the whole form is disabled. Fixes [#3264](https://github.com/rjsf-team/react-jsonschema-form/issues/3264). 
+
 ## @rjsf/utils
 - Added protections against infinite recursion of `$ref`s for the `toIdSchema()`, `toPathSchema()` and `getDefaultFormState()` functions, fixing [#3560](https://github.com/rjsf-team/react-jsonschema-form/issues/3560)
 - Updated `getDefaultFormState()` to handle object-based `additionalProperties` with defaults using `formData` in addition to values contained in a `default` object, fixing [#2593](https://github.com/rjsf-team/react-jsonschema-form/issues/2593)
@@ -75,7 +78,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
 - Updated the `custom-templates` documentation to add `errorSchema` to the props for `ObjectFieldTemplate`
-
 # 5.4.0
 
 ## @rjsf/antd

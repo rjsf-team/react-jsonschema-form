@@ -28,6 +28,8 @@ import {
   UI_GLOBAL_OPTIONS_KEY,
   ValidationData,
   ValidatorType,
+  SUBMIT_BTN_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -781,6 +783,12 @@ export default class Form<
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || 'form';
 
+    let { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions = {} } = getUiOptions<T, S, F>(uiSchema);
+    if (disabled) {
+      submitOptions = { ...submitOptions, props: { ...submitOptions.props, disabled: true } };
+    }
+    const submitUiSchema = { [UI_OPTIONS_KEY]: { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions } };
+
     return (
       <FormTag
         className={className ? className : 'rjsf'}
@@ -815,7 +823,8 @@ export default class Form<
           disabled={disabled}
           readonly={readonly}
         />
-        {children ? children : <SubmitButton uiSchema={uiSchema} registry={registry} />}
+
+        {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
         {showErrorList === 'bottom' && this.renderErrors(registry)}
       </FormTag>
     );
