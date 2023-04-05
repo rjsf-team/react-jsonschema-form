@@ -5,6 +5,7 @@ import {
   ArrayFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
+  TemplatesType,
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
@@ -123,6 +124,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     window.alert('Form submitted');
   }, []);
 
+  const templates: Partial<TemplatesType> = {};
+  if (ArrayFieldTemplate) {
+    templates.ArrayFieldTemplate = ArrayFieldTemplate;
+  }
+  if (ObjectFieldTemplate) {
+    templates.ObjectFieldTemplate = ObjectFieldTemplate;
+  }
+
   return (
     <>
       <Header
@@ -183,7 +192,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
             >
               <FormComponent
                 {...liveSettings}
-                templates={{ ArrayFieldTemplate, ObjectFieldTemplate }}
+                templates={templates}
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}
