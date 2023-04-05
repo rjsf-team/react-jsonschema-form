@@ -352,7 +352,6 @@ export default class Form<
       props.idPrefix,
       props.idSeparator
     );
-
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema,
