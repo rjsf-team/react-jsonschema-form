@@ -1185,13 +1185,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ]);
       });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
-        // Mock errors so that withExactlyOneSubschema works as expected
+        // Mock isValid so that withExactlyOneSubschema works as expected
         testValidator.setReturnValues({
-          data: [
-            { errors: [], errorSchema: {} }, // First oneOf... first === first
-            { errors: [{ stack: 'error' }], errorSchema: {} }, // Second oneOf... second !== first
-            { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... first !== second
-            { errors: [], errorSchema: {} }, // Second oneOf... second === second
+          isValid: [
+            true, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+            false, // First oneOf... first !== second
+            true, // Second oneOf... second === second
           ],
         });
         const schema: RJSFSchema = {
