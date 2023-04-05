@@ -223,6 +223,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           includeUndefinedValues === true,
           _recurseList,
           behaviorBitFlags,
+          schema.required?.includes(key)
         );
         maybeAddDefaultToObject<T>(acc, key, computedDefault, includeUndefinedValues, schema.required);
         return acc;
@@ -293,54 +294,56 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         }) as T[];
       }
 
+      const ignoreMinItemsFlag =
+        behaviorBitFlags &
+        DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
+
+      console.log('defaults test', !schema.minItems, ignoreMinItemsFlag && !required, isMultiSelect<T, S, F>(validator, schema, rootSchema));
       if (
         !schema.minItems ||
-        behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItems
+        (ignoreMinItemsFlag && !required) ||
+        isMultiSelect<T, S, F>(validator, schema, rootSchema)
       ) {
-        return defaults;
+        return defaults ? defaults : [];
       }
 
-      if (!isMultiSelect<T, S, F>(validator, schema, rootSchema)) {
-        const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
-        if (schema.minItems > defaultsLength) {
-          const defaultEntries: T[] = (defaults || []) as T[];
-          // populate the array with the defaults
-          const fillerSchema: S = getInnerSchemaForArrayItem<S>(
-            schema,
-            AdditionalItemsHandling.Invert
-          );
-          const fillerDefault = fillerSchema.default;
-          if (
-            behaviorBitFlags === DefaultFormStateBehavior.Legacy ||
-            (required &&
-              fillerDefault &&
-              behaviorBitFlags &
-              DefaultFormStateBehavior.RequiredMinItemsPopulated)
-          ) {
-            const fillerEntries: T[] = new Array(
-              schema.minItems - defaultsLength
-            ).fill(
-              computeDefaults<any, S, F>(
-                validator,
-                fillerSchema,
-                fillerDefault,
-                rootSchema,
-                undefined,
-                undefined,
-                _recurseList,
-                behaviorBitFlags
-              )
-            ) as T[];
-            // then fill up the rest with either the item default or empty, up to minItems
-            return defaultEntries.concat(fillerEntries);
-          }
-
-          // otherwise just return default entries
-          return defaultEntries;
+      const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
+      if (schema.minItems > defaultsLength) {
+        const defaultEntries: T[] = (defaults || []) as T[];
+        // populate the array with the defaults
+        const fillerSchema: S = getInnerSchemaForArrayItem<S>(
+          schema,
+          AdditionalItemsHandling.Invert
+        );
+        const fillerDefault = fillerSchema.default;
+        console.log('filler', fillerDefault, behaviorBitFlags, required);
+        if (
+          behaviorBitFlags === DefaultFormStateBehavior.Legacy ||
+          (ignoreMinItemsFlag && required)
+        ) {
+          const fillerEntries: T[] = new Array(
+            schema.minItems - defaultsLength
+          ).fill(
+            computeDefaults<any, S, F>(
+              validator,
+              fillerSchema,
+              fillerDefault,
+              rootSchema,
+              undefined,
+              undefined,
+              _recurseList,
+              behaviorBitFlags
+            )
+          ) as T[];
+          // then fill up the rest with either the item default or empty, up to minItems
+          return defaultEntries.concat(fillerEntries);
         }
+
+        // otherwise return default entries
+        return defaultEntries;
       }
+      return defaults ? defaults : [];
     }
-    return defaults ? defaults : [];
   }
 
   return defaults;

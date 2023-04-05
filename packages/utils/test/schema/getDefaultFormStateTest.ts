@@ -1,4 +1,4 @@
-import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
+import { createSchemaUtils, DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
 import { computeDefaults } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
@@ -233,8 +233,58 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
     });
-    describe('root default', () => {
-      it('should map root schema default to form state, if any', () => {
+    describe('default form state behavior: ignore min items unless required', () => {
+      it('test an object with an optional array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalArray: {
+              type: 'array',
+              minItems: 2,
+            },
+          },
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            undefined,
+            undefined,
+            DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
+          )
+        ).toEqual({ optionalArray: [] });
+      });
+      it('test an object with a required array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 2,
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            undefined,
+            undefined,
+            DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
+          )
+        ).toEqual({ requiredArray: [undefined, undefined] });
+      });
+    });
+    describe("root default", () => {
+      it("should map root schema default to form state, if any", () => {
         expect(
           getDefaultFormState(testValidator, {
             type: 'string',
