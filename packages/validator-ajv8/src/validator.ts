@@ -58,6 +58,8 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
    * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
+   * @deprecated - Use the `toErrorList()` function provided by `@rjsf/utils` instead. This function will be removed in
+   *        the next major release.
    */
   toErrorList(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []) {
     return toErrorList(errorSchema, fieldPath);
