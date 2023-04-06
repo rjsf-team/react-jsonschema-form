@@ -1,4 +1,3 @@
-import { render } from 'react-dom';
 import { Theme as MuiV4Theme } from '@rjsf/material-ui';
 import { Theme as MuiV5Theme } from '@rjsf/mui';
 import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
@@ -12,13 +11,14 @@ import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
 
-import Playground from './app';
+import Layout from './layout';
+import Playground, { PlaygroundProps } from './components';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 
-const validators = {
+const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
   AJV8_es: esV8Validator,
   AJV8_2019,
@@ -26,7 +26,7 @@ const validators = {
   'AJV6 (deprecated)': v6Validator,
 };
 
-const themes = {
+const themes: PlaygroundProps['themes'] = {
   default: {
     stylesheet: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
     theme: {},
@@ -117,4 +117,10 @@ const themes = {
   },
 };
 
-render(<Playground themes={themes} validators={validators} />, document.getElementById('app'));
+export default function App() {
+  return (
+    <Layout>
+      <Playground themes={themes} validators={validators} />
+    </Layout>
+  );
+}

@@ -262,7 +262,6 @@ describe('BooleanField', () => {
       uiSchema: { bool: { 'ui:widget': 'radio' } },
     });
     const focusSpys = [sinon.spy(), sinon.spy()];
-    console.log(node.innerHTML);
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs.length).eql(2);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy

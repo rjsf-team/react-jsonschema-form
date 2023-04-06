@@ -1,10 +1,13 @@
-import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG } from '../../src';
+import get from 'lodash/get';
+
+import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG, PROPERTIES_KEY } from '../../src';
 import {
   resolveSchema,
   stubExistingAdditionalProperties,
   withDependentProperties,
   withExactlyOneSubschema,
 } from '../../src/schema/retrieveSchema';
+import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
@@ -37,7 +40,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
     });
-
     it('should `resolve` a schema which contains definitions not in `#/definitions`', () => {
       const address: RJSFSchema = {
         type: 'object',
@@ -58,7 +60,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ...address,
       });
     });
-
     it('should give an error when JSON pointer is not in a URI encoded format', () => {
       const address: RJSFSchema = {
         type: 'object',
@@ -76,7 +77,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
     });
-
     it('should give an error when JSON pointer does not point to anything', () => {
       const schema: RJSFSchema = {
         $ref: '#/definitions/schemas/address',
@@ -85,7 +85,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
     });
-
     it('should `resolve` escaped JSON Pointers', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/a~0complex~1name' };
       const address: RJSFSchema = { type: 'string' };
@@ -95,7 +94,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(address);
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a definition', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -127,7 +125,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with a type and definition', () => {
       const schema: RJSFSchema = {
         type: 'string',
@@ -153,7 +150,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with oneOf', () => {
       const oneOf: RJSFSchema[] = [
         {
@@ -182,7 +178,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with anyOf', () => {
       const anyOf: RJSFSchema[] = [
         {
@@ -211,7 +206,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
-
     it('should handle null formData for schema which contains additionalProperties', () => {
       const schema: RJSFSchema = {
         additionalProperties: {
@@ -226,8 +220,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {},
       });
     });
-
-    it('should priorize local definitions over foreign ones', () => {
+    it('should prioritize local definitions over foreign ones', () => {
       const schema: RJSFSchema = {
         $ref: '#/definitions/address',
         title: 'foo',
@@ -241,6 +234,23 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
         ...address,
         title: 'foo',
+      });
+    });
+    it('recursive ref should resolve once', () => {
+      const result = retrieveSchema(testValidator, RECURSIVE_REF, RECURSIVE_REF);
+      expect(result).toEqual({
+        definitions: RECURSIVE_REF.definitions,
+        ...(RECURSIVE_REF.definitions!['@enum'] as RJSFSchema),
+      });
+    });
+    it('recursive allof ref should resolve once', () => {
+      const result = retrieveSchema(
+        testValidator,
+        get(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
+        RECURSIVE_REF_ALLOF
+      );
+      expect(result).toEqual({
+        ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
       });
     });
 
@@ -472,11 +482,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('with $ref in oneOf', () => {
           it('should retrieve referenced schemas', () => {
-            // Mock errors so that withExactlyOneSubschema works as expected
+            // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              data: [
-                { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... second !== first
-                { errors: [], errorSchema: {} }, // Second oneOf... second === second
+              isValid: [
+                false, // First oneOf... second !== first
+                true, // Second oneOf... second === second
               ],
             });
             const schema: RJSFSchema = {
@@ -558,11 +568,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('true condition', () => {
           it('should add `first` properties given `first` data', () => {
-            // Mock errors so that withExactlyOneSubschema works as expected
+            // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              data: [
-                { errors: [], errorSchema: {} }, // First dependency... first === first
-                { errors: [{ stack: 'error' }], errorSchema: {} }, // Second dependency... second !== first
+              isValid: [
+                true, // First dependency... first === first
+                false, // Second dependency... second !== first
               ],
             });
             const schema: RJSFSchema = {
@@ -601,11 +611,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           });
 
           it('should add `second` properties given `second` data', () => {
-            // Mock errors so that withExactlyOneSubschema works as expected
+            // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              data: [
-                { errors: [{ stack: 'error' }], errorSchema: {} }, // First dependency... first !== second
-                { errors: [], errorSchema: {} }, // Second dependency... second === second
+              isValid: [
+                false, // First dependency... first !== second
+                true, // Second dependency... second === second
               ],
             });
             const schema: RJSFSchema = {
@@ -720,13 +730,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
 
             it('should not include nested dependencies that should be hidden', () => {
-              // Mock errors so that withExactlyOneSubschema works as expected
+              // Mock isValid so that withExactlyOneSubschema works as expected
               testValidator.setReturnValues({
-                data: [
-                  { errors: [{ stack: 'error' }], errorSchema: {} }, // employee_accounts oneOf ... - fail
-                  { errors: [], errorSchema: {} }, // update_absences first oneOf... success
-                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences second oneOf... fail
-                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences third oneOf... fail
+                isValid: [
+                  false, // employee_accounts oneOf ... - fail
+                  true, // update_absences first oneOf... success
+                  false, // update_absences second oneOf... fail
+                  false, // update_absences third oneOf... fail
                 ],
               });
               const formData = {
@@ -748,13 +758,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
 
             it('should include nested dependencies that should not be hidden', () => {
-              // Mock errors so that withExactlyOneSubschema works as expected
+              // Mock isValid so that withExactlyOneSubschema works as expected
               testValidator.setReturnValues({
-                data: [
-                  { errors: [], errorSchema: {} }, // employee_accounts oneOf... success
-                  { errors: [], errorSchema: {} }, // update_absences first oneOf... success
-                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences second oneOf... fail
-                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences third oneOf... fail
+                isValid: [
+                  true, // employee_accounts oneOf... success
+                  true, // update_absences first oneOf... success
+                  false, // update_absences second oneOf... fail
+                  false, // update_absences third oneOf... fail
                 ],
               });
               const formData = {
@@ -790,11 +800,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('with $ref in dependency', () => {
           it('should retrieve the referenced schema', () => {
-            // Mock errors so that withExactlyOneSubschema works as expected
+            // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              data: [
-                { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... fail
-                { errors: [], errorSchema: {} }, // Second oneOf... success
+              isValid: [
+                false, // First oneOf... fail
+                true, // Second oneOf... success
               ],
             });
             const schema: RJSFSchema = {
@@ -859,7 +869,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
-        expect(consoleWarnSpy).toBeCalledWith(expect.stringMatching(/could not merge subschemas in allOf/));
+        expect(consoleWarnSpy).toBeCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error)
+        );
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {

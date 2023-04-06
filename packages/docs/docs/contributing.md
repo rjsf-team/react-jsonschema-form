@@ -59,6 +59,64 @@ You can run all tests from the root directory OR from `packages` subdirectory us
 npm run test
 ```
 
+### Snapshot testing
+
+All the themes, including `core` use snapshot testing (NOTE: `core` also has extensive non-snapshot tests).
+The source-code of these snapshot tests reside in the `core` package in the `testSnap` directory and are shared with all the themes.
+In order to support the various themes, the code for the tests are actually functions that take two parameters:
+
+- `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
+- `[customOptions]`: { [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
+
+There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
+
+Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
+
+```tsx
+import arrayTests from '@rjsf/core/testSnap/arrayTests'; // OR
+// import arrayTests from '@rjsf/core/testSnap/formTests'
+// import arrayTests from '@rjsf/core/testSnap/objectTests'
+
+import Form from '../src';
+
+arrayTests(Form); // OR
+// formTests(Form);
+// objectTests(Form);
+```
+
+Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `npm run test` from the root directory to update all the snapshots.
+If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
+For example:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import arrayTests from '@rjsf/core/testSnap/formTests';
+
+import Form from '../src';
+
+formTests(Form);
+
+describe('Theme specific tests', () => {
+  it('test a theme-specific option', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      // Enable the theme specific feature
+    };
+    const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+```
+
+See the `antd` `Form.test.tsx` for a specific example of this.
+
 ### Code coverage
 
 Code coverage reports are currently available only for the `@rjsf/core` theme package.
@@ -70,7 +128,7 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
 
-> NOTE: All three of these directories share the same tests for verifying `validator` based APIs. See the documentation in the `getTestValidator()` functions for more information. 
+> NOTE: All three of these directories share the same tests for verifying `validator` based APIs. See the documentation in the `getTestValidator()` functions for more information.
 
 ## Releasing
 
@@ -90,7 +148,7 @@ Note that if you are releasing a new major version, you should bump the peer dep
 Then, make a PR to main. Merge the PR into main -- make sure you use "merge commit", not squash and merge, so that
 the original commit where the tag was based on is still present in the main branch.
 
-Then, create a release in the Github "Releases" tab, select the new tag that you have added,
+Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
 and add a description of the changes in the new release. You can copy
 the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
 

@@ -1,6 +1,6 @@
 # Schema definitions and references
 
-This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which is Barbarian for _avoiding to copy and paste commonly used field schemas_:
+This library partially supports [inline schema definition dereferencing](http://json-schema.org/draft/2019-09/json-schema-core.html#ref), which allows you to re-use parts of your schema:
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';

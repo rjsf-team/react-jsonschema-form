@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "5.3.1",
+  "version": "5.5.2",
   "main": "dist/index.js",
   "module": "dist/utils.esm.js",
   "typings": "dist/index.d.ts",
@@ -37,25 +37,25 @@
     "react-is": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
+    "@babel/core": "^7.21.4",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-modules-commonjs": "^7.21.2",
     "@babel/plugin-transform-react-jsx": "^7.21.0",
-    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "@types/jest-expect-message": "^1.1.0",
     "@types/json-schema": "^7.0.9",
     "@types/json-schema-merge-allof": "^0.6.1",
-    "@types/lodash": "^4.14.191",
+    "@types/lodash": "^4.14.192",
     "@types/react": "^17.0.48",
     "@types/react-is": "^17.0.3",
     "@types/react-test-renderer": "^17.0.2",
     "dts-cli": "^1.6.3",
-    "eslint": "^8.36.0",
+    "eslint": "^8.37.0",
     "jest-expect-message": "^1.1.3",
     "react": "^17.0.2",
     "react-test-renderer": "^17.0.2",
-    "rimraf": "^4.4.0"
+    "rimraf": "^4.4.1"
   },
   "publishConfig": {
     "access": "public"

@@ -131,7 +131,7 @@ render(<Form schema={schema} formData={formData} validator={validator} />, docum
 
 ### Form event handlers
 
-You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`, and `onBlur` on the `<Form />` component; see the [Form Props Reference](/docs/api-reference/form-props.md) for more details.
+You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`, and `onBlur` on the `<Form />` component; see the [Form Props Reference](./api-reference/form-props.md) for more details.
 
 ### Controlled component
 
