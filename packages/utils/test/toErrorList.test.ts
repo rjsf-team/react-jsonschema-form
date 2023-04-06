@@ -5,7 +5,7 @@ describe('toErrorList()', () => {
   it('returns empty array when nothing is passed', () => {
     expect(toErrorList()).toEqual([]);
   });
-  it('', () => {
+  it('Returns the expected list of errors when given an ErrorSchema', () => {
     expect(toErrorList(TEST_ERROR_SCHEMA)).toEqual(TEST_ERROR_LIST);
   });
 });

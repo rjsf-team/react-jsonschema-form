@@ -1031,14 +1031,16 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S): boolean;
-  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
-   * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
+  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
+   * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
    * `validator.toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, then
    * `validationData` is returned.
    *
    * @param validationData - The current `ValidationData` into which to merge the additional errors
    * @param [additionalErrorSchema] - The additional set of errors
-   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided
+   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
+   *        removed in the next major release.
    */
   mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T>;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
@@ -1048,8 +1050,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
-   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-   *        removed in the next major release.
    */
   retrieveSchema(schema: S, formData?: T): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
