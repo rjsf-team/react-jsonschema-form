@@ -16,6 +16,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.5.3
+## @rjsf/semantic-ui
+- Updated `SelectWidget` to handle undefined `target` in `onFocus` and `onBlur` handlers
+
 # 5.5.2
 
 ## @rjsf/material-ui
@@ -94,6 +98,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Converted the `playground` to use Typescript, including some refactoring of code to make that job easier
 - Updated the `custom-templates` documentation to add `errorSchema` to the props for `ObjectFieldTemplate`
+
 # 5.4.0
 
 ## @rjsf/antd
@@ -145,8 +150,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
 
 ## @rjsf/semantic-ui
-
--
 - Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing [#3231](https://github.com/rjsf-team/react-jsonschema-form/issues/3231)
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget` and `TextareaWidget` to hide labels when `hideLabel` is true using the new `labelValue()` helper (including globally)
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
