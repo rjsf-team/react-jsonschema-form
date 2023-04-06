@@ -176,6 +176,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param validationData - The current `ValidationData` into which to merge the additional errors
    * @param [additionalErrorSchema] - The additional set of errors
    * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
+   *        removed in the next major release.
    */
   mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T> {
     return mergeValidationData<T, S, F>(this.validator, validationData, additionalErrorSchema);

@@ -16,6 +16,31 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.6.0
+
+## @rjsf/core
+
+- Switched `Form` to use the new `validatorDataMerge()` function instead of the new deprecated `schemaUtils.mergeValidatorData()`
+
+## @rjsf/utils
+
+- Refactored the `createErrorHandler()`, `toErrorList()`, `toErrorSchema()` and `unwrapErrorHandler()` functions from the `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` implementations since they were identical
+  - As a result, the `mergeValidationData()` function was deprecated in favor of the new `validationDataMerge()` function that uses the refactored `toErrorList()` function
+  - Refactored the `ROOT_SCHEMA_PREFIX` constant as well
+- Updated `ValidatorType` and `SchemaUtilsType` to deprecate the `toErrorList()` and `mergeValidationData()` functions, respectively
+
+## @rjsf/validator-ajv6
+
+- Removed the refactored functions and constant from the `AJV6Validator` in favor of using the new functions and constant from `@rjsf/utils`
+
+## @rjsf/validator-ajv8
+
+- Removed the refactored functions and constant from the `AJV8Validator` in favor of using the new functions and constant from `@rjsf/utils`
+
+## Dev / docs / playground
+
+- Updated the `utility-functions` documentation to describe the new refactored functions as well as deprecating the `mergeValidationData()` function
+
 # 5.5.2
 
 ## @rjsf/material-ui

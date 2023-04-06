@@ -917,6 +917,8 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
    * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
+   * @deprecated - Use the `toErrorList()` function provided by `@rjsf/utils` instead. This function will be removed in
+   *        the next major release.
    */
   toErrorList(errorSchema?: ErrorSchema<T>, fieldPath?: string[]): RJSFValidationError[];
   /** Validates data against a schema, returning true if the data is valid, or
@@ -1046,6 +1048,8 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
+   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
+   *        removed in the next major release.
    */
   retrieveSchema(schema: S, formData?: T): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the

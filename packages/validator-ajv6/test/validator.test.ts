@@ -10,12 +10,6 @@ import {
 
 import AJV6Validator from '../src/validator';
 
-class TestValidator extends AJV6Validator {
-  withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
-    return super.withIdRefPrefix(schemaNode);
-  }
-}
-
 const illFormedKey = "bar.`'[]()=+*&^%$#@!";
 const metaSchemaDraft4 = require('ajv/lib/refs/json-schema-draft-04.json');
 const metaSchemaDraft6 = require('ajv/lib/refs/json-schema-draft-06.json');
@@ -29,10 +23,10 @@ describe('AJV6Validator', () => {
     builder.resetAllErrors();
   });
   describe('default options', () => {
-    // Use the TestValidator to access the `withIdRefPrefix` function
-    let validator: TestValidator;
+    // Use the AJV6Validator to access the `withIdRefPrefix` function
+    let validator: AJV6Validator;
     beforeAll(() => {
-      validator = new TestValidator({});
+      validator = new AJV6Validator({});
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -78,41 +72,6 @@ describe('AJV6Validator', () => {
         };
 
         expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
-      });
-    });
-    describe('validator.withIdRefPrefix()', () => {
-      it('should recursively add id prefix to all refs', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-        const expected = {
-          anyOf: [{ $ref: '__rjsf_rootSchema#/defs/foo' }],
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(expected);
-      });
-      it('shouldn`t mutate the schema', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-
-        validator.withIdRefPrefix(schema);
-
-        expect(schema).toEqual({
-          anyOf: [{ $ref: '#/defs/foo' }],
-        });
-      });
-      it('should not change a property named `$ref`', () => {
-        const schema: RJSFSchema = {
-          title: 'A registration form',
-          description: 'A simple form example.',
-          type: 'object',
-          properties: {
-            $ref: { type: 'string', title: 'First name', default: 'Chuck' },
-          },
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(schema);
       });
     });
     describe('validator.toErrorList()', () => {
@@ -471,10 +430,10 @@ describe('AJV6Validator', () => {
     });
   });
   describe('validator.validateFormData(), custom options', () => {
-    let validator: TestValidator;
+    let validator: AJV6Validator;
     let schema: RJSFSchema;
     beforeAll(() => {
-      validator = new TestValidator({});
+      validator = new AJV6Validator({});
       schema = {
         $ref: '#/definitions/Dataset',
         $schema: 'http://json-schema.org/draft-04/schema#',
@@ -503,7 +462,7 @@ describe('AJV6Validator', () => {
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
-        validator = new TestValidator({
+        validator = new AJV6Validator({
           additionalMetaSchemas: [metaSchemaDraft4],
         });
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
@@ -520,7 +479,7 @@ describe('AJV6Validator', () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
-        validator = new TestValidator({
+        validator = new AJV6Validator({
           additionalMetaSchemas: [metaSchemaDraft4, metaSchemaDraft6],
         });
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);

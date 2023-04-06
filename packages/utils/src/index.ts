@@ -1,6 +1,7 @@
 import allowAdditionalItems from './allowAdditionalItems';
 import asNumber from './asNumber';
 import canExpand from './canExpand';
+import createErrorHandler from './createErrorHandler';
 import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
 import deepEquals from './deepEquals';
@@ -40,7 +41,12 @@ import schemaRequiresTrueValue from './schemaRequiresTrueValue';
 import shouldRender from './shouldRender';
 import toConstant from './toConstant';
 import toDateString from './toDateString';
+import toErrorList from './toErrorList';
+import toErrorSchema from './toErrorSchema';
+import unwrapErrorHandler from './unwrapErrorHandler';
 import utcToLocal from './utcToLocal';
+import validationDataMerge from './validationDataMerge';
+import withIdRefPrefix from './withIdRefPrefix';
 
 export * from './types';
 export * from './enums';
@@ -53,6 +59,7 @@ export {
   ariaDescribedByIds,
   asNumber,
   canExpand,
+  createErrorHandler,
   createSchemaUtils,
   dataURItoBlob,
   deepEquals,
@@ -97,5 +104,10 @@ export {
   titleId,
   toConstant,
   toDateString,
+  toErrorList,
+  toErrorSchema,
+  unwrapErrorHandler,
   utcToLocal,
+  validationDataMerge,
+  withIdRefPrefix,
 };

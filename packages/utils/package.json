@@ -18,7 +18,8 @@
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test"
+    "test": "dts test",
+    "test:debug": "node --inspect-brk node_modules/.bin/dts test"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [

@@ -15,10 +15,6 @@ import AJV8Validator from '../src/validator';
 import { Localizer } from '../src';
 
 class TestValidator extends AJV8Validator {
-  withIdRefPrefix(schemaNode: RJSFSchema): RJSFSchema {
-    return super.withIdRefPrefix(schemaNode);
-  }
-
   transformRJSFValidationErrors(errors: ErrorObject[] = [], uiSchema?: UiSchema): RJSFValidationError[] {
     return super.transformRJSFValidationErrors(errors, uiSchema);
   }
@@ -113,41 +109,6 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
 
         expect(compileSpy).toHaveBeenCalledTimes(1);
-      });
-    });
-    describe('validator.withIdRefPrefix()', () => {
-      it('should recursively add id prefix to all refs', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-        const expected = {
-          anyOf: [{ $ref: '__rjsf_rootSchema#/defs/foo' }],
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(expected);
-      });
-      it('shouldn`t mutate the schema', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-
-        validator.withIdRefPrefix(schema);
-
-        expect(schema).toEqual({
-          anyOf: [{ $ref: '#/defs/foo' }],
-        });
-      });
-      it('should not change a property named `$ref`', () => {
-        const schema: RJSFSchema = {
-          title: 'A registration form',
-          description: 'A simple form example.',
-          type: 'object',
-          properties: {
-            $ref: { type: 'string', title: 'First name', default: 'Chuck' },
-          },
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(schema);
       });
     });
     describe('validator.toErrorList()', () => {
@@ -604,41 +565,6 @@ describe('AJV8Validator', () => {
         expect(compileSpy).toHaveBeenCalledTimes(1);
       });
     });
-    describe('validator.withIdRefPrefix()', () => {
-      it('should recursively add id prefix to all refs', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-        const expected = {
-          anyOf: [{ $ref: '__rjsf_rootSchema#/defs/foo' }],
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(expected);
-      });
-      it('shouldn`t mutate the schema', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-
-        validator.withIdRefPrefix(schema);
-
-        expect(schema).toEqual({
-          anyOf: [{ $ref: '#/defs/foo' }],
-        });
-      });
-      it('should not change a property named `$ref`', () => {
-        const schema: RJSFSchema = {
-          title: 'A registration form',
-          description: 'A simple form example.',
-          type: 'object',
-          properties: {
-            $ref: { type: 'string', title: 'First name', default: 'Chuck' },
-          },
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(schema);
-      });
-    });
     describe('validator.toErrorList()', () => {
       it('should return empty list for unspecified errorSchema', () => {
         expect(validator.toErrorList()).toEqual([]);
@@ -1092,41 +1018,6 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
 
         expect(compileSpy).toHaveBeenCalledTimes(1);
-      });
-    });
-    describe('validator.withIdRefPrefix()', () => {
-      it('should recursively add id prefix to all refs', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-        const expected = {
-          anyOf: [{ $ref: '__rjsf_rootSchema#/defs/foo' }],
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(expected);
-      });
-      it('shouldn`t mutate the schema', () => {
-        const schema: RJSFSchema = {
-          anyOf: [{ $ref: '#/defs/foo' }],
-        };
-
-        validator.withIdRefPrefix(schema);
-
-        expect(schema).toEqual({
-          anyOf: [{ $ref: '#/defs/foo' }],
-        });
-      });
-      it('should not change a property named `$ref`', () => {
-        const schema: RJSFSchema = {
-          title: 'A registration form',
-          description: 'A simple form example.',
-          type: 'object',
-          properties: {
-            $ref: { type: 'string', title: 'First name', default: 'Chuck' },
-          },
-        };
-
-        expect(validator.withIdRefPrefix(schema)).toEqual(schema);
       });
     });
     describe('validator.toErrorList()', () => {
