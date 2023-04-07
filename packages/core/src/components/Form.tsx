@@ -23,13 +23,14 @@ import {
   RJSF_ADDITONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
   shouldRender,
+  SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
   UiSchema,
   UI_GLOBAL_OPTIONS_KEY,
-  ValidationData,
-  ValidatorType,
-  SUBMIT_BTN_OPTIONS_KEY,
   UI_OPTIONS_KEY,
+  ValidationData,
+  validationDataMerge,
+  ValidatorType,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -341,7 +342,7 @@ export default class Form<
       errorSchema = currentErrors.errorSchema;
     }
     if (props.extraErrors) {
-      const merged = schemaUtils.mergeValidationData({ errorSchema, errors }, props.extraErrors);
+      const merged = validationDataMerge({ errorSchema, errors }, props.extraErrors);
       errorSchema = merged.errorSchema;
       errors = merged.errors;
     }
@@ -514,7 +515,7 @@ export default class Form<
       const schemaValidationErrors = errors;
       const schemaValidationErrorSchema = errorSchema;
       if (extraErrors) {
-        const merged = schemaUtils.mergeValidationData(schemaValidation, extraErrors);
+        const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
         errors = merged.errors;
       }
@@ -712,7 +713,6 @@ export default class Form<
   validateForm() {
     const { extraErrors, focusOnFirstError, onError } = this.props;
     const { formData } = this.state;
-    const { schemaUtils } = this.state;
     const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
@@ -720,7 +720,7 @@ export default class Form<
     const schemaValidationErrorSchema = errorSchema;
     if (errors.length > 0) {
       if (extraErrors) {
-        const merged = schemaUtils.mergeValidationData(schemaValidation, extraErrors);
+        const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
         errors = merged.errors;
       }

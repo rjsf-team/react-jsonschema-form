@@ -1,4 +1,13 @@
-import { EnumOptionsType, ONE_OF_KEY, RJSFSchema } from '../../src';
+import reduce from 'lodash/reduce';
+
+import {
+  EnumOptionsType,
+  ErrorSchema,
+  ErrorSchemaBuilder,
+  ONE_OF_KEY,
+  RJSFSchema,
+  RJSFValidationError,
+} from '../../src';
 
 export const oneOfData = {
   name: 'second_option',
@@ -337,3 +346,40 @@ export const RECURSIVE_REF: RJSFSchema = {
   },
   $ref: '#/definitions/@enum',
 };
+
+export const ERROR_MAPPER = {
+  '': 'root error',
+  foo: 'foo error',
+  list: 'list error',
+  'list.0': 'list 0 error',
+  'list.1': 'list 1 error',
+  nested: 'nested error',
+  'nested.baz': 'baz error',
+  'nested.blah': 'blah error',
+};
+
+export const TEST_FORM_DATA = {
+  foo: 'bar',
+  list: ['a', 'b'],
+  nested: {
+    baz: 1,
+    blah: false,
+  },
+};
+
+export const TEST_ERROR_SCHEMA: ErrorSchema = reduce(
+  ERROR_MAPPER,
+  (builder: ErrorSchemaBuilder, value, key) => {
+    return builder.addErrors(value, key === '' ? undefined : key);
+  },
+  new ErrorSchemaBuilder()
+).ErrorSchema;
+
+export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
+  ERROR_MAPPER,
+  (list: RJSFValidationError[], value, key) => {
+    list.push({ property: `.${key}`, message: value, stack: `.${key} ${value}` });
+    return list;
+  },
+  []
+);

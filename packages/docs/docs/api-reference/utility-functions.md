@@ -11,20 +11,20 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there is the special `ADDITIONAL_PROPERTY_FLAG` flag that is added to a schema under certain conditions by the `retrieveSchema()` utility.
 
-These constants can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
+These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
 
 ## Types
 
 Additionally, the Typescript types used by the utility functions represent nearly all the types used by RJSF.
 Those types are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These types can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
+These types can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
 
 ## Enums
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
 
-These enums can be found on Github [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
+These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
 
 ## Non-Validator utility functions
 
@@ -84,6 +84,18 @@ The UI for the field can expand if it has additional properties, is not forced a
 #### Returns
 
 - boolean: True if the schema element has additionalProperties, is expandable, and not at the maxProperties limit
+
+### createErrorHandler<T = any>()
+
+Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
+
+#### Parameters
+
+- formData: T - The form data around which the error handler is created
+
+#### Returns
+
+- FormValidation&lt;T>: A `FormValidation` object based on the `formData` structure
 
 ### dataURItoBlob()
 
@@ -700,6 +712,59 @@ If `time` is false, then the time portion of the string is removed.
 
 - string: The UTC date string
 
+### toErrorList<T = any>()
+
+Converts an `errorSchema` into a list of `RJSFValidationErrors`
+
+#### Parameters
+
+- errorSchema: ErrorSchema&lt;T> - The `ErrorSchema` instance to convert
+- [fieldPath=[]]: string[] | undefined - The current field path, defaults to [] if not specified
+
+#### Returns
+
+- RJSFValidationErrors[]: The list of `RJSFValidationErrors` extracted from the `errorSchema`
+
+### toErrorSchema<T = any>()
+
+Transforms a RJSF validation errors list into an `ErrorSchema`
+
+```ts
+const changesThis = [
+  { property: '.level1.level2[2].level3', message: 'err a' },
+  { property: '.level1.level2[2].level3', message: 'err b' },
+  { property: '.level1.level2[4].level3', message: 'err b' },
+];
+const intoThis = {
+  level1: {
+    level2: {
+      2: { level3: { errors: ['err a', 'err b'] } },
+      4: { level3: { errors: ['err b'] } },
+    },
+  },
+};
+```
+
+#### Parameters
+
+- errors: RJSFValidationError[] - The list of RJSFValidationError objects
+
+#### Returns
+
+- ErrorSchema&lt;T>: The `ErrorSchema` built from the list of `RJSFValidationErrors`
+
+#### unwrapErrorHandler<T = any>()
+
+Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
+
+#### Parameters
+
+- errorHandler: FormValidation&lt;T> - The `FormValidation` error handling structure
+
+#### Returns
+
+- ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
+
 ### utcToLocal()
 
 Converts a UTC date string into a local Date format
@@ -711,6 +776,33 @@ Converts a UTC date string into a local Date format
 #### Returns
 
 - string: An empty string when `jsonDate` is falsey, otherwise a date string in local format
+
+### validationDataMerge<T = any>()
+
+Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
+If no `additionalErrorSchema` is passed, then `validationData` is returned.
+
+#### Parameters
+
+- validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
+- [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
+
+#### Returns
+
+- ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+
+### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
+This is used in isValid to make references to the rootSchema
+
+#### Parameters
+
+- schemaNode: S - The object node to which a `ROOT_SCHEMA_PREFIX` is added when a `$ref` is part of it
+
+#### Returns
+
+- S: A copy of the `schemaNode` with updated `$ref`s
 
 ## Validator-based utility functions
 
@@ -844,6 +936,9 @@ Checks to see if the `schema` combination represents a select
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `validator.toErrorList()` onto the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
+
+> NOTE: This is function is deprecated. Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
+> removed in the next major release.
 
 #### Parameters
 

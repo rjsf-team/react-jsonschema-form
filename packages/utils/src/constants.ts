@@ -22,6 +22,7 @@ export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
 export const RJSF_ADDITONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
+export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';
