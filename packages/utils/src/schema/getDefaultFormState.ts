@@ -1,7 +1,15 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY, DefaultFormStateBehavior } from '../constants';
+import {
+  ANY_OF_KEY,
+  DEFAULT_KEY,
+  DEPENDENCIES_KEY,
+  PROPERTIES_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+  DefaultFormStateBehavior,
+} from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -294,11 +302,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         }) as T[];
       }
 
-      const ignoreMinItemsFlag =
-        behaviorBitFlags &
-        DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
+      const ignoreMinItemsFlag = behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
 
-      console.log('defaults test', !schema.minItems, ignoreMinItemsFlag && !required, isMultiSelect<T, S, F>(validator, schema, rootSchema));
       if (
         !schema.minItems ||
         (ignoreMinItemsFlag && !required) ||
@@ -311,19 +316,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       if (schema.minItems > defaultsLength) {
         const defaultEntries: T[] = (defaults || []) as T[];
         // populate the array with the defaults
-        const fillerSchema: S = getInnerSchemaForArrayItem<S>(
-          schema,
-          AdditionalItemsHandling.Invert
-        );
+        const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
         const fillerDefault = fillerSchema.default;
-        console.log('filler', fillerDefault, behaviorBitFlags, required);
-        if (
-          behaviorBitFlags === DefaultFormStateBehavior.Legacy ||
-          (ignoreMinItemsFlag && required)
-        ) {
-          const fillerEntries: T[] = new Array(
-            schema.minItems - defaultsLength
-          ).fill(
+        if (behaviorBitFlags === DefaultFormStateBehavior.Legacy || (ignoreMinItemsFlag && required)) {
+          const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
             computeDefaults<any, S, F>(
               validator,
               fillerSchema,
@@ -388,10 +384,7 @@ export default function getDefaultFormState<
     undefined,
     behaviorBitFlags
   );
-  if (formData === undefined ||
-    formData === null ||
-    (typeof formData === "number" && isNaN(formData))
-  ) {
+  if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {
     // No form data? Use schema defaults.
     return defaults;
   }
