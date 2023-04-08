@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode } from 'react';
+import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode, PropsWithChildren } from 'react';
 import { CssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
 import createCache, { EmotionCache } from '@emotion/cache';
@@ -41,7 +41,7 @@ interface DemoFrameProps extends FrameComponentProps {
   children: ReactElement;
 }
 
-export default function DemoFrame(props: DemoFrameProps) {
+const DemoFrame: React.FC<PropsWithChildren<DemoFrameProps>> = (props) => {
   const { children, head, theme, ...frameProps } = props;
 
   const [jss, setJss] = useState<Jss>();
@@ -123,4 +123,6 @@ export default function DemoFrame(props: DemoFrameProps) {
       {body}
     </Frame>
   );
-}
+};
+
+export default DemoFrame;

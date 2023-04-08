@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { PropsWithChildren, useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -10,12 +10,12 @@ import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
 
-const HeaderButton: React.FC<
-  {
-    title: string;
-    onClick: () => void;
-  } & React.ButtonHTMLAttributes<HTMLButtonElement>
-> = ({ title, onClick, children, ...buttonProps }) => {
+type HeaderButtonProps = {
+  title: string;
+  onClick: () => void;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+const HeaderButton: React.FC<PropsWithChildren<HeaderButtonProps>> = ({ children, title, onClick, ...buttonProps }) => {
   return (
     <button type='button' className='btn btn-default' title={title} onClick={onClick} {...buttonProps}>
       {children}

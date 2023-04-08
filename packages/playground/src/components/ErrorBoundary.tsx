@@ -1,8 +1,4 @@
-import { Component, ReactNode } from 'react';
-
-type Props = {
-  children: ReactNode;
-};
+import { Component, PropsWithChildren } from 'react';
 
 type State =
   | {
@@ -13,8 +9,8 @@ type State =
 
 type Error = { message: string; [key: string]: unknown };
 
-class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundary extends Component<PropsWithChildren, State> {
+  constructor(props: PropsWithChildren) {
     super(props);
     this.state = { hasError: false, error: null };
   }
