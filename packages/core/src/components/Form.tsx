@@ -173,7 +173,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   transformErrors?: ErrorTransformer<T, S, F>;
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
    */
-  focusOnFirstError?: boolean;
+  focusOnFirstError?: boolean | ((error: RJSFValidationError) => void);
   /** Optional string translation function, if provided, allows users to change the translation of the RJSF internal
    * strings. Some strings contain replaceable parameter values as indicated by `%1`, `%2`, etc. The number after the
    * `%` indicates the order of the parameter. The ordering of parameters is important because some languages may choose
@@ -725,7 +725,11 @@ export default class Form<
         errors = merged.errors;
       }
       if (focusOnFirstError) {
-        this.focusOnError(schemaValidation.errors[0]);
+        if (typeof focusOnFirstError === 'function') {
+          focusOnFirstError(schemaValidation.errors[0]);
+        } else {
+          this.focusOnError(schemaValidation.errors[0]);
+        }
       }
       this.setState(
         {
