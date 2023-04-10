@@ -13,18 +13,28 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: 'npm'
-          cache-dependency-path: 'packages/**/package-lock.json'
-      - run: npm ci
-      - run: npm run build
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-      - run: npm test
-      - run: npm run lint
-      - run: npm run cs-check
+      - run: pnpm test
+      - run: pnpm lint
+      - run: pnpm cs-check
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npx lerna publish from-package --yes
+      - run: pnpm dlx lerna publish from-package --yes
       - if: always()
         run: rm .npmrc

@@ -3,5 +3,6 @@
   "version": "5.5.2",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useNx": true,
-  "useWorkspaces": false
+  "useWorkspaces": true,
+  "npmClient": "pnpm"
 }

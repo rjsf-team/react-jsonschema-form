@@ -23,6 +23,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 # Runtime data
 pids
@@ -122,6 +123,7 @@ site
 dist
 dist-temp
 lib
+package-lock.json
 yarn.lock
 
 # IDE
