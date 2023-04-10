@@ -113,6 +113,22 @@ Dictionary of registered fields in the form. See [Custom Widgets and Fields](../
 
 If set to true, then the first field with an error will receive the focus when the form is submitted with errors.
 
+You can also provide a custom callback function to handle what happens when this function is called.
+
+```tsx
+import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'string',
+};
+
+const focusOnError = (error: RJSFValidationError) => {
+  console.log('I need to handle focusing this error');
+};
+
+render(<Form schema={schema} focusOnFirstError={focusOnError} />, document.getElementById('app'));
+```
+
 ## formContext
 
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.

@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Switched `Form` to use the new `validatorDataMerge()` function instead of the new deprecated `schemaUtils.mergeValidatorData()`
+- Added option to provide a callback function to `focusOnFirstError` ([3590](https://github.com/rjsf-team/react-jsonschema-form/pull/3590))
 
 ## @rjsf/utils
 

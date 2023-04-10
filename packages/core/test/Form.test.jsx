@@ -1964,6 +1964,43 @@ describeRepeated('Form common', (createFormComponent) => {
         sinon.assert.calledOnce(focusSpy);
       });
 
+      it('should call the onError handler and call the provided focusOnFirstError callback function', () => {
+        const onError = sandbox.spy();
+
+        const focusCallback = () => {
+          console.log('focusCallback called');
+        };
+
+        const focusOnFirstError = sandbox.spy(focusCallback);
+        const { node } = createFormComponent({
+          schema,
+          onError,
+          focusOnFirstError,
+          uiSchema: {
+            'ui:disabled': true,
+          },
+        });
+
+        const input = node.querySelector('input[type=text]');
+        const focusSpy = sinon.spy();
+        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        input.focus = focusSpy;
+
+        Simulate.change(input, {
+          target: { value: 'short' },
+        });
+        Simulate.submit(node);
+
+        sinon.assert.calledWithMatch(
+          onError,
+          sinon.match((value) => {
+            return value.length === 1 && value[0].message === 'must NOT have fewer than 8 characters';
+          })
+        );
+        sinon.assert.notCalled(focusSpy);
+        sinon.assert.calledOnce(focusOnFirstError);
+      });
+
       it('should reset errors and errorSchema state to initial state after correction and resubmission', () => {
         const { node, onError, onSubmit } = createFormComponent({
           schema,
