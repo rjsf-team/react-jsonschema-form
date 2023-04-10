@@ -115,6 +115,8 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param formData - The form data associated with the schema
  * @param options - The list of options that can be selected from
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
+ * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+ *          determine which option is selected
  * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
  */
 export default function getClosestMatchingOption<
@@ -126,12 +128,13 @@ export default function getClosestMatchingOption<
   rootSchema: S,
   formData: T | undefined,
   options: S[],
-  selectedOption = -1
+  selectedOption = -1,
+  discriminatorField?: string
 ): number {
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = options.reduce((validList: number[], option, index: number) => {
     const testOptions: S[] = [JUNK_OPTION as S, option];
-    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema);
+    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema, discriminatorField);
     // The match is the real option, so add its index to list of valid indexes
     if (match === 1) {
       validList.push(index);

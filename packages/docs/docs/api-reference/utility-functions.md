@@ -852,6 +852,7 @@ The closest match is determined using the number of matching properties, and mor
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
+- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
 
 #### Returns
 
@@ -868,6 +869,7 @@ Always returns the first option if there is nothing that matches.
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
+- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
 
 #### Returns
 
@@ -884,6 +886,7 @@ Deprecated, use `getFirstMatchingOption()` instead.
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
+- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
 
 #### Returns
 

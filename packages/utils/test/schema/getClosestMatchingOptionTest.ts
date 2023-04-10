@@ -167,5 +167,74 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       });
       expect(getClosestMatchingOption(testValidator, schema, formData, get(schema, 'items.oneOf'))).toEqual(1);
     });
+    it('should return 0 when schema has discriminator but no matching data', () => {
+      // Mock isValid to fail both values
+      testValidator.setReturnValues({ isValid: [false, false, false, false] });
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Foo: {
+            title: 'Foo',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', default: 'foo_coding', enum: ['foo_coding'], type: 'string' },
+            },
+          },
+          Bar: {
+            title: 'Bar',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', default: 'bar_coding', enum: ['bar_coding'], type: 'string' },
+            },
+          },
+        },
+        discriminator: {
+          propertyName: 'code',
+          mapping: {
+            foo_coding: '#/definitions/Foo',
+            bar_coding: '#/definitions/Bar',
+          },
+        },
+        oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+      };
+      const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
+      expect(getClosestMatchingOption(testValidator, schema, undefined, options, -1, 'code')).toEqual(-1);
+    });
+    it('should return Bar when schema has discriminator for bar', () => {
+      // Mock isValid to pass the second value
+      testValidator.setReturnValues({ isValid: [false, false, false, true] });
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Foo: {
+            title: 'Foo',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', default: 'foo_coding', enum: ['foo_coding'], type: 'string' },
+            },
+          },
+          Bar: {
+            title: 'Bar',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', default: 'bar_coding', enum: ['bar_coding'], type: 'string' },
+            },
+          },
+        },
+        discriminator: {
+          propertyName: 'code',
+          mapping: {
+            foo_coding: '#/definitions/Foo',
+            bar_coding: '#/definitions/Bar',
+          },
+        },
+        oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+      };
+      const formData = { code: 'bar_coding' };
+      const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
+      // Use the schemaUtils to verify the discriminator prop gets passed
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+      expect(schemaUtils.getClosestMatchingOption(formData, options, 0, 'code')).toEqual(1);
+    });
   });
 }

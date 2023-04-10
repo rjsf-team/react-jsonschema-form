@@ -204,6 +204,128 @@ exports[`object fields object 1`] = `
 </form>
 `;
 
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-xs-5 form-additional"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_additionalProperty-key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                className="form-control"
+                defaultValue="additionalProperty"
+                id="root_additionalProperty-key"
+                onBlur={[Function]}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="form-additional form-group col-xs-5"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_additionalProperty"
+              label="additionalProperty"
+              name="root_additionalProperty"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+          <div
+            className="col-xs-2"
+          >
+            <button
+              className="btn btn-danger array-item-remove btn-block"
+              disabled={false}
+              onClick={[Function]}
+              style={
+                Object {
+                  "border": "0",
+                }
+              }
+              title="Remove"
+              type="button"
+            >
+              <i
+                className="glyphicon glyphicon-remove"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`object fields with title and description additionalProperties 1`] = `
 <form
   className="rjsf"
@@ -808,6 +930,138 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 </form>
 `;
 
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        My Field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-xs-5 form-additional"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_additionalProperty-key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                className="form-control"
+                defaultValue="additionalProperty"
+                id="root_additionalProperty-key"
+                onBlur={[Function]}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="form-additional form-group col-xs-5"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_additionalProperty"
+              label="additionalProperty"
+              name="root_additionalProperty"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+          <div
+            className="col-xs-2"
+          >
+            <button
+              className="btn btn-danger array-item-remove btn-block"
+              disabled={false}
+              onClick={[Function]}
+              style={
+                Object {
+                  "border": "0",
+                }
+              }
+              title="Remove"
+              type="button"
+            >
+              <i
+                className="glyphicon glyphicon-remove"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`object fields with title and description object 1`] = `
 <form
   className="rjsf"
@@ -897,6 +1151,138 @@ exports[`object fields with title and description object 1`] = `
           type="number"
           value=""
         />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        Test field
+      </legend>
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-xs-5 form-additional"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_additionalProperty-key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                className="form-control"
+                defaultValue="additionalProperty"
+                id="root_additionalProperty-key"
+                onBlur={[Function]}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="form-additional form-group col-xs-5"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_additionalProperty"
+              label="additionalProperty"
+              name="root_additionalProperty"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+          <div
+            className="col-xs-2"
+          >
+            <button
+              className="btn btn-danger array-item-remove btn-block"
+              disabled={false}
+              onClick={[Function]}
+              style={
+                Object {
+                  "border": "0",
+                }
+              }
+              title="Remove"
+              type="button"
+            >
+              <i
+                className="glyphicon glyphicon-remove"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
       </div>
     </fieldset>
   </div>
@@ -1083,6 +1469,122 @@ exports[`object fields with title and description with global label off object 1
           type="number"
           value=""
         />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <fieldset
+      id="root"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-xs-5 form-additional"
+          >
+            <div
+              className="form-group"
+            >
+              <label
+                className="control-label"
+                htmlFor="root_additionalProperty-key"
+              >
+                additionalProperty Key
+              </label>
+              <input
+                className="form-control"
+                defaultValue="additionalProperty"
+                id="root_additionalProperty-key"
+                onBlur={[Function]}
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            className="form-additional form-group col-xs-5"
+          >
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_additionalProperty"
+              label="additionalProperty"
+              name="root_additionalProperty"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+          <div
+            className="col-xs-2"
+          >
+            <button
+              className="btn btn-danger array-item-remove btn-block"
+              disabled={false}
+              onClick={[Function]}
+              style={
+                Object {
+                  "border": "0",
+                }
+              }
+              title="Remove"
+              type="button"
+            >
+              <i
+                className="glyphicon glyphicon-remove"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
       </div>
     </fieldset>
   </div>

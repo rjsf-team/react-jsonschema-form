@@ -1,3 +1,7 @@
+import get from 'lodash/get';
+import has from 'lodash/has';
+
+import { PROPERTIES_KEY } from '../constants';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
@@ -7,6 +11,8 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '..
  * @param formData - The current formData, if any, used to figure out a match
  * @param options - The list of options to find a matching options from
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
+ * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+ *          determine which option is selected
  * @returns - The index of the matched option or 0 if none is available
  * @deprecated
  */
@@ -14,7 +20,13 @@ export default function getMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, formData: T | undefined, options: S[], rootSchema: S): number {
+>(
+  validator: ValidatorType<T, S, F>,
+  formData: T | undefined,
+  options: S[],
+  rootSchema: S,
+  discriminatorField?: string
+): number {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.
   if (formData === undefined) {
@@ -23,18 +35,26 @@ export default function getMatchingOption<
   for (let i = 0; i < options.length; i++) {
     const option = options[i];
 
-    // If the schema describes an object then we need to add slightly more
-    // strict matching to the schema, because unless the schema uses the
-    // "requires" keyword, an object will match the schema as long as it
-    // doesn't have matching keys with a conflicting type. To do this we use an
-    // "anyOf" with an array of requires. This augmentation expresses that the
-    // schema should match if any of the keys in the schema are present on the
-    // object and pass validation.
-    if (option.properties) {
+    // If we have a discriminator field, then we will use this to make the determination
+    if (discriminatorField && has(option, [PROPERTIES_KEY, discriminatorField])) {
+      const value = get(formData, discriminatorField);
+      const discriminator = get(option, [PROPERTIES_KEY, discriminatorField], {});
+      if (validator.isValid(discriminator, value, rootSchema)) {
+        return i;
+      }
+    } else if (option[PROPERTIES_KEY]) {
+      // If the schema describes an object then we need to add slightly more
+      // strict matching to the schema, because unless the schema uses the
+      // "requires" keyword, an object will match the schema as long as it
+      // doesn't have matching keys with a conflicting type. To do this we use an
+      // "anyOf" with an array of requires. This augmentation expresses that the
+      // schema should match if any of the keys in the schema are present on the
+      // object and pass validation.
+      //
       // Create an "anyOf" schema that requires at least one of the keys in the
       // "properties" object
       const requiresAnyOf = {
-        anyOf: Object.keys(option.properties).map((key) => ({
+        anyOf: Object.keys(option[PROPERTIES_KEY]).map((key) => ({
           required: [key],
         })),
       };

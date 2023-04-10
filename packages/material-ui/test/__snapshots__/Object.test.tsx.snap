@@ -399,6 +399,239 @@ exports[`object fields object 1`] = `
 </form>
 `;
 
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="MuiGrid-root form-group field field-string MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
+                  htmlFor="root_additionalProperty-key"
+                  id="root_additionalProperty-key-label"
+                >
+                  additionalProperty Key
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiFormControl-fullWidth"
+              >
+                <div
+                  aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                  className="MuiFormControl-root MuiTextField-root"
+                >
+                  <label
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                    data-shrink={true}
+                    htmlFor="root_additionalProperty"
+                    id="root_additionalProperty-label"
+                  >
+                    additionalProperty
+                  </label>
+                  <div
+                    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="MuiInputBase-input MuiInput-input"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <button
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                tabIndex={0}
+                title="Remove"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <button
+              className="MuiButtonBase-root MuiIconButton-root object-property-expand MuiIconButton-colorPrimary"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              title="Add Item"
+              type="button"
+            >
+              <span
+                className="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-3"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</form>
+`;
+
 exports[`object fields with title and description additionalProperties 1`] = `
 <form
   className="rjsf"
@@ -412,7 +645,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-5"
+        className="MuiBox-root MuiBox-root-6"
         id="root__title"
       >
         <h5
@@ -461,8 +694,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                  data-shrink={false}
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
                 >
@@ -501,8 +734,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   className="MuiFormControl-root MuiTextField-root"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                    data-shrink={false}
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                    data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
                   >
@@ -576,9 +809,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -622,9 +852,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   />
                 </svg>
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
@@ -632,7 +859,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-6"
+    className="MuiBox-root MuiBox-root-7"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -656,9 +883,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>
@@ -677,7 +901,7 @@ exports[`object fields with title and description from both additionalProperties
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-13"
+        className="MuiBox-root MuiBox-root-18"
         id="root__title"
       >
         <h5
@@ -726,8 +950,8 @@ exports[`object fields with title and description from both additionalProperties
                 className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                  data-shrink={false}
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
                 >
@@ -766,8 +990,8 @@ exports[`object fields with title and description from both additionalProperties
                   className="MuiFormControl-root MuiTextField-root"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                    data-shrink={false}
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                    data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
                   >
@@ -841,9 +1065,6 @@ exports[`object fields with title and description from both additionalProperties
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root"
-                />
               </button>
             </div>
           </div>
@@ -887,9 +1108,6 @@ exports[`object fields with title and description from both additionalProperties
                   />
                 </svg>
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
@@ -897,7 +1115,7 @@ exports[`object fields with title and description from both additionalProperties
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-14"
+    className="MuiBox-root MuiBox-root-19"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -921,9 +1139,6 @@ exports[`object fields with title and description from both additionalProperties
       >
         Submit
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </form>
@@ -942,7 +1157,7 @@ exports[`object fields with title and description from both object 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-11"
+        className="MuiBox-root MuiBox-root-16"
         id="root__title"
       >
         <h5
@@ -1090,7 +1305,7 @@ exports[`object fields with title and description from both object 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-12"
+    className="MuiBox-root MuiBox-root-17"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1114,6 +1329,9 @@ exports[`object fields with title and description from both object 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
@@ -1132,7 +1350,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-9"
+        className="MuiBox-root MuiBox-root-12"
         id="root__title"
       >
         <h5
@@ -1352,7 +1570,7 @@ exports[`object fields with title and description from uiSchema additionalProper
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-10"
+    className="MuiBox-root MuiBox-root-13"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1397,7 +1615,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-7"
+        className="MuiBox-root MuiBox-root-10"
         id="root__title"
       >
         <h5
@@ -1545,7 +1763,263 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-8"
+    className="MuiBox-root MuiBox-root-11"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <div
+        className="MuiBox-root MuiBox-root-14"
+        id="root__title"
+      >
+        <h5
+          className="MuiTypography-root MuiTypography-h5"
+        >
+          My Field
+        </h5>
+        <hr
+          className="MuiDivider-root"
+        />
+      </div>
+      <h6
+        className="MuiTypography-root MuiTypography-subtitle2"
+        id="root__description"
+        style={
+          Object {
+            "marginTop": "5px",
+          }
+        }
+      >
+        a fancier description
+      </h6>
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="MuiGrid-root form-group field field-string MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
+                  htmlFor="root_additionalProperty-key"
+                  id="root_additionalProperty-key-label"
+                >
+                  additionalProperty Key
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiFormControl-fullWidth"
+              >
+                <div
+                  aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                  className="MuiFormControl-root MuiTextField-root"
+                >
+                  <label
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                    data-shrink={true}
+                    htmlFor="root_additionalProperty"
+                    id="root_additionalProperty-label"
+                  >
+                    additionalProperty
+                  </label>
+                  <div
+                    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="MuiInputBase-input MuiInput-input"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <button
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                tabIndex={0}
+                title="Remove"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <button
+              className="MuiButtonBase-root MuiIconButton-root object-property-expand MuiIconButton-colorPrimary"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              title="Add Item"
+              type="button"
+            >
+              <span
+                className="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-15"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1587,7 +2061,7 @@ exports[`object fields with title and description object 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-3"
+        className="MuiBox-root MuiBox-root-4"
         id="root__title"
       >
         <h5
@@ -1735,7 +2209,7 @@ exports[`object fields with title and description object 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-4"
+    className="MuiBox-root MuiBox-root-5"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1759,24 +2233,50 @@ exports[`object fields with title and description object 1`] = `
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
 `;
 
-exports[`object fields with title and description with global label off additionalProperties 1`] = `
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
 <form
   className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group field field-undefined"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
+      <div
+        className="MuiBox-root MuiBox-root-8"
+        id="root__title"
+      >
+        <h5
+          className="MuiTypography-root MuiTypography-h5"
+        >
+          Test field
+        </h5>
+        <hr
+          className="MuiDivider-root"
+        />
+      </div>
+      <h6
+        className="MuiTypography-root MuiTypography-subtitle2"
+        id="root__description"
+        style={
+          Object {
+            "marginTop": "5px",
+          }
+        }
+      >
+        a test description
+      </h6>
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -1805,10 +2305,10 @@ exports[`object fields with title and description with global label off addition
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                   data-shrink={false}
-                  htmlFor="root_foo-key"
-                  id="root_foo-key-label"
+                  htmlFor="root_additionalProperty-key"
+                  id="root_additionalProperty-key-label"
                 >
-                  foo Key
+                  additionalProperty Key
                 </label>
                 <div
                   className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
@@ -1818,10 +2318,10 @@ exports[`object fields with title and description with global label off addition
                     aria-invalid={false}
                     autoFocus={false}
                     className="MuiInputBase-input MuiInput-input"
-                    defaultValue="foo"
+                    defaultValue="additionalProperty"
                     disabled={false}
-                    id="root_foo-key"
-                    name="root_foo-key"
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
                     onAnimationStart={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -1839,9 +2339,17 @@ exports[`object fields with title and description with global label off addition
                 className="MuiFormControl-root MuiFormControl-fullWidth"
               >
                 <div
-                  aria-describedby="root_foo__error root_foo__description root_foo__help"
+                  aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                   className="MuiFormControl-root MuiTextField-root"
                 >
+                  <label
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                    data-shrink={false}
+                    htmlFor="root_additionalProperty"
+                    id="root_additionalProperty-label"
+                  >
+                    additionalProperty
+                  </label>
                   <div
                     className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
                     onClick={[Function]}
@@ -1851,8 +2359,8 @@ exports[`object fields with title and description with global label off addition
                       autoFocus={false}
                       className="MuiInputBase-input MuiInput-input"
                       disabled={false}
-                      id="root_foo"
-                      name="root_foo"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
                       onAnimationStart={[Function]}
                       onBlur={[Function]}
                       onChange={[Function]}
@@ -1860,7 +2368,7 @@ exports[`object fields with title and description with global label off addition
                       placeholder=""
                       required={false}
                       type="text"
-                      value="foo"
+                      value="should appear"
                     />
                   </div>
                 </div>
@@ -1966,7 +2474,7 @@ exports[`object fields with title and description with global label off addition
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-16"
+    className="MuiBox-root MuiBox-root-9"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1993,6 +2501,231 @@ exports[`object fields with title and description with global label off addition
       <span
         className="MuiTouchRipple-root"
       />
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="MuiGrid-root form-group field field-string MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                  data-shrink={true}
+                  htmlFor="root_foo-key"
+                  id="root_foo-key-label"
+                >
+                  foo Key
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiFormControl-fullWidth"
+              >
+                <div
+                  aria-describedby="root_foo__error root_foo__description root_foo__help"
+                  className="MuiFormControl-root MuiTextField-root"
+                >
+                  <div
+                    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="MuiInputBase-input MuiInput-input"
+                      disabled={false}
+                      id="root_foo"
+                      name="root_foo"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <button
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                tabIndex={0}
+                title="Remove"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <button
+              className="MuiButtonBase-root MuiIconButton-root object-property-expand MuiIconButton-colorPrimary"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              title="Add Item"
+              type="button"
+            >
+              <span
+                className="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-21"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -2110,7 +2843,7 @@ exports[`object fields with title and description with global label off object 1
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-15"
+    className="MuiBox-root MuiBox-root-20"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2134,6 +2867,243 @@ exports[`object fields with title and description with global label off object 1
       >
         Submit
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+        style={
+          Object {
+            "marginTop": "10px",
+          }
+        }
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+          style={
+            Object {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="MuiGrid-root form-group field field-string MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                  data-shrink={false}
+                  htmlFor="root_additionalProperty-key"
+                  id="root_additionalProperty-key-label"
+                >
+                  additionalProperty Key
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-invalid={false}
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+            >
+              <div
+                className="MuiFormControl-root MuiFormControl-fullWidth"
+              >
+                <div
+                  aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                  className="MuiFormControl-root MuiTextField-root"
+                >
+                  <div
+                    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="MuiInputBase-input MuiInput-input"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item"
+            >
+              <button
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "flex": 1,
+                    "fontWeight": "bold",
+                    "paddingLeft": 6,
+                    "paddingRight": 6,
+                  }
+                }
+                tabIndex={0}
+                title="Remove"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13H5v-2h14v2z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  className="MuiTouchRipple-root"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-flex-end"
+        >
+          <div
+            className="MuiGrid-root MuiGrid-item"
+          >
+            <button
+              className="MuiButtonBase-root MuiIconButton-root object-property-expand MuiIconButton-colorPrimary"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              title="Add Item"
+              type="button"
+            >
+              <span
+                className="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+              </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-22"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </form>
