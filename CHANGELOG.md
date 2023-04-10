@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.6.1
+
+## Dev / docs / playground
+
+- Updated `playground` to use React 18. Also enabled React strict mode.
+
 # 5.6.0
 
 ## @rjsf/core
