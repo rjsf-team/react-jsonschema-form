@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=14"
   },
-  "packageManager": "pnpm@8.2.0",
+  "packageManager": "pnpm@7.32.0",
   "scripts": {
     "publish": "lerna publish",
     "changed": "lerna changed",
