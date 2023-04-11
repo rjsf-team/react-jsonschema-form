@@ -211,7 +211,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="form-group field field-object"
   >
     <fieldset
       id="root"
@@ -937,7 +937,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="form-group field field-object"
   >
     <fieldset
       id="root"
@@ -1173,7 +1173,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="form-group field field-object"
   >
     <fieldset
       id="root"
@@ -1491,7 +1491,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="form-group field field-object"
   >
     <fieldset
       id="root"

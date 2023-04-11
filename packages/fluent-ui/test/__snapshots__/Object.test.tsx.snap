@@ -286,7 +286,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="ms-Grid-col ms-sm12  field field-undefined"
+    className="ms-Grid-col ms-sm12  field field-object"
     id="root"
     style={
       Object {
@@ -1143,7 +1143,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="ms-Grid-col ms-sm12  field field-undefined"
+    className="ms-Grid-col ms-sm12  field field-object"
     id="root"
     style={
       Object {
@@ -1452,7 +1452,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="ms-Grid-col ms-sm12  field field-undefined"
+    className="ms-Grid-col ms-sm12  field field-object"
     id="root"
     style={
       Object {
@@ -1829,7 +1829,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="ms-Grid-col ms-sm12  field field-undefined"
+    className="ms-Grid-col ms-sm12  field field-object"
     id="root"
     style={
       Object {
