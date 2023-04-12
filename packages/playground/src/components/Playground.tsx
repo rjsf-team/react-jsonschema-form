@@ -45,9 +45,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     readonly: false,
     omitExtraData: false,
     liveOmit: false,
-    featureFlags: {
-      defaultFormStateBehavior: DefaultFormStateBehavior.Legacy_PopulateMinItems,
-    },
+    defaultFormStateBehavior: DefaultFormStateBehavior.Legacy_PopulateMinItems,
   });
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
   const [ArrayFieldTemplate, setArrayFieldTemplate] = useState<ComponentType<ArrayFieldTemplateProps>>();

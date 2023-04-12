@@ -182,10 +182,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
-  /** Optional feature flags, if provided, specify different behavior that can be enabled. This enables differing behavior within
-   * the library for differing interpreations of edge cases without breaking existing behavior.
-   */
-  featureFlags?: { defaultFormStateBehavior?: number };
+  /** Optional bit flag, if provided, allows users to override default form state behavior.
+   * Currently only affecting minItems on array fields */
+  defaultFormStateBehavior?: number;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -311,9 +310,8 @@ export default class Form<
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
     const behaviorBitFlags =
-      ('behaviorBitFlags' in props
-        ? props.featureFlags?.defaultFormStateBehavior
-        : this.props.featureFlags?.defaultFormStateBehavior) || DefaultFormStateBehavior.Legacy_PopulateMinItems;
+      ('behaviorBitFlags' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior) ||
+      DefaultFormStateBehavior.Legacy_PopulateMinItems;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
     if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, behaviorBitFlags)) {
       schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, behaviorBitFlags);

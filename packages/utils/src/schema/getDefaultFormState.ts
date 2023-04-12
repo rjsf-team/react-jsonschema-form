@@ -306,7 +306,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         (behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired) ===
         DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
 
-      console.log('first defaults return', defaults, behaviorBitFlags);
       if (
         !schema.minItems ||
         (ignoreMinItemsFlagSet && !required) ||
