@@ -1434,6 +1434,74 @@ describe('anyOf', () => {
       expect(inputs).to.have.length.of(0);
     });
   });
+  describe('OpenAPI discriminator support', () => {
+    const schema = {
+      type: 'object',
+      definitions: {
+        Foo: {
+          title: 'Foo',
+          type: 'object',
+          properties: {
+            code: { title: 'Code', default: 'foo_coding', enum: ['foo_coding'], type: 'string' },
+          },
+        },
+        Bar: {
+          title: 'Bar',
+          type: 'object',
+          properties: {
+            code: { title: 'Code', default: 'bar_coding', enum: ['bar_coding'], type: 'string' },
+          },
+        },
+        Baz: {
+          title: 'Baz',
+          type: 'object',
+          properties: {
+            code: { title: 'Code', default: 'baz_coding', enum: ['baz_coding'], type: 'string' },
+          },
+        },
+      },
+      discriminator: {
+        propertyName: 'code',
+        mapping: {
+          foo_coding: '#/definitions/Foo',
+          bar_coding: '#/definitions/Bar',
+          baz_coding: '#/definitions/Baz',
+        },
+      },
+      anyOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }, { $ref: '#/definitions/Baz' }],
+    };
+    beforeEach(() => {
+      sandbox = createSandbox();
+      sandbox.stub(console, 'warn');
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
+    it('Selects the first node by default when there is no formData', () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+      const select = node.querySelector('select#root__anyof_select');
+      expect(select.value).eql('0');
+    });
+    it('Selects the 3rd node by default when there is formData that points to it', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { code: 'baz_coding' },
+      });
+      const select = node.querySelector('select#root__anyof_select');
+      expect(select.value).eql('2');
+    });
+    it('warns when discriminator.propertyName is not a string', () => {
+      const badSchema = { ...schema, discriminator: { propertyName: 5 } };
+      const { node } = createFormComponent({
+        schema: badSchema,
+      });
+      const select = node.querySelector('select#root__anyof_select');
+      expect(select.value).eql('0');
+      expect(console.warn.calledWithMatch(/Expecting discriminator to be a string, got "number" instead/)).to.be.true;
+    });
+  });
 
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', function () {
     const schema = {

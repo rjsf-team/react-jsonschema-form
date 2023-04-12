@@ -15,7 +15,7 @@ import {
   RJSF_ADDITONAL_PROPERTIES_FLAG,
 } from '../constants';
 import { FormContextType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
-import { getClosestMatchingOption } from './index';
+import getClosestMatchingOption from './getClosestMatchingOption';
 import retrieveSchema from './retrieveSchema';
 
 /** An internal helper that generates an `PathSchema` object for the `schema`, recursively with protection against

@@ -54,6 +54,16 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
       const tree = renderer.create(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('show add button and fields if additionalProperties is true and not an object', () => {
+      const schema: RJSFSchema = {
+        additionalProperties: true,
+      };
+      const formData: any = {
+        additionalProperty: 'should appear',
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     describe('with title and description', () => {
       test('object', () => {
         const schema: RJSFSchema = {
@@ -76,6 +86,17 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
         const tree = renderer.create(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />).toJSON();
         expect(tree).toMatchSnapshot();
       });
+      test('show add button and fields if additionalProperties is true and not an object', () => {
+        const schema: RJSFSchema = {
+          ...titleAndDesc,
+          additionalProperties: true,
+        };
+        const formData: any = {
+          additionalProperty: 'should appear',
+        };
+        const tree = renderer.create(<Form schema={schema} validator={validator} formData={formData} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
     });
     describe('with title and description from uiSchema', () => {
       test('object', () => {
@@ -96,6 +117,18 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
         };
         const tree = renderer
           .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('show add button and fields if additionalProperties is true and not an object', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: true,
+        };
+        const formData: any = {
+          additionalProperty: 'should appear',
+        };
+        const tree = renderer
+          .create(<Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={formData} />)
           .toJSON();
         expect(tree).toMatchSnapshot();
       });
@@ -146,6 +179,19 @@ export default function arrayTests(Form: ComponentType<FormProps>) {
         };
         const tree = renderer
           .create(<Form schema={schema} uiSchema={labelsOff} validator={validator} formData={{ foo: 'foo' }} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('show add button and fields if additionalProperties is true and not an object', () => {
+        const schema: RJSFSchema = {
+          ...titleAndDesc,
+          additionalProperties: true,
+        };
+        const formData: any = {
+          additionalProperty: 'should appear',
+        };
+        const tree = renderer
+          .create(<Form schema={schema} uiSchema={labelsOff} validator={validator} formData={formData} />)
           .toJSON();
         expect(tree).toMatchSnapshot();
       });

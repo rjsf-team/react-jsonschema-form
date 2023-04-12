@@ -2400,7 +2400,6 @@ describeRepeated('Form common', (createFormComponent) => {
         const { node, onError } = createFormComponent(formProps);
 
         submitForm(node);
-        console.log(onError.lastCall);
         sinon.assert.calledWithMatch(onError.lastCall, [
           {
             message: 'must NOT have fewer than 4 characters',
@@ -3707,7 +3706,7 @@ describe('Form omitExtraData and liveOmit', () => {
       { omitExtraData: true, liveOmit: true }
     );
 
-    const textNode = node.querySelector('#root-key');
+    const textNode = node.querySelector('#root_nested_key1-key');
     Simulate.blur(textNode, {
       target: { value: 'key1new' },
     });

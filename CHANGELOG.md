@@ -22,6 +22,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Switched `Form` to use the new `validatorDataMerge()` function instead of the new deprecated `schemaUtils.mergeValidatorData()`
 - Added option to provide a callback function to `focusOnFirstError` ([3590](https://github.com/rjsf-team/react-jsonschema-form/pull/3590))
+- Updated `MultiSchemaField` to handle the OpenAPI `discriminator` extension on `anyOf/oneOf` fields by passing it into `getClosestMatchingOption()` if it exists, fixing [#3512](https://github.com/rjsf-team/react-jsonschema-form/issues/3512)
+- Updated `SchemaField` function to use `getSchemaType` rather than `schema.type` to set the proper class name.
 
 ## @rjsf/utils
 
@@ -29,6 +31,10 @@ should change the heading of the (upcoming) version to include a major version b
   - As a result, the `mergeValidationData()` function was deprecated in favor of the new `validationDataMerge()` function that uses the refactored `toErrorList()` function
   - Refactored the `ROOT_SCHEMA_PREFIX` constant as well
 - Updated `ValidatorType` and `SchemaUtilsType` to deprecate the `toErrorList()` and `mergeValidationData()` functions, respectively
+- Updated the `getClosestMatchingOption()` and `getFirstMatchingOption()` to pass the new `discriminatorField` to the `getMatchingOption()` function
+- Updated `getMatchingOption()` to use `discriminatorField` when it is present in the `options` object properties to drill into the object to detect if that one field is valid
+- Updated `SchemaUtilsType` and the associated forward functions in `createSchemaUtils` to add the new `discriminatorField?: string` optional parameter
+- Updated `toIdSchema()` function to use `getSchemaType(schema) === 'object'` rather than `schema.type === 'object'` to get the proper pathing for ids, fixing [#2044](https://github.com/rjsf-team/react-jsonschema-form/issues/2044)
 
 ## @rjsf/validator-ajv6
 

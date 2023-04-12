@@ -111,10 +111,24 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param formData - The form data associated with the schema
    * @param options - The list of options that can be selected from
    * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
+   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+   *          determine which option is selected
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
-  getClosestMatchingOption(formData: T | undefined, options: S[], selectedOption?: number): number {
-    return getClosestMatchingOption<T, S, F>(this.validator, this.rootSchema, formData, options, selectedOption);
+  getClosestMatchingOption(
+    formData: T | undefined,
+    options: S[],
+    selectedOption?: number,
+    discriminatorField?: string
+  ): number {
+    return getClosestMatchingOption<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      formData,
+      options,
+      selectedOption,
+      discriminatorField
+    );
   }
 
   /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
@@ -122,10 +136,12 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param formData - The current formData, if any, used to figure out a match
    * @param options - The list of options to find a matching options from
+   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+   *          determine which option is selected
    * @returns - The firstindex of the matched option or 0 if none is available
    */
-  getFirstMatchingOption(formData: T | undefined, options: S[]): number {
-    return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema);
+  getFirstMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number {
+    return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
@@ -133,11 +149,13 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param formData - The current formData, if any, onto which to provide any missing defaults
    * @param options - The list of options to find a matching options from
+   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+   *          determine which option is selected
    * @returns - The index of the matched option or 0 if none is available
    * @deprecated
    */
-  getMatchingOption(formData: T | undefined, options: S[]) {
-    return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema);
+  getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string) {
+    return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files

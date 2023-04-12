@@ -249,6 +249,157 @@ exports[`object fields object 1`] = `
 </form>
 `;
 
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_additionalProperty"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button array-item-remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`object fields with title and description additionalProperties 1`] = `
 <form
   className="ui form rjsf"
@@ -973,6 +1124,168 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 </form>
 `;
 
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        My Field
+      </h5>
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_additionalProperty"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button array-item-remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`object fields with title and description object 1`] = `
 <form
   className="ui form rjsf"
@@ -1078,6 +1391,168 @@ exports[`object fields with title and description object 1`] = `
           >
             B description
           </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        Test field
+      </h5>
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_additionalProperty"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button array-item-remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1308,6 +1783,151 @@ exports[`object fields with title and description with global label off object 1
                 value=""
               />
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_additionalProperty"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="should appear"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button array-item-remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              Object {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
           </div>
         </div>
       </div>

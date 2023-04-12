@@ -5,6 +5,7 @@ import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KE
 import isObject from '../isObject';
 import { FormContextType, IdSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
+import getSchemaType from '../getSchemaType';
 
 /** An internal helper that generates an `IdSchema` object for the `schema`, recursively with protection against
  * infinite recursion
@@ -59,7 +60,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   }
   const $id = id || idPrefix;
   const idSchema: IdSchema = { $id } as IdSchema<T>;
-  if (schema.type === 'object' && PROPERTIES_KEY in schema) {
+  if (getSchemaType<S>(schema) === 'object' && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema[ID_KEY] + idSeparator + name;

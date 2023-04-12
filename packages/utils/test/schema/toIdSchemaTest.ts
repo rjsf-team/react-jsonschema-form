@@ -30,6 +30,25 @@ export default function toIdSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
+    it('should return ids for multiple types with null', () => {
+      const schema: RJSFSchema = {
+        type: ['object', 'null'],
+        properties: {
+          names: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        },
+      };
+      expect(toIdSchema(testValidator, schema)).toEqual({
+        $id: 'root',
+        names: {
+          $id: 'root_names',
+        },
+      });
+    });
     it('should return an idSchema for nested objects', () => {
       const schema: RJSFSchema = {
         type: 'object',

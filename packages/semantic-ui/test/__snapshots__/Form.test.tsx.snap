@@ -25,7 +25,7 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
         A simple test theme form example.
       </p>
       <div
-        className="form-group field field-undefined"
+        className="form-group field field-string"
       >
         <div
           className="grouped equal width fields"
