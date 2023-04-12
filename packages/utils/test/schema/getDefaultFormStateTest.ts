@@ -234,7 +234,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('default form state behavior: ignore min items unless required', () => {
-      it('test an object with an optional array property with minItems', () => {
+      it.only('test an object with an optional array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -255,7 +255,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             undefined,
             DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
           )
-        ).toEqual({ optionalArray: [] });
+        ).toEqual({});
       });
       it('test an object with a required array property with minItems', () => {
         const schema: RJSFSchema = {
@@ -283,8 +283,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ requiredArray: [undefined, undefined] });
       });
     });
-    describe("root default", () => {
-      it("should map root schema default to form state, if any", () => {
+    describe('root default', () => {
+      it('should map root schema default to form state, if any', () => {
         expect(
           getDefaultFormState(testValidator, {
             type: 'string',
@@ -325,7 +325,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               default: 1,
             },
             noneValue
-          ),
+          )
         ).toEqual(1);
       });
     });

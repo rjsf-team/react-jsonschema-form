@@ -67,13 +67,18 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
+   * @param behaviorBitFlags Bitwise flags to set which behavior is chosen for certain edge cases
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S): boolean {
+  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S, behaviorBitFlags: number): boolean {
     if (!validator || !rootSchema) {
       return false;
     }
-    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
+    return (
+      this.validator !== validator ||
+      !deepEquals(this.rootSchema, rootSchema) ||
+      this.behaviorBitFlags !== behaviorBitFlags
+    );
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have

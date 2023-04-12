@@ -315,7 +315,7 @@ export default class Form<
         ? props.featureFlags?.defaultFormStateBehavior
         : this.props.featureFlags?.defaultFormStateBehavior) || DefaultFormStateBehavior.Legacy_PopulateMinItems;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
-    if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)) {
+    if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, behaviorBitFlags)) {
       schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, behaviorBitFlags);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;

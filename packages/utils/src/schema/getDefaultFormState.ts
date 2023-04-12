@@ -302,11 +302,14 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         }) as T[];
       }
 
-      const ignoreMinItemsFlag = behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
+      const ignoreMinItemsFlagSet =
+        (behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired) ===
+        DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
 
+      console.log('first defaults return', defaults, behaviorBitFlags);
       if (
         !schema.minItems ||
-        (ignoreMinItemsFlag && !required) ||
+        (ignoreMinItemsFlagSet && !required) ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema)
       ) {
         return defaults ? defaults : [];
@@ -318,7 +321,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         // populate the array with the defaults
         const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
         const fillerDefault = fillerSchema.default;
-        if (behaviorBitFlags === DefaultFormStateBehavior.Legacy_PopulateMinItems || (ignoreMinItemsFlag && required)) {
+        if (
+          behaviorBitFlags === DefaultFormStateBehavior.Legacy_PopulateMinItems ||
+          (ignoreMinItemsFlagSet && required)
+        ) {
           const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
             computeDefaults<any, S, F>(
               validator,
