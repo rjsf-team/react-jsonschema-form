@@ -318,7 +318,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         // populate the array with the defaults
         const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
         const fillerDefault = fillerSchema.default;
-        if (behaviorBitFlags === DefaultFormStateBehavior.Legacy || (ignoreMinItemsFlag && required)) {
+        if (behaviorBitFlags === DefaultFormStateBehavior.Legacy_PopulateMinItems || (ignoreMinItemsFlag && required)) {
           const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
             computeDefaults<any, S, F>(
               validator,

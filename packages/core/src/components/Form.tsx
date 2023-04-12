@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   CustomValidator,
   deepEquals,
+  DefaultFormStateBehavior,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -184,7 +185,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Optional feature flags, if provided, specify different behavior that can be enabled. This enables differing behavior within
    * the library for differing interpreations of edge cases without breaking existing behavior.
    */
-  featureFlags?: { defaultFormStateFeatures?: number; };
+  featureFlags?: { defaultFormStateBehavior?: number };
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -309,9 +310,13 @@ export default class Form<
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
+    const behaviorBitFlags =
+      ('behaviorBitFlags' in props
+        ? props.featureFlags?.defaultFormStateBehavior
+        : this.props.featureFlags?.defaultFormStateBehavior) || DefaultFormStateBehavior.Legacy_PopulateMinItems;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
     if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)) {
-      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema);
+      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, behaviorBitFlags);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);

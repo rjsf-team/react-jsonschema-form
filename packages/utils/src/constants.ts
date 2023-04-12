@@ -30,7 +30,6 @@ export const UI_OPTIONS_KEY = 'ui:options';
 export const UI_GLOBAL_OPTIONS_KEY = 'ui:globalOptions';
 
 export const DefaultFormStateBehavior = {
-  Legacy: 0,
-  PopulateMinItems: 0,
-  IgnoreMinItemsUnlessRequired: 1,
+  Legacy_PopulateMinItems: 0 << 0,
+  IgnoreMinItemsUnlessRequired: 1 << 0,
 } as const;

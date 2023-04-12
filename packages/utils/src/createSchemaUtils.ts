@@ -27,10 +27,11 @@ import {
   toIdSchema,
   toPathSchema,
 } from './schema';
+import { DefaultFormStateBehavior } from './constants';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both the `validator`
- * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
+ * that one does not have to explicitly pass the `validator`, `rootSchema`, or `defaultFormStateBehavior` to each method.
+ * Since these generally do not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
 class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
@@ -38,15 +39,18 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
+  behaviorBitFlags: number;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
+   * @param behaviorBitFlags Bitwise flags to set which behavior is chosen for certain edge cases.
    */
-  constructor(validator: ValidatorType<T, S, F>, rootSchema: S) {
+  constructor(validator: ValidatorType<T, S, F>, rootSchema: S, behaviorBitFlags: number) {
     this.rootSchema = rootSchema;
     this.validator = validator;
+    this.behaviorBitFlags = behaviorBitFlags;
   }
 
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
@@ -80,14 +84,12 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
-   * @param [behaviorBitFlags=0] Optional bitwise flags to set which behavior is chosen for certain edge cases.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
-    behaviorBitFlags = 0
+    includeUndefinedValues: boolean | 'excludeObjectChildren' = false
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -95,7 +97,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       this.rootSchema,
       includeUndefinedValues,
-      behaviorBitFlags
+      this.behaviorBitFlags
     );
   }
 
@@ -267,12 +269,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param [behaviorBitFlags=0] Optional bitwise flags to set which behavior is chosen for certain edge cases.
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(validator, rootSchema);
+>(
+  validator: ValidatorType<T, S, F>,
+  rootSchema: S,
+  behaviorBitFlags = DefaultFormStateBehavior.Legacy_PopulateMinItems
+): SchemaUtilsType<T, S, F> {
+  return new SchemaUtils<T, S, F>(validator, rootSchema, behaviorBitFlags);
 }
