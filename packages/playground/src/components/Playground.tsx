@@ -5,6 +5,7 @@ import {
   ArrayFieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
+  RJSFValidationError,
   TemplatesType,
   UiSchema,
   ValidatorType,
@@ -17,8 +18,6 @@ import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
 import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
-
-const log = (type: string) => console.log.bind(console, type);
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -40,7 +39,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [liveSettings, setLiveSettings] = useState<LiveSettings>({
     showErrorList: 'top',
     validate: false,
-    disable: false,
+    disabled: false,
+    noHtml5Validate: false,
     readonly: false,
     omitExtraData: false,
     liveOmit: false,
@@ -64,7 +64,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const load = useCallback(
     (data: any) => {
       // Reset the ArrayFieldTemplate whenever you load new data
-      const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors } = data;
+      const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors, liveSettings } = data;
       // uiSchema is missing on some examples. Provide a default to
       // clear the field in all cases.
       const { schema, uiSchema = {}, formData, theme: dataTheme = theme } = data;
@@ -80,6 +80,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setTheme(dataTheme);
       setArrayFieldTemplate(ArrayFieldTemplate);
       setObjectFieldTemplate(ObjectFieldTemplate);
+      setLiveSettings(liveSettings);
       setShowForm(true);
     },
     [theme, onThemeSelected, themes]
@@ -197,14 +198,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
-                noHtml5Validate={true}
                 fields={{ geo: GeoPosition }}
                 validator={validators[validator]}
                 onChange={onFormDataChange}
                 onSubmit={onFormDataSubmit}
                 onBlur={(id: string, value: string) => console.log(`Touched ${id} with value ${value}`)}
                 onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
-                onError={log('errors')}
+                onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
                 ref={playGroundFormRef}
               />
             </DemoFrame>

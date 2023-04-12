@@ -25,6 +25,7 @@ import {
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
+  toErrorList,
   UiSchema,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
@@ -533,7 +534,7 @@ export default class Form<
       state = {
         formData: newFormData,
         errorSchema: errorSchema,
-        errors: schemaUtils.getValidator().toErrorList(errorSchema),
+        errors: toErrorList(errorSchema),
       };
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
@@ -618,7 +619,7 @@ export default class Form<
       // There are no errors generated through schema validation.
       // Check for user provided errors and update state accordingly.
       const errorSchema = extraErrors || {};
-      const errors = extraErrors ? schemaUtils.getValidator().toErrorList(extraErrors) : [];
+      const errors = extraErrors ? toErrorList(extraErrors) : [];
       this.setState(
         {
           formData: newFormData,

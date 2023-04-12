@@ -57,6 +57,7 @@ const liveSettingsSchema: RJSFSchema = {
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
     liveOmit: { type: 'boolean', title: 'Live omit' },
     noValidate: { type: 'boolean', title: 'Disable validation' },
+    noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
     showErrorList: {
       type: 'string',

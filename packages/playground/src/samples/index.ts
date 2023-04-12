@@ -32,6 +32,7 @@ import options from './options';
 import ifThenElse from './ifThenElse';
 
 export const samples = Object.freeze({
+  Blank: { schema: {}, uiSchema: {}, formData: {} },
   Simple: simple,
   'UI Options': options,
   Nested: nested,

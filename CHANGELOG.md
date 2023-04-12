@@ -18,9 +18,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.6.0
 
+## @rjsf/antd
+
+- Treat multiple as a boolean rather than comparing against `undefined` in the `SelectWidget`, fixing [#3595](https://github.com/rjsf-team/react-jsonschema-form/issues/3595)
+
 ## @rjsf/core
 
-- Switched `Form` to use the new `validatorDataMerge()` function instead of the new deprecated `schemaUtils.mergeValidatorData()`
+- Switched `Form` to use the new `validatorDataMerge()` and `toErrorList()` functions instead of the new deprecated `schemaUtils.mergeValidatorData()` and `schemaUtils.getValidator().toErrorList()`
 - Added option to provide a callback function to `focusOnFirstError` ([3590](https://github.com/rjsf-team/react-jsonschema-form/pull/3590))
 - Updated `MultiSchemaField` to handle the OpenAPI `discriminator` extension on `anyOf/oneOf` fields by passing it into `getClosestMatchingOption()` if it exists, fixing [#3512](https://github.com/rjsf-team/react-jsonschema-form/issues/3512)
 - Updated `SchemaField` function to use `getSchemaType` rather than `schema.type` to set the proper class name.
@@ -47,6 +51,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the `utility-functions` documentation to describe the new refactored functions as well as deprecating the `mergeValidationData()` function
+- Updated the `playground` to properly restore `liveSettings` from shared links and added a switch for `noHtml5Validation` in the live settings rather than having it set to `true` always
+  - Also added a new `Blank` example to help users easily paste their code
 
 # 5.5.2
 
