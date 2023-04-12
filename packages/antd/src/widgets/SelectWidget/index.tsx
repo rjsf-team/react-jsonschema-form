@@ -83,7 +83,7 @@ export default function SelectWidget<
         disabled={disabled || (readonlyAsDisabled && readonly)}
         getPopupContainer={getPopupContainer}
         id={id}
-        mode={typeof multiple !== 'undefined' ? 'multiple' : undefined}
+        mode={multiple ? 'multiple' : undefined}
         onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleChange : undefined}
         onFocus={!readonly ? handleFocus : undefined}
