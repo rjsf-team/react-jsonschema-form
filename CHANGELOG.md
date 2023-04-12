@@ -23,6 +23,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Switched `Form` to use the new `validatorDataMerge()` function instead of the new deprecated `schemaUtils.mergeValidatorData()`
 - Added option to provide a callback function to `focusOnFirstError` ([3590](https://github.com/rjsf-team/react-jsonschema-form/pull/3590))
 - Updated `MultiSchemaField` to handle the OpenAPI `discriminator` extension on `anyOf/oneOf` fields by passing it into `getClosestMatchingOption()` if it exists, fixing [#3512](https://github.com/rjsf-team/react-jsonschema-form/issues/3512)
+- Updated `SchemaField` function to use `getSchemaType` rather than `schema.type` to set the proper class name.
 
 ## @rjsf/utils
 
