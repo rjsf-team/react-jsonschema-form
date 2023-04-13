@@ -15,6 +15,19 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.7.0
+
+## @rjsf/core
+
+- Added new `defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363))
+
+## @rjsf/utils
+
+- Refactored optional parameters for `computeDefaults()` into destructured props object to reduce clutter when only specifying later of the optional argument
+
+## Dev / docs / playground
+
+- Added **Default Form State Behavior** live setting
 
 # 5.7.0
 

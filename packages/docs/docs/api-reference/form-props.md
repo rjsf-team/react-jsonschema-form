@@ -59,6 +59,50 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
+## defaultFormStateBehavior
+
+Allows you to specify different form behavior in regards to handling optional array fields with `minItems` set. This is done via a bit flag with the following values, which are defined in `utils/src/constants.ts` in the `DefaultFormStateBehavior` object:
+
+| Reference Name                 | Value | Description                                                                                                                        |
+| ------------------------------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `Legacy_PopulateMinItems`      | `0`   | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined |
+| `IgnoreMinItemsUnlessRequired` | `1`   | Ignore `minItems` on a field when calculating defaults unless the field is required                                                |
+
+```tsx
+import { RJSFSchema, DefaultFormStateBehavior } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  items: { type: 'string' },
+  minItems: 3,
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    defaultFormStateBehavior={DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired}
+  />,
+  document.getElementById('app')
+);
+```
+
+OR
+
+```tsx
+...
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    defaultFormStateBehavior={1}
+  />,
+  document.getElementById('app')
+);
+```
+
 ## disabled
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.

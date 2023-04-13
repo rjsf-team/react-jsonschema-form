@@ -309,12 +309,12 @@ export default class Form<
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
-    const behaviorBitFlags =
-      ('behaviorBitFlags' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior) ||
+    const defaultFormStateBehavior =
+      ('defaultFormStateBehavior' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior) ||
       DefaultFormStateBehavior.Legacy_PopulateMinItems;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
-    if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, behaviorBitFlags)) {
-      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, behaviorBitFlags);
+    if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, defaultFormStateBehavior)) {
+      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, defaultFormStateBehavior);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);

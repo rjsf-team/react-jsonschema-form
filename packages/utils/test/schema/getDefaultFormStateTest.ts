@@ -245,6 +245,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           value: [undefined],
         });
       });
+      it('test computeDefaults returns undefined with simple schema and no optional args', () => {
+        const schema: RJSFSchema = { type: 'string' };
+        expect(computeDefaults(testValidator, schema)).toBe(undefined);
+      });
     });
     describe('default form state behavior: ignore min items unless required', () => {
       it('should return empty data for an optional array property with minItems', () => {
@@ -260,7 +264,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
           })
         ).toEqual({});
       });
@@ -278,7 +282,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { optionalArray: [] },
-            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
           })
         ).toEqual({ optionalArray: [] });
       });
@@ -297,7 +301,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
           })
         ).toEqual({ requiredArray: [undefined, undefined] });
       });
@@ -317,7 +321,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
           })
         ).toEqual({ requiredArray: ['default0', 'default1'] });
       });
@@ -338,7 +342,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { requiredArray: ['raw0'] },
-            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
           })
         ).toEqual({ requiredArray: ['raw0', 'default0'] });
       });
