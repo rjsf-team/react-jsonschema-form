@@ -34,7 +34,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           $ref: '#/definitions/testdef',
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema)).toEqual({
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
           foo: 42,
         });
       });
@@ -58,7 +58,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredProperty'],
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema)).toEqual({ requiredProperty: 'foo' });
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({ requiredProperty: 'foo' });
       });
       it('test an object with an optional property that has a nested required property and includeUndefinedValues', () => {
         const schema: RJSFSchema = {
@@ -85,7 +85,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredProperty'],
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema, undefined, true)).toEqual({
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues: true })).toEqual({
           optionalProperty: {
             nestedRequiredProperty: {
               undefinedProperty: undefined,
@@ -122,7 +122,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredProperty'],
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema, undefined, 'excludeObjectChildren')).toEqual({
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({
           optionalNumberProperty: undefined,
           optionalObjectProperty: {
             nestedRequiredProperty: {},
@@ -145,7 +150,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             foo: 'bar',
           },
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema)).toEqual({
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
           requiredProperty: 'foo',
           foo: 'bar',
         });
@@ -167,7 +172,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             foo: 'bar',
           },
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema, undefined, true)).toEqual({
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues: true })).toEqual({
           requiredProperty: 'foo',
           foo: 'bar',
         });
@@ -202,7 +207,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           },
         };
-        expect(computeDefaults(testValidator, schema, undefined, schema, { test: { foo: 'x', newKey: {} } })).toEqual({
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
           test: {
             newKey: {
               host: 'localhost',
@@ -218,23 +228,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             invalidProperty: 'not a valid property value',
           },
         } as RJSFSchema;
-        expect(computeDefaults(testValidator, schema, undefined, schema, undefined, 'excludeObjectChildren')).toEqual(
-          {}
-        );
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({});
       });
       it('test with a recursive schema', () => {
-        expect(computeDefaults(testValidator, RECURSIVE_REF, undefined, RECURSIVE_REF)).toEqual({
+        expect(computeDefaults(testValidator, RECURSIVE_REF, { rootSchema: RECURSIVE_REF })).toEqual({
           name: '',
         });
       });
       it('test with a recursive allof schema', () => {
-        expect(computeDefaults(testValidator, RECURSIVE_REF_ALLOF, undefined, RECURSIVE_REF_ALLOF)).toEqual({
+        expect(computeDefaults(testValidator, RECURSIVE_REF_ALLOF, { rootSchema: RECURSIVE_REF_ALLOF })).toEqual({
           value: [undefined],
         });
       });
     });
     describe('default form state behavior: ignore min items unless required', () => {
-      it.only('test an object with an optional array property with minItems', () => {
+      it('should return empty data for an optional array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -245,19 +258,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         expect(
-          computeDefaults(
-            testValidator,
-            schema,
-            undefined,
-            schema,
-            undefined,
-            undefined,
-            undefined,
-            DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
-          )
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+          })
         ).toEqual({});
       });
-      it('test an object with a required array property with minItems', () => {
+      it('should return undefined filled array for a required array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -270,17 +277,51 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           required: ['requiredArray'],
         };
         expect(
-          computeDefaults(
-            testValidator,
-            schema,
-            undefined,
-            schema,
-            undefined,
-            undefined,
-            undefined,
-            DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
-          )
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+          })
         ).toEqual({ requiredArray: [undefined, undefined] });
+      });
+      it('should return defaults array for a required array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 2,
+              default: ['default0', 'default1'],
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+          })
+        ).toEqual({ requiredArray: ['default0', 'default1'] });
+      });
+      it('should combine defaults with raw form data for a required array property with minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string', default: 'default0' },
+              minItems: 2,
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { requiredArray: ['raw0'] },
+            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+          })
+        ).toEqual({ requiredArray: ['raw0', 'default0'] });
       });
     });
     describe('root default', () => {
