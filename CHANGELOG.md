@@ -16,6 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.6.1
+
+## Dev / docs / playground
+
+- Updated the `contributing` documentation to improve the `Releasing` section to include a new `npm run post-versioning` step
+  - Implemented a new `bump-peer-deps.js` script to help implement the new scripts included in the `post-versioning` step
+
 # 5.6.0
 
 ## @rjsf/antd
