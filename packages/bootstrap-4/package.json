@@ -50,12 +50,12 @@
     "@types/react-dom": "^17.0.17",
     "@types/react-test-renderer": "^17.0.2",
     "dts-cli": "^1.6.3",
-    "eslint": "^8.37.0",
+    "eslint": "^8.38.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.6",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
-    "rimraf": "^4.4.1"
+    "rimraf": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"

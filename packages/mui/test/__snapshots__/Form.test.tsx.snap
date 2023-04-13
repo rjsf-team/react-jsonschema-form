@@ -8149,6 +8149,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -8662,6 +8663,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -9165,6 +9167,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -9663,6 +9666,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -10163,6 +10167,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -10675,6 +10680,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
@@ -11187,6 +11193,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           </div>
           <input
             aria-hidden={true}
+            aria-invalid={false}
             autoFocus={false}
             className="MuiSelect-nativeInput emotion-4"
             disabled={false}
