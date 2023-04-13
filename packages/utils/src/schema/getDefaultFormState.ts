@@ -290,7 +290,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       // Deeply inject defaults into already existing form data
       if (Array.isArray(rawFormData)) {
         const schemaItem: S = getInnerSchemaForArrayItem<S>(schema);
-        console.log('schemaItem', schemaItem);
         defaults = rawFormData.map((item: T, idx: number) => {
           return computeDefaults<T, S, F>(validator, schemaItem, {
             rootSchema,
@@ -324,12 +323,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       const defaultEntries: T[] = (defaults || []) as T[];
       const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
       const fillerDefault = fillerSchema.default;
-      if (
-        (behaviorBitFlags & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired) !==
-        DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired
-      ) {
-        return defaultEntries;
-      }
 
       // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
       const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(

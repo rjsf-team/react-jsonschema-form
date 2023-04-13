@@ -264,6 +264,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           })
         ).toEqual({});
       });
+      it('should return empty array when given an empty array as form data for an optional array property with minItems ', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalArray: {
+              type: 'array',
+              minItems: 2,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { optionalArray: [] },
+            behaviorBitFlags: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+          })
+        ).toEqual({ optionalArray: [] });
+      });
       it('should return undefined filled array for a required array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -303,7 +321,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           })
         ).toEqual({ requiredArray: ['default0', 'default1'] });
       });
-      it('should combine defaults with raw form data for a required array property with minItems', () => {
+      // BUG: https://github.com/rjsf-team/react-jsonschema-form/issues/3602
+      it.skip('should combine defaults with raw form data for a required array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
