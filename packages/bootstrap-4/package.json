@@ -29,8 +29,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^5.0.0",
-    "@rjsf/utils": "^5.0.0",
+    "@rjsf/core": "5.6.x",
+    "@rjsf/utils": "5.6.x",
     "react": "^16.14.0 || >=17",
     "react-bootstrap": "^1.6.5"
   },
