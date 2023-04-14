@@ -24,7 +24,9 @@
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
     "update-lockfile": "npm update --lockfile-version 2 --package-lock-only",
-    "update-all-lockfiles": "npm run update-lockfile && lerna run --concurrency 1 --stream update-lockfile ",
+    "update-all-lockfiles": "npm run update-lockfile && lerna run --concurrency 1 --stream update-lockfile && npm install",
+    "bump-packages": "npm update --save --lockfile-version 2",
+    "bump-all-packages": "npm run bump-packages && lerna run --concurrency 1 --stream bump-packages && npm install && npm run build && npm run test",
     "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run update-all-lockfiles && git add package-lock.json packages/*/package*.json && CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push"
   },
   "license": "Apache-2.0",
