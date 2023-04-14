@@ -16,7 +16,8 @@
     "publish-to-gh-pages": "npm run build && gh-pages --dist build/",
     "publish-to-npm": "npm run build && npm publish",
     "start": "vite --force",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update-lockfile": "npm update --lockfile-version 2 --package-lock-only"
   },
   "lint-staged": {
     "src/**/*.ts?(x)": [

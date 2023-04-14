@@ -16,7 +16,8 @@
     "precommit": "lint-staged",
     "test": "dts test",
     "test:update": "dts test --u",
-    "test:watch": "dts test --watch"
+    "test:watch": "dts test --watch",
+    "update-lockfile": "npm update --lockfile-version 2 --package-lock-only"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [

@@ -15,7 +15,8 @@
     "typecheck": "tsc",
     "precommit": "lint-staged",
     "cs-check": "prettier -l \"{src, docs}/**/*.(ts?(x)|md|css)\"",
-    "cs-format": "prettier \"{src, docs}/**/*.(ts?(x)|md|css)\" --write"
+    "cs-format": "prettier \"{src, docs}/**/*.(ts?(x)|md|css)\" --write",
+    "update-lockfile": "npm update --lockfile-version 2 --package-lock-only"
   },
   "lint-staged": {
     "src/**/*.(ts?(x)|css)": [

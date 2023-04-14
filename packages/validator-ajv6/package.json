@@ -18,7 +18,8 @@
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test"
+    "test": "dts test",
+    "update-lockfile": "npm update --lockfile-version 2 --package-lock-only"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
