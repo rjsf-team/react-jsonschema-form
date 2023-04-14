@@ -13,7 +13,7 @@
     "test:update": "lerna run --concurrency 2 --stream test:update",
     "lint": "lerna run lint",
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
-    "refresh-node-modules": "rm -rf node_modules && rm -rf packages/*/node_modules && npm install",
+    "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
     "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run refresh-node-modules && git add package-lock.json packages/*/package*.json && CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
@@ -48,6 +48,7 @@
     "lint-staged": "^13.2.1",
     "nx": "^15.9.2",
     "prettier": "^2.8.7",
+    "rimraf": "^5.0.0",
     "ts-jest": "^27.1.5",
     "tslib": "^2.5.0",
     "typescript": "^4.9.5"
