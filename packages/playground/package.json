@@ -17,8 +17,7 @@
     "publish-to-npm": "npm run build && npm publish",
     "start": "vite --force",
     "preview": "vite preview",
-    "bump-packages": "npm update --save --lockfile-version 2",
-    "update-lockfile": "npm update --lockfile-version 2 --package-lock-only"
+    "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
     "src/**/*.ts?(x)": [
