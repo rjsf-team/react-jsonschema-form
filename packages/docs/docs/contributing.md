@@ -132,18 +132,24 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-To release, go to the main branch and then create a new branch with the version number (with an `rc` prefix instead of `v`):
+To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
+For instance if you are about to create the new `5.100.10` branch, then you would run the following commands:
 
 ```bash
-git checkout -b rc5.0.1
+git checkout -b rc5.100.10
 git push
 npx lerna version
+npm run post-versioning
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The command above will create a new version tag and push it to GitHub.
+The `npx lerna version` command will create a new version tag and push it to GitHub.
 
-Note that if you are releasing a new major version, you should bump the peer dependency `@rjsf/core` in the `package.json` files of other packages accordingly.
+The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
+It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.
+Finally, it creates and pushes a new commit with those `package.json` and `package-lock.json` files up to GitHub.
+
+> NOTE: this command will take a while, be patient
 
 Then, make a PR to main. Merge the PR into main -- make sure you use "merge commit", not squash and merge, so that
 the original commit where the tag was based on is still present in the main branch.

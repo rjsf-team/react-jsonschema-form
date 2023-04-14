@@ -13,7 +13,8 @@
     "test:debug": "node --inspect-brk node_modules/.bin/dts test",
     "test:update": "dts test --u",
     "test:watch": "dts test --watch",
-    "test-coverage": "dts test --coverage"
+    "test-coverage": "dts test --coverage",
+    "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
     "{src,test,testSnap}/**/*.[jt]s?(x)": [
@@ -33,7 +34,7 @@
     "node": ">=14"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.0.0",
+    "@rjsf/utils": "5.6.x",
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {

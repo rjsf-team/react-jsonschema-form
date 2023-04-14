@@ -19,7 +19,8 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "dts test",
-    "test:update": "dts test --u"
+    "test:update": "dts test --u",
+    "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -28,8 +29,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^5.0.0",
-    "@rjsf/utils": "^5.0.0",
+    "@rjsf/core": "5.6.x",
+    "@rjsf/utils": "5.6.x",
     "react": "^16.14.0 || >=17",
     "react-bootstrap": "^1.6.5"
   },

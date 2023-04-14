@@ -18,7 +18,8 @@
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test"
+    "test": "dts test",
+    "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -33,7 +34,7 @@
     "lodash-es": "^4.17.15"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.0.0"
+    "@rjsf/utils": "5.6.x"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",

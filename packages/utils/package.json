@@ -19,7 +19,8 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "dts test",
-    "test:debug": "node --inspect-brk node_modules/.bin/dts test"
+    "test:debug": "node --inspect-brk node_modules/.bin/dts test",
+    "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
