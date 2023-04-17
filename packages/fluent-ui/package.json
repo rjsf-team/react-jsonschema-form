@@ -44,9 +44,9 @@
     "@rjsf/core": "^5.6.0",
     "@rjsf/utils": "^5.6.0",
     "@rjsf/validator-ajv8": "^5.6.0",
-    "@types/lodash": "^4.14.192",
-    "@types/react": "^17.0.48",
-    "@types/react-dom": "^17.0.17",
+    "@types/lodash": "^4.14.194",
+    "@types/react": "^17.0.58",
+    "@types/react-dom": "^17.0.19",
     "@types/react-test-renderer": "^17.0.2",
     "dts-cli": "^1.6.3",
     "eslint": "^8.38.0",
@@ -80,7 +80,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "lodash": "^4.17.15",
-    "lodash-es": "^4.17.15"
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21"
   }
 }
