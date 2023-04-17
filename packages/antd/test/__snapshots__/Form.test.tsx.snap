@@ -1128,6 +1128,7 @@ exports[`single fields number field 0 1`] = `
   >
     <div
       className="ant-input-number"
+      onBeforeInput={[Function]}
       onBlur={[Function]}
       onCompositionEnd={[Function]}
       onCompositionStart={[Function]}
@@ -1251,6 +1252,7 @@ exports[`single fields number field 1`] = `
   >
     <div
       className="ant-input-number"
+      onBeforeInput={[Function]}
       onBlur={[Function]}
       onCompositionEnd={[Function]}
       onCompositionStart={[Function]}
@@ -3003,6 +3005,7 @@ exports[`single fields up/down field 1`] = `
   >
     <div
       className="ant-input-number"
+      onBeforeInput={[Function]}
       onBlur={[Function]}
       onCompositionEnd={[Function]}
       onCompositionStart={[Function]}

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "main": "dist/index.js",
   "module": "dist/validator-ajv8.esm.js",
   "typings": "dist/index.d.ts",
@@ -30,8 +30,8 @@
   "dependencies": {
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
-    "lodash": "^4.17.15",
-    "lodash-es": "^4.17.15"
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
     "@rjsf/utils": "5.6.x"
@@ -43,10 +43,10 @@
     "@babel/plugin-transform-react-jsx": "^7.21.0",
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
-    "@rjsf/utils": "^5.6.0",
+    "@rjsf/utils": "^5.6.1",
     "@types/jest-expect-message": "^1.1.0",
-    "@types/json-schema": "^7.0.9",
-    "@types/lodash": "^4.14.192",
+    "@types/json-schema": "^7.0.11",
+    "@types/lodash": "^4.14.194",
     "dts-cli": "^1.6.3",
     "eslint": "^8.38.0",
     "jest-expect-message": "^1.1.3",

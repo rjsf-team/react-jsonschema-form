@@ -1049,6 +1049,7 @@ exports[`array fields fixed array 1`] = `
                           >
                             <div
                               className="ant-input-number ant-input-number-in-form-item"
+                              onBeforeInput={[Function]}
                               onBlur={[Function]}
                               onCompositionEnd={[Function]}
                               onCompositionStart={[Function]}
@@ -2619,6 +2620,7 @@ exports[`with title and description fixed array 1`] = `
                           >
                             <div
                               className="ant-input-number ant-input-number-in-form-item"
+                              onBeforeInput={[Function]}
                               onBlur={[Function]}
                               onCompositionEnd={[Function]}
                               onCompositionStart={[Function]}
@@ -3868,6 +3870,7 @@ exports[`with title and description from both fixed array 1`] = `
                           >
                             <div
                               className="ant-input-number ant-input-number-in-form-item"
+                              onBeforeInput={[Function]}
                               onBlur={[Function]}
                               onCompositionEnd={[Function]}
                               onCompositionStart={[Function]}
@@ -5117,6 +5120,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           >
                             <div
                               className="ant-input-number ant-input-number-in-form-item"
+                              onBeforeInput={[Function]}
                               onBlur={[Function]}
                               onCompositionEnd={[Function]}
                               onCompositionStart={[Function]}
@@ -6273,6 +6277,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           >
                             <div
                               className="ant-input-number ant-input-number-in-form-item"
+                              onBeforeInput={[Function]}
                               onBlur={[Function]}
                               onCompositionEnd={[Function]}
                               onCompositionStart={[Function]}

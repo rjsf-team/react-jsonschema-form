@@ -454,6 +454,7 @@ exports[`object fields object 1`] = `
                       >
                         <div
                           className="ant-input-number ant-input-number-in-form-item"
+                          onBeforeInput={[Function]}
                           onBlur={[Function]}
                           onCompositionEnd={[Function]}
                           onCompositionStart={[Function]}
@@ -1745,6 +1746,7 @@ exports[`object fields with title and description from both object 1`] = `
                       >
                         <div
                           className="ant-input-number ant-input-number-in-form-item"
+                          onBeforeInput={[Function]}
                           onBlur={[Function]}
                           onCompositionEnd={[Function]}
                           onCompositionStart={[Function]}
@@ -2404,6 +2406,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       >
                         <div
                           className="ant-input-number ant-input-number-in-form-item"
+                          onBeforeInput={[Function]}
                           onBlur={[Function]}
                           onCompositionEnd={[Function]}
                           onCompositionStart={[Function]}
@@ -3063,6 +3066,7 @@ exports[`object fields with title and description object 1`] = `
                       >
                         <div
                           className="ant-input-number ant-input-number-in-form-item"
+                          onBeforeInput={[Function]}
                           onBlur={[Function]}
                           onCompositionEnd={[Function]}
                           onCompositionStart={[Function]}
@@ -3957,6 +3961,7 @@ exports[`object fields with title and description with global label off object 1
                       >
                         <div
                           className="ant-input-number ant-input-number-in-form-item"
+                          onBeforeInput={[Function]}
                           onBlur={[Function]}
                           onCompositionEnd={[Function]}
                           onCompositionStart={[Function]}
