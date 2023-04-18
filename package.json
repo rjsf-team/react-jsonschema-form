@@ -25,7 +25,9 @@
     "bump-packages": "npm update --save --lockfile-version 2",
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
-    "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run refresh-node-modules && git add package-lock.json packages/*/package*.json && CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push"
+    "commit-package-changes": "git add package-lock.json packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
+    "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run refresh-node-modules && npm run commit-package-changes && npm run update-version-tags",
+    "update-version-tags": "git tag -f $(node scripts/get-version-tag.js) && git push -f origin $(node scripts/get-version-tag.js)"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
@@ -38,6 +40,7 @@
     "@types/react-dom": "^17.0.19",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
+    "cross-env": "^7.0.3",
     "dts-cli": "^1.6.3",
     "eslint": "^8.38.0",
     "eslint-plugin-import": "^2.27.5",
