@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.6.2
+
+## Dev / docs / playground
+
+- Fixed issues with `post-versioning` that caused the 5.6.1 branch to not be publishable
+
 # 5.6.1
 
 ## Dev / docs / playground

@@ -10,7 +10,7 @@ const MAJOR_MINOR_REGEX = /^\^(\d+.\d+).\d+$/;
 
 // Since this file is in the `scripts` directory, the root dir of the repo is up one level
 const rootDir = path.resolve(__dirname, '../');
-// Read all of the packages directory names
+// Read all the packages directory names
 const dirs = fs.readdirSync(path.resolve(rootDir, 'packages'));
 dirs.forEach((dir) => {
   // Get the name of each of the package.json files from the directory
