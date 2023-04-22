@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.6.3
+
+## @rjsf/antd
+
+- Fix #3608 by ensuring the root field is always wrapped in Form.Item
+
 # 5.6.2
 
 ## Dev / docs / playground
