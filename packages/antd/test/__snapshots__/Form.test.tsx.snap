@@ -9,122 +9,144 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
   <div
     className="form-group field field-object"
   >
-    <fieldset
-      id="root"
+    <div
+      className="ant-form-item"
     >
       <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        
         <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="form-group field field-string"
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-form-item"
+              className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-row ant-form-item-row"
-                style={Object {}}
+              <fieldset
+                id="root"
               >
                 <div
-                  className="ant-col ant-col-24 ant-form-item-label"
-                  style={Object {}}
+                  className="ant-row"
+                  style={
+                    Object {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                    }
+                  }
                 >
-                  <label
-                    className=""
-                    htmlFor="root_my-field"
-                    title="my-field"
-                  >
-                    my-field
-                    <span
-                      aria-label="question-circle"
-                      className="anticon anticon-question-circle ant-form-item-tooltip"
-                      onMouseEnter={[Function]}
-                      onMouseLeave={[Function]}
-                      role="img"
-                      title=""
-                    >
-                      <svg
-                        aria-hidden="true"
-                        data-icon="question-circle"
-                        fill="currentColor"
-                        focusable="false"
-                        height="1em"
-                        viewBox="64 64 896 896"
-                        width="1em"
-                      >
-                        <path
-                          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
-                        />
-                        <path
-                          d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z"
-                        />
-                      </svg>
-                    </span>
-                  </label>
-                </div>
-                <div
-                  className="ant-col ant-col-24 ant-form-item-control"
-                  style={Object {}}
-                >
+                  
                   <div
-                    className="ant-form-item-control-input"
+                    className="ant-col ant-col-24"
+                    style={
+                      Object {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
                   >
                     <div
-                      className="ant-form-item-control-input-content"
+                      className="form-group field field-string"
                     >
-                      <span
-                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onClick={[Function]}
-                        style={
-                          Object {
-                            "width": "100%",
-                          }
-                        }
+                      <div
+                        className="ant-form-item"
                       >
-                        <input
-                          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                          className="ant-input"
-                          hidden={null}
-                          id="root_my-field"
-                          name="root_my-field"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          placeholder=""
-                          style={null}
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          className="ant-input-suffix"
-                        />
-                      </span>
+                        <div
+                          className="ant-row ant-form-item-row"
+                          style={Object {}}
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label"
+                            style={Object {}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                              <span
+                                aria-label="question-circle"
+                                className="anticon anticon-question-circle ant-form-item-tooltip"
+                                onMouseEnter={[Function]}
+                                onMouseLeave={[Function]}
+                                role="img"
+                                title=""
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  data-icon="question-circle"
+                                  fill="currentColor"
+                                  focusable="false"
+                                  height="1em"
+                                  viewBox="64 64 896 896"
+                                  width="1em"
+                                >
+                                  <path
+                                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                  />
+                                  <path
+                                    d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z"
+                                  />
+                                </svg>
+                              </span>
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control"
+                            style={Object {}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                                  onClick={[Function]}
+                                  style={
+                                    Object {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input"
+                                    hidden={null}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    placeholder=""
+                                    style={null}
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </fieldset>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -148,37 +170,59 @@ exports[`single fields checkbox field 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <label
-      className="ant-checkbox-wrapper"
+    <div
+      className="ant-form-item"
     >
-      <span
-        className="ant-checkbox"
+      <div
+        className="ant-row ant-form-item-row"
         style={Object {}}
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          checked={false}
-          className="ant-checkbox-input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyPress={[Function]}
-          onKeyUp={[Function]}
-          type="checkbox"
-        />
-        <span
-          className="ant-checkbox-inner"
-        />
-      </span>
-      <span>
-        
-      </span>
-    </label>
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+              >
+                <span
+                  className="ant-checkbox"
+                  style={Object {}}
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyPress={[Function]}
+                    onKeyUp={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span>
+                  
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -202,37 +246,59 @@ exports[`single fields checkbox field with label 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <label
-      className="ant-checkbox-wrapper"
+    <div
+      className="ant-form-item"
     >
-      <span
-        className="ant-checkbox"
+      <div
+        className="ant-row ant-form-item-row"
         style={Object {}}
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          checked={false}
-          className="ant-checkbox-input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyPress={[Function]}
-          onKeyUp={[Function]}
-          type="checkbox"
-        />
-        <span
-          className="ant-checkbox-inner"
-        />
-      </span>
-      <span>
-        test
-      </span>
-    </label>
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+              >
+                <span
+                  className="ant-checkbox"
+                  style={Object {}}
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyPress={[Function]}
+                    onKeyUp={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span>
+                  test
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -257,149 +323,171 @@ exports[`single fields checkboxes field 1`] = `
     className="form-group field field-array"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-checkbox-group"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
+      className="ant-form-item"
     >
-      <span>
-        <label
-          className="ant-checkbox-wrapper"
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
+          <div
+            className="ant-form-item-control-input"
           >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="ant-checkbox-input"
-              disabled={false}
-              id="root-0"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-              value="0"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            foo
-          </span>
-        </label>
-        <br />
-      </span>
-      <span>
-        <label
-          className="ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="ant-checkbox-input"
-              disabled={false}
-              id="root-1"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-              value="1"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            bar
-          </span>
-        </label>
-        <br />
-      </span>
-      <span>
-        <label
-          className="ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="ant-checkbox-input"
-              disabled={false}
-              id="root-2"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-              value="2"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            fuzz
-          </span>
-        </label>
-        <br />
-      </span>
-      <span>
-        <label
-          className="ant-checkbox-wrapper"
-        >
-          <span
-            className="ant-checkbox"
-            style={Object {}}
-          >
-            <input
-              autoFocus={false}
-              checked={false}
-              className="ant-checkbox-input"
-              disabled={false}
-              id="root-3"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              type="checkbox"
-              value="3"
-            />
-            <span
-              className="ant-checkbox-inner"
-            />
-          </span>
-          <span>
-            qux
-          </span>
-        </label>
-        <br />
-      </span>
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-checkbox-group"
+                id="root"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+                  >
+                    <span
+                      className="ant-checkbox"
+                      style={Object {}}
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-0"
+                        name="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyPress={[Function]}
+                        onKeyUp={[Function]}
+                        type="checkbox"
+                        value="0"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      foo
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+                  >
+                    <span
+                      className="ant-checkbox"
+                      style={Object {}}
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-1"
+                        name="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyPress={[Function]}
+                        onKeyUp={[Function]}
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      bar
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+                  >
+                    <span
+                      className="ant-checkbox"
+                      style={Object {}}
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-2"
+                        name="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyPress={[Function]}
+                        onKeyUp={[Function]}
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      fuzz
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item"
+                  >
+                    <span
+                      className="ant-checkbox"
+                      style={Object {}}
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-3"
+                        name="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyPress={[Function]}
+                        onKeyUp={[Function]}
+                        type="checkbox"
+                        value="3"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      qux
+                    </span>
+                  </label>
+                  <br />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -424,106 +512,128 @@ exports[`single fields field with description 1`] = `
   <div
     className="form-group field field-object"
   >
-    <fieldset
-      id="root"
+    <div
+      className="ant-form-item"
     >
       <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        
         <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="form-group field field-string"
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-form-item"
+              className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-row ant-form-item-row"
-                style={Object {}}
+              <fieldset
+                id="root"
               >
                 <div
-                  className="ant-col ant-col-24 ant-form-item-label"
-                  style={Object {}}
+                  className="ant-row"
+                  style={
+                    Object {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                    }
+                  }
                 >
-                  <label
-                    className=""
-                    htmlFor="root_my-field"
-                    title="my-field"
-                  >
-                    my-field
-                  </label>
-                </div>
-                <div
-                  className="ant-col ant-col-24 ant-form-item-control"
-                  style={Object {}}
-                >
+                  
                   <div
-                    className="ant-form-item-control-input"
+                    className="ant-col ant-col-24"
+                    style={
+                      Object {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
                   >
                     <div
-                      className="ant-form-item-control-input-content"
+                      className="form-group field field-string"
                     >
-                      <span
-                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onClick={[Function]}
-                        style={
-                          Object {
-                            "width": "100%",
-                          }
-                        }
+                      <div
+                        className="ant-form-item"
                       >
-                        <input
-                          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                          className="ant-input"
-                          hidden={null}
-                          id="root_my-field"
-                          name="root_my-field"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          placeholder=""
-                          style={null}
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          className="ant-input-suffix"
-                        />
-                      </span>
+                        <div
+                          className="ant-row ant-form-item-row"
+                          style={Object {}}
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label"
+                            style={Object {}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control"
+                            style={Object {}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                                  onClick={[Function]}
+                                  style={
+                                    Object {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input"
+                                    hidden={null}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    placeholder=""
+                                    style={null}
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-extra"
+                            >
+                              <span
+                                id="root_my-field__description"
+                              >
+                                some description
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  >
-                    <span
-                      id="root_my-field__description"
-                    >
-                      some description
-                    </span>
-                  </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </fieldset>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -547,106 +657,128 @@ exports[`single fields field with description in uiSchema 1`] = `
   <div
     className="form-group field field-object"
   >
-    <fieldset
-      id="root"
+    <div
+      className="ant-form-item"
     >
       <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        
         <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="form-group field field-string"
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-form-item"
+              className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-row ant-form-item-row"
-                style={Object {}}
+              <fieldset
+                id="root"
               >
                 <div
-                  className="ant-col ant-col-24 ant-form-item-label"
-                  style={Object {}}
+                  className="ant-row"
+                  style={
+                    Object {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                    }
+                  }
                 >
-                  <label
-                    className=""
-                    htmlFor="root_my-field"
-                    title="my-field"
-                  >
-                    my-field
-                  </label>
-                </div>
-                <div
-                  className="ant-col ant-col-24 ant-form-item-control"
-                  style={Object {}}
-                >
+                  
                   <div
-                    className="ant-form-item-control-input"
+                    className="ant-col ant-col-24"
+                    style={
+                      Object {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
                   >
                     <div
-                      className="ant-form-item-control-input-content"
+                      className="form-group field field-string"
                     >
-                      <span
-                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onClick={[Function]}
-                        style={
-                          Object {
-                            "width": "100%",
-                          }
-                        }
+                      <div
+                        className="ant-form-item"
                       >
-                        <input
-                          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                          className="ant-input"
-                          hidden={null}
-                          id="root_my-field"
-                          name="root_my-field"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          placeholder=""
-                          style={null}
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          className="ant-input-suffix"
-                        />
-                      </span>
+                        <div
+                          className="ant-row ant-form-item-row"
+                          style={Object {}}
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label"
+                            style={Object {}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control"
+                            style={Object {}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                                  onClick={[Function]}
+                                  style={
+                                    Object {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input"
+                                    hidden={null}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    placeholder=""
+                                    style={null}
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-extra"
+                            >
+                              <span
+                                id="root_my-field__description"
+                              >
+                                some other description
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div
-                    className="ant-form-item-extra"
-                  >
-                    <span
-                      id="root_my-field__description"
-                    >
-                      some other description
-                    </span>
-                  </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </fieldset>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -670,24 +802,56 @@ exports[`single fields format color 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="color"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="color"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -712,57 +876,79 @@ exports[`single fields format date 1`] = `
     className="form-group field field-string"
   >
     <div
-      className="ant-picker"
-      onClick={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-picker-input"
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoComplete="off"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          placeholder=""
-          readOnly={true}
-          size={12}
-          title=""
-          value=""
-        />
-        <span
-          className="ant-picker-suffix"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            aria-label="calendar"
-            className="anticon anticon-calendar"
-            role="img"
+          <div
+            className="ant-form-item-control-input"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="calendar"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <div
+              className="ant-form-item-control-input-content"
             >
-              <path
-                d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
-              />
-            </svg>
-          </span>
-        </span>
+              <div
+                className="ant-picker ant-picker-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-picker-input"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoComplete="off"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onMouseDown={[Function]}
+                    placeholder=""
+                    readOnly={true}
+                    size={12}
+                    title=""
+                    value=""
+                  />
+                  <span
+                    className="ant-picker-suffix"
+                  >
+                    <span
+                      aria-label="calendar"
+                      className="anticon anticon-calendar"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="calendar"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -789,57 +975,79 @@ exports[`single fields format datetime 1`] = `
     className="form-group field field-string"
   >
     <div
-      className="ant-picker"
-      onClick={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-picker-input"
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoComplete="off"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          placeholder=""
-          readOnly={true}
-          size={21}
-          title=""
-          value=""
-        />
-        <span
-          className="ant-picker-suffix"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            aria-label="calendar"
-            className="anticon anticon-calendar"
-            role="img"
+          <div
+            className="ant-form-item-control-input"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="calendar"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <div
+              className="ant-form-item-control-input-content"
             >
-              <path
-                d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
-              />
-            </svg>
-          </span>
-        </span>
+              <div
+                className="ant-picker ant-picker-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-picker-input"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoComplete="off"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onMouseDown={[Function]}
+                    placeholder=""
+                    readOnly={true}
+                    size={21}
+                    title=""
+                    value=""
+                  />
+                  <span
+                    className="ant-picker-suffix"
+                  >
+                    <span
+                      aria-label="calendar"
+                      className="anticon anticon-calendar"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="calendar"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -865,24 +1073,56 @@ exports[`single fields format time 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="time"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="time"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -984,24 +1224,80 @@ exports[`single fields help and error display 1`] = `
   <div
     className="form-group field field-string field-error has-error has-danger"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
+    <div
+      className="ant-form-item ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-status-error ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                >
+                  <span
+                    className="ant-form-item-feedback-icon ant-form-item-feedback-icon-error"
+                  >
+                    <span
+                      aria-label="close-circle"
+                      className="anticon anticon-close-circle"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="close-circle"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -1025,21 +1321,43 @@ exports[`single fields hidden field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <fieldset
-      id="root"
+    <div
+      className="ant-form-item"
     >
       <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <fieldset
+                id="root"
+              >
+                <div
+                  className="ant-row"
+                  style={
+                    Object {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                    }
+                  }
+                >
+                  
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
       </div>
-    </fieldset>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -1063,24 +1381,56 @@ exports[`single fields hidden label 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -1103,7 +1453,29 @@ exports[`single fields null field 1`] = `
 >
   <div
     className="form-group field field-null"
-  />
+  >
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <button
     className="ant-btn ant-btn-submit"
     disabled={false}
@@ -1127,104 +1499,135 @@ exports[`single fields number field 0 1`] = `
     className="form-group field field-number"
   >
     <div
-      className="ant-input-number"
-      onBeforeInput={[Function]}
-      onBlur={[Function]}
-      onCompositionEnd={[Function]}
-      onCompositionStart={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-input-number-handler-wrap"
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          aria-disabled={false}
-          aria-label="Increase Value"
-          className="ant-input-number-handler ant-input-number-handler-up"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            aria-label="up"
-            className="anticon anticon-up ant-input-number-handler-up-inner"
-            role="img"
+          <div
+            className="ant-form-item-control-input"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="up"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <div
+              className="ant-form-item-control-input-content"
             >
-              <path
-                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-        <span
-          aria-disabled={false}
-          aria-label="Decrease Value"
-          className="ant-input-number-handler ant-input-number-handler-down"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
-        >
-          <span
-            aria-label="down"
-            className="anticon anticon-down ant-input-number-handler-down-inner"
-            role="img"
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="down"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-      </div>
-      <div
-        className="ant-input-number-input-wrap"
-      >
-        <input
-          aria-describedby="root__error root__description root__help"
-          aria-valuenow="0"
-          autoComplete="off"
-          className="ant-input-number-input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          role="spinbutton"
-          step={1}
-          type="number"
-          value="0"
-        />
+              <div
+                className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
+                onMouseUp={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-input-number ant-input-number-in-form-item"
+                  onBeforeInput={[Function]}
+                  onBlur={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  style={null}
+                >
+                  <div
+                    className="ant-input-number-handler-wrap"
+                  >
+                    <span
+                      aria-disabled={false}
+                      aria-label="Increase Value"
+                      className="ant-input-number-handler ant-input-number-handler-up"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="up"
+                        className="anticon anticon-up ant-input-number-handler-up-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="up"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                    <span
+                      aria-disabled={false}
+                      aria-label="Decrease Value"
+                      className="ant-input-number-handler ant-input-number-handler-down"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="down"
+                        className="anticon anticon-down ant-input-number-handler-down-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="down"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    className="ant-input-number-input-wrap"
+                  >
+                    <input
+                      aria-describedby="root__error root__description root__help"
+                      aria-valuenow="0"
+                      autoComplete="off"
+                      className="ant-input-number-input"
+                      disabled={false}
+                      id="root"
+                      name="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      role="spinbutton"
+                      step={1}
+                      type="number"
+                      value="0"
+                    />
+                  </div>
+                </div>
+                <span
+                  className="ant-input-number-suffix"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1251,104 +1654,135 @@ exports[`single fields number field 1`] = `
     className="form-group field field-number"
   >
     <div
-      className="ant-input-number"
-      onBeforeInput={[Function]}
-      onBlur={[Function]}
-      onCompositionEnd={[Function]}
-      onCompositionStart={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-input-number-handler-wrap"
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          aria-disabled={false}
-          aria-label="Increase Value"
-          className="ant-input-number-handler ant-input-number-handler-up"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            aria-label="up"
-            className="anticon anticon-up ant-input-number-handler-up-inner"
-            role="img"
+          <div
+            className="ant-form-item-control-input"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="up"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <div
+              className="ant-form-item-control-input-content"
             >
-              <path
-                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-        <span
-          aria-disabled={false}
-          aria-label="Decrease Value"
-          className="ant-input-number-handler ant-input-number-handler-down"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
-        >
-          <span
-            aria-label="down"
-            className="anticon anticon-down ant-input-number-handler-down-inner"
-            role="img"
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="down"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-      </div>
-      <div
-        className="ant-input-number-input-wrap"
-      >
-        <input
-          aria-describedby="root__error root__description root__help"
-          aria-valuenow={null}
-          autoComplete="off"
-          className="ant-input-number-input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          role="spinbutton"
-          step={1}
-          type="number"
-          value=""
-        />
+              <div
+                className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
+                onMouseUp={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-input-number ant-input-number-in-form-item"
+                  onBeforeInput={[Function]}
+                  onBlur={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  style={null}
+                >
+                  <div
+                    className="ant-input-number-handler-wrap"
+                  >
+                    <span
+                      aria-disabled={false}
+                      aria-label="Increase Value"
+                      className="ant-input-number-handler ant-input-number-handler-up"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="up"
+                        className="anticon anticon-up ant-input-number-handler-up-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="up"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                    <span
+                      aria-disabled={false}
+                      aria-label="Decrease Value"
+                      className="ant-input-number-handler ant-input-number-handler-down"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="down"
+                        className="anticon anticon-down ant-input-number-handler-down-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="down"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    className="ant-input-number-input-wrap"
+                  >
+                    <input
+                      aria-describedby="root__error root__description root__help"
+                      aria-valuenow={null}
+                      autoComplete="off"
+                      className="ant-input-number-input"
+                      disabled={false}
+                      id="root"
+                      name="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      role="spinbutton"
+                      step={1}
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <span
+                  className="ant-input-number-suffix"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1374,56 +1808,78 @@ exports[`single fields password field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <span
-      className="ant-input-affix-wrapper ant-input-password"
-      onClick={[Function]}
+    <div
+      className="ant-form-item"
     >
-      <input
-        aria-describedby="root__error root__description root__help"
-        className="ant-input"
-        hidden={null}
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        placeholder=""
-        style={null}
-        type="password"
-        value=""
-      />
-      <span
-        className="ant-input-suffix"
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          aria-label="eye-invisible"
-          className="anticon anticon-eye-invisible ant-input-password-icon"
-          onClick={[Function]}
-          onMouseDown={[Function]}
-          onMouseUp={[Function]}
-          role="img"
-          tabIndex={-1}
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <svg
-            aria-hidden="true"
-            data-icon="eye-invisible"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
+          <div
+            className="ant-form-item-control-input"
           >
-            <path
-              d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z"
-            />
-            <path
-              d="M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z"
-            />
-          </svg>
-        </span>
-      </span>
-    </span>
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-password ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="password"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                >
+                  <span
+                    aria-label="eye-invisible"
+                    className="anticon anticon-eye-invisible ant-input-password-icon"
+                    onClick={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseUp={[Function]}
+                    role="img"
+                    tabIndex={-1}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="eye-invisible"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z"
+                      />
+                      <path
+                        d="M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -1448,74 +1904,96 @@ exports[`single fields radio field 1`] = `
     className="form-group field field-boolean"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-radio-group ant-radio-group-outline"
-      id="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
+      className="ant-form-item"
     >
-      <label
-        className="ant-radio-wrapper"
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          className="ant-radio"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
           style={Object {}}
         >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="ant-radio-input"
-            disabled={false}
-            id="root-0"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyPress={[Function]}
-            onKeyUp={[Function]}
-            type="radio"
-            value="0"
-          />
-          <span
-            className="ant-radio-inner"
-          />
-        </span>
-        <span>
-          Yes
-        </span>
-      </label>
-      <label
-        className="ant-radio-wrapper"
-      >
-        <span
-          className="ant-radio"
-          style={Object {}}
-        >
-          <input
-            autoFocus={false}
-            checked={false}
-            className="ant-radio-input"
-            disabled={false}
-            id="root-1"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyPress={[Function]}
-            onKeyUp={[Function]}
-            type="radio"
-            value="1"
-          />
-          <span
-            className="ant-radio-inner"
-          />
-        </span>
-        <span>
-          No
-        </span>
-      </label>
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-radio-group ant-radio-group-outline"
+                id="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item"
+                >
+                  <span
+                    className="ant-radio"
+                    style={Object {}}
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={false}
+                      id="root-0"
+                      name="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyPress={[Function]}
+                      onKeyUp={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span>
+                    Yes
+                  </span>
+                </label>
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item"
+                >
+                  <span
+                    className="ant-radio"
+                    style={Object {}}
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={false}
+                      id="root-1"
+                      name="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyPress={[Function]}
+                      onKeyUp={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span>
+                    No
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -1540,44 +2018,76 @@ exports[`single fields schema examples 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help root__examples"
-      className="ant-input"
-      id="root"
-      list="root__examples"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
-    <datalist
-      id="root__examples"
+    <div
+      className="ant-form-item"
     >
-      <option
-        value="Firefox"
-      />
-      <option
-        value="Chrome"
-      />
-      <option
-        value="Opera"
-      />
-      <option
-        value="Vivaldi"
-      />
-      <option
-        value="Safari"
-      />
-    </datalist>
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help root__examples"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  list="root__examples"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+              <datalist
+                id="root__examples"
+              >
+                <option
+                  value="Firefox"
+                />
+                <option
+                  value="Chrome"
+                />
+                <option
+                  value="Opera"
+                />
+                <option
+                  value="Vivaldi"
+                />
+                <option
+                  value="Safari"
+                />
+              </datalist>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -1602,96 +2112,118 @@ exports[`single fields select field 1`] = `
     className="form-group field field-string"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-single ant-select-show-arrow"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          className="ant-select-selection-search"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <input
-            aria-activedescendant="root_list_0"
-            aria-autocomplete="list"
-            aria-controls="root_list"
-            aria-describedby="root__error root__description root__help"
-            aria-haspopup="listbox"
-            aria-owns="root_list"
-            autoComplete="off"
-            autoFocus={false}
-            className="ant-select-selection-search-input"
-            disabled={false}
-            id="root"
-            onChange={[Function]}
-            onCompositionEnd={[Function]}
-            onCompositionStart={[Function]}
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            onPaste={[Function]}
-            readOnly={true}
-            role="combobox"
-            style={
-              Object {
-                "opacity": 0,
-              }
-            }
-            type="search"
-            unselectable="on"
-            value=""
-          />
-        </span>
-        <span
-          className="ant-select-selection-placeholder"
-        >
-          
-        </span>
-      </div>
-      <span
-        aria-hidden={true}
-        className="ant-select-arrow"
-        onMouseDown={[Function]}
-        style={
-          Object {
-            "WebkitUserSelect": "none",
-            "userSelect": "none",
-          }
-        }
-        unselectable="on"
-      >
-        <span
-          aria-label="down"
-          className="anticon anticon-down ant-select-suffix"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="down"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
+          <div
+            className="ant-form-item-control-input"
           >
-            <path
-              d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-            />
-          </svg>
-        </span>
-      </span>
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-select ant-select-in-form-item ant-select-has-feedback ant-select-single ant-select-show-arrow"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <span
+                    className="ant-select-selection-search"
+                  >
+                    <input
+                      aria-activedescendant="root_list_0"
+                      aria-autocomplete="list"
+                      aria-controls="root_list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-haspopup="listbox"
+                      aria-owns="root_list"
+                      autoComplete="off"
+                      autoFocus={false}
+                      className="ant-select-selection-search-input"
+                      disabled={false}
+                      id="root"
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onKeyDown={[Function]}
+                      onMouseDown={[Function]}
+                      onPaste={[Function]}
+                      readOnly={true}
+                      role="combobox"
+                      style={
+                        Object {
+                          "opacity": 0,
+                        }
+                      }
+                      type="search"
+                      unselectable="on"
+                      value=""
+                    />
+                  </span>
+                  <span
+                    className="ant-select-selection-placeholder"
+                  >
+                    
+                  </span>
+                </div>
+                <span
+                  aria-hidden={true}
+                  className="ant-select-arrow"
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "WebkitUserSelect": "none",
+                      "userSelect": "none",
+                    }
+                  }
+                  unselectable="on"
+                >
+                  <span
+                    aria-label="down"
+                    className="anticon anticon-down ant-select-suffix"
+                    role="img"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="down"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -1717,93 +2249,115 @@ exports[`single fields select field multiple choice 1`] = `
     className="form-group field field-array"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-multiple ant-select-show-search"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
         <div
-          className="ant-select-selection-overflow"
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-select-selection-search"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              style={
-                Object {
-                  "width": 100,
-                }
-              }
+              className="ant-form-item-control-input-content"
             >
-              <input
-                aria-activedescendant="root_list_0"
-                aria-autocomplete="list"
-                aria-controls="root_list"
+              <div
                 aria-describedby="root__error root__description root__help"
-                aria-haspopup="listbox"
-                aria-owns="root_list"
-                autoComplete="off"
-                autoFocus={false}
-                className="ant-select-selection-search-input"
-                disabled={false}
-                id="root"
-                onChange={[Function]}
-                onCompositionEnd={[Function]}
-                onCompositionStart={[Function]}
+                className="ant-select ant-select-in-form-item ant-select-multiple ant-select-show-search"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
                 onKeyDown={[Function]}
+                onKeyUp={[Function]}
                 onMouseDown={[Function]}
-                onPaste={[Function]}
-                readOnly={true}
-                role="combobox"
                 style={
                   Object {
-                    "opacity": 0,
+                    "width": "100%",
                   }
                 }
-                type="search"
-                unselectable="on"
-                value=""
-              />
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-search-mirror"
               >
-                
-                 
-              </span>
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <div
+                    className="ant-select-selection-overflow"
+                  >
+                    <div
+                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <div
+                        className="ant-select-selection-search"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={
+                          Object {
+                            "width": 100,
+                          }
+                        }
+                      >
+                        <input
+                          aria-activedescendant="root_list_0"
+                          aria-autocomplete="list"
+                          aria-controls="root_list"
+                          aria-describedby="root__error root__description root__help"
+                          aria-haspopup="listbox"
+                          aria-owns="root_list"
+                          autoComplete="off"
+                          autoFocus={false}
+                          className="ant-select-selection-search-input"
+                          disabled={false}
+                          id="root"
+                          onChange={[Function]}
+                          onCompositionEnd={[Function]}
+                          onCompositionStart={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseDown={[Function]}
+                          onPaste={[Function]}
+                          readOnly={true}
+                          role="combobox"
+                          style={
+                            Object {
+                              "opacity": 0,
+                            }
+                          }
+                          type="search"
+                          unselectable="on"
+                          value=""
+                        />
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-search-mirror"
+                        >
+                          
+                           
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    className="ant-select-selection-placeholder"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <span
-          className="ant-select-selection-placeholder"
-        />
       </div>
     </div>
   </div>
@@ -1830,93 +2384,115 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     className="form-group field field-array"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-multiple ant-select-show-search"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
         <div
-          className="ant-select-selection-overflow"
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-select-selection-search"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              style={
-                Object {
-                  "width": 100,
-                }
-              }
+              className="ant-form-item-control-input-content"
             >
-              <input
-                aria-activedescendant="root_list_0"
-                aria-autocomplete="list"
-                aria-controls="root_list"
+              <div
                 aria-describedby="root__error root__description root__help"
-                aria-haspopup="listbox"
-                aria-owns="root_list"
-                autoComplete="off"
-                autoFocus={false}
-                className="ant-select-selection-search-input"
-                disabled={false}
-                id="root"
-                onChange={[Function]}
-                onCompositionEnd={[Function]}
-                onCompositionStart={[Function]}
+                className="ant-select ant-select-in-form-item ant-select-multiple ant-select-show-search"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
                 onKeyDown={[Function]}
+                onKeyUp={[Function]}
                 onMouseDown={[Function]}
-                onPaste={[Function]}
-                readOnly={true}
-                role="combobox"
                 style={
                   Object {
-                    "opacity": 0,
+                    "width": "100%",
                   }
                 }
-                type="search"
-                unselectable="on"
-                value=""
-              />
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-search-mirror"
               >
-                
-                 
-              </span>
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <div
+                    className="ant-select-selection-overflow"
+                  >
+                    <div
+                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <div
+                        className="ant-select-selection-search"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={
+                          Object {
+                            "width": 100,
+                          }
+                        }
+                      >
+                        <input
+                          aria-activedescendant="root_list_0"
+                          aria-autocomplete="list"
+                          aria-controls="root_list"
+                          aria-describedby="root__error root__description root__help"
+                          aria-haspopup="listbox"
+                          aria-owns="root_list"
+                          autoComplete="off"
+                          autoFocus={false}
+                          className="ant-select-selection-search-input"
+                          disabled={false}
+                          id="root"
+                          onChange={[Function]}
+                          onCompositionEnd={[Function]}
+                          onCompositionStart={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseDown={[Function]}
+                          onPaste={[Function]}
+                          readOnly={true}
+                          role="combobox"
+                          style={
+                            Object {
+                              "opacity": 0,
+                            }
+                          }
+                          type="search"
+                          unselectable="on"
+                          value=""
+                        />
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-search-mirror"
+                        >
+                          
+                           
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    className="ant-select-selection-placeholder"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <span
-          className="ant-select-selection-placeholder"
-        />
       </div>
     </div>
   </div>
@@ -1943,201 +2519,223 @@ exports[`single fields select field multiple choice formData 1`] = `
     className="form-group field field-array"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-multiple ant-select-show-search"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
         <div
-          className="ant-select-selection-overflow"
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="ant-select-selection-overflow-item"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
-          >
-            <span
-              className="ant-select-selection-item"
-              title="foo"
-            >
-              <span
-                className="ant-select-selection-item-content"
-              >
-                foo
-              </span>
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-item-remove"
-                onClick={[Function]}
-                onMouseDown={[Function]}
-                style={
-                  Object {
-                    "WebkitUserSelect": "none",
-                    "userSelect": "none",
-                  }
-                }
-                unselectable="on"
-              >
-                <span
-                  aria-label="close"
-                  className="anticon anticon-close"
-                  role="img"
-                >
-                  <svg
-                    aria-hidden="true"
-                    data-icon="close"
-                    fill="currentColor"
-                    focusable="false"
-                    height="1em"
-                    viewBox="64 64 896 896"
-                    width="1em"
-                  >
-                    <path
-                      d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </span>
-          </div>
-          <div
-            className="ant-select-selection-overflow-item"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
-          >
-            <span
-              className="ant-select-selection-item"
-              title="bar"
-            >
-              <span
-                className="ant-select-selection-item-content"
-              >
-                bar
-              </span>
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-item-remove"
-                onClick={[Function]}
-                onMouseDown={[Function]}
-                style={
-                  Object {
-                    "WebkitUserSelect": "none",
-                    "userSelect": "none",
-                  }
-                }
-                unselectable="on"
-              >
-                <span
-                  aria-label="close"
-                  className="anticon anticon-close"
-                  role="img"
-                >
-                  <svg
-                    aria-hidden="true"
-                    data-icon="close"
-                    fill="currentColor"
-                    focusable="false"
-                    height="1em"
-                    viewBox="64 64 896 896"
-                    width="1em"
-                  >
-                    <path
-                      d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </span>
-          </div>
-          <div
-            className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-select-selection-search"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              style={
-                Object {
-                  "width": 100,
-                }
-              }
+              className="ant-form-item-control-input-content"
             >
-              <input
-                aria-activedescendant="root_list_0"
-                aria-autocomplete="list"
-                aria-controls="root_list"
+              <div
                 aria-describedby="root__error root__description root__help"
-                aria-haspopup="listbox"
-                aria-owns="root_list"
-                autoComplete="off"
-                autoFocus={false}
-                className="ant-select-selection-search-input"
-                disabled={false}
-                id="root"
-                onChange={[Function]}
-                onCompositionEnd={[Function]}
-                onCompositionStart={[Function]}
+                className="ant-select ant-select-in-form-item ant-select-multiple ant-select-show-search"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
                 onKeyDown={[Function]}
+                onKeyUp={[Function]}
                 onMouseDown={[Function]}
-                onPaste={[Function]}
-                readOnly={true}
-                role="combobox"
                 style={
                   Object {
-                    "opacity": 0,
+                    "width": "100%",
                   }
                 }
-                type="search"
-                unselectable="on"
-                value=""
-              />
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-search-mirror"
               >
-                
-                 
-              </span>
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <div
+                    className="ant-select-selection-overflow"
+                  >
+                    <div
+                      className="ant-select-selection-overflow-item"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <span
+                        className="ant-select-selection-item"
+                        title="foo"
+                      >
+                        <span
+                          className="ant-select-selection-item-content"
+                        >
+                          foo
+                        </span>
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-item-remove"
+                          onClick={[Function]}
+                          onMouseDown={[Function]}
+                          style={
+                            Object {
+                              "WebkitUserSelect": "none",
+                              "userSelect": "none",
+                            }
+                          }
+                          unselectable="on"
+                        >
+                          <span
+                            aria-label="close"
+                            className="anticon anticon-close"
+                            role="img"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              data-icon="close"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="64 64 896 896"
+                              width="1em"
+                            >
+                              <path
+                                d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      className="ant-select-selection-overflow-item"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <span
+                        className="ant-select-selection-item"
+                        title="bar"
+                      >
+                        <span
+                          className="ant-select-selection-item-content"
+                        >
+                          bar
+                        </span>
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-item-remove"
+                          onClick={[Function]}
+                          onMouseDown={[Function]}
+                          style={
+                            Object {
+                              "WebkitUserSelect": "none",
+                              "userSelect": "none",
+                            }
+                          }
+                          unselectable="on"
+                        >
+                          <span
+                            aria-label="close"
+                            className="anticon anticon-close"
+                            role="img"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              data-icon="close"
+                              fill="currentColor"
+                              focusable="false"
+                              height="1em"
+                              viewBox="64 64 896 896"
+                              width="1em"
+                            >
+                              <path
+                                d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <div
+                        className="ant-select-selection-search"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={
+                          Object {
+                            "width": 100,
+                          }
+                        }
+                      >
+                        <input
+                          aria-activedescendant="root_list_0"
+                          aria-autocomplete="list"
+                          aria-controls="root_list"
+                          aria-describedby="root__error root__description root__help"
+                          aria-haspopup="listbox"
+                          aria-owns="root_list"
+                          autoComplete="off"
+                          autoFocus={false}
+                          className="ant-select-selection-search-input"
+                          disabled={false}
+                          id="root"
+                          onChange={[Function]}
+                          onCompositionEnd={[Function]}
+                          onCompositionStart={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseDown={[Function]}
+                          onPaste={[Function]}
+                          readOnly={true}
+                          role="combobox"
+                          style={
+                            Object {
+                              "opacity": 0,
+                            }
+                          }
+                          type="search"
+                          unselectable="on"
+                          value=""
+                        />
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-search-mirror"
+                        >
+                          
+                           
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2167,93 +2765,115 @@ exports[`single fields select field multiple choice with labels 1`] = `
     className="form-group field field-array"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-multiple ant-select-show-search"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
         <div
-          className="ant-select-selection-overflow"
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-            style={
-              Object {
-                "height": undefined,
-                "opacity": 1,
-                "order": undefined,
-                "overflowY": undefined,
-                "pointerEvents": undefined,
-                "position": undefined,
-              }
-            }
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-select-selection-search"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              style={
-                Object {
-                  "width": 100,
-                }
-              }
+              className="ant-form-item-control-input-content"
             >
-              <input
-                aria-activedescendant="root_list_0"
-                aria-autocomplete="list"
-                aria-controls="root_list"
+              <div
                 aria-describedby="root__error root__description root__help"
-                aria-haspopup="listbox"
-                aria-owns="root_list"
-                autoComplete="off"
-                autoFocus={false}
-                className="ant-select-selection-search-input"
-                disabled={false}
-                id="root"
-                onChange={[Function]}
-                onCompositionEnd={[Function]}
-                onCompositionStart={[Function]}
+                className="ant-select ant-select-in-form-item ant-select-multiple ant-select-show-search"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
                 onKeyDown={[Function]}
+                onKeyUp={[Function]}
                 onMouseDown={[Function]}
-                onPaste={[Function]}
-                readOnly={true}
-                role="combobox"
                 style={
                   Object {
-                    "opacity": 0,
+                    "width": "100%",
                   }
                 }
-                type="search"
-                unselectable="on"
-                value=""
-              />
-              <span
-                aria-hidden={true}
-                className="ant-select-selection-search-mirror"
               >
-                
-                 
-              </span>
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <div
+                    className="ant-select-selection-overflow"
+                  >
+                    <div
+                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
+                      style={
+                        Object {
+                          "height": undefined,
+                          "opacity": 1,
+                          "order": undefined,
+                          "overflowY": undefined,
+                          "pointerEvents": undefined,
+                          "position": undefined,
+                        }
+                      }
+                    >
+                      <div
+                        className="ant-select-selection-search"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={
+                          Object {
+                            "width": 100,
+                          }
+                        }
+                      >
+                        <input
+                          aria-activedescendant="root_list_0"
+                          aria-autocomplete="list"
+                          aria-controls="root_list"
+                          aria-describedby="root__error root__description root__help"
+                          aria-haspopup="listbox"
+                          aria-owns="root_list"
+                          autoComplete="off"
+                          autoFocus={false}
+                          className="ant-select-selection-search-input"
+                          disabled={false}
+                          id="root"
+                          onChange={[Function]}
+                          onCompositionEnd={[Function]}
+                          onCompositionStart={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseDown={[Function]}
+                          onPaste={[Function]}
+                          readOnly={true}
+                          role="combobox"
+                          style={
+                            Object {
+                              "opacity": 0,
+                            }
+                          }
+                          type="search"
+                          unselectable="on"
+                          value=""
+                        />
+                        <span
+                          aria-hidden={true}
+                          className="ant-select-selection-search-mirror"
+                        >
+                          
+                           
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    className="ant-select-selection-placeholder"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <span
-          className="ant-select-selection-placeholder"
-        />
       </div>
     </div>
   </div>
@@ -2280,96 +2900,118 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     className="form-group field field-string"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-single ant-select-show-arrow"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          className="ant-select-selection-search"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <input
-            aria-activedescendant="root_list_0"
-            aria-autocomplete="list"
-            aria-controls="root_list"
-            aria-describedby="root__error root__description root__help"
-            aria-haspopup="listbox"
-            aria-owns="root_list"
-            autoComplete="off"
-            autoFocus={false}
-            className="ant-select-selection-search-input"
-            disabled={false}
-            id="root"
-            onChange={[Function]}
-            onCompositionEnd={[Function]}
-            onCompositionStart={[Function]}
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            onPaste={[Function]}
-            readOnly={true}
-            role="combobox"
-            style={
-              Object {
-                "opacity": 0,
-              }
-            }
-            type="search"
-            unselectable="on"
-            value=""
-          />
-        </span>
-        <span
-          className="ant-select-selection-placeholder"
-        >
-          
-        </span>
-      </div>
-      <span
-        aria-hidden={true}
-        className="ant-select-arrow"
-        onMouseDown={[Function]}
-        style={
-          Object {
-            "WebkitUserSelect": "none",
-            "userSelect": "none",
-          }
-        }
-        unselectable="on"
-      >
-        <span
-          aria-label="down"
-          className="anticon anticon-down ant-select-suffix"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="down"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
+          <div
+            className="ant-form-item-control-input"
           >
-            <path
-              d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-            />
-          </svg>
-        </span>
-      </span>
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-select ant-select-in-form-item ant-select-has-feedback ant-select-single ant-select-show-arrow"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <span
+                    className="ant-select-selection-search"
+                  >
+                    <input
+                      aria-activedescendant="root_list_0"
+                      aria-autocomplete="list"
+                      aria-controls="root_list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-haspopup="listbox"
+                      aria-owns="root_list"
+                      autoComplete="off"
+                      autoFocus={false}
+                      className="ant-select-selection-search-input"
+                      disabled={false}
+                      id="root"
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onKeyDown={[Function]}
+                      onMouseDown={[Function]}
+                      onPaste={[Function]}
+                      readOnly={true}
+                      role="combobox"
+                      style={
+                        Object {
+                          "opacity": 0,
+                        }
+                      }
+                      type="search"
+                      unselectable="on"
+                      value=""
+                    />
+                  </span>
+                  <span
+                    className="ant-select-selection-placeholder"
+                  >
+                    
+                  </span>
+                </div>
+                <span
+                  aria-hidden={true}
+                  className="ant-select-arrow"
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "WebkitUserSelect": "none",
+                      "userSelect": "none",
+                    }
+                  }
+                  unselectable="on"
+                >
+                  <span
+                    aria-label="down"
+                    className="anticon anticon-down ant-select-suffix"
+                    role="img"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="down"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -2395,97 +3037,119 @@ exports[`single fields select field single choice formData 1`] = `
     className="form-group field field-string"
   >
     <div
-      aria-describedby="root__error root__description root__help"
-      className="ant-select ant-select-single ant-select-show-arrow"
-      name="root"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-select-selector"
-        onClick={[Function]}
-        onMouseDown={[Function]}
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          className="ant-select-selection-search"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <input
-            aria-activedescendant="root_list_0"
-            aria-autocomplete="list"
-            aria-controls="root_list"
-            aria-describedby="root__error root__description root__help"
-            aria-haspopup="listbox"
-            aria-owns="root_list"
-            autoComplete="off"
-            autoFocus={false}
-            className="ant-select-selection-search-input"
-            disabled={false}
-            id="root"
-            onChange={[Function]}
-            onCompositionEnd={[Function]}
-            onCompositionStart={[Function]}
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            onPaste={[Function]}
-            readOnly={true}
-            role="combobox"
-            style={
-              Object {
-                "opacity": 0,
-              }
-            }
-            type="search"
-            unselectable="on"
-            value=""
-          />
-        </span>
-        <span
-          className="ant-select-selection-item"
-          title="bar"
-        >
-          bar
-        </span>
-      </div>
-      <span
-        aria-hidden={true}
-        className="ant-select-arrow"
-        onMouseDown={[Function]}
-        style={
-          Object {
-            "WebkitUserSelect": "none",
-            "userSelect": "none",
-          }
-        }
-        unselectable="on"
-      >
-        <span
-          aria-label="down"
-          className="anticon anticon-down ant-select-suffix"
-          role="img"
-        >
-          <svg
-            aria-hidden="true"
-            data-icon="down"
-            fill="currentColor"
-            focusable="false"
-            height="1em"
-            viewBox="64 64 896 896"
-            width="1em"
+          <div
+            className="ant-form-item-control-input"
           >
-            <path
-              d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-            />
-          </svg>
-        </span>
-      </span>
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-select ant-select-in-form-item ant-select-has-feedback ant-select-single ant-select-show-arrow"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-select-selector"
+                  onClick={[Function]}
+                  onMouseDown={[Function]}
+                >
+                  <span
+                    className="ant-select-selection-search"
+                  >
+                    <input
+                      aria-activedescendant="root_list_0"
+                      aria-autocomplete="list"
+                      aria-controls="root_list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-haspopup="listbox"
+                      aria-owns="root_list"
+                      autoComplete="off"
+                      autoFocus={false}
+                      className="ant-select-selection-search-input"
+                      disabled={false}
+                      id="root"
+                      onChange={[Function]}
+                      onCompositionEnd={[Function]}
+                      onCompositionStart={[Function]}
+                      onKeyDown={[Function]}
+                      onMouseDown={[Function]}
+                      onPaste={[Function]}
+                      readOnly={true}
+                      role="combobox"
+                      style={
+                        Object {
+                          "opacity": 0,
+                        }
+                      }
+                      type="search"
+                      unselectable="on"
+                      value=""
+                    />
+                  </span>
+                  <span
+                    className="ant-select-selection-item"
+                    title="bar"
+                  >
+                    bar
+                  </span>
+                </div>
+                <span
+                  aria-hidden={true}
+                  className="ant-select-arrow"
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "WebkitUserSelect": "none",
+                      "userSelect": "none",
+                    }
+                  }
+                  unselectable="on"
+                >
+                  <span
+                    aria-label="down"
+                    className="anticon anticon-down ant-select-suffix"
+                    role="img"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="down"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -2511,48 +3175,70 @@ exports[`single fields slider field 1`] = `
     className="form-group field field-integer"
   >
     <div
-      className="ant-slider ant-slider-horizontal"
-      onMouseDown={[Function]}
+      className="ant-form-item"
     >
       <div
-        className="ant-slider-rail"
-      />
-      <div
-        className="ant-slider-track"
-        onMouseDown={[Function]}
-        onTouchStart={[Function]}
-        style={
-          Object {
-            "left": "0%",
-            "width": "56.896551724137936%",
-          }
-        }
-      />
-      <div
-        className="ant-slider-step"
-      />
-      <div
-        aria-disabled={false}
-        aria-valuemax={100}
-        aria-valuemin={42}
-        aria-valuenow={75}
-        className="ant-slider-handle"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onMouseDown={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onTouchStart={[Function]}
-        role="slider"
-        style={
-          Object {
-            "left": "56.896551724137936%",
-            "transform": "translateX(-50%)",
-          }
-        }
-        tabIndex={0}
-      />
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                className="ant-slider ant-slider-horizontal"
+                onMouseDown={[Function]}
+              >
+                <div
+                  className="ant-slider-rail"
+                />
+                <div
+                  className="ant-slider-track"
+                  onMouseDown={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "left": "0%",
+                      "width": "56.896551724137936%",
+                    }
+                  }
+                />
+                <div
+                  className="ant-slider-step"
+                />
+                <div
+                  aria-disabled={false}
+                  aria-valuemax={100}
+                  aria-valuemin={42}
+                  aria-valuenow={75}
+                  className="ant-slider-handle"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseEnter={[Function]}
+                  onMouseLeave={[Function]}
+                  onTouchStart={[Function]}
+                  role="slider"
+                  style={
+                    Object {
+                      "left": "56.896551724137936%",
+                      "transform": "translateX(-50%)",
+                    }
+                  }
+                  tabIndex={0}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -2577,25 +3263,57 @@ exports[`single fields string field format data-url 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div>
-      <input
-        aria-describedby="root__error root__description root__help"
-        className="ant-input"
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        placeholder=""
-        style={
-          Object {
-            "width": "100%",
-          }
-        }
-        type="file"
-        value=""
-      />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div>
+                <span
+                  className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                  onClick={[Function]}
+                  style={
+                    Object {
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    className="ant-input"
+                    hidden={null}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    placeholder=""
+                    style={null}
+                    type="file"
+                    value=""
+                  />
+                  <span
+                    className="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -2620,24 +3338,56 @@ exports[`single fields string field format email 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="email"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="email"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2661,24 +3411,56 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="url"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="url"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2702,24 +3484,56 @@ exports[`single fields string field regular 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2743,24 +3557,56 @@ exports[`single fields string field with placeholder 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder="placeholder"
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="placeholder"
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2784,28 +3630,63 @@ exports[`single fields textarea field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <textarea
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      disabled={false}
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onCompositionEnd={[Function]}
-      onCompositionStart={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      rows={4}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="textarea"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                className="ant-input-textarea ant-input-textarea-in-form-item ant-input-textarea-has-feedback"
+                data-count="0"
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <textarea
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  disabled={false}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  rows={4}
+                  style={
+                    Object {
+                      "width": "100%",
+                    }
+                  }
+                  type="textarea"
+                  value=""
+                />
+                <span
+                  className="ant-input-textarea-suffix"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2829,114 +3710,136 @@ exports[`single fields title field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <fieldset
-      id="root"
+    <div
+      className="ant-form-item"
     >
       <div
-        className="ant-row"
-        style={
-          Object {
-            "marginLeft": -12,
-            "marginRight": -12,
-          }
-        }
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-label"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
-        >
-          <label
-            className=""
-            htmlFor="root__title"
-            onClick={[Function]}
-            title="Titre 1"
-          >
-            Titre 1
-          </label>
-        </div>
-        <div
-          className="ant-col ant-col-24"
-          style={
-            Object {
-              "paddingLeft": 12,
-              "paddingRight": 12,
-            }
-          }
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
           <div
-            className="form-group field field-string"
+            className="ant-form-item-control-input"
           >
             <div
-              className="ant-form-item"
+              className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-row ant-form-item-row"
-                style={Object {}}
+              <fieldset
+                id="root"
               >
                 <div
-                  className="ant-col ant-col-24 ant-form-item-label"
-                  style={Object {}}
-                >
-                  <label
-                    className=""
-                    htmlFor="root_title"
-                    title="Titre 2"
-                  >
-                    Titre 2
-                  </label>
-                </div>
-                <div
-                  className="ant-col ant-col-24 ant-form-item-control"
-                  style={Object {}}
+                  className="ant-row"
+                  style={
+                    Object {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                    }
+                  }
                 >
                   <div
-                    className="ant-form-item-control-input"
+                    className="ant-col ant-col-24 ant-form-item-label"
+                    style={
+                      Object {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
+                  >
+                    <label
+                      className=""
+                      htmlFor="root__title"
+                      onClick={[Function]}
+                      title="Titre 1"
+                    >
+                      Titre 1
+                    </label>
+                  </div>
+                  <div
+                    className="ant-col ant-col-24"
+                    style={
+                      Object {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
                   >
                     <div
-                      className="ant-form-item-control-input-content"
+                      className="form-group field field-string"
                     >
-                      <span
-                        className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
-                        onClick={[Function]}
-                        style={
-                          Object {
-                            "width": "100%",
-                          }
-                        }
+                      <div
+                        className="ant-form-item"
                       >
-                        <input
-                          aria-describedby="root_title__error root_title__description root_title__help"
-                          className="ant-input"
-                          hidden={null}
-                          id="root_title"
-                          name="root_title"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          placeholder=""
-                          style={null}
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          className="ant-input-suffix"
-                        />
-                      </span>
+                        <div
+                          className="ant-row ant-form-item-row"
+                          style={Object {}}
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label"
+                            style={Object {}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_title"
+                              title="Titre 2"
+                            >
+                              Titre 2
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control"
+                            style={Object {}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                                  onClick={[Function]}
+                                  style={
+                                    Object {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_title__error root_title__description root_title__help"
+                                    className="ant-input"
+                                    hidden={null}
+                                    id="root_title"
+                                    name="root_title"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    placeholder=""
+                                    style={null}
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </fieldset>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
@@ -2961,24 +3864,46 @@ exports[`single fields unsupported field 1`] = `
     className="form-group field field-undefined"
   >
     <div
-      className="unsupported-field"
+      className="ant-form-item"
     >
-      <p>
-        <span>
-          Unsupported field schema for field 
-          <code>
-            root
-          </code>
-          : 
-          <em>
-            Unknown field type undefined
-          </em>
-          .
-        </span>
-      </p>
-      <pre>
-        {}
-      </pre>
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                className="unsupported-field"
+              >
+                <p>
+                  <span>
+                    Unsupported field schema for field 
+                    <code>
+                      root
+                    </code>
+                    : 
+                    <em>
+                      Unknown field type undefined
+                    </em>
+                    .
+                  </span>
+                </p>
+                <pre>
+                  {}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -3004,104 +3929,135 @@ exports[`single fields up/down field 1`] = `
     className="form-group field field-number"
   >
     <div
-      className="ant-input-number"
-      onBeforeInput={[Function]}
-      onBlur={[Function]}
-      onCompositionEnd={[Function]}
-      onCompositionStart={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
+      className="ant-form-item"
     >
       <div
-        className="ant-input-number-handler-wrap"
+        className="ant-row ant-form-item-row"
+        style={Object {}}
       >
-        <span
-          aria-disabled={false}
-          aria-label="Increase Value"
-          className="ant-input-number-handler ant-input-number-handler-up"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
         >
-          <span
-            aria-label="up"
-            className="anticon anticon-up ant-input-number-handler-up-inner"
-            role="img"
+          <div
+            className="ant-form-item-control-input"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="up"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <div
+              className="ant-form-item-control-input-content"
             >
-              <path
-                d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-        <span
-          aria-disabled={false}
-          aria-label="Decrease Value"
-          className="ant-input-number-handler ant-input-number-handler-down"
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          role="button"
-          unselectable="on"
-        >
-          <span
-            aria-label="down"
-            className="anticon anticon-down ant-input-number-handler-down-inner"
-            role="img"
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="down"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-              />
-            </svg>
-          </span>
-        </span>
-      </div>
-      <div
-        className="ant-input-number-input-wrap"
-      >
-        <input
-          aria-describedby="root__error root__description root__help"
-          aria-valuenow={null}
-          autoComplete="off"
-          className="ant-input-number-input"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          role="spinbutton"
-          step={1}
-          type="number"
-          value=""
-        />
+              <div
+                className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
+                onMouseUp={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="ant-input-number ant-input-number-in-form-item"
+                  onBeforeInput={[Function]}
+                  onBlur={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  style={null}
+                >
+                  <div
+                    className="ant-input-number-handler-wrap"
+                  >
+                    <span
+                      aria-disabled={false}
+                      aria-label="Increase Value"
+                      className="ant-input-number-handler ant-input-number-handler-up"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="up"
+                        className="anticon anticon-up ant-input-number-handler-up-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="up"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                    <span
+                      aria-disabled={false}
+                      aria-label="Decrease Value"
+                      className="ant-input-number-handler ant-input-number-handler-down"
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      role="button"
+                      unselectable="on"
+                    >
+                      <span
+                        aria-label="down"
+                        className="anticon anticon-down ant-input-number-handler-down-inner"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="down"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    className="ant-input-number-input-wrap"
+                  >
+                    <input
+                      aria-describedby="root__error root__description root__help"
+                      aria-valuenow={null}
+                      autoComplete="off"
+                      className="ant-input-number-input"
+                      disabled={false}
+                      id="root"
+                      name="root"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      role="spinbutton"
+                      step={1}
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <span
+                  className="ant-input-number-suffix"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -3127,24 +4083,56 @@ exports[`single fields using custom tagName 1`] = `
   <div
     className="form-group field field-string"
   >
-    <input
-      aria-describedby="root__error root__description root__help"
-      className="ant-input"
-      id="root"
-      name="root"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      placeholder=""
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-      type="text"
-      value=""
-    />
+    <div
+      className="ant-form-item"
+    >
+      <div
+        className="ant-row ant-form-item-row"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <span
+                className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "width": "100%",
+                  }
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input"
+                  hidden={null}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  style={null}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <button
     className="ant-btn ant-btn-submit"
