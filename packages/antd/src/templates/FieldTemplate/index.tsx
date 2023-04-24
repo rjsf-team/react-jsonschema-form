@@ -94,25 +94,21 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      {id === 'root' ? (
-        children
-      ) : (
-        <Form.Item
-          colon={colon}
-          hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-          help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
-          htmlFor={id}
-          label={displayLabel && label}
-          labelCol={labelCol}
-          required={required}
-          style={wrapperStyle}
-          validateStatus={rawErrors?.length ? 'error' : undefined}
-          wrapperCol={wrapperCol}
-          {...descriptionProps}
-        >
-          {children}
-        </Form.Item>
-      )}
+      <Form.Item
+        colon={colon}
+        hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
+        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
+        htmlFor={id}
+        label={displayLabel && label}
+        labelCol={labelCol}
+        required={required}
+        style={wrapperStyle}
+        validateStatus={rawErrors?.length ? 'error' : undefined}
+        wrapperCol={wrapperCol}
+        {...descriptionProps}
+      >
+        {children}
+      </Form.Item>
     </WrapIfAdditionalTemplate>
   );
 }

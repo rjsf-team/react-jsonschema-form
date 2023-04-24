@@ -16,9 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+
 # 5.7.0
 ## @rjsf/mantine-ui
 - Add mantine UI to `@rfsj`
+
+# 5.6.3
+
+## @rjsf/antd
+
+- Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
 
 # 5.6.2
 
