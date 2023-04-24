@@ -16,6 +16,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.7.0
+## @rjsf/mantine-ui
+- Add mantine UI to `@rfsj`
+
 # 5.6.2
 
 ## Dev / docs / playground

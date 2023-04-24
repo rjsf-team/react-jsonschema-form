@@ -1,0 +1,96 @@
+import { ChangeEvent } from 'react';
+
+import {
+  ariaDescribedByIds,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  getTemplate,
+  optionId,
+  titleId,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
+import { Checkbox, Input } from '@mantine/core';
+
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function CheckboxesWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    label,
+    hideLabel,
+    onChange,
+    onBlur,
+    onFocus,
+    schema,
+    uiSchema,
+    rawErrors = [],
+    registry,
+  } = props;
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
+  const { enumOptions, enumDisabled } = options;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
+  const _onChange =
+    (index: number) =>
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+      // eslint-disable-next-line no-shadow
+      if (checked) {
+        onChange(enumOptionsSelectValue<S>(index, checkboxesValues, enumOptions));
+      } else {
+        onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
+      }
+    };
+  const hasErrors = rawErrors && rawErrors.length > 0;
+
+  const _onBlur = () => onBlur(id, value);
+  const _onFocus = () => onFocus(id, value);
+
+  return (
+    <>
+      {!hideLabel && !!label && (
+        <TitleFieldTemplate id={titleId<T>(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
+      )}
+      <Input.Wrapper id={id}>
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, index) => {
+            const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            return (
+              <Checkbox
+                id={optionId(id, index)}
+                name={id}
+                key={index}
+                label={option.label}
+                checked={checked}
+                disabled={disabled || itemDisabled || readonly}
+                autoFocus={autofocus && index === 0}
+                onChange={_onChange(index)}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+                aria-describedby={ariaDescribedByIds<T>(id)}
+              />
+            );
+          })}
+        {hasErrors &&
+          rawErrors.map((error, index) => (
+            <Input.Error key={`checkboxes-widget-input-errors-${index}`}>{error}</Input.Error>
+          ))}
+      </Input.Wrapper>
+    </>
+  );
+}

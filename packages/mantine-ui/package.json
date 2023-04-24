@@ -1,0 +1,87 @@
+{
+  "name": "@rjsf/mantine-ui",
+  "version": "5.6.2",
+  "main": "dist/index.js",
+  "module": "dist/mantine-ui.esm.js",
+  "typings": "dist/index.d.ts",
+  "description": "Mantine UI theme, fields and widgets for react-jsonschema-form",
+  "files": [
+    "dist"
+  ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "rimraf dist && dts build --rollupTypes --format cjs,es,umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "dts test",
+    "test:update": "dts test --u",
+    "bump-packages": "npm update --save --lockfile-version 2"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts(x)": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "peerDependencies": {
+    "@mantine/core": ">=4.2.12",
+    "@mantine/hooks": ">=4.2.12",
+    "tabler-icons-react": ">=1.56.0",
+    "react": "^16.14.0 || >=17"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-react-jsx": "^7.21.0",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/register": "^7.21.0",
+    "@emotion/eslint-plugin": "^11.10.0",
+    "@emotion/jest": "^11.10.5",
+    "@rjsf/core": "^5.6.2",
+    "@rjsf/utils": "^5.6.2",
+    "@rjsf/validator-ajv8": "^5.6.2",
+    "@types/lodash": "^4.14.194",
+    "@types/react": "^17.0.58",
+    "@types/react-dom": "^17.0.19",
+    "@types/react-test-renderer": "^17.0.2",
+    "atob": "^2.1.2",
+    "dts-cli": "^1.6.3",
+    "eslint": "^8.38.0",
+    "nanoid": "^3.3.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Przemyslaw Kalisiewicz <przemek.development@gmail.com>",
+  "contributors": [
+    "Przemyslaw Kalisiewicz <przemek.development@gmail.com"
+  ],
+  "keywords": [
+    "Mantine UI",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "mantine-ui",
+    "rjsf-mantine-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
+}

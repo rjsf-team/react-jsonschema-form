@@ -6,6 +6,7 @@ import { create, Jss } from 'jss';
 import { jssPreset, StylesProvider } from '@material-ui/core/styles';
 import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
+import { __createMantineFrameProvider } from '@rjsf/mantine-ui';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -115,6 +116,8 @@ export default function DemoFrame(props: DemoFrameProps) {
     );
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
+  } else if (theme === 'mantine-ui') {
+    body = <FrameContextConsumer>{__createMantineFrameProvider(props)}</FrameContextConsumer>;
   }
 
   return (

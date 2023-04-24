@@ -24,6 +24,7 @@ body:
         - material-ui
         - mui
         - semantic-ui
+        - mantine-ui
         - utils
         - validator-ajv6
         - validator-ajv8

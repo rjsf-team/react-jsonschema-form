@@ -35,6 +35,7 @@
 - [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
 - [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
+- [Mantine UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mantine-ui)
 
 ## Documentation
 
