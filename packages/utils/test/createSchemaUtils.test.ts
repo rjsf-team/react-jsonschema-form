@@ -27,12 +27,14 @@ describe('createSchemaUtils()', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, defaultFormStateBehavior)).toBe(false);
       });
       it('returns false when passing falsy validator', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(null as unknown as ValidatorType, {}, defaultFormStateBehavior)).toBe(false);
-      });
-      it('returns false when passing falsy rootSchema', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, null as unknown as RJSFSchema, defaultFormStateBehavior)).toBe(
+        expect(schemaUtils.doesSchemaUtilsDiffer(null as unknown as ValidatorType, {}, defaultFormStateBehavior)).toBe(
           false
         );
+      });
+      it('returns false when passing falsy rootSchema', () => {
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, null as unknown as RJSFSchema, defaultFormStateBehavior)
+        ).toBe(false);
       });
       it('returns true when passing different validator', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(getTestValidator({}), {}, defaultFormStateBehavior)).toBe(true);

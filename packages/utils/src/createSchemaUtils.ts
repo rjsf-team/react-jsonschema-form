@@ -70,7 +70,11 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param [defaultFormStateBehavior=0] - Optional bit flag, if provided, allows users to override default form state behavior
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S, defaultFormStateBehavior = DefaultFormStateBehavior.Legacy_PopulateMinItems): boolean {
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S,
+    defaultFormStateBehavior = DefaultFormStateBehavior.Legacy_PopulateMinItems
+  ): boolean {
     if (!validator || !rootSchema) {
       return false;
     }
