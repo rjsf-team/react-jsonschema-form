@@ -1,4 +1,6 @@
+import { CSSProperties } from 'react';
 import {
+  canExpand,
   descriptionId,
   FormContextType,
   getTemplate,
@@ -9,6 +11,10 @@ import {
   titleId,
 } from '@rjsf/utils';
 
+const rightJustify = {
+  float: 'right',
+} as CSSProperties;
+
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -18,9 +24,13 @@ export default function ObjectFieldTemplate<
   title,
   properties,
   required,
+  disabled,
+  readonly,
   schema,
   uiSchema,
   idSchema,
+  formData,
+  onAddClick,
   registry,
 }: ObjectFieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -30,6 +40,10 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions
   );
+  // Button templates are not overridden in the uiSchema
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
   return (
     <>
       {title && (
@@ -53,6 +67,17 @@ export default function ObjectFieldTemplate<
       )}
       <div className='ms-Grid' dir='ltr'>
         <div className='ms-Grid-row'>{properties.map((element) => element.content)}</div>
+        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+          <span style={rightJustify}>
+            <AddButton
+              className='object-property-expand'
+              onClick={onAddClick(schema)}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </span>
+        )}
       </div>
     </>
   );

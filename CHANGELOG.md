@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
 
+## @rjsf/fluent-ui
+
+- Added support for `additionalProperties` to fluent-ui theme, fixing [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777).
+
 # 5.6.2
 
 ## Dev / docs / playground
