@@ -5,7 +5,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
-import { Theme as MantineUITheme } from '@rjsf/mantine-ui';
+// import { Theme as MantineUITheme } from '@rjsf/mantine-ui';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import v6Validator from '@rjsf/validator-ajv6';
 import localize_es from 'ajv-i18n/localize/es';
@@ -116,10 +116,10 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
     theme: SuiTheme,
   },
-  'mantine-ui': {
-    stylesheet: '',
-    theme: MantineUITheme,
-  },
+  // 'mantine-ui': {
+  //   stylesheet: '',
+  //   theme: MantineUITheme,
+  // },
 };
 
 export default function App() {
