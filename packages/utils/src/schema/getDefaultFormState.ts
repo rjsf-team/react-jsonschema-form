@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import getSchemaType from '../getSchemaType';
 import isObject from '../isObject';
 import isFixedItems from '../isFixedItems';
@@ -141,10 +142,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       );
     }
   } else if (DEPENDENCIES_KEY in schema) {
-    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, formData);
+    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, formData);
     return computeDefaults<T, S, F>(
       validator,
-      resolvedSchema,
+      resolvedSchema[0], // pick the first element from resolve dependencies
       defaults,
       rootSchema,
       formData as T,
@@ -167,26 +168,30 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     if (schema.oneOf!.length === 0) {
       return undefined;
     }
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     schema = schema.oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
         isEmpty(formData) ? undefined : formData,
         schema.oneOf as S[],
-        0
+        0,
+        discriminator
       )
     ] as S;
   } else if (ANY_OF_KEY in schema) {
     if (schema.anyOf!.length === 0) {
       return undefined;
     }
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     schema = schema.anyOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
         isEmpty(formData) ? undefined : formData,
         schema.anyOf as S[],
-        0
+        0,
+        discriminator
       )
     ] as S;
   }

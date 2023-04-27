@@ -14,6 +14,7 @@ export const DEPENDENCIES_KEY = 'dependencies';
 export const ENUM_KEY = 'enum';
 export const ERRORS_KEY = '__errors';
 export const ID_KEY = '$id';
+export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
 export const NAME_KEY = '$name';
 export const ONE_OF_KEY = 'oneOf';

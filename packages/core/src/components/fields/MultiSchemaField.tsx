@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import isString from 'lodash/isString';
 import omit from 'lodash/omit';
 import {
   deepEquals,
   ERRORS_KEY,
   FieldProps,
   FormContextType,
+  getDiscriminatorFieldFromSchema,
   getUiOptions,
   getWidget,
   RJSFSchema,
@@ -96,13 +96,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry: { schemaUtils },
     } = this.props;
 
-    let discriminator: string | undefined;
-    const maybeString = get(schema, 'discriminator.propertyName', undefined);
-    if (isString(maybeString)) {
-      discriminator = maybeString;
-    } else if (maybeString !== undefined) {
-      console.warn(`Expecting discriminator to be a string, got "${typeof maybeString}" instead`);
-    }
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const option = schemaUtils.getClosestMatchingOption(formData, options, selectedOption, discriminator);
     if (option > 0) {
       return option;
