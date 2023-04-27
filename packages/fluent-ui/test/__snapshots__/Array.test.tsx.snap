@@ -8,7 +8,6 @@ exports[`array fields array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -113,7 +112,6 @@ exports[`array fields array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -135,7 +133,6 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -320,7 +317,6 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -588,7 +584,6 @@ exports[`array fields checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -681,7 +676,6 @@ exports[`array fields empty errors array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -698,7 +692,6 @@ exports[`array fields empty errors array 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_name"
           style={
             Object {
               "marginBottom": 15,
@@ -793,7 +786,6 @@ exports[`array fields fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -815,7 +807,6 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -873,7 +864,6 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -993,7 +983,6 @@ exports[`array fields has errors 1`] = `
   </div>
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1010,7 +999,6 @@ exports[`array fields has errors 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
-          id="root_name"
           style={
             Object {
               "marginBottom": 15,
@@ -1137,7 +1125,6 @@ exports[`array fields no errors 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1154,7 +1141,6 @@ exports[`array fields no errors 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_name"
           style={
             Object {
               "marginBottom": 15,
@@ -1249,7 +1235,6 @@ exports[`with title and description array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1366,7 +1351,6 @@ exports[`with title and description array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1400,7 +1384,6 @@ exports[`with title and description array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -1597,7 +1580,6 @@ exports[`with title and description array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -1877,7 +1859,6 @@ exports[`with title and description checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1981,7 +1962,6 @@ exports[`with title and description fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2015,7 +1995,6 @@ exports[`with title and description fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -2085,7 +2064,6 @@ exports[`with title and description fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -2187,7 +2165,6 @@ exports[`with title and description from both array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2304,7 +2281,6 @@ exports[`with title and description from both array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2338,7 +2314,6 @@ exports[`with title and description from both array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -2535,7 +2510,6 @@ exports[`with title and description from both array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -2815,7 +2789,6 @@ exports[`with title and description from both checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2919,7 +2892,6 @@ exports[`with title and description from both fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2953,7 +2925,6 @@ exports[`with title and description from both fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -3023,7 +2994,6 @@ exports[`with title and description from both fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -3125,7 +3095,6 @@ exports[`with title and description from uiSchema array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -3242,7 +3211,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -3276,7 +3244,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -3473,7 +3440,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -3753,7 +3719,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -3857,7 +3822,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -3891,7 +3855,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -3961,7 +3924,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -4063,7 +4025,6 @@ exports[`with title and description with global label off array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -4168,7 +4129,6 @@ exports[`with title and description with global label off array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -4190,7 +4150,6 @@ exports[`with title and description with global label off array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -4374,7 +4333,6 @@ exports[`with title and description with global label off array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,
@@ -4641,7 +4599,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -4745,7 +4702,6 @@ exports[`with title and description with global label off fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -4767,7 +4723,6 @@ exports[`with title and description with global label off fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
                   "marginBottom": 15,
@@ -4824,7 +4779,6 @@ exports[`with title and description with global label off fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
                   "marginBottom": 15,

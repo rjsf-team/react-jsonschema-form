@@ -41,7 +41,7 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div id={id} className={classNames} style={{ ...style, marginBottom: 15 }}>
+      <div className={classNames} style={{ ...style, marginBottom: 15 }}>
         {children}
       </div>
     );

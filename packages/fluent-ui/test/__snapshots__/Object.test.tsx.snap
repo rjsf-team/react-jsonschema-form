@@ -8,7 +8,6 @@ exports[`object fields additionalProperties 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -256,7 +255,6 @@ exports[`object fields object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -273,7 +271,6 @@ exports[`object fields object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_a"
           style={
             Object {
               "marginBottom": 15,
@@ -322,7 +319,6 @@ exports[`object fields object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
-          id="root_b"
           style={
             Object {
               "marginBottom": 15,
@@ -418,7 +414,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -666,7 +661,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -925,7 +919,6 @@ exports[`object fields with title and description from both additionalProperties
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1184,7 +1177,6 @@ exports[`object fields with title and description from both object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1212,7 +1204,6 @@ exports[`object fields with title and description from both object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_a"
           style={
             Object {
               "marginBottom": 15,
@@ -1265,7 +1256,6 @@ exports[`object fields with title and description from both object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
-          id="root_b"
           style={
             Object {
               "marginBottom": 15,
@@ -1365,7 +1355,6 @@ exports[`object fields with title and description from uiSchema additionalProper
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1624,7 +1613,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -1652,7 +1640,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_a"
           style={
             Object {
               "marginBottom": 15,
@@ -1705,7 +1692,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
-          id="root_b"
           style={
             Object {
               "marginBottom": 15,
@@ -1805,7 +1791,6 @@ exports[`object fields with title and description from uiSchema show add button 
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2064,7 +2049,6 @@ exports[`object fields with title and description object 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2092,7 +2076,6 @@ exports[`object fields with title and description object 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_a"
           style={
             Object {
               "marginBottom": 15,
@@ -2145,7 +2128,6 @@ exports[`object fields with title and description object 1`] = `
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
-          id="root_b"
           style={
             Object {
               "marginBottom": 15,
@@ -2245,7 +2227,6 @@ exports[`object fields with title and description show add button and fields if 
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2504,7 +2485,6 @@ exports[`object fields with title and description with global label off addition
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2743,7 +2723,6 @@ exports[`object fields with title and description with global label off object 1
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
@@ -2760,7 +2739,6 @@ exports[`object fields with title and description with global label off object 1
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_a"
           style={
             Object {
               "marginBottom": 15,
@@ -2800,7 +2778,6 @@ exports[`object fields with title and description with global label off object 1
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
-          id="root_b"
           style={
             Object {
               "marginBottom": 15,
@@ -2887,7 +2864,6 @@ exports[`object fields with title and description with global label off show add
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
         "marginBottom": 15,
