@@ -7,51 +7,46 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-boolean"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Checkbox is-enabled root-139"
     >
-      <div
-        className="ms-Checkbox is-enabled root-139"
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root"
       >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root"
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
         >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-        </label>
-      </div>
+            
+          </i>
+        </div>
+      </label>
     </div>
   </div>
   <div>
@@ -98,58 +93,53 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-boolean"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Checkbox is-enabled root-139"
     >
-      <div
-        className="ms-Checkbox is-enabled root-139"
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        aria-label="test"
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root"
       >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          aria-label="test"
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root"
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
         >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-          <span
-            aria-hidden="true"
-            className="ms-Checkbox-text text-144"
-          >
-            test
-          </span>
-        </label>
-      </div>
+            
+          </i>
+        </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-144"
+        >
+          test
+        </span>
+      </label>
     </div>
   </div>
   <div>
@@ -196,195 +186,190 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
+    <label
+      className="ms-Label root-73"
+    />
     <div
-      className="ms-Grid-col ms-sm12  field field-array"
-      id="root"
+      className="ms-Checkbox is-enabled root-139"
+    >
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        aria-label="foo"
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root-0"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root-0"
+      >
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
+          >
+            
+          </i>
+        </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-144"
+        >
+          foo
+        </span>
+      </label>
+    </div>
+    <div
+      className="ms-Checkbox is-enabled root-139"
+    >
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        aria-label="bar"
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root-1"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root-1"
+      >
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
+          >
+            
+          </i>
+        </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-144"
+        >
+          bar
+        </span>
+      </label>
+    </div>
+    <div
+      className="ms-Checkbox is-enabled root-139"
+    >
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        aria-label="fuzz"
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root-2"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root-2"
+      >
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
+          >
+            
+          </i>
+        </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-144"
+        >
+          fuzz
+        </span>
+      </label>
+    </div>
+    <div
+      className="ms-Checkbox is-enabled root-139"
+    >
+      <input
+        aria-checked="false"
+        aria-disabled={false}
+        aria-label="qux"
+        checked={false}
+        className="input-140"
+        disabled={false}
+        id="root-3"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="checkbox"
+      />
+      <label
+        className="ms-Checkbox-label label-141"
+        htmlFor="root-3"
+      >
+        <div
+          className="ms-Checkbox-checkbox checkbox-142"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Checkbox-checkmark checkmark-145"
+            data-icon-name="CheckMark"
+          >
+            
+          </i>
+        </div>
+        <span
+          aria-hidden="true"
+          className="ms-Checkbox-text text-144"
+        >
+          qux
+        </span>
+      </label>
+    </div>
+    <span
       style={
         Object {
-          "display": undefined,
-          "marginBottom": 15,
+          "color": "rgb(164, 38, 44)",
+          "fontFamily": "\\"Segoe UI\\", \\"Segoe UI Web (West European)\\", \\"Segoe UI\\", -apple-system, BlinkMacSystemFont, Roboto, \\"Helvetica Neue\\", sans-serif",
+          "fontSize": 12,
+          "fontWeight": "normal",
         }
       }
     >
-      <label
-        className="ms-Label root-73"
-      />
-      <div
-        className="ms-Checkbox is-enabled root-139"
-      >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          aria-label="foo"
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root-0"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root-0"
-        >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-          <span
-            aria-hidden="true"
-            className="ms-Checkbox-text text-144"
-          >
-            foo
-          </span>
-        </label>
-      </div>
-      <div
-        className="ms-Checkbox is-enabled root-139"
-      >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          aria-label="bar"
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root-1"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root-1"
-        >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-          <span
-            aria-hidden="true"
-            className="ms-Checkbox-text text-144"
-          >
-            bar
-          </span>
-        </label>
-      </div>
-      <div
-        className="ms-Checkbox is-enabled root-139"
-      >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          aria-label="fuzz"
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root-2"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root-2"
-        >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-          <span
-            aria-hidden="true"
-            className="ms-Checkbox-text text-144"
-          >
-            fuzz
-          </span>
-        </label>
-      </div>
-      <div
-        className="ms-Checkbox is-enabled root-139"
-      >
-        <input
-          aria-checked="false"
-          aria-disabled={false}
-          aria-label="qux"
-          checked={false}
-          className="input-140"
-          disabled={false}
-          id="root-3"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          type="checkbox"
-        />
-        <label
-          className="ms-Checkbox-label label-141"
-          htmlFor="root-3"
-        >
-          <div
-            className="ms-Checkbox-checkbox checkbox-142"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Checkbox-checkmark checkmark-145"
-              data-icon-name="CheckMark"
-            >
-              
-            </i>
-          </div>
-          <span
-            aria-hidden="true"
-            className="ms-Checkbox-text text-144"
-          >
-            qux
-          </span>
-        </label>
-      </div>
-      <span
-        style={
-          Object {
-            "color": "rgb(164, 38, 44)",
-            "fontFamily": "\\"Segoe UI\\", \\"Segoe UI Web (West European)\\", \\"Segoe UI\\", -apple-system, BlinkMacSystemFont, Roboto, \\"Helvetica Neue\\", sans-serif",
-            "fontSize": 12,
-            "fontWeight": "normal",
-          }
-        }
-      >
-        
-      </span>
       
-    </div>
+    </span>
+    
   </div>
   <div>
     <br />
@@ -430,84 +415,74 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-object"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    
+    <div
+      className="ms-Grid"
+      dir="ltr"
     >
-      
       <div
-        className="ms-Grid"
-        dir="ltr"
+        className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-row"
+          className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
+          style={
+            Object {
+              "marginBottom": 15,
+            }
+          }
         >
           <div
-            className="form-group field field-string"
+            className="ms-TextField root-54"
           >
             <div
-              className="ms-Grid-col ms-sm12  field field-string"
-              id="root_my-field"
-              style={
-                Object {
-                  "display": undefined,
-                  "marginBottom": 15,
-                }
-              }
+              className="ms-TextField-wrapper"
             >
+              <label
+                className="ms-Label root-73"
+                htmlFor="root_my-field"
+                id="TextFieldLabel153"
+              >
+                my-field
+              </label>
               <div
-                className="ms-TextField root-54"
+                className="ms-TextField-fieldGroup fieldGroup-55"
               >
-                <div
-                  className="ms-TextField-wrapper"
-                >
-                  <label
-                    className="ms-Label root-73"
-                    htmlFor="root_my-field"
-                    id="TextFieldLabel153"
-                  >
-                    my-field
-                  </label>
-                  <div
-                    className="ms-TextField-fieldGroup fieldGroup-55"
-                  >
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      aria-invalid={false}
-                      aria-labelledby="TextFieldLabel153"
-                      autoFocus={false}
-                      className="ms-TextField-field field-56"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onInput={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  aria-invalid={false}
+                  aria-labelledby="TextFieldLabel153"
+                  autoFocus={false}
+                  className="ms-TextField-field field-56"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
               </div>
-              <span
-                className="css-166"
-              >
-                some description
-              </span>
             </div>
           </div>
+          <span
+            className="css-166"
+          >
+            some description
+          </span>
         </div>
       </div>
     </div>
@@ -556,84 +531,74 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-object"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    
+    <div
+      className="ms-Grid"
+      dir="ltr"
     >
-      
       <div
-        className="ms-Grid"
-        dir="ltr"
+        className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-row"
+          className="ms-Grid-col ms-sm12  field field-string"
+          id="root_my-field"
+          style={
+            Object {
+              "marginBottom": 15,
+            }
+          }
         >
           <div
-            className="form-group field field-string"
+            className="ms-TextField root-54"
           >
             <div
-              className="ms-Grid-col ms-sm12  field field-string"
-              id="root_my-field"
-              style={
-                Object {
-                  "display": undefined,
-                  "marginBottom": 15,
-                }
-              }
+              className="ms-TextField-wrapper"
             >
+              <label
+                className="ms-Label root-73"
+                htmlFor="root_my-field"
+                id="TextFieldLabel159"
+              >
+                my-field
+              </label>
               <div
-                className="ms-TextField root-54"
+                className="ms-TextField-fieldGroup fieldGroup-55"
               >
-                <div
-                  className="ms-TextField-wrapper"
-                >
-                  <label
-                    className="ms-Label root-73"
-                    htmlFor="root_my-field"
-                    id="TextFieldLabel159"
-                  >
-                    my-field
-                  </label>
-                  <div
-                    className="ms-TextField-fieldGroup fieldGroup-55"
-                  >
-                    <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                      aria-invalid={false}
-                      aria-labelledby="TextFieldLabel159"
-                      autoFocus={false}
-                      className="ms-TextField-field field-56"
-                      disabled={false}
-                      id="root_my-field"
-                      name="root_my-field"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onInput={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  aria-invalid={false}
+                  aria-labelledby="TextFieldLabel159"
+                  autoFocus={false}
+                  className="ms-TextField-field field-56"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
               </div>
-              <span
-                className="css-166"
-              >
-                some other description
-              </span>
             </div>
           </div>
+          <span
+            className="css-166"
+          >
+            some other description
+          </span>
         </div>
       </div>
     </div>
@@ -682,328 +647,323 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    <label
+      className="ms-Label root-73"
+      htmlFor="root"
+    />
+    <div
+      aria-label="Color picker, Red 255 Green 255 Blue 255 Alpha 100% selected."
+      className="ms-ColorPicker root-74"
+      role="group"
     >
-      <label
-        className="ms-Label root-73"
-        htmlFor="root"
-      />
       <div
-        aria-label="Color picker, Red 255 Green 255 Blue 255 Alpha 100% selected."
-        className="ms-ColorPicker root-74"
-        role="group"
+        className="ms-ColorPicker-panel panel-75"
       >
         <div
-          className="ms-ColorPicker-panel panel-75"
+          aria-describedby="ColorRectangle-description48"
+          aria-label="Saturation and brightness"
+          aria-valuemax={100}
+          aria-valuemin={0}
+          aria-valuenow={0}
+          aria-valuetext="Saturation 0 brightness 100"
+          className="ms-ColorPicker-colorRect root-84"
+          data-is-focusable={true}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          role="slider"
+          style={
+            Object {
+              "backgroundColor": "#ff0000",
+            }
+          }
+          tabIndex={0}
         >
           <div
-            aria-describedby="ColorRectangle-description48"
-            aria-label="Saturation and brightness"
-            aria-valuemax={100}
-            aria-valuemin={0}
-            aria-valuenow={0}
-            aria-valuetext="Saturation 0 brightness 100"
-            className="ms-ColorPicker-colorRect root-84"
-            data-is-focusable={true}
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            role="slider"
-            style={
-              Object {
-                "backgroundColor": "#ff0000",
-              }
-            }
-            tabIndex={0}
+            className="description-88"
+            id="ColorRectangle-description48"
           >
-            <div
-              className="description-88"
-              id="ColorRectangle-description48"
-            >
-              Use left and right arrow keys to set saturation. Use up and down arrow keys to set brightness.
-            </div>
-            <div
-              className="ms-ColorPicker-light light-85"
-            />
-            <div
-              className="ms-ColorPicker-dark dark-86"
-            />
-            <div
-              className="ms-ColorPicker-thumb thumb-87"
-              style={
-                Object {
-                  "backgroundColor": "#ffffff",
-                  "left": "0%",
-                  "top": "0%",
-                }
-              }
-            />
+            Use left and right arrow keys to set saturation. Use up and down arrow keys to set brightness.
           </div>
           <div
-            className="flexContainer-80"
+            className="ms-ColorPicker-light light-85"
+          />
+          <div
+            className="ms-ColorPicker-dark dark-86"
+          />
+          <div
+            className="ms-ColorPicker-thumb thumb-87"
+            style={
+              Object {
+                "backgroundColor": "#ffffff",
+                "left": "0%",
+                "top": "0%",
+              }
+            }
+          />
+        </div>
+        <div
+          className="flexContainer-80"
+        >
+          <div
+            className="flexSlider-81"
           >
             <div
-              className="flexSlider-81"
+              aria-label="Hue"
+              aria-valuemax={359}
+              aria-valuemin={0}
+              aria-valuenow={0}
+              aria-valuetext="0"
+              className="ms-ColorPicker-slider is-hue root-89"
+              data-is-focusable={true}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="slider"
+              tabIndex={0}
             >
               <div
-                aria-label="Hue"
-                aria-valuemax={359}
-                aria-valuemin={0}
-                aria-valuenow={0}
-                aria-valuetext="0"
-                className="ms-ColorPicker-slider is-hue root-89"
-                data-is-focusable={true}
-                onKeyDown={[Function]}
-                onMouseDown={[Function]}
-                role="slider"
-                tabIndex={0}
-              >
-                <div
-                  className="ms-ColorPicker-thumb is-slider sliderThumb-91"
-                  style={
-                    Object {
-                      "left": "0%",
-                    }
-                  }
-                />
-              </div>
-              <div
-                aria-label="Alpha"
-                aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={100}
-                aria-valuetext="100"
-                className="ms-ColorPicker-slider is-alpha root-92"
-                data-is-focusable={true}
-                onKeyDown={[Function]}
-                onMouseDown={[Function]}
-                role="slider"
-                tabIndex={0}
-              >
-                <div
-                  className="ms-ColorPicker-sliderOverlay sliderOverlay-90"
-                  style={
-                    Object {
-                      "background": "linear-gradient(to right, transparent, #ffffff)",
-                    }
-                  }
-                />
-                <div
-                  className="ms-ColorPicker-thumb is-slider sliderThumb-91"
-                  style={
-                    Object {
-                      "left": "100%",
-                    }
-                  }
-                />
-              </div>
-            </div>
-            <div
-              className="flexPreviewBox-82"
-            >
-              <div
-                className="ms-ColorPicker-colorSquare colorSquare-79 is-preview"
+                className="ms-ColorPicker-thumb is-slider sliderThumb-91"
                 style={
                   Object {
-                    "backgroundColor": "#ffffff",
+                    "left": "0%",
+                  }
+                }
+              />
+            </div>
+            <div
+              aria-label="Alpha"
+              aria-valuemax={100}
+              aria-valuemin={0}
+              aria-valuenow={100}
+              aria-valuetext="100"
+              className="ms-ColorPicker-slider is-alpha root-92"
+              data-is-focusable={true}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="slider"
+              tabIndex={0}
+            >
+              <div
+                className="ms-ColorPicker-sliderOverlay sliderOverlay-90"
+                style={
+                  Object {
+                    "background": "linear-gradient(to right, transparent, #ffffff)",
+                  }
+                }
+              />
+              <div
+                className="ms-ColorPicker-thumb is-slider sliderThumb-91"
+                style={
+                  Object {
+                    "left": "100%",
                   }
                 }
               />
             </div>
           </div>
-          <table
-            cellPadding="0"
-            cellSpacing="0"
-            className="ms-ColorPicker-table table-76"
-            role="group"
+          <div
+            className="flexPreviewBox-82"
           >
-            <thead>
-              <tr
-                className="tableHeader-77"
-              >
-                <td
-                  className="tableHexCell-78"
-                >
-                  Hex
-                </td>
-                <td>
-                  Red
-                </td>
-                <td>
-                  Green
-                </td>
-                <td>
-                  Blue
-                </td>
-                <td
-                  className=""
-                >
-                  Alpha
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div
-                    className="ms-TextField ms-ColorPicker-input input-93"
-                  >
-                    <div
-                      className="ms-TextField-wrapper"
-                    >
-                      <div
-                        className="ms-TextField-fieldGroup fieldGroup-55"
-                      >
-                        <input
-                          aria-invalid={false}
-                          aria-label="Hex"
-                          autoComplete="off"
-                          className="ms-TextField-field field-56"
-                          id="TextField49"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          spellCheck={false}
-                          type="text"
-                          value="ffffff"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div
-                    className="ms-TextField ms-ColorPicker-input input-93"
-                  >
-                    <div
-                      className="ms-TextField-wrapper"
-                    >
-                      <div
-                        className="ms-TextField-fieldGroup fieldGroup-55"
-                      >
-                        <input
-                          aria-invalid={false}
-                          aria-label="Red"
-                          aria-live="assertive"
-                          autoComplete="off"
-                          className="ms-TextField-field field-56"
-                          id="TextField52"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          spellCheck={false}
-                          type="text"
-                          value="255"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div
-                    className="ms-TextField ms-ColorPicker-input input-93"
-                  >
-                    <div
-                      className="ms-TextField-wrapper"
-                    >
-                      <div
-                        className="ms-TextField-fieldGroup fieldGroup-55"
-                      >
-                        <input
-                          aria-invalid={false}
-                          aria-label="Green"
-                          aria-live="assertive"
-                          autoComplete="off"
-                          className="ms-TextField-field field-56"
-                          id="TextField55"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          spellCheck={false}
-                          type="text"
-                          value="255"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div
-                    className="ms-TextField ms-ColorPicker-input input-93"
-                  >
-                    <div
-                      className="ms-TextField-wrapper"
-                    >
-                      <div
-                        className="ms-TextField-fieldGroup fieldGroup-55"
-                      >
-                        <input
-                          aria-invalid={false}
-                          aria-label="Blue"
-                          aria-live="assertive"
-                          autoComplete="off"
-                          className="ms-TextField-field field-56"
-                          id="TextField58"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          spellCheck={false}
-                          type="text"
-                          value="255"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div
-                    className="ms-TextField ms-ColorPicker-input input-93"
-                  >
-                    <div
-                      className="ms-TextField-wrapper"
-                    >
-                      <div
-                        className="ms-TextField-fieldGroup fieldGroup-55"
-                      >
-                        <input
-                          aria-invalid={false}
-                          aria-label="Alpha"
-                          aria-live="assertive"
-                          autoComplete="off"
-                          className="ms-TextField-field field-56"
-                          id="TextField61"
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          spellCheck={false}
-                          type="text"
-                          value="100"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <div
+              className="ms-ColorPicker-colorSquare colorSquare-79 is-preview"
+              style={
+                Object {
+                  "backgroundColor": "#ffffff",
+                }
+              }
+            />
+          </div>
         </div>
+        <table
+          cellPadding="0"
+          cellSpacing="0"
+          className="ms-ColorPicker-table table-76"
+          role="group"
+        >
+          <thead>
+            <tr
+              className="tableHeader-77"
+            >
+              <td
+                className="tableHexCell-78"
+              >
+                Hex
+              </td>
+              <td>
+                Red
+              </td>
+              <td>
+                Green
+              </td>
+              <td>
+                Blue
+              </td>
+              <td
+                className=""
+              >
+                Alpha
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div
+                  className="ms-TextField ms-ColorPicker-input input-93"
+                >
+                  <div
+                    className="ms-TextField-wrapper"
+                  >
+                    <div
+                      className="ms-TextField-fieldGroup fieldGroup-55"
+                    >
+                      <input
+                        aria-invalid={false}
+                        aria-label="Hex"
+                        autoComplete="off"
+                        className="ms-TextField-field field-56"
+                        id="TextField49"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        spellCheck={false}
+                        type="text"
+                        value="ffffff"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div
+                  className="ms-TextField ms-ColorPicker-input input-93"
+                >
+                  <div
+                    className="ms-TextField-wrapper"
+                  >
+                    <div
+                      className="ms-TextField-fieldGroup fieldGroup-55"
+                    >
+                      <input
+                        aria-invalid={false}
+                        aria-label="Red"
+                        aria-live="assertive"
+                        autoComplete="off"
+                        className="ms-TextField-field field-56"
+                        id="TextField52"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        spellCheck={false}
+                        type="text"
+                        value="255"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div
+                  className="ms-TextField ms-ColorPicker-input input-93"
+                >
+                  <div
+                    className="ms-TextField-wrapper"
+                  >
+                    <div
+                      className="ms-TextField-fieldGroup fieldGroup-55"
+                    >
+                      <input
+                        aria-invalid={false}
+                        aria-label="Green"
+                        aria-live="assertive"
+                        autoComplete="off"
+                        className="ms-TextField-field field-56"
+                        id="TextField55"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        spellCheck={false}
+                        type="text"
+                        value="255"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div
+                  className="ms-TextField ms-ColorPicker-input input-93"
+                >
+                  <div
+                    className="ms-TextField-wrapper"
+                  >
+                    <div
+                      className="ms-TextField-fieldGroup fieldGroup-55"
+                    >
+                      <input
+                        aria-invalid={false}
+                        aria-label="Blue"
+                        aria-live="assertive"
+                        autoComplete="off"
+                        className="ms-TextField-field field-56"
+                        id="TextField58"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        spellCheck={false}
+                        type="text"
+                        value="255"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div
+                  className="ms-TextField ms-ColorPicker-input input-93"
+                >
+                  <div
+                    className="ms-TextField-wrapper"
+                  >
+                    <div
+                      className="ms-TextField-fieldGroup fieldGroup-55"
+                    >
+                      <input
+                        aria-invalid={false}
+                        aria-label="Alpha"
+                        aria-live="assertive"
+                        autoComplete="off"
+                        className="ms-TextField-field field-56"
+                        id="TextField61"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        spellCheck={false}
+                        type="text"
+                        value="100"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1049,73 +1009,68 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
+      aria-describedby="root__error root__description root__help"
+      className="ms-DatePicker control-94"
       id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      onBlur={[Function]}
+      onFocus={[Function]}
     >
       <div
-        aria-describedby="root__error root__description root__help"
-        className="ms-DatePicker control-94"
-        id="root"
-        onBlur={[Function]}
-        onFocus={[Function]}
+        aria-haspopup="true"
       >
         <div
-          aria-haspopup="true"
+          className="ms-TextField textField-100"
         >
           <div
-            className="ms-TextField textField-100"
+            className="ms-TextField-wrapper"
           >
             <div
-              className="ms-TextField-wrapper"
+              className="ms-TextField-fieldGroup fieldGroup-55"
             >
               <div
-                className="ms-TextField-fieldGroup fieldGroup-55"
+                aria-expanded={false}
+                aria-invalid={false}
+                aria-label="Select a date"
+                className="ms-TextField-field field-101 readOnlyTextField-98"
+                id="root-label"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                role="combobox"
+                tabIndex={0}
               >
-                <div
-                  aria-expanded={false}
-                  aria-invalid={false}
-                  aria-label="Select a date"
-                  className="ms-TextField-field field-101 readOnlyTextField-98"
-                  id="root-label"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onClick={[Function]}
-                  onFocus={[Function]}
-                  onInput={[Function]}
-                  onKeyDown={[Function]}
-                  role="combobox"
-                  tabIndex={0}
+                <span
+                  className="readOnlyPlaceholder-99"
                 >
-                  <span
-                    className="readOnlyPlaceholder-99"
-                  >
-                    
-                  </span>
-                </div>
-                <i
-                  aria-hidden={true}
-                  className="ms-DatePicker-event--without-label msDatePickerDisabled icon-105"
-                  data-icon-name="Calendar"
-                  onClick={[Function]}
-                >
-                  
-                </i>
+                  
+                </span>
               </div>
+              <i
+                aria-hidden={true}
+                className="ms-DatePicker-event--without-label msDatePickerDisabled icon-105"
+                data-icon-name="Calendar"
+                onClick={[Function]}
+              >
+                
+              </i>
             </div>
           </div>
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1161,49 +1116,44 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="datetime-local"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="datetime-local"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1249,49 +1199,44 @@ exports[`single fields format time 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="time"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="time"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1367,87 +1312,82 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-178"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-178"
-          >
-            <input
-              aria-describedby="TextFieldDescription189"
-              aria-invalid={true}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-        <span
-          id="TextFieldDescription189"
-        >
-          <div
-            role="alert"
+          <input
+            aria-describedby="TextFieldDescription189"
+            aria-invalid={true}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
           />
-        </span>
-      </div>
-      
-      <div
-        className="ms-List"
-        id="root__error"
-        role="list"
-      >
-        <div
-          className="ms-List-surface"
-          role="presentation"
-        >
-          <div
-            className="ms-List-page"
-            role="presentation"
-            style={Object {}}
-          >
-            <div
-              className="ms-List-cell"
-              data-automationid="ListCell"
-              data-list-index={0}
-              role="listitem"
-            >
-              
-            </div>
-          </div>
         </div>
       </div>
       <span
-        className="css-166"
-        id="root__help"
+        id="TextFieldDescription189"
       >
-        help me!
+        <div
+          role="alert"
+        />
       </span>
     </div>
+    
+    <div
+      className="ms-List"
+      id="root__error"
+      role="list"
+    >
+      <div
+        className="ms-List-surface"
+        role="presentation"
+      >
+        <div
+          className="ms-List-page"
+          role="presentation"
+          style={Object {}}
+        >
+          <div
+            className="ms-List-cell"
+            data-automationid="ListCell"
+            data-list-index={0}
+            role="listitem"
+          >
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      className="css-166"
+      id="root__help"
+    >
+      help me!
+    </span>
   </div>
   <div>
     <br />
@@ -1493,48 +1433,35 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-object"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    
+    <div
+      className="ms-Grid"
+      dir="ltr"
     >
-      
       <div
-        className="ms-Grid"
-        dir="ltr"
+        className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-row"
+          style={
+            Object {
+              "display": "none",
+            }
+          }
         >
-          <div
-            className="form-group field field-string"
-          >
-            <div
-              className="ms-Grid-col ms-sm12  field field-string"
-              id="root_my-field"
-              style={
-                Object {
-                  "display": "none",
-                  "marginBottom": 15,
-                }
-              }
-            >
-              <input
-                id="root_my-field"
-                name="root_my-field"
-                type="hidden"
-                value=""
-              />
-              
-            </div>
-          </div>
+          <input
+            id="root_my-field"
+            name="root_my-field"
+            type="hidden"
+            value=""
+          />
         </div>
       </div>
     </div>
@@ -1583,45 +1510,40 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
     </div>
@@ -1670,20 +1592,15 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-null"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-null"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
-    >
-      
-    </div>
+    }
+  >
+    
   </div>
   <div>
     <br />
@@ -1729,50 +1646,45 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-number"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              step="any"
-              type="number"
-              value="0"
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            step="any"
+            type="number"
+            value="0"
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1818,50 +1730,45 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-number"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              step="any"
-              type="number"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            step="any"
+            type="number"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1907,49 +1814,44 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="password"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="password"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -1995,99 +1897,94 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="ms-Grid-col ms-sm12  field field-boolean"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-boolean"
+      className=""
       id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
     >
       <div
-        className=""
-        id="root"
-        name="root"
-        onBlur={[Function]}
-        onFocus={[Function]}
+        className="ms-ChoiceFieldGroup root-146"
+        role="radiogroup"
       >
         <div
-          className="ms-ChoiceFieldGroup root-146"
-          role="radiogroup"
+          className="ms-ChoiceFieldGroup-flexContainer"
         >
           <div
-            className="ms-ChoiceFieldGroup-flexContainer"
+            className="ms-ChoiceField root-147"
           >
             <div
-              className="ms-ChoiceField root-147"
+              className="ms-ChoiceField-wrapper"
             >
-              <div
-                className="ms-ChoiceField-wrapper"
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input input-148"
+                disabled={false}
+                id="root-0"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-149"
+                htmlFor="root-0"
               >
-                <input
-                  aria-describedby="root__error root__description root__help"
-                  checked={false}
-                  className="ms-ChoiceField-input input-148"
-                  disabled={false}
-                  id="root-0"
-                  name="root"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="radio"
-                />
-                <label
-                  className="ms-ChoiceField-field field-149"
-                  htmlFor="root-0"
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel140-0"
                 >
-                  <span
-                    className="ms-ChoiceFieldLabel"
-                    id="ChoiceGroupLabel140-0"
-                  >
-                    Yes
-                  </span>
-                </label>
-              </div>
+                  Yes
+                </span>
+              </label>
             </div>
+          </div>
+          <div
+            className="ms-ChoiceField root-147"
+          >
             <div
-              className="ms-ChoiceField root-147"
+              className="ms-ChoiceField-wrapper"
             >
-              <div
-                className="ms-ChoiceField-wrapper"
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input input-148"
+                disabled={false}
+                id="root-1"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-149"
+                htmlFor="root-1"
               >
-                <input
-                  aria-describedby="root__error root__description root__help"
-                  checked={false}
-                  className="ms-ChoiceField-input input-148"
-                  disabled={false}
-                  id="root-1"
-                  name="root"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="radio"
-                />
-                <label
-                  className="ms-ChoiceField-field field-149"
-                  htmlFor="root-1"
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel140-1"
                 >
-                  <span
-                    className="ms-ChoiceFieldLabel"
-                    id="ChoiceGroupLabel140-1"
-                  >
-                    No
-                  </span>
-                </label>
-              </div>
+                  No
+                </span>
+              </label>
             </div>
           </div>
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2133,69 +2030,64 @@ exports[`single fields schema examples 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help root__examples"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              list="root__examples"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help root__examples"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            list="root__examples"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
-      <datalist
-        id="root__examples"
-      >
-        <option
-          value="Firefox"
-        />
-        <option
-          value="Chrome"
-        />
-        <option
-          value="Opera"
-        />
-        <option
-          value="Vivaldi"
-        />
-        <option
-          value="Safari"
-        />
-      </datalist>
-      
     </div>
+    <datalist
+      id="root__examples"
+    >
+      <option
+        value="Firefox"
+      />
+      <option
+        value="Chrome"
+      />
+      <option
+        value="Opera"
+      />
+      <option
+        value="Vivaldi"
+      />
+      <option
+        value="Safari"
+      />
+    </datalist>
+    
   </div>
   <div>
     <br />
@@ -2241,58 +2133,53 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
         >
-          <span
-            className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
-            id="root-option"
-          />
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2338,59 +2225,54 @@ exports[`single fields select field multiple choice 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-array"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-required={false}
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-required={false}
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
         >
-          <span
-            className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
-            id="root-option"
-          />
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2436,59 +2318,54 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-array"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-required={false}
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-required={false}
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
         >
-          <span
-            className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
-            id="root-option"
-          />
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2534,61 +2411,56 @@ exports[`single fields select field multiple choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-array"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-required={false}
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-required={false}
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title title-138"
+          id="root-option"
         >
-          <span
-            className="ms-Dropdown-title title-138"
-            id="root-option"
+          foo, bar
+        </span>
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            foo, bar
-          </span>
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2634,59 +2506,54 @@ exports[`single fields select field multiple choice with labels 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="ms-Grid-col ms-sm12  field field-array"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-array"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-required={false}
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          aria-required={false}
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
         >
-          <span
-            className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
-            id="root-option"
-          />
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2732,58 +2599,53 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
         >
-          <span
-            className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-122"
-            id="root-option"
-          />
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2829,60 +2691,55 @@ exports[`single fields select field single choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-Dropdown-container"
     >
       <div
-        className="ms-Dropdown-container"
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        className="ms-Dropdown dropdown-121"
+        data-is-focusable={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
       >
-        <div
-          aria-describedby="root__error root__description root__help"
-          aria-disabled={false}
-          aria-expanded="false"
-          aria-haspopup="listbox"
-          className="ms-Dropdown dropdown-121"
-          data-is-focusable={true}
-          id="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          role="combobox"
-          tabIndex={0}
+        <span
+          className="ms-Dropdown-title title-138"
+          id="root-option"
         >
-          <span
-            className="ms-Dropdown-title title-138"
-            id="root-option"
+          bar
+        </span>
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-137"
+            data-icon-name="ChevronDown"
           >
-            bar
-          </span>
-          <span
-            className="ms-Dropdown-caretDownWrapper caretDownWrapper-123"
-          >
-            <i
-              aria-hidden={true}
-              className="ms-Dropdown-caretDown caretDown-137"
-              data-icon-name="ChevronDown"
-            >
-              
-            </i>
-          </span>
-        </div>
+            
+          </i>
+        </span>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -2928,81 +2785,76 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-integer"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-integer"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    <label
+      className="ms-Label root-73"
+      htmlFor="root"
+    />
+    <div
+      className="ms-Slider ms-Slider-enabled ms-Slider-row root-154"
     >
-      <label
-        className="ms-Label root-73"
-        htmlFor="root"
-      />
       <div
-        className="ms-Slider ms-Slider-enabled ms-Slider-row root-154"
+        className="ms-Slider-container container-156"
       >
         <div
-          className="ms-Slider-container container-156"
+          aria-disabled={false}
+          aria-valuemax={100}
+          aria-valuemin={42}
+          aria-valuenow={42}
+          aria-valuetext="42"
+          className="ms-Slider-slideBox ms-Slider-showValue ms-Slider-showTransitions slideBox-157"
+          data-is-focusable={true}
+          id="Slider144"
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          onTouchStart={[Function]}
+          role="slider"
+          tabIndex={0}
         >
           <div
-            aria-disabled={false}
-            aria-valuemax={100}
-            aria-valuemin={42}
-            aria-valuenow={42}
-            aria-valuetext="42"
-            className="ms-Slider-slideBox ms-Slider-showValue ms-Slider-showTransitions slideBox-157"
-            data-is-focusable={true}
-            id="Slider144"
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            onTouchStart={[Function]}
-            role="slider"
-            tabIndex={0}
+            className="ms-Slider-line line-159"
           >
-            <div
-              className="ms-Slider-line line-159"
-            >
-              <span
-                className="ms-Slider-thumb thumb-158"
-                style={
-                  Object {
-                    "left": "0%",
-                  }
+            <span
+              className="ms-Slider-thumb thumb-158"
+              style={
+                Object {
+                  "left": "0%",
                 }
-              />
-              <span
-                className="lineContainer-160 ms-Slider-active activeSection-161"
-                style={
-                  Object {
-                    "width": "0%",
-                  }
+              }
+            />
+            <span
+              className="lineContainer-160 ms-Slider-active activeSection-161"
+              style={
+                Object {
+                  "width": "0%",
                 }
-              />
-              <span
-                className="lineContainer-160 ms-Slider-inactive inactiveSection-162"
-                style={
-                  Object {
-                    "width": "100%",
-                  }
+              }
+            />
+            <span
+              className="lineContainer-160 ms-Slider-inactive inactiveSection-162"
+              style={
+                Object {
+                  "width": "100%",
                 }
-              />
-            </div>
+              }
+            />
           </div>
-          <label
-            className="ms-Label ms-Slider-value valueLabel-165"
-          >
-            42
-          </label>
         </div>
+        <label
+          className="ms-Label ms-Slider-value valueLabel-165"
+        >
+          42
+        </label>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3048,51 +2900,46 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
-    >
-      <div>
+    }
+  >
+    <div>
+      <div
+        className="ms-TextField root-54"
+      >
         <div
-          className="ms-TextField root-54"
+          className="ms-TextField-wrapper"
         >
           <div
-            className="ms-TextField-wrapper"
+            className="ms-TextField-fieldGroup fieldGroup-55"
           >
-            <div
-              className="ms-TextField-fieldGroup fieldGroup-55"
-            >
-              <input
-                aria-describedby="root__error root__description root__help"
-                aria-invalid={false}
-                autoFocus={false}
-                className="ms-TextField-field field-56"
-                disabled={false}
-                id="root"
-                name="root"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onInput={[Function]}
-                placeholder=""
-                readOnly={false}
-                type="file"
-                value=""
-              />
-            </div>
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              autoFocus={false}
+              className="ms-TextField-field field-56"
+              disabled={false}
+              id="root"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              placeholder=""
+              readOnly={false}
+              type="file"
+              value=""
+            />
           </div>
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3138,49 +2985,44 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="email"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="email"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3226,49 +3068,44 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="url"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="url"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3314,49 +3151,44 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3402,49 +3234,44 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder="placeholder"
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder="placeholder"
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3490,49 +3317,44 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField ms-TextField--multiline root-54"
     >
       <div
-        className="ms-TextField ms-TextField--multiline root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-118"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-118"
-          >
-            <textarea
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-119"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <textarea
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-119"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />
@@ -3578,85 +3400,75 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-object"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-object"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    <label
+      className="ms-Label root-167"
+      id="root__title"
     >
-      <label
-        className="ms-Label root-167"
-        id="root__title"
-      >
-        Titre 1
-      </label>
+      Titre 1
+    </label>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
       <div
-        className="ms-Grid"
-        dir="ltr"
+        className="ms-Grid-row"
       >
         <div
-          className="ms-Grid-row"
+          className="ms-Grid-col ms-sm12  field field-string"
+          id="root_title"
+          style={
+            Object {
+              "marginBottom": 15,
+            }
+          }
         >
           <div
-            className="form-group field field-string"
+            className="ms-TextField root-54"
           >
             <div
-              className="ms-Grid-col ms-sm12  field field-string"
-              id="root_title"
-              style={
-                Object {
-                  "display": undefined,
-                  "marginBottom": 15,
-                }
-              }
+              className="ms-TextField-wrapper"
             >
-              <div
-                className="ms-TextField root-54"
+              <label
+                className="ms-Label root-73"
+                htmlFor="root_title"
+                id="TextFieldLabel165"
               >
-                <div
-                  className="ms-TextField-wrapper"
-                >
-                  <label
-                    className="ms-Label root-73"
-                    htmlFor="root_title"
-                    id="TextFieldLabel165"
-                  >
-                    Titre 2
-                  </label>
-                  <div
-                    className="ms-TextField-fieldGroup fieldGroup-55"
-                  >
-                    <input
-                      aria-describedby="root_title__error root_title__description root_title__help"
-                      aria-invalid={false}
-                      aria-labelledby="TextFieldLabel165"
-                      autoFocus={false}
-                      className="ms-TextField-field field-56"
-                      disabled={false}
-                      id="root_title"
-                      name="root_title"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onInput={[Function]}
-                      placeholder=""
-                      readOnly={false}
-                      required={false}
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                Titre 2
+              </label>
+              <div
+                className="ms-TextField-fieldGroup fieldGroup-55"
+              >
+                <input
+                  aria-describedby="root_title__error root_title__description root_title__help"
+                  aria-invalid={false}
+                  aria-labelledby="TextFieldLabel165"
+                  autoFocus={false}
+                  className="ms-TextField-field field-56"
+                  disabled={false}
+                  id="root_title"
+                  name="root_title"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onInput={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
               </div>
-              
             </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -3705,40 +3517,35 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="ms-Grid-col ms-sm12  field field-undefined"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-undefined"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="unsupported-field"
     >
-      <div
-        className="unsupported-field"
-      >
-        <p>
-          <span>
-            Unsupported field schema for field 
-            <code>
-              root
-            </code>
-            : 
-            <em>
-              Unknown field type undefined
-            </em>
-            .
-          </span>
-        </p>
-        <pre>
-          {}
-        </pre>
-      </div>
-      
+      <p>
+        <span>
+          Unsupported field schema for field 
+          <code>
+            root
+          </code>
+          : 
+          <em>
+            Unknown field type undefined
+          </em>
+          .
+        </span>
+      </p>
+      <pre>
+        {}
+      </pre>
     </div>
+    
   </div>
   <div>
     <br />
@@ -3784,125 +3591,120 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
-  >
-    <div
-      className="ms-Grid-col ms-sm12  field field-number"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
+    className="ms-Grid-col ms-sm12  field field-number"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
       }
+    }
+  >
+    <label
+      className="ms-Label root-73"
+      htmlFor="root"
+    />
+    <div
+      className="css-106"
     >
-      <label
-        className="ms-Label root-73"
-        htmlFor="root"
-      />
-      <div
-        className="css-106"
-      >
-        
-        <div
-          aria-describedby="root__error root__description root__help"
-          className="css-110"
-          id="root"
-          onChange={[Function]}
-        >
-          <input
-            aria-disabled={false}
-            aria-labelledby=""
-            aria-valuemax={Infinity}
-            aria-valuemin={-Infinity}
-            aria-valuetext=""
-            autoComplete="off"
-            className="ms-spinButton-input css-111"
-            data-lpignore={true}
-            disabled={false}
-            id="input93"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onInput={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            role="spinbutton"
-            type="text"
-            value=""
-          />
-          <span
-            className="css-112"
-          >
-            <button
-              aria-label="Increase value by 1"
-              className="ms-Button ms-Button--icon ms-UpButton root-113"
-              data-is-focusable={false}
-              onClick={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              tabIndex={-1}
-              type="button"
-            >
-              <span
-                className="ms-Button-flexContainer flexContainer-66"
-                data-automationid="splitbuttonprimary"
-              >
-                <i
-                  aria-hidden={true}
-                  className="ms-Icon root-37 css-116 ms-Button-icon icon-114"
-                  data-icon-name="ChevronUpSmall"
-                  style={
-                    Object {
-                      "fontFamily": "\\"FabricMDL2Icons-2\\"",
-                    }
-                  }
-                >
-                  
-                </i>
-              </span>
-            </button>
-            <button
-              aria-label="Decrease value by 1"
-              className="ms-Button ms-Button--icon ms-DownButton root-113"
-              data-is-focusable={false}
-              onClick={[Function]}
-              onKeyDown={[Function]}
-              onKeyPress={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              tabIndex={-1}
-              type="button"
-            >
-              <span
-                className="ms-Button-flexContainer flexContainer-66"
-                data-automationid="splitbuttonprimary"
-              >
-                <i
-                  aria-hidden={true}
-                  className="ms-Icon root-37 css-117 ms-Button-icon icon-114"
-                  data-icon-name="ChevronDownSmall"
-                  style={
-                    Object {
-                      "fontFamily": "\\"FabricMDL2Icons-3\\"",
-                    }
-                  }
-                >
-                  
-                </i>
-              </span>
-            </button>
-          </span>
-        </div>
-      </div>
       
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="css-110"
+        id="root"
+        onChange={[Function]}
+      >
+        <input
+          aria-disabled={false}
+          aria-labelledby=""
+          aria-valuemax={Infinity}
+          aria-valuemin={-Infinity}
+          aria-valuetext=""
+          autoComplete="off"
+          className="ms-spinButton-input css-111"
+          data-lpignore={true}
+          disabled={false}
+          id="input93"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          role="spinbutton"
+          type="text"
+          value=""
+        />
+        <span
+          className="css-112"
+        >
+          <button
+            aria-label="Increase value by 1"
+            className="ms-Button ms-Button--icon ms-UpButton root-113"
+            data-is-focusable={false}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-66"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-37 css-116 ms-Button-icon icon-114"
+                data-icon-name="ChevronUpSmall"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-label="Decrease value by 1"
+            className="ms-Button ms-Button--icon ms-DownButton root-113"
+            data-is-focusable={false}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-66"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-37 css-117 ms-Button-icon icon-114"
+                data-icon-name="ChevronDownSmall"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-3\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </span>
+      </div>
     </div>
+    
   </div>
   <div>
     <br />
@@ -3948,49 +3750,44 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="ms-Grid-col ms-sm12  field field-string"
+    id="root"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
   >
     <div
-      className="ms-Grid-col ms-sm12  field field-string"
-      id="root"
-      style={
-        Object {
-          "display": undefined,
-          "marginBottom": 15,
-        }
-      }
+      className="ms-TextField root-54"
     >
       <div
-        className="ms-TextField root-54"
+        className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-wrapper"
+          className="ms-TextField-fieldGroup fieldGroup-55"
         >
-          <div
-            className="ms-TextField-fieldGroup fieldGroup-55"
-          >
-            <input
-              aria-describedby="root__error root__description root__help"
-              aria-invalid={false}
-              autoFocus={false}
-              className="ms-TextField-field field-56"
-              disabled={false}
-              id="root"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onInput={[Function]}
-              placeholder=""
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            autoFocus={false}
+            className="ms-TextField-field field-56"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="text"
+            value=""
+          />
         </div>
       </div>
-      
     </div>
+    
   </div>
   <div>
     <br />

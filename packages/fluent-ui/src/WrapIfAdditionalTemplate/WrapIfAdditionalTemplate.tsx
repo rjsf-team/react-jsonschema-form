@@ -16,7 +16,6 @@ export default function WrapIfAdditionalTemplate<
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
-    classNames,
     disabled,
     id,
     label,
@@ -30,6 +29,11 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
   } = props;
   const { templates, translateString } = registry;
+
+  // TODO: do this better by not returning the form-group class from master.
+  let { classNames = '' } = props;
+  classNames = 'ms-Grid-col ms-sm12 ' + classNames.replace('form-group', '');
+
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -37,7 +41,7 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={style}>
+      <div id={id} className={classNames} style={{ ...style, marginBottom: 15 }}>
         {children}
       </div>
     );
@@ -46,9 +50,9 @@ export default function WrapIfAdditionalTemplate<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
   return (
-    <div className={`ms-Grid ${classNames}`} style={style} dir='ltr'>
-      <div className='ms-Grid-row'>
-        <div key={`${id}-key`} className='ms-Grid-col ms-sm4 ms-md4 ms-lg5'>
+    <div className={classNames} style={{ ...style, marginBottom: 15 }} dir='ltr'>
+      <div key={`${id}-key`} className='ms-Grid-row'>
+        <div className='ms-Grid-col ms-sm4 ms-md4 ms-lg5'>
           <TextField
             required={required}
             label={keyLabel}
