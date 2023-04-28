@@ -58,7 +58,16 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
   addSchema(schema: S, hash: string) {
     const key = get(schema, ID_KEY, hash);
     const identifiedSchema = { ...schema, [ID_KEY]: key };
-    this.schemaMap[key] = identifiedSchema;
+    const existing = this.schemaMap[key];
+    if (!existing) {
+      this.schemaMap[key] = identifiedSchema;
+    } else if (!isEqual(existing, identifiedSchema)) {
+      console.error('existing schema:', JSON.stringify(existing, null, 2));
+      console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
+      throw new Error(
+        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $ID to one of the schemas`
+      );
+    }
   }
 
   /** Returns the current `schemaMap` to the caller

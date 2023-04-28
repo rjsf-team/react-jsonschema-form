@@ -8,9 +8,9 @@ const TINY_SCHEMA: RJSFSchema = {
 
 describe('hashForSchema', () => {
   it('returns a hash for a tiny schema', () => {
-    expect(hashForSchema(TINY_SCHEMA)).toEqual('1529867581');
+    expect(hashForSchema(TINY_SCHEMA)).toMatchSnapshot();
   });
   it('returns a hash for a more complex schema', () => {
-    expect(hashForSchema(RECURSIVE_REF)).toEqual('-1807418922');
+    expect(hashForSchema(RECURSIVE_REF)).toMatchSnapshot();
   });
 });

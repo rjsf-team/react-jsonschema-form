@@ -334,6 +334,7 @@ export function resolveAnyOrOneOfSchemas<
       }
       return s;
     });
+    // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
       return anyOrOneOf;
