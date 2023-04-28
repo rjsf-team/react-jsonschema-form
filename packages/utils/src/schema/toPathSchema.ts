@@ -53,36 +53,19 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     }
   }
 
-  const pathSchema: PathSchema = {
+  let pathSchema: PathSchema = {
     [NAME_KEY]: name.replace(/^\./, ''),
   } as PathSchema;
 
-  if (ONE_OF_KEY in schema) {
+  if (ONE_OF_KEY in schema || ANY_OF_KEY in schema) {
+    const xxxOf: S[] = ONE_OF_KEY in schema ? (schema.oneOf as S[]) : (schema.anyOf as S[]);
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const index = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema!,
-      formData,
-      schema.oneOf as S[],
-      0,
-      discriminator
-    );
-    const _schema: S = schema.oneOf![index] as S;
-    return toPathSchemaInternal<T, S, F>(validator, _schema, name, rootSchema, formData, _recurseList);
-  }
-
-  if (ANY_OF_KEY in schema) {
-    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const index = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema!,
-      formData,
-      schema.anyOf as S[],
-      0,
-      discriminator
-    );
-    const _schema: S = schema.anyOf![index] as S;
-    return toPathSchemaInternal<T, S, F>(validator, _schema, name, rootSchema, formData, _recurseList);
+    const index = getClosestMatchingOption<T, S, F>(validator, rootSchema!, formData, xxxOf, 0, discriminator);
+    const _schema: S = xxxOf![index] as S;
+    pathSchema = {
+      ...pathSchema,
+      ...toPathSchemaInternal<T, S, F>(validator, _schema, name, rootSchema, formData, _recurseList),
+    };
   }
 
   if (ADDITIONAL_PROPERTIES_KEY in schema && schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
