@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import { Checkbox, ICheckboxProps } from '@fluentui/react';
 import {
   ariaDescribedByIds,
@@ -49,7 +49,10 @@ export default function CheckboxWidget<
     label,
     hideLabel,
     schema,
+    autofocus,
     onChange,
+    onBlur,
+    onFocus,
     options,
     registry,
     uiSchema,
@@ -66,6 +69,9 @@ export default function CheckboxWidget<
     },
     [onChange]
   );
+
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   const description = options.description ?? schema.description;
@@ -86,6 +92,11 @@ export default function CheckboxWidget<
         name={id}
         label={labelValue(label || undefined, hideLabel)}
         disabled={disabled || readonly}
+        inputProps={{
+          autoFocus: autofocus,
+          onBlur: _onBlur,
+          onFocus: _onFocus,
+        }}
         checked={typeof value === 'undefined' ? false : value}
         onChange={_onChange}
         {...uiProps}

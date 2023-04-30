@@ -1,10 +1,11 @@
-import { FormEvent } from 'react';
+import { FormEvent, FocusEvent } from 'react';
 import { Checkbox } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  enumOptionsValueForIndex,
   labelValue,
   optionId,
   FormContextType,
@@ -28,12 +29,15 @@ export default function CheckboxesWidget<
   disabled,
   options,
   value,
+  autofocus,
   readonly,
   required,
   onChange,
+  onBlur,
+  onFocus,
   rawErrors = [],
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange = (index: number) => (_ev?: FormEvent<HTMLElement>, checked?: boolean) => {
@@ -43,6 +47,12 @@ export default function CheckboxesWidget<
       onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
     }
   };
+
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
 
@@ -60,6 +70,11 @@ export default function CheckboxesWidget<
               checked={checked}
               label={option.label}
               disabled={disabled || itemDisabled || readonly}
+              inputProps={{
+                autoFocus: autofocus && index === 0,
+                onBlur: _onBlur,
+                onFocus: _onFocus,
+              }}
               onChange={_onChange(index)}
               key={index}
               {...uiProps}

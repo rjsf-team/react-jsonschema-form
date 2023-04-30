@@ -19,13 +19,16 @@ exports[`single fields checkbox field 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
@@ -103,13 +106,16 @@ exports[`single fields checkbox field with label 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
@@ -195,13 +201,16 @@ exports[`single fields checkboxes field 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-0"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
@@ -232,13 +241,16 @@ exports[`single fields checkboxes field 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-1"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
@@ -269,13 +281,16 @@ exports[`single fields checkboxes field 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-2"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
@@ -306,13 +321,16 @@ exports[`single fields checkboxes field 1`] = `
     >
       <input
         aria-disabled={false}
+        autoFocus={false}
         checked={false}
         className="input-201"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-3"
         name="root"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
         type="checkbox"
       />
       <label
