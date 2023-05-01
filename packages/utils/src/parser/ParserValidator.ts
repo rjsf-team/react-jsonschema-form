@@ -65,7 +65,7 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
       console.error('existing schema:', JSON.stringify(existing, null, 2));
       console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
       throw new Error(
-        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $ID to one of the schemas`
+        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`
       );
     }
   }
