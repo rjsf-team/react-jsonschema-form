@@ -16,15 +16,30 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.6.3
+# 5.7.0
 
 ## @rjsf/antd
 
 - Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
 
+## @rjsf/core
+
+- Updated the `MultiSchemaField` to use the new `getDiscriminatorFieldFromSchema()` API
+
 ## @rjsf/fluent-ui
 
 - Added support for `additionalProperties` to fluent-ui theme, fixing [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777).
+
+## @rjsf/utils
+
+- Added two new APIs `getDiscriminatorFieldFromSchema()` (a refactor of code from `MultiSchemaField`) and `hashForSchema()`
+  - Updated `getDefaultFormState()` and `toPathSchema()` to use `getDiscriminatorFieldFromSchema()` to provide a discriminator field to `getClosestMatchingOption()` calls.
+- Refactored the `retrieveSchema()` internal API functions to support implementing an internal `schemaParser()` API for use in precompiling schemas, in support of [#3543](https://github.com/rjsf-team/react-jsonschema-form/issues/3543)
+- Fixed `toPathSchema()` to handle `properties` in an object along with `anyOf`/`oneOf`, fixing [#3628](https://github.com/rjsf-team/react-jsonschema-form/issues/3628) and [#1628](https://github.com/rjsf-team/react-jsonschema-form/issues/1628)
+
+## Dev / docs / playground
+
+- Added documentation to `custom-templates` describing how to extend the `BaseInputTemplate`
 
 # 5.6.2
 

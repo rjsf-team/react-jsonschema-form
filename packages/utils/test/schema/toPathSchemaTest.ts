@@ -594,6 +594,9 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
     it('should return a pathSchema for a schema with oneOf', () => {
       const schema: RJSFSchema = {
         type: 'object',
+        properties: {
+          str: { type: 'string' },
+        },
         oneOf: [
           {
             properties: {
@@ -613,6 +616,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = {
+        str: 'string',
         lorem: 'loremValue',
       };
 
@@ -624,11 +628,17 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         lorem: {
           $name: 'lorem',
         },
+        str: {
+          $name: 'str',
+        },
       });
     });
     it('should return a pathSchema for a schema with anyOf', () => {
       const schema: RJSFSchema = {
         type: 'object',
+        properties: {
+          str: { type: 'string' },
+        },
         anyOf: [
           {
             properties: {
@@ -648,6 +658,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = {
+        str: 'string',
         ipsum: 'ipsumValue',
       };
       // Two per option using getClosestMatchingOption, the first ones are both false
@@ -658,6 +669,9 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         $name: '',
         ipsum: {
           $name: 'ipsum',
+        },
+        str: {
+          $name: 'str',
         },
       });
     });

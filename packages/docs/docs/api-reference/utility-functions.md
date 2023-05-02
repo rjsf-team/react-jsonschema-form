@@ -268,6 +268,19 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
+### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.
+Returns `undefined` when a valid discriminator is not present.
+
+#### Parameters
+
+- schema: S - The schema from which the discriminator is potentially obtained
+
+#### Returns
+
+- string | undefined: The `discriminator.propertyName` if it exists in the schema, otherwise `undefined`
+
 ### getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
@@ -376,6 +389,18 @@ create a schema, it is useful to know what type to use based on the data we are 
 #### Returns
 
 - string: The best guess for the object type
+
+### hashForSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Stringifies the schema and returns the hash of the resulting string.
+
+#### Parameters
+
+- schema: S - The schema for which the hash is desired
+
+#### Returns
+
+- string: The string obtained from the hash of the stringified schema
 
 ### hasWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
