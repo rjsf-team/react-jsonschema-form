@@ -66,23 +66,35 @@ const liveSettingsSchema: RJSFSchema = {
       enum: [false, 'top', 'bottom'],
     },
     experimental_defaultFormStateBehavior: {
-      title: 'Default form state behavior',
-      arrayMinItems: {
-        type: 'string',
-        title: 'minItems behavior for array field',
-        oneOf: [
-          {
-            type: 'string',
-            title: 'Populate remaining minItems with default values (legacy behavior)',
-            enum: ['populate'],
-          },
-          {
-            type: 'string',
-            title: 'Ignore minItems unless field is required',
-            enum: ['requiredOnly'],
-          },
-        ],
+      title: 'Default Form State Behavior (Experimental)',
+      type: 'object',
+      properties: {
+        arrayMinItems: {
+          type: 'string',
+          title: 'minItems behavior for array field',
+          default: 'populate',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Populate remaining minItems with default values (legacy behavior)',
+              enum: ['populate'],
+            },
+            {
+              type: 'string',
+              title: 'Ignore minItems unless field is required',
+              enum: ['requiredOnly'],
+            },
+          ],
+        },
       },
+    },
+  },
+};
+
+const liveSettingsUiSchema: UiSchema = {
+  experimental_defaultFormStateBehavior: {
+    'ui:options': {
+      label: false,
     },
   },
 };
@@ -194,6 +206,7 @@ export default function Header({
             formData={liveSettings}
             validator={localValidator}
             onChange={handleSetLiveSettings}
+            uiSchema={liveSettingsUiSchema}
           >
             <div />
           </Form>
