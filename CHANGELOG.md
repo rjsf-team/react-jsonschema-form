@@ -15,11 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.7.0
+# 5.8.0
 
 ## @rjsf/core
 
-- Added new `defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363))
+- Added new `experimental_defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) (PR [3604](https://github.com/rjsf-team/react-jsonschema-form/pull/3604))
 
 ## @rjsf/utils
 
@@ -27,7 +27,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Added **Default Form State Behavior** live setting
+- Added **minItems behavior for array field** live setting
 
 # 5.7.0
 
