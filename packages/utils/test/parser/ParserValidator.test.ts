@@ -77,7 +77,7 @@ describe('ParserValidator', () => {
     validator.schemaMap[DUPLICATE_HASH] = TINY_SCHEMA;
     expect(() => validator.isValid(DUPLICATE_SCHEMA, undefined, RECURSIVE_REF)).toThrowError(
       new Error(
-        `Two different schemas exist with the same key ${DUPLICATE_HASH}! What a bad coincidence. If possible, try adding an $ID to one of the schemas`
+        `Two different schemas exist with the same key ${DUPLICATE_HASH}! What a bad coincidence. If possible, try adding an $id to one of the schemas`
       )
     );
   });
