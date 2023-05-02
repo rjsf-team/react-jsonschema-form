@@ -31,6 +31,10 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type FormContextType = GenericObjectType;
 
+export type Experimental_DefaultFormStateBehavior = {
+  arrayMinItems?: 'populate' | 'requiredOnly';
+};
+
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
   /** The year of the Date */
@@ -956,10 +960,14 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [defaultFormStateBehavior=0] Optional bit flag, if provided, allows users to override default form state behavior
+   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S, defaultFormStateBehavior?: number): boolean;
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S,
+    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+  ): boolean;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *

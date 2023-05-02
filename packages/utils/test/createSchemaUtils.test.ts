@@ -1,10 +1,16 @@
-import { createSchemaUtils, RJSFSchema, SchemaUtilsType, ValidatorType } from '../src';
+import {
+  createSchemaUtils,
+  Experimental_DefaultFormStateBehavior,
+  RJSFSchema,
+  SchemaUtilsType,
+  ValidatorType,
+} from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 
 describe('createSchemaUtils()', () => {
   const testValidator: ValidatorType = getTestValidator({});
   const rootSchema: RJSFSchema = { type: 'object' };
-  const defaultFormStateBehavior = 1;
+  const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = { arrayMinItems: 'requiredOnly' };
   const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema, defaultFormStateBehavior);
 
   it('getValidator()', () => {
@@ -19,9 +25,12 @@ describe('createSchemaUtils()', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema)).toBe(false);
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, 1)).toBe(true);
+        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: 'requiredOnly' })).toBe(
+          true
+        );
       });
     });
+
     describe('constructed with defaultFormStateBehavior', () => {
       it('returns false when passing same validator, rootSchema, and defaultFormStateBehavior', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, defaultFormStateBehavior)).toBe(false);
@@ -43,7 +52,7 @@ describe('createSchemaUtils()', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, {}, defaultFormStateBehavior)).toBe(true);
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, 0)).toBe(true);
+        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: 'populate' })).toBe(true);
       });
     });
   });

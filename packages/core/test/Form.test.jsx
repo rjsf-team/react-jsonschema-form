@@ -17,7 +17,6 @@ import {
   submitForm,
 } from './test_utils';
 import widgetsSchema from './widgets_schema.json';
-import { DefaultFormStateBehavior } from '@rjsf/utils';
 
 describeRepeated('Form common', (createFormComponent) => {
   let sandbox;
@@ -1417,7 +1416,7 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: {
           albums: ['Until We Have Faces'],
         },
-        defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
       });
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
@@ -1435,7 +1434,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: {},
-        defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
       });
       submitForm(node);
       sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: {} });

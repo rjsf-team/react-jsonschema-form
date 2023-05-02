@@ -1,15 +1,7 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import {
-  ANY_OF_KEY,
-  DEFAULT_KEY,
-  DEPENDENCIES_KEY,
-  PROPERTIES_KEY,
-  ONE_OF_KEY,
-  REF_KEY,
-  DefaultFormStateBehavior,
-} from '../constants';
+import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -18,7 +10,14 @@ import isObject from '../isObject';
 import isFixedItems from '../isFixedItems';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
-import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_DefaultFormStateBehavior,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 
@@ -107,7 +106,7 @@ interface computeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   rawFormData?: T;
   includeUndefinedValues?: boolean | 'excludeObjectChildren';
   _recurseList?: string[];
-  defaultFormStateBehavior?: number;
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
   required?: boolean;
 }
 
@@ -124,7 +123,7 @@ interface computeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @param [props._recurseList=[]] - The list of ref names currently being recursed, used to prevent infinite recursion
- * @param [props.defaultFormStateBehavior=0] - Optional bit flag, if provided, allows users to override default form state behavior
+ * @param [props.experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @param [props.required] - Optional flag, if true, indicates this schema was required in the parent schema.
  * @returns - The resulting `formData` with all the defaults provided
  */
@@ -137,7 +136,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     rootSchema = {} as S,
     includeUndefinedValues = false,
     _recurseList = [],
-    defaultFormStateBehavior = 0,
+    experimental_defaultFormStateBehavior = undefined,
     required = false,
   }: computeDefaultsProps<T, S> = {}
 ): T | T[] | undefined {
@@ -160,7 +159,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rootSchema,
         includeUndefinedValues,
         _recurseList: _recurseList.concat(refName!),
-        defaultFormStateBehavior,
+        experimental_defaultFormStateBehavior,
         parentDefaults: defaults,
         rawFormData: formData as T,
       });
@@ -168,13 +167,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   } else if (DEPENDENCIES_KEY in schema) {
     const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, formData);
     return computeDefaults<T, S, F>(
-      validator,
+      validator, 
       resolvedSchema[0],
       {
         rootSchema,
         includeUndefinedValues,
         _recurseList,
-        defaultFormStateBehavior,
+        experimental_defaultFormStateBehavior,
         parentDefaults: defaults,
         rawFormData: formData as T,
       },
@@ -185,7 +184,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rootSchema,
         includeUndefinedValues,
         _recurseList,
-        defaultFormStateBehavior,
+        experimental_defaultFormStateBehavior,
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData as T,
       })
@@ -236,7 +235,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         const computedDefault = computeDefaults<T, S, F>(validator, get(schema, [PROPERTIES_KEY, key]), {
           rootSchema,
           _recurseList,
-          defaultFormStateBehavior,
+          experimental_defaultFormStateBehavior,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
@@ -263,7 +262,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
             rootSchema,
             _recurseList,
-            defaultFormStateBehavior,
+            experimental_defaultFormStateBehavior,
             includeUndefinedValues: includeUndefinedValues === true,
             parentDefaults: get(defaults, [key]),
             rawFormData: get(formData, [key]),
@@ -282,7 +281,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           return computeDefaults<T, S, F>(validator, schemaItem, {
             rootSchema,
             _recurseList,
-            defaultFormStateBehavior,
+            experimental_defaultFormStateBehavior,
             parentDefaults: item,
           });
         }) as T[];
@@ -295,17 +294,14 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           return computeDefaults<T, S, F>(validator, schemaItem, {
             rootSchema,
             _recurseList,
-            defaultFormStateBehavior,
+            experimental_defaultFormStateBehavior,
             rawFormData: item,
             parentDefaults: get(defaults, [idx]),
           });
         }) as T[];
       }
 
-      const ignoreMinItemsFlagSet =
-        (defaultFormStateBehavior & DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired) ===
-        DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired;
-
+      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems === 'requiredOnly';
       if (ignoreMinItemsFlagSet && !required) {
         // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
         // return form data/defaults
@@ -331,7 +327,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           parentDefaults: fillerDefault,
           rootSchema,
           _recurseList,
-          defaultFormStateBehavior,
+          experimental_defaultFormStateBehavior,
         })
       ) as T[];
       // then fill up the rest with either the item default or empty, up to minItems
@@ -352,7 +348,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
- * @param [defaultFormStateBehavior=0] Optional bit flag, if provided, allows users to override default form state behavior
+ * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -365,7 +361,7 @@ export default function getDefaultFormState<
   formData?: T,
   rootSchema?: S,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
-  defaultFormStateBehavior = 0
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
 ) {
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);
@@ -374,7 +370,7 @@ export default function getDefaultFormState<
   const defaults = computeDefaults<T, S, F>(validator, schema, {
     rootSchema,
     includeUndefinedValues,
-    defaultFormStateBehavior,
+    experimental_defaultFormStateBehavior,
     rawFormData: formData,
   });
   if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {

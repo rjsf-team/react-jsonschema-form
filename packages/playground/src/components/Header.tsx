@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { DefaultFormStateBehavior, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import CopyLink from './CopyLink';
@@ -65,22 +65,24 @@ const liveSettingsSchema: RJSFSchema = {
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
-    defaultFormStateBehavior: {
-      type: 'number',
-      default: DefaultFormStateBehavior.Legacy_PopulateMinItems,
+    experimental_defaultFormStateBehavior: {
       title: 'Default form state behavior',
-      oneOf: [
-        {
-          type: 'number',
-          title: 'Populate remaining minItems with default values (legacy behavior)',
-          enum: [DefaultFormStateBehavior.Legacy_PopulateMinItems],
-        },
-        {
-          type: 'number',
-          title: 'Ignore minItems unless field is required',
-          enum: [DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired],
-        },
-      ],
+      arrayMinItems: {
+        type: 'string',
+        title: 'minItems behavior for array field',
+        oneOf: [
+          {
+            type: 'string',
+            title: 'Populate remaining minItems with default values (legacy behavior)',
+            enum: ['populate'],
+          },
+          {
+            type: 'string',
+            title: 'Ignore minItems unless field is required',
+            enum: ['requiredOnly'],
+          },
+        ],
+      },
     },
   },
 };

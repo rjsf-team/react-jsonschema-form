@@ -1,6 +1,7 @@
 import deepEquals from './deepEquals';
 import {
   ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
   FormContextType,
   GlobalUISchemaOptions,
   IdSchema,
@@ -27,10 +28,9 @@ import {
   toIdSchema,
   toPathSchema,
 } from './schema';
-import { DefaultFormStateBehavior } from './constants';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator`, `rootSchema`, or `defaultFormStateBehavior` to each method.
+ * that one does not have to explicitly pass the `validator`, `rootSchema`, or `experimental_defaultFormStateBehavior` to each method.
  * Since these generally do not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
@@ -39,18 +39,22 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
-  defaultFormStateBehavior: number;
+  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
-   * @param defaultFormStateBehavior - Bit flag which allows users to override default form state behavior
+   * @param experimental_defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
    */
-  constructor(validator: ValidatorType<T, S, F>, rootSchema: S, defaultFormStateBehavior: number) {
+  constructor(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S,
+    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior
+  ) {
     this.rootSchema = rootSchema;
     this.validator = validator;
-    this.defaultFormStateBehavior = defaultFormStateBehavior;
+    this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
   }
 
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
@@ -67,13 +71,13 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [defaultFormStateBehavior=0] - Optional bit flag, if provided, allows users to override default form state behavior
+   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    defaultFormStateBehavior = DefaultFormStateBehavior.Legacy_PopulateMinItems
+    experimental_defaultFormStateBehavior = {}
   ): boolean {
     if (!validator || !rootSchema) {
       return false;
@@ -81,7 +85,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     return (
       this.validator !== validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
-      this.defaultFormStateBehavior !== defaultFormStateBehavior
+      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior)
     );
   }
 
@@ -106,7 +110,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       this.rootSchema,
       includeUndefinedValues,
-      this.defaultFormStateBehavior
+      this.experimental_defaultFormStateBehavior
     );
   }
 
@@ -278,7 +282,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param [defaultFormStateBehavior=0] - Optional bit flag, if provided, allows users to override default form state behavior
+ * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
@@ -288,7 +292,7 @@ export default function createSchemaUtils<
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
-  defaultFormStateBehavior = DefaultFormStateBehavior.Legacy_PopulateMinItems
+  experimental_defaultFormStateBehavior = {}
 ): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(validator, rootSchema, defaultFormStateBehavior);
+  return new SchemaUtils<T, S, F>(validator, rootSchema, experimental_defaultFormStateBehavior);
 }

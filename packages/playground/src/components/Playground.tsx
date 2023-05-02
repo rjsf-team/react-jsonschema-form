@@ -9,7 +9,6 @@ import {
   TemplatesType,
   UiSchema,
   ValidatorType,
-  DefaultFormStateBehavior,
 } from '@rjsf/utils';
 
 import { samples } from '../samples';
@@ -45,7 +44,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     readonly: false,
     omitExtraData: false,
     liveOmit: false,
-    defaultFormStateBehavior: DefaultFormStateBehavior.Legacy_PopulateMinItems,
+    experimental_defaultFormStateBehavior: {},
   });
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
   const [ArrayFieldTemplate, setArrayFieldTemplate] = useState<ComponentType<ArrayFieldTemplateProps>>();

@@ -1,4 +1,4 @@
-import { createSchemaUtils, DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
+import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
 import { computeDefaults } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
@@ -264,7 +264,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
           })
         ).toEqual({});
       });
@@ -282,7 +282,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { optionalArray: [] },
-            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
           })
         ).toEqual({ optionalArray: [] });
       });
@@ -301,7 +301,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
           })
         ).toEqual({ requiredArray: [undefined, undefined] });
       });
@@ -321,7 +321,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
           })
         ).toEqual({ requiredArray: ['default0', 'default1'] });
       });
@@ -342,7 +342,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { requiredArray: ['raw0'] },
-            defaultFormStateBehavior: DefaultFormStateBehavior.IgnoreMinItemsUnlessRequired,
+            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
           })
         ).toEqual({ requiredArray: ['raw0', 'default0'] });
       });
