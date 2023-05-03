@@ -36,6 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Updated `getDefaultFormState()` and `toPathSchema()` to use `getDiscriminatorFieldFromSchema()` to provide a discriminator field to `getClosestMatchingOption()` calls.
 - Refactored the `retrieveSchema()` internal API functions to support implementing an internal `schemaParser()` API for use in precompiling schemas, in support of [#3543](https://github.com/rjsf-team/react-jsonschema-form/issues/3543)
 - Fixed `toPathSchema()` to handle `properties` in an object along with `anyOf`/`oneOf`, fixing [#3628](https://github.com/rjsf-team/react-jsonschema-form/issues/3628) and [#1628](https://github.com/rjsf-team/react-jsonschema-form/issues/1628)
+- Fixed `computeDefaults()` to handle `$ref` in an object along with `anyOf`/`oneOf`, fixing [#3633](https://github.com/rjsf-team/react-jsonschema-form/issues/3633)
 
 ## Dev / docs / playground
 
