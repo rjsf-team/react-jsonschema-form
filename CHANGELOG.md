@@ -15,6 +15,14 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.6.2
+## @rjsf/material-ui
+-"ui:options" : {"label" : false}
+-Updated `CheckboxesWidget.tsx` added property disableLabel and use it to hide label if label = 'false'
+
+## @rjsf/mui
+-"ui:options" : {"label" : false}
+-Updated `CheckboxesWidget.tsx` added property disableLabel and use it to hide label if label = 'false'
 
 # 5.3.0
 

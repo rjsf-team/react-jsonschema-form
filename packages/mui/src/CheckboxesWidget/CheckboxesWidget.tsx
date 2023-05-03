@@ -35,6 +35,8 @@ export default function CheckboxesWidget<
   autofocus,
   readonly,
   required,
+  uiSchema,
+  registry,
   onChange,
   onBlur,
   onFocus,
@@ -56,12 +58,14 @@ export default function CheckboxesWidget<
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-
+  
+  const { schemaUtils } = registry;
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema);
   return (
     <>
-      <FormLabel required={required} htmlFor={id}>
+      {displayLabel && (<FormLabel required={required} htmlFor={id}>
         {label || schema.title}
-      </FormLabel>
+      </FormLabel>)}
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
