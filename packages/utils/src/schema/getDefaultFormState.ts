@@ -166,18 +166,14 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     }
   } else if (DEPENDENCIES_KEY in schema) {
     const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, formData);
-    return computeDefaults<T, S, F>(
-      validator, 
-      resolvedSchema[0],
-      {
-        rootSchema,
-        includeUndefinedValues,
-        _recurseList,
-        experimental_defaultFormStateBehavior,
-        parentDefaults: defaults,
-        rawFormData: formData as T,
-      },
-    );
+    return computeDefaults<T, S, F>(validator, resolvedSchema[0], {
+      rootSchema,
+      includeUndefinedValues,
+      _recurseList,
+      experimental_defaultFormStateBehavior,
+      parentDefaults: defaults,
+      rawFormData: formData as T,
+    });
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S>(validator, itemSchema, {
