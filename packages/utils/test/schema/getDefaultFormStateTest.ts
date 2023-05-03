@@ -728,6 +728,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
+      it('should populate defaults for oneOf + ref', () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            foo: {
+              type: 'object',
+              properties: {
+                fooProp: {
+                  type: 'string',
+                },
+                fooProp2: {
+                  type: 'string',
+                  default: 'fooProp2',
+                },
+              },
+            },
+            bar: {
+              type: 'object',
+              properties: {
+                barProp: {
+                  type: 'string',
+                },
+                barProp2: {
+                  type: 'string',
+                  default: 'barProp2',
+                },
+              },
+            },
+          },
+          oneOf: [
+            {
+              $ref: '#/definitions/foo',
+            },
+            {
+              $ref: '#/definitions/bar',
+            },
+          ],
+        };
+        expect(getDefaultFormState(testValidator, schema, { fooProp: 'fooProp' }, schema)).toEqual({
+          fooProp: 'fooProp',
+          fooProp2: 'fooProp2',
+        });
+        expect(getDefaultFormState(testValidator, schema, { barProp: 'barProp' }, schema)).toEqual({
+          barProp: 'barProp',
+          barProp2: 'barProp2',
+        });
+      });
       it('should fill array with additional items schema when items is empty', () => {
         const schema: RJSFSchema = {
           type: 'object',
