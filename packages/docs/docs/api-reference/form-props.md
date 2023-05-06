@@ -86,9 +86,9 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={
-      arrayMinItems: 'requiredOnly'
-    }
+    experimental_defaultFormStateBehavior={{
+      arrayMinItems: 'requiredOnly',
+    }}
   />,
   document.getElementById('app')
 );

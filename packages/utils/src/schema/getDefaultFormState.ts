@@ -100,7 +100,7 @@ function maybeAddDefaultToObject<T = any>(
   }
 }
 
-interface computeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema> {
+interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema> {
   parentDefaults?: T;
   rootSchema?: S;
   rawFormData?: T;
@@ -138,7 +138,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
     required = false,
-  }: computeDefaultsProps<T, S> = {}
+  }: ComputeDefaultsProps<T, S> = {}
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);

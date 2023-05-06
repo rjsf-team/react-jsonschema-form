@@ -268,7 +268,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           })
         ).toEqual({});
       });
-      it('should return empty array when given an empty array as form data for an optional array property with minItems ', () => {
+      it('should return empty array when given an empty array as form data for an optional array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {

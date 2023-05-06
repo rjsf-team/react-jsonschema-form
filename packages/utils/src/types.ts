@@ -31,6 +31,9 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type FormContextType = GenericObjectType;
 
+/** Experimental features to specify different form state behavior. Currently, this only affects the
+ * handling of optional array fields where `minItems` is set.
+ */
 export type Experimental_DefaultFormStateBehavior = {
   arrayMinItems?: 'populate' | 'requiredOnly';
 };
