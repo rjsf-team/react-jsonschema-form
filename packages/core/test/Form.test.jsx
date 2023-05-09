@@ -1398,6 +1398,49 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
+  describe('Default form state behavior flag', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        albums: {
+          type: 'array',
+          items: { type: 'string' },
+          title: 'Album Titles',
+          minItems: 3,
+        },
+      },
+    };
+    it('Errors when minItems is set, field is required, and minimum number of items are not present with IgnoreMinItemsUnlessRequired flag set', () => {
+      const { node, onError } = createFormComponent({
+        schema: { ...schema, required: ['albums'] },
+        formData: {
+          albums: ['Until We Have Faces'],
+        },
+        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onError.lastCall, [
+        {
+          message: 'must NOT have fewer than 3 items',
+          name: 'minItems',
+          params: { limit: 3 },
+          property: '.albums',
+          schemaPath: '#/properties/albums/minItems',
+          stack: "'Album Titles' must NOT have fewer than 3 items",
+        },
+      ]);
+    });
+    it('Submits when minItems is set, field is not required, and no items are present with IgnoreMinItemsUnlessRequired flag set', () => {
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        formData: {},
+        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+      });
+      submitForm(node);
+      sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: {} });
+    });
+  });
+
   describe('Schema and external formData updates', () => {
     let comp;
     let onChangeProp;

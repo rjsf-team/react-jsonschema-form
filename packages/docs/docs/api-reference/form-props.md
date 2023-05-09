@@ -59,6 +59,41 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
+## experimental_defaultFormStateBehavior
+
+Experimental features to specify different form state behavior. Currently, this only affects the handling of optional array fields where `minItems` is set.
+
+The following sub-sections represent the different keys in this object, with the tables explaining the values and their meanings.
+
+### `arrayMinItems`
+
+| Flag Value     | Description                                                                                                                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `populate`     | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined |
+| `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required                                                |
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  items: { type: 'string' },
+  minItems: 3,
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    experimental_defaultFormStateBehavior={{
+      arrayMinItems: 'requiredOnly',
+    }}
+  />,
+  document.getElementById('app')
+);
+```
+
 ## disabled
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
