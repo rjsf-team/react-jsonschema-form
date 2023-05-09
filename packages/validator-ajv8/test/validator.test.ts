@@ -1,4 +1,3 @@
-import { ErrorObject } from 'ajv';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
 import {
@@ -14,12 +13,6 @@ import {
 import AJV8Validator from '../src/validator';
 import { Localizer } from '../src';
 
-class TestValidator extends AJV8Validator {
-  transformRJSFValidationErrors(errors: ErrorObject[] = [], uiSchema?: UiSchema): RJSFValidationError[] {
-    return super.transformRJSFValidationErrors(errors, uiSchema);
-  }
-}
-
 const illFormedKey = "bar`'()=+*&^%$#@!";
 const metaSchemaDraft6 = require('ajv/lib/refs/json-schema-draft-06.json');
 
@@ -32,10 +25,10 @@ describe('AJV8Validator', () => {
     builder.resetAllErrors();
   });
   describe('default options', () => {
-    // Use the TestValidator to access the `withIdRefPrefix` function
-    let validator: TestValidator;
+    // Use the AJV8Validator to access the `withIdRefPrefix` function
+    let validator: AJV8Validator;
     beforeAll(() => {
-      validator = new TestValidator({});
+      validator = new AJV8Validator({});
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -486,10 +479,10 @@ describe('AJV8Validator', () => {
     });
   });
   describe('default options, with Ajv2019', () => {
-    // Use the TestValidator to access the `withIdRefPrefix` function
-    let validator: TestValidator;
+    // Use the AJV8Validator to access the `withIdRefPrefix` function
+    let validator: AJV8Validator;
     beforeAll(() => {
-      validator = new TestValidator({ AjvClass: Ajv2019 });
+      validator = new AJV8Validator({ AjvClass: Ajv2019 });
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -941,10 +934,10 @@ describe('AJV8Validator', () => {
     });
   });
   describe('default options, with Ajv2020', () => {
-    // Use the TestValidator to access the `withIdRefPrefix` function
-    let validator: TestValidator;
+    // Use the AJV8Validator to access the `withIdRefPrefix` function
+    let validator: AJV8Validator;
     beforeAll(() => {
-      validator = new TestValidator({ AjvClass: Ajv2020 });
+      validator = new AJV8Validator({ AjvClass: Ajv2020 });
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -1369,22 +1362,6 @@ describe('AJV8Validator', () => {
           });
         });
       });
-      describe('passing optional error fields to transformRJSFValidationErrors', () => {
-        it('should transform errors without an error message or parentSchema field', () => {
-          const error = {
-            instancePath: '/numberOfChildren',
-            schemaPath: '#/properties/numberOfChildren/pattern',
-            keyword: 'pattern',
-            params: { pattern: '\\d+' },
-            schema: '\\d+',
-            data: 'aa',
-          };
-
-          const errors = validator.transformRJSFValidationErrors([error]);
-
-          expect(errors).toHaveLength(1);
-        });
-      });
       describe('No custom validate function, single additionalProperties value', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
@@ -1600,12 +1577,12 @@ describe('AJV8Validator', () => {
     });
   });
   describe('validator.validateFormData(), custom options, and localizer', () => {
-    let validator: TestValidator;
+    let validator: AJV8Validator;
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = jest.fn().mockImplementation();
-      validator = new TestValidator({}, localizer);
+      validator = new AJV8Validator({}, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
         $schema: 'http://json-schema.org/draft-06/schema#',
@@ -1636,7 +1613,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         (localizer as jest.Mock).mockClear();
-        validator = new TestValidator(
+        validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],
           },
@@ -1673,7 +1650,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
-        validator = new TestValidator({
+        validator = new AJV8Validator({
           additionalMetaSchemas: [metaSchemaDraft6],
         });
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
@@ -1752,12 +1729,12 @@ describe('AJV8Validator', () => {
     });
   });
   describe('validator.validateFormData(), custom options, localizer and Ajv2019', () => {
-    let validator: TestValidator;
+    let validator: AJV8Validator;
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = jest.fn().mockImplementation();
-      validator = new TestValidator({ AjvClass: Ajv2019 }, localizer);
+      validator = new AJV8Validator({ AjvClass: Ajv2019 }, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
         $schema: 'http://json-schema.org/draft-06/schema#',
@@ -1788,7 +1765,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         (localizer as jest.Mock).mockClear();
-        validator = new TestValidator(
+        validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],
             AjvClass: Ajv2019,
@@ -1826,7 +1803,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
-        validator = new TestValidator({
+        validator = new AJV8Validator({
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2019,
         });
@@ -1906,12 +1883,12 @@ describe('AJV8Validator', () => {
     });
   });
   describe('validator.validateFormData(), custom options, localizer and Ajv2020', () => {
-    let validator: TestValidator;
+    let validator: AJV8Validator;
     let schema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = jest.fn().mockImplementation();
-      validator = new TestValidator({ AjvClass: Ajv2020 }, localizer);
+      validator = new AJV8Validator({ AjvClass: Ajv2020 }, localizer);
       schema = {
         $ref: '#/definitions/Dataset',
         $schema: 'http://json-schema.org/draft-06/schema#',
@@ -1942,7 +1919,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         (localizer as jest.Mock).mockClear();
-        validator = new TestValidator(
+        validator = new AJV8Validator(
           {
             additionalMetaSchemas: [metaSchemaDraft6],
             AjvClass: Ajv2020,
@@ -1980,7 +1957,7 @@ describe('AJV8Validator', () => {
       let errors: RJSFValidationError[];
 
       beforeAll(() => {
-        validator = new TestValidator({
+        validator = new AJV8Validator({
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2020,
         });

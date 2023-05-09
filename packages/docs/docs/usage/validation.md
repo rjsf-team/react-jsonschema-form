@@ -13,6 +13,82 @@ If you depend on having specifically formatted messages, then using this validat
 
 It is also possible for you to provide your own implementation if you desire, as long as it fulfills the `ValidatorType` interface specified in `@rjsf/utils`.
 
+## API documentation
+
+The documentation for the APIs associated with the AJV 8 validator package can be found [here](../api-reference/validator-ajv8.md)
+
+## Precompiled validators
+
+In 5.7.0, support for precompiled validators was added to the `@rjsf/validator-ajv8` package.
+The main use case for this is to overcome issues with `unsafe-eval` warnings from the browser caused by strict Content Security Policy settings.
+See the [Standalone Validation Code](https://ajv.js.org/standalone.html) section of the AJV documentation for more details about precompiled validators.
+
+Due to how RJSF uses the AJV validator in determining `anyOf/oneOf` selections and how it resolves dependencies, if-then-else and references ($ref) in schemas via the `retrieveSchema()` utility method, RJSF provides its own schema compilation API built on-top-of the one provided by AJV 8.
+If you are wanting to use a precompiled validator, two steps are required:
+
+1. Precompiling the schema into a set of validator functions
+2. Providing those precompiled validator functions to a `ValidatorType` implementation in the `Form`
+
+### Schema precompilation
+
+The first step in the process is to compile a schema into a set of validator functions that are saved into a commonJS-based Javascript file.
+The `@rjsf/validator-ajv8` package exports the `compileSchemaValidators()` function that does this.
+It is expected that this function will be used in a manner similar to the following:
+
+```cjs
+const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
+const yourSchema = require('path_to/yourSchema'); // If your schema is a js file
+
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
+```
+
+If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`, `ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the `compileSchemaValidators()` function in a manner similar to:
+
+```cjs
+const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
+const yourSchema = require('path_to/yourSchema.json'); // If your schema is a json file
+
+const options = {
+  additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+  customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/, 'area-code': /\d{3}/ },
+  ajvOptionsOverrides: {
+    $data: true,
+    verbose: true,
+  },
+  ajvFormatOptions: {
+    mode: 'fast',
+  },
+};
+
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
+```
+
+It is highly recommended to create a `compileYourSchema.js` file (or what ever name you want) with code similar to what is shown above and then, using node, run the code as follows:
+
+```
+node compileYourSchema.js
+```
+
+> NOTE: You must have your schema provided within a file that can be parsed and turned into the set of precompiled validator functions.
+
+### Using the precompiled validator
+
+After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.js` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
+The `@rjsf/validator-ajv8` package exports the `usePrecompiledValidator()` function for this.
+Here is an example of how to use your precompiled validator with your `Form`:
+
+```tsx
+import { usePrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
+import Form from '@rjsf/core'; // Or whatever theme you use
+
+import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
+import * as precompiledValidator from 'path_to/yourCompiledSchema';
+
+const validator = usePrecompiledValidator(precompiledValidator as ValidatorFunctions);
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
 ## Live validation
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.

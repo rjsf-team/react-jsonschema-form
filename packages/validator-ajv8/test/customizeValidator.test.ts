@@ -1,6 +1,6 @@
 import AJV8Validator from '../src/validator';
 import defaultValidator, { customizeValidator, Localizer } from '../src';
-import { CUSTOM_OPTIONS } from './createAjvInstance.test';
+import { CUSTOM_OPTIONS } from './harness/testData';
 
 jest.mock('../src/validator');
 
