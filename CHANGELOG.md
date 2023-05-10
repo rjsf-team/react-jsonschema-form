@@ -32,7 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/fluent-ui
 
 - Added support for `additionalProperties` to fluent-ui theme, fixing [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777).
-- Upgraded to `8.x` version of `@fluentui/react`
+- Upgraded to `8.x` version of `@fluentui/react`, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
 
 ## @rjsf/utils
 
