@@ -141,9 +141,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   }: ComputeDefaultsProps<T, S> = {}
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
-  let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
+  const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults: T | T[] | undefined = parentDefaults;
+  // If we get a new schema, then we need to recompute defaults again for the new schema found.
+  let schemaToCompute: S | null = null;
+  let updatedRecurseList = _recurseList;
+
   if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
@@ -154,26 +158,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     const refName = schema[REF_KEY];
     // Use referenced schema defaults for this node.
     if (!_recurseList.includes(refName!)) {
-      const refSchema = findSchemaDefinition<S>(refName, rootSchema);
-      return computeDefaults<T, S, F>(validator, refSchema, {
-        rootSchema,
-        includeUndefinedValues,
-        _recurseList: _recurseList.concat(refName!),
-        experimental_defaultFormStateBehavior,
-        parentDefaults: defaults,
-        rawFormData: formData as T,
-      });
+      updatedRecurseList = _recurseList.concat(refName!);
+      schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
   } else if (DEPENDENCIES_KEY in schema) {
     const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, formData);
-    return computeDefaults<T, S, F>(validator, resolvedSchema[0], {
-      rootSchema,
-      includeUndefinedValues,
-      _recurseList,
-      experimental_defaultFormStateBehavior,
-      parentDefaults: defaults,
-      rawFormData: formData as T,
-    });
+    schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S>(validator, itemSchema, {
@@ -190,7 +180,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    schema = schema.oneOf![
+    schemaToCompute = schema.oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
@@ -205,7 +195,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    schema = schema.anyOf![
+    schemaToCompute = schema.anyOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
@@ -215,6 +205,17 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         discriminator
       )
     ] as S;
+  }
+
+  if (schemaToCompute) {
+    return computeDefaults<T, S, F>(validator, schemaToCompute, {
+      rootSchema,
+      includeUndefinedValues,
+      _recurseList: updatedRecurseList,
+      experimental_defaultFormStateBehavior,
+      parentDefaults: defaults as T | undefined,
+      rawFormData: formData as T,
+    });
   }
 
   // No defaults defined for this node, fallback to generic typed ones.
