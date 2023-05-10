@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
+- Fix [#3594](https://github.com/rjsf-team/react-jsonschema-form/issues/3594) by removing the duplicate title for `SelectWidget` and description for `CheckboxWidget`
 
 ## @rjsf/core
 
