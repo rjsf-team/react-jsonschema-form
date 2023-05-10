@@ -26,7 +26,12 @@ export default function compileSchemaValidators<S extends StrictRJSFSchema = RJS
   const schemas = Object.values(schemaMaps);
 
   const { additionalMetaSchemas, customFormats, ajvOptionsOverrides = {}, ajvFormatOptions, AjvClass } = options;
-  const compileOptions = { ...ajvOptionsOverrides, code: { source: true, lines: true }, schemas };
+  // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
+  const compileOptions = {
+    ...ajvOptionsOverrides,
+    code: { lines: true, ...ajvOptionsOverrides.code, source: true },
+    schemas,
+  };
   const ajv = createAjvInstance(additionalMetaSchemas, customFormats, compileOptions, ajvFormatOptions, AjvClass);
 
   const moduleCode = standaloneCode(ajv);

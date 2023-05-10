@@ -114,7 +114,19 @@ describe('AJV8PrecompiledValidator', () => {
           new Error('The schema associated with the precompiled schema differs from the schema provided for validation')
         );
       });
-      describe('No custom validate function, single value', () => {
+      describe('No custom validate function, single value of correct type generates no errors', () => {
+        let errors: RJSFValidationError[];
+
+        beforeAll(() => {
+          const result = validator.validateFormData({ foo: '42' }, rootSchema);
+          errors = result.errors;
+        });
+
+        it('should return an empty error list', () => {
+          expect(errors).toHaveLength(0);
+        });
+      });
+      describe('No custom validate function, single value of wrong type generates error', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
 
@@ -168,6 +180,17 @@ describe('AJV8PrecompiledValidator', () => {
       describe('Validating required fields', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
+        describe('formData is provided at top level', () => {
+          beforeAll(() => {
+            const formData = { passwords: { pass1: 'a', pass2: 'b' } };
+            const result = validator.validateFormData(formData, rootSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an empty error list', () => {
+            expect(errors).toHaveLength(0);
+          });
+        });
         describe('formData is not provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
@@ -185,7 +208,19 @@ describe('AJV8PrecompiledValidator', () => {
           });
         });
       });
-      describe('No custom validate function, single additionalProperties value', () => {
+      describe('No custom validate function, single additionalProperties value of correct type', () => {
+        let errors: RJSFValidationError[];
+
+        beforeAll(() => {
+          const result = validator.validateFormData({ anything: { foo: '42' } }, rootSchema);
+          errors = result.errors;
+        });
+
+        it('should return an empty error list', () => {
+          expect(errors).toHaveLength(0);
+        });
+      });
+      describe('No custom validate function, single additionalProperties value of wrong type', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
 
@@ -246,7 +281,21 @@ describe('AJV8PrecompiledValidator', () => {
             return errors;
           });
         });
-        describe('formData is provided', () => {
+        describe('formData is provided and passes custom validation', () => {
+          beforeAll(() => {
+            const formData = { passwords: { pass1: 'a', pass2: 'a' } };
+            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an empty error list', () => {
+            expect(errors).toHaveLength(0);
+          });
+          it('validate function was called with uiSchema', () => {
+            expect(validate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), uiSchema);
+          });
+        });
+        describe('formData is provided, but fails custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
             const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
@@ -298,6 +347,15 @@ describe('AJV8PrecompiledValidator', () => {
           };
           const result = validator.validateFormData(formData, rootSchema);
           expect(result.errors).toHaveLength(0);
+        });
+        it('Data-Url with bad data generates error', () => {
+          const formData = {
+            dataUrlWithName: 'x=',
+          };
+          const result = validator.validateFormData(formData, rootSchema);
+          expect(result.errors).toHaveLength(1);
+          expect(result.errorSchema.dataUrlWithName!.__errors).toHaveLength(1);
+          expect(result.errorSchema.dataUrlWithName!.__errors![0]).toEqual('must match format "data-url"');
         });
       });
     });

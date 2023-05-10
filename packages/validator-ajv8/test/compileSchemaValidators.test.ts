@@ -59,7 +59,10 @@ describe('compileSchemaValidators()', () => {
     beforeAll(() => {
       schemas = Object.values(schemaParser(superSchema as RJSFSchema));
       expectedCode = readFileSync('./test/harness/superSchemaOptions.js').toString();
-      compileSchemaValidators(superSchema as RJSFSchema, OUTPUT_FILE, CUSTOM_OPTIONS);
+      compileSchemaValidators(superSchema as RJSFSchema, OUTPUT_FILE, {
+        ...CUSTOM_OPTIONS,
+        ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
+      });
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
@@ -82,7 +85,7 @@ describe('compileSchemaValidators()', () => {
         ajvFormatOptions,
         AjvClass,
       } = CUSTOM_OPTIONS;
-      const expectedCompileOpts = { ...ajvOptionsOverrides, code: { source: true, lines: true }, schemas };
+      const expectedCompileOpts = { ...ajvOptionsOverrides, code: { source: true, lines: false }, schemas };
       expect(createAjvInstance).toHaveBeenCalledWith(
         additionalMetaSchemas,
         customFormats,

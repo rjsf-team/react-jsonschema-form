@@ -100,7 +100,6 @@ export default class AJV8PrecompiledValidator<
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    const validationError: Error | undefined = undefined;
     if (!isEqual(schema, this.rootSchema)) {
       throw new Error(
         'The schema associated with the precompiled schema differs from the schema provided for validation'
@@ -116,10 +115,7 @@ export default class AJV8PrecompiledValidator<
     // Clear errors to prevent persistent errors, see #1104
     this.mainValidator.errors = null;
 
-    return {
-      errors: errors as unknown as Result[],
-      validationError,
-    };
+    return { errors: errors as unknown as Result[] };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives

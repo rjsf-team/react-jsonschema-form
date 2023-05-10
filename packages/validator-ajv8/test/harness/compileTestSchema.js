@@ -16,10 +16,7 @@ const superSchema = require('./superSchema.json');
 const options = {
   additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
   customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/, 'area-code': /\d{3}/ },
-  ajvOptionsOverrides: {
-    $data: true,
-      verbose: true,
-  },
+  ajvOptionsOverrides: { $data: true, verbose: true, code: { lines: false } },
   ajvFormatOptions: {
     mode: 'fast',
   },
