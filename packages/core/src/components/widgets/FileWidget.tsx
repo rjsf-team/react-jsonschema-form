@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import {
   dataURItoBlob,
   FormContextType,
@@ -110,7 +110,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   );
 }
 
-function extractFileInfo(dataURLs: string[]) {
+function extractFileInfo(dataURLs: string[]): FileInfoType[] {
   return dataURLs
     .filter((dataURL) => dataURL)
     .map((dataURL) => {
@@ -133,28 +133,30 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 ) {
   const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
-  const extractedFilesInfo = useMemo(
-    () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])),
-    [value]
+  const [filesInfo, setFilesInfo] = useState<FileInfoType[]>(
+    Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])
   );
-  const [filesInfo, setFilesInfo] = useState<FileInfoType[]>(extractedFilesInfo);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (!event.target.files) {
         return;
       }
+      // Due to variances in themes, dealing with multiple files for the array case now happens one file at a time.
+      // This is because we don't pass `multiple` into the `BaseInputTemplate` anymore. Instead, we deal with the single
+      // file in each event and concatenate them together ourselves
       processFiles(event.target.files).then((filesInfoEvent) => {
-        setFilesInfo(filesInfoEvent);
         const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL);
         if (multiple) {
-          onChange(newValue);
+          setFilesInfo(filesInfo.concat(filesInfoEvent[0]));
+          onChange(value.concat(newValue[0]));
         } else {
+          setFilesInfo(filesInfoEvent);
           onChange(newValue[0]);
         }
       });
     },
-    [multiple, onChange]
+    [multiple, value, filesInfo, onChange]
   );
 
   return (
