@@ -26,8 +26,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated the `MultiSchemaField` to use the new `getDiscriminatorFieldFromSchema()` API
-
-- Added new `experimental_defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([3604](https://github.com/rjsf-team/react-jsonschema-form/pull/3604))
+- Added new `experimental_defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
+- Fixed regression [#3650](https://github.com/rjsf-team/react-jsonschema-form/issues/3650) in `FileWidget` to again support adding multiple files to arrays
 
 ## @rjsf/fluent-ui
 

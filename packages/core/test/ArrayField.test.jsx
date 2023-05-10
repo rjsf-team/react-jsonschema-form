@@ -1500,7 +1500,7 @@ describe('ArrayField', () => {
       expect(node.querySelector('.field [type=file]').getAttribute('multiple')).not.to.be.null;
     });
 
-    it('should handle a change event', async () => {
+    it('should handle a two change events that results in two items in the list', async () => {
       sandbox.stub(window, 'FileReader').returns({
         set onload(fn) {
           fn({ target: { result: 'data:text/plain;base64,x=' } });
@@ -1513,10 +1513,23 @@ describe('ArrayField', () => {
 
       Simulate.change(node.querySelector('.field input[type=file]'), {
         target: {
-          files: [
-            { name: 'file1.txt', size: 1, type: 'type' },
-            { name: 'file2.txt', size: 2, type: 'type' },
-          ],
+          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ['data:text/plain;name=file1.txt;base64,x='],
+        },
+        'root'
+      );
+
+      Simulate.change(node.querySelector('.field input[type=file]'), {
+        target: {
+          files: [{ name: 'file2.txt', size: 2, type: 'type' }],
         },
       });
 
