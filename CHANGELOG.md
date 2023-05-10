@@ -32,7 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/fluent-ui
 
 - Added support for `additionalProperties` to fluent-ui theme, fixing [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777).
-- Upgraded to `8.x` version of `@fluentui/react`, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
+- Upgraded to `8.x` version of `@fluentui/react` maintaining backwards compatibility to version 7, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
 
 ## @rjsf/utils
 
@@ -51,6 +51,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added documentation to `custom-templates` describing how to extend the `BaseInputTemplate`
 - Added **minItems behavior for array field** live setting, fixing [#3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602)
+- Upgraded playground to `8.x` version of `@fluentui/react`, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
 - Added documentation to `validation` describing the new precompiled validators feature
 - Added new `validator-ajv8.md` documentation to the `api-reference` directory as well as putting it into the `sidebar.js`
 
