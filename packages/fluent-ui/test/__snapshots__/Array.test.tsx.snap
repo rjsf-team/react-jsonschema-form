@@ -707,19 +707,19 @@ exports[`array fields empty errors array 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-165"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel72"
+                id="TextFieldLabel81"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-164"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel72"
+                  aria-labelledby="TextFieldLabel81"
                   autoFocus={false}
                   className="ms-TextField-field field-127"
                   disabled={false}
@@ -768,7 +768,7 @@ exports[`array fields empty errors array 1`] = `
           >
             <span
               className="ms-Button-label label-122"
-              id="id__75"
+              id="id__84"
             >
               Submit
             </span>
@@ -954,18 +954,18 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-102"
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-164"
   >
     <div
-      className="ms-MessageBar-content content-103"
+      className="ms-MessageBar-content content-165"
     >
       <div
         aria-hidden={true}
-        className="ms-MessageBar-icon iconContainer-104"
+        className="ms-MessageBar-icon iconContainer-166"
       >
         <i
           aria-hidden={true}
-          className="icon-112"
+          className="icon-175"
           data-icon-name="ErrorBadge"
         >
           
@@ -973,12 +973,12 @@ exports[`array fields has errors 1`] = `
       </div>
       <div
         aria-live="assertive"
-        className="ms-MessageBar-text text-106"
-        id="MessageBar54"
-        role="status"
+        className="ms-MessageBar-text text-168"
+        id="MessageBar62"
+        role="alert"
       >
         <span
-          className="ms-MessageBar-innerText innerText-107"
+          className="ms-MessageBar-innerText innerText-169"
         />
       </div>
     </div>
@@ -1008,27 +1008,27 @@ exports[`array fields has errors 1`] = `
           }
         >
           <div
-            className="ms-TextField root-67"
+            className="ms-TextField root-125"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-114"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel57"
+                id="TextFieldLabel65"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-113"
+                className="ms-TextField-fieldGroup fieldGroup-176"
               >
                 <input
-                  aria-describedby="TextFieldDescription56"
+                  aria-describedby="TextFieldDescription64"
                   aria-invalid={true}
-                  aria-labelledby="TextFieldLabel57"
+                  aria-labelledby="TextFieldLabel65"
                   autoFocus={false}
-                  className="ms-TextField-field field-69"
+                  className="ms-TextField-field field-127"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -1045,7 +1045,7 @@ exports[`array fields has errors 1`] = `
               </div>
             </div>
             <span
-              id="TextFieldDescription56"
+              id="TextFieldDescription64"
             >
               <div
                 role="alert"
@@ -1088,7 +1088,7 @@ exports[`array fields has errors 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1099,15 +1099,15 @@ exports[`array fields has errors 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__58"
+              className="ms-Button-label label-122"
+              id="id__68"
             >
               Submit
             </span>
@@ -1156,19 +1156,19 @@ exports[`array fields no errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-165"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel64"
+                id="TextFieldLabel73"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-164"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel64"
+                  aria-labelledby="TextFieldLabel73"
                   autoFocus={false}
                   className="ms-TextField-field field-127"
                   disabled={false}
@@ -1217,7 +1217,3647 @@ exports[`array fields no errors 1`] = `
           >
             <span
               className="ms-Button-label label-122"
-              id="id__67"
+              id="id__76"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      Test field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a test description
+    </span>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__87"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__90"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      Test field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a test description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel111"
+                  >
+                    Test item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel111"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a test item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel128"
+                  >
+                    Test item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel128"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="b"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a test item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__143"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__146"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Dropdown-container"
+    >
+      <label
+        className="ms-Label ms-Dropdown-label root-182"
+        id="root-label"
+      >
+        Test field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="root-label root-option"
+        aria-required={false}
+        className="ms-Dropdown dropdown-136"
+        data-is-focusable={true}
+        data-ktp-target={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
+      >
+        <span
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-154"
+            data-icon-name="ChevronDown"
+          >
+            
+          </i>
+        </span>
+      </div>
+    </div>
+    <span
+      className="css-180"
+    >
+      a test description
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__106"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      Test field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a test description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel95"
+                  >
+                    Test item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel95"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a test item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-number"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel100"
+                  >
+                    Test item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel100"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a test item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__103"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__211"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__214"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel235"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel235"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel252"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel252"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="b"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__267"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__270"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Dropdown-container"
+    >
+      <label
+        className="ms-Label ms-Dropdown-label root-182"
+        id="root-label"
+      >
+        My Field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="root-label root-option"
+        aria-required={false}
+        className="ms-Dropdown dropdown-136"
+        data-is-focusable={true}
+        data-ktp-target={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
+      >
+        <span
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-154"
+            data-icon-name="ChevronDown"
+          >
+            
+          </i>
+        </span>
+      </div>
+    </div>
+    <span
+      className="css-180"
+    >
+      a fancier description
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__230"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel219"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel219"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-number"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel224"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel224"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__227"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__149"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__152"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel173"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel173"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel190"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel190"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="b"
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__205"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__208"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Dropdown-container"
+    >
+      <label
+        className="ms-Label ms-Dropdown-label root-182"
+        id="root-label"
+      >
+        My Field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="root-label root-option"
+        aria-required={false}
+        className="ms-Dropdown dropdown-136"
+        data-is-focusable={true}
+        data-ktp-target={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
+      >
+        <span
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-154"
+            data-icon-name="ChevronDown"
+          >
+            
+          </i>
+        </span>
+      </div>
+    </div>
+    <span
+      className="css-180"
+    >
+      a fancier description
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__168"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <label
+      className="ms-Label root-179"
+      id="root__title"
+    >
+      My Field
+    </label>
+    <span
+      className="css-180"
+      id="root__description"
+    >
+      a fancier description
+    </span>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_0"
+                    id="TextFieldLabel157"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel157"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-number"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <label
+                    className="ms-Label root-181"
+                    htmlFor="root_1"
+                    id="TextFieldLabel162"
+                  >
+                    My Item
+                  </label>
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-178"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      aria-labelledby="TextFieldLabel162"
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <span
+                className="css-180"
+              >
+                a fancier item description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__165"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__273"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__276"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-126"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-126"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value="b"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
+                data-icon-name="Up"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            aria-disabled={true}
+            className="ms-Button ms-Button--icon is-disabled root-155"
+            data-is-focusable={false}
+            disabled={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
+                data-icon-name="Down"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
+                data-icon-name="Copy"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+          <button
+            className="ms-Button ms-Button--icon root-161"
+            data-is-focusable={true}
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyPress={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            type="button"
+          >
+            <span
+              className="ms-Button-flexContainer flexContainer-111"
+              data-automationid="splitbuttonprimary"
+            >
+              <i
+                aria-hidden={true}
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
+                data-icon-name="Delete"
+                style={
+                  Object {
+                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  }
+                }
+              >
+                
+              </i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <button
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        style={
+          Object {
+            "height": "32px",
+          }
+        }
+        type="button"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
+            data-icon-name="Add"
+            style={
+              Object {
+                "fontFamily": "\\"FabricMDL2Icons\\"",
+              }
+            }
+          >
+            
+          </i>
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-114"
+              id="id__329"
+            >
+              Add Item
+            </span>
+          </span>
+        </span>
+      </button>
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__332"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Dropdown-container"
+    >
+      <label
+        className="ms-Label ms-Dropdown-label root-182"
+        id="root-label"
+      >
+        Test field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="root-label root-option"
+        aria-required={false}
+        className="ms-Dropdown dropdown-136"
+        data-is-focusable={true}
+        data-ktp-target={true}
+        id="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+        tabIndex={0}
+      >
+        <span
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
+          id="root-option"
+        />
+        <span
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
+        >
+          <i
+            aria-hidden={true}
+            className="ms-Dropdown-caretDown caretDown-154"
+            data-icon-name="ChevronDown"
+          >
+            
+          </i>
+        </span>
+      </div>
+    </div>
+    <span
+      className="css-180"
+    >
+      a test description
+    </span>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__292"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-array"
+    style={
+      Object {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-string"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-126"
+                  >
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_0"
+                      name="root_0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ms-Grid"
+      dir="ltr"
+    >
+      <div
+        className="ms-Grid-row"
+      >
+        <div
+          className="ms-Grid-col ms-sm6 ms-md8 ms-lg9"
+        >
+          <div
+            className="ms-Grid-row"
+          >
+            <div
+              className="ms-Grid-col ms-sm12  field field-number"
+              style={
+                Object {
+                  "marginBottom": 15,
+                }
+              }
+            >
+              <div
+                className="ms-TextField is-required root-125"
+              >
+                <div
+                  className="ms-TextField-wrapper"
+                >
+                  <div
+                    className="ms-TextField-fieldGroup fieldGroup-126"
+                  >
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-invalid={false}
+                      autoFocus={false}
+                      className="ms-TextField-field field-127"
+                      disabled={false}
+                      id="root_1"
+                      name="root_1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={true}
+                      step="any"
+                      type="number"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-120"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-111"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-112"
+          >
+            <span
+              className="ms-Button-label label-122"
+              id="id__289"
             >
               Submit
             </span>

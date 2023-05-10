@@ -28,6 +28,8 @@ export const allowedProps: (keyof ICheckboxProps)[] = [
   'disabled',
   'indeterminate',
   'inputProps',
+  /* Backward compatibility with fluentui v7 */
+  'keytipProps' as any,
   'label',
   'onChange',
   'onRenderLabel',
@@ -101,6 +103,12 @@ export default function CheckboxWidget<
         onChange={_onChange}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        /* Backward compatibility with fluentui v7 */
+        {...{
+          autoFocus: autofocus,
+          onBlur: _onBlur,
+          onFocus: _onFocus,
+        }}
       />
     </>
   );

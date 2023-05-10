@@ -1,4 +1,4 @@
-import { FocusEvent, SyntheticEvent } from 'react';
+import { ChangeEvent, FocusEvent, SyntheticEvent } from 'react';
 import { ISpinButtonProps, SpinButton } from '@fluentui/react';
 import {
   ariaDescribedByIds,
@@ -29,6 +29,8 @@ const allowedProps: (keyof ISpinButtonProps)[] = [
   'defaultValue',
   'disabled',
   'downArrowButtonStyles',
+  /* Backward compatibility with fluentui v7 */
+  'getClassNames' as any,
   'iconButtonProps',
   'iconProps',
   'incrementButtonAriaLabel',
@@ -73,7 +75,14 @@ export default function UpDownWidget<
   registry,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const _onChange = (_: SyntheticEvent<HTMLElement>, newValue?: string) => onChange(Number(newValue));
+  const _onChange = (ev: ChangeEvent<HTMLInputElement> | SyntheticEvent<HTMLElement>, newValue?: string) => {
+    if (newValue) {
+      onChange(Number(newValue));
+    } else if ('value' in ev.target) {
+      /* Backward compatibility with fluentui v7 */
+      onChange(Number(ev.target.value));
+    }
+  };
 
   let { min, max, step } = rangeSpec<S>(schema);
   if (min === undefined) {

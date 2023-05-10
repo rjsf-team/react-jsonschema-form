@@ -79,6 +79,12 @@ export default function CheckboxesWidget<
               key={index}
               {...uiProps}
               aria-describedby={ariaDescribedByIds<T>(id)}
+              /* Backward compatibility with fluentui v7 */
+              {...{
+                autoFocus: autofocus && index === 0,
+                onBlur: _onBlur,
+                onFocus: _onFocus,
+              }}
             />
           );
         })}
