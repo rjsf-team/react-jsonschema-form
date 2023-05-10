@@ -20,7 +20,8 @@ const allowedProps: (keyof IChoiceGroupProps)[] = [
   'selectedKey',
   'onChange',
   'label',
-  'onChanged',
+  /* Backward compatibility with fluentui v7 */
+  'onChanged' as any,
   'theme',
   'styles',
   'ariaLabelledBy',

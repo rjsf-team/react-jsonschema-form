@@ -1,5 +1,5 @@
 import { FocusEvent, useCallback } from 'react';
-import { Checkbox } from '@fluentui/react';
+import { Checkbox, ICheckboxProps } from '@fluentui/react';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -13,7 +13,7 @@ import {
 import _pick from 'lodash/pick';
 
 // Keys of ICheckboxProps from @fluentui/react
-export const allowedProps = [
+export const allowedProps: (keyof ICheckboxProps)[] = [
   'ariaDescribedBy',
   'ariaLabel',
   'ariaPositionInSet',
@@ -28,7 +28,8 @@ export const allowedProps = [
   'disabled',
   'indeterminate',
   'inputProps',
-  'keytipProps',
+  /* Backward compatibility with fluentui v7 */
+  'keytipProps' as any,
   'label',
   'onChange',
   'onRenderLabel',
@@ -93,13 +94,21 @@ export default function CheckboxWidget<
         name={id}
         label={labelValue(label || undefined, hideLabel)}
         disabled={disabled || readonly}
-        autoFocus={autofocus}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
+        inputProps={{
+          autoFocus: autofocus,
+          onBlur: _onBlur,
+          onFocus: _onFocus,
+        }}
         checked={typeof value === 'undefined' ? false : value}
         onChange={_onChange}
         {...uiProps}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        /* Backward compatibility with fluentui v7 */
+        {...{
+          autoFocus: autofocus,
+          onBlur: _onBlur,
+          onFocus: _onFocus,
+        }}
       />
     </>
   );
