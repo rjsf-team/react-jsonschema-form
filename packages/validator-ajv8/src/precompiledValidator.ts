@@ -73,7 +73,7 @@ export default class AJV8PrecompiledValidator<
    * @returns - The precompiled validator function associated with this schema
    */
   getValidator(schema: S) {
-    const key = get(schema, ID_KEY, hashForSchema(schema));
+    const key = get(schema, ID_KEY) || hashForSchema(schema);
     const validator = this.validateFns[key];
     if (!validator) {
       throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);

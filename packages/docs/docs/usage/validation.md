@@ -74,17 +74,17 @@ node compileYourSchema.js
 ### Using the precompiled validator
 
 After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.js` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
-The `@rjsf/validator-ajv8` package exports the `usePrecompiledValidator()` function for this.
+The `@rjsf/validator-ajv8` package exports the `createPrecompiledValidator()` function for this.
 Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
-import { usePrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core'; // Or whatever theme you use
 
 import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
 import * as precompiledValidator from 'path_to/yourCompiledSchema';
 
-const validator = usePrecompiledValidator(precompiledValidator as ValidatorFunctions);
+const validator = createPrecompiledValidator(precompiledValidator as ValidatorFunctions);
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```

@@ -14,7 +14,7 @@ import AJV8PrecompiledValidator from './precompiledValidator';
  * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
-export default function usePrecompiledValidator<
+export default function createPrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any

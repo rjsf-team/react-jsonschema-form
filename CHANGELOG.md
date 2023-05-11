@@ -45,7 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv8
 
-- Added two new APIs `compileSchemaValidators()` and `usePrecompiledValidator()` implemented to support using precompiled validators build with AJV 8, fixing [#3543](https://github.com/rjsf-team/react-jsonschema-form/issues/3543)
+- Added two new APIs `compileSchemaValidators()` and `createPrecompiledValidator()` implemented to support using precompiled validators build with AJV 8, fixing [#3543](https://github.com/rjsf-team/react-jsonschema-form/issues/3543)
 
 ## Dev / docs / playground
 

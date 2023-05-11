@@ -1,8 +1,8 @@
 import customizeValidator from './customizeValidator';
 import compileSchemaValidators from './compileSchemaValidators';
-import usePrecompiledValidator from './usePrecompiledValidator';
+import createPrecompiledValidator from './createPrecompiledValidator';
 
-export { customizeValidator, compileSchemaValidators, usePrecompiledValidator };
+export { customizeValidator, compileSchemaValidators, createPrecompiledValidator };
 export * from './types';
 
 export default customizeValidator();

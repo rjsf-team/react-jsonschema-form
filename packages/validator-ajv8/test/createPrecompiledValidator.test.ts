@@ -4,7 +4,7 @@ import AJV8PrecompiledValidator from '../src/precompiledValidator';
 import { Localizer, ValidatorFunctions } from '../src';
 import * as superSchemaFns from './harness/superSchema';
 import superSchema from './harness/superSchema.json';
-import usePrecompiledValidator from '../src/usePrecompiledValidator';
+import createPrecompiledValidator from '../src/createPrecompiledValidator';
 
 jest.mock('../src/precompiledValidator');
 
@@ -15,13 +15,14 @@ type TestType = {
 
 const validateFns = superSchemaFns as ValidatorFunctions;
 const rootSchema = superSchema as RJSFSchema;
+const mockedValidator = jest.mocked(AJV8PrecompiledValidator);
 
-describe('usePrecompiledValidator()', () => {
-  describe('passing validatorFns and rootSchema to usePrecompiledValidator', () => {
+describe('createPrecompiledValidator()', () => {
+  describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
     let custom: any;
     beforeAll(() => {
-      (AJV8PrecompiledValidator as unknown as jest.Mock).mockClear();
-      custom = usePrecompiledValidator<TestType>(validateFns, rootSchema);
+      mockedValidator.mockClear();
+      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema);
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(AJV8PrecompiledValidator);
@@ -30,13 +31,13 @@ describe('usePrecompiledValidator()', () => {
       expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined);
     });
   });
-  describe('passing validatorFns, rootSchema and localizer to usePrecompiledValidator', () => {
+  describe('passing validatorFns, rootSchema and localizer to createPrecompiledValidator', () => {
     let custom: any;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = jest.fn();
-      (AJV8PrecompiledValidator as unknown as jest.Mock).mockClear();
-      custom = usePrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
+      mockedValidator.mockClear();
+      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(AJV8PrecompiledValidator);

@@ -27,8 +27,8 @@ export type Localizer = (errors?: null | ErrorObject[]) => void;
  * AJV schema standalone compilation code
  */
 export interface CompiledValidateFunction<T = any> extends Omit<ValidateFunction<T>, 'schema' | 'schemaEnv'> {
-  /** This is literally copied from the `ValidateFunction` type definition from which it extends because it seems to get
-   * lost as part of the Omit<>.
+  /** This is almost an exact copy from the `ValidateFunction` type definition from which it extends because it seems to
+   * get lost as part of the Omit<> and this one simply returns boolean rather than `data is T`.
    */
   (this: Ajv | any, data: any, dataCxt?: DataValidationCxt): boolean;
 }

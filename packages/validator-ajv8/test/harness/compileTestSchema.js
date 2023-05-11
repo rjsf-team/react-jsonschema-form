@@ -22,6 +22,8 @@ const options = {
   },
 };
 
-compileSchemaValidators(superSchema, './superSchema.js');
+// Since these are expected to be run via the `npm run compileSchemas` script from the root directory add the output
+// path to the directory where this file resides
+compileSchemaValidators(superSchema, './test/harness/superSchema.js');
 
-compileSchemaValidators(superSchema, './superSchemaOptions.js', options);
+compileSchemaValidators(superSchema, './test/harness/superSchemaOptions.js', options);

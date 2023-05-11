@@ -25,7 +25,6 @@ describe('AJV8Validator', () => {
     builder.resetAllErrors();
   });
   describe('default options', () => {
-    // Use the AJV8Validator to access the `withIdRefPrefix` function
     let validator: AJV8Validator;
     beforeAll(() => {
       validator = new AJV8Validator({});
@@ -479,7 +478,6 @@ describe('AJV8Validator', () => {
     });
   });
   describe('default options, with Ajv2019', () => {
-    // Use the AJV8Validator to access the `withIdRefPrefix` function
     let validator: AJV8Validator;
     beforeAll(() => {
       validator = new AJV8Validator({ AjvClass: Ajv2019 });
@@ -934,7 +932,6 @@ describe('AJV8Validator', () => {
     });
   });
   describe('default options, with Ajv2020', () => {
-    // Use the AJV8Validator to access the `withIdRefPrefix` function
     let validator: AJV8Validator;
     beforeAll(() => {
       validator = new AJV8Validator({ AjvClass: Ajv2020 });
