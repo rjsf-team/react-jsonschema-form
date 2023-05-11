@@ -5,6 +5,9 @@
   "globals": {
     "expect": true
   },
+  "ignorePatterns": [
+    "harness/*.js"
+  ],
   "rules": {
     "no-unused-vars": [
       2,

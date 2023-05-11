@@ -18,7 +18,8 @@
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "test": "dts test",
+    "compileSchemas":"node test/harness/compileTestSchema.js",
+    "test": "npm run compileSchemas && dts test",
     "bump-packages": "npm update --save --lockfile-version 2"
   },
   "lint-staged": {
