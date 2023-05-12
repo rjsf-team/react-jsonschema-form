@@ -72,6 +72,14 @@ The following sub-sections represent the different keys in this object, with the
 | `populate`     | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined |
 | `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required                                                |
 
+### `emptyObjectFields
+
+| Flag Value     | Description                                                       |
+| -------------- |-------------------------------------------------------------------|
+| `populateAllDefaults`     | Legacy behavior - set default when there is an empty object field |
+| `populateRequiredDefaults` | Only sets default when the field is required                      |
+| `skipDefaults` | Does not set defaults to enmpty object field                      |
+
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
