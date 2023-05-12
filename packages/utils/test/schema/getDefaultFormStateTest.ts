@@ -203,7 +203,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 'bar',
         });
       });
-      it('test an object with additionalProperties type object with and formdata', () => {
+      it('test an object with additionalProperties type object with defaults and formdata', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -244,6 +244,45 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               host: 'localhost',
               port: 389,
             },
+          },
+        });
+      });
+      it('test an object with additionalProperties type object with no defaults and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
+          test: {
+            newKey: {},
           },
         });
       });

@@ -74,11 +74,11 @@ The following sub-sections represent the different keys in this object, with the
 
 ### `emptyObjectFields
 
-| Flag Value     | Description                                                       |
-| -------------- |-------------------------------------------------------------------|
-| `populateAllDefaults`     | Legacy behavior - set default when there is an empty object field |
-| `populateRequiredDefaults` | Only sets default when the field is required                      |
-| `skipDefaults` | Does not set defaults to enmpty object field                      |
+| Flag Value                 | Description                                                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, an non-empty object field, or the field itself is required  |
+| `populateRequiredDefaults` | Only sets default when a value is an object and its parent field is required or it is a primitive value and it is required |
+| `skipDefaults`             | Does not set defaults                                                                                                      |
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';

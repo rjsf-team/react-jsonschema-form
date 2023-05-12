@@ -89,7 +89,7 @@ function maybeAddDefaultToObject<T = any>(
   key: string,
   computedDefault: T | T[] | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
-  isParentRequired = false,
+  isParentRequired: boolean,
   requiredFields: string[] = [],
   experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {}
 ) {
@@ -277,10 +277,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             .filter((key) => !schema.properties || !schema.properties[key])
             .forEach((key) => keys.add(key));
         }
+        let formDataRequired: string[];
         if (isObject(formData)) {
+          formDataRequired = [];
           Object.keys(formData as GenericObjectType)
             .filter((key) => !schema.properties || !schema.properties[key])
-            .forEach((key) => keys.add(key));
+            .forEach((key) => {
+              keys.add(key);
+              formDataRequired.push(key);
+            });
         }
         keys.forEach((key) => {
           const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
@@ -298,7 +303,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             key,
             computedDefault,
             includeUndefinedValues,
-            required
+            required,
+            formDataRequired
           );
         });
       }
