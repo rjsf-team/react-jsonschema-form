@@ -183,7 +183,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    */
   translateString?: Registry['translateString'];
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
-   * Currently only affecting minItems on array fields */
+   * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
+   * `emptyObjectFields`
+   */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
   // Private
   /**
