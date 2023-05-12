@@ -1,0 +1,883 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`schemaParser() parses property dependencies properly 1`] = `
+Object {
+  "2c34081c": Object {
+    "$id": "2c34081c",
+    "dependencies": Object {
+      "a": Array [
+        "b",
+      ],
+    },
+    "properties": Object {
+      "a": Object {
+        "type": "string",
+      },
+      "b": Object {
+        "type": "integer",
+      },
+    },
+    "required": Array [
+      "a",
+    ],
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses recursive refs in allOf properly 1`] = `
+Object {
+  "3d2b22a": Object {
+    "$id": "3d2b22a",
+    "definitions": Object {
+      "@enum": Object {
+        "properties": Object {
+          "_id": Object {
+            "title": "Value",
+            "type": "number",
+          },
+          "children": Object {
+            "items": Object {
+              "allOf": Array [
+                Object {
+                  "$ref": "#/definitions/@enum",
+                },
+              ],
+            },
+            "title": "Subvalues",
+            "type": "array",
+          },
+          "name": Object {
+            "default": "",
+            "title": "Name",
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+    },
+    "properties": Object {
+      "value": Object {
+        "items": Object {
+          "allOf": Array [
+            Object {
+              "$ref": "#/definitions/@enum",
+            },
+          ],
+        },
+        "minItems": 1,
+        "type": "array",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses recursive refs properly 1`] = `
+Object {
+  "-6bbb062a": Object {
+    "$id": "-6bbb062a",
+    "$ref": "#/definitions/@enum",
+    "definitions": Object {
+      "@enum": Object {
+        "properties": Object {
+          "children": Object {
+            "$ref": "#/definitions/@enum",
+          },
+          "name": Object {
+            "default": "",
+            "title": "Name",
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+    },
+  },
+}
+`;
+
+exports[`schemaParser() parses schema and required dependencies properly 1`] = `
+Object {
+  "-a54479e": Object {
+    "$id": "-a54479e",
+    "dependencies": Object {
+      "a": Object {
+        "properties": Object {
+          "a": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "b",
+        ],
+      },
+    },
+    "properties": Object {
+      "a": Object {
+        "type": "string",
+      },
+      "b": Object {
+        "type": "integer",
+      },
+    },
+    "required": Array [
+      "a",
+    ],
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses schema dependencies properly 1`] = `
+Object {
+  "-77e20f4b": Object {
+    "$id": "-77e20f4b",
+    "dependencies": Object {
+      "a": Object {
+        "properties": Object {
+          "b": Object {
+            "type": "integer",
+          },
+        },
+      },
+    },
+    "properties": Object {
+      "a": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses schema dependencies with one of and refs properly 1`] = `
+Object {
+  "-6ae1f7c2": Object {
+    "$id": "-6ae1f7c2",
+    "definitions": Object {
+      "needsA": Object {
+        "properties": Object {
+          "a": Object {
+            "enum": Array [
+              "int",
+            ],
+          },
+          "b": Object {
+            "type": "integer",
+          },
+        },
+      },
+      "needsB": Object {
+        "properties": Object {
+          "a": Object {
+            "enum": Array [
+              "bool",
+            ],
+          },
+          "b": Object {
+            "type": "boolean",
+          },
+        },
+      },
+    },
+    "dependencies": Object {
+      "a": Object {
+        "oneOf": Array [
+          Object {
+            "$ref": "#/definitions/needsA",
+          },
+          Object {
+            "$ref": "#/definitions/needsB",
+          },
+        ],
+      },
+    },
+    "properties": Object {
+      "a": Object {
+        "enum": Array [
+          "int",
+          "bool",
+        ],
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "-72b37ea6": Object {
+    "$id": "-72b37ea6",
+    "properties": Object {
+      "a": Object {
+        "enum": Array [
+          "bool",
+        ],
+      },
+    },
+    "type": "object",
+  },
+  "-a4bd7cf": Object {
+    "$id": "-a4bd7cf",
+    "properties": Object {
+      "a": Object {
+        "enum": Array [
+          "int",
+        ],
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses schema with a single condition 1`] = `
+Object {
+  "-33d8d73c": Object {
+    "$id": "-33d8d73c",
+    "properties": Object {
+      "country": Object {
+        "const": "United States of America",
+      },
+    },
+  },
+  "76bba80f": Object {
+    "$id": "76bba80f",
+    "else": Object {
+      "properties": Object {
+        "postal_code": Object {
+          "pattern": "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
+        },
+      },
+    },
+    "if": Object {
+      "properties": Object {
+        "country": Object {
+          "const": "United States of America",
+        },
+      },
+    },
+    "properties": Object {
+      "country": Object {
+        "default": "United States of America",
+        "enum": Array [
+          "United States of America",
+          "Canada",
+        ],
+      },
+    },
+    "then": Object {
+      "properties": Object {
+        "postal_code": Object {
+          "pattern": "[0-9]{5}(-[0-9]{4})?",
+        },
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses schema with multiple conditions 1`] = `
+Object {
+  "-36b03e42": Object {
+    "$id": "-36b03e42",
+    "properties": Object {
+      "BreedName": Object {
+        "const": "Alsatian",
+      },
+    },
+    "required": Array [
+      "BreedName",
+    ],
+  },
+  "-d94a755": Object {
+    "$id": "-d94a755",
+    "properties": Object {
+      "Animal": Object {
+        "const": "Cat",
+      },
+    },
+    "required": Array [
+      "Animal",
+    ],
+  },
+  "3e7e3b11": Object {
+    "$id": "3e7e3b11",
+    "properties": Object {
+      "Animal": Object {
+        "const": "Dog",
+      },
+    },
+    "required": Array [
+      "Animal",
+    ],
+  },
+  "5b44d8ca": Object {
+    "$id": "5b44d8ca",
+    "properties": Object {
+      "BreedName": Object {
+        "const": "Dalmation",
+      },
+    },
+    "required": Array [
+      "BreedName",
+    ],
+  },
+  "7f2647ff": Object {
+    "$id": "7f2647ff",
+    "allOf": Array [
+      Object {
+        "if": Object {
+          "properties": Object {
+            "Animal": Object {
+              "const": "Cat",
+            },
+          },
+          "required": Array [
+            "Animal",
+          ],
+        },
+        "then": Object {
+          "properties": Object {
+            "Tail": Object {
+              "default": "Long",
+              "enum": Array [
+                "Long",
+                "Short",
+                "None",
+              ],
+              "title": "Tail length",
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "Tail",
+          ],
+        },
+      },
+      Object {
+        "if": Object {
+          "properties": Object {
+            "Animal": Object {
+              "const": "Dog",
+            },
+          },
+          "required": Array [
+            "Animal",
+          ],
+        },
+        "then": Object {
+          "properties": Object {
+            "Breed": Object {
+              "allOf": Array [
+                Object {
+                  "if": Object {
+                    "properties": Object {
+                      "BreedName": Object {
+                        "const": "Alsatian",
+                      },
+                    },
+                    "required": Array [
+                      "BreedName",
+                    ],
+                  },
+                  "then": Object {
+                    "properties": Object {
+                      "Fur": Object {
+                        "default": "brown",
+                        "enum": Array [
+                          "black",
+                          "brown",
+                        ],
+                        "title": "Fur",
+                        "type": "string",
+                      },
+                    },
+                    "required": Array [
+                      "Fur",
+                    ],
+                  },
+                },
+                Object {
+                  "if": Object {
+                    "properties": Object {
+                      "BreedName": Object {
+                        "const": "Dalmation",
+                      },
+                    },
+                    "required": Array [
+                      "BreedName",
+                    ],
+                  },
+                  "then": Object {
+                    "properties": Object {
+                      "Spots": Object {
+                        "default": "small",
+                        "enum": Array [
+                          "large",
+                          "small",
+                        ],
+                        "title": "Spots",
+                        "type": "string",
+                      },
+                    },
+                    "required": Array [
+                      "Spots",
+                    ],
+                  },
+                },
+              ],
+              "properties": Object {
+                "BreedName": Object {
+                  "default": "Alsatian",
+                  "enum": Array [
+                    "Alsatian",
+                    "Dalmation",
+                  ],
+                  "title": "Breed name",
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "BreedName",
+              ],
+              "title": "Breed",
+            },
+          },
+        },
+      },
+    ],
+    "properties": Object {
+      "Animal": Object {
+        "default": "Cat",
+        "enum": Array [
+          "Cat",
+          "Dog",
+        ],
+        "title": "Animal",
+        "type": "string",
+      },
+    },
+    "required": Array [
+      "Animal",
+    ],
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses schema with nested conditions 1`] = `
+Object {
+  "-f42a226": Object {
+    "$id": "-f42a226",
+    "properties": Object {
+      "state": Object {
+        "const": "New York",
+      },
+    },
+    "required": Array [
+      "state",
+    ],
+  },
+  "14f43ce2": Object {
+    "$id": "14f43ce2",
+    "properties": Object {
+      "country": Object {
+        "const": "USA",
+      },
+    },
+    "required": Array [
+      "country",
+    ],
+  },
+  "2d21fc3e": Object {
+    "$id": "2d21fc3e",
+    "if": Object {
+      "properties": Object {
+        "country": Object {
+          "const": "USA",
+        },
+      },
+      "required": Array [
+        "country",
+      ],
+    },
+    "properties": Object {
+      "country": Object {
+        "enum": Array [
+          "USA",
+        ],
+      },
+    },
+    "required": Array [
+      "country",
+    ],
+    "then": Object {
+      "else": Object {
+        "if": Object {
+          "properties": Object {
+            "state": Object {
+              "const": "California",
+            },
+          },
+          "required": Array [
+            "state",
+          ],
+        },
+        "then": Object {
+          "properties": Object {
+            "city": Object {
+              "enum": Array [
+                "Los Angeles",
+                "San Diego",
+                "San Jose",
+              ],
+              "type": "string",
+            },
+          },
+        },
+      },
+      "if": Object {
+        "properties": Object {
+          "state": Object {
+            "const": "New York",
+          },
+        },
+        "required": Array [
+          "state",
+        ],
+      },
+      "properties": Object {
+        "state": Object {
+          "enum": Array [
+            "California",
+            "New York",
+          ],
+          "type": "string",
+        },
+      },
+      "required": Array [
+        "state",
+      ],
+      "then": Object {
+        "properties": Object {
+          "city": Object {
+            "enum": Array [
+              "New York City",
+              "Buffalo",
+              "Rochester",
+            ],
+            "type": "string",
+          },
+        },
+      },
+    },
+    "type": "object",
+  },
+  "5ad8e931": Object {
+    "$id": "5ad8e931",
+    "properties": Object {
+      "state": Object {
+        "const": "California",
+      },
+    },
+    "required": Array [
+      "state",
+    ],
+  },
+}
+`;
+
+exports[`schemaParser() parses schema with oneof and nested dependencies 1`] = `
+Object {
+  "-1b756c98": Object {
+    "$id": "-1b756c98",
+    "properties": Object {
+      "employee_accounts": Object {
+        "const": true,
+      },
+    },
+    "type": "object",
+  },
+  "-29fab89": Object {
+    "$id": "-29fab89",
+    "properties": Object {
+      "update_absences": Object {
+        "const": "NON_MEDICAL_ONLY",
+      },
+    },
+    "type": "object",
+  },
+  "-5773f6db": Object {
+    "$id": "-5773f6db",
+    "properties": Object {
+      "update_absences": Object {
+        "const": "MEDICAL_ONLY",
+      },
+    },
+    "type": "object",
+  },
+  "2638e86c": Object {
+    "$id": "2638e86c",
+    "properties": Object {
+      "update_absences": Object {
+        "const": "BOTH",
+      },
+    },
+    "type": "object",
+  },
+  "2ef9c4e1": Object {
+    "$id": "2ef9c4e1",
+    "const": "BOTH",
+    "title": "Both",
+  },
+  "5269a07e": Object {
+    "$id": "5269a07e",
+    "dependencies": Object {
+      "employee_accounts": Object {
+        "oneOf": Array [
+          Object {
+            "properties": Object {
+              "employee_accounts": Object {
+                "const": true,
+              },
+              "update_absences": Object {
+                "oneOf": Array [
+                  Object {
+                    "const": "BOTH",
+                    "title": "Both",
+                  },
+                ],
+                "title": "Update Absences",
+                "type": "string",
+              },
+            },
+          },
+        ],
+      },
+      "update_absences": Object {
+        "oneOf": Array [
+          Object {
+            "properties": Object {
+              "permitted_extension": Object {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": Object {
+                "const": "BOTH",
+              },
+            },
+          },
+          Object {
+            "properties": Object {
+              "permitted_extension": Object {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": Object {
+                "const": "MEDICAL_ONLY",
+              },
+            },
+          },
+          Object {
+            "properties": Object {
+              "permitted_extension": Object {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": Object {
+                "const": "NON_MEDICAL_ONLY",
+              },
+            },
+          },
+        ],
+      },
+    },
+    "properties": Object {
+      "employee_accounts": Object {
+        "title": "Employee Accounts",
+        "type": "boolean",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`schemaParser() parses superSchema properly 1`] = `
+Object {
+  "-1a32fe51": Object {
+    "$id": "-1a32fe51",
+    "anyOf": Array [
+      Object {
+        "required": Array [
+          "name",
+        ],
+      },
+    ],
+    "properties": Object {
+      "name": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "-48288a90": Object {
+    "$id": "-48288a90",
+    "anyOf": Array [
+      Object {
+        "required": Array [
+          "choice",
+        ],
+      },
+      Object {
+        "required": Array [
+          "more",
+        ],
+      },
+    ],
+    "properties": Object {
+      "choice": Object {
+        "const": "two",
+        "type": "string",
+      },
+      "more": Object {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+  "4aa7be7e": Object {
+    "$id": "4aa7be7e",
+    "anyOf": Array [
+      Object {
+        "required": Array [
+          "choice",
+        ],
+      },
+      Object {
+        "required": Array [
+          "other",
+        ],
+      },
+    ],
+    "properties": Object {
+      "choice": Object {
+        "const": "one",
+        "type": "string",
+      },
+      "other": Object {
+        "type": "number",
+      },
+    },
+    "type": "object",
+  },
+  "super-schema": Object {
+    "$id": "super-schema",
+    "definitions": Object {
+      "choice1": Object {
+        "properties": Object {
+          "choice": Object {
+            "const": "one",
+            "type": "string",
+          },
+          "other": Object {
+            "type": "number",
+          },
+        },
+        "type": "object",
+      },
+      "choice2": Object {
+        "properties": Object {
+          "choice": Object {
+            "const": "two",
+            "type": "string",
+          },
+          "more": Object {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "foo": Object {
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "list": Object {
+        "items": Object {
+          "type": "string",
+        },
+        "type": "array",
+      },
+      "passwords": Object {
+        "properties": Object {
+          "pass1": Object {
+            "type": "string",
+          },
+          "pass2": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "pass1",
+          "pass2",
+        ],
+        "type": "object",
+      },
+      "price": Object {
+        "minimum": 0,
+        "multipleOf": 0.03,
+        "title": "Price per task ($)",
+        "type": "number",
+      },
+    },
+    "properties": Object {
+      "anything": Object {
+        "additionalProperties": Object {
+          "type": "string",
+        },
+        "type": "object",
+      },
+      "dataUrlWithName": Object {
+        "format": "data-url",
+        "type": "string",
+      },
+      "foo": Object {
+        "type": "string",
+      },
+      "list": Object {
+        "$ref": "#/definitions/list",
+      },
+      "multi": Object {
+        "anyOf": Array [
+          Object {
+            "$ref": "#/definitions/foo",
+          },
+        ],
+      },
+      "passwords": Object {
+        "$ref": "#/definitions/passwords",
+      },
+      "price": Object {
+        "$ref": "#/definitions/price",
+      },
+      "single": Object {
+        "oneOf": Array [
+          Object {
+            "$ref": "#/definitions/choice1",
+          },
+          Object {
+            "$ref": "#/definitions/choice2",
+          },
+        ],
+      },
+    },
+    "type": "object",
+  },
+}
+`;

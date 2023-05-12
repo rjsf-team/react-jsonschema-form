@@ -13,6 +13,7 @@ import enumOptionsSelectValue from './enumOptionsSelectValue';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder';
 import findSchemaDefinition from './findSchemaDefinition';
+import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
@@ -20,6 +21,7 @@ import getTemplate from './getTemplate';
 import getUiOptions from './getUiOptions';
 import getWidget from './getWidget';
 import guessType from './guessType';
+import hashForSchema from './hashForSchema';
 import hasWidget from './hasWidget';
 import { ariaDescribedByIds, descriptionId, errorId, examplesId, helpId, optionId, titleId } from './idGenerators';
 import isConstant from './isConstant';
@@ -52,6 +54,7 @@ export * from './types';
 export * from './enums';
 
 export * from './constants';
+export * from './parser';
 export * from './schema';
 
 export {
@@ -74,6 +77,7 @@ export {
   examplesId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
+  getDiscriminatorFieldFromSchema,
   getInputProps,
   getSchemaType,
   getSubmitButtonOptions,
@@ -82,6 +86,7 @@ export {
   getWidget,
   guessType,
   hasWidget,
+  hashForSchema,
   helpId,
   isConstant,
   isCustomWidget,

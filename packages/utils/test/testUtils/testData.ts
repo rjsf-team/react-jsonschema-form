@@ -5,6 +5,7 @@ import {
   ErrorSchema,
   ErrorSchemaBuilder,
   ONE_OF_KEY,
+  ID_KEY,
   RJSFSchema,
   RJSFValidationError,
 } from '../../src';
@@ -383,3 +384,404 @@ export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
   },
   []
 );
+
+export const SUPER_SCHEMA: RJSFSchema = {
+  [ID_KEY]: 'super-schema',
+  definitions: {
+    foo: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+    price: {
+      title: 'Price per task ($)',
+      type: 'number',
+      multipleOf: 0.03,
+      minimum: 0,
+    },
+    passwords: {
+      type: 'object',
+      properties: {
+        pass1: { type: 'string' },
+        pass2: { type: 'string' },
+      },
+      required: ['pass1', 'pass2'],
+    },
+    list: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    choice1: {
+      type: 'object',
+      properties: {
+        choice: {
+          type: 'string',
+          const: 'one',
+        },
+        other: {
+          type: 'number',
+        },
+      },
+    },
+    choice2: {
+      type: 'object',
+      properties: {
+        choice: {
+          type: 'string',
+          const: 'two',
+        },
+        more: {
+          type: 'string',
+        },
+      },
+    },
+  },
+  type: 'object',
+  properties: {
+    foo: { type: 'string' },
+    price: { $ref: '#/definitions/price' },
+    passwords: { $ref: '#/definitions/passwords' },
+    dataUrlWithName: { type: 'string', format: 'data-url' },
+    multi: {
+      anyOf: [{ $ref: '#/definitions/foo' }],
+    },
+    list: { $ref: '#/definitions/list' },
+    single: {
+      oneOf: [{ $ref: '#/definitions/choice1' }, { $ref: '#/definitions/choice2' }],
+    },
+    anything: {
+      type: 'object',
+      additionalProperties: {
+        type: 'string',
+      },
+    },
+  },
+};
+
+export const PROPERTY_DEPENDENCIES: RJSFSchema = {
+  type: 'object',
+  properties: {
+    a: { type: 'string' },
+    b: { type: 'integer' },
+  },
+  required: ['a'],
+  dependencies: {
+    a: ['b'],
+  },
+};
+
+export const SCHEMA_DEPENDENCIES: RJSFSchema = {
+  type: 'object',
+  properties: {
+    a: { type: 'string' },
+  },
+  dependencies: {
+    a: {
+      properties: {
+        b: { type: 'integer' },
+      },
+    },
+  },
+};
+
+export const SCHEMA_AND_ONEOF_REF_DEPENDENCIES: RJSFSchema = {
+  type: 'object',
+  definitions: {
+    needsA: {
+      properties: {
+        a: { enum: ['int'] },
+        b: { type: 'integer' },
+      },
+    },
+    needsB: {
+      properties: {
+        a: { enum: ['bool'] },
+        b: { type: 'boolean' },
+      },
+    },
+  },
+  properties: {
+    a: { type: 'string', enum: ['int', 'bool'] },
+  },
+  dependencies: {
+    a: {
+      oneOf: [{ $ref: '#/definitions/needsA' }, { $ref: '#/definitions/needsB' }],
+    },
+  },
+};
+
+export const SCHEMA_AND_REQUIRED_DEPENDENCIES: RJSFSchema = {
+  type: 'object',
+  properties: {
+    a: { type: 'string' },
+    b: { type: 'integer' },
+  },
+  required: ['a'],
+  dependencies: {
+    a: {
+      properties: {
+        a: { type: 'string' },
+      },
+      required: ['b'],
+    },
+  },
+};
+
+export const SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES: RJSFSchema = {
+  type: 'object',
+  dependencies: {
+    employee_accounts: {
+      oneOf: [
+        {
+          properties: {
+            employee_accounts: {
+              const: true,
+            },
+            update_absences: {
+              title: 'Update Absences',
+              type: 'string',
+              oneOf: [
+                {
+                  title: 'Both',
+                  const: 'BOTH',
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+    update_absences: {
+      oneOf: [
+        {
+          properties: {
+            permitted_extension: {
+              title: 'Permitted Extension',
+              type: 'integer',
+            },
+            update_absences: {
+              const: 'BOTH',
+            },
+          },
+        },
+        {
+          properties: {
+            permitted_extension: {
+              title: 'Permitted Extension',
+              type: 'integer',
+            },
+            update_absences: {
+              const: 'MEDICAL_ONLY',
+            },
+          },
+        },
+        {
+          properties: {
+            permitted_extension: {
+              title: 'Permitted Extension',
+              type: 'integer',
+            },
+            update_absences: {
+              const: 'NON_MEDICAL_ONLY',
+            },
+          },
+        },
+      ],
+    },
+  },
+  properties: {
+    employee_accounts: {
+      type: 'boolean',
+      title: 'Employee Accounts',
+    },
+  },
+};
+
+export const SCHEMA_WITH_SINGLE_CONDITION: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: {
+      default: 'United States of America',
+      enum: ['United States of America', 'Canada'],
+    },
+  },
+  if: {
+    properties: { country: { const: 'United States of America' } },
+  },
+  then: {
+    properties: { postal_code: { pattern: '[0-9]{5}(-[0-9]{4})?' } },
+  },
+  else: {
+    properties: {
+      postal_code: { pattern: '[A-Z][0-9][A-Z] [0-9][A-Z][0-9]' },
+    },
+  },
+};
+
+export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = {
+  type: 'object',
+  properties: {
+    Animal: {
+      default: 'Cat',
+      enum: ['Cat', 'Dog'],
+      title: 'Animal',
+      type: 'string',
+    },
+  },
+  allOf: [
+    {
+      if: {
+        required: ['Animal'],
+        properties: {
+          Animal: {
+            const: 'Cat',
+          },
+        },
+      },
+      then: {
+        properties: {
+          Tail: {
+            default: 'Long',
+            enum: ['Long', 'Short', 'None'],
+            title: 'Tail length',
+            type: 'string',
+          },
+        },
+        required: ['Tail'],
+      },
+    },
+    {
+      if: {
+        required: ['Animal'],
+        properties: {
+          Animal: {
+            const: 'Dog',
+          },
+        },
+      },
+      then: {
+        properties: {
+          Breed: {
+            title: 'Breed',
+            properties: {
+              BreedName: {
+                default: 'Alsatian',
+                enum: ['Alsatian', 'Dalmation'],
+                title: 'Breed name',
+                type: 'string',
+              },
+            },
+            allOf: [
+              {
+                if: {
+                  required: ['BreedName'],
+                  properties: {
+                    BreedName: {
+                      const: 'Alsatian',
+                    },
+                  },
+                },
+                then: {
+                  properties: {
+                    Fur: {
+                      default: 'brown',
+                      enum: ['black', 'brown'],
+                      title: 'Fur',
+                      type: 'string',
+                    },
+                  },
+                  required: ['Fur'],
+                },
+              },
+              {
+                if: {
+                  required: ['BreedName'],
+                  properties: {
+                    BreedName: {
+                      const: 'Dalmation',
+                    },
+                  },
+                },
+                then: {
+                  properties: {
+                    Spots: {
+                      default: 'small',
+                      enum: ['large', 'small'],
+                      title: 'Spots',
+                      type: 'string',
+                    },
+                  },
+                  required: ['Spots'],
+                },
+              },
+            ],
+            required: ['BreedName'],
+          },
+        },
+      },
+    },
+  ],
+  required: ['Animal'],
+};
+
+export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: {
+      enum: ['USA'],
+    },
+  },
+  required: ['country'],
+  if: {
+    properties: {
+      country: {
+        const: 'USA',
+      },
+    },
+    required: ['country'],
+  },
+  then: {
+    properties: {
+      state: {
+        type: 'string',
+        enum: ['California', 'New York'],
+      },
+    },
+    required: ['state'],
+    if: {
+      properties: {
+        state: {
+          const: 'New York',
+        },
+      },
+      required: ['state'],
+    },
+    then: {
+      properties: {
+        city: {
+          type: 'string',
+          enum: ['New York City', 'Buffalo', 'Rochester'],
+        },
+      },
+    },
+    else: {
+      if: {
+        properties: {
+          state: {
+            const: 'California',
+          },
+        },
+        required: ['state'],
+      },
+      then: {
+        properties: {
+          city: {
+            type: 'string',
+            enum: ['Los Angeles', 'San Diego', 'San Jose'],
+          },
+        },
+      },
+    },
+  },
+};

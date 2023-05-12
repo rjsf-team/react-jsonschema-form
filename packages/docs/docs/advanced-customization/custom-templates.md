@@ -361,6 +361,26 @@ render(
 );
 ```
 
+Sometimes you just need to pass some additional properties to the existing `BaseInputTemplate`.
+The way to do this varies based upon whether you are using `core` or some other theme (such as `mui`):
+
+```tsx
+import { BaseInputTemplateProps } from '@rjsf/utils';
+import { getDefaultRegistry } from '@rjsf/core';
+import { Templates } from '@rjsf/mui';
+
+const {
+  templates: { BaseInputTemplate },
+} = getDefaultRegistry(); // To get templates from core
+// const { BaseInputTemplate } = Templates; // To get templates from a theme do this
+
+function MyBaseInputTemplate(props: BaseInputTemplateProps) {
+  const customProps = {};
+  // get your custom props from where you need to
+  return <BaseInputTemplate {...props} {...customProps} />;
+}
+```
+
 The following props are passed to the `BaseInputTemplate`:
 
 - `id`: The generated id for this widget;

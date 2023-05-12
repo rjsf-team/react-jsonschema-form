@@ -70,13 +70,21 @@ export default function CheckboxesWidget<
               checked={checked}
               label={option.label}
               disabled={disabled || itemDisabled || readonly}
-              autoFocus={autofocus && index === 0}
+              inputProps={{
+                autoFocus: autofocus && index === 0,
+                onBlur: _onBlur,
+                onFocus: _onFocus,
+              }}
               onChange={_onChange(index)}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
               key={index}
               {...uiProps}
               aria-describedby={ariaDescribedByIds<T>(id)}
+              /* Backward compatibility with fluentui v7 */
+              {...{
+                autoFocus: autofocus && index === 0,
+                onBlur: _onBlur,
+                onFocus: _onFocus,
+              }}
             />
           );
         })}

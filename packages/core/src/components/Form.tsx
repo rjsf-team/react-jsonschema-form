@@ -32,6 +32,7 @@ import {
   ValidationData,
   validationDataMerge,
   ValidatorType,
+  Experimental_DefaultFormStateBehavior,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -181,6 +182,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
+  /** Optional configuration object with flags, if provided, allows users to override default form state behavior
+   * Currently only affecting minItems on array fields */
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -305,9 +309,16 @@ export default class Form<
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
     const rootSchema = schema;
+    const experimental_defaultFormStateBehavior =
+      'experimental_defaultFormStateBehavior' in props
+        ? props.experimental_defaultFormStateBehavior
+        : this.props.experimental_defaultFormStateBehavior;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
-    if (!schemaUtils || schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema)) {
-      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema);
+    if (
+      !schemaUtils ||
+      schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, experimental_defaultFormStateBehavior)
+    ) {
+      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, experimental_defaultFormStateBehavior);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);

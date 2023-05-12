@@ -8,10 +8,8 @@ exports[`array fields array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -24,7 +22,7 @@ exports[`array fields array 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -40,12 +38,12 @@ exports[`array fields array 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -56,10 +54,10 @@ exports[`array fields array 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
+              className="ms-Button-label label-114"
               id="id__0"
             >
               Add Item
@@ -75,7 +73,7 @@ exports[`array fields array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -86,14 +84,14 @@ exports[`array fields array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
+              className="ms-Button-label label-122"
               id="id__3"
             >
               Submit
@@ -114,10 +112,8 @@ exports[`array fields array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -137,28 +133,26 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -189,7 +183,7 @@ exports[`array fields array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -201,12 +195,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -219,7 +213,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -230,12 +224,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -248,7 +242,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -259,12 +253,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -277,7 +271,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -288,12 +282,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -323,28 +317,26 @@ exports[`array fields array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -374,7 +366,7 @@ exports[`array fields array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -385,12 +377,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -404,7 +396,7 @@ exports[`array fields array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -416,12 +408,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -434,7 +426,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -445,12 +437,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -463,7 +455,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -474,12 +466,12 @@ exports[`array fields array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -502,7 +494,7 @@ exports[`array fields array icons 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -518,12 +510,12 @@ exports[`array fields array icons 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -534,11 +526,11 @@ exports[`array fields array icons 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__48"
+              className="ms-Button-label label-114"
+              id="id__56"
             >
               Add Item
             </span>
@@ -553,7 +545,7 @@ exports[`array fields array icons 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -564,15 +556,15 @@ exports[`array fields array icons 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__51"
+              className="ms-Button-label label-122"
+              id="id__59"
             >
               Submit
             </span>
@@ -592,10 +584,8 @@ exports[`array fields checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -609,8 +599,9 @@ exports[`array fields checkboxes 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-78"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
+        data-ktp-target={true}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -623,15 +614,16 @@ exports[`array fields checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-79"
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-80"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-94"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -647,7 +639,7 @@ exports[`array fields checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -658,15 +650,15 @@ exports[`array fields checkboxes 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__15"
+              className="ms-Button-label label-122"
+              id="id__19"
             >
               Submit
             </span>
@@ -686,10 +678,8 @@ exports[`array fields empty errors array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -704,36 +694,34 @@ exports[`array fields empty errors array 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_name"
           style={
             Object {
-              "display": undefined,
               "marginBottom": 15,
             }
           }
         >
           <div
-            className="ms-TextField root-67"
+            className="ms-TextField root-125"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-114"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel69"
+                id="TextFieldLabel81"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-115"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel69"
+                  aria-labelledby="TextFieldLabel81"
                   autoFocus={false}
-                  className="ms-TextField-field field-69"
+                  className="ms-TextField-field field-127"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -761,7 +749,7 @@ exports[`array fields empty errors array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -772,15 +760,15 @@ exports[`array fields empty errors array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__70"
+              className="ms-Button-label label-122"
+              id="id__84"
             >
               Submit
             </span>
@@ -800,10 +788,8 @@ exports[`array fields fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -823,28 +809,26 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -882,28 +866,26 @@ exports[`array fields fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -934,7 +916,7 @@ exports[`array fields fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -945,15 +927,15 @@ exports[`array fields fixed array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__12"
+              className="ms-Button-label label-122"
+              id="id__16"
             >
               Submit
             </span>
@@ -972,18 +954,18 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-102"
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-164"
   >
     <div
-      className="ms-MessageBar-content content-103"
+      className="ms-MessageBar-content content-165"
     >
       <div
         aria-hidden={true}
-        className="ms-MessageBar-icon iconContainer-104"
+        className="ms-MessageBar-icon iconContainer-166"
       >
         <i
           aria-hidden={true}
-          className="icon-112"
+          className="icon-175"
           data-icon-name="ErrorBadge"
         >
           
@@ -991,22 +973,20 @@ exports[`array fields has errors 1`] = `
       </div>
       <div
         aria-live="assertive"
-        className="ms-MessageBar-text text-106"
-        id="MessageBar54"
-        role="status"
+        className="ms-MessageBar-text text-168"
+        id="MessageBar62"
+        role="alert"
       >
         <span
-          className="ms-MessageBar-innerText innerText-107"
+          className="ms-MessageBar-innerText innerText-169"
         />
       </div>
     </div>
   </div>
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -1021,36 +1001,34 @@ exports[`array fields has errors 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
-          id="root_name"
           style={
             Object {
-              "display": undefined,
               "marginBottom": 15,
             }
           }
         >
           <div
-            className="ms-TextField root-67"
+            className="ms-TextField root-125"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-114"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel57"
+                id="TextFieldLabel65"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-113"
+                className="ms-TextField-fieldGroup fieldGroup-176"
               >
                 <input
-                  aria-describedby="TextFieldDescription56"
+                  aria-describedby="TextFieldDescription64"
                   aria-invalid={true}
-                  aria-labelledby="TextFieldLabel57"
+                  aria-labelledby="TextFieldLabel65"
                   autoFocus={false}
-                  className="ms-TextField-field field-69"
+                  className="ms-TextField-field field-127"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -1067,7 +1045,7 @@ exports[`array fields has errors 1`] = `
               </div>
             </div>
             <span
-              id="TextFieldDescription56"
+              id="TextFieldDescription64"
             >
               <div
                 role="alert"
@@ -1110,7 +1088,7 @@ exports[`array fields has errors 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1121,15 +1099,15 @@ exports[`array fields has errors 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__58"
+              className="ms-Button-label label-122"
+              id="id__68"
             >
               Submit
             </span>
@@ -1149,10 +1127,8 @@ exports[`array fields no errors 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-object"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -1167,36 +1143,34 @@ exports[`array fields no errors 1`] = `
       >
         <div
           className="ms-Grid-col ms-sm12  field field-string"
-          id="root_name"
           style={
             Object {
-              "display": undefined,
               "marginBottom": 15,
             }
           }
         >
           <div
-            className="ms-TextField root-67"
+            className="ms-TextField root-125"
           >
             <div
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-114"
+                className="ms-Label root-177"
                 htmlFor="root_name"
-                id="TextFieldLabel63"
+                id="TextFieldLabel73"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-115"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel63"
+                  aria-labelledby="TextFieldLabel73"
                   autoFocus={false}
-                  className="ms-TextField-field field-69"
+                  className="ms-TextField-field field-127"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -1224,7 +1198,7 @@ exports[`array fields no errors 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1235,15 +1209,15 @@ exports[`array fields no errors 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__64"
+              className="ms-Button-label label-122"
+              id="id__76"
             >
               Submit
             </span>
@@ -1263,22 +1237,20 @@ exports[`with title and description array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -1291,7 +1263,7 @@ exports[`with title and description array 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1307,12 +1279,12 @@ exports[`with title and description array 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -1323,11 +1295,11 @@ exports[`with title and description array 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__73"
+              className="ms-Button-label label-114"
+              id="id__87"
             >
               Add Item
             </span>
@@ -1342,7 +1314,7 @@ exports[`with title and description array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1353,15 +1325,15 @@ exports[`with title and description array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__76"
+              className="ms-Button-label label-122"
+              id="id__90"
             >
               Submit
             </span>
@@ -1381,22 +1353,20 @@ exports[`with title and description array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -1416,36 +1386,34 @@ exports[`with title and description array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel93"
+                    id="TextFieldLabel111"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel93"
+                      aria-labelledby="TextFieldLabel111"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -1463,7 +1431,7 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a test item description
               </span>
@@ -1480,7 +1448,7 @@ exports[`with title and description array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -1492,12 +1460,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -1510,7 +1478,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1521,12 +1489,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -1539,7 +1507,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1550,12 +1518,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -1568,7 +1536,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1579,12 +1547,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -1614,36 +1582,34 @@ exports[`with title and description array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel108"
+                    id="TextFieldLabel128"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel108"
+                      aria-labelledby="TextFieldLabel128"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -1661,7 +1627,7 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a test item description
               </span>
@@ -1677,7 +1643,7 @@ exports[`with title and description array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1688,12 +1654,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -1707,7 +1673,7 @@ exports[`with title and description array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -1719,12 +1685,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -1737,7 +1703,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1748,12 +1714,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -1766,7 +1732,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1777,12 +1743,12 @@ exports[`with title and description array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -1805,7 +1771,7 @@ exports[`with title and description array icons 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1821,12 +1787,12 @@ exports[`with title and description array icons 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -1837,11 +1803,11 @@ exports[`with title and description array icons 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__121"
+              className="ms-Button-label label-114"
+              id="id__143"
             >
               Add Item
             </span>
@@ -1856,7 +1822,7 @@ exports[`with title and description array icons 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1867,15 +1833,15 @@ exports[`with title and description array icons 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__124"
+              className="ms-Button-label label-122"
+              id="id__146"
             >
               Submit
             </span>
@@ -1895,10 +1861,8 @@ exports[`with title and description checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -1907,7 +1871,7 @@ exports[`with title and description checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-119"
+        className="ms-Label ms-Dropdown-label root-182"
         id="root-label"
       >
         Test field
@@ -1919,8 +1883,9 @@ exports[`with title and description checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-78"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
+        data-ktp-target={true}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -1933,15 +1898,16 @@ exports[`with title and description checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-79"
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-80"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-94"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -1950,7 +1916,7 @@ exports[`with title and description checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-117"
+      className="css-180"
     >
       a test description
     </span>
@@ -1961,7 +1927,7 @@ exports[`with title and description checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1972,15 +1938,15 @@ exports[`with title and description checkboxes 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__88"
+              className="ms-Button-label label-122"
+              id="id__106"
             >
               Submit
             </span>
@@ -2000,22 +1966,20 @@ exports[`with title and description fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -2035,36 +1999,34 @@ exports[`with title and description fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel81"
+                    id="TextFieldLabel95"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel81"
+                      aria-labelledby="TextFieldLabel95"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -2082,7 +2044,7 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a test item description
               </span>
@@ -2106,36 +2068,34 @@ exports[`with title and description fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel84"
+                    id="TextFieldLabel100"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel84"
+                      aria-labelledby="TextFieldLabel100"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -2154,7 +2114,7 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a test item description
               </span>
@@ -2170,7 +2130,7 @@ exports[`with title and description fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2181,15 +2141,15 @@ exports[`with title and description fixed array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__85"
+              className="ms-Button-label label-122"
+              id="id__103"
             >
               Submit
             </span>
@@ -2209,22 +2169,20 @@ exports[`with title and description from both array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -2237,7 +2195,7 @@ exports[`with title and description from both array 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2253,12 +2211,12 @@ exports[`with title and description from both array 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -2269,11 +2227,11 @@ exports[`with title and description from both array 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__181"
+              className="ms-Button-label label-114"
+              id="id__211"
             >
               Add Item
             </span>
@@ -2288,7 +2246,7 @@ exports[`with title and description from both array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2299,15 +2257,15 @@ exports[`with title and description from both array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__184"
+              className="ms-Button-label label-122"
+              id="id__214"
             >
               Submit
             </span>
@@ -2327,22 +2285,20 @@ exports[`with title and description from both array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -2362,36 +2318,34 @@ exports[`with title and description from both array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel201"
+                    id="TextFieldLabel235"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel201"
+                      aria-labelledby="TextFieldLabel235"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -2409,7 +2363,7 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -2426,7 +2380,7 @@ exports[`with title and description from both array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -2438,12 +2392,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -2456,7 +2410,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2467,12 +2421,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -2485,7 +2439,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2496,12 +2450,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -2514,7 +2468,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2525,12 +2479,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -2560,36 +2514,34 @@ exports[`with title and description from both array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel216"
+                    id="TextFieldLabel252"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel216"
+                      aria-labelledby="TextFieldLabel252"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -2607,7 +2559,7 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -2623,7 +2575,7 @@ exports[`with title and description from both array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2634,12 +2586,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -2653,7 +2605,7 @@ exports[`with title and description from both array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -2665,12 +2617,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -2683,7 +2635,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2694,12 +2646,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -2712,7 +2664,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2723,12 +2675,12 @@ exports[`with title and description from both array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -2751,7 +2703,7 @@ exports[`with title and description from both array icons 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2767,12 +2719,12 @@ exports[`with title and description from both array icons 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -2783,11 +2735,11 @@ exports[`with title and description from both array icons 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__229"
+              className="ms-Button-label label-114"
+              id="id__267"
             >
               Add Item
             </span>
@@ -2802,7 +2754,7 @@ exports[`with title and description from both array icons 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2813,15 +2765,15 @@ exports[`with title and description from both array icons 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__232"
+              className="ms-Button-label label-122"
+              id="id__270"
             >
               Submit
             </span>
@@ -2841,10 +2793,8 @@ exports[`with title and description from both checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -2853,7 +2803,7 @@ exports[`with title and description from both checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-119"
+        className="ms-Label ms-Dropdown-label root-182"
         id="root-label"
       >
         My Field
@@ -2865,8 +2815,9 @@ exports[`with title and description from both checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-78"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
+        data-ktp-target={true}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2879,15 +2830,16 @@ exports[`with title and description from both checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-79"
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-80"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-94"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -2896,7 +2848,7 @@ exports[`with title and description from both checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-117"
+      className="css-180"
     >
       a fancier description
     </span>
@@ -2907,7 +2859,7 @@ exports[`with title and description from both checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2918,15 +2870,15 @@ exports[`with title and description from both checkboxes 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__196"
+              className="ms-Button-label label-122"
+              id="id__230"
             >
               Submit
             </span>
@@ -2946,22 +2898,20 @@ exports[`with title and description from both fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -2981,36 +2931,34 @@ exports[`with title and description from both fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel189"
+                    id="TextFieldLabel219"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel189"
+                      aria-labelledby="TextFieldLabel219"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -3028,7 +2976,7 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -3052,36 +3000,34 @@ exports[`with title and description from both fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel192"
+                    id="TextFieldLabel224"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel192"
+                      aria-labelledby="TextFieldLabel224"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -3100,7 +3046,7 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -3116,7 +3062,7 @@ exports[`with title and description from both fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3127,15 +3073,15 @@ exports[`with title and description from both fixed array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__193"
+              className="ms-Button-label label-122"
+              id="id__227"
             >
               Submit
             </span>
@@ -3155,22 +3101,20 @@ exports[`with title and description from uiSchema array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3183,7 +3127,7 @@ exports[`with title and description from uiSchema array 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3199,12 +3143,12 @@ exports[`with title and description from uiSchema array 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -3215,11 +3159,11 @@ exports[`with title and description from uiSchema array 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__127"
+              className="ms-Button-label label-114"
+              id="id__149"
             >
               Add Item
             </span>
@@ -3234,7 +3178,7 @@ exports[`with title and description from uiSchema array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3245,15 +3189,15 @@ exports[`with title and description from uiSchema array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__130"
+              className="ms-Button-label label-122"
+              id="id__152"
             >
               Submit
             </span>
@@ -3273,22 +3217,20 @@ exports[`with title and description from uiSchema array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3308,36 +3250,34 @@ exports[`with title and description from uiSchema array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel147"
+                    id="TextFieldLabel173"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel147"
+                      aria-labelledby="TextFieldLabel173"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -3355,7 +3295,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -3372,7 +3312,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -3384,12 +3324,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -3402,7 +3342,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3413,12 +3353,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -3431,7 +3371,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3442,12 +3382,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -3460,7 +3400,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3471,12 +3411,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -3506,36 +3446,34 @@ exports[`with title and description from uiSchema array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel162"
+                    id="TextFieldLabel190"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel162"
+                      aria-labelledby="TextFieldLabel190"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -3553,7 +3491,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -3569,7 +3507,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3580,12 +3518,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -3599,7 +3537,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -3611,12 +3549,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -3629,7 +3567,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3640,12 +3578,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -3658,7 +3596,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3669,12 +3607,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -3697,7 +3635,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3713,12 +3651,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -3729,11 +3667,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__175"
+              className="ms-Button-label label-114"
+              id="id__205"
             >
               Add Item
             </span>
@@ -3748,7 +3686,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3759,15 +3697,15 @@ exports[`with title and description from uiSchema array icons 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__178"
+              className="ms-Button-label label-122"
+              id="id__208"
             >
               Submit
             </span>
@@ -3787,10 +3725,8 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -3799,7 +3735,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-119"
+        className="ms-Label ms-Dropdown-label root-182"
         id="root-label"
       >
         My Field
@@ -3811,8 +3747,9 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-78"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
+        data-ktp-target={true}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3825,15 +3762,16 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-79"
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-80"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-94"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -3842,7 +3780,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-117"
+      className="css-180"
     >
       a fancier description
     </span>
@@ -3853,7 +3791,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3864,15 +3802,15 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__142"
+              className="ms-Button-label label-122"
+              id="id__168"
             >
               Submit
             </span>
@@ -3892,22 +3830,20 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
   >
     <label
-      className="ms-Label root-116"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-117"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3927,36 +3863,34 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_0"
-                    id="TextFieldLabel135"
+                    id="TextFieldLabel157"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel135"
+                      aria-labelledby="TextFieldLabel157"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -3974,7 +3908,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -3998,36 +3932,34 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-118"
+                    className="ms-Label root-181"
                     htmlFor="root_1"
-                    id="TextFieldLabel138"
+                    id="TextFieldLabel162"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-115"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
-                      aria-labelledby="TextFieldLabel138"
+                      aria-labelledby="TextFieldLabel162"
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -4046,7 +3978,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-117"
+                className="css-180"
               >
                 a fancier item description
               </span>
@@ -4062,7 +3994,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4073,15 +4005,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__139"
+              className="ms-Button-label label-122"
+              id="id__165"
             >
               Submit
             </span>
@@ -4101,10 +4033,8 @@ exports[`with title and description with global label off array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -4117,7 +4047,7 @@ exports[`with title and description with global label off array 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4133,12 +4063,12 @@ exports[`with title and description with global label off array 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -4149,11 +4079,11 @@ exports[`with title and description with global label off array 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__235"
+              className="ms-Button-label label-114"
+              id="id__273"
             >
               Add Item
             </span>
@@ -4168,7 +4098,7 @@ exports[`with title and description with global label off array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4179,15 +4109,15 @@ exports[`with title and description with global label off array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__238"
+              className="ms-Button-label label-122"
+              id="id__276"
             >
               Submit
             </span>
@@ -4207,10 +4137,8 @@ exports[`with title and description with global label off array icons 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -4230,28 +4158,26 @@ exports[`with title and description with global label off array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -4281,7 +4207,7 @@ exports[`with title and description with global label off array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -4293,12 +4219,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -4311,7 +4237,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4322,12 +4248,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -4340,7 +4266,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4351,12 +4277,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -4369,7 +4295,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4380,12 +4306,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -4415,28 +4341,26 @@ exports[`with title and description with global label off array icons 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -4465,7 +4389,7 @@ exports[`with title and description with global label off array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4476,12 +4400,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -4495,7 +4419,7 @@ exports[`with title and description with global label off array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-95"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -4507,12 +4431,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-99 ms-Button-icon icon-96"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -4525,7 +4449,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4536,12 +4460,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-101 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -4554,7 +4478,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-100"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4565,12 +4489,12 @@ exports[`with title and description with global label off array icons 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-54"
+              className="ms-Button-flexContainer flexContainer-111"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-37 css-61 ms-Button-icon icon-63"
+                className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
                   Object {
@@ -4593,7 +4517,7 @@ exports[`with title and description with global label off array icons 1`] = `
       }
     >
       <button
-        className="ms-Button ms-Button--commandBar array-item-add root-53"
+        className="ms-Button ms-Button--commandBar array-item-add root-110"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4609,12 +4533,12 @@ exports[`with title and description with global label off array icons 1`] = `
         type="button"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <i
             aria-hidden={true}
-            className="ms-Icon root-37 css-61 ms-Button-icon icon-56"
+            className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
               Object {
@@ -4625,11 +4549,11 @@ exports[`with title and description with global label off array icons 1`] = `
             
           </i>
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-57"
-              id="id__283"
+              className="ms-Button-label label-114"
+              id="id__329"
             >
               Add Item
             </span>
@@ -4644,7 +4568,7 @@ exports[`with title and description with global label off array icons 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4655,15 +4579,15 @@ exports[`with title and description with global label off array icons 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__286"
+              className="ms-Button-label label-122"
+              id="id__332"
             >
               Submit
             </span>
@@ -4683,10 +4607,8 @@ exports[`with title and description with global label off checkboxes 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -4695,7 +4617,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-119"
+        className="ms-Label ms-Dropdown-label root-182"
         id="root-label"
       >
         Test field
@@ -4707,8 +4629,9 @@ exports[`with title and description with global label off checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-78"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
+        data-ktp-target={true}
         id="root"
         onBlur={[Function]}
         onChange={[Function]}
@@ -4721,15 +4644,16 @@ exports[`with title and description with global label off checkboxes 1`] = `
         tabIndex={0}
       >
         <span
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-79"
+          aria-invalid={false}
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-80"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-94"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -4738,7 +4662,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-117"
+      className="css-180"
     >
       a test description
     </span>
@@ -4749,7 +4673,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4760,15 +4684,15 @@ exports[`with title and description with global label off checkboxes 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__250"
+              className="ms-Button-label label-122"
+              id="id__292"
             >
               Submit
             </span>
@@ -4788,10 +4712,8 @@ exports[`with title and description with global label off fixed array 1`] = `
 >
   <div
     className="ms-Grid-col ms-sm12  field field-array"
-    id="root"
     style={
       Object {
-        "display": undefined,
         "marginBottom": 15,
       }
     }
@@ -4811,28 +4733,26 @@ exports[`with title and description with global label off fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-string"
-              id="root_0"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_0"
                       name="root_0"
@@ -4869,28 +4789,26 @@ exports[`with title and description with global label off fixed array 1`] = `
           >
             <div
               className="ms-Grid-col ms-sm12  field field-number"
-              id="root_1"
               style={
                 Object {
-                  "display": undefined,
                   "marginBottom": 15,
                 }
               }
             >
               <div
-                className="ms-TextField is-required root-67"
+                className="ms-TextField is-required root-125"
               >
                 <div
                   className="ms-TextField-wrapper"
                 >
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-68"
+                    className="ms-TextField-fieldGroup fieldGroup-126"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
                       aria-invalid={false}
                       autoFocus={false}
-                      className="ms-TextField-field field-69"
+                      className="ms-TextField-field field-127"
                       disabled={false}
                       id="root_1"
                       name="root_1"
@@ -4920,7 +4838,7 @@ exports[`with title and description with global label off fixed array 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-62"
+        className="ms-Button ms-Button--primary root-120"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -4931,15 +4849,15 @@ exports[`with title and description with global label off fixed array 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-54"
+          className="ms-Button-flexContainer flexContainer-111"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-55"
+            className="ms-Button-textContainer textContainer-112"
           >
             <span
-              className="ms-Button-label label-64"
-              id="id__247"
+              className="ms-Button-label label-122"
+              id="id__289"
             >
               Submit
             </span>

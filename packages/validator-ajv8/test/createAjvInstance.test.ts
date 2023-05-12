@@ -3,26 +3,11 @@ import Ajv2019 from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 
 import createAjvInstance, { AJV_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from '../src/createAjvInstance';
-import { CustomValidatorOptionsType } from '../src';
+import { CUSTOM_OPTIONS } from './harness/testData';
 
 jest.mock('ajv');
 jest.mock('ajv/dist/2019');
 jest.mock('ajv-formats');
-
-export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
-  additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
-  customFormats: {
-    'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
-    'area-code': /\d{3}/,
-  },
-  ajvOptionsOverrides: {
-    $data: true,
-    verbose: true,
-  },
-  ajvFormatOptions: {
-    mode: 'fast',
-  },
-};
 
 describe('createAjvInstance()', () => {
   describe('no additional meta schemas, custom formats, ajv options overrides or ajv format options', () => {

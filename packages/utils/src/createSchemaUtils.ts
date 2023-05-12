@@ -1,6 +1,7 @@
 import deepEquals from './deepEquals';
 import {
   ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
   FormContextType,
   GlobalUISchemaOptions,
   IdSchema,
@@ -29,8 +30,8 @@ import {
 } from './schema';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both the `validator`
- * and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified set of APIs to the
+ * that one does not have to explicitly pass the `validator`, `rootSchema`, or `experimental_defaultFormStateBehavior` to each method.
+ * Since these generally do not change across a `Form`, this allows for providing a simplified set of APIs to the
  * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
 class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
@@ -38,15 +39,22 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
+  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
+   * @param experimental_defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
    */
-  constructor(validator: ValidatorType<T, S, F>, rootSchema: S) {
+  constructor(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S,
+    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior
+  ) {
     this.rootSchema = rootSchema;
     this.validator = validator;
+    this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
   }
 
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
@@ -63,13 +71,22 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
+   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(validator: ValidatorType<T, S, F>, rootSchema: S): boolean {
+  doesSchemaUtilsDiffer(
+    validator: ValidatorType<T, S, F>,
+    rootSchema: S,
+    experimental_defaultFormStateBehavior = {}
+  ): boolean {
     if (!validator || !rootSchema) {
       return false;
     }
-    return this.validator !== validator || !deepEquals(this.rootSchema, rootSchema);
+    return (
+      this.validator !== validator ||
+      !deepEquals(this.rootSchema, rootSchema) ||
+      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior)
+    );
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
@@ -87,7 +104,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     formData?: T,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S, F>(this.validator, schema, formData, this.rootSchema, includeUndefinedValues);
+    return getDefaultFormState<T, S, F>(
+      this.validator,
+      schema,
+      formData,
+      this.rootSchema,
+      includeUndefinedValues,
+      this.experimental_defaultFormStateBehavior
+    );
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
@@ -258,12 +282,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(validator, rootSchema);
+>(
+  validator: ValidatorType<T, S, F>,
+  rootSchema: S,
+  experimental_defaultFormStateBehavior = {}
+): SchemaUtilsType<T, S, F> {
+  return new SchemaUtils<T, S, F>(validator, rootSchema, experimental_defaultFormStateBehavior);
 }

@@ -79,6 +79,7 @@ const sidebars = {
         'api-reference/themes/chakra-ui/uiSchema',
         'api-reference/form-props',
         'api-reference/utility-functions',
+        'api-reference/validator-ajv8'
       ],
     },
     {

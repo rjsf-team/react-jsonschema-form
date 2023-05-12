@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hashForSchema returns a hash for a more complex schema 1`] = `"-6bbb062a"`;
+
+exports[`hashForSchema returns a hash for a tiny schema 1`] = `"5b2fed3d"`;

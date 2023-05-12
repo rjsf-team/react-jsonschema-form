@@ -2,8 +2,6 @@ import { FocusEvent } from 'react';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import {
   ariaDescribedByIds,
-  descriptionId,
-  getTemplate,
   labelValue,
   FormContextType,
   RJSFSchema,
@@ -22,29 +20,8 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-  const {
-    autofocus,
-    disabled,
-    formContext,
-    id,
-    label,
-    hideLabel,
-    onBlur,
-    onChange,
-    onFocus,
-    readonly,
-    value,
-    registry,
-    options,
-    schema,
-    uiSchema,
-  } = props;
+  const { autofocus, disabled, formContext, id, label, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options
-  );
 
   const handleChange = ({ target }: CheckboxChangeEvent) => onChange(target.checked);
 
@@ -58,33 +35,18 @@ export default function CheckboxWidget<
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
   };
-  const description = options.description ?? schema.description;
-
   return (
-    <>
-      {!hideLabel && !!description && (
-        <div>
-          <DescriptionFieldTemplate
-            id={descriptionId<T>(id)}
-            description={description}
-            schema={schema}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        </div>
-      )}
-      <Checkbox
-        autoFocus={autofocus}
-        checked={typeof value === 'undefined' ? false : value}
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={id}
-        onChange={!readonly ? handleChange : undefined}
-        {...extraProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
-      >
-        {labelValue(label, hideLabel, '')}
-      </Checkbox>
-    </>
+    <Checkbox
+      autoFocus={autofocus}
+      checked={typeof value === 'undefined' ? false : value}
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      id={id}
+      name={id}
+      onChange={!readonly ? handleChange : undefined}
+      {...extraProps}
+      aria-describedby={ariaDescribedByIds<T>(id)}
+    >
+      {labelValue(label, hideLabel, '')}
+    </Checkbox>
   );
 }

@@ -1,0 +1,76 @@
+{
+  "definitions": {
+    "foo": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      }
+    },
+    "price": {
+      "title": "Price per task ($)",
+      "type": "number",
+      "multipleOf": 0.03,
+      "minimum": 1
+    },
+    "passwords": {
+      "type": "object",
+      "properties": {
+        "pass1": { "type": "string" },
+        "pass2": { "type": "string" }
+      },
+      "required": ["pass1", "pass2"]
+    },
+    "list": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "choice1": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string",
+          "const": "one"
+        },
+        "other": {
+          "type": "number"
+        }
+      }
+    },
+    "choice2": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string",
+          "const": "two"
+        },
+        "more": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "foo": { "type": "string" },
+    "price": { "$ref": "#/definitions/price" },
+    "passwords": { "$ref": "#/definitions/passwords" },
+    "dataUrlWithName": { "type": "string", "format": "data-url" },
+    "phone": { "type": "string", "format": "phone-us" },
+    "multi": {
+      "anyOf": [{ "$ref": "#/definitions/foo" }]
+    },
+    "list": { "$ref": "#/definitions/list" },
+    "single": {
+      "oneOf": [
+        { "$ref": "#/definitions/choice1" },
+        { "$ref": "#/definitions/choice2" }
+      ]
+    },
+    "anything": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}
