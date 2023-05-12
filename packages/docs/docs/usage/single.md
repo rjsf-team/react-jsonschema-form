@@ -29,6 +29,8 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Fields can have titles and descriptions specified by the `title` keyword in the schema and `description` keyword in the schema, respectively. These two can also be overriden by the `ui:title` and `ui:description` keywords in the uiSchema.
 
+Description can render markdown, read more about it `markdown-to-jsx` official [docs](https://probablyup.com/markdown-to-jsx/).
+
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';

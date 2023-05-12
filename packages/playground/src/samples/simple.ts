@@ -9,6 +9,8 @@ export default {
         type: 'string',
         title: 'First name',
         default: 'Chuck',
+        description:
+          'Make things **bold** or *italic*. Take a look at other options [here](https://probablyup.com/markdown-to-jsx/)',
       },
       lastName: {
         type: 'string',

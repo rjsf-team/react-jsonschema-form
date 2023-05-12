@@ -55,6 +55,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
 - Fix [#3594](https://github.com/rjsf-team/react-jsonschema-form/issues/3594) by removing the duplicate title for `SelectWidget` and description for `CheckboxWidget`
 
+## @rjsf/bootstrap-4
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/chakra-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
 ## @rjsf/core
 
 - Updated the `MultiSchemaField` to use the new `getDiscriminatorFieldFromSchema()` API
@@ -62,11 +70,25 @@ should change the heading of the (upcoming) version to include a major version b
   - to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [#3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([#3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
   - to handle setting object defaults based on the value of `emptyObjectFields` supporting required fields only and skipping defaults entirely, fixing [#2980](https://github.com/rjsf-team/react-jsonschema-form/issues/2980)
 - Fixed regression [#3650](https://github.com/rjsf-team/react-jsonschema-form/issues/3650) in `FileWidget` to again support adding multiple files to arrays
+- Updated SchemaField to be able to render markdown in the description field
 
 ## @rjsf/fluent-ui
 
 - Added support for `additionalProperties` to fluent-ui theme, fixing [#2777](https://github.com/rjsf-team/react-jsonschema-form/issues/2777).
 - Upgraded to `8.x` version of `@fluentui/react` maintaining backwards compatibility to version 7, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/material-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/mui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/semantic-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
 
 ## @rjsf/utils
 
@@ -88,6 +110,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Upgraded playground to `8.x` version of `@fluentui/react`, fixing [#3463](https://github.com/rjsf-team/react-jsonschema-form/issues/3463)
 - Added documentation to `validation` describing the new precompiled validators feature
 - Added new `validator-ajv8.md` documentation to the `api-reference` directory as well as putting it into the `sidebar.js`
+- Updated sample data and documentation about the markdown in `RJSFSchema` description
 
 # 5.6.2
 
