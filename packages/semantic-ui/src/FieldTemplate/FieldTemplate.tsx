@@ -30,7 +30,7 @@ export default function FieldTemplate<
     errors,
     help,
     hidden,
-    rawDescription,
+    description,
     registry,
     schema,
     uiSchema,
@@ -68,12 +68,12 @@ export default function FieldTemplate<
       <Form.Group key={id} widths='equal' grouped>
         <MaybeWrap wrap={wrapContent} className='sui-field-content'>
           {children}
-          {displayLabel && rawDescription && (
+          {displayLabel && description && (
             <MaybeWrap wrap={wrapLabel} className='sui-field-label'>
-              {rawDescription && (
+              {description && (
                 <DescriptionFieldTemplate
                   id={descriptionId<T>(id)}
-                  description={rawDescription}
+                  description={description}
                   schema={schema}
                   uiSchema={uiSchema}
                   registry={registry}

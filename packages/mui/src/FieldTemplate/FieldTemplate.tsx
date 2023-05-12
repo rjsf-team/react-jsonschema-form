@@ -35,7 +35,7 @@ export default function FieldTemplate<
     rawErrors = [],
     errors,
     help,
-    rawDescription,
+    description,
     schema,
     uiSchema,
     registry,
@@ -67,9 +67,9 @@ export default function FieldTemplate<
     >
       <FormControl fullWidth={true} error={rawErrors.length ? true : false} required={required}>
         {children}
-        {displayLabel && rawDescription ? (
+        {displayLabel && description ? (
           <Typography variant='caption' color='textSecondary'>
-            {rawDescription}
+            {description}
           </Typography>
         ) : null}
         {errors}
