@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { RJSFSchema, schemaParser } from '@rjsf/utils';
 
-import { compileSchemaValidators } from '../src';
+import { compileSchemaValidators } from '../src/index-dev';
 import createAjvInstance from '../src/createAjvInstance';
 import superSchema from './harness/superSchema.json';
 import { CUSTOM_OPTIONS } from './harness/testData';

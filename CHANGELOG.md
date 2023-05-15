@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the `validation` documentation to add a note with a web-resource to help folks work around the "Module not found: Can't resolve 'fs' error" issue for development environments
+- Updated all of the `package-lock.json` files to bump peer-dependencies to `5.7.x`, fixing [#3669](https://github.com/rjsf-team/react-jsonschema-form/issues/3669)
 
 # 5.7.0
 
