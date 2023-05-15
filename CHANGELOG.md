@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.7.1
+
+## @rjsf/core
+
+- Added a check to prevent from breaking when the element to focus - in case `focusOnFirstError` is set - cannot be found
+
 # 5.7.0
 
 ## @rjsf/antd
