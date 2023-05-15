@@ -1148,7 +1148,6 @@ describe('oneOf', () => {
     });
     const outerOneOf = node.querySelector('select#root_0__oneof_select');
     expect(outerOneOf.value).eql('1');
-    console.log(node.innerHTML);
     const innerOneOf = node.querySelector('select#root_0_ipsum__oneof_select');
     expect(innerOneOf.value).eql('1');
   });

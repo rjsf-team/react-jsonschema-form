@@ -16,6 +16,21 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.7.1
+
+## @rjsf/validator-ajv8
+
+- Updated the build for all but the `cjs` development version, to not export the `compileSchemaValidators()` function to avoid "Module not found: Can't resolve 'fs' error" issues, fixing [#3668](https://github.com/rjsf-team/react-jsonschema-form/issues/3668)
+
+## @rjsf/core
+
+- Added protection against a null `field` in the `focusOnError` method in `Form`
+
+## Dev / docs / playground
+
+- Updated the `validation` documentation to add a note with a web-resource to help folks work around the "Module not found: Can't resolve 'fs' error" issue for development environments
+- Updated all of the `package-lock.json` files to bump peer-dependencies to `5.7.x`, fixing [#3669](https://github.com/rjsf-team/react-jsonschema-form/issues/3669)
+
 # 5.7.0
 
 ## @rjsf/antd

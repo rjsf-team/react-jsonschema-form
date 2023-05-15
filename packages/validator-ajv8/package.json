@@ -13,7 +13,8 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
+    "build": "rimraf dist && dts build --rollupTypes --format esm,umd && npm run build:compiler",
+    "build:compiler": "dts build --noClean --rollupTypes --format cjs --entry ./src/index.ts --entry ./src/compileSchemaValidators.ts",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
