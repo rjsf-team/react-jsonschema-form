@@ -71,6 +71,8 @@ node compileYourSchema.js
 
 > NOTE: You must have your schema provided within a file that can be parsed and turned into the set of precompiled validator functions.
 
+> Additional Note: If you are using Webpack or NextJS and are encountering an issue resolving `fs` during development, consult this [blog post](https://bobbyhadz.com/blog/module-not-found-cant-resolve-fs) for how to solve the issue. 
+
 ### Using the precompiled validator
 
 After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.js` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
