@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "main": "dist/index.js",
   "module": "dist/validator-ajv8.esm.js",
   "typings": "dist/index.d.ts",
@@ -45,7 +45,7 @@
     "@babel/plugin-transform-react-jsx": "^7.21.5",
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-react": "^7.18.6",
-    "@rjsf/utils": "^5.7.0",
+    "@rjsf/utils": "^5.7.1",
     "@types/jest-expect-message": "^1.1.0",
     "@types/json-schema": "^7.0.11",
     "@types/lodash": "^4.14.194",
