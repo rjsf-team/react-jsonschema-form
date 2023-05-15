@@ -53,7 +53,7 @@
     "dts-cli": "^1.6.3",
     "eslint": "^8.40.0",
     "react": "^17.0.2",
-    "react-bootstrap": "^1.6.7",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^5.0.0"
