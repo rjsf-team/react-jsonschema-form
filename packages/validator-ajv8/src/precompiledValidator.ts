@@ -38,13 +38,13 @@ export default class AJV8PrecompiledValidator<
    *
    * @private
    */
-  readonly validateFns: ValidatorFunctions<T>;
+  readonly validateFns: ValidatorFunctions;
 
   /** The main validator function associated with the base schema in the `precompiledValidator`
    *
    * @private
    */
-  readonly mainValidator: CompiledValidateFunction<T>;
+  readonly mainValidator: CompiledValidateFunction;
 
   /** The Localizer function to use for localizing Ajv errors
    *
@@ -59,7 +59,7 @@ export default class AJV8PrecompiledValidator<
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    * @throws - Error when the base schema of the precompiled validator does not have a matching validator function
    */
-  constructor(validateFns: ValidatorFunctions<T>, rootSchema: S, localizer?: Localizer) {
+  constructor(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer) {
     this.rootSchema = rootSchema;
     this.validateFns = validateFns;
     this.localizer = localizer;

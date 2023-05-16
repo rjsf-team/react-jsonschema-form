@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "allowJs": true

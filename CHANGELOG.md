@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.7.2
+
+## @rjsf/validator-ajv8
+
+- Removed the importing of internal `ajv` types by simplifying the `CompiledValidateFunction` type to avoid a bunch of Typescript errors encountered by users of the package
+
 # 5.7.1
 
 ## @rjsf/validator-ajv8
