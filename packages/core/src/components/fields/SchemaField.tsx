@@ -191,7 +191,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
-  const descriptionWithMarkdown = <Markdown>{description}</Markdown>;
+
+  const richDescription = uiOptions.enableMarkdownInDescription ? <Markdown>{description}</Markdown> : description;
 
   const help = uiOptions.help;
   const hidden = uiOptions.widget === 'hidden';
@@ -236,7 +237,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     description: (
       <DescriptionFieldTemplate
         id={descriptionId<T>(id)}
-        description={descriptionWithMarkdown}
+        description={richDescription}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}

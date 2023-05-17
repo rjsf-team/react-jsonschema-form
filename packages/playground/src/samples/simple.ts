@@ -9,8 +9,6 @@ export default {
         type: 'string',
         title: 'First name',
         default: 'Chuck',
-        description:
-          'Make things **bold** or *italic*. Take a look at other options [here](https://probablyup.com/markdown-to-jsx/)',
       },
       lastName: {
         type: 'string',
@@ -42,9 +40,15 @@ export default {
       'ui:emptyValue': '',
       'ui:placeholder': 'ui:emptyValue causes this field to always be valid despite being required',
       'ui:autocomplete': 'family-name',
+      'ui:enableMarkdownInDescription': true,
+      'ui:description':
+        'Make text **bold** or *italic*. Take a look at other options [here](https://probablyup.com/markdown-to-jsx/).',
     },
     lastName: {
       'ui:autocomplete': 'given-name',
+      'ui:enableMarkdownInDescription': true,
+      'ui:description':
+        'Make things **bold** or *italic*. Embed snippets of `code`. <small>And this is a small texts.</small> ',
     },
     age: {
       'ui:widget': 'updown',
