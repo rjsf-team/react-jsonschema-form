@@ -156,7 +156,12 @@ export default class AJV8PrecompiledValidator<
         'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
       );
     }
-    const validator = this.getValidator(schema);
-    return validator(formData);
+    try {
+      const validator = this.getValidator(schema);
+      return validator(formData);
+    } catch (e) {
+      console.warn('Error encountered getting validator', e);
+      return false;
+    }
   }
 }
