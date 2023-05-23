@@ -1,4 +1,4 @@
-@import '~antd/lib/style/themes/default.less';
+@import '~antd/dist/reset.css';
 
 .field-hidden {
   display: none;
@@ -9,30 +9,27 @@
 }
 
 .form-group:not(.field) {
-  // Add margin below oneOf / anyOf dropdown.
-  margin-bottom: @form-item-margin-bottom;
+  margin-bottom: 24px;
 }
 
 .object-property-expand {
-  // Add margin below the `additionalProperties` related add button.
-  margin-bottom: @form-item-margin-bottom;
+  margin-bottom: 24px;
 }
 
 // .panel.panel-default.panel-body > .ant-row > fieldset > .ant-col.ant-form-item-label {
 .panel.panel-default.panel-body fieldset > .ant-col.ant-form-item-label {
-  // Hide oneOf / anyOf  object title.
   display: none;
 }
 
 .panel.panel-danger.errors {
-  margin-bottom: @form-item-margin-bottom;
+  margin-bottom: 24px;
 
   .list-group .ant-list-item {
     margin-left: 0;
     margin-right: 0;
 
     .anticon.anticon-exclamation-circle {
-      color: @red-6;
+      color: #f5222d;
     }
   }
 }
