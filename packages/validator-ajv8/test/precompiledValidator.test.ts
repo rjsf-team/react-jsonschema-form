@@ -2,9 +2,11 @@ import {
   ErrorSchema,
   ErrorSchemaBuilder,
   FormValidation,
+  hashForSchema,
   RJSFSchema,
   RJSFValidationError,
   UiSchema,
+  JUNK_OPTION_ID,
 } from '@rjsf/utils';
 
 import AJV8PrecompiledValidator from '../src/precompiledValidator';
@@ -62,9 +64,22 @@ describe('AJV8PrecompiledValidator', () => {
 
         expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
       });
-      it('should return false if the schema is not recognized', () => {
+      it('should return false if junk option id is passed', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+          $id: JUNK_OPTION_ID,
+        };
+        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
+      });
+      it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
-        expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(false);
+        const hash = hashForSchema(schema);
+        expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrowError(
+          new Error(`No precompiled validator function was found for the given schema for "${hash}"`)
+        );
       });
       it('should throw if the rootSchema is different than the one the validator was constructed with', () => {
         const schema: RJSFSchema = {
