@@ -8,6 +8,7 @@ import {
   FormContextType,
   hashForSchema,
   ID_KEY,
+  JUNK_OPTION_ID,
   RJSFSchema,
   StrictRJSFSchema,
   toErrorList,
@@ -155,6 +156,9 @@ export default class AJV8PrecompiledValidator<
       throw new Error(
         'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
       );
+    }
+    if (get(schema, ID_KEY) === JUNK_OPTION_ID) {
+      return false;
     }
     const validator = this.getValidator(schema);
     return validator(formData);
