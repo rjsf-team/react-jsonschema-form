@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `getClosestMatchingOption` `JUNK_OPTION` schema with a well known $id
+- Updated `schemaParser` to resolve array items field, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3689)
 
 ## @rjsf/validator-ajv8
 
