@@ -7,7 +7,7 @@ import times from 'lodash/times';
 
 import getFirstMatchingOption from './getFirstMatchingOption';
 import retrieveSchema from './retrieveSchema';
-import { ONE_OF_KEY, REF_KEY } from '../constants';
+import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID } from '../constants';
 import guessType from '../guessType';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
@@ -16,6 +16,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '..
  */
 export const JUNK_OPTION: StrictRJSFSchema = {
   type: 'object',
+  $id: JUNK_OPTION_ID,
   properties: {
     __not_really_there__: {
       type: 'number',

@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.7.3
+
+## @rjsf/utils
+
+- Updated `getClosestMatchingOption` `JUNK_OPTION` schema with a well known $id
+
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator.isValid()` to return false for junk schema option, fixing [#3677](https://github.com/rjsf-team/react-jsonschema-form/issues/3677)
+
 # 5.7.2
 
 ## @rjsf/validator-ajv8
