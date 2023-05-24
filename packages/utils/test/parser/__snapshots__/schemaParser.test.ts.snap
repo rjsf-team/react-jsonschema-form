@@ -1,5 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`schemaParser() parse schema with array condition 1`] = `
+Object {
+  "-33d8d73c": Object {
+    "$id": "-33d8d73c",
+    "properties": Object {
+      "country": Object {
+        "const": "United States of America",
+      },
+    },
+  },
+  "240a61a6": Object {
+    "$id": "240a61a6",
+    "properties": Object {
+      "list": Object {
+        "items": Object {
+          "else": Object {
+            "properties": Object {
+              "postal_code": Object {
+                "pattern": "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
+              },
+            },
+          },
+          "if": Object {
+            "properties": Object {
+              "country": Object {
+                "const": "United States of America",
+              },
+            },
+          },
+          "properties": Object {
+            "country": Object {
+              "default": "United States of America",
+              "enum": Array [
+                "United States of America",
+                "Canada",
+              ],
+            },
+          },
+          "then": Object {
+            "properties": Object {
+              "postal_code": Object {
+                "pattern": "[0-9]{5}(-[0-9]{4})?",
+              },
+            },
+          },
+          "type": "object",
+        },
+        "type": "array",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
 exports[`schemaParser() parses property dependencies properly 1`] = `
 Object {
   "2c34081c": Object {

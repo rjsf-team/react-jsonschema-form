@@ -2,7 +2,7 @@ import forEach from 'lodash/forEach';
 import isEqual from 'lodash/isEqual';
 
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types';
-import { PROPERTIES_KEY } from '../constants';
+import { PROPERTIES_KEY, ITEMS_KEY } from '../constants';
 import ParserValidator, { SchemaMap } from './ParserValidator';
 import { retrieveSchemaInternal, resolveAnyOrOneOfSchemas } from '../schema/retrieveSchema';
 
@@ -35,6 +35,9 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           });
         }
       });
+      if (ITEMS_KEY in schema && !Array.isArray(schema.items) && typeof schema.items !== 'boolean') {
+        parseSchema<T, S, F>(validator, recurseList, rootSchema, schema.items as S);
+      }
     }
   });
 }

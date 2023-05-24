@@ -6,6 +6,7 @@ import {
   SCHEMA_DEPENDENCIES,
   SCHEMA_AND_ONEOF_REF_DEPENDENCIES,
   SCHEMA_AND_REQUIRED_DEPENDENCIES,
+  SCHEMA_WITH_ARRAY_CONDITION,
   SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES,
   SCHEMA_WITH_SINGLE_CONDITION,
   SCHEMA_WITH_MULTIPLE_CONDITIONS,
@@ -56,6 +57,10 @@ describe('schemaParser()', () => {
   });
   it('parses superSchema properly', () => {
     const schemaMap = schemaParser(SUPER_SCHEMA);
+    expect(schemaMap).toMatchSnapshot();
+  });
+  it('parse schema with array condition', () => {
+    const schemaMap = schemaParser(SCHEMA_WITH_ARRAY_CONDITION);
     expect(schemaMap).toMatchSnapshot();
   });
 });

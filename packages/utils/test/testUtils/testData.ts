@@ -785,3 +785,13 @@ export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = {
     },
   },
 };
+
+export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = {
+  type: 'object',
+  properties: {
+    list: {
+      type: 'array',
+      items: SCHEMA_WITH_SINGLE_CONDITION,
+    },
+  },
+};
