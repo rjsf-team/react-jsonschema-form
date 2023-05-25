@@ -225,7 +225,9 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
       </div>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -299,7 +301,14 @@ exports[`single fields field with description 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  some description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      some description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -379,7 +388,14 @@ exports[`single fields field with description in uiSchema 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  some other description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      some other description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -433,7 +449,9 @@ exports[`single fields format color 1`] = `
         type="color"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -481,7 +499,9 @@ exports[`single fields format date 1`] = `
         type="date"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -529,7 +549,9 @@ exports[`single fields format datetime 1`] = `
         type="datetime-local"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -577,7 +599,9 @@ exports[`single fields format time 1`] = `
         type="time"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -653,7 +677,9 @@ exports[`single fields help and error display 1`] = `
         type="text"
         value=""
       />
-      
+      <small
+        className="text-danger form-text"
+      />
       <ul
         className="list-group"
         id="root__error"
@@ -806,7 +832,9 @@ exports[`single fields null field 1`] = `
       >
         
       </label>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -855,7 +883,9 @@ exports[`single fields number field 0 1`] = `
         type="number"
         value={0}
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -904,7 +934,9 @@ exports[`single fields number field 1`] = `
         type="number"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -952,7 +984,9 @@ exports[`single fields password field 1`] = `
         type="password"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1037,7 +1071,9 @@ exports[`single fields radio field 1`] = `
           </label>
         </div>
       </div>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1105,7 +1141,9 @@ exports[`single fields schema examples 1`] = `
           value="Safari"
         />
       </datalist>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1170,7 +1208,9 @@ exports[`single fields select field 1`] = `
           bar
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1246,7 +1286,9 @@ exports[`single fields select field multiple choice 1`] = `
           qux
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1322,7 +1364,9 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           qux
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1403,7 +1447,9 @@ exports[`single fields select field multiple choice formData 1`] = `
           qux
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1472,7 +1518,9 @@ exports[`single fields select field multiple choice with labels 1`] = `
           Green
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1537,7 +1585,9 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           bar
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1602,7 +1652,9 @@ exports[`single fields select field single choice formData 1`] = `
           bar
         </option>
       </select>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1658,7 +1710,9 @@ exports[`single fields slider field 1`] = `
       >
         75
       </span>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1708,7 +1762,9 @@ exports[`single fields string field format data-url 1`] = `
           value=""
         />
       </div>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1756,7 +1812,9 @@ exports[`single fields string field format email 1`] = `
         type="email"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1804,7 +1862,9 @@ exports[`single fields string field format uri 1`] = `
         type="url"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1852,7 +1912,9 @@ exports[`single fields string field regular 1`] = `
         type="text"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1900,7 +1962,9 @@ exports[`single fields string field with placeholder 1`] = `
         type="text"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -1951,7 +2015,9 @@ exports[`single fields textarea field 1`] = `
           rows={5}
         />
       </div>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -2037,7 +2103,9 @@ exports[`single fields title field 1`] = `
                   type="text"
                   value=""
                 />
-                
+                <small
+                  className="text-muted form-text"
+                />
               </div>
             </div>
           </div>
@@ -2095,7 +2163,9 @@ exports[`single fields unsupported field 1`] = `
           {}
         </pre>
       </div>
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -2143,7 +2213,9 @@ exports[`single fields up/down field 1`] = `
         type="number"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>
@@ -2191,7 +2263,9 @@ exports[`single fields using custom tagName 1`] = `
         type="text"
         value=""
       />
-      
+      <small
+        className="text-muted form-text"
+      />
     </div>
   </div>
   <div>

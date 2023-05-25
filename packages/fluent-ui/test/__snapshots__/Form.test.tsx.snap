@@ -15,13 +15,13 @@ exports[`single fields checkbox field 1`] = `
     }
   >
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
@@ -32,16 +32,16 @@ exports[`single fields checkbox field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
@@ -56,7 +56,7 @@ exports[`single fields checkbox field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -67,14 +67,14 @@ exports[`single fields checkbox field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__169"
             >
               Submit
@@ -102,13 +102,13 @@ exports[`single fields checkbox field with label 1`] = `
     }
   >
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
@@ -119,23 +119,23 @@ exports[`single fields checkbox field with label 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-206"
+          className="ms-Checkbox-text text-207"
         >
           test
         </span>
@@ -148,7 +148,7 @@ exports[`single fields checkbox field with label 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -159,14 +159,14 @@ exports[`single fields checkbox field with label 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__172"
             >
               Submit
@@ -194,16 +194,16 @@ exports[`single fields checkboxes field 1`] = `
     }
   >
     <label
-      className="ms-Label root-130"
+      className="ms-Label root-131"
     />
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-0"
@@ -214,36 +214,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root-0"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-206"
+          className="ms-Checkbox-text text-207"
         >
           foo
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-1"
@@ -254,36 +254,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root-1"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-206"
+          className="ms-Checkbox-text text-207"
         >
           bar
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-2"
@@ -294,36 +294,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root-2"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-206"
+          className="ms-Checkbox-text text-207"
         >
           fuzz
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-201"
+      className="ms-Checkbox is-enabled root-202"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-202"
+        className="input-203"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-3"
@@ -334,23 +334,23 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-203"
+        className="ms-Checkbox-label label-204"
         htmlFor="root-3"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-204"
+          className="ms-Checkbox-checkbox checkbox-205"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-207"
+            className="ms-Checkbox-checkmark checkmark-208"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-206"
+          className="ms-Checkbox-text text-207"
         >
           qux
         </span>
@@ -368,7 +368,9 @@ exports[`single fields checkboxes field 1`] = `
     >
       
     </span>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -376,7 +378,7 @@ exports[`single fields checkboxes field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -387,14 +389,14 @@ exports[`single fields checkboxes field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__175"
             >
               Submit
@@ -444,7 +446,7 @@ exports[`single fields field with description 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-130"
+                className="ms-Label root-131"
                 htmlFor="root_my-field"
                 id="TextFieldLabel191"
               >
@@ -476,9 +478,14 @@ exports[`single fields field with description 1`] = `
             </div>
           </div>
           <span
-            className="css-229"
+            className="css-122"
           >
-            some description
+            <span
+              className="css-122"
+              id="root_my-field__description"
+            >
+              some description
+            </span>
           </span>
         </div>
       </div>
@@ -490,7 +497,7 @@ exports[`single fields field with description 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -501,14 +508,14 @@ exports[`single fields field with description 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__194"
             >
               Submit
@@ -558,7 +565,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-130"
+                className="ms-Label root-131"
                 htmlFor="root_my-field"
                 id="TextFieldLabel199"
               >
@@ -590,9 +597,14 @@ exports[`single fields field with description in uiSchema 1`] = `
             </div>
           </div>
           <span
-            className="css-229"
+            className="css-122"
           >
-            some other description
+            <span
+              className="css-122"
+              id="root_my-field__description"
+            >
+              some other description
+            </span>
           </span>
         </div>
       </div>
@@ -604,7 +616,7 @@ exports[`single fields field with description in uiSchema 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -615,14 +627,14 @@ exports[`single fields field with description in uiSchema 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__202"
             >
               Submit
@@ -650,16 +662,16 @@ exports[`single fields format color 1`] = `
     }
   >
     <label
-      className="ms-Label root-130"
+      className="ms-Label root-131"
       htmlFor="root"
     />
     <div
       aria-label="Color picker, Red 255 Green 255 Blue 255 Alpha 100% selected."
-      className="ms-ColorPicker root-131"
+      className="ms-ColorPicker root-132"
       role="group"
     >
       <div
-        className="ms-ColorPicker-panel panel-132"
+        className="ms-ColorPicker-panel panel-133"
       >
         <div
           aria-describedby="ColorRectangle-description62"
@@ -668,7 +680,7 @@ exports[`single fields format color 1`] = `
           aria-valuemin={0}
           aria-valuenow={0}
           aria-valuetext="Saturation 0 brightness 100"
-          className="ms-ColorPicker-colorRect root-141"
+          className="ms-ColorPicker-colorRect root-142"
           data-is-focusable={true}
           onKeyDown={[Function]}
           onMouseDown={[Function]}
@@ -681,19 +693,19 @@ exports[`single fields format color 1`] = `
           tabIndex={0}
         >
           <div
-            className="description-145"
+            className="description-146"
             id="ColorRectangle-description62"
           >
             Use left and right arrow keys to set saturation. Use up and down arrow keys to set brightness.
           </div>
           <div
-            className="ms-ColorPicker-light light-142"
+            className="ms-ColorPicker-light light-143"
           />
           <div
-            className="ms-ColorPicker-dark dark-143"
+            className="ms-ColorPicker-dark dark-144"
           />
           <div
-            className="ms-ColorPicker-thumb thumb-144"
+            className="ms-ColorPicker-thumb thumb-145"
             style={
               Object {
                 "backgroundColor": "#ffffff",
@@ -704,10 +716,10 @@ exports[`single fields format color 1`] = `
           />
         </div>
         <div
-          className="flexContainer-137"
+          className="flexContainer-138"
         >
           <div
-            className="flexSlider-138"
+            className="flexSlider-139"
           >
             <div
               aria-label="Hue"
@@ -715,7 +727,7 @@ exports[`single fields format color 1`] = `
               aria-valuemin={0}
               aria-valuenow={0}
               aria-valuetext="0"
-              className="ms-ColorPicker-slider is-hue root-146"
+              className="ms-ColorPicker-slider is-hue root-147"
               data-is-focusable={true}
               onKeyDown={[Function]}
               onMouseDown={[Function]}
@@ -723,7 +735,7 @@ exports[`single fields format color 1`] = `
               tabIndex={0}
             >
               <div
-                className="ms-ColorPicker-thumb is-slider sliderThumb-148"
+                className="ms-ColorPicker-thumb is-slider sliderThumb-149"
                 style={
                   Object {
                     "left": "0%",
@@ -737,7 +749,7 @@ exports[`single fields format color 1`] = `
               aria-valuemin={0}
               aria-valuenow={100}
               aria-valuetext="100"
-              className="ms-ColorPicker-slider is-alpha root-149"
+              className="ms-ColorPicker-slider is-alpha root-150"
               data-is-focusable={true}
               onKeyDown={[Function]}
               onMouseDown={[Function]}
@@ -745,7 +757,7 @@ exports[`single fields format color 1`] = `
               tabIndex={0}
             >
               <div
-                className="ms-ColorPicker-sliderOverlay sliderOverlay-147"
+                className="ms-ColorPicker-sliderOverlay sliderOverlay-148"
                 style={
                   Object {
                     "background": "linear-gradient(to right, transparent, #ffffff)",
@@ -753,7 +765,7 @@ exports[`single fields format color 1`] = `
                 }
               />
               <div
-                className="ms-ColorPicker-thumb is-slider sliderThumb-148"
+                className="ms-ColorPicker-thumb is-slider sliderThumb-149"
                 style={
                   Object {
                     "left": "100%",
@@ -763,10 +775,10 @@ exports[`single fields format color 1`] = `
             </div>
           </div>
           <div
-            className="flexPreviewBox-139"
+            className="flexPreviewBox-140"
           >
             <div
-              className="ms-ColorPicker-colorSquare colorSquare-136 is-preview"
+              className="ms-ColorPicker-colorSquare colorSquare-137 is-preview"
               style={
                 Object {
                   "backgroundColor": "#ffffff",
@@ -778,15 +790,15 @@ exports[`single fields format color 1`] = `
         <table
           cellPadding="0"
           cellSpacing="0"
-          className="ms-ColorPicker-table table-133"
+          className="ms-ColorPicker-table table-134"
           role="group"
         >
           <thead>
             <tr
-              className="tableHeader-134"
+              className="tableHeader-135"
             >
               <td
-                className="tableHexCell-135"
+                className="tableHexCell-136"
               >
                 Hex
               </td>
@@ -810,7 +822,7 @@ exports[`single fields format color 1`] = `
             <tr>
               <td>
                 <div
-                  className="ms-TooltipHost root-150"
+                  className="ms-TooltipHost root-151"
                   onBlurCapture={[Function]}
                   onFocusCapture={[Function]}
                   onKeyDown={[Function]}
@@ -819,7 +831,7 @@ exports[`single fields format color 1`] = `
                   role="none"
                 >
                   <div
-                    className="ms-TextField ms-ColorPicker-input input-151"
+                    className="ms-TextField ms-ColorPicker-input input-152"
                   >
                     <div
                       className="ms-TextField-wrapper"
@@ -864,7 +876,7 @@ exports[`single fields format color 1`] = `
               </td>
               <td>
                 <div
-                  className="ms-TooltipHost root-150"
+                  className="ms-TooltipHost root-151"
                   onBlurCapture={[Function]}
                   onFocusCapture={[Function]}
                   onKeyDown={[Function]}
@@ -873,7 +885,7 @@ exports[`single fields format color 1`] = `
                   role="none"
                 >
                   <div
-                    className="ms-TextField ms-ColorPicker-input input-151"
+                    className="ms-TextField ms-ColorPicker-input input-152"
                   >
                     <div
                       className="ms-TextField-wrapper"
@@ -918,7 +930,7 @@ exports[`single fields format color 1`] = `
               </td>
               <td>
                 <div
-                  className="ms-TooltipHost root-150"
+                  className="ms-TooltipHost root-151"
                   onBlurCapture={[Function]}
                   onFocusCapture={[Function]}
                   onKeyDown={[Function]}
@@ -927,7 +939,7 @@ exports[`single fields format color 1`] = `
                   role="none"
                 >
                   <div
-                    className="ms-TextField ms-ColorPicker-input input-151"
+                    className="ms-TextField ms-ColorPicker-input input-152"
                   >
                     <div
                       className="ms-TextField-wrapper"
@@ -972,7 +984,7 @@ exports[`single fields format color 1`] = `
               </td>
               <td>
                 <div
-                  className="ms-TooltipHost root-150"
+                  className="ms-TooltipHost root-151"
                   onBlurCapture={[Function]}
                   onFocusCapture={[Function]}
                   onKeyDown={[Function]}
@@ -981,7 +993,7 @@ exports[`single fields format color 1`] = `
                   role="none"
                 >
                   <div
-                    className="ms-TextField ms-ColorPicker-input input-151"
+                    className="ms-TextField ms-ColorPicker-input input-152"
                   >
                     <div
                       className="ms-TextField-wrapper"
@@ -1026,7 +1038,7 @@ exports[`single fields format color 1`] = `
               </td>
               <td>
                 <div
-                  className="ms-TooltipHost root-150"
+                  className="ms-TooltipHost root-151"
                   onBlurCapture={[Function]}
                   onFocusCapture={[Function]}
                   onKeyDown={[Function]}
@@ -1035,7 +1047,7 @@ exports[`single fields format color 1`] = `
                   role="none"
                 >
                   <div
-                    className="ms-TextField ms-ColorPicker-input input-151"
+                    className="ms-TextField ms-ColorPicker-input input-152"
                   >
                     <div
                       className="ms-TextField-wrapper"
@@ -1083,7 +1095,9 @@ exports[`single fields format color 1`] = `
         </table>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1091,7 +1105,7 @@ exports[`single fields format color 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1102,14 +1116,14 @@ exports[`single fields format color 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__93"
             >
               Submit
@@ -1138,14 +1152,14 @@ exports[`single fields format date 1`] = `
   >
     <div
       aria-describedby="root__error root__description root__help"
-      className="ms-DatePicker control-152"
+      className="ms-DatePicker control-153"
       id="root"
       onBlur={[Function]}
       onFocus={[Function]}
     >
       <div>
         <div
-          className="ms-TextField textField-158"
+          className="ms-TextField textField-159"
         >
           <div
             className="ms-TextField-wrapper"
@@ -1159,7 +1173,7 @@ exports[`single fields format date 1`] = `
                 aria-haspopup="dialog"
                 aria-invalid={false}
                 aria-label="Select a date"
-                className="ms-TextField-field field-159 readOnlyTextField-156"
+                className="ms-TextField-field field-160 readOnlyTextField-157"
                 data-is-focusable={true}
                 id="root-label"
                 onBlur={[Function]}
@@ -1172,14 +1186,14 @@ exports[`single fields format date 1`] = `
                 tabIndex={0}
               >
                 <span
-                  className="readOnlyPlaceholder-157"
+                  className="readOnlyPlaceholder-158"
                 >
                   
                 </span>
               </div>
               <i
                 aria-hidden={true}
-                className="ms-DatePicker-event--without-label msDatePickerDisabled icon-163"
+                className="ms-DatePicker-event--without-label msDatePickerDisabled icon-164"
                 data-icon-name="Calendar"
                 onClick={[Function]}
               >
@@ -1192,14 +1206,16 @@ exports[`single fields format date 1`] = `
           >
             <div
               aria-live="assertive"
-              className="statusMessage-155"
+              className="statusMessage-156"
             />
             
           </span>
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1207,7 +1223,7 @@ exports[`single fields format date 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1218,14 +1234,14 @@ exports[`single fields format date 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__102"
             >
               Submit
@@ -1281,7 +1297,9 @@ exports[`single fields format datetime 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1289,7 +1307,7 @@ exports[`single fields format datetime 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1300,14 +1318,14 @@ exports[`single fields format datetime 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__110"
             >
               Submit
@@ -1363,7 +1381,9 @@ exports[`single fields format time 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1371,7 +1391,7 @@ exports[`single fields format time 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1382,14 +1402,14 @@ exports[`single fields format time 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__118"
             >
               Submit
@@ -1482,7 +1502,9 @@ exports[`single fields help and error display 1`] = `
         />
       </span>
     </div>
-    
+    <span
+      className="css-122"
+    />
     <div
       className="ms-List"
       id="root__error"
@@ -1509,7 +1531,7 @@ exports[`single fields help and error display 1`] = `
       </div>
     </div>
     <span
-      className="css-229"
+      className="css-122"
       id="root__help"
     >
       help me!
@@ -1521,7 +1543,7 @@ exports[`single fields help and error display 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1532,14 +1554,14 @@ exports[`single fields help and error display 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__243"
             >
               Submit
@@ -1597,7 +1619,7 @@ exports[`single fields hidden field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1608,14 +1630,14 @@ exports[`single fields hidden field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__186"
             >
               Submit
@@ -1678,7 +1700,7 @@ exports[`single fields hidden label 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1689,14 +1711,14 @@ exports[`single fields hidden label 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__218"
             >
               Submit
@@ -1723,7 +1745,9 @@ exports[`single fields null field 1`] = `
       }
     }
   >
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1731,7 +1755,7 @@ exports[`single fields null field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1742,14 +1766,14 @@ exports[`single fields null field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__56"
             >
               Submit
@@ -1806,7 +1830,9 @@ exports[`single fields number field 0 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1814,7 +1840,7 @@ exports[`single fields number field 0 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1825,14 +1851,14 @@ exports[`single fields number field 0 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__53"
             >
               Submit
@@ -1889,7 +1915,9 @@ exports[`single fields number field 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1897,7 +1925,7 @@ exports[`single fields number field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1908,14 +1936,14 @@ exports[`single fields number field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__45"
             >
               Submit
@@ -1971,7 +1999,9 @@ exports[`single fields password field 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -1979,7 +2009,7 @@ exports[`single fields password field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1990,14 +2020,14 @@ exports[`single fields password field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__126"
             >
               Submit
@@ -2025,7 +2055,7 @@ exports[`single fields radio field 1`] = `
     }
   >
     <div
-      className="ms-ChoiceFieldGroup root-208"
+      className="ms-ChoiceFieldGroup root-209"
       id="root"
       name="root"
       onBlur={[Function]}
@@ -2039,7 +2069,7 @@ exports[`single fields radio field 1`] = `
           className="ms-ChoiceFieldGroup-flexContainer"
         >
           <div
-            className="ms-ChoiceField root-209"
+            className="ms-ChoiceField root-210"
           >
             <div
               className="ms-ChoiceField-wrapper"
@@ -2047,7 +2077,7 @@ exports[`single fields radio field 1`] = `
               <input
                 aria-describedby="root__error root__description root__help"
                 checked={false}
-                className="ms-ChoiceField-input input-210"
+                className="ms-ChoiceField-input input-211"
                 disabled={false}
                 id="ChoiceGroup178-0"
                 name="root"
@@ -2057,7 +2087,7 @@ exports[`single fields radio field 1`] = `
                 type="radio"
               />
               <label
-                className="ms-ChoiceField-field field-211"
+                className="ms-ChoiceField-field field-212"
                 htmlFor="ChoiceGroup178-0"
               >
                 <span
@@ -2070,7 +2100,7 @@ exports[`single fields radio field 1`] = `
             </div>
           </div>
           <div
-            className="ms-ChoiceField root-209"
+            className="ms-ChoiceField root-210"
           >
             <div
               className="ms-ChoiceField-wrapper"
@@ -2078,7 +2108,7 @@ exports[`single fields radio field 1`] = `
               <input
                 aria-describedby="root__error root__description root__help"
                 checked={false}
-                className="ms-ChoiceField-input input-210"
+                className="ms-ChoiceField-input input-211"
                 disabled={false}
                 id="ChoiceGroup178-1"
                 name="root"
@@ -2088,7 +2118,7 @@ exports[`single fields radio field 1`] = `
                 type="radio"
               />
               <label
-                className="ms-ChoiceField-field field-211"
+                className="ms-ChoiceField-field field-212"
                 htmlFor="ChoiceGroup178-1"
               >
                 <span
@@ -2103,7 +2133,9 @@ exports[`single fields radio field 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2111,7 +2143,7 @@ exports[`single fields radio field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2122,14 +2154,14 @@ exports[`single fields radio field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__180"
             >
               Submit
@@ -2205,7 +2237,9 @@ exports[`single fields schema examples 1`] = `
         value="Safari"
       />
     </datalist>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2213,7 +2247,7 @@ exports[`single fields schema examples 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2224,14 +2258,14 @@ exports[`single fields schema examples 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__234"
             >
               Submit
@@ -2266,7 +2300,7 @@ exports[`single fields select field 1`] = `
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2282,15 +2316,15 @@ exports[`single fields select field 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2298,7 +2332,9 @@ exports[`single fields select field 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2306,7 +2342,7 @@ exports[`single fields select field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2317,14 +2353,14 @@ exports[`single fields select field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__148"
             >
               Submit
@@ -2360,7 +2396,7 @@ exports[`single fields select field multiple choice 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2376,15 +2412,15 @@ exports[`single fields select field multiple choice 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2392,7 +2428,9 @@ exports[`single fields select field multiple choice 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2400,7 +2438,7 @@ exports[`single fields select field multiple choice 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2411,14 +2449,14 @@ exports[`single fields select field multiple choice 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__151"
             >
               Submit
@@ -2454,7 +2492,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2470,15 +2508,15 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2486,7 +2524,9 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2494,7 +2534,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2505,14 +2545,14 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__160"
             >
               Submit
@@ -2548,7 +2588,7 @@ exports[`single fields select field multiple choice formData 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2564,15 +2604,15 @@ exports[`single fields select field multiple choice formData 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2580,7 +2620,9 @@ exports[`single fields select field multiple choice formData 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2588,7 +2630,7 @@ exports[`single fields select field multiple choice formData 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2599,14 +2641,14 @@ exports[`single fields select field multiple choice formData 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__166"
             >
               Submit
@@ -2642,7 +2684,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2658,15 +2700,15 @@ exports[`single fields select field multiple choice with labels 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2674,7 +2716,9 @@ exports[`single fields select field multiple choice with labels 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2682,7 +2726,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2693,14 +2737,14 @@ exports[`single fields select field multiple choice with labels 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__154"
             >
               Submit
@@ -2735,7 +2779,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2751,15 +2795,15 @@ exports[`single fields select field single choice enumDisabled 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-182"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-183"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2767,7 +2811,9 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2775,7 +2821,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2786,14 +2832,14 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__157"
             >
               Submit
@@ -2828,7 +2874,7 @@ exports[`single fields select field single choice formData 1`] = `
         aria-disabled={false}
         aria-expanded="false"
         aria-haspopup="listbox"
-        className="ms-Dropdown dropdown-181"
+        className="ms-Dropdown dropdown-182"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2844,17 +2890,17 @@ exports[`single fields select field single choice formData 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title title-200"
+          className="ms-Dropdown-title title-201"
           id="root-option"
         >
           bar
         </span>
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-183"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-184"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-199"
+            className="ms-Dropdown-caretDown caretDown-200"
             data-icon-name="ChevronDown"
           >
             
@@ -2862,7 +2908,9 @@ exports[`single fields select field single choice formData 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2870,7 +2918,7 @@ exports[`single fields select field single choice formData 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2881,14 +2929,14 @@ exports[`single fields select field single choice formData 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__163"
             >
               Submit
@@ -2916,18 +2964,18 @@ exports[`single fields slider field 1`] = `
     }
   >
     <label
-      className="ms-Label root-130"
+      className="ms-Label root-131"
       htmlFor="root"
     />
     <div
-      className="ms-Slider ms-Slider-enabled ms-Slider-row root-216"
+      className="ms-Slider ms-Slider-enabled ms-Slider-row root-217"
     >
       <label
-        className="ms-Label titleLabel-227"
+        className="ms-Label titleLabel-228"
         htmlFor="root"
       />
       <div
-        className="ms-Slider-container container-218"
+        className="ms-Slider-container container-219"
       >
         <div
           aria-disabled={false}
@@ -2935,7 +2983,7 @@ exports[`single fields slider field 1`] = `
           aria-valuemin={42}
           aria-valuenow={42}
           aria-valuetext="42"
-          className="ms-Slider-slideBox ms-Slider-showValue slideBox-219"
+          className="ms-Slider-slideBox ms-Slider-showValue slideBox-220"
           data-is-focusable={true}
           id="root"
           onKeyDown={[Function]}
@@ -2945,10 +2993,10 @@ exports[`single fields slider field 1`] = `
           tabIndex={0}
         >
           <div
-            className="ms-Slider-line line-221"
+            className="ms-Slider-line line-222"
           >
             <span
-              className="ms-Slider-thumb thumb-220"
+              className="ms-Slider-thumb thumb-221"
               style={
                 Object {
                   "left": "0%",
@@ -2956,7 +3004,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-222 ms-Slider-inactive inactiveSection-224"
+              className="lineContainer-223 ms-Slider-inactive inactiveSection-225"
               style={
                 Object {
                   "width": "0%",
@@ -2964,7 +3012,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-222 ms-Slider-active activeSection-223"
+              className="lineContainer-223 ms-Slider-active activeSection-224"
               style={
                 Object {
                   "width": "0%",
@@ -2972,7 +3020,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-222 ms-Slider-inactive inactiveSection-224"
+              className="lineContainer-223 ms-Slider-inactive inactiveSection-225"
               style={
                 Object {
                   "width": "100%",
@@ -2982,13 +3030,15 @@ exports[`single fields slider field 1`] = `
           </div>
         </div>
         <label
-          className="ms-Label ms-Slider-value valueLabel-228"
+          className="ms-Label ms-Slider-value valueLabel-229"
         >
           42
         </label>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -2996,7 +3046,7 @@ exports[`single fields slider field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3007,14 +3057,14 @@ exports[`single fields slider field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__183"
             >
               Submit
@@ -3072,7 +3122,9 @@ exports[`single fields string field format data-url 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3080,7 +3132,7 @@ exports[`single fields string field format data-url 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3091,14 +3143,14 @@ exports[`single fields string field format data-url 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__29"
             >
               Submit
@@ -3154,7 +3206,9 @@ exports[`single fields string field format email 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3162,7 +3216,7 @@ exports[`single fields string field format email 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3173,14 +3227,14 @@ exports[`single fields string field format email 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__13"
             >
               Submit
@@ -3236,7 +3290,9 @@ exports[`single fields string field format uri 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3244,7 +3300,7 @@ exports[`single fields string field format uri 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3255,14 +3311,14 @@ exports[`single fields string field format uri 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__21"
             >
               Submit
@@ -3318,7 +3374,9 @@ exports[`single fields string field regular 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3326,7 +3384,7 @@ exports[`single fields string field regular 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3337,14 +3395,14 @@ exports[`single fields string field regular 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__5"
             >
               Submit
@@ -3400,7 +3458,9 @@ exports[`single fields string field with placeholder 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3408,7 +3468,7 @@ exports[`single fields string field with placeholder 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3419,14 +3479,14 @@ exports[`single fields string field with placeholder 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__37"
             >
               Submit
@@ -3460,13 +3520,13 @@ exports[`single fields textarea field 1`] = `
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-178"
+          className="ms-TextField-fieldGroup fieldGroup-179"
         >
           <textarea
             aria-describedby="root__error root__description root__help"
             aria-invalid={false}
             autoFocus={false}
-            className="ms-TextField-field field-179"
+            className="ms-TextField-field field-180"
             disabled={false}
             id="root"
             name="root"
@@ -3482,7 +3542,9 @@ exports[`single fields textarea field 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3490,7 +3552,7 @@ exports[`single fields textarea field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3501,14 +3563,14 @@ exports[`single fields textarea field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__145"
             >
               Submit
@@ -3563,7 +3625,7 @@ exports[`single fields title field 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-130"
+                className="ms-Label root-131"
                 htmlFor="root_title"
                 id="TextFieldLabel207"
               >
@@ -3594,7 +3656,9 @@ exports[`single fields title field 1`] = `
               </div>
             </div>
           </div>
-          
+          <span
+            className="css-122"
+          />
         </div>
       </div>
     </div>
@@ -3605,7 +3669,7 @@ exports[`single fields title field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3616,14 +3680,14 @@ exports[`single fields title field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__210"
             >
               Submit
@@ -3670,7 +3734,9 @@ exports[`single fields unsupported field 1`] = `
         {}
       </pre>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3678,7 +3744,7 @@ exports[`single fields unsupported field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3689,14 +3755,14 @@ exports[`single fields unsupported field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__59"
             >
               Submit
@@ -3724,16 +3790,16 @@ exports[`single fields up/down field 1`] = `
     }
   >
     <label
-      className="ms-Label root-130"
+      className="ms-Label root-131"
       htmlFor="root"
     />
     <div
-      className="root-164"
+      className="root-165"
     >
       
       <div
         aria-describedby="root__error root__description root__help"
-        className="spinButtonWrapper-168"
+        className="spinButtonWrapper-169"
         data-ktp-target={true}
         id="root"
       >
@@ -3744,7 +3810,7 @@ exports[`single fields up/down field 1`] = `
           aria-valuemin={-Infinity}
           aria-valuetext=""
           autoComplete="off"
-          className="ms-spinButton-input input-169"
+          className="ms-spinButton-input input-170"
           data-ktp-execute-target={true}
           data-lpignore={true}
           disabled={false}
@@ -3760,11 +3826,11 @@ exports[`single fields up/down field 1`] = `
           value=""
         />
         <span
-          className="arrowButtonsContainer-170"
+          className="arrowButtonsContainer-171"
         >
           <button
             aria-label="Increase value by 1"
-            className="ms-Button ms-Button--icon ms-UpButton root-171"
+            className="ms-Button ms-Button--icon ms-UpButton root-172"
             data-is-focusable={false}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3777,12 +3843,12 @@ exports[`single fields up/down field 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-123"
+              className="ms-Button-flexContainer flexContainer-124"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-175 ms-Button-icon icon-172"
+                className="ms-Icon root-105 css-176 ms-Button-icon icon-173"
                 data-icon-name="ChevronUpSmall"
                 style={
                   Object {
@@ -3796,7 +3862,7 @@ exports[`single fields up/down field 1`] = `
           </button>
           <button
             aria-label="Decrease value by 1"
-            className="ms-Button ms-Button--icon ms-DownButton root-171"
+            className="ms-Button ms-Button--icon ms-DownButton root-172"
             data-is-focusable={false}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3809,12 +3875,12 @@ exports[`single fields up/down field 1`] = `
             type="button"
           >
             <span
-              className="ms-Button-flexContainer flexContainer-123"
+              className="ms-Button-flexContainer flexContainer-124"
               data-automationid="splitbuttonprimary"
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-177 ms-Button-icon icon-172"
+                className="ms-Icon root-105 css-178 ms-Button-icon icon-173"
                 data-icon-name="ChevronDownSmall"
                 style={
                   Object {
@@ -3829,7 +3895,9 @@ exports[`single fields up/down field 1`] = `
         </span>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3837,7 +3905,7 @@ exports[`single fields up/down field 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3848,14 +3916,14 @@ exports[`single fields up/down field 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__137"
             >
               Submit
@@ -3911,7 +3979,9 @@ exports[`single fields using custom tagName 1`] = `
         </div>
       </div>
     </div>
-    
+    <span
+      className="css-122"
+    />
   </div>
   <div>
     <br />
@@ -3919,7 +3989,7 @@ exports[`single fields using custom tagName 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-122"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3930,14 +4000,14 @@ exports[`single fields using custom tagName 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-123"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-124"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-126"
+              className="ms-Button-label label-127"
               id="id__226"
             >
               Submit

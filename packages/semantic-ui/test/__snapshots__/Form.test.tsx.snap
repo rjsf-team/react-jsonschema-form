@@ -135,7 +135,10 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
               </div>
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_test__description"
+          />
         </div>
       </div>
     </div>
@@ -410,7 +413,10 @@ exports[`single fields checkboxes field 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -473,7 +479,12 @@ exports[`single fields field with description 1`] = `
             className="sui-description"
             id="root_my-field__description"
           >
-            some description
+            <p
+              className="sui-description"
+              id="root_my-field__description"
+            >
+              some description
+            </p>
           </p>
         </div>
       </div>
@@ -539,7 +550,12 @@ exports[`single fields field with description in uiSchema 1`] = `
             className="sui-description"
             id="root_my-field__description"
           >
-            some other description
+            <p
+              className="sui-description"
+              id="root_my-field__description"
+            >
+              some other description
+            </p>
           </p>
         </div>
       </div>
@@ -588,7 +604,10 @@ exports[`single fields format color 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -634,7 +653,10 @@ exports[`single fields format date 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -680,7 +702,10 @@ exports[`single fields format datetime 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -726,7 +751,10 @@ exports[`single fields format time 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -791,7 +819,10 @@ exports[`single fields help and error display 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
       <div
         className="ui mini info message"
         id="root__help"
@@ -930,7 +961,10 @@ exports[`single fields null field 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -977,7 +1011,10 @@ exports[`single fields number field 0 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1024,7 +1061,10 @@ exports[`single fields number field 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1070,7 +1110,10 @@ exports[`single fields password field 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1165,7 +1208,10 @@ exports[`single fields radio field 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1231,7 +1277,10 @@ exports[`single fields schema examples 1`] = `
           value="Safari"
         />
       </datalist>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1336,7 +1385,10 @@ exports[`single fields select field 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1472,7 +1524,10 @@ exports[`single fields select field multiple choice 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1608,7 +1663,10 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1730,7 +1788,10 @@ exports[`single fields select field multiple choice formData 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1847,7 +1908,10 @@ exports[`single fields select field multiple choice with labels 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -1952,7 +2016,10 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2057,7 +2124,10 @@ exports[`single fields select field single choice formData 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2102,7 +2172,10 @@ exports[`single fields slider field 1`] = `
       <span>
         75
       </span>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2150,7 +2223,10 @@ exports[`single fields string field format data-url 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2196,7 +2272,10 @@ exports[`single fields string field format email 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2242,7 +2321,10 @@ exports[`single fields string field format uri 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2288,7 +2370,10 @@ exports[`single fields string field regular 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2334,7 +2419,10 @@ exports[`single fields string field with placeholder 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2378,7 +2466,10 @@ exports[`single fields textarea field 1`] = `
           value=""
         />
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2442,7 +2533,10 @@ exports[`single fields title field 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_title__description"
+          />
         </div>
       </div>
     </div>
@@ -2489,7 +2583,10 @@ exports[`single fields unsupported field 1`] = `
           {}
         </pre>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2535,7 +2632,10 @@ exports[`single fields up/down field 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -2581,7 +2681,10 @@ exports[`single fields using custom tagName 1`] = `
           />
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button

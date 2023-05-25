@@ -117,7 +117,10 @@ exports[`array fields array icons 1`] = `
                           />
                         </div>
                       </div>
-                      
+                      <p
+                        className="sui-description"
+                        id="root_0__description"
+                      />
                     </div>
                   </div>
                 </div>
@@ -221,7 +224,10 @@ exports[`array fields array icons 1`] = `
                           />
                         </div>
                       </div>
-                      
+                      <p
+                        className="sui-description"
+                        id="root_1__description"
+                      />
                     </div>
                   </div>
                 </div>
@@ -421,7 +427,10 @@ exports[`array fields checkboxes 1`] = `
           </div>
         </div>
       </div>
-      
+      <p
+        className="sui-description"
+        id="root__description"
+      />
     </div>
   </div>
   <button
@@ -480,7 +489,10 @@ exports[`array fields empty errors array 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_name__description"
+          />
         </div>
       </div>
     </div>
@@ -558,7 +570,10 @@ exports[`array fields fixed array 1`] = `
                           />
                         </div>
                       </div>
-                      
+                      <p
+                        className="sui-description"
+                        id="root_0__description"
+                      />
                     </div>
                   </div>
                 </div>
@@ -609,7 +624,10 @@ exports[`array fields fixed array 1`] = `
                           />
                         </div>
                       </div>
-                      
+                      <p
+                        className="sui-description"
+                        id="root_1__description"
+                      />
                     </div>
                   </div>
                 </div>
@@ -695,7 +713,10 @@ exports[`array fields has errors 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_name__description"
+          />
           <div
             className="ui red pointing above small basic label"
             id="root_name__error"
@@ -774,7 +795,10 @@ exports[`array fields no errors 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_name__description"
+          />
         </div>
       </div>
     </div>
@@ -939,7 +963,12 @@ exports[`with title and description array icons 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a test item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a test item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1053,7 +1082,12 @@ exports[`with title and description array icons 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a test item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a test item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1263,7 +1297,12 @@ exports[`with title and description checkboxes 1`] = `
         className="sui-description"
         id="root__description"
       >
-        a test description
+        <p
+          className="sui-description"
+          id="root__description"
+        >
+          a test description
+        </p>
       </p>
     </div>
   </div>
@@ -1361,7 +1400,12 @@ exports[`with title and description fixed array 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a test item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a test item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1422,7 +1466,12 @@ exports[`with title and description fixed array 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a test item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a test item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1594,7 +1643,12 @@ exports[`with title and description from both array icons 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1708,7 +1762,12 @@ exports[`with title and description from both array icons 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -1918,7 +1977,12 @@ exports[`with title and description from both checkboxes 1`] = `
         className="sui-description"
         id="root__description"
       >
-        a fancier description
+        <p
+          className="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
       </p>
     </div>
   </div>
@@ -2016,7 +2080,12 @@ exports[`with title and description from both fixed array 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -2077,7 +2146,12 @@ exports[`with title and description from both fixed array 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -2249,7 +2323,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -2363,7 +2442,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -2573,7 +2657,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         className="sui-description"
         id="root__description"
       >
-        a fancier description
+        <p
+          className="sui-description"
+          id="root__description"
+        >
+          a fancier description
+        </p>
       </p>
     </div>
   </div>
@@ -2671,7 +2760,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         className="sui-description"
                         id="root_0__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -2732,7 +2826,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         className="sui-description"
                         id="root_1__description"
                       >
-                        a fancier item description
+                        <p
+                          className="sui-description"
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </p>
                       </p>
                     </div>
                   </div>
@@ -3182,7 +3281,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
         className="sui-description"
         id="root__description"
       >
-        a test description
+        <p
+          className="sui-description"
+          id="root__description"
+        >
+          a test description
+        </p>
       </p>
     </div>
   </div>

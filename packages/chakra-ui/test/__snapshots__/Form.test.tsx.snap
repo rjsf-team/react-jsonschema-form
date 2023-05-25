@@ -387,10 +387,14 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-19 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-20 {
+  margin-top: 3px;
+}
+
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -660,13 +664,16 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-19"
+      />
     </div>
   </div>
   <div
-    className="emotion-19"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-20"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -697,10 +704,15 @@ exports[`single fields field with description 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-9 {
+  margin-top: 3px;
+}
+
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -786,7 +798,12 @@ exports[`single fields field with description 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                some description
+                <p
+                  className="chakra-text emotion-8"
+                  id="root_my-field__description"
+                >
+                  some description
+                </p>
               </p>
             </div>
           </div>
@@ -795,10 +812,10 @@ exports[`single fields field with description 1`] = `
     </div>
   </div>
   <div
-    className="emotion-8"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-9"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >
@@ -829,10 +846,15 @@ exports[`single fields field with description in uiSchema 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-9 {
+  margin-top: 3px;
+}
+
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -918,7 +940,12 @@ exports[`single fields field with description in uiSchema 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                some other description
+                <p
+                  className="chakra-text emotion-8"
+                  id="root_my-field__description"
+                >
+                  some other description
+                </p>
               </p>
             </div>
           </div>
@@ -927,10 +954,10 @@ exports[`single fields field with description in uiSchema 1`] = `
     </div>
   </div>
   <div
-    className="emotion-8"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-9"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >
@@ -946,10 +973,14 @@ exports[`single fields format color 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1011,13 +1042,16 @@ exports[`single fields format color 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1033,10 +1067,14 @@ exports[`single fields format date 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1098,13 +1136,16 @@ exports[`single fields format date 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1120,10 +1161,14 @@ exports[`single fields format datetime 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1185,13 +1230,16 @@ exports[`single fields format datetime 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1207,10 +1255,14 @@ exports[`single fields format time 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1272,13 +1324,16 @@ exports[`single fields format time 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1335,7 +1390,11 @@ exports[`single fields help and error display 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-10 {
+.emotion-8 {
+  margin-top: 2px;
+}
+
+.emotion-11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1346,11 +1405,11 @@ exports[`single fields help and error display 1`] = `
   align-items: center;
 }
 
-.emotion-12 {
+.emotion-13 {
   margin-top: 3px;
 }
 
-.emotion-13 {
+.emotion-14 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1444,6 +1503,9 @@ exports[`single fields help and error display 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-8"
+      />
       <ul
         className="emotion-2"
         role="list"
@@ -1453,7 +1515,7 @@ exports[`single fields help and error display 1`] = `
         >
           <div
             aria-live="polite"
-            className="chakra-form__error-message emotion-10"
+            className="chakra-form__error-message emotion-11"
             id="root__error"
           >
             an error
@@ -1469,10 +1531,10 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="emotion-12"
+    className="emotion-13"
   >
     <button
-      className="chakra-button emotion-13"
+      className="chakra-button emotion-14"
       disabled={false}
       type="submit"
     >
@@ -1658,10 +1720,14 @@ exports[`single fields hidden label 1`] = `
 
 exports[`single fields null field 1`] = `
 .emotion-1 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-2 {
+  margin-top: 3px;
+}
+
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1701,13 +1767,17 @@ exports[`single fields null field 1`] = `
     <div
       className="chakra-form-control emotion-0"
       role="group"
-    />
+    >
+      <p
+        className="chakra-text emotion-1"
+      />
+    </div>
   </div>
   <div
-    className="emotion-1"
+    className="emotion-2"
   >
     <button
-      className="chakra-button emotion-2"
+      className="chakra-button emotion-3"
       disabled={false}
       type="submit"
     >
@@ -1723,10 +1793,14 @@ exports[`single fields number field 0 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1789,13 +1863,16 @@ exports[`single fields number field 0 1`] = `
           value={0}
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1811,10 +1888,14 @@ exports[`single fields number field 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1877,13 +1958,16 @@ exports[`single fields number field 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1899,10 +1983,14 @@ exports[`single fields password field 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1964,13 +2052,16 @@ exports[`single fields password field 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -2045,10 +2136,14 @@ exports[`single fields radio field 1`] = `
 }
 
 .emotion-10 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-11 {
+  margin-top: 3px;
+}
+
+.emotion-12 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2204,13 +2299,16 @@ exports[`single fields radio field 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-10"
+      />
     </div>
   </div>
   <div
-    className="emotion-10"
+    className="emotion-11"
   >
     <button
-      className="chakra-button emotion-11"
+      className="chakra-button emotion-12"
       disabled={false}
       type="submit"
     >
@@ -2226,10 +2324,14 @@ exports[`single fields schema examples 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2311,13 +2413,16 @@ exports[`single fields schema examples 1`] = `
           />
         </datalist>
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -2496,10 +2601,14 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2628,13 +2737,16 @@ exports[`single fields select field 1`] = `
           />
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -2814,10 +2926,14 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2951,13 +3067,16 @@ exports[`single fields select field multiple choice 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -3137,10 +3256,14 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3274,13 +3397,16 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -3506,10 +3632,14 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-23 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-24 {
+  margin-top: 3px;
+}
+
+.emotion-25 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3717,13 +3847,16 @@ exports[`single fields select field multiple choice formData 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-23"
+      />
     </div>
   </div>
   <div
-    className="emotion-23"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-24"
+      className="chakra-button emotion-25"
       disabled={false}
       type="submit"
     >
@@ -3903,10 +4036,14 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4040,13 +4177,16 @@ exports[`single fields select field multiple choice with labels 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -4225,10 +4365,14 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4357,13 +4501,16 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           />
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -4542,10 +4689,14 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-14 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-15 {
+  margin-top: 3px;
+}
+
+.emotion-16 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4674,13 +4825,16 @@ exports[`single fields select field single choice formData 1`] = `
           />
         </div>
       </div>
+      <p
+        className="chakra-text emotion-14"
+      />
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-15"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-16"
       disabled={false}
       type="submit"
     >
@@ -4696,10 +4850,14 @@ exports[`single fields slider field 1`] = `
 }
 
 .emotion-6 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-7 {
+  margin-top: 3px;
+}
+
+.emotion-8 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4819,13 +4977,16 @@ exports[`single fields slider field 1`] = `
           />
         </div>
       </div>
+      <p
+        className="chakra-text emotion-6"
+      />
     </div>
   </div>
   <div
-    className="emotion-6"
+    className="emotion-7"
   >
     <button
-      className="chakra-button emotion-7"
+      className="chakra-button emotion-8"
       disabled={false}
       type="submit"
     >
@@ -4841,10 +5002,14 @@ exports[`single fields string field format data-url 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4908,13 +5073,16 @@ exports[`single fields string field format data-url 1`] = `
           />
         </div>
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -4930,10 +5098,14 @@ exports[`single fields string field format email 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4995,13 +5167,16 @@ exports[`single fields string field format email 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5017,10 +5192,14 @@ exports[`single fields string field format uri 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5082,13 +5261,16 @@ exports[`single fields string field format uri 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5104,10 +5286,14 @@ exports[`single fields string field regular 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5169,13 +5355,16 @@ exports[`single fields string field regular 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5191,10 +5380,14 @@ exports[`single fields string field with placeholder 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5256,13 +5449,16 @@ exports[`single fields string field with placeholder 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5278,10 +5474,14 @@ exports[`single fields textarea field 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5342,13 +5542,16 @@ exports[`single fields textarea field 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5386,10 +5589,14 @@ exports[`single fields title field 1`] = `
 }
 
 .emotion-10 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-11 {
+  margin-top: 3px;
+}
+
+.emotion-12 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5485,6 +5692,9 @@ exports[`single fields title field 1`] = `
                   value=""
                 />
               </div>
+              <p
+                className="chakra-text emotion-10"
+              />
             </div>
           </div>
         </div>
@@ -5492,10 +5702,10 @@ exports[`single fields title field 1`] = `
     </div>
   </div>
   <div
-    className="emotion-10"
+    className="emotion-11"
   >
     <button
-      className="chakra-button emotion-11"
+      className="chakra-button emotion-12"
       disabled={false}
       type="submit"
     >
@@ -5507,10 +5717,14 @@ exports[`single fields title field 1`] = `
 
 exports[`single fields unsupported field 1`] = `
 .emotion-1 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-2 {
+  margin-top: 3px;
+}
+
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5571,13 +5785,16 @@ exports[`single fields unsupported field 1`] = `
           {}
         </pre>
       </div>
+      <p
+        className="chakra-text emotion-1"
+      />
     </div>
   </div>
   <div
-    className="emotion-1"
+    className="emotion-2"
   >
     <button
-      className="chakra-button emotion-2"
+      className="chakra-button emotion-3"
       disabled={false}
       type="submit"
     >
@@ -5656,10 +5873,14 @@ exports[`single fields up/down field 1`] = `
 }
 
 .emotion-9 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-10 {
+  margin-top: 3px;
+}
+
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5779,13 +6000,16 @@ exports[`single fields up/down field 1`] = `
           </div>
         </div>
       </div>
+      <p
+        className="chakra-text emotion-9"
+      />
     </div>
   </div>
   <div
-    className="emotion-9"
+    className="emotion-10"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-11"
       disabled={false}
       type="submit"
     >
@@ -5801,10 +6025,14 @@ exports[`single fields using custom tagName 1`] = `
 }
 
 .emotion-3 {
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .emotion-4 {
+  margin-top: 3px;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5866,13 +6094,16 @@ exports[`single fields using custom tagName 1`] = `
           value=""
         />
       </div>
+      <p
+        className="chakra-text emotion-3"
+      />
     </div>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >

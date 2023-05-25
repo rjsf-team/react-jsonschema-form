@@ -89,7 +89,10 @@ exports[`object fields additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_foo__description"
+                />
               </div>
             </div>
             <div
@@ -197,7 +200,10 @@ exports[`object fields object 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_a__description"
+          />
         </div>
       </div>
       <div
@@ -234,7 +240,10 @@ exports[`object fields object 1`] = `
               />
             </div>
           </div>
-          
+          <p
+            className="sui-description"
+            id="root_b__description"
+          />
         </div>
       </div>
     </div>
@@ -338,7 +347,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_additionalProperty__description"
+                />
               </div>
             </div>
             <div
@@ -500,7 +512,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_foo__description"
+                />
               </div>
             </div>
             <div
@@ -662,7 +677,10 @@ exports[`object fields with title and description from both additionalProperties
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_foo__description"
+                />
               </div>
             </div>
             <div
@@ -785,7 +803,12 @@ exports[`object fields with title and description from both object 1`] = `
             className="sui-description"
             id="root_a__description"
           >
-            a fancier item A description
+            <p
+              className="sui-description"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </p>
           </p>
         </div>
       </div>
@@ -827,7 +850,12 @@ exports[`object fields with title and description from both object 1`] = `
             className="sui-description"
             id="root_b__description"
           >
-            a fancier item B description
+            <p
+              className="sui-description"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </p>
           </p>
         </div>
       </div>
@@ -943,7 +971,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_foo__description"
+                />
               </div>
             </div>
             <div
@@ -1066,7 +1097,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             className="sui-description"
             id="root_a__description"
           >
-            a fancier item A description
+            <p
+              className="sui-description"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </p>
           </p>
         </div>
       </div>
@@ -1108,7 +1144,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             className="sui-description"
             id="root_b__description"
           >
-            a fancier item B description
+            <p
+              className="sui-description"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </p>
           </p>
         </div>
       </div>
@@ -1224,7 +1265,10 @@ exports[`object fields with title and description from uiSchema show add button 
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_additionalProperty__description"
+                />
               </div>
             </div>
             <div
@@ -1347,7 +1391,12 @@ exports[`object fields with title and description object 1`] = `
             className="sui-description"
             id="root_a__description"
           >
-            A description
+            <p
+              className="sui-description"
+              id="root_a__description"
+            >
+              A description
+            </p>
           </p>
         </div>
       </div>
@@ -1389,7 +1438,12 @@ exports[`object fields with title and description object 1`] = `
             className="sui-description"
             id="root_b__description"
           >
-            B description
+            <p
+              className="sui-description"
+              id="root_b__description"
+            >
+              B description
+            </p>
           </p>
         </div>
       </div>
@@ -1505,7 +1559,10 @@ exports[`object fields with title and description show add button and fields if 
                     />
                   </div>
                 </div>
-                
+                <p
+                  className="sui-description"
+                  id="root_additionalProperty__description"
+                />
               </div>
             </div>
             <div
