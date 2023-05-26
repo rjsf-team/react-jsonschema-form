@@ -25,11 +25,7 @@ exports[`object fields additionalProperties 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-13 {
-  margin-top: 2px;
-}
-
-.emotion-15 {
+.emotion-14 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -59,7 +55,7 @@ exports[`object fields additionalProperties 1`] = `
   padding: 0px;
 }
 
-.emotion-16 {
+.emotion-15 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -71,11 +67,11 @@ exports[`object fields additionalProperties 1`] = `
   vertical-align: middle;
 }
 
-.emotion-17 {
+.emotion-16 {
   justify-self: flex-end;
 }
 
-.emotion-18 {
+.emotion-17 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -104,7 +100,7 @@ exports[`object fields additionalProperties 1`] = `
   width: auto;
 }
 
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -119,7 +115,7 @@ exports[`object fields additionalProperties 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-21 {
+.emotion-20 {
   margin-top: 3px;
 }
 
@@ -208,9 +204,6 @@ exports[`object fields additionalProperties 1`] = `
                     value="foo"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-13"
-                />
               </div>
             </div>
             <div
@@ -218,7 +211,7 @@ exports[`object fields additionalProperties 1`] = `
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-15"
+                className="chakra-button emotion-14"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -226,7 +219,7 @@ exports[`object fields additionalProperties 1`] = `
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-16"
+                  className="chakra-icon emotion-15"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -243,20 +236,20 @@ exports[`object fields additionalProperties 1`] = `
           </div>
         </div>
         <div
-          className="emotion-17"
+          className="emotion-16"
         >
           <button
-            className="chakra-button object-property-expand emotion-18"
+            className="chakra-button object-property-expand emotion-17"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-19"
+              className="chakra-button__icon emotion-18"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-16"
+                className="chakra-icon emotion-15"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -273,10 +266,10 @@ exports[`object fields additionalProperties 1`] = `
     </div>
   </div>
   <div
-    className="emotion-21"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-18"
+      className="chakra-button emotion-17"
       disabled={false}
       type="submit"
     >
@@ -302,15 +295,11 @@ exports[`object fields object 1`] = `
   text-align: start;
 }
 
-.emotion-7 {
-  margin-top: 2px;
-}
-
-.emotion-14 {
+.emotion-12 {
   margin-top: 3px;
 }
 
-.emotion-15 {
+.emotion-13 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -393,9 +382,6 @@ exports[`object fields object 1`] = `
                   value=""
                 />
               </div>
-              <p
-                className="chakra-text emotion-7"
-              />
             </div>
           </div>
         </div>
@@ -438,9 +424,6 @@ exports[`object fields object 1`] = `
                   value=""
                 />
               </div>
-              <p
-                className="chakra-text emotion-7"
-              />
             </div>
           </div>
         </div>
@@ -448,10 +431,10 @@ exports[`object fields object 1`] = `
     </div>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-12"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-13"
       disabled={false}
       type="submit"
     >
@@ -486,11 +469,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   margin-bottom: 1px;
 }
 
-.emotion-13 {
-  margin-top: 2px;
-}
-
-.emotion-15 {
+.emotion-14 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -520,7 +499,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   padding: 0px;
 }
 
-.emotion-16 {
+.emotion-15 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -532,11 +511,11 @@ exports[`object fields show add button and fields if additionalProperties is tru
   vertical-align: middle;
 }
 
-.emotion-17 {
+.emotion-16 {
   justify-self: flex-end;
 }
 
-.emotion-18 {
+.emotion-17 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -565,7 +544,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   width: auto;
 }
 
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -580,7 +559,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   margin-inline-end: 0.5rem;
 }
 
-.emotion-21 {
+.emotion-20 {
   margin-top: 3px;
 }
 
@@ -669,9 +648,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     value="should appear"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-13"
-                />
               </div>
             </div>
             <div
@@ -679,7 +655,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-15"
+                className="chakra-button emotion-14"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -687,7 +663,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-16"
+                  className="chakra-icon emotion-15"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -704,20 +680,20 @@ exports[`object fields show add button and fields if additionalProperties is tru
           </div>
         </div>
         <div
-          className="emotion-17"
+          className="emotion-16"
         >
           <button
-            className="chakra-button object-property-expand emotion-18"
+            className="chakra-button object-property-expand emotion-17"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-19"
+              className="chakra-button__icon emotion-18"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-16"
+                className="chakra-icon emotion-15"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -734,10 +710,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
     </div>
   </div>
   <div
-    className="emotion-21"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-18"
+      className="chakra-button emotion-17"
       disabled={false}
       type="submit"
     >
@@ -788,11 +764,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-17 {
-  margin-top: 2px;
-}
-
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -822,7 +794,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   padding: 0px;
 }
 
-.emotion-20 {
+.emotion-19 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -834,11 +806,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
   vertical-align: middle;
 }
 
-.emotion-21 {
+.emotion-20 {
   justify-self: flex-end;
 }
 
-.emotion-22 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -867,7 +839,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   width: auto;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -882,7 +854,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: 3px;
 }
 
@@ -990,9 +962,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     value="foo"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-17"
-                />
               </div>
             </div>
             <div
@@ -1000,7 +969,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-19"
+                className="chakra-button emotion-18"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -1008,7 +977,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-20"
+                  className="chakra-icon emotion-19"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -1025,20 +994,20 @@ exports[`object fields with title and description additionalProperties 1`] = `
           </div>
         </div>
         <div
-          className="emotion-21"
+          className="emotion-20"
         >
           <button
-            className="chakra-button object-property-expand emotion-22"
+            className="chakra-button object-property-expand emotion-21"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-23"
+              className="chakra-button__icon emotion-22"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-20"
+                className="chakra-icon emotion-19"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -1055,10 +1024,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
     </div>
   </div>
   <div
-    className="emotion-25"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -1109,11 +1078,7 @@ exports[`object fields with title and description from both additionalProperties
   margin-bottom: 1px;
 }
 
-.emotion-17 {
-  margin-top: 2px;
-}
-
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1143,7 +1108,7 @@ exports[`object fields with title and description from both additionalProperties
   padding: 0px;
 }
 
-.emotion-20 {
+.emotion-19 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -1155,11 +1120,11 @@ exports[`object fields with title and description from both additionalProperties
   vertical-align: middle;
 }
 
-.emotion-21 {
+.emotion-20 {
   justify-self: flex-end;
 }
 
-.emotion-22 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1188,7 +1153,7 @@ exports[`object fields with title and description from both additionalProperties
   width: auto;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1203,7 +1168,7 @@ exports[`object fields with title and description from both additionalProperties
   margin-inline-end: 0.5rem;
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: 3px;
 }
 
@@ -1311,9 +1276,6 @@ exports[`object fields with title and description from both additionalProperties
                     value="foo"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-17"
-                />
               </div>
             </div>
             <div
@@ -1321,7 +1283,7 @@ exports[`object fields with title and description from both additionalProperties
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-19"
+                className="chakra-button emotion-18"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -1329,7 +1291,7 @@ exports[`object fields with title and description from both additionalProperties
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-20"
+                  className="chakra-icon emotion-19"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -1346,20 +1308,20 @@ exports[`object fields with title and description from both additionalProperties
           </div>
         </div>
         <div
-          className="emotion-21"
+          className="emotion-20"
         >
           <button
-            className="chakra-button object-property-expand emotion-22"
+            className="chakra-button object-property-expand emotion-21"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-23"
+              className="chakra-button__icon emotion-22"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-20"
+                className="chakra-icon emotion-19"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -1376,10 +1338,10 @@ exports[`object fields with title and description from both additionalProperties
     </div>
   </div>
   <div
-    className="emotion-25"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -1654,11 +1616,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   margin-bottom: 1px;
 }
 
-.emotion-17 {
-  margin-top: 2px;
-}
-
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1688,7 +1646,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   padding: 0px;
 }
 
-.emotion-20 {
+.emotion-19 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -1700,11 +1658,11 @@ exports[`object fields with title and description from uiSchema additionalProper
   vertical-align: middle;
 }
 
-.emotion-21 {
+.emotion-20 {
   justify-self: flex-end;
 }
 
-.emotion-22 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1733,7 +1691,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   width: auto;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1748,7 +1706,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   margin-inline-end: 0.5rem;
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: 3px;
 }
 
@@ -1856,9 +1814,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                     value="foo"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-17"
-                />
               </div>
             </div>
             <div
@@ -1866,7 +1821,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-19"
+                className="chakra-button emotion-18"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -1874,7 +1829,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-20"
+                  className="chakra-icon emotion-19"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -1891,20 +1846,20 @@ exports[`object fields with title and description from uiSchema additionalProper
           </div>
         </div>
         <div
-          className="emotion-21"
+          className="emotion-20"
         >
           <button
-            className="chakra-button object-property-expand emotion-22"
+            className="chakra-button object-property-expand emotion-21"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-23"
+              className="chakra-button__icon emotion-22"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-20"
+                className="chakra-icon emotion-19"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -1921,10 +1876,10 @@ exports[`object fields with title and description from uiSchema additionalProper
     </div>
   </div>
   <div
-    className="emotion-25"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -2199,11 +2154,7 @@ exports[`object fields with title and description from uiSchema show add button 
   margin-bottom: 1px;
 }
 
-.emotion-17 {
-  margin-top: 2px;
-}
-
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2233,7 +2184,7 @@ exports[`object fields with title and description from uiSchema show add button 
   padding: 0px;
 }
 
-.emotion-20 {
+.emotion-19 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -2245,11 +2196,11 @@ exports[`object fields with title and description from uiSchema show add button 
   vertical-align: middle;
 }
 
-.emotion-21 {
+.emotion-20 {
   justify-self: flex-end;
 }
 
-.emotion-22 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2278,7 +2229,7 @@ exports[`object fields with title and description from uiSchema show add button 
   width: auto;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2293,7 +2244,7 @@ exports[`object fields with title and description from uiSchema show add button 
   margin-inline-end: 0.5rem;
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: 3px;
 }
 
@@ -2401,9 +2352,6 @@ exports[`object fields with title and description from uiSchema show add button 
                     value="should appear"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-17"
-                />
               </div>
             </div>
             <div
@@ -2411,7 +2359,7 @@ exports[`object fields with title and description from uiSchema show add button 
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-19"
+                className="chakra-button emotion-18"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -2419,7 +2367,7 @@ exports[`object fields with title and description from uiSchema show add button 
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-20"
+                  className="chakra-icon emotion-19"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -2436,20 +2384,20 @@ exports[`object fields with title and description from uiSchema show add button 
           </div>
         </div>
         <div
-          className="emotion-21"
+          className="emotion-20"
         >
           <button
-            className="chakra-button object-property-expand emotion-22"
+            className="chakra-button object-property-expand emotion-21"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-23"
+              className="chakra-button__icon emotion-22"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-20"
+                className="chakra-icon emotion-19"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -2466,10 +2414,10 @@ exports[`object fields with title and description from uiSchema show add button 
     </div>
   </div>
   <div
-    className="emotion-25"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -2744,11 +2692,7 @@ exports[`object fields with title and description show add button and fields if 
   margin-bottom: 1px;
 }
 
-.emotion-17 {
-  margin-top: 2px;
-}
-
-.emotion-19 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2778,7 +2722,7 @@ exports[`object fields with title and description show add button and fields if 
   padding: 0px;
 }
 
-.emotion-20 {
+.emotion-19 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -2790,11 +2734,11 @@ exports[`object fields with title and description show add button and fields if 
   vertical-align: middle;
 }
 
-.emotion-21 {
+.emotion-20 {
   justify-self: flex-end;
 }
 
-.emotion-22 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2823,7 +2767,7 @@ exports[`object fields with title and description show add button and fields if 
   width: auto;
 }
 
-.emotion-23 {
+.emotion-22 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2838,7 +2782,7 @@ exports[`object fields with title and description show add button and fields if 
   margin-inline-end: 0.5rem;
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: 3px;
 }
 
@@ -2946,9 +2890,6 @@ exports[`object fields with title and description show add button and fields if 
                     value="should appear"
                   />
                 </div>
-                <p
-                  className="chakra-text emotion-17"
-                />
               </div>
             </div>
             <div
@@ -2956,7 +2897,7 @@ exports[`object fields with title and description show add button and fields if 
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-19"
+                className="chakra-button emotion-18"
                 disabled={false}
                 onClick={[Function]}
                 title="Remove"
@@ -2964,7 +2905,7 @@ exports[`object fields with title and description show add button and fields if 
               >
                 <svg
                   aria-hidden={true}
-                  className="chakra-icon emotion-20"
+                  className="chakra-icon emotion-19"
                   focusable={false}
                   viewBox="0 0 24 24"
                 >
@@ -2981,20 +2922,20 @@ exports[`object fields with title and description show add button and fields if 
           </div>
         </div>
         <div
-          className="emotion-21"
+          className="emotion-20"
         >
           <button
-            className="chakra-button object-property-expand emotion-22"
+            className="chakra-button object-property-expand emotion-21"
             disabled={false}
             onClick={[Function]}
             type="button"
           >
             <span
-              className="chakra-button__icon emotion-23"
+              className="chakra-button__icon emotion-22"
             >
               <svg
                 aria-hidden={true}
-                className="chakra-icon emotion-20"
+                className="chakra-icon emotion-19"
                 focusable={false}
                 viewBox="0 0 24 24"
               >
@@ -3011,10 +2952,10 @@ exports[`object fields with title and description show add button and fields if 
     </div>
   </div>
   <div
-    className="emotion-25"
+    className="emotion-24"
   >
     <button
-      className="chakra-button emotion-22"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >

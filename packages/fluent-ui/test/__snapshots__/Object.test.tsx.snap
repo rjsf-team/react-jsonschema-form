@@ -113,9 +113,7 @@ exports[`object fields additionalProperties 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -126,7 +124,7 @@ exports[`object fields additionalProperties 1`] = `
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -137,12 +135,12 @@ exports[`object fields additionalProperties 1`] = `
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -166,7 +164,7 @@ exports[`object fields additionalProperties 1`] = `
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -182,12 +180,12 @@ exports[`object fields additionalProperties 1`] = `
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -198,10 +196,10 @@ exports[`object fields additionalProperties 1`] = `
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__26"
               >
                 Add Item
@@ -218,7 +216,7 @@ exports[`object fields additionalProperties 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -229,14 +227,14 @@ exports[`object fields additionalProperties 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__29"
             >
               Submit
@@ -317,9 +315,7 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
-          <span
-            className="css-123"
-          />
+          
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
@@ -368,9 +364,7 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
-          <span
-            className="css-123"
-          />
+          
         </div>
       </div>
     </div>
@@ -381,7 +375,7 @@ exports[`object fields object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -392,14 +386,14 @@ exports[`object fields object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__10"
             >
               Submit
@@ -525,9 +519,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -538,7 +530,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -549,12 +541,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -578,7 +570,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -594,12 +586,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -610,10 +602,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__45"
               >
                 Add Item
@@ -630,7 +622,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -641,14 +633,14 @@ exports[`object fields show add button and fields if additionalProperties is tru
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__48"
             >
               Submit
@@ -676,13 +668,13 @@ exports[`object fields with title and description additionalProperties 1`] = `
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a test description
@@ -785,9 +777,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -798,7 +788,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -809,12 +799,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -838,7 +828,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -854,12 +844,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -870,10 +860,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__77"
               >
                 Add Item
@@ -890,7 +880,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -901,14 +891,14 @@ exports[`object fields with title and description additionalProperties 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__80"
             >
               Submit
@@ -936,13 +926,13 @@ exports[`object fields with title and description from both additionalProperties
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a fancier description
@@ -1045,9 +1035,7 @@ exports[`object fields with title and description from both additionalProperties
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1058,7 +1046,7 @@ exports[`object fields with title and description from both additionalProperties
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -1069,12 +1057,12 @@ exports[`object fields with title and description from both additionalProperties
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -1098,7 +1086,7 @@ exports[`object fields with title and description from both additionalProperties
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -1114,12 +1102,12 @@ exports[`object fields with title and description from both additionalProperties
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -1130,10 +1118,10 @@ exports[`object fields with title and description from both additionalProperties
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__179"
               >
                 Add Item
@@ -1150,7 +1138,7 @@ exports[`object fields with title and description from both additionalProperties
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1161,14 +1149,14 @@ exports[`object fields with title and description from both additionalProperties
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__182"
             >
               Submit
@@ -1196,13 +1184,13 @@ exports[`object fields with title and description from both object 1`] = `
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a fancier description
@@ -1261,10 +1249,10 @@ exports[`object fields with title and description from both object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_a__description"
             >
               a fancier item A description
@@ -1319,10 +1307,10 @@ exports[`object fields with title and description from both object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_b__description"
             >
               a fancier item B description
@@ -1338,7 +1326,7 @@ exports[`object fields with title and description from both object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1349,14 +1337,14 @@ exports[`object fields with title and description from both object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__163"
             >
               Submit
@@ -1384,13 +1372,13 @@ exports[`object fields with title and description from uiSchema additionalProper
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a fancier description
@@ -1493,9 +1481,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1506,7 +1492,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -1517,12 +1503,12 @@ exports[`object fields with title and description from uiSchema additionalProper
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -1546,7 +1532,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -1562,12 +1548,12 @@ exports[`object fields with title and description from uiSchema additionalProper
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -1578,10 +1564,10 @@ exports[`object fields with title and description from uiSchema additionalProper
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__128"
               >
                 Add Item
@@ -1598,7 +1584,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1609,14 +1595,14 @@ exports[`object fields with title and description from uiSchema additionalProper
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__131"
             >
               Submit
@@ -1644,13 +1630,13 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a fancier description
@@ -1709,10 +1695,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_a__description"
             >
               a fancier item A description
@@ -1767,10 +1753,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_b__description"
             >
               a fancier item B description
@@ -1786,7 +1772,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -1797,14 +1783,14 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__112"
             >
               Submit
@@ -1832,13 +1818,13 @@ exports[`object fields with title and description from uiSchema show add button 
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a fancier description
@@ -1941,9 +1927,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1954,7 +1938,7 @@ exports[`object fields with title and description from uiSchema show add button 
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -1965,12 +1949,12 @@ exports[`object fields with title and description from uiSchema show add button 
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -1994,7 +1978,7 @@ exports[`object fields with title and description from uiSchema show add button 
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -2010,12 +1994,12 @@ exports[`object fields with title and description from uiSchema show add button 
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -2026,10 +2010,10 @@ exports[`object fields with title and description from uiSchema show add button 
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__147"
               >
                 Add Item
@@ -2046,7 +2030,7 @@ exports[`object fields with title and description from uiSchema show add button 
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2057,14 +2041,14 @@ exports[`object fields with title and description from uiSchema show add button 
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__150"
             >
               Submit
@@ -2092,13 +2076,13 @@ exports[`object fields with title and description object 1`] = `
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a test description
@@ -2157,10 +2141,10 @@ exports[`object fields with title and description object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_a__description"
             >
               A description
@@ -2215,10 +2199,10 @@ exports[`object fields with title and description object 1`] = `
             </div>
           </div>
           <span
-            className="css-123"
+            className="css-140"
           >
             <span
-              className="css-123"
+              className="css-140"
               id="root_b__description"
             >
               B description
@@ -2234,7 +2218,7 @@ exports[`object fields with title and description object 1`] = `
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2245,14 +2229,14 @@ exports[`object fields with title and description object 1`] = `
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__61"
             >
               Submit
@@ -2280,13 +2264,13 @@ exports[`object fields with title and description show add button and fields if 
     }
   >
     <label
-      className="ms-Label root-140"
+      className="ms-Label root-139"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-123"
+      className="css-140"
       id="root__description"
     >
       a test description
@@ -2389,9 +2373,7 @@ exports[`object fields with title and description show add button and fields if 
                   </div>
                 </div>
               </div>
-              <span
-                className="css-123"
-              />
+              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -2402,7 +2384,7 @@ exports[`object fields with title and description show add button and fields if 
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -2413,12 +2395,12 @@ exports[`object fields with title and description show add button and fields if 
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -2442,7 +2424,7 @@ exports[`object fields with title and description show add button and fields if 
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -2458,12 +2440,12 @@ exports[`object fields with title and description show add button and fields if 
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -2474,10 +2456,10 @@ exports[`object fields with title and description show add button and fields if 
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__96"
               >
                 Add Item
@@ -2494,7 +2476,7 @@ exports[`object fields with title and description show add button and fields if 
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2505,14 +2487,14 @@ exports[`object fields with title and description show add button and fields if 
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__99"
             >
               Submit
@@ -2640,7 +2622,7 @@ exports[`object fields with title and description with global label off addition
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -2651,12 +2633,12 @@ exports[`object fields with title and description with global label off addition
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -2680,7 +2662,7 @@ exports[`object fields with title and description with global label off addition
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -2696,12 +2678,12 @@ exports[`object fields with title and description with global label off addition
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -2712,10 +2694,10 @@ exports[`object fields with title and description with global label off addition
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__211"
               >
                 Add Item
@@ -2732,7 +2714,7 @@ exports[`object fields with title and description with global label off addition
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2743,14 +2725,14 @@ exports[`object fields with title and description with global label off addition
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__214"
             >
               Submit
@@ -2873,7 +2855,7 @@ exports[`object fields with title and description with global label off object 1
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -2884,14 +2866,14 @@ exports[`object fields with title and description with global label off object 1
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__195"
             >
               Submit
@@ -3019,7 +3001,7 @@ exports[`object fields with title and description with global label off show add
               }
             >
               <button
-                className="ms-Button ms-Button--icon root-132"
+                className="ms-Button ms-Button--icon root-131"
                 data-is-focusable={true}
                 onClick={[Function]}
                 onKeyDown={[Function]}
@@ -3030,12 +3012,12 @@ exports[`object fields with title and description with global label off show add
                 type="button"
               >
                 <span
-                  className="ms-Button-flexContainer flexContainer-125"
+                  className="ms-Button-flexContainer flexContainer-124"
                   data-automationid="splitbuttonprimary"
                 >
                   <i
                     aria-hidden={true}
-                    className="ms-Icon root-105 css-135 ms-Button-icon icon-127"
+                    className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
                       Object {
@@ -3059,7 +3041,7 @@ exports[`object fields with title and description with global label off show add
         }
       >
         <button
-          className="ms-Button ms-Button--commandBar object-property-expand root-136"
+          className="ms-Button ms-Button--commandBar object-property-expand root-135"
           data-is-focusable={true}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -3075,12 +3057,12 @@ exports[`object fields with title and description with global label off show add
           type="button"
         >
           <span
-            className="ms-Button-flexContainer flexContainer-125"
+            className="ms-Button-flexContainer flexContainer-124"
             data-automationid="splitbuttonprimary"
           >
             <i
               aria-hidden={true}
-              className="ms-Icon root-105 css-135 ms-Button-icon icon-137"
+              className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
                 Object {
@@ -3091,10 +3073,10 @@ exports[`object fields with title and description with global label off show add
               
             </i>
             <span
-              className="ms-Button-textContainer textContainer-126"
+              className="ms-Button-textContainer textContainer-125"
             >
               <span
-                className="ms-Button-label label-138"
+                className="ms-Button-label label-137"
                 id="id__230"
               >
                 Add Item
@@ -3111,7 +3093,7 @@ exports[`object fields with title and description with global label off show add
       className="ms-Grid-col ms-sm12"
     >
       <button
-        className="ms-Button ms-Button--primary root-124"
+        className="ms-Button ms-Button--primary root-123"
         data-is-focusable={true}
         onClick={[Function]}
         onKeyDown={[Function]}
@@ -3122,14 +3104,14 @@ exports[`object fields with title and description with global label off show add
         type="submit"
       >
         <span
-          className="ms-Button-flexContainer flexContainer-125"
+          className="ms-Button-flexContainer flexContainer-124"
           data-automationid="splitbuttonprimary"
         >
           <span
-            className="ms-Button-textContainer textContainer-126"
+            className="ms-Button-textContainer textContainer-125"
           >
             <span
-              className="ms-Button-label label-128"
+              className="ms-Button-label label-127"
               id="id__233"
             >
               Submit

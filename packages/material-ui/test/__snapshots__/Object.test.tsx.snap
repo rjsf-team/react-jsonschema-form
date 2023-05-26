@@ -108,9 +108,6 @@ exports[`object fields additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -314,9 +311,6 @@ exports[`object fields object 1`] = `
                   />
                 </div>
               </div>
-              <span
-                className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-              />
             </div>
           </div>
         </div>
@@ -369,9 +363,6 @@ exports[`object fields object 1`] = `
                   />
                 </div>
               </div>
-              <span
-                className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-              />
             </div>
           </div>
         </div>
@@ -516,9 +507,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -775,9 +763,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -1034,9 +1019,6 @@ exports[`object fields with title and description from both additionalProperties
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -1506,9 +1488,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -1984,9 +1963,6 @@ exports[`object fields with title and description from uiSchema show add button 
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div
@@ -2456,9 +2432,6 @@ exports[`object fields with title and description show add button and fields if 
                     />
                   </div>
                 </div>
-                <span
-                  className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                />
               </div>
             </div>
             <div

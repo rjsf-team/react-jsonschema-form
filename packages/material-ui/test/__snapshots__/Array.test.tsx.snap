@@ -175,9 +175,6 @@ exports[`array fields array icons 1`] = `
                               />
                             </div>
                           </div>
-                          <span
-                            className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                          />
                         </div>
                       </div>
                     </div>
@@ -422,9 +419,6 @@ exports[`array fields array icons 1`] = `
                               />
                             </div>
                           </div>
-                          <span
-                            className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                          />
                         </div>
                       </div>
                     </div>
@@ -767,9 +761,6 @@ exports[`array fields checkboxes 1`] = `
           </svg>
         </div>
       </div>
-      <span
-        className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-      />
     </div>
   </div>
   <div
@@ -871,9 +862,6 @@ exports[`array fields empty errors array 1`] = `
                   />
                 </div>
               </div>
-              <span
-                className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-              />
             </div>
           </div>
         </div>
@@ -983,9 +971,6 @@ exports[`array fields fixed array 1`] = `
                               />
                             </div>
                           </div>
-                          <span
-                            className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                          />
                         </div>
                       </div>
                     </div>
@@ -1046,9 +1031,6 @@ exports[`array fields fixed array 1`] = `
                               />
                             </div>
                           </div>
-                          <span
-                            className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-                          />
                         </div>
                       </div>
                     </div>
@@ -1208,9 +1190,6 @@ exports[`array fields has errors 1`] = `
                   />
                 </div>
               </div>
-              <span
-                className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-              />
               <ul
                 className="MuiList-root MuiList-dense"
               >
@@ -1331,9 +1310,6 @@ exports[`array fields no errors 1`] = `
                   />
                 </div>
               </div>
-              <span
-                className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
-              />
             </div>
           </div>
         </div>

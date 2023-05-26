@@ -151,9 +151,7 @@ exports[`array fields array icons 1`] = `
                           type="text"
                           value="a"
                         />
-                        <small
-                          className="text-muted form-text"
-                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -361,9 +359,7 @@ exports[`array fields array icons 1`] = `
                           type="text"
                           value="b"
                         />
-                        <small
-                          className="text-muted form-text"
-                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -660,9 +656,7 @@ exports[`array fields checkboxes 1`] = `
           c
         </option>
       </select>
-      <small
-        className="text-muted form-text"
-      />
+      
     </div>
   </div>
   <div>
@@ -733,9 +727,7 @@ exports[`array fields empty errors array 1`] = `
                   type="text"
                   value=""
                 />
-                <small
-                  className="text-muted form-text"
-                />
+                
               </div>
             </div>
           </div>
@@ -813,9 +805,7 @@ exports[`array fields fixed array 1`] = `
                           type="text"
                           value=""
                         />
-                        <small
-                          className="text-muted form-text"
-                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -861,9 +851,7 @@ exports[`array fields fixed array 1`] = `
                           type="number"
                           value=""
                         />
-                        <small
-                          className="text-muted form-text"
-                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -974,9 +962,7 @@ exports[`array fields has errors 1`] = `
                   type="text"
                   value=""
                 />
-                <small
-                  className="text-danger form-text"
-                />
+                
                 <ul
                   className="list-group"
                   id="root_name__error"
@@ -1070,9 +1056,7 @@ exports[`array fields no errors 1`] = `
                   type="text"
                   value=""
                 />
-                <small
-                  className="text-muted form-text"
-                />
+                
               </div>
             </div>
           </div>

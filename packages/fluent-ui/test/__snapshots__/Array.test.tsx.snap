@@ -169,9 +169,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-136"
-              />
+              
             </div>
           </div>
         </div>
@@ -185,7 +183,7 @@ exports[`array fields array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -202,7 +200,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -215,7 +213,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -231,7 +229,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -244,7 +242,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -260,7 +258,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -273,7 +271,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -355,9 +353,7 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-136"
-              />
+              
             </div>
           </div>
         </div>
@@ -370,7 +366,7 @@ exports[`array fields array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -386,7 +382,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -400,7 +396,7 @@ exports[`array fields array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -417,7 +413,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -430,7 +426,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -446,7 +442,7 @@ exports[`array fields array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -459,7 +455,7 @@ exports[`array fields array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -603,7 +599,7 @@ exports[`array fields checkboxes 1`] = `
         aria-expanded="false"
         aria-haspopup="listbox"
         aria-required={false}
-        className="ms-Dropdown dropdown-137"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -619,15 +615,15 @@ exports[`array fields checkboxes 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-138"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-139"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-155"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -635,9 +631,7 @@ exports[`array fields checkboxes 1`] = `
         </span>
       </div>
     </div>
-    <span
-      className="css-136"
-    />
+    
   </div>
   <div>
     <br />
@@ -713,14 +707,14 @@ exports[`array fields empty errors array 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-178"
+                className="ms-Label root-177"
                 htmlFor="root_name"
                 id="TextFieldLabel81"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-179"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
@@ -744,9 +738,7 @@ exports[`array fields empty errors array 1`] = `
               </div>
             </div>
           </div>
-          <span
-            className="css-136"
-          />
+          
         </div>
       </div>
     </div>
@@ -853,9 +845,7 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-136"
-              />
+              
             </div>
           </div>
         </div>
@@ -913,9 +903,7 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
-              <span
-                className="css-136"
-              />
+              
             </div>
           </div>
         </div>
@@ -966,18 +954,18 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-165"
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-164"
   >
     <div
-      className="ms-MessageBar-content content-166"
+      className="ms-MessageBar-content content-165"
     >
       <div
         aria-hidden={true}
-        className="ms-MessageBar-icon iconContainer-167"
+        className="ms-MessageBar-icon iconContainer-166"
       >
         <i
           aria-hidden={true}
-          className="icon-176"
+          className="icon-175"
           data-icon-name="ErrorBadge"
         >
           
@@ -985,12 +973,12 @@ exports[`array fields has errors 1`] = `
       </div>
       <div
         aria-live="assertive"
-        className="ms-MessageBar-text text-169"
+        className="ms-MessageBar-text text-168"
         id="MessageBar62"
         role="alert"
       >
         <span
-          className="ms-MessageBar-innerText innerText-170"
+          className="ms-MessageBar-innerText innerText-169"
         />
       </div>
     </div>
@@ -1026,14 +1014,14 @@ exports[`array fields has errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-178"
+                className="ms-Label root-177"
                 htmlFor="root_name"
                 id="TextFieldLabel65"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-177"
+                className="ms-TextField-fieldGroup fieldGroup-176"
               >
                 <input
                   aria-describedby="TextFieldDescription64"
@@ -1064,9 +1052,7 @@ exports[`array fields has errors 1`] = `
               />
             </span>
           </div>
-          <span
-            className="css-136"
-          />
+          
           <div
             className="ms-List"
             id="root_name__error"
@@ -1170,14 +1156,14 @@ exports[`array fields no errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-178"
+                className="ms-Label root-177"
                 htmlFor="root_name"
                 id="TextFieldLabel73"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-179"
+                className="ms-TextField-fieldGroup fieldGroup-178"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
@@ -1201,9 +1187,7 @@ exports[`array fields no errors 1`] = `
               </div>
             </div>
           </div>
-          <span
-            className="css-136"
-          />
+          
         </div>
       </div>
     </div>
@@ -1260,13 +1244,13 @@ exports[`with title and description array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -1376,13 +1360,13 @@ exports[`with title and description array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -1422,7 +1406,7 @@ exports[`with title and description array icons 1`] = `
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -1447,10 +1431,10 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a test item description
@@ -1469,7 +1453,7 @@ exports[`with title and description array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -1486,7 +1470,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -1499,7 +1483,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1515,7 +1499,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -1528,7 +1512,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1544,7 +1528,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -1557,7 +1541,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1623,7 +1607,7 @@ exports[`with title and description array icons 1`] = `
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -1648,10 +1632,10 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a test item description
@@ -1669,7 +1653,7 @@ exports[`with title and description array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1685,7 +1669,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -1699,7 +1683,7 @@ exports[`with title and description array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -1716,7 +1700,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -1729,7 +1713,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1745,7 +1729,7 @@ exports[`with title and description array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -1758,7 +1742,7 @@ exports[`with title and description array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -1909,7 +1893,7 @@ exports[`with title and description checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-137"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -1925,15 +1909,15 @@ exports[`with title and description checkboxes 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-138"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-139"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-155"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -1942,10 +1926,10 @@ exports[`with title and description checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-136"
+      className="css-180"
     >
       <span
-        className="css-136"
+        className="css-180"
         id="root__description"
       >
         a test description
@@ -2004,13 +1988,13 @@ exports[`with title and description fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a test description
@@ -2050,7 +2034,7 @@ exports[`with title and description fixed array 1`] = `
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -2075,10 +2059,10 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a test item description
@@ -2124,7 +2108,7 @@ exports[`with title and description fixed array 1`] = `
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -2150,10 +2134,10 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a test item description
@@ -2217,13 +2201,13 @@ exports[`with title and description from both array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -2333,13 +2317,13 @@ exports[`with title and description from both array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -2379,7 +2363,7 @@ exports[`with title and description from both array icons 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -2404,10 +2388,10 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -2426,7 +2410,7 @@ exports[`with title and description from both array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -2443,7 +2427,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -2456,7 +2440,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2472,7 +2456,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -2485,7 +2469,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2501,7 +2485,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -2514,7 +2498,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2580,7 +2564,7 @@ exports[`with title and description from both array icons 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -2605,10 +2589,10 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -2626,7 +2610,7 @@ exports[`with title and description from both array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2642,7 +2626,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -2656,7 +2640,7 @@ exports[`with title and description from both array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -2673,7 +2657,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -2686,7 +2670,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2702,7 +2686,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -2715,7 +2699,7 @@ exports[`with title and description from both array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -2866,7 +2850,7 @@ exports[`with title and description from both checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-137"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -2882,15 +2866,15 @@ exports[`with title and description from both checkboxes 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-138"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-139"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-155"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -2899,10 +2883,10 @@ exports[`with title and description from both checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-136"
+      className="css-180"
     >
       <span
-        className="css-136"
+        className="css-180"
         id="root__description"
       >
         a fancier description
@@ -2961,13 +2945,13 @@ exports[`with title and description from both fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3007,7 +2991,7 @@ exports[`with title and description from both fixed array 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -3032,10 +3016,10 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -3081,7 +3065,7 @@ exports[`with title and description from both fixed array 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -3107,10 +3091,10 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -3174,13 +3158,13 @@ exports[`with title and description from uiSchema array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3290,13 +3274,13 @@ exports[`with title and description from uiSchema array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3336,7 +3320,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -3361,10 +3345,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -3383,7 +3367,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -3400,7 +3384,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -3413,7 +3397,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3429,7 +3413,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -3442,7 +3426,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3458,7 +3442,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -3471,7 +3455,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3537,7 +3521,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -3562,10 +3546,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -3583,7 +3567,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3599,7 +3583,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -3613,7 +3597,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -3630,7 +3614,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -3643,7 +3627,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3659,7 +3643,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -3672,7 +3656,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -3823,7 +3807,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-137"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -3839,15 +3823,15 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-138"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-139"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-155"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -3856,10 +3840,10 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-136"
+      className="css-180"
     >
       <span
-        className="css-136"
+        className="css-180"
         id="root__description"
       >
         a fancier description
@@ -3918,13 +3902,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-180"
+      className="ms-Label root-179"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-136"
+      className="css-180"
       id="root__description"
     >
       a fancier description
@@ -3964,7 +3948,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -3989,10 +3973,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -4038,7 +4022,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-179"
+                    className="ms-TextField-fieldGroup fieldGroup-178"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -4064,10 +4048,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-136"
+                className="css-180"
               >
                 <span
-                  className="css-136"
+                  className="css-180"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -4298,7 +4282,7 @@ exports[`with title and description with global label off array icons 1`] = `
         >
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -4315,7 +4299,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -4328,7 +4312,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4344,7 +4328,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -4357,7 +4341,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4373,7 +4357,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -4386,7 +4370,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4480,7 +4464,7 @@ exports[`with title and description with global label off array icons 1`] = `
           }
         >
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4496,7 +4480,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
                   Object {
@@ -4510,7 +4494,7 @@ exports[`with title and description with global label off array icons 1`] = `
           </button>
           <button
             aria-disabled={true}
-            className="ms-Button ms-Button--icon is-disabled root-156"
+            className="ms-Button ms-Button--icon is-disabled root-155"
             data-is-focusable={false}
             disabled={true}
             onClick={[Function]}
@@ -4527,7 +4511,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-161 ms-Button-icon icon-157"
+                className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
                   Object {
@@ -4540,7 +4524,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4556,7 +4540,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <i
                 aria-hidden={true}
-                className="ms-Icon root-105 css-164 ms-Button-icon icon-121"
+                className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
                   Object {
@@ -4569,7 +4553,7 @@ exports[`with title and description with global label off array icons 1`] = `
             </span>
           </button>
           <button
-            className="ms-Button ms-Button--icon root-162"
+            className="ms-Button ms-Button--icon root-161"
             data-is-focusable={true}
             onClick={[Function]}
             onKeyDown={[Function]}
@@ -4720,7 +4704,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         aria-haspopup="listbox"
         aria-labelledby="root-label root-option"
         aria-required={false}
-        className="ms-Dropdown dropdown-137"
+        className="ms-Dropdown dropdown-136"
         data-is-focusable={true}
         data-ktp-target={true}
         id="root"
@@ -4736,15 +4720,15 @@ exports[`with title and description with global label off checkboxes 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-138"
+          className="ms-Dropdown-title ms-Dropdown-titleIsPlaceHolder title-137"
           id="root-option"
         />
         <span
-          className="ms-Dropdown-caretDownWrapper caretDownWrapper-139"
+          className="ms-Dropdown-caretDownWrapper caretDownWrapper-138"
         >
           <i
             aria-hidden={true}
-            className="ms-Dropdown-caretDown caretDown-155"
+            className="ms-Dropdown-caretDown caretDown-154"
             data-icon-name="ChevronDown"
           >
             
@@ -4753,10 +4737,10 @@ exports[`with title and description with global label off checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-136"
+      className="css-180"
     >
       <span
-        className="css-136"
+        className="css-180"
         id="root__description"
       >
         a test description
