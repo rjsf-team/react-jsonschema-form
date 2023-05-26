@@ -42,6 +42,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
 
+## @rjsf/core
+
+- Updated SchemaField to be able to render markdown in the description field
+
 ## Dev / docs / playground
 
 - Updated sample data and documentation about the markdown in `RJSFSchema` description
@@ -92,7 +96,6 @@ should change the heading of the (upcoming) version to include a major version b
   - to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [#3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([#3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
   - to handle setting object defaults based on the value of `emptyObjectFields` supporting required fields only and skipping defaults entirely, fixing [#2980](https://github.com/rjsf-team/react-jsonschema-form/issues/2980)
 - Fixed regression [#3650](https://github.com/rjsf-team/react-jsonschema-form/issues/3650) in `FileWidget` to again support adding multiple files to arrays
-- Updated SchemaField to be able to render markdown in the description field
 
 ## @rjsf/fluent-ui
 
