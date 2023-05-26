@@ -4,6 +4,7 @@ import {
   RECURSIVE_REF,
   RECURSIVE_REF_ALLOF,
   SCHEMA_DEPENDENCIES,
+  SCHEMA_WITH_ALLOF_CANNOT_MERGE,
   SCHEMA_AND_ONEOF_REF_DEPENDENCIES,
   SCHEMA_AND_REQUIRED_DEPENDENCIES,
   SCHEMA_WITH_ARRAY_CONDITION,
@@ -61,6 +62,10 @@ describe('schemaParser()', () => {
   });
   it('parse schema with array condition', () => {
     const schemaMap = schemaParser(SCHEMA_WITH_ARRAY_CONDITION);
+    expect(schemaMap).toMatchSnapshot();
+  });
+  it('parse schema with allof not able to merge', () => {
+    const schemaMap = schemaParser(SCHEMA_WITH_ALLOF_CANNOT_MERGE);
     expect(schemaMap).toMatchSnapshot();
   });
 });
