@@ -35,6 +35,7 @@ export default function FieldTemplate<
     rawErrors = [],
     errors,
     help,
+    description,
     rawDescription,
     schema,
     uiSchema,
@@ -69,7 +70,7 @@ export default function FieldTemplate<
         {children}
         {displayLabel && rawDescription ? (
           <Typography variant='caption' color='textSecondary'>
-            {rawDescription}
+            {description}
           </Typography>
         ) : null}
         {errors}

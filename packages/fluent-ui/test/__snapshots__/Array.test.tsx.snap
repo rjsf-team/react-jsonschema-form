@@ -1433,7 +1433,12 @@ exports[`with title and description array icons 1`] = `
               <span
                 className="css-180"
               >
-                a test item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -1629,7 +1634,12 @@ exports[`with title and description array icons 1`] = `
               <span
                 className="css-180"
               >
-                a test item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -1918,7 +1928,12 @@ exports[`with title and description checkboxes 1`] = `
     <span
       className="css-180"
     >
-      a test description
+      <span
+        className="css-180"
+        id="root__description"
+      >
+        a test description
+      </span>
     </span>
   </div>
   <div>
@@ -2046,7 +2061,12 @@ exports[`with title and description fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a test item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -2116,7 +2136,12 @@ exports[`with title and description fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a test item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -2365,7 +2390,12 @@ exports[`with title and description from both array icons 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -2561,7 +2591,12 @@ exports[`with title and description from both array icons 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -2850,7 +2885,12 @@ exports[`with title and description from both checkboxes 1`] = `
     <span
       className="css-180"
     >
-      a fancier description
+      <span
+        className="css-180"
+        id="root__description"
+      >
+        a fancier description
+      </span>
     </span>
   </div>
   <div>
@@ -2978,7 +3018,12 @@ exports[`with title and description from both fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3048,7 +3093,12 @@ exports[`with title and description from both fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3297,7 +3347,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3493,7 +3548,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3782,7 +3842,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     <span
       className="css-180"
     >
-      a fancier description
+      <span
+        className="css-180"
+        id="root__description"
+      >
+        a fancier description
+      </span>
     </span>
   </div>
   <div>
@@ -3910,7 +3975,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3980,7 +4050,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               <span
                 className="css-180"
               >
-                a fancier item description
+                <span
+                  className="css-180"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -4664,7 +4739,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
     <span
       className="css-180"
     >
-      a test description
+      <span
+        className="css-180"
+        id="root__description"
+      >
+        a test description
+      </span>
     </span>
   </div>
   <div>

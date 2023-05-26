@@ -16,6 +16,40 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.8.0
+
+## @rjsf/bootstrap-4
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/chakra-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/fluent-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/material-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/mui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/semantic-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/core
+
+- Updated SchemaField to be able to render markdown in the description field
+
+## Dev / docs / playground
+
+- Updated sample data and documentation about the markdown in `RJSFSchema` description
+
 # 5.7.3
 
 ## @rjsf/utils
@@ -58,7 +92,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated the `MultiSchemaField` to use the new `getDiscriminatorFieldFromSchema()` API
-- Added new `experimental_defaultFormStateBehavior` prop to `Form` 
+- Added new `experimental_defaultFormStateBehavior` prop to `Form`
   - to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [#3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([#3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
   - to handle setting object defaults based on the value of `emptyObjectFields` supporting required fields only and skipping defaults entirely, fixing [#2980](https://github.com/rjsf-team/react-jsonschema-form/issues/2980)
 - Fixed regression [#3650](https://github.com/rjsf-team/react-jsonschema-form/issues/3650) in `FileWidget` to again support adding multiple files to arrays

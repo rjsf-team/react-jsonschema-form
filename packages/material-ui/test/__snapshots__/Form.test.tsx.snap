@@ -548,7 +548,17 @@ exports[`single fields field with description 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                some description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_my-field__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  some description
+                </h6>
               </span>
             </div>
           </div>
@@ -661,7 +671,17 @@ exports[`single fields field with description in uiSchema 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                some other description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_my-field__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  some other description
+                </h6>
               </span>
             </div>
           </div>

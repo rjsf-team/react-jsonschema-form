@@ -19,6 +19,7 @@ export default function FieldTemplate<
   rawErrors = [],
   errors,
   help,
+  description,
   rawDescription,
   classNames,
   style,
@@ -66,7 +67,7 @@ export default function FieldTemplate<
         )}
         {children}
         {displayLabel && rawDescription && (
-          <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{rawDescription}</Form.Text>
+          <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
         )}
         {errors}
         {help}

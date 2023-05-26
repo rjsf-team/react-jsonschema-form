@@ -299,7 +299,14 @@ exports[`single fields field with description 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  some description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      some description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -379,7 +386,14 @@ exports[`single fields field with description in uiSchema 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  some other description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      some other description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>

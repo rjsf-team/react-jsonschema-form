@@ -1239,7 +1239,17 @@ exports[`object fields with title and description from both object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                a fancier item A description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_a__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  a fancier item A description
+                </h6>
               </span>
             </div>
           </div>
@@ -1296,7 +1306,17 @@ exports[`object fields with title and description from both object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                a fancier item B description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_b__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  a fancier item B description
+                </h6>
               </span>
             </div>
           </div>
@@ -1697,7 +1717,17 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                a fancier item A description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_a__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  a fancier item A description
+                </h6>
               </span>
             </div>
           </div>
@@ -1754,7 +1784,17 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                a fancier item B description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_b__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  a fancier item B description
+                </h6>
               </span>
             </div>
           </div>
@@ -2143,7 +2183,17 @@ exports[`object fields with title and description object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                A description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_a__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  A description
+                </h6>
               </span>
             </div>
           </div>
@@ -2200,7 +2250,17 @@ exports[`object fields with title and description object 1`] = `
               <span
                 className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
               >
-                B description
+                <h6
+                  className="MuiTypography-root MuiTypography-subtitle2"
+                  id="root_b__description"
+                  style={
+                    Object {
+                      "marginTop": "5px",
+                    }
+                  }
+                >
+                  B description
+                </h6>
               </span>
             </div>
           </div>
