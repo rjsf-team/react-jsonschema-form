@@ -13,7 +13,7 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: FieldTemplateProps<T, S, F>) {
-  const { children, errors, help, displayLabel, description, hidden, uiSchema, registry } = props;
+  const { children, errors, help, displayLabel, description, rawDescription, hidden, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
@@ -26,7 +26,7 @@ export default function FieldTemplate<
   return (
     <WrapIfAdditionalTemplate {...props}>
       {children}
-      {displayLabel && description && <Text>{description}</Text>}
+      {displayLabel && rawDescription && <Text>{description}</Text>}
       {errors}
       {help}
     </WrapIfAdditionalTemplate>

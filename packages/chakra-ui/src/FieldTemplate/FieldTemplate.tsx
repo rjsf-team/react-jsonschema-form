@@ -31,6 +31,7 @@ export default function FieldTemplate<
     errors,
     help,
     description,
+    rawDescription,
     schema,
     uiSchema,
   } = props;
@@ -62,7 +63,7 @@ export default function FieldTemplate<
     >
       <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0}>
         {children}
-        {displayLabel && description ? <Text mt={2}>{description}</Text> : null}
+        {displayLabel && rawDescription ? <Text mt={2}>{description}</Text> : null}
         {errors}
         {help}
       </FormControl>
