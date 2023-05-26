@@ -16,6 +16,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.x.x
+
+## Dev / docs / playground
+
+- Fixed broken playground examples ([#3696](https://github.com/rjsf-team/react-jsonschema-form/issues/3696))
+- Added experimental_defaultFormStateBehavior.emptyObjectFields control to Playground
+- Fixed bug where subthemes would not appear in Playground
+
 # 5.8.0
 
 ## @rjsf/utils
