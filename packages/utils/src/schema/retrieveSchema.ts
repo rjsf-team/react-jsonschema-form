@@ -60,7 +60,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
-  const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
+  const conditionValue = validator.isValid(expression as S, formData || {} as T, rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
