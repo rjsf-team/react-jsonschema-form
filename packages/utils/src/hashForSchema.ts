@@ -17,11 +17,15 @@ function hashString(string: string): string {
   return hash.toString(16);
 }
 
-/** Stringifies the schema and returns the hash of the resulting string.
+/** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields
+ * in consistent order before stringify to prevent different hash ids for the same schema.
  *
  * @param schema - The schema for which the hash is desired
  * @returns - The string obtained from the hash of the stringified schema
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
-  return hashString(JSON.stringify(schema));
+  const allKeys = new Set<string>();
+  // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
+  JSON.stringify(schema, (key, value) => (allKeys.add(key), value));
+  return hashString(JSON.stringify(schema, Array.from(allKeys).sort()));
 }
