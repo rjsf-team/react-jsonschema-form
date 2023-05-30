@@ -18,6 +18,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.8.0
 
+## @rjsf/utils
+
+- Updated `retrieveSchemaInternal` to return failed merged allOf sub schemas for expandAllBranches flag, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3700)
+- Updated `hashForSchema` to short schema fields in consistent order before stringify to prevent different hash ids for the same schema
+
 ## @rjsf/bootstrap-4
 
 - Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes

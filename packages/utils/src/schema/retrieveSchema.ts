@@ -287,6 +287,9 @@ export function retrieveSchemaInternal<
       } catch (e) {
         console.warn('could not merge subschemas in allOf:\n', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
+        if (expandAllBranches && allOf) {
+          return [resolvedSchemaWithoutAllOf as S, ...(allOf as S[])];
+        }
         return resolvedSchemaWithoutAllOf as S;
       }
     }
