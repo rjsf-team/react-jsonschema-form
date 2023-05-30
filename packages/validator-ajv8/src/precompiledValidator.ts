@@ -15,6 +15,7 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
+  retrieveSchema,
 } from '@rjsf/utils';
 
 import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
@@ -101,7 +102,8 @@ export default class AJV8PrecompiledValidator<
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    if (!isEqual(schema, this.rootSchema)) {
+    const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
+    if (!isEqual(schema, resolvedRootSchema)) {
       throw new Error(
         'The schema associated with the precompiled schema differs from the schema provided for validation'
       );
