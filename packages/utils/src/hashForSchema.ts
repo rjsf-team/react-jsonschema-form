@@ -25,6 +25,7 @@ function hashString(string: string): string {
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   const allKeys = new Set<string>();
+  // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
   JSON.stringify(schema, (key, value) => (allKeys.add(key), value));
   return hashString(JSON.stringify(schema, Array.from(allKeys).sort()));
 }
