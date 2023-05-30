@@ -1,5 +1,100 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`schemaParser() parse schema with allof not able to merge 1`] = `
+Object {
+  "-44c06f09": Object {
+    "$id": "-44c06f09",
+    "allOf": Array [
+      Object {
+        "if": Object {
+          "properties": Object {
+            "animal": Object {
+              "const": "Cat",
+            },
+          },
+        },
+        "then": Object {
+          "properties": Object {
+            "food": Object {
+              "enum": Array [
+                "meat",
+                "grass",
+                "fish",
+              ],
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "food",
+          ],
+        },
+      },
+      Object {
+        "if": Object {
+          "properties": Object {
+            "animal": Object {
+              "const": "Fish",
+            },
+          },
+        },
+        "then": Object {
+          "properties": Object {
+            "food": Object {
+              "enum": Array [
+                "insect",
+                "worms",
+              ],
+              "type": "string",
+            },
+            "water": Object {
+              "enum": Array [
+                "lake",
+                "sea",
+              ],
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "food",
+            "water",
+          ],
+        },
+      },
+      Object {
+        "required": Array [
+          "animal",
+        ],
+      },
+    ],
+    "properties": Object {
+      "animal": Object {
+        "enum": Array [
+          "Cat",
+          "Fish",
+        ],
+      },
+    },
+    "type": "object",
+  },
+  "59fefb6e": Object {
+    "$id": "59fefb6e",
+    "properties": Object {
+      "animal": Object {
+        "const": "Fish",
+      },
+    },
+  },
+  "6f438756": Object {
+    "$id": "6f438756",
+    "properties": Object {
+      "animal": Object {
+        "const": "Cat",
+      },
+    },
+  },
+}
+`;
+
 exports[`schemaParser() parse schema with array condition 1`] = `
 Object {
   "-33d8d73c": Object {
@@ -10,8 +105,8 @@ Object {
       },
     },
   },
-  "240a61a6": Object {
-    "$id": "240a61a6",
+  "f254d0a": Object {
+    "$id": "f254d0a",
     "properties": Object {
       "list": Object {
         "items": Object {
@@ -57,8 +152,8 @@ Object {
 
 exports[`schemaParser() parses property dependencies properly 1`] = `
 Object {
-  "2c34081c": Object {
-    "$id": "2c34081c",
+  "-4e612676": Object {
+    "$id": "-4e612676",
     "dependencies": Object {
       "a": Array [
         "b",
@@ -82,8 +177,8 @@ Object {
 
 exports[`schemaParser() parses recursive refs in allOf properly 1`] = `
 Object {
-  "3d2b22a": Object {
-    "$id": "3d2b22a",
+  "2b3d97f8": Object {
+    "$id": "2b3d97f8",
     "definitions": Object {
       "@enum": Object {
         "properties": Object {
@@ -131,8 +226,8 @@ Object {
 
 exports[`schemaParser() parses recursive refs properly 1`] = `
 Object {
-  "-6bbb062a": Object {
-    "$id": "-6bbb062a",
+  "7cf4cd8a": Object {
+    "$id": "7cf4cd8a",
     "$ref": "#/definitions/@enum",
     "definitions": Object {
       "@enum": Object {
@@ -155,8 +250,8 @@ Object {
 
 exports[`schemaParser() parses schema and required dependencies properly 1`] = `
 Object {
-  "-a54479e": Object {
-    "$id": "-a54479e",
+  "-738b34fc": Object {
+    "$id": "-738b34fc",
     "dependencies": Object {
       "a": Object {
         "properties": Object {
@@ -187,8 +282,8 @@ Object {
 
 exports[`schemaParser() parses schema dependencies properly 1`] = `
 Object {
-  "-77e20f4b": Object {
-    "$id": "-77e20f4b",
+  "75f1f611": Object {
+    "$id": "75f1f611",
     "dependencies": Object {
       "a": Object {
         "properties": Object {
@@ -210,8 +305,30 @@ Object {
 
 exports[`schemaParser() parses schema dependencies with one of and refs properly 1`] = `
 Object {
-  "-6ae1f7c2": Object {
-    "$id": "-6ae1f7c2",
+  "-29b1244f": Object {
+    "$id": "-29b1244f",
+    "properties": Object {
+      "a": Object {
+        "enum": Array [
+          "int",
+        ],
+      },
+    },
+    "type": "object",
+  },
+  "71dd1668": Object {
+    "$id": "71dd1668",
+    "properties": Object {
+      "a": Object {
+        "enum": Array [
+          "bool",
+        ],
+      },
+    },
+    "type": "object",
+  },
+  "7de97d9a": Object {
+    "$id": "7de97d9a",
     "definitions": Object {
       "needsA": Object {
         "properties": Object {
@@ -261,28 +378,6 @@ Object {
     },
     "type": "object",
   },
-  "-72b37ea6": Object {
-    "$id": "-72b37ea6",
-    "properties": Object {
-      "a": Object {
-        "enum": Array [
-          "bool",
-        ],
-      },
-    },
-    "type": "object",
-  },
-  "-a4bd7cf": Object {
-    "$id": "-a4bd7cf",
-    "properties": Object {
-      "a": Object {
-        "enum": Array [
-          "int",
-        ],
-      },
-    },
-    "type": "object",
-  },
 }
 `;
 
@@ -296,8 +391,8 @@ Object {
       },
     },
   },
-  "76bba80f": Object {
-    "$id": "76bba80f",
+  "7a88ed97": Object {
+    "$id": "7a88ed97",
     "else": Object {
       "properties": Object {
         "postal_code": Object {
@@ -335,30 +430,8 @@ Object {
 
 exports[`schemaParser() parses schema with multiple conditions 1`] = `
 Object {
-  "-36b03e42": Object {
-    "$id": "-36b03e42",
-    "properties": Object {
-      "BreedName": Object {
-        "const": "Alsatian",
-      },
-    },
-    "required": Array [
-      "BreedName",
-    ],
-  },
-  "-d94a755": Object {
-    "$id": "-d94a755",
-    "properties": Object {
-      "Animal": Object {
-        "const": "Cat",
-      },
-    },
-    "required": Array [
-      "Animal",
-    ],
-  },
-  "3e7e3b11": Object {
-    "$id": "3e7e3b11",
+  "-269ce7ef": Object {
+    "$id": "-269ce7ef",
     "properties": Object {
       "Animal": Object {
         "const": "Dog",
@@ -368,8 +441,8 @@ Object {
       "Animal",
     ],
   },
-  "5b44d8ca": Object {
-    "$id": "5b44d8ca",
+  "-5e82ba72": Object {
+    "$id": "-5e82ba72",
     "properties": Object {
       "BreedName": Object {
         "const": "Dalmation",
@@ -379,8 +452,8 @@ Object {
       "BreedName",
     ],
   },
-  "7f2647ff": Object {
-    "$id": "7f2647ff",
+  "-61d82723": Object {
+    "$id": "-61d82723",
     "allOf": Array [
       Object {
         "if": Object {
@@ -519,6 +592,28 @@ Object {
     ],
     "type": "object",
   },
+  "-7b9d5dae": Object {
+    "$id": "-7b9d5dae",
+    "properties": Object {
+      "BreedName": Object {
+        "const": "Alsatian",
+      },
+    },
+    "required": Array [
+      "BreedName",
+    ],
+  },
+  "6dc2a62b": Object {
+    "$id": "6dc2a62b",
+    "properties": Object {
+      "Animal": Object {
+        "const": "Cat",
+      },
+    },
+    "required": Array [
+      "Animal",
+    ],
+  },
 }
 `;
 
@@ -546,8 +641,19 @@ Object {
       "country",
     ],
   },
-  "2d21fc3e": Object {
-    "$id": "2d21fc3e",
+  "5ad8e931": Object {
+    "$id": "5ad8e931",
+    "properties": Object {
+      "state": Object {
+        "const": "California",
+      },
+    },
+    "required": Array [
+      "state",
+    ],
+  },
+  "767ff7c6": Object {
+    "$id": "767ff7c6",
     "if": Object {
       "properties": Object {
         "country": Object {
@@ -630,33 +736,13 @@ Object {
     },
     "type": "object",
   },
-  "5ad8e931": Object {
-    "$id": "5ad8e931",
-    "properties": Object {
-      "state": Object {
-        "const": "California",
-      },
-    },
-    "required": Array [
-      "state",
-    ],
-  },
 }
 `;
 
 exports[`schemaParser() parses schema with oneof and nested dependencies 1`] = `
 Object {
-  "-1b756c98": Object {
-    "$id": "-1b756c98",
-    "properties": Object {
-      "employee_accounts": Object {
-        "const": true,
-      },
-    },
-    "type": "object",
-  },
-  "-29fab89": Object {
-    "$id": "-29fab89",
+  "-37c29d49": Object {
+    "$id": "-37c29d49",
     "properties": Object {
       "update_absences": Object {
         "const": "NON_MEDICAL_ONLY",
@@ -664,31 +750,8 @@ Object {
     },
     "type": "object",
   },
-  "-5773f6db": Object {
-    "$id": "-5773f6db",
-    "properties": Object {
-      "update_absences": Object {
-        "const": "MEDICAL_ONLY",
-      },
-    },
-    "type": "object",
-  },
-  "2638e86c": Object {
-    "$id": "2638e86c",
-    "properties": Object {
-      "update_absences": Object {
-        "const": "BOTH",
-      },
-    },
-    "type": "object",
-  },
-  "2ef9c4e1": Object {
-    "$id": "2ef9c4e1",
-    "const": "BOTH",
-    "title": "Both",
-  },
-  "5269a07e": Object {
-    "$id": "5269a07e",
+  "-406a5a54": Object {
+    "$id": "-406a5a54",
     "dependencies": Object {
       "employee_accounts": Object {
         "oneOf": Array [
@@ -757,13 +820,45 @@ Object {
     },
     "type": "object",
   },
+  "-7a6dd81b": Object {
+    "$id": "-7a6dd81b",
+    "properties": Object {
+      "update_absences": Object {
+        "const": "MEDICAL_ONLY",
+      },
+    },
+    "type": "object",
+  },
+  "-7c3c9229": Object {
+    "$id": "-7c3c9229",
+    "const": "BOTH",
+    "title": "Both",
+  },
+  "3a28e528": Object {
+    "$id": "3a28e528",
+    "properties": Object {
+      "employee_accounts": Object {
+        "const": true,
+      },
+    },
+    "type": "object",
+  },
+  "934b22c": Object {
+    "$id": "934b22c",
+    "properties": Object {
+      "update_absences": Object {
+        "const": "BOTH",
+      },
+    },
+    "type": "object",
+  },
 }
 `;
 
 exports[`schemaParser() parses superSchema properly 1`] = `
 Object {
-  "-1a32fe51": Object {
-    "$id": "-1a32fe51",
+  "-130bae51": Object {
+    "$id": "-130bae51",
     "anyOf": Array [
       Object {
         "required": Array [
@@ -778,8 +873,8 @@ Object {
     },
     "type": "object",
   },
-  "-48288a90": Object {
-    "$id": "-48288a90",
+  "-1e3c57ec": Object {
+    "$id": "-1e3c57ec",
     "anyOf": Array [
       Object {
         "required": Array [
@@ -803,8 +898,8 @@ Object {
     },
     "type": "object",
   },
-  "4aa7be7e": Object {
-    "$id": "4aa7be7e",
+  "-42566fe2": Object {
+    "$id": "-42566fe2",
     "anyOf": Array [
       Object {
         "required": Array [
