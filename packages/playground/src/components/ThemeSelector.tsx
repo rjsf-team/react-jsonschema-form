@@ -18,6 +18,7 @@ interface ThemeSelectorProps {
 export default function ThemeSelector({ theme, themes, select }: ThemeSelectorProps) {
   const schema: RJSFSchema = {
     type: 'string',
+    title: 'Theme',
     enum: Object.keys(themes),
   };
 
