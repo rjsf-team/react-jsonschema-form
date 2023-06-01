@@ -86,6 +86,30 @@ const liveSettingsSchema: RJSFSchema = {
             },
           ],
         },
+        emptyObjectFields: {
+          type: 'string',
+          title: 'Object fields default behavior',
+          default: 'populateAllDefaults',
+          oneOf: [
+            {
+              type: 'string',
+              title:
+                'Assign value to formData when default is primitive, non-empty object field, or is required (legacy behavior)',
+              enum: ['populateAllDefaults'],
+            },
+            {
+              type: 'string',
+              title:
+                'Assign value to formData when default is an object and parent is required, or default is primitive and is required',
+              enum: ['populateRequiredDefaults'],
+            },
+            {
+              type: 'string',
+              title: 'Does not set defaults',
+              enum: ['skipDefaults'],
+            },
+          ],
+        },
       },
     },
   },
@@ -213,7 +237,7 @@ export default function Header({
         </div>
         <div className='col-sm-2'>
           <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
-          {themes[theme] && themes[theme].subthemes && subtheme && (
+          {themes[theme] && themes[theme].subthemes && (
             <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
           )}
           <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />

@@ -72,7 +72,7 @@ The following sub-sections represent the different keys in this object, with the
 | `populate`     | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined |
 | `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required                                                |
 
-### `emptyObjectFields
+### `emptyObjectFields`
 
 | Flag Value                 | Description                                                                                                                |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
