@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/validator-ajv8
 
-- Updated `AJV8PrecompiledValidator.rawValidation()` to resolve root schema before comparing input schema, fixing [#3708](https://github.com/rjsf-team/react-jsonschema-form/issues/3708)
+- Updated `AJV8PrecompiledValidator.rawValidation()` to use resolve root schema when comparing input schema, fixing [#3708](https://github.com/rjsf-team/react-jsonschema-form/issues/3708)
 
 ## @rjsf/utils
 
