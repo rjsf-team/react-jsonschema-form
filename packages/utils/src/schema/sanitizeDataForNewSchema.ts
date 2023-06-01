@@ -1,5 +1,7 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
+import omitBy from 'lodash/omitBy';
+import isUndefined from 'lodash/isUndefined';
 
 import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import { PROPERTIES_KEY, REF_KEY } from '../constants';
@@ -137,8 +139,14 @@ export default function sanitizeDataForNewSchema<
     });
 
     newFormData = {
-      ...data,
-      ...removeOldSchemaData,
+      // remove fields from old schema and then sanitize undefined
+      ...omitBy(
+        {
+          ...data,
+          ...removeOldSchemaData,
+        },
+        isUndefined
+      ),
       ...nestedData,
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
