@@ -18,11 +18,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.8.0
 
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator.rawValidation()` to use resolve root schema when comparing input schema, fixing [#3708](https://github.com/rjsf-team/react-jsonschema-form/issues/3708)
+
 ## @rjsf/utils
 
 - Updated `resolveCondition` to default formData as empty object when evaluating if expression, fixing [#3706](https://github.com/rjsf-team/react-jsonschema-form/issues/3706)
 - Updated `retrieveSchemaInternal` to return failed merged allOf sub schemas for expandAllBranches flag, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3700)
-- Updated `hashForSchema` to short schema fields in consistent order before stringify to prevent different hash ids for the same schema
+- Updated `hashForSchema` to sort schema fields in consistent order before stringify to prevent different hash ids for the same schema
+- Updated `enumOptionsSelectValue` to allow picking falsy enumOptions, fixing [#3716](https://github.com/rjsf-team/react-jsonschema-form/issues/3716)
 
 ## @rjsf/bootstrap-4
 
