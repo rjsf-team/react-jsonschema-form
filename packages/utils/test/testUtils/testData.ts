@@ -285,6 +285,11 @@ export const ALL_OPTIONS: EnumOptionsType[] = [
   { value: 'boo', label: 'Boo' },
 ];
 
+export const FALSY_OPTIONS: EnumOptionsType[] = [
+  { value: '', label: 'Empty String' },
+  { value: 0, label: 'Zero' },
+];
+
 export const RECURSIVE_REF_ALLOF: RJSFSchema = {
   definitions: {
     '@enum': {

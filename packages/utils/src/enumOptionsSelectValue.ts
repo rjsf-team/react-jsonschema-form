@@ -1,5 +1,6 @@
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
+import { isNil } from 'lodash';
 
 /** Add the enum option value at the `valueIndex` to the list of `selected` values in the proper order as defined by
  * `allEnumOptions`
@@ -15,7 +16,7 @@ export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSF
   allEnumOptions: EnumOptionsType<S>[] = []
 ) {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
-  if (value) {
+  if (!isNil(value)) {
     const index = allEnumOptions.findIndex((opt) => value === opt.value);
     const all = allEnumOptions.map(({ value: val }) => val);
     const updated = selected.slice(0, index).concat(value, selected.slice(index));
