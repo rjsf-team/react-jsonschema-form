@@ -67,7 +67,7 @@
     "framer-motion": "^5.6.0",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
-    "monaco-editor": "^0.37.1",
+    "monaco-editor": "^0.38.0",
     "react": "^18.2.0",
     "react-bootstrap": "^1.6.7",
     "react-dom": "^18.2.0",
