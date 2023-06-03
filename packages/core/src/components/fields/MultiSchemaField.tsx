@@ -98,12 +98,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const option = schemaUtils.getClosestMatchingOption(formData, options, selectedOption, discriminator);
-    if (option > 0) {
-      return option;
-    }
-    // If the form data matches none of the options, use the currently selected
-    // option, assuming it's available; otherwise use the first option
-    return selectedOption || 0;
+    return option;
   }
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
