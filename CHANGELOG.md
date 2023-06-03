@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Updated `getClosestMatchingOption` to return selected option if all options score the same, fixing [#3693](https://github.com/rjsf-team/react-jsonschema-form/issues/3693) and [#3705](https://github.com/rjsf-team/react-jsonschema-form/issues/3705)
 - Updated `resolveCondition` to default formData as empty object when evaluating if expression, fixing [#3706](https://github.com/rjsf-team/react-jsonschema-form/issues/3706)
 - Updated `retrieveSchemaInternal` to return failed merged allOf sub schemas for expandAllBranches flag, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3700)
 - Updated `hashForSchema` to sort schema fields in consistent order before stringify to prevent different hash ids for the same schema
@@ -56,6 +57,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated SchemaField to be able to render markdown in the description field
+- Updated `MultiSchemaField.getMatchingOption` to use option index from `getClosestMatchingOption`, fixing [#3693](https://github.com/rjsf-team/react-jsonschema-form/issues/3693) and
+[#3705](https://github.com/rjsf-team/react-jsonschema-form/issues/3705)
 
 ## Dev / docs / playground
 
