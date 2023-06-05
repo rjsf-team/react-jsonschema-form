@@ -1430,7 +1430,7 @@ exports[`single fields help and error display 1`] = `
       >
         <i
           aria-hidden={true}
-          className="icon-240"
+          className="icon-241"
           data-icon-name="ErrorBadge"
         >
           
@@ -1463,7 +1463,7 @@ exports[`single fields help and error display 1`] = `
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-241"
+          className="ms-TextField-fieldGroup fieldGroup-242"
         >
           <input
             aria-describedby="TextFieldDescription239"
