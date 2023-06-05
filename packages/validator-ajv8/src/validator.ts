@@ -13,6 +13,7 @@ import {
   ValidationData,
   ValidatorType,
   withIdRefPrefix,
+  hashForSchema,
 } from '@rjsf/utils';
 
 import { CustomValidatorOptionsType, Localizer } from './types';
@@ -137,12 +138,17 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
         this.ajv.addSchema(rootSchema, rootSchemaId);
       }
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
+      const schemaHash = hashForSchema(schemaWithIdRefPrefix);
       let compiledValidator: ValidateFunction | undefined;
       if (schemaWithIdRefPrefix[ID_KEY]) {
         compiledValidator = this.ajv.getSchema(schemaWithIdRefPrefix[ID_KEY]);
+      } else {
+        compiledValidator = this.ajv.getSchema(schemaHash);
       }
       if (compiledValidator === undefined) {
-        compiledValidator = this.ajv.compile(schemaWithIdRefPrefix);
+        compiledValidator =
+          this.ajv.addSchema(schemaWithIdRefPrefix, schemaHash).getSchema(schemaHash) ||
+          this.ajv.compile(schemaWithIdRefPrefix);
       }
       const result = compiledValidator(formData);
       return result as boolean;
