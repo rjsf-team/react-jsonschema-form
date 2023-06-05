@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "5.7.3",
+  "version": "5.8.0",
   "main": "dist/index.js",
   "module": "dist/utils.esm.js",
   "typings": "dist/index.d.ts",
