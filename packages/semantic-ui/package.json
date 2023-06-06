@@ -29,8 +29,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "5.7.x",
-    "@rjsf/utils": "5.7.x",
+    "@rjsf/core": ">=5.8.x",
+    "@rjsf/utils": ">=5.8.x",
     "react": "^16.14.0 || >=17",
     "semantic-ui-react": "^1.3.1"
   },
