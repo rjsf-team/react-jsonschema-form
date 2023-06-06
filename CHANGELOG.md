@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated peer dependencies in all packages to `>=5.8.x`
+- Updated peer dependencies in all packages to `^5.8.x`
 
 # 5.8.0
 
