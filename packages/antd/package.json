@@ -30,8 +30,8 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@rjsf/core": "5.7.x",
-    "@rjsf/utils": "5.7.x",
+    "@rjsf/core": "^5.8.x",
+    "@rjsf/utils": "^5.8.x",
     "antd": "^4.0.0",
     "dayjs": "^1.8.0",
     "react": "^16.14.0 || >=17"

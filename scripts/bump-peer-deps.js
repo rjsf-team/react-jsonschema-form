@@ -41,7 +41,7 @@ dirs.forEach((dir) => {
       // peerDependencies to `5.4.x` we support any patch versions of `5.4` but will prevent the user from forgetting to
       // bump `@rjsf/utils` to 5.4
       //
-      peerDeps[key] = `${majorMinorMatch[1]}.x`;
+      peerDeps[key] = `^${majorMinorMatch[1]}.x`;
     }
   });
   // Now write the package.json file with the update packageObject, maintaining the 2 character spacing and remembering
