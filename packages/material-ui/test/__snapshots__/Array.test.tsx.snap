@@ -1596,7 +1596,17 @@ exports[`with title and description array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a test item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a test item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -1851,7 +1861,17 @@ exports[`with title and description array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a test item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a test item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -2191,7 +2211,17 @@ exports[`with title and description checkboxes 1`] = `
       <span
         className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
       >
-        a test description
+        <h6
+          className="MuiTypography-root MuiTypography-subtitle2"
+          id="root__description"
+          style={
+            Object {
+              "marginTop": "5px",
+            }
+          }
+        >
+          a test description
+        </h6>
       </span>
     </div>
   </div>
@@ -2343,7 +2373,17 @@ exports[`with title and description fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a test item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a test item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -2423,7 +2463,17 @@ exports[`with title and description fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a test item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a test item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -2714,7 +2764,17 @@ exports[`with title and description from both array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -2969,7 +3029,17 @@ exports[`with title and description from both array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -3309,7 +3379,17 @@ exports[`with title and description from both checkboxes 1`] = `
       <span
         className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
       >
-        a fancier description
+        <h6
+          className="MuiTypography-root MuiTypography-subtitle2"
+          id="root__description"
+          style={
+            Object {
+              "marginTop": "5px",
+            }
+          }
+        >
+          a fancier description
+        </h6>
       </span>
     </div>
   </div>
@@ -3461,7 +3541,17 @@ exports[`with title and description from both fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -3541,7 +3631,17 @@ exports[`with title and description from both fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -3832,7 +3932,17 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -4087,7 +4197,17 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -4427,7 +4547,17 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       <span
         className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
       >
-        a fancier description
+        <h6
+          className="MuiTypography-root MuiTypography-subtitle2"
+          id="root__description"
+          style={
+            Object {
+              "marginTop": "5px",
+            }
+          }
+        >
+          a fancier description
+        </h6>
       </span>
     </div>
   </div>
@@ -4579,7 +4709,17 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_0__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -4659,7 +4799,17 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           <span
                             className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
                           >
-                            a fancier item description
+                            <h6
+                              className="MuiTypography-root MuiTypography-subtitle2"
+                              id="root_1__description"
+                              style={
+                                Object {
+                                  "marginTop": "5px",
+                                }
+                              }
+                            >
+                              a fancier item description
+                            </h6>
                           </span>
                         </div>
                       </div>
@@ -5457,7 +5607,17 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <span
         className="MuiTypography-root MuiTypography-caption MuiTypography-colorTextSecondary"
       >
-        a test description
+        <h6
+          className="MuiTypography-root MuiTypography-subtitle2"
+          id="root__description"
+          style={
+            Object {
+              "marginTop": "5px",
+            }
+          }
+        >
+          a test description
+        </h6>
       </span>
     </div>
   </div>

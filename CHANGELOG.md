@@ -16,12 +16,100 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.9.0
+- Add mantine ui
+
+# 5.8.1
+
+## Dev / docs / playground
+
+- Updated peer dependencies in all packages to `^5.8.x`
 
 # 5.8.0
-## @rjsf/mantine-ui
-- Add mantine UI to `@rfsj`
+
+## @rjsf/bootstrap-4
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/chakra-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/core
+
+- Updated SchemaField to be able to render markdown in the description field
+- Updated `MultiSchemaField.getMatchingOption` to use option index from `getClosestMatchingOption`, fixing [#3693](https://github.com/rjsf-team/react-jsonschema-form/issues/3693) and
+  [#3705](https://github.com/rjsf-team/react-jsonschema-form/issues/3705)
+
+## @rjsf/fluent-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/material-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/mui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/semantic-ui
+
+- Updated FieldTemplate Component to display description from SchemaField and make it consistent for all the available themes
+
+## @rjsf/utils
+
+- Updated `getClosestMatchingOption` to return selected option if all options score the same, fixing [#3693](https://github.com/rjsf-team/react-jsonschema-form/issues/3693) and [#3705](https://github.com/rjsf-team/react-jsonschema-form/issues/3705)
+- Updated `resolveCondition` to default formData as empty object when evaluating if expression, fixing [#3706](https://github.com/rjsf-team/react-jsonschema-form/issues/3706)
+- Updated `retrieveSchemaInternal` to return failed merged allOf sub schemas for expandAllBranches flag, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3700)
+- Updated `hashForSchema` to sort schema fields in consistent order before stringify to prevent different hash ids for the same schema
+- Updated `enumOptionsSelectValue` to allow picking falsy enumOptions, fixing [#3716](https://github.com/rjsf-team/react-jsonschema-form/issues/3716)
+
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator.rawValidation()` to use resolve root schema when comparing input schema, fixing [#3708](https://github.com/rjsf-team/react-jsonschema-form/issues/3708)
+
+## Dev / docs / playground
+
+- Updated sample data and documentation about the markdown in `RJSFSchema` description
+- Fixed broken playground examples ([#3696](https://github.com/rjsf-team/react-jsonschema-form/issues/3696))
+- Added experimental_defaultFormStateBehavior.emptyObjectFields control to Playground
+- Fixed bug where subthemes would not appear in Playground
+
+# 5.7.3
+
+## @rjsf/utils
+
+- Updated `getClosestMatchingOption` `JUNK_OPTION` schema with a well known $id
+- Updated `schemaParser` to resolve array items field, fixing [#3689](https://github.com/rjsf-team/react-jsonschema-form/issues/3689)
+
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator.isValid()` to return false for junk schema option, fixing [#3677](https://github.com/rjsf-team/react-jsonschema-form/issues/3677)
+
+# 5.7.2
+
+## @rjsf/validator-ajv8
+
+- Removed the importing of internal `ajv` types by simplifying the `CompiledValidateFunction` type to avoid a bunch of Typescript errors encountered by users of the package
+
+# 5.7.1
+
+## @rjsf/validator-ajv8
+
+- Updated the build for all but the `cjs` development version, to not export the `compileSchemaValidators()` function to avoid "Module not found: Can't resolve 'fs' error" issues, fixing [#3668](https://github.com/rjsf-team/react-jsonschema-form/issues/3668)
+
+## @rjsf/core
+
+- Added protection against a null `field` in the `focusOnError` method in `Form`
+
+## Dev / docs / playground
+
+- Updated the `validation` documentation to add a note with a web-resource to help folks work around the "Module not found: Can't resolve 'fs' error" issue for development environments
+- Updated all of the `package-lock.json` files to bump peer-dependencies to `5.7.x`, fixing [#3669](https://github.com/rjsf-team/react-jsonschema-form/issues/3669)
 
 # 5.7.0
+
 ## @rjsf/antd
 
 - Fix [#3608](https://github.com/rjsf-team/react-jsonschema-form/issues/3608) by ensuring the root field is always wrapped in Form.Item
@@ -30,7 +118,9 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated the `MultiSchemaField` to use the new `getDiscriminatorFieldFromSchema()` API
-- Added new `experimental_defaultFormStateBehavior` prop to `Form` to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
+- Added new `experimental_defaultFormStateBehavior` prop to `Form`
+  - to specify alternate behavior when dealing with the rendering of array fields where `minItems` is set but field is not `required` (fixes [#3363](https://github.com/rjsf-team/react-jsonschema-form/issues/3363)) ([#3602](https://github.com/rjsf-team/react-jsonschema-form/issues/3602))
+  - to handle setting object defaults based on the value of `emptyObjectFields` supporting required fields only and skipping defaults entirely, fixing [#2980](https://github.com/rjsf-team/react-jsonschema-form/issues/2980)
 - Fixed regression [#3650](https://github.com/rjsf-team/react-jsonschema-form/issues/3650) in `FileWidget` to again support adding multiple files to arrays
 
 ## @rjsf/fluent-ui

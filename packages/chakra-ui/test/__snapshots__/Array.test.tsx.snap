@@ -1865,7 +1865,7 @@ exports[`with title and description array icons 1`] = `
   margin-top: 2px;
 }
 
-.emotion-17 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1873,21 +1873,21 @@ exports[`with title and description array icons 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-17>*:first-of-type:not(:last-of-type) {
+.emotion-18>*:first-of-type:not(:last-of-type) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.emotion-17>*:not(:first-of-type):not(:last-of-type) {
+.emotion-18>*:not(:first-of-type):not(:last-of-type) {
   border-radius: 0px;
 }
 
-.emotion-17>*:not(:first-of-type):last-of-type {
+.emotion-18>*:not(:first-of-type):last-of-type {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.emotion-18 {
+.emotion-19 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1917,12 +1917,12 @@ exports[`with title and description array icons 1`] = `
   padding: 0px;
 }
 
-.emotion-18:focus,
-.emotion-18[data-focus] {
+.emotion-19:focus,
+.emotion-19[data-focus] {
   z-index: 1;
 }
 
-.emotion-19 {
+.emotion-20 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -1934,11 +1934,11 @@ exports[`with title and description array icons 1`] = `
   vertical-align: middle;
 }
 
-.emotion-44 {
+.emotion-46 {
   justify-self: flex-end;
 }
 
-.emotion-46 {
+.emotion-48 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1967,7 +1967,7 @@ exports[`with title and description array icons 1`] = `
   width: auto;
 }
 
-.emotion-47 {
+.emotion-49 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1982,7 +1982,7 @@ exports[`with title and description array icons 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-49 {
+.emotion-51 {
   margin-top: 3px;
 }
 
@@ -2079,7 +2079,12 @@ exports[`with title and description array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a test item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a test item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -2088,12 +2093,12 @@ exports[`with title and description array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move up"
@@ -2101,7 +2106,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2113,7 +2118,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move down"
@@ -2121,7 +2126,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2133,7 +2138,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -2141,7 +2146,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2153,7 +2158,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -2161,7 +2166,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2229,7 +2234,12 @@ exports[`with title and description array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a test item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a test item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -2238,12 +2248,12 @@ exports[`with title and description array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move up"
@@ -2251,7 +2261,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2263,7 +2273,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move down"
@@ -2271,7 +2281,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2283,7 +2293,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -2291,7 +2301,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2303,7 +2313,7 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -2311,7 +2321,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -2329,23 +2339,23 @@ exports[`with title and description array icons 1`] = `
             </div>
           </div>
           <div
-            className="emotion-44"
+            className="emotion-46"
           >
             <div
               className="emotion-15"
             >
               <button
-                className="chakra-button array-item-add emotion-46"
+                className="chakra-button array-item-add emotion-48"
                 disabled={false}
                 onClick={[Function]}
                 type="button"
               >
                 <span
-                  className="chakra-button__icon emotion-47"
+                  className="chakra-button__icon emotion-49"
                 >
                   <svg
                     aria-hidden={true}
-                    className="chakra-icon emotion-19"
+                    className="chakra-icon emotion-20"
                     focusable={false}
                     viewBox="0 0 24 24"
                   >
@@ -2364,10 +2374,10 @@ exports[`with title and description array icons 1`] = `
     </div>
   </div>
   <div
-    className="emotion-49"
+    className="emotion-51"
   >
     <button
-      className="chakra-button emotion-46"
+      className="chakra-button emotion-48"
       disabled={false}
       type="submit"
     >
@@ -2556,10 +2566,15 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-17 {
+  margin-top: 3px;
+}
+
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2703,15 +2718,20 @@ exports[`with title and description checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        a test description
+        <p
+          className="chakra-text emotion-16"
+          id="root__description"
+        >
+          a test description
+        </p>
       </p>
     </div>
   </div>
   <div
-    className="emotion-16"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-17"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >
@@ -2784,11 +2804,11 @@ exports[`with title and description fixed array 1`] = `
   margin-top: 2px;
 }
 
-.emotion-24 {
+.emotion-26 {
   margin-top: 3px;
 }
 
-.emotion-25 {
+.emotion-27 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2910,7 +2930,12 @@ exports[`with title and description fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a test item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a test item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -2969,7 +2994,12 @@ exports[`with title and description fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a test item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a test item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -2981,10 +3011,10 @@ exports[`with title and description fixed array 1`] = `
     </div>
   </div>
   <div
-    className="emotion-24"
+    className="emotion-26"
   >
     <button
-      className="chakra-button emotion-25"
+      className="chakra-button emotion-27"
       disabled={false}
       type="submit"
     >
@@ -3236,7 +3266,7 @@ exports[`with title and description from both array icons 1`] = `
   margin-top: 2px;
 }
 
-.emotion-17 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3244,21 +3274,21 @@ exports[`with title and description from both array icons 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-17>*:first-of-type:not(:last-of-type) {
+.emotion-18>*:first-of-type:not(:last-of-type) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.emotion-17>*:not(:first-of-type):not(:last-of-type) {
+.emotion-18>*:not(:first-of-type):not(:last-of-type) {
   border-radius: 0px;
 }
 
-.emotion-17>*:not(:first-of-type):last-of-type {
+.emotion-18>*:not(:first-of-type):last-of-type {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.emotion-18 {
+.emotion-19 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3288,12 +3318,12 @@ exports[`with title and description from both array icons 1`] = `
   padding: 0px;
 }
 
-.emotion-18:focus,
-.emotion-18[data-focus] {
+.emotion-19:focus,
+.emotion-19[data-focus] {
   z-index: 1;
 }
 
-.emotion-19 {
+.emotion-20 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -3305,11 +3335,11 @@ exports[`with title and description from both array icons 1`] = `
   vertical-align: middle;
 }
 
-.emotion-44 {
+.emotion-46 {
   justify-self: flex-end;
 }
 
-.emotion-46 {
+.emotion-48 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3338,7 +3368,7 @@ exports[`with title and description from both array icons 1`] = `
   width: auto;
 }
 
-.emotion-47 {
+.emotion-49 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -3353,7 +3383,7 @@ exports[`with title and description from both array icons 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-49 {
+.emotion-51 {
   margin-top: 3px;
 }
 
@@ -3450,7 +3480,12 @@ exports[`with title and description from both array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -3459,12 +3494,12 @@ exports[`with title and description from both array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move up"
@@ -3472,7 +3507,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3484,7 +3519,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move down"
@@ -3492,7 +3527,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3504,7 +3539,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -3512,7 +3547,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3524,7 +3559,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -3532,7 +3567,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3600,7 +3635,12 @@ exports[`with title and description from both array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -3609,12 +3649,12 @@ exports[`with title and description from both array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move up"
@@ -3622,7 +3662,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3634,7 +3674,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move down"
@@ -3642,7 +3682,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3654,7 +3694,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -3662,7 +3702,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3674,7 +3714,7 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -3682,7 +3722,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -3700,23 +3740,23 @@ exports[`with title and description from both array icons 1`] = `
             </div>
           </div>
           <div
-            className="emotion-44"
+            className="emotion-46"
           >
             <div
               className="emotion-15"
             >
               <button
-                className="chakra-button array-item-add emotion-46"
+                className="chakra-button array-item-add emotion-48"
                 disabled={false}
                 onClick={[Function]}
                 type="button"
               >
                 <span
-                  className="chakra-button__icon emotion-47"
+                  className="chakra-button__icon emotion-49"
                 >
                   <svg
                     aria-hidden={true}
-                    className="chakra-icon emotion-19"
+                    className="chakra-icon emotion-20"
                     focusable={false}
                     viewBox="0 0 24 24"
                   >
@@ -3735,10 +3775,10 @@ exports[`with title and description from both array icons 1`] = `
     </div>
   </div>
   <div
-    className="emotion-49"
+    className="emotion-51"
   >
     <button
-      className="chakra-button emotion-46"
+      className="chakra-button emotion-48"
       disabled={false}
       type="submit"
     >
@@ -3927,10 +3967,15 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-17 {
+  margin-top: 3px;
+}
+
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4074,15 +4119,20 @@ exports[`with title and description from both checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        a fancier description
+        <p
+          className="chakra-text emotion-16"
+          id="root__description"
+        >
+          a fancier description
+        </p>
       </p>
     </div>
   </div>
   <div
-    className="emotion-16"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-17"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >
@@ -4155,11 +4205,11 @@ exports[`with title and description from both fixed array 1`] = `
   margin-top: 2px;
 }
 
-.emotion-24 {
+.emotion-26 {
   margin-top: 3px;
 }
 
-.emotion-25 {
+.emotion-27 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4281,7 +4331,12 @@ exports[`with title and description from both fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -4340,7 +4395,12 @@ exports[`with title and description from both fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -4352,10 +4412,10 @@ exports[`with title and description from both fixed array 1`] = `
     </div>
   </div>
   <div
-    className="emotion-24"
+    className="emotion-26"
   >
     <button
-      className="chakra-button emotion-25"
+      className="chakra-button emotion-27"
       disabled={false}
       type="submit"
     >
@@ -4607,7 +4667,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   margin-top: 2px;
 }
 
-.emotion-17 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4615,21 +4675,21 @@ exports[`with title and description from uiSchema array icons 1`] = `
   margin-bottom: 1px;
 }
 
-.emotion-17>*:first-of-type:not(:last-of-type) {
+.emotion-18>*:first-of-type:not(:last-of-type) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.emotion-17>*:not(:first-of-type):not(:last-of-type) {
+.emotion-18>*:not(:first-of-type):not(:last-of-type) {
   border-radius: 0px;
 }
 
-.emotion-17>*:not(:first-of-type):last-of-type {
+.emotion-18>*:not(:first-of-type):last-of-type {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.emotion-18 {
+.emotion-19 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4659,12 +4719,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
   padding: 0px;
 }
 
-.emotion-18:focus,
-.emotion-18[data-focus] {
+.emotion-19:focus,
+.emotion-19[data-focus] {
   z-index: 1;
 }
 
-.emotion-19 {
+.emotion-20 {
   width: 1em;
   height: 1em;
   display: inline-block;
@@ -4676,11 +4736,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
   vertical-align: middle;
 }
 
-.emotion-44 {
+.emotion-46 {
   justify-self: flex-end;
 }
 
-.emotion-46 {
+.emotion-48 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4709,7 +4769,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   width: auto;
 }
 
-.emotion-47 {
+.emotion-49 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -4724,7 +4784,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   margin-inline-end: 0.5rem;
 }
 
-.emotion-49 {
+.emotion-51 {
   margin-top: 3px;
 }
 
@@ -4821,7 +4881,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -4830,12 +4895,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move up"
@@ -4843,7 +4908,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -4855,7 +4920,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move down"
@@ -4863,7 +4928,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -4875,7 +4940,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -4883,7 +4948,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -4895,7 +4960,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -4903,7 +4968,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -4971,7 +5036,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -4980,12 +5050,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="emotion-0"
               >
                 <div
-                  className="chakra-button__group emotion-17"
+                  className="chakra-button__group emotion-18"
                   role="group"
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Move up"
@@ -4993,7 +5063,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -5005,7 +5075,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={true}
                     onClick={[Function]}
                     title="Move down"
@@ -5013,7 +5083,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -5025,7 +5095,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Copy"
@@ -5033,7 +5103,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -5045,7 +5115,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-18"
+                    className="chakra-button emotion-19"
                     disabled={false}
                     onClick={[Function]}
                     title="Remove"
@@ -5053,7 +5123,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <svg
                       aria-hidden={true}
-                      className="chakra-icon emotion-19"
+                      className="chakra-icon emotion-20"
                       focusable={false}
                       viewBox="0 0 24 24"
                     >
@@ -5071,23 +5141,23 @@ exports[`with title and description from uiSchema array icons 1`] = `
             </div>
           </div>
           <div
-            className="emotion-44"
+            className="emotion-46"
           >
             <div
               className="emotion-15"
             >
               <button
-                className="chakra-button array-item-add emotion-46"
+                className="chakra-button array-item-add emotion-48"
                 disabled={false}
                 onClick={[Function]}
                 type="button"
               >
                 <span
-                  className="chakra-button__icon emotion-47"
+                  className="chakra-button__icon emotion-49"
                 >
                   <svg
                     aria-hidden={true}
-                    className="chakra-icon emotion-19"
+                    className="chakra-icon emotion-20"
                     focusable={false}
                     viewBox="0 0 24 24"
                   >
@@ -5106,10 +5176,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
     </div>
   </div>
   <div
-    className="emotion-49"
+    className="emotion-51"
   >
     <button
-      className="chakra-button emotion-46"
+      className="chakra-button emotion-48"
       disabled={false}
       type="submit"
     >
@@ -5298,10 +5368,15 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-17 {
+  margin-top: 3px;
+}
+
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5445,15 +5520,20 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        a fancier description
+        <p
+          className="chakra-text emotion-16"
+          id="root__description"
+        >
+          a fancier description
+        </p>
       </p>
     </div>
   </div>
   <div
-    className="emotion-16"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-17"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >
@@ -5526,11 +5606,11 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   margin-top: 2px;
 }
 
-.emotion-24 {
+.emotion-26 {
   margin-top: 3px;
 }
 
-.emotion-25 {
+.emotion-27 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5652,7 +5732,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_0__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -5711,7 +5796,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      a fancier item description
+                      <p
+                        className="chakra-text emotion-5"
+                        id="root_1__description"
+                      >
+                        a fancier item description
+                      </p>
                     </p>
                   </div>
                 </div>
@@ -5723,10 +5813,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     </div>
   </div>
   <div
-    className="emotion-24"
+    className="emotion-26"
   >
     <button
-      className="chakra-button emotion-25"
+      className="chakra-button emotion-27"
       disabled={false}
       type="submit"
     >
@@ -6554,10 +6644,15 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-17 {
+  margin-top: 3px;
+}
+
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -6701,15 +6796,20 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        a test description
+        <p
+          className="chakra-text emotion-16"
+          id="root__description"
+        >
+          a test description
+        </p>
       </p>
     </div>
   </div>
   <div
-    className="emotion-16"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-17"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >

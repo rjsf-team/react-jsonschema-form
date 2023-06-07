@@ -1278,7 +1278,14 @@ exports[`with title and description array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a test item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a test item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -1490,7 +1497,14 @@ exports[`with title and description array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a test item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a test item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -1791,7 +1805,14 @@ exports[`with title and description checkboxes 1`] = `
       <small
         className="text-muted form-text"
       >
-        a test description
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            a test description
+          </div>
+        </div>
       </small>
     </div>
   </div>
@@ -1892,7 +1913,14 @@ exports[`with title and description fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a test item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a test item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -1942,7 +1970,14 @@ exports[`with title and description fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a test item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a test item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -2172,7 +2207,14 @@ exports[`with title and description from both array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -2384,7 +2426,14 @@ exports[`with title and description from both array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -2685,7 +2734,14 @@ exports[`with title and description from both checkboxes 1`] = `
       <small
         className="text-muted form-text"
       >
-        a fancier description
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
       </small>
     </div>
   </div>
@@ -2786,7 +2842,14 @@ exports[`with title and description from both fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -2836,7 +2899,14 @@ exports[`with title and description from both fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -3066,7 +3136,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -3278,7 +3355,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -3579,7 +3663,14 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       <small
         className="text-muted form-text"
       >
-        a fancier description
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            a fancier description
+          </div>
+        </div>
       </small>
     </div>
   </div>
@@ -3680,7 +3771,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_0__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -3730,7 +3828,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         <small
                           className="text-muted form-text"
                         >
-                          a fancier item description
+                          <div>
+                            <div
+                              className="mb-3"
+                              id="root_1__description"
+                            >
+                              a fancier item description
+                            </div>
+                          </div>
                         </small>
                       </div>
                     </div>
@@ -4401,7 +4506,14 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <small
         className="text-muted form-text"
       >
-        a test description
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            a test description
+          </div>
+        </div>
       </small>
     </div>
   </div>

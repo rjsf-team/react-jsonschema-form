@@ -43,5 +43,5 @@ export default {
     },
   },
   formData: ['react', 'jsonschema', 'form'],
-  ArrayFieldTemplate,
+  templates: { ArrayFieldTemplate },
 };

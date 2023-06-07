@@ -7,7 +7,7 @@ import times from 'lodash/times';
 
 import getFirstMatchingOption from './getFirstMatchingOption';
 import retrieveSchema from './retrieveSchema';
-import { ONE_OF_KEY, REF_KEY } from '../constants';
+import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID } from '../constants';
 import guessType from '../guessType';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 
@@ -16,6 +16,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '..
  */
 export const JUNK_OPTION: StrictRJSFSchema = {
   type: 'object',
+  $id: JUNK_OPTION_ID,
   properties: {
     __not_really_there__: {
       type: 'number',
@@ -151,6 +152,7 @@ export default function getClosestMatchingOption<
     times(options.length, (i) => allValidIndexes.push(i));
   }
   type BestType = { bestIndex: number; bestScore: number };
+  const scoreCount = new Set<number>();
   // Score all the options in the list of valid indexes and return the index with the best score
   const { bestIndex }: BestType = allValidIndexes.reduce(
     (scoreData: BestType, index: number) => {
@@ -160,6 +162,7 @@ export default function getClosestMatchingOption<
         option = retrieveSchema<T, S, F>(validator, option, rootSchema, formData);
       }
       const score = calculateIndexScore(validator, rootSchema, option, formData);
+      scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };
       }
@@ -167,5 +170,10 @@ export default function getClosestMatchingOption<
     },
     { bestIndex: selectedOption, bestScore: 0 }
   );
+  // if all scores are the same go with selectedOption
+  if (scoreCount.size === 1 && selectedOption >= 0) {
+    return selectedOption;
+  }
+
   return bestIndex;
 }

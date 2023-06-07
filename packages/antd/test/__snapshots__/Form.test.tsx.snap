@@ -192,7 +192,6 @@ exports[`single fields checkbox field 1`] = `
               >
                 <span
                   className="ant-checkbox"
-                  style={Object {}}
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
@@ -205,9 +204,6 @@ exports[`single fields checkbox field 1`] = `
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onKeyPress={[Function]}
-                    onKeyUp={[Function]}
                     type="checkbox"
                   />
                   <span
@@ -268,7 +264,6 @@ exports[`single fields checkbox field with label 1`] = `
               >
                 <span
                   className="ant-checkbox"
-                  style={Object {}}
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
@@ -281,9 +276,6 @@ exports[`single fields checkbox field with label 1`] = `
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onKeyPress={[Function]}
-                    onKeyUp={[Function]}
                     type="checkbox"
                   />
                   <span
@@ -353,7 +345,6 @@ exports[`single fields checkboxes field 1`] = `
                   >
                     <span
                       className="ant-checkbox"
-                      style={Object {}}
                     >
                       <input
                         autoFocus={false}
@@ -362,12 +353,7 @@ exports[`single fields checkboxes field 1`] = `
                         disabled={false}
                         id="root-0"
                         name="root"
-                        onBlur={[Function]}
                         onChange={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        onKeyPress={[Function]}
-                        onKeyUp={[Function]}
                         type="checkbox"
                         value="0"
                       />
@@ -387,7 +373,6 @@ exports[`single fields checkboxes field 1`] = `
                   >
                     <span
                       className="ant-checkbox"
-                      style={Object {}}
                     >
                       <input
                         autoFocus={false}
@@ -396,12 +381,7 @@ exports[`single fields checkboxes field 1`] = `
                         disabled={false}
                         id="root-1"
                         name="root"
-                        onBlur={[Function]}
                         onChange={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        onKeyPress={[Function]}
-                        onKeyUp={[Function]}
                         type="checkbox"
                         value="1"
                       />
@@ -421,7 +401,6 @@ exports[`single fields checkboxes field 1`] = `
                   >
                     <span
                       className="ant-checkbox"
-                      style={Object {}}
                     >
                       <input
                         autoFocus={false}
@@ -430,12 +409,7 @@ exports[`single fields checkboxes field 1`] = `
                         disabled={false}
                         id="root-2"
                         name="root"
-                        onBlur={[Function]}
                         onChange={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        onKeyPress={[Function]}
-                        onKeyUp={[Function]}
                         type="checkbox"
                         value="2"
                       />
@@ -455,7 +429,6 @@ exports[`single fields checkboxes field 1`] = `
                   >
                     <span
                       className="ant-checkbox"
-                      style={Object {}}
                     >
                       <input
                         autoFocus={false}
@@ -464,12 +437,7 @@ exports[`single fields checkboxes field 1`] = `
                         disabled={false}
                         id="root-3"
                         name="root"
-                        onBlur={[Function]}
                         onChange={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        onKeyPress={[Function]}
-                        onKeyUp={[Function]}
                         type="checkbox"
                         value="3"
                       />
@@ -1932,7 +1900,6 @@ exports[`single fields radio field 1`] = `
                 >
                   <span
                     className="ant-radio"
-                    style={Object {}}
                   >
                     <input
                       autoFocus={false}
@@ -1941,12 +1908,7 @@ exports[`single fields radio field 1`] = `
                       disabled={false}
                       id="root-0"
                       name="root"
-                      onBlur={[Function]}
                       onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      onKeyPress={[Function]}
-                      onKeyUp={[Function]}
                       type="radio"
                       value="0"
                     />
@@ -1963,7 +1925,6 @@ exports[`single fields radio field 1`] = `
                 >
                   <span
                     className="ant-radio"
-                    style={Object {}}
                   >
                     <input
                       autoFocus={false}
@@ -1972,12 +1933,7 @@ exports[`single fields radio field 1`] = `
                       disabled={false}
                       id="root-1"
                       name="root"
-                      onBlur={[Function]}
                       onChange={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      onKeyPress={[Function]}
-                      onKeyUp={[Function]}
                       type="radio"
                       value="1"
                     />

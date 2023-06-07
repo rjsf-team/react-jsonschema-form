@@ -1251,7 +1251,12 @@ exports[`object fields with title and description from both object 1`] = `
           <span
             className="css-140"
           >
-            a fancier item A description
+            <span
+              className="css-140"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </span>
           </span>
         </div>
         <div
@@ -1304,7 +1309,12 @@ exports[`object fields with title and description from both object 1`] = `
           <span
             className="css-140"
           >
-            a fancier item B description
+            <span
+              className="css-140"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </span>
           </span>
         </div>
       </div>
@@ -1687,7 +1697,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           <span
             className="css-140"
           >
-            a fancier item A description
+            <span
+              className="css-140"
+              id="root_a__description"
+            >
+              a fancier item A description
+            </span>
           </span>
         </div>
         <div
@@ -1740,7 +1755,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           <span
             className="css-140"
           >
-            a fancier item B description
+            <span
+              className="css-140"
+              id="root_b__description"
+            >
+              a fancier item B description
+            </span>
           </span>
         </div>
       </div>
@@ -2123,7 +2143,12 @@ exports[`object fields with title and description object 1`] = `
           <span
             className="css-140"
           >
-            A description
+            <span
+              className="css-140"
+              id="root_a__description"
+            >
+              A description
+            </span>
           </span>
         </div>
         <div
@@ -2176,7 +2201,12 @@ exports[`object fields with title and description object 1`] = `
           <span
             className="css-140"
           >
-            B description
+            <span
+              className="css-140"
+              id="root_b__description"
+            >
+              B description
+            </span>
           </span>
         </div>
       </div>

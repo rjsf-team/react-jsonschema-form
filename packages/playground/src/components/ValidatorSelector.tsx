@@ -11,6 +11,7 @@ interface ValidatorSelectorProps {
 export default function ValidatorSelector({ validator, validators, select }: ValidatorSelectorProps) {
   const schema: RJSFSchema = {
     type: 'string',
+    title: 'Validator',
     enum: Object.keys(validators),
   };
 

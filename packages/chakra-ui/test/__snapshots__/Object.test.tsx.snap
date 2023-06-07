@@ -1387,11 +1387,11 @@ exports[`object fields with title and description from both object 1`] = `
   margin-top: 2px;
 }
 
-.emotion-18 {
+.emotion-20 {
   margin-top: 3px;
 }
 
-.emotion-19 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1496,7 +1496,12 @@ exports[`object fields with title and description from both object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                a fancier item A description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_a__description"
+                >
+                  a fancier item A description
+                </p>
               </p>
             </div>
           </div>
@@ -1543,7 +1548,12 @@ exports[`object fields with title and description from both object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                a fancier item B description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_b__description"
+                >
+                  a fancier item B description
+                </p>
               </p>
             </div>
           </div>
@@ -1552,10 +1562,10 @@ exports[`object fields with title and description from both object 1`] = `
     </div>
   </div>
   <div
-    className="emotion-18"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-19"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -1915,11 +1925,11 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   margin-top: 2px;
 }
 
-.emotion-18 {
+.emotion-20 {
   margin-top: 3px;
 }
 
-.emotion-19 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2024,7 +2034,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                a fancier item A description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_a__description"
+                >
+                  a fancier item A description
+                </p>
               </p>
             </div>
           </div>
@@ -2071,7 +2086,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                a fancier item B description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_b__description"
+                >
+                  a fancier item B description
+                </p>
               </p>
             </div>
           </div>
@@ -2080,10 +2100,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     </div>
   </div>
   <div
-    className="emotion-18"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-19"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >
@@ -2443,11 +2463,11 @@ exports[`object fields with title and description object 1`] = `
   margin-top: 2px;
 }
 
-.emotion-18 {
+.emotion-20 {
   margin-top: 3px;
 }
 
-.emotion-19 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2552,7 +2572,12 @@ exports[`object fields with title and description object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                A description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_a__description"
+                >
+                  A description
+                </p>
               </p>
             </div>
           </div>
@@ -2599,7 +2624,12 @@ exports[`object fields with title and description object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                B description
+                <p
+                  className="chakra-text emotion-4"
+                  id="root_b__description"
+                >
+                  B description
+                </p>
               </p>
             </div>
           </div>
@@ -2608,10 +2638,10 @@ exports[`object fields with title and description object 1`] = `
     </div>
   </div>
   <div
-    className="emotion-18"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-19"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >

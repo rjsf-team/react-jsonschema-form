@@ -478,7 +478,12 @@ exports[`single fields field with description 1`] = `
           <span
             className="css-229"
           >
-            some description
+            <span
+              className="css-229"
+              id="root_my-field__description"
+            >
+              some description
+            </span>
           </span>
         </div>
       </div>
@@ -592,7 +597,12 @@ exports[`single fields field with description in uiSchema 1`] = `
           <span
             className="css-229"
           >
-            some other description
+            <span
+              className="css-229"
+              id="root_my-field__description"
+            >
+              some other description
+            </span>
           </span>
         </div>
       </div>
@@ -1420,7 +1430,7 @@ exports[`single fields help and error display 1`] = `
       >
         <i
           aria-hidden={true}
-          className="icon-240"
+          className="icon-241"
           data-icon-name="ErrorBadge"
         >
           
@@ -1453,7 +1463,7 @@ exports[`single fields help and error display 1`] = `
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-241"
+          className="ms-TextField-fieldGroup fieldGroup-242"
         >
           <input
             aria-describedby="TextFieldDescription239"

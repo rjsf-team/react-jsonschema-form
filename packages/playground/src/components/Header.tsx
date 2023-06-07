@@ -26,29 +26,32 @@ const HeaderButton: React.FC<
 function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: React.MutableRefObject<any> }) {
   return (
     <>
-      <HeaderButton
-        title='Click me to submit the form programmatically.'
-        onClick={() => playGroundFormRef.current.submit()}
-      >
-        Prog. Submit
-      </HeaderButton>{' '}
-      <HeaderButton
-        title='Click me to validate the form programmatically.'
-        onClick={() => playGroundFormRef.current.validateForm()}
-      >
-        Prog. Validate
-      </HeaderButton>{' '}
-      <HeaderButton
-        title='Click me to reset the form programmatically.'
-        onClick={() => playGroundFormRef.current.reset()}
-      >
-        Prog. Reset
-      </HeaderButton>
+      <label className='control-label'>Programmatic</label>
+      <div className='btn-group'>
+        <HeaderButton
+          title='Click me to submit the form programmatically.'
+          onClick={() => playGroundFormRef.current.submit()}
+        >
+          Submit
+        </HeaderButton>
+        <HeaderButton
+          title='Click me to validate the form programmatically.'
+          onClick={() => playGroundFormRef.current.validateForm()}
+        >
+          Validate
+        </HeaderButton>
+        <HeaderButton
+          title='Click me to reset the form programmatically.'
+          onClick={() => playGroundFormRef.current.reset()}
+        >
+          Reset
+        </HeaderButton>
+      </div>
     </>
   );
 }
 
-const liveSettingsSchema: RJSFSchema = {
+const liveSettingsBooleanSchema: RJSFSchema = {
   type: 'object',
   properties: {
     liveValidate: { type: 'boolean', title: 'Live validation' },
@@ -59,6 +62,12 @@ const liveSettingsSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+  },
+};
+
+const liveSettingsSelectSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
     showErrorList: {
       type: 'string',
       default: 'top',
@@ -86,12 +95,36 @@ const liveSettingsSchema: RJSFSchema = {
             },
           ],
         },
+        emptyObjectFields: {
+          type: 'string',
+          title: 'Object fields default behavior',
+          default: 'populateAllDefaults',
+          oneOf: [
+            {
+              type: 'string',
+              title:
+                'Assign value to formData when default is primitive, non-empty object field, or is required (legacy behavior)',
+              enum: ['populateAllDefaults'],
+            },
+            {
+              type: 'string',
+              title:
+                'Assign value to formData when default is an object and parent is required, or default is primitive and is required',
+              enum: ['populateRequiredDefaults'],
+            },
+            {
+              type: 'string',
+              title: 'Does not set defaults',
+              enum: ['skipDefaults'],
+            },
+          ],
+        },
       },
     },
   },
 };
 
-const liveSettingsUiSchema: UiSchema = {
+const liveSettingsSelectUiSchema: UiSchema = {
   experimental_defaultFormStateBehavior: {
     'ui:options': {
       label: false,
@@ -164,7 +197,7 @@ export default function Header({
 
   const handleSetLiveSettings = useCallback(
     ({ formData }: IChangeEvent) => {
-      setLiveSettings(formData);
+      setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...formData }));
     },
     [setLiveSettings]
   );
@@ -196,24 +229,35 @@ export default function Header({
     <div className='page-header'>
       <h1>react-jsonschema-form</h1>
       <div className='row'>
-        <div className='col-sm-6'>
+        <div className='col-sm-4'>
           <Selector onSelected={load} />
         </div>
         <div className='col-sm-2'>
           <Form
             idPrefix='rjsf_options'
-            schema={liveSettingsSchema}
+            schema={liveSettingsBooleanSchema}
             formData={liveSettings}
             validator={localValidator}
             onChange={handleSetLiveSettings}
-            uiSchema={liveSettingsUiSchema}
+          >
+            <div />
+          </Form>
+        </div>
+        <div className='col-sm-2'>
+          <Form
+            idPrefix='rjsf_options'
+            schema={liveSettingsSelectSchema}
+            formData={liveSettings}
+            validator={localValidator}
+            onChange={handleSetLiveSettings}
+            uiSchema={liveSettingsSelectUiSchema}
           >
             <div />
           </Form>
         </div>
         <div className='col-sm-2'>
           <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
-          {themes[theme] && themes[theme].subthemes && subtheme && (
+          {themes[theme] && themes[theme].subthemes && (
             <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
           )}
           <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />

@@ -6,6 +6,7 @@ import {
   RJSFSchema,
   RJSFValidationError,
   UiSchema,
+  JUNK_OPTION_ID,
 } from '@rjsf/utils';
 
 import AJV8PrecompiledValidator from '../src/precompiledValidator';
@@ -62,6 +63,16 @@ describe('AJV8PrecompiledValidator', () => {
         };
 
         expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
+      });
+      it('should return false if junk option id is passed', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+          $id: JUNK_OPTION_ID,
+        };
+        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;

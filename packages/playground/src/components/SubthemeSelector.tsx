@@ -16,7 +16,7 @@ export interface SubthemesType {
 }
 
 interface SubthemeSelectorProps {
-  subtheme: string;
+  subtheme: string | null;
   subthemes: SubthemesType;
   select: (subthemeName: string, subtheme: SubthemeType) => void;
 }
@@ -25,6 +25,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
   const schema: RJSFSchema = useMemo(
     () => ({
       type: 'string',
+      title: 'Subtheme',
       enum: Object.keys(subthemes),
     }),
     [subthemes]

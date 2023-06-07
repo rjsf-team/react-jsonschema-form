@@ -970,7 +970,14 @@ exports[`object fields with title and description from both object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  a fancier item A description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -1020,7 +1027,14 @@ exports[`object fields with title and description from both object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  a fancier item B description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -1326,7 +1340,14 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  a fancier item A description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -1376,7 +1397,14 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  a fancier item B description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -1682,7 +1710,14 @@ exports[`object fields with title and description object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  A description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      A description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>
@@ -1732,7 +1767,14 @@ exports[`object fields with title and description object 1`] = `
                 <small
                   className="text-muted form-text"
                 >
-                  B description
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      B description
+                    </div>
+                  </div>
                 </small>
               </div>
             </div>

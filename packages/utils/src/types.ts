@@ -31,11 +31,13 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type FormContextType = GenericObjectType;
 
-/** Experimental features to specify different form state behavior. Currently, this only affects the
- * handling of optional array fields where `minItems` is set.
+/** Experimental features to specify different form state behavior. Currently, this affects the
+ * handling of optional array fields where `minItems` is set and handling of setting defaults based on the
+ * value of `emptyObjectFields`
  */
 export type Experimental_DefaultFormStateBehavior = {
   arrayMinItems?: 'populate' | 'requiredOnly';
+  emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults';
 };
 
 /** The interface representing a Date object that contains an optional time */
@@ -963,7 +965,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [experimental_defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(

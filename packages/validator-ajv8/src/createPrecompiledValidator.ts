@@ -18,6 +18,6 @@ export default function createPrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validateFns: ValidatorFunctions<T>, rootSchema: S, localizer?: Localizer): ValidatorType<T, S, F> {
+>(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer): ValidatorType<T, S, F> {
   return new AJV8PrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer);
 }

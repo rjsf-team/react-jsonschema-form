@@ -285,6 +285,11 @@ export const ALL_OPTIONS: EnumOptionsType[] = [
   { value: 'boo', label: 'Boo' },
 ];
 
+export const FALSY_OPTIONS: EnumOptionsType[] = [
+  { value: '', label: 'Empty String' },
+  { value: 0, label: 'Zero' },
+];
+
 export const RECURSIVE_REF_ALLOF: RJSFSchema = {
   definitions: {
     '@enum': {
@@ -784,4 +789,68 @@ export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = {
       },
     },
   },
+};
+
+export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = {
+  type: 'object',
+  properties: {
+    list: {
+      type: 'array',
+      items: SCHEMA_WITH_SINGLE_CONDITION,
+    },
+  },
+};
+
+export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = {
+  type: 'object',
+  properties: {
+    animal: {
+      enum: ['Cat', 'Fish'],
+    },
+  },
+  allOf: [
+    {
+      if: {
+        properties: {
+          animal: {
+            const: 'Cat',
+          },
+        },
+      },
+      then: {
+        properties: {
+          food: {
+            type: 'string',
+            enum: ['meat', 'grass', 'fish'],
+          },
+        },
+        required: ['food'],
+      },
+    },
+    {
+      if: {
+        properties: {
+          animal: {
+            const: 'Fish',
+          },
+        },
+      },
+      then: {
+        properties: {
+          food: {
+            type: 'string',
+            enum: ['insect', 'worms'],
+          },
+          water: {
+            type: 'string',
+            enum: ['lake', 'sea'],
+          },
+        },
+        required: ['food', 'water'],
+      },
+    },
+    {
+      required: ['animal'],
+    },
+  ],
 };

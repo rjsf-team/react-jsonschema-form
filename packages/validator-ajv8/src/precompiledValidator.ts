@@ -8,12 +8,14 @@ import {
   FormContextType,
   hashForSchema,
   ID_KEY,
+  JUNK_OPTION_ID,
   RJSFSchema,
   StrictRJSFSchema,
   toErrorList,
   UiSchema,
   ValidationData,
   ValidatorType,
+  retrieveSchema,
 } from '@rjsf/utils';
 
 import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
@@ -34,17 +36,23 @@ export default class AJV8PrecompiledValidator<
    */
   readonly rootSchema: S;
 
+  /** The root schema resolved top level refs
+   *
+   * @private
+   */
+  readonly resolvedRootSchema: S;
+
   /** The `ValidatorFunctions` map used to construct this validator
    *
    * @private
    */
-  readonly validateFns: ValidatorFunctions<T>;
+  readonly validateFns: ValidatorFunctions;
 
   /** The main validator function associated with the base schema in the `precompiledValidator`
    *
    * @private
    */
-  readonly mainValidator: CompiledValidateFunction<T>;
+  readonly mainValidator: CompiledValidateFunction;
 
   /** The Localizer function to use for localizing Ajv errors
    *
@@ -59,11 +67,12 @@ export default class AJV8PrecompiledValidator<
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    * @throws - Error when the base schema of the precompiled validator does not have a matching validator function
    */
-  constructor(validateFns: ValidatorFunctions<T>, rootSchema: S, localizer?: Localizer) {
+  constructor(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer) {
     this.rootSchema = rootSchema;
     this.validateFns = validateFns;
     this.localizer = localizer;
     this.mainValidator = this.getValidator(rootSchema);
+    this.resolvedRootSchema = retrieveSchema(this, rootSchema, rootSchema);
   }
 
   /** Returns the precompiled validator associated with the given `schema` from the map of precompiled validator
@@ -100,7 +109,7 @@ export default class AJV8PrecompiledValidator<
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    if (!isEqual(schema, this.rootSchema)) {
+    if (!isEqual(schema, this.resolvedRootSchema)) {
       throw new Error(
         'The schema associated with the precompiled schema differs from the schema provided for validation'
       );
@@ -155,6 +164,9 @@ export default class AJV8PrecompiledValidator<
       throw new Error(
         'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
       );
+    }
+    if (get(schema, ID_KEY) === JUNK_OPTION_ID) {
+      return false;
     }
     const validator = this.getValidator(schema);
     return validator(formData);

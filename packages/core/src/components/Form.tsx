@@ -183,7 +183,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    */
   translateString?: Registry['translateString'];
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
-   * Currently only affecting minItems on array fields */
+   * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
+   * `emptyObjectFields`
+   */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
   // Private
   /**
@@ -708,7 +710,7 @@ export default class Form<
       // if not an exact match, try finding an input starting with the element id (like radio buttons or checkboxes)
       field = this.formElement.current.querySelector(`input[id^=${elementId}`);
     }
-    if (field.length) {
+    if (field && field.length) {
       // If we got a list with length > 0
       field = field[0];
     }

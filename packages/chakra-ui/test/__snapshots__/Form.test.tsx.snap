@@ -697,10 +697,15 @@ exports[`single fields field with description 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-9 {
+  margin-top: 3px;
+}
+
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -786,7 +791,12 @@ exports[`single fields field with description 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                some description
+                <p
+                  className="chakra-text emotion-8"
+                  id="root_my-field__description"
+                >
+                  some description
+                </p>
               </p>
             </div>
           </div>
@@ -795,10 +805,10 @@ exports[`single fields field with description 1`] = `
     </div>
   </div>
   <div
-    className="emotion-8"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-9"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >
@@ -829,10 +839,15 @@ exports[`single fields field with description in uiSchema 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .emotion-9 {
+  margin-top: 3px;
+}
+
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -918,7 +933,12 @@ exports[`single fields field with description in uiSchema 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                some other description
+                <p
+                  className="chakra-text emotion-8"
+                  id="root_my-field__description"
+                >
+                  some other description
+                </p>
               </p>
             </div>
           </div>
@@ -927,10 +947,10 @@ exports[`single fields field with description in uiSchema 1`] = `
     </div>
   </div>
   <div
-    className="emotion-8"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-9"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >

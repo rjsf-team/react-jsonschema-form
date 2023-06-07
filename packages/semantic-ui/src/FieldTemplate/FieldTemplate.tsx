@@ -3,7 +3,6 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  descriptionId,
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
@@ -30,6 +29,7 @@ export default function FieldTemplate<
     errors,
     help,
     hidden,
+    description,
     rawDescription,
     registry,
     schema,
@@ -41,11 +41,6 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions
-  );
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
@@ -70,15 +65,7 @@ export default function FieldTemplate<
           {children}
           {displayLabel && rawDescription && (
             <MaybeWrap wrap={wrapLabel} className='sui-field-label'>
-              {rawDescription && (
-                <DescriptionFieldTemplate
-                  id={descriptionId<T>(id)}
-                  description={rawDescription}
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  registry={registry}
-                />
-              )}
+              {description}
             </MaybeWrap>
           )}
           {help}

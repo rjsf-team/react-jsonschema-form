@@ -65,10 +65,11 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
   return {} as S;
 }
 
-/** Either add `computedDefault` at `key` into `obj` or not add it based on its value and the value of
- * `includeUndefinedValues`. Generally undefined `computedDefault` values are added only when `includeUndefinedValues`
- * is either true or "excludeObjectChildren". If `includeUndefinedValues` is false, then non-undefined and
- * non-empty-object values will be added.
+/** Either add `computedDefault` at `key` into `obj` or not add it based on its value, the value of
+ * `includeUndefinedValues`, the value of `emptyObjectFields` and if its parent field is required. Generally undefined
+ * `computedDefault` values are added only when `includeUndefinedValues` is either true/"excludeObjectChildren". If `
+ * includeUndefinedValues` is false and `emptyObjectFields` is not "skipDefaults", then non-undefined and non-empty-object
+ * values will be added based on certain conditions.
  *
  * @param obj - The object into which the computed default may be added
  * @param key - The key into the object at which the computed default may be added
@@ -78,25 +79,43 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
  *          false when computing defaults for any nested object properties. If "allowEmptyObject", prevents undefined
  *          values in this object while allow the object itself to be empty and passing `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
+ * @param isParentRequired - The optional boolean that indicates whether the parent field is required
  * @param requiredFields - The list of fields that are required
+ * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override
+ *        default form state behavior
  */
 function maybeAddDefaultToObject<T = any>(
   obj: GenericObjectType,
   key: string,
   computedDefault: T | T[] | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
-  requiredFields: string[] = []
+  isParentRequired: boolean,
+  requiredFields: string[] = [],
+  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {}
 ) {
+  const { emptyObjectFields = 'populateAllDefaults' } = experimental_defaultFormStateBehavior;
   if (includeUndefinedValues) {
     obj[key] = computedDefault;
-  } else if (isObject(computedDefault)) {
-    // Store computedDefault if it's a non-empty object (e.g. not {})
-    if (!isEmpty(computedDefault) || requiredFields.includes(key)) {
+  } else if (emptyObjectFields !== 'skipDefaults') {
+    if (isObject(computedDefault)) {
+      // Store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+      // Condition 1: If computedDefault is not empty or if the key is a required field
+      // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
+      if (
+        (!isEmpty(computedDefault) || requiredFields.includes(key)) &&
+        (isParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
+      ) {
+        obj[key] = computedDefault;
+      }
+    } else if (
+      // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
+      // Condition 1: computedDefault is not undefined
+      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or if the key is a required field
+      computedDefault !== undefined &&
+      (emptyObjectFields === 'populateAllDefaults' || requiredFields.includes(key))
+    ) {
       obj[key] = computedDefault;
     }
-  } else if (computedDefault !== undefined) {
-    // Store computedDefault if it's a defined primitive (e.g. true)
-    obj[key] = computedDefault;
   }
 }
 
@@ -238,7 +257,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           rawFormData: get(formData, [key]),
           required: schema.required?.includes(key),
         });
-        maybeAddDefaultToObject<T>(acc, key, computedDefault, includeUndefinedValues, schema.required);
+        maybeAddDefaultToObject<T>(
+          acc,
+          key,
+          computedDefault,
+          includeUndefinedValues,
+          required,
+          schema.required,
+          experimental_defaultFormStateBehavior
+        );
         return acc;
       }, {}) as T;
       if (schema.additionalProperties) {
@@ -250,10 +277,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             .filter((key) => !schema.properties || !schema.properties[key])
             .forEach((key) => keys.add(key));
         }
+        let formDataRequired: string[];
         if (isObject(formData)) {
+          formDataRequired = [];
           Object.keys(formData as GenericObjectType)
             .filter((key) => !schema.properties || !schema.properties[key])
-            .forEach((key) => keys.add(key));
+            .forEach((key) => {
+              keys.add(key);
+              formDataRequired.push(key);
+            });
         }
         keys.forEach((key) => {
           const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
@@ -265,7 +297,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             rawFormData: get(formData, [key]),
             required: schema.required?.includes(key),
           });
-          maybeAddDefaultToObject<T>(objectDefaults as GenericObjectType, key, computedDefault, includeUndefinedValues);
+          // Since these are additional properties we don’t need to add the `experimental_defaultFormStateBehavior` prop
+          maybeAddDefaultToObject<T>(
+            objectDefaults as GenericObjectType,
+            key,
+            computedDefault,
+            includeUndefinedValues,
+            required,
+            formDataRequired
+          );
         });
       }
       return objectDefaults;

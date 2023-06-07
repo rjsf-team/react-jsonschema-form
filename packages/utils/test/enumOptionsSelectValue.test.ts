@@ -1,5 +1,5 @@
 import { enumOptionsSelectValue, EnumOptionsType } from '../src';
-import { ALL_OPTIONS } from './testUtils/testData';
+import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData';
 
 describe('enumOptionsSelectValue()', () => {
   let selected: EnumOptionsType['value'][];
@@ -32,5 +32,14 @@ describe('enumOptionsSelectValue()', () => {
   });
   it('returns the selected array unchanged when options are missing', () => {
     expect(enumOptionsSelectValue(0, selected)).toBe(selected);
+  });
+  it('handles falsy values', () => {
+    selected = [];
+    const expected: any[] = [];
+    FALSY_OPTIONS.forEach((option, index) => {
+      expected.push(option.value);
+      selected = enumOptionsSelectValue(index, selected, FALSY_OPTIONS);
+      expect(selected).toStrictEqual(expected);
+    });
   });
 });

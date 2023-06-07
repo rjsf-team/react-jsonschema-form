@@ -9,7 +9,7 @@
  * Then add the two updated `superSchema.js` and `superSchemaOptions.js` files to your PR
  */
 
-const compileSchemaValidators = require('../../dist').compileSchemaValidators;
+const compileSchemaValidators = require('../../dist/compileSchemaValidators').default;
 const superSchema = require('./superSchema.json');
 
 // NOTE these are the same as the CUSTOM_OPTIONS in `testData.ts`, keep them in sync

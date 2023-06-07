@@ -653,4 +653,50 @@ describe('SchemaField', () => {
       expect(customMatches[0].textContent).to.contain(helpText);
     });
   });
+
+  describe('markdown', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const descText = 'Make things **bold** or *italic*. Embed snippets of `code`.';
+
+    it('should render description with markdown', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          foo: {
+            'ui:description': descText,
+            'ui:enableMarkdownInDescription': true,
+          },
+        },
+      });
+
+      const { innerHTML } = node.querySelector('form .form-group .form-group .field-description');
+
+      expect(innerHTML).to.contains('<strong>');
+      expect(innerHTML).to.contains('<em>');
+      expect(innerHTML).to.contains('<code>');
+    });
+
+    it('should render description without html tags', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          foo: {
+            'ui:description': descText,
+          },
+        },
+      });
+
+      const { innerHTML, textContent } = node.querySelector('form .form-group .form-group .field-description');
+
+      expect(innerHTML).to.not.contains('<strong>');
+      expect(innerHTML).to.not.contains('<em>');
+      expect(innerHTML).to.not.contains('<code>');
+      expect(textContent).to.contains(descText);
+    });
+  });
 });

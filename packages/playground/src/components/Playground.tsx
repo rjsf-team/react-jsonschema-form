@@ -1,15 +1,6 @@
 import { useCallback, useState, useRef, useEffect, ComponentType, FormEvent } from 'react';
 import { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
-import {
-  ErrorSchema,
-  ArrayFieldTemplateProps,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  RJSFValidationError,
-  TemplatesType,
-  UiSchema,
-  ValidatorType,
-} from '@rjsf/utils';
+import { ErrorSchema, RJSFSchema, RJSFValidationError, TemplatesType, UiSchema, ValidatorType } from '@rjsf/utils';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';
@@ -44,11 +35,10 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     readonly: false,
     omitExtraData: false,
     liveOmit: false,
-    experimental_defaultFormStateBehavior: { arrayMinItems: 'populate' },
+    experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
   });
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
-  const [ArrayFieldTemplate, setArrayFieldTemplate] = useState<ComponentType<ArrayFieldTemplateProps>>();
-  const [ObjectFieldTemplate, setObjectFieldTemplate] = useState<ComponentType<ObjectFieldTemplateProps>>();
+  const [templates, setTemplates] = useState<Partial<TemplatesType>>();
 
   const playGroundFormRef = useRef<any>(null);
 
@@ -65,7 +55,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const load = useCallback(
     (data: any) => {
       // Reset the ArrayFieldTemplate whenever you load new data
-      const { ArrayFieldTemplate, ObjectFieldTemplate, extraErrors, liveSettings } = data;
+      const { templates = {}, extraErrors, liveSettings } = data;
       // uiSchema is missing on some examples. Provide a default to
       // clear the field in all cases.
       const { schema, uiSchema = {}, formData, theme: dataTheme = theme } = data;
@@ -79,9 +69,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(formData);
       setExtraErrors(extraErrors);
       setTheme(dataTheme);
-      setArrayFieldTemplate(ArrayFieldTemplate);
-      setObjectFieldTemplate(ObjectFieldTemplate);
-      setLiveSettings(liveSettings);
+      setTemplates(templates);
       setShowForm(true);
       setLiveSettings(liveSettings);
     },
@@ -126,14 +114,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     console.log('submit event', event);
     window.alert('Form submitted');
   }, []);
-
-  const templates: Partial<TemplatesType> = {};
-  if (ArrayFieldTemplate) {
-    templates.ArrayFieldTemplate = ArrayFieldTemplate;
-  }
-  if (ObjectFieldTemplate) {
-    templates.ObjectFieldTemplate = ObjectFieldTemplate;
-  }
 
   return (
     <>

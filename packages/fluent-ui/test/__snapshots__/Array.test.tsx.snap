@@ -707,14 +707,14 @@ exports[`array fields empty errors array 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-177"
+                className="ms-Label root-178"
                 htmlFor="root_name"
                 id="TextFieldLabel81"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-178"
+                className="ms-TextField-fieldGroup fieldGroup-179"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
@@ -965,7 +965,7 @@ exports[`array fields has errors 1`] = `
       >
         <i
           aria-hidden={true}
-          className="icon-175"
+          className="icon-176"
           data-icon-name="ErrorBadge"
         >
           
@@ -1014,14 +1014,14 @@ exports[`array fields has errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-177"
+                className="ms-Label root-178"
                 htmlFor="root_name"
                 id="TextFieldLabel65"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-176"
+                className="ms-TextField-fieldGroup fieldGroup-177"
               >
                 <input
                   aria-describedby="TextFieldDescription64"
@@ -1156,14 +1156,14 @@ exports[`array fields no errors 1`] = `
               className="ms-TextField-wrapper"
             >
               <label
-                className="ms-Label root-177"
+                className="ms-Label root-178"
                 htmlFor="root_name"
                 id="TextFieldLabel73"
               >
                 name
               </label>
               <div
-                className="ms-TextField-fieldGroup fieldGroup-178"
+                className="ms-TextField-fieldGroup fieldGroup-179"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
@@ -1244,13 +1244,13 @@ exports[`with title and description array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a test description
@@ -1360,13 +1360,13 @@ exports[`with title and description array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a test description
@@ -1399,14 +1399,14 @@ exports[`with title and description array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel111"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -1431,9 +1431,14 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a test item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -1595,14 +1600,14 @@ exports[`with title and description array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel128"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -1627,9 +1632,14 @@ exports[`with title and description array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a test item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -1871,7 +1881,7 @@ exports[`with title and description checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-182"
+        className="ms-Label ms-Dropdown-label root-183"
         id="root-label"
       >
         Test field
@@ -1916,9 +1926,14 @@ exports[`with title and description checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-180"
+      className="css-181"
     >
-      a test description
+      <span
+        className="css-181"
+        id="root__description"
+      >
+        a test description
+      </span>
     </span>
   </div>
   <div>
@@ -1973,13 +1988,13 @@ exports[`with title and description fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       Test field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a test description
@@ -2012,14 +2027,14 @@ exports[`with title and description fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel95"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -2044,9 +2059,14 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a test item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -2081,14 +2101,14 @@ exports[`with title and description fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel100"
                   >
                     Test item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -2114,9 +2134,14 @@ exports[`with title and description fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a test item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a test item description
+                </span>
               </span>
             </div>
           </div>
@@ -2176,13 +2201,13 @@ exports[`with title and description from both array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -2292,13 +2317,13 @@ exports[`with title and description from both array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -2331,14 +2356,14 @@ exports[`with title and description from both array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel235"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -2363,9 +2388,14 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -2527,14 +2557,14 @@ exports[`with title and description from both array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel252"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -2559,9 +2589,14 @@ exports[`with title and description from both array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -2803,7 +2838,7 @@ exports[`with title and description from both checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-182"
+        className="ms-Label ms-Dropdown-label root-183"
         id="root-label"
       >
         My Field
@@ -2848,9 +2883,14 @@ exports[`with title and description from both checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-180"
+      className="css-181"
     >
-      a fancier description
+      <span
+        className="css-181"
+        id="root__description"
+      >
+        a fancier description
+      </span>
     </span>
   </div>
   <div>
@@ -2905,13 +2945,13 @@ exports[`with title and description from both fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -2944,14 +2984,14 @@ exports[`with title and description from both fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel219"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -2976,9 +3016,14 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3013,14 +3058,14 @@ exports[`with title and description from both fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel224"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -3046,9 +3091,14 @@ exports[`with title and description from both fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3108,13 +3158,13 @@ exports[`with title and description from uiSchema array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -3224,13 +3274,13 @@ exports[`with title and description from uiSchema array icons 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -3263,14 +3313,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel173"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -3295,9 +3345,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3459,14 +3514,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel190"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -3491,9 +3546,14 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3735,7 +3795,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-182"
+        className="ms-Label ms-Dropdown-label root-183"
         id="root-label"
       >
         My Field
@@ -3780,9 +3840,14 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-180"
+      className="css-181"
     >
-      a fancier description
+      <span
+        className="css-181"
+        id="root__description"
+      >
+        a fancier description
+      </span>
     </span>
   </div>
   <div>
@@ -3837,13 +3902,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     }
   >
     <label
-      className="ms-Label root-179"
+      className="ms-Label root-180"
       id="root__title"
     >
       My Field
     </label>
     <span
-      className="css-180"
+      className="css-181"
       id="root__description"
     >
       a fancier description
@@ -3876,14 +3941,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_0"
                     id="TextFieldLabel157"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_0__error root_0__description root_0__help"
@@ -3908,9 +3973,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_0__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -3945,14 +4015,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="ms-TextField-wrapper"
                 >
                   <label
-                    className="ms-Label root-181"
+                    className="ms-Label root-182"
                     htmlFor="root_1"
                     id="TextFieldLabel162"
                   >
                     My Item
                   </label>
                   <div
-                    className="ms-TextField-fieldGroup fieldGroup-178"
+                    className="ms-TextField-fieldGroup fieldGroup-179"
                   >
                     <input
                       aria-describedby="root_1__error root_1__description root_1__help"
@@ -3978,9 +4048,14 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 </div>
               </div>
               <span
-                className="css-180"
+                className="css-181"
               >
-                a fancier item description
+                <span
+                  className="css-181"
+                  id="root_1__description"
+                >
+                  a fancier item description
+                </span>
               </span>
             </div>
           </div>
@@ -4617,7 +4692,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       className="ms-Dropdown-container"
     >
       <label
-        className="ms-Label ms-Dropdown-label root-182"
+        className="ms-Label ms-Dropdown-label root-183"
         id="root-label"
       >
         Test field
@@ -4662,9 +4737,14 @@ exports[`with title and description with global label off checkboxes 1`] = `
       </div>
     </div>
     <span
-      className="css-180"
+      className="css-181"
     >
-      a test description
+      <span
+        className="css-181"
+        id="root__description"
+      >
+        a test description
+      </span>
     </span>
   </div>
   <div>

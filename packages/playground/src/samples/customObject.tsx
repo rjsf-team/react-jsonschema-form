@@ -1,29 +1,48 @@
-const ObjectFieldTemplate: React.FC<{
-  TitleField: React.FC<{ title: string }>;
-  title: string;
-  properties: any[];
-  description: string;
-}> = ({ TitleField, properties, title, description }) => {
+import {
+  getTemplate,
+  getUiOptions,
+  titleId,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+  ObjectFieldTemplateProps,
+} from '@rjsf/utils';
+
+function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: ObjectFieldTemplateProps<T, S, F>
+) {
+  const { registry, properties, title, description, uiSchema, required, schema, idSchema } = props;
+  const options = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
   return (
     <div>
-      <TitleField title={title} />
+      {title && (
+        <TitleFieldTemplate
+          id={titleId<T>(idSchema)}
+          title={title}
+          required={required}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}{' '}
+      {description}
       <div className='row'>
         {properties.map((prop) => (
-          <div className='col-lg-2 col-md-4 col-sm-6 col-xs-12' key={prop.content.key}>
+          <div className='col-lg-1 col-md-2 col-sm-4 col-xs-6' key={prop.content.key}>
             {prop.content}
           </div>
         ))}
       </div>
-      {description}
     </div>
   );
-};
+}
 
 export default {
   schema: {
     title: 'A registration form',
     description:
-      'This is the same as the simple form, but it is rendered as a bootstrap grid. Try shrinking the browser window to see it in action.',
+      'This is the same as the simple form, but with an altered bootstrap grid. Set the theme to default, and try shrinking the browser window to see it in action.',
     type: 'object',
     required: ['firstName', 'lastName'],
     properties: {
@@ -62,5 +81,7 @@ export default {
     bio: 'Roundhouse kicking asses since 1940',
     password: 'noneed',
   },
-  ObjectFieldTemplate,
+  templates: {
+    ObjectFieldTemplate,
+  },
 };
