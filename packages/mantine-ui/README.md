@@ -65,8 +65,8 @@ Exports `mantine-ui` theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 
-- `@mantine/core >=4.2.12`
-- `@mantine/hooks >=4.2.12`
+- `@mantine/core >=5.7.1`
+- `@mantine/hooks >=5.7.1`
 - `react >= 17.0.0`
 - `tabler-icons-react >=1.56.0`
 

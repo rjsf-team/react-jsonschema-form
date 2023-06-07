@@ -29,8 +29,8 @@
     ]
   },
   "peerDependencies": {
-    "@mantine/core": ">=4.2.12",
-    "@mantine/hooks": ">=4.2.12",
+    "@mantine/core": ">=5.7.1",
+    "@mantine/hooks": ">=5.7.1",
     "tabler-icons-react": ">=1.56.0",
     "react": "^16.14.0 || >=17"
   },
@@ -44,8 +44,8 @@
     "@babel/register": "^7.21.0",
     "@emotion/eslint-plugin": "^11.10.0",
     "@emotion/jest": "^11.10.5",
-    "@mantine/core": "^4.2.12",
-    "@mantine/hooks": "^4.2.12",
+    "@mantine/core": "^5.7.1",
+    "@mantine/hooks": "^5.7.1",
     "@rjsf/core": "^5.6.2",
     "@rjsf/utils": "^5.6.2",
     "@rjsf/validator-ajv8": "^5.6.2",
