@@ -78,7 +78,7 @@ Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonsch
 ### Installation
 
 ```bash
-yarn add @mantine/core@^4.2.12 @mantine/hooks@^4.2.12 tabler-icons-react@^1.56.0
+yarn add @mantine/core@^5.7.1 @mantine/hooks@^5.7.1 tabler-icons-react@^1.56.0
 ```
 
 ```bash
