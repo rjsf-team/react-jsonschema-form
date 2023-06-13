@@ -138,16 +138,15 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
         this.ajv.addSchema(rootSchema, rootSchemaId);
       }
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const schemaHash = hashForSchema(schemaWithIdRefPrefix);
+      const schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       let compiledValidator: ValidateFunction | undefined;
-      if (schemaWithIdRefPrefix[ID_KEY]) {
-        compiledValidator = this.ajv.getSchema(schemaWithIdRefPrefix[ID_KEY]);
-      } else {
-        compiledValidator = this.ajv.getSchema(schemaHash);
-      }
+      compiledValidator = this.ajv.getSchema(schemaId);
       if (compiledValidator === undefined) {
+        // Add schema by an explicit ID so it can be fetched later
+        // Fall back to using compile if necessary
+        // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
         compiledValidator =
-          this.ajv.addSchema(schemaWithIdRefPrefix, schemaHash).getSchema(schemaHash) ||
+          this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ||
           this.ajv.compile(schemaWithIdRefPrefix);
       }
       const result = compiledValidator(formData);
