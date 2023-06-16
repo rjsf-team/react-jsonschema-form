@@ -249,7 +249,7 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
-  const { description, idSchema } = props;
+  const { title, idSchema } = props;
   const id = titleId(idSchema);
   return <h1 id={id}>{title}</h1>;
 }
