@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.8.2
+
+## @rjsf/validator-ajv8
+
+- Explicitly cache schemas by their hash when checking data is valid to avoid multiple compilations for schemas without IDs leading to poor performance [#3721](https://github.com/rjsf-team/react-jsonschema-form/pull/3721)
 
 # 5.8.1
 

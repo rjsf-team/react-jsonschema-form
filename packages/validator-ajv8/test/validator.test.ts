@@ -93,13 +93,58 @@ describe('AJV8Validator', () => {
         };
 
         // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
-        const compileSpy = jest.spyOn(validator.ajv, 'compile');
+        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        addSchemaSpy.mockClear();
+
+        // Call isValid twice with the same schema
+        validator.isValid(schema, formData, rootSchema);
+        validator.isValid(schema, formData, rootSchema);
+
+        // Root schema is added twice
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
+      });
+      it('should fallback to using compile', () => {
+        const schema: RJSFSchema = {
+          $id: 'schema-id-2',
+        };
+
+        const rootSchema: RJSFSchema = {
+          $id: 'root-schema-id',
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+            },
+          },
+        };
+        const formData = {
+          name: 'John Doe',
+        };
+
+        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
+        const ajvInstance = validator.ajv;
+        const originalGetSchema = ajvInstance.getSchema.bind(ajvInstance);
+        const getSchemaSpy = jest.spyOn(ajvInstance, 'getSchema');
+        getSchemaSpy.mockClear();
+        getSchemaSpy.mockImplementation((schemaId) => {
+          if (schemaId === schema.$id) {
+            return undefined;
+          }
+
+          return originalGetSchema(schemaId);
+        });
+
+        const compileSpy = jest.spyOn(ajvInstance, 'compile');
         compileSpy.mockClear();
 
         // Call isValid twice with the same schema
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
+        getSchemaSpy.mockRestore();
         expect(compileSpy).toHaveBeenCalledTimes(1);
       });
     });
@@ -546,14 +591,18 @@ describe('AJV8Validator', () => {
         };
 
         // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
-        const compileSpy = jest.spyOn(validator.ajv, 'compile');
-        compileSpy.mockClear();
+        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
-        expect(compileSpy).toHaveBeenCalledTimes(1);
+        // Root schema is added twice
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
       });
     });
     describe('validator.toErrorList()', () => {
@@ -1000,14 +1049,18 @@ describe('AJV8Validator', () => {
         };
 
         // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
-        const compileSpy = jest.spyOn(validator.ajv, 'compile');
-        compileSpy.mockClear();
+        const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
+        addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
-        expect(compileSpy).toHaveBeenCalledTimes(1);
+        // Root schema is added twice
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
       });
     });
     describe('validator.toErrorList()', () => {
