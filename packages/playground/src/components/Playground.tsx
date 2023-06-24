@@ -9,6 +9,7 @@ import ErrorBoundary from './ErrorBoundary';
 import GeoPosition from './GeoPosition';
 import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
+import SpecialInput from './SpecialInput';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -180,7 +181,10 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
-                fields={{ geo: GeoPosition }}
+                fields={{
+                  geo: GeoPosition,
+                  '/schemas/specialString': SpecialInput
+                }}
                 validator={validators[validator]}
                 onChange={onFormDataChange}
                 onSubmit={onFormDataSubmit}
