@@ -31,12 +31,40 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type FormContextType = GenericObjectType;
 
-/** Experimental features to specify different form state behavior. Currently, this affects the
+/** Experimental feature that specifies the Array `minItems` default form state behavior
+ */
+export type Experimental_ArrayMinItems = {
+  /** Optional enumerated flag controlling how array minItems are populated, defaulting to `all`:
+   * - `all`: Legacy behavior, populate minItems entries with default values initially and include an empty array when
+   *        no values have been defined.
+   * - `requiredOnly`: Ignore `minItems` on a field when calculating defaults unless the field is required.
+   */
+  populate?: 'all' | 'requiredOnly';
+  /** When `formData` is provided and does not contain `minItems` worth of data, this flag (`false` by default) controls
+   * whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the
+   * `minItems` condition is met. When false, only the `formData` provided is merged into the default form state, even
+   * if there are fewer than the `minItems`. When true, the defaults are appended onto the end of the `formData` until
+   * the `minItems` condition is met.
+   */
+  mergeExtraDefaults?: boolean;
+};
+
+/** Experimental features to specify different default form state behaviors. Currently, this affects the
  * handling of optional array fields where `minItems` is set and handling of setting defaults based on the
- * value of `emptyObjectFields`
+ * value of `emptyObjectFields`.
  */
 export type Experimental_DefaultFormStateBehavior = {
-  arrayMinItems?: 'populate' | 'requiredOnly';
+  /** Optional object, that controls how the default form state for arrays with `minItems` is handled. When not provided
+   * it defaults to `{ populate: 'all' }`.
+   */
+  arrayMinItems?: Experimental_ArrayMinItems;
+  /** Optional enumerated flag controlling how empty object fields are populated, defaulting to `populateAllDefaults`:
+   * - `populateAllDefaults`: Legacy behavior - set default when there is a primitive value, an non-empty object field,
+   *        or the field itself is required  |
+   * - `populateRequiredDefaults`: Only sets default when a value is an object and its parent field is required, or it
+   *        is a primitive value and it is required |
+   * - `skipDefaults`: Does not set defaults                                                                                                      |
+   */
   emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults';
 };
 

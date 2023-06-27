@@ -516,7 +516,7 @@ When merging defaults and form data, we want to merge in this specific way:
 
 - objects are deeply merged
 - arrays are merged in such a way that:
-  - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored
+  - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in which case the extras are appended onto the end of the form data
   - when the array is not set in form data, the default is copied over
 - scalars are overwritten/set by form data
 
@@ -524,6 +524,7 @@ When merging defaults and form data, we want to merge in this specific way:
 
 - [defaults]: T | undefined - The defaults to merge
 - [formData]: T | undefined - The form data into which the defaults will be merged
+- [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
 
 #### Returns
 
