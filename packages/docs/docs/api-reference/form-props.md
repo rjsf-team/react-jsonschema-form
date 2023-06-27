@@ -84,7 +84,7 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 Optional boolean flag, defaulting to `false` when not specified.
 When `formData` is provided and does not contain `minItems` worth of data, this flag controls whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the `minItems` condition is met.
-When `false`, only the `formData` provided is merged into the default form state, even if there are fewer than the `minItems`.
+When `false` (legacy behavior), only the `formData` provided is merged into the default form state, even if there are fewer than the `minItems`.
 When `true`, the defaults are appended onto the end of the `formData` until the `minItems` condition is met.
 
 ### `emptyObjectFields`
