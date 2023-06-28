@@ -10,7 +10,9 @@ import getTestValidator from './testUtils/getTestValidator';
 describe('createSchemaUtils()', () => {
   const testValidator: ValidatorType = getTestValidator({});
   const rootSchema: RJSFSchema = { type: 'object' };
-  const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = { arrayMinItems: 'requiredOnly' };
+  const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+    arrayMinItems: { populate: 'requiredOnly' },
+  };
   const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema, defaultFormStateBehavior);
 
   it('getValidator()', () => {
@@ -25,9 +27,9 @@ describe('createSchemaUtils()', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema)).toBe(false);
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: 'requiredOnly' })).toBe(
-          true
-        );
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'requiredOnly' } })
+        ).toBe(true);
       });
     });
 
@@ -52,7 +54,9 @@ describe('createSchemaUtils()', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, {}, defaultFormStateBehavior)).toBe(true);
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: 'populate' })).toBe(true);
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'all' } })
+        ).toBe(true);
       });
     });
   });

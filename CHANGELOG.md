@@ -15,6 +15,23 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.9.0
+
+## @rjsf/utils
+
+- Updated `getDefaultFormState()` to fix a bug where `experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' }` wasn't working for object properties with `$ref`s
+- Experimental feature **breaking change**:
+  - Updated the `experimental_defaultFormStateBehavior.arrayMinItems` from simple flag to an object containing two optional fields, `populate` and `mergeExtraDefaults`
+    - The new `arrayMinItems.mergeExtraDefaults` flag, when "true", allows users to merge defaults onto the end of `formData` arrays when `minItems` is specified
+  - If you were previously passing `experimental_defaultFormStateBehavior` as `{ arrayMinItems = 'requiredOnly }` on the `Form`, now you would pass `{ arrayMinItems: { populate: 'requiredOnly' } }`
+- Added a new, optional `mergeExtraArrayDefaults=false` flag to the `mergeDefaultWithFormData()` utility function to support the new `arrayMinItems.mergeExtraDefaults` experimental feature
+
+## Dev / docs / playground
+
+- Updated the `utility-functions` documentation to add the new `mergeExtraArrayDefaults` flag for the `mergeDefaultWithFormData()` function
+- Updated the `form-props` documentation to update the `arrayMinItems` documentation for the new object behavior
+- Updated the `playground` to add a checkbox for the new `arrayMinItems.mergeExtraDefaults` flag 
+
 # 5.8.2
 
 ## @rjsf/validator-ajv8

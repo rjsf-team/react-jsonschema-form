@@ -36,6 +36,10 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5])).toEqual([4, 5]);
   });
 
+  it('should merge arrays using entries from second and extra from the first', () => {
+    expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], true)).toEqual([4, 5, 3]);
+  });
+
   it('should deeply merge arrays with overlapping entries', () => {
     expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }])).toEqual([{ a: 1, b: 2 }, { c: 3 }]);
   });
@@ -73,6 +77,41 @@ describe('mergeDefaultsWithFormData()', () => {
       c: 3,
     };
     expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
+  });
+
+  it('should recursively merge deeply nested objects, including extra array data', () => {
+    const obj1 = {
+      a: 1,
+      b: {
+        c: 3,
+        d: [1, 2, 3],
+        e: { f: { g: 1 } },
+        h: [{ i: 1 }, { i: 2 }],
+      },
+      c: 2,
+    };
+    const obj2 = {
+      a: 1,
+      b: {
+        d: [3],
+        e: { f: { h: 2 } },
+        g: 1,
+        h: [{ i: 3 }],
+      },
+      c: 3,
+    };
+    const expected = {
+      a: 1,
+      b: {
+        c: 3,
+        d: [3, 2, 3],
+        e: { f: { g: 1, h: 2 } },
+        g: 1,
+        h: [{ i: 3 }, { i: 2 }],
+      },
+      c: 3,
+    };
+    expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
   });
 
   it('should recursively merge File objects', () => {
