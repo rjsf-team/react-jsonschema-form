@@ -390,7 +390,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           })
         ).toEqual({ requiredArray: ['default0', 'default1'] });
       });
-      it('should combine defaults with raw form data for a required array property with minItems', () => {
+      it('should not combine defaults with raw form data for a required array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -402,6 +402,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredArray'],
         };
+        // merging defaults with formData does not happen in computeDefaults, regardless of parameters
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,

@@ -64,6 +64,8 @@ See [Validation](../usage/validation.md) for more information.
 Experimental features to specify different form state behavior.
 Currently, this only affects the handling of optional array fields where `minItems` is set and handling of setting defaults based on the value of `emptyObjectFields`.
 
+> **Warning:** This API is experimental and unstable, therefore breaking changes may be shipped in minor or patch releases. If you want to use this feature, we recommend pinning exact versions of `@rjsf/\*` packages in your package.json file or be ready to update your use of it when necessary.
+
 The following subsections represent the different keys in this object, with the tables explaining the values and their meanings.
 
 ### `arrayMinItems`
