@@ -398,3 +398,36 @@ const schema: RJSFSchema = {
 
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
+
+### Custom Field by Id
+
+**Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
+
+You can provide your own implementation of React component for rendering any JSONSchema schema `$id`. This is useful when you want to augment a given schema `$id` with supplementary powers.
+
+To proceed so, pass a `fields` object having a `$id` value property to your `Form` component; here's an example:
+
+```tsx
+import { RJSFSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const CustomIdField = function (props: FieldProps) {
+  return (
+    <div id='custom'>
+      <p>Yeah, I'm pretty dumb.</p>
+      <div>My props are: {JSON.stringify(props)}</div>
+    </div>
+  );
+};
+
+const fields: RegistryFieldsType = {
+  '/schemas/my-id': CustomIdField,
+};
+
+const schema: RJSFSchema = {
+  $id: '/schemas/my-id',
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+```
