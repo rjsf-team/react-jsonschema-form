@@ -1416,7 +1416,7 @@ describeRepeated('Form common', (createFormComponent) => {
         formData: {
           albums: ['Until We Have Faces'],
         },
-        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+        experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
       submitForm(node);
       sinon.assert.calledWithMatch(onError.lastCall, [
@@ -1434,7 +1434,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: {},
-        experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+        experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
       submitForm(node);
       sinon.assert.calledWithMatch(onSubmit.lastCall, { formData: {} });

@@ -329,7 +329,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
           })
         ).toEqual({});
       });
@@ -347,7 +347,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { optionalArray: [] },
-            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
           })
         ).toEqual({ optionalArray: [] });
       });
@@ -366,7 +366,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
           })
         ).toEqual({ requiredArray: [undefined, undefined] });
       });
@@ -386,12 +386,11 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
           })
         ).toEqual({ requiredArray: ['default0', 'default1'] });
       });
-      // BUG: https://github.com/rjsf-team/react-jsonschema-form/issues/3602
-      it.skip('should combine defaults with raw form data for a required array property with minItems', () => {
+      it('should not combine defaults with raw form data for a required array property with minItems', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -403,13 +402,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredArray'],
         };
+        // merging defaults with formData does not happen in computeDefaults, regardless of parameters
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
             rawFormData: { requiredArray: ['raw0'] },
-            experimental_defaultFormStateBehavior: { arrayMinItems: 'requiredOnly' },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
           })
-        ).toEqual({ requiredArray: ['raw0', 'default0'] });
+        ).toEqual({ requiredArray: ['default0', 'default0'] });
       });
     });
     describe('default form state behavior: emptyObjectFields = "populateRequiredDefaults"', () => {
@@ -439,6 +439,69 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
           })
         ).toEqual({ requiredProperty: 'foo' });
+      });
+      it('test an object with a nested required property in a ref', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            nestedRequired: {
+              properties: {
+                nested: {
+                  type: 'string',
+                  default: 'foo',
+                },
+              },
+              required: ['nested'],
+            },
+          },
+          properties: {
+            nestedRequiredProperty: {
+              $ref: '#/definitions/nestedRequired',
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty', 'nestedRequiredProperty'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+          })
+        ).toEqual({ requiredProperty: 'foo', nestedRequiredProperty: { nested: 'foo' } });
+      });
+      it('test an object with a nested optional property in a ref', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            nestedOptional: {
+              properties: {
+                nested: {
+                  type: 'string',
+                  default: 'foo',
+                },
+              },
+            },
+          },
+          properties: {
+            nestedOptionalProperty: {
+              $ref: '#/definitions/nestedOptional',
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty', 'nestedOptionalProperty'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+          })
+        ).toEqual({ requiredProperty: 'foo', nestedOptionalProperty: {} });
       });
       it('test an object with an optional property that has a nested required property with default', () => {
         const schema: RJSFSchema = {
@@ -1911,6 +1974,109 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, formData)).toEqual(result);
       });
+    });
+    it('should return undefined defaults for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 2,
+          },
+        },
+      };
+      expect(getDefaultFormState(testValidator, schema, undefined, schema, false)).toEqual({
+        requiredArray: [undefined, undefined],
+      });
+    });
+    it('should not combine defaults with raw form data for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 2,
+          },
+        },
+      };
+      expect(getDefaultFormState(testValidator, schema, { requiredArray: ['raw0'] }, schema, false)).toEqual({
+        requiredArray: ['raw0'],
+      });
+    });
+    it('should combine ALL defaults with raw form data for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 2,
+          },
+        },
+      };
+      expect(
+        getDefaultFormState(testValidator, schema, { requiredArray: ['raw0'] }, schema, false, {
+          arrayMinItems: { mergeExtraDefaults: true },
+        })
+      ).toEqual({
+        requiredArray: ['raw0', undefined],
+      });
+    });
+    it('should return given defaults for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string', default: 'default0' },
+            minItems: 2,
+          },
+        },
+        required: ['requiredArray'],
+      };
+      expect(
+        getDefaultFormState(testValidator, schema, undefined, schema, false, {
+          arrayMinItems: { populate: 'requiredOnly' },
+        })
+      ).toEqual({ requiredArray: ['default0', 'default0'] });
+    });
+    it('should not combine defaults with raw form data for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string', default: 'default0' },
+            minItems: 2,
+          },
+        },
+        required: ['requiredArray'],
+      };
+      expect(
+        getDefaultFormState(testValidator, schema, { requiredArray: ['raw0'] }, schema, false, {
+          arrayMinItems: { populate: 'requiredOnly' },
+        })
+      ).toEqual({ requiredArray: ['raw0'] });
+    });
+    it('should combine ALL defaults with raw form data for a required array property with minItems', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          requiredArray: {
+            type: 'array',
+            items: { type: 'string', default: 'default0' },
+            minItems: 2,
+          },
+        },
+        required: ['requiredArray'],
+      };
+      expect(
+        getDefaultFormState(testValidator, schema, { requiredArray: ['raw0'] }, schema, false, {
+          arrayMinItems: { populate: 'requiredOnly', mergeExtraDefaults: true },
+        })
+      ).toEqual({ requiredArray: ['raw0', 'default0'] });
     });
   });
 }

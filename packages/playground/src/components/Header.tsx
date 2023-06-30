@@ -79,21 +79,31 @@ const liveSettingsSelectSchema: RJSFSchema = {
       type: 'object',
       properties: {
         arrayMinItems: {
-          type: 'string',
-          title: 'minItems behavior for array field',
-          default: 'populate',
-          oneOf: [
-            {
+          type: 'object',
+          properties: {
+            populate: {
               type: 'string',
-              title: 'Populate remaining minItems with default values (legacy behavior)',
-              enum: ['populate'],
+              default: 'populate',
+              title: 'Populate minItems in arrays',
+              oneOf: [
+                {
+                  type: 'string',
+                  title: 'Populate remaining minItems with default values (legacy behavior)',
+                  enum: ['all'],
+                },
+                {
+                  type: 'string',
+                  title: 'Ignore minItems unless field is required',
+                  enum: ['requiredOnly'],
+                },
+              ],
             },
-            {
-              type: 'string',
-              title: 'Ignore minItems unless field is required',
-              enum: ['requiredOnly'],
+            mergeExtraDefaults: {
+              title: 'Merge array defaults with formData',
+              type: 'boolean',
+              default: false,
             },
-          ],
+          },
         },
         emptyObjectFields: {
           type: 'string',
@@ -128,6 +138,11 @@ const liveSettingsSelectUiSchema: UiSchema = {
   experimental_defaultFormStateBehavior: {
     'ui:options': {
       label: false,
+    },
+    arrayMinItems: {
+      'ui:options': {
+        label: false,
+      },
     },
   },
 };

@@ -89,7 +89,7 @@ function maybeAddDefaultToObject<T = any>(
   key: string,
   computedDefault: T | T[] | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
-  isParentRequired: boolean,
+  isParentRequired?: boolean,
   requiredFields: string[] = [],
   experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {}
 ) {
@@ -98,12 +98,15 @@ function maybeAddDefaultToObject<T = any>(
     obj[key] = computedDefault;
   } else if (emptyObjectFields !== 'skipDefaults') {
     if (isObject(computedDefault)) {
+      // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
+      // the field key itself in the `requiredField` list
+      const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
       // Store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
       if (
         (!isEmpty(computedDefault) || requiredFields.includes(key)) &&
-        (isParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
+        (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
         obj[key] = computedDefault;
       }
@@ -156,7 +159,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     includeUndefinedValues = false,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
-    required = false,
+    required,
   }: ComputeDefaultsProps<T, S> = {}
 ): T | T[] | undefined {
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -192,6 +195,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         experimental_defaultFormStateBehavior,
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData as T,
+        required,
       })
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
@@ -234,6 +238,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_defaultFormStateBehavior,
       parentDefaults: defaults as T | undefined,
       rawFormData: formData as T,
+      required,
     });
   }
 
@@ -320,6 +325,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             _recurseList,
             experimental_defaultFormStateBehavior,
             parentDefaults: item,
+            required,
           });
         }) as T[];
       }
@@ -334,11 +340,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             experimental_defaultFormStateBehavior,
             rawFormData: item,
             parentDefaults: get(defaults, [idx]),
+            required,
           });
         }) as T[];
       }
 
-      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems === 'requiredOnly';
+      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
       if (ignoreMinItemsFlagSet && !required) {
         // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
         // return form data/defaults
@@ -365,6 +372,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          required,
         })
       ) as T[];
       // then fill up the rest with either the item default or empty, up to minItems
@@ -414,11 +422,12 @@ export default function getDefaultFormState<
     // No form data? Use schema defaults.
     return defaults;
   }
+  const { mergeExtraDefaults } = experimental_defaultFormStateBehavior?.arrayMinItems || {};
   if (isObject(formData)) {
-    return mergeDefaultsWithFormData<T>(defaults as T, formData);
+    return mergeDefaultsWithFormData<T>(defaults as T, formData, mergeExtraDefaults);
   }
   if (Array.isArray(formData)) {
-    return mergeDefaultsWithFormData<T[]>(defaults as T[], formData);
+    return mergeDefaultsWithFormData<T[]>(defaults as T[], formData, mergeExtraDefaults);
   }
   return formData;
 }

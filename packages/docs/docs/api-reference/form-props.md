@@ -61,24 +61,43 @@ See [Validation](../usage/validation.md) for more information.
 
 ## experimental_defaultFormStateBehavior
 
-Experimental features to specify different form state behavior. Currently, this only affects the handling of optional array fields where `minItems` is set.
+Experimental features to specify different form state behavior.
+Currently, this only affects the handling of optional array fields where `minItems` is set and handling of setting defaults based on the value of `emptyObjectFields`.
 
-The following sub-sections represent the different keys in this object, with the tables explaining the values and their meanings.
+> **Warning:** This API is experimental and unstable, therefore breaking changes may be shipped in minor or patch releases. If you want to use this feature, we recommend pinning exact versions of `@rjsf/\*` packages in your package.json file or be ready to update your use of it when necessary.
+
+The following subsections represent the different keys in this object, with the tables explaining the values and their meanings.
 
 ### `arrayMinItems`
 
-| Flag Value     | Description                                                                                                                        |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `populate`     | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined |
-| `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required                                                |
+This optional subsection is an object with two optional fields, `populate` and `mergeExtraDefaults`.
+When not specified, it defaults to `{ populate: 'all', mergeExtraDefaults: false }`.
+
+#### `arrayMinItems.populate`
+
+Optional enumerated flag controlling how array minItems are populated, defaulting to `all`:
+
+| Flag Value     | Description                                                                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `all`          | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined. |
+| `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required.                                                |
+
+#### `arrayMinItems.mergeExtraDefaults`
+
+Optional boolean flag, defaulting to `false` when not specified.
+When `formData` is provided and does not contain `minItems` worth of data, this flag controls whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the `minItems` condition is met.
+When `false` (legacy behavior), only the `formData` provided is merged into the default form state, even if there are fewer than the `minItems`.
+When `true`, the defaults are appended onto the end of the `formData` until the `minItems` condition is met.
 
 ### `emptyObjectFields`
 
-| Flag Value                 | Description                                                                                                                |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, an non-empty object field, or the field itself is required  |
-| `populateRequiredDefaults` | Only sets default when a value is an object and its parent field is required or it is a primitive value and it is required |
-| `skipDefaults`             | Does not set defaults                                                                                                      |
+Optional enumerated flag controlling how empty object fields are populated, defaulting to `populateAllDefaults`:
+
+| Flag Value                 | Description                                                                                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `populateAllDefaults`      | Legacy behavior - set default when there is a primitive value, an non-empty object field, or the field itself is required   |
+| `populateRequiredDefaults` | Only sets default when a value is an object and its parent field is required, or it is a primitive value and it is required |
+| `skipDefaults`             | Does not set defaults                                                                                                       |
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
@@ -95,7 +114,7 @@ render(
     schema={schema}
     validator={validator}
     experimental_defaultFormStateBehavior={{
-      arrayMinItems: 'requiredOnly',
+      arrayMinItems: { populate: 'requiredOnly' },
     }}
   />,
   document.getElementById('app')
