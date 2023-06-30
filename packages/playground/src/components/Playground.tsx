@@ -183,7 +183,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 formData={formData}
                 fields={{
                   geo: GeoPosition,
-                  '/schemas/specialString': SpecialInput
+                  '/schemas/specialString': SpecialInput,
                 }}
                 validator={validators[validator]}
                 onChange={onFormDataChange}

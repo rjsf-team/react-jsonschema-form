@@ -134,6 +134,41 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('Custom type component', () => {
+    const CustomStringField = function () {
+      return <div id='custom-type' />;
+    };
+
+    it('should use custom type compnent', () => {
+      const fields = { StringField: CustomStringField };
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        fields,
+      });
+
+      expect(node.querySelectorAll('#custom-type')).to.have.length.of(1);
+    });
+  });
+
+  describe('Custom id component', () => {
+    const CustomIdField = function () {
+      return <div id='custom-id' />;
+    };
+
+    it('should use custom id compnent', () => {
+      const fields = { '/schemas/custom-id': CustomIdField };
+      const { node } = createFormComponent({
+        schema: {
+          $id: '/schemas/custom-id',
+          type: 'string',
+        },
+        fields,
+      });
+
+      expect(node.querySelectorAll('#custom-id')).to.have.length.of(1);
+    });
+  });
+
   describe('ui:field support', () => {
     class MyObject extends Component {
       constructor(props) {

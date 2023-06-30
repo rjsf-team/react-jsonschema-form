@@ -30,7 +30,7 @@ import errorSchema from './errorSchema';
 import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
-import customField from './customField'
+import customField from './customField';
 
 export const samples = Object.freeze({
   Blank: { schema: {}, uiSchema: {}, formData: {} },
