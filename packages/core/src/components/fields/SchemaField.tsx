@@ -62,7 +62,13 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const schemaType = getSchemaType(schema);
   const type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
-  const componentName = COMPONENT_TYPES[type];
+
+  const schemaId = schema.$id;
+
+  let componentName = COMPONENT_TYPES[type];
+  if (schemaId && schemaId in fields) {
+    componentName = schemaId;
+  }
 
   // If the type is not defined and the schema uses 'anyOf' or 'oneOf', don't
   // render a field and let the MultiSchemaField component handle the form display

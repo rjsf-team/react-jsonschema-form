@@ -30,6 +30,7 @@ import errorSchema from './errorSchema';
 import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
+import customField from './customField';
 
 export const samples = Object.freeze({
   Blank: { schema: {}, uiSchema: {}, formData: {} },
@@ -65,6 +66,7 @@ export const samples = Object.freeze({
   Nullable: nullable,
   ErrorSchema: errorSchema,
   Defaults: defaults,
+  'Custom Field': customField,
 } as const);
 
 export type Sample = keyof typeof samples;

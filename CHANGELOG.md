@@ -15,6 +15,18 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.10.0
+
+## @rjsf/core
+
+- Updated `getFieldComponent()` to support rendering a custom component by given schema id ($id). [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
+
+## Dev / docs / playground
+
+- Updated the `custom-widgets-fields` documentation to add the new added behaviour of `getFieldComponent()` function. [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
+- Updated the `playground` to add an example of the new added behaviour of `getFieldComponent()` function. [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
+
+
 # 5.9.0
 
 ## @rjsf/utils

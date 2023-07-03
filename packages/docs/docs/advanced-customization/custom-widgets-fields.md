@@ -398,3 +398,36 @@ const schema: RJSFSchema = {
 
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
+
+### Custom Field by Id
+
+**Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
+
+You can provide your own implementation of the field component that applies to any schema or sub-schema based on the schema's `$id` value. This is useful when your custom field should be conditionally applied based on the schema rather than the property name or data type.
+
+To provide a custom field in this way, the `fields` prop should be an object which contains a key that matches the `$id` value of the schema which should have a custom field; here's an example:
+
+```tsx
+import { RJSFSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const CustomIdField = function (props: FieldProps) {
+  return (
+    <div id='custom'>
+      <p>Yeah, I'm pretty dumb.</p>
+      <div>My props are: {JSON.stringify(props)}</div>
+    </div>
+  );
+};
+
+const fields: RegistryFieldsType = {
+  '/schemas/my-id': CustomIdField,
+};
+
+const schema: RJSFSchema = {
+  $id: '/schemas/my-id',
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+```
