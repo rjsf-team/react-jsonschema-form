@@ -12,8 +12,8 @@ const SpecialInput: FC<FieldProps<string>> = ({ onChange, formData }) => {
     <div className='SpecialInput'>
       <h3>Hey, I&apos;m a custom component</h3>
       <p>
-        I&apos;m registered as <code>geo</code> and referenced in
-        <code>uiSchema</code> as the <code>ui:field</code> to use for this schema.
+        I&apos;m registered as <code>/schemas/specialString</code> and referenced in
+        <code>Form</code>'s <code>field</code> prop to use for this schema anywhere this schema <code>$id</code> is used.
       </p>
       <div className='row'>
         <div className='col-sm-6'>

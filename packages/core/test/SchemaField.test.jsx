@@ -139,7 +139,7 @@ describe('SchemaField', () => {
       return <div id='custom-type' />;
     };
 
-    it('should use custom type compnent', () => {
+    it('should use custom type component', () => {
       const fields = { StringField: CustomStringField };
       const { node } = createFormComponent({
         schema: { type: 'string' },

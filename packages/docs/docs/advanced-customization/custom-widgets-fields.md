@@ -403,9 +403,9 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 
 **Warning:** This is a powerful feature as you can override the whole form behavior and easily mess it up. Handle with care.
 
-You can provide your own implementation of React component for rendering any JSONSchema schema `$id`. This is useful when you want to augment a given schema `$id` with supplementary powers.
+You can provide your own implementation of the field component that applies to any schema or sub-schema based on the schema's `$id` value. This is useful when your custom field should be conditionally applied based on the schema rather than the property name or data type.
 
-To proceed so, pass a `fields` object having a `$id` value property to your `Form` component; here's an example:
+To provide a custom field in this way, the `fields` prop should be an object which contains a key that matches the `$id` value of the schema which should have a custom field; here's an example:
 
 ```tsx
 import { RJSFSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
