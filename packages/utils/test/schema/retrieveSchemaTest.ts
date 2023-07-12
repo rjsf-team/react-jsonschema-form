@@ -1276,17 +1276,26 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('resolveAnyOrOneOfSchemas()', () => {
-      it('resolves anyOf with $ref for single element', () => {
+      it('resolves anyOf with $ref for single element, merging schemas', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
         expect(resolveAnyOrOneOfSchemas(testValidator, anyOfSchema, SUPER_SCHEMA, false)).toEqual([
-          SUPER_SCHEMA.definitions?.foo,
+          {
+            ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
+            title: 'multi',
+          },
         ]);
       });
-      it('resolves oneOf with $ref for expandedAll elements', () => {
+      it('resolves oneOf with $ref for expandedAll elements, merging schemas', () => {
         const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
         expect(resolveAnyOrOneOfSchemas(testValidator, oneOfSchema, SUPER_SCHEMA, true)).toEqual([
-          SUPER_SCHEMA.definitions?.choice1,
-          SUPER_SCHEMA.definitions?.choice2,
+          {
+            ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
+            required: ['choice'],
+          },
+          {
+            ...(SUPER_SCHEMA.definitions?.choice2 as RJSFSchema),
+            required: ['choice'],
+          },
         ]);
       });
     });

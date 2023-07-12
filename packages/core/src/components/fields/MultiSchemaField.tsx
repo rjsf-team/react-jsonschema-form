@@ -2,7 +2,9 @@ import { Component } from 'react';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
+import unset from 'lodash/unset';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   ERRORS_KEY,
   FieldProps,
@@ -19,7 +21,7 @@ import {
 type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
   /** The currently selected option */
   selectedOption: number;
-  /* The option schemas after retrieving all $refs */
+  /** The option schemas after retrieving all $refs */
   retrievedOptions: S[];
 };
 
@@ -139,7 +141,6 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   render() {
     const {
       name,
-      baseType,
       disabled = false,
       errorSchema = {},
       formContext,
@@ -170,9 +171,10 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let optionSchema: S;
 
     if (option) {
-      // If the subschema doesn't declare a type, infer the type from the
-      // parent schema
-      optionSchema = option.type ? option : Object.assign({}, option, { type: baseType });
+      const { oneOf, anyOf, ...remaining } = schema;
+      // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
+      unset(remaining, ADDITIONAL_PROPERTY_FLAG);
+      optionSchema = !isEmpty(remaining) ? { ...remaining, ...option } : option;
     }
 
     const translateEnum: TranslatableString = title

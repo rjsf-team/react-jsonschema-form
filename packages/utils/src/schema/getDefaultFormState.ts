@@ -199,35 +199,39 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       })
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
-    if (schema.oneOf!.length === 0) {
+    const { oneOf, ...remaining } = schema;
+    if (oneOf!.length === 0) {
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    schemaToCompute = schema.oneOf![
+    schemaToCompute = oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
         isEmpty(formData) ? undefined : formData,
-        schema.oneOf as S[],
+        oneOf as S[],
         0,
         discriminator
       )
     ] as S;
+    schemaToCompute = { ...remaining, ...schemaToCompute };
   } else if (ANY_OF_KEY in schema) {
-    if (schema.anyOf!.length === 0) {
+    const { anyOf, ...remaining } = schema;
+    if (anyOf!.length === 0) {
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    schemaToCompute = schema.anyOf![
+    schemaToCompute = anyOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
         isEmpty(formData) ? undefined : formData,
-        schema.anyOf as S[],
+        anyOf as S[],
         0,
         discriminator
       )
     ] as S;
+    schemaToCompute = { ...remaining, ...schemaToCompute };
   }
 
   if (schemaToCompute) {

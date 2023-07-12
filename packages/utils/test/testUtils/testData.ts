@@ -449,10 +449,12 @@ export const SUPER_SCHEMA: RJSFSchema = {
     passwords: { $ref: '#/definitions/passwords' },
     dataUrlWithName: { type: 'string', format: 'data-url' },
     multi: {
+      title: 'multi',
       anyOf: [{ $ref: '#/definitions/foo' }],
     },
     list: { $ref: '#/definitions/list' },
     single: {
+      required: ['choice'],
       oneOf: [{ $ref: '#/definitions/choice1' }, { $ref: '#/definitions/choice2' }],
     },
     anything: {
