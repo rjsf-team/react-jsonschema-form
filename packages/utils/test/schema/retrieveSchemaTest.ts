@@ -5,6 +5,7 @@ import {
   getAllPermutationsOfXxxOf,
   resolveAnyOrOneOfSchemas,
   resolveCondition,
+  retrieveSchemaInternal,
   stubExistingAdditionalProperties,
   withDependentProperties,
   withExactlyOneSubschema,
@@ -686,6 +687,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.stringMatching(/could not merge subschemas in allOf/),
           expect.any(Error)
         );
+      });
+      it('should return allOf as individual schemas when expand all', () => {
+        const schema: RJSFSchema = {
+          allOf: [{ type: 'string' }, { type: 'boolean' }],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchemaInternal(testValidator, schema, rootSchema, formData, true)).toEqual(schema.allOf);
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {
