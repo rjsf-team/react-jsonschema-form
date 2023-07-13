@@ -17,9 +17,15 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.10.1
 
+## @rjsf/core
+
+- Updated `MultiSchemaField` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
+
 ## @rjsf/utils
 
 - Updated `retrieveSchemaInternal()` to always resolve allOf schema without merging when `expandAllBranches` is set, fixing compiled schema issue always throwing error with `mergeAllOf`
+- Updated `getDefaultFormState()` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
+- Updated `retrieveSchema()` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
 
 # 5.10.0
 
@@ -39,7 +45,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `custom-widgets-fields` documentation to add the new added behaviour of `getFieldComponent()` function. [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
 - Updated the `playground` to add an example of the new added behaviour of `getFieldComponent()` function. [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
-
 
 # 5.9.0
 

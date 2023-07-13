@@ -12,6 +12,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getUiOptions,
   getWidget,
+  mergeSchemas,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -174,7 +175,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       const { oneOf, anyOf, ...remaining } = schema;
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
       unset(remaining, ADDITIONAL_PROPERTY_FLAG);
-      optionSchema = !isEmpty(remaining) ? { ...remaining, ...option } : option;
+      optionSchema = !isEmpty(remaining) ? (mergeSchemas(remaining, option) as S) : option;
     }
 
     const translateEnum: TranslatableString = title
