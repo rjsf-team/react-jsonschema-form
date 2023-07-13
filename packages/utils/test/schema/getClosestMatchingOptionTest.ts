@@ -207,7 +207,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         },
       };
       const formData = { ipsum: { night: 'nicht' } };
-      // Mock to return true for the last of the second one-ofs
+      // Mock to return true for the last of the second anyOfs
       testValidator.setReturnValues({
         isValid: [false, false, false, false, false, false, false, true],
       });
