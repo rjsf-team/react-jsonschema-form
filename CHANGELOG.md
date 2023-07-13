@@ -20,6 +20,14 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `getFieldComponent()` to support rendering a custom component by given schema id ($id). [#3740](https://github.com/rjsf-team/react-jsonschema-form/pull/3740)
+- Updated `MultiSchemaField` to merge the selected `oneOf/anyOf` value into base `schema`, fixing [#3744](https://github.com/rjsf-team/react-jsonschema-form/issues/3744)
+
+## @rjsf/utils
+
+- Updated `getClosestMatchingOption()` to resolve refs in options before computing the closest matching option, fixing an issue with using precompiled validators
+  - Also, added support for nested `anyOf` and `discriminator` support in the recursive `calculateIndexScore()`
+- Updated `getDefaultFormState()` to merge the remaining schema into `anyOf/oneOf` schema selected during the computation of values, fixing [#3744](https://github.com/rjsf-team/react-jsonschema-form/issues/3744)
+- Updated `retrieveSchema()` to merge the remaining schema into the `anyOf/oneOf` schema selected during the resolving of dependencies, fixing [#3744](https://github.com/rjsf-team/react-jsonschema-form/issues/3744)
 
 ## Dev / docs / playground
 

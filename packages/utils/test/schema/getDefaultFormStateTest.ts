@@ -1469,6 +1469,66 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         });
       });
+      it('should not populate nested default values for oneOf, when not required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['name'],
+          properties: {
+            name: {
+              type: 'object',
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: 'First Name' },
+                  },
+                },
+                { type: 'string', default: 'b' },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({ name: {} });
+      });
+      it('should populate nested default values for oneOf, when required is merged in', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['name'],
+          properties: {
+            name: {
+              type: 'object',
+              required: ['first'],
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: 'First Name' },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: '1st Name' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({
+          name: {
+            first: 'First Name',
+          },
+        });
+      });
       it('should populate defaults for oneOf + dependencies', () => {
         const schema: RJSFSchema = {
           oneOf: [
@@ -1571,6 +1631,66 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          name: {
+            first: 'First Name',
+          },
+        });
+      });
+      it('should not populate nested default values for anyOf, when not required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['name'],
+          properties: {
+            name: {
+              type: 'object',
+              anyOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: 'First Name' },
+                  },
+                },
+                { type: 'string', default: 'b' },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({ name: {} });
+      });
+      it('should populate nested default values for anyOf, when required is merged in', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['name'],
+          properties: {
+            name: {
+              type: 'object',
+              required: ['first'],
+              anyOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: 'First Name' },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    first: { type: 'string', default: '1st Name' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({
           name: {
             first: 'First Name',
           },

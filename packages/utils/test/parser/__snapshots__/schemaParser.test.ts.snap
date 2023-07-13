@@ -1009,6 +1009,7 @@ Object {
             "$ref": "#/definitions/foo",
           },
         ],
+        "title": "multi",
       },
       "passwords": Object {
         "$ref": "#/definitions/passwords",
@@ -1024,6 +1025,9 @@ Object {
           Object {
             "$ref": "#/definitions/choice2",
           },
+        ],
+        "required": Array [
+          "choice",
         ],
       },
     },
