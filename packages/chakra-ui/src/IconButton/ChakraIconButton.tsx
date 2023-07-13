@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { IconButton } from '@chakra-ui/react';
-import { IconButtonProps as ChakraIconButtonProps } from '@chakra-ui/button/dist/declarations/src/icon-button';
+type ChakraIconButtonProps = React.ComponentProps<typeof IconButton>;
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 function ChakraIconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
