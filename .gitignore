@@ -137,3 +137,6 @@ coverage
 venv
 *.orig
 out/
+
+# typescript tsbuildinfo
+*.tsbuildinfo

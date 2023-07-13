@@ -3,11 +3,11 @@
   "version": "5.13.6",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
-    "build:ts": "rimraf lib && tsc",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "rimraf dist && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test,testSnap}/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"{src,test,testSnap}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",

@@ -11,11 +11,11 @@
     "src"
   ],
   "scripts": {
-    "build:ts": "rimraf lib && tsc",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/material-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/material-ui.esm.js --format=umd --file=dist/material-ui.umd.js --name=@rjsf/material-ui",
-    "build": "rimraf dist && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",

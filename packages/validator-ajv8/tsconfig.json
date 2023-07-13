@@ -7,5 +7,10 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "jsx": "react-jsx"
-  }
+  },
+  "references": [
+    {
+      "path": "../utils"
+    }
+  ]
 }

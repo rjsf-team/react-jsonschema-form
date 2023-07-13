@@ -7,5 +7,16 @@
     "baseUrl": "./",
     "jsx": "react-jsx",
     "skipLibCheck": true
-  }
+  },
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../validator-ajv8"
+    }
+  ]
 }

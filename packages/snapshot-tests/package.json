@@ -3,7 +3,7 @@
   "version": "5.13.6",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
-    "build": "rimraf lib && tsc",
+    "build": "tsc -b .",
     "cs-check": "prettier -l \"src/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"src/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src",

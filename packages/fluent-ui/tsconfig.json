@@ -12,5 +12,16 @@
     // @fluentui/react/lib/components/SelectedItemsList/BaseSelectedItemsList.d.ts
     // @fluentui/utilities/lib/styled.d.ts
     "skipLibCheck": true
-  }
+  },
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../validator-ajv8"
+    }
+  ]
 }

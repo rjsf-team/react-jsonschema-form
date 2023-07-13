@@ -14,6 +14,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import Layout from './layout';
 import Playground, { PlaygroundProps } from './components';
 
+// @ts-expect-error todo: error TS2345: Argument of type 'Localize' is not assignable to parameter of type 'Localizer'.
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });

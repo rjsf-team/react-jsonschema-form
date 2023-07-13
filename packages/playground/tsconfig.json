@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": "./src",
+    "baseUrl": "./",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -19,5 +21,18 @@
     "types": ["vite/client"]
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+//    { "path": "./tsconfig.node.json" },
+    { "path": "../antd" },
+    { "path": "../bootstrap-4" },
+    { "path": "../chakra-ui" },
+    { "path": "../core" },
+    { "path": "../fluent-ui" },
+    { "path": "../material-ui" },
+    { "path": "../mui" },
+    { "path": "../semantic-ui" },
+    { "path": "../utils" },
+    { "path": "../validator-ajv6" },
+    { "path": "../validator-ajv8" }
+  ]
 }
