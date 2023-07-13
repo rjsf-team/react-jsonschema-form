@@ -280,6 +280,10 @@ export function retrieveSchemaInternal<
       return resolveCondition<T, S, F>(validator, resolvedSchema, rootSchema, expandAllBranches, rawFormData as T);
     }
     if (ALL_OF_KEY in resolvedSchema) {
+      // resolve allOf schemas
+      if (expandAllBranches) {
+        return [...(resolvedSchema.allOf as S[])];
+      }
       try {
         resolvedSchema = mergeAllOf(resolvedSchema, {
           deep: false,
@@ -287,9 +291,6 @@ export function retrieveSchemaInternal<
       } catch (e) {
         console.warn('could not merge subschemas in allOf:\n', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
-        if (expandAllBranches && allOf) {
-          return [resolvedSchemaWithoutAllOf as S, ...(allOf as S[])];
-        }
         return resolvedSchemaWithoutAllOf as S;
       }
     }

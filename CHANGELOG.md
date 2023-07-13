@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.10.1
+
+## @rjsf/utils
+
+- Updated `retrieveSchemaInternal()` to always resolve allOf schema without merging when `expandAllBranches` is set, fixing compiled schema issue always throwing error with `mergeAllOf`
+
 # 5.10.0
 
 ## @rjsf/core
