@@ -279,9 +279,9 @@ export function retrieveSchemaInternal<
     if (IF_KEY in resolvedSchema) {
       return resolveCondition<T, S, F>(validator, resolvedSchema, rootSchema, expandAllBranches, rawFormData as T);
     }
-    if (ALL_OF_KEY in schema) {
+    if (ALL_OF_KEY in resolvedSchema) {
       try {
-        resolvedSchema = mergeAllOf(s, {
+        resolvedSchema = mergeAllOf(resolvedSchema, {
           deep: false,
         } as Options) as S;
       } catch (e) {
@@ -321,10 +321,11 @@ export function resolveAnyOrOneOfSchemas<
   F extends FormContextType = any
 >(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
-  if (Array.isArray(schema.oneOf)) {
-    anyOrOneOf = schema.oneOf as S[];
-  } else if (Array.isArray(schema.anyOf)) {
-    anyOrOneOf = schema.anyOf as S[];
+  const { oneOf, anyOf, ...remaining } = schema;
+  if (Array.isArray(oneOf)) {
+    anyOrOneOf = oneOf as S[];
+  } else if (Array.isArray(anyOf)) {
+    anyOrOneOf = anyOf as S[];
   }
   if (anyOrOneOf) {
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
@@ -340,9 +341,9 @@ export function resolveAnyOrOneOfSchemas<
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
-      return anyOrOneOf;
+      return anyOrOneOf.map((item) => ({ ...remaining, ...item }));
     }
-    schema = anyOrOneOf[option] as S;
+    schema = { ...remaining, ...anyOrOneOf[option] } as S;
   }
   return [schema];
 }

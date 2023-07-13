@@ -35,6 +35,7 @@ describe('oneOf', () => {
   it('should render a select element if the oneOf keyword is present', () => {
     const schema = {
       type: 'object',
+      title: 'Merges into oneOf',
       oneOf: [
         {
           properties: {
@@ -53,6 +54,7 @@ describe('oneOf', () => {
       schema,
     });
 
+    expect(node.querySelector('legend#root__title').innerHTML).eql(schema.title);
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__oneof_select');
   });
