@@ -15,6 +15,7 @@ jobs:
           node-version: 18.x
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
+      - run: npm i -g npm@9
       - run: npm ci
       - run: npm run build
         env:
