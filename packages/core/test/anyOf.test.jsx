@@ -31,10 +31,13 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('select')).to.have.length.of(0);
   });
 
-  it('should render a select element if the anyOf keyword is present', () => {
+  it('should render a select element if the anyOf keyword is present, merges top level required', () => {
     const schema = {
       type: 'object',
-      title: 'Merges into anyOf',
+      required: ['baz'],
+      properties: {
+        baz: { type: 'number' },
+      },
       anyOf: [
         {
           properties: {
@@ -53,9 +56,44 @@ describe('anyOf', () => {
       schema,
     });
 
-    expect(node.querySelector('legend#root__title').innerHTML).eql(schema.title);
+    console.log(node.innerHTML);
+
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
+    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
+  });
+
+  it('should render a select element if the anyOf keyword is present, merges top level and anyOf required', () => {
+    const schema = {
+      type: 'object',
+      required: ['baz'],
+      properties: {
+        baz: { type: 'number' },
+      },
+      anyOf: [
+        {
+          required: ['foo'],
+          properties: {
+            foo: { type: 'string' },
+          },
+        },
+        {
+          properties: {
+            bar: { type: 'string' },
+          },
+        },
+      ],
+    };
+
+    const { node } = createFormComponent({
+      schema,
+    });
+
+    console.log(node.innerHTML);
+
+    expect(node.querySelectorAll('select')).to.have.length.of(1);
+    expect(node.querySelector('select').id).eql('root__anyof_select');
+    expect(node.querySelectorAll('span.required')).to.have.length.of(3);
   });
 
   it('should render a root select element with default value', () => {
