@@ -1529,6 +1529,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         });
       });
+      it('should populate nested default values merging required fields', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['foo', 'bar'],
+          properties: {
+            foo: {
+              type: 'string',
+              default: 'fooVal',
+            },
+          },
+          oneOf: [
+            {
+              properties: {
+                bar: {
+                  type: 'number',
+                },
+                baz: {
+                  default: 'bazIsRequired',
+                },
+              },
+              required: ['baz'],
+            },
+          ],
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({ foo: 'fooVal', baz: 'bazIsRequired' });
+      });
       it('should populate defaults for oneOf + dependencies', () => {
         const schema: RJSFSchema = {
           oneOf: [
@@ -1695,6 +1725,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             first: 'First Name',
           },
         });
+      });
+      it('should populate nested default values merging required fields', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['foo', 'bar'],
+          properties: {
+            foo: {
+              type: 'string',
+              default: 'fooVal',
+            },
+          },
+          anyOf: [
+            {
+              properties: {
+                bar: {
+                  type: 'number',
+                },
+                baz: {
+                  default: 'bazIsRequired',
+                },
+              },
+              required: ['baz'],
+            },
+          ],
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, {}, undefined, undefined, {
+            emptyObjectFields: 'populateRequiredDefaults',
+          })
+        ).toEqual({ foo: 'fooVal', baz: 'bazIsRequired' });
       });
       it('should populate defaults for anyOf + dependencies', () => {
         const schema: RJSFSchema = {

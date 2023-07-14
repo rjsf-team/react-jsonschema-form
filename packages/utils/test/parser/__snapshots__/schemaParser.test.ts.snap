@@ -936,6 +936,9 @@ Object {
             "type": "number",
           },
         },
+        "required": Array [
+          "more",
+        ],
         "type": "object",
       },
       "choice2": Object {

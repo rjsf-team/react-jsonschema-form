@@ -419,6 +419,7 @@ export const SUPER_SCHEMA: RJSFSchema = {
     },
     choice1: {
       type: 'object',
+      required: ['more'],
       properties: {
         choice: {
           type: 'string',

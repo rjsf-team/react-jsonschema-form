@@ -10,6 +10,7 @@ import isObject from '../isObject';
 import isFixedItems from '../isFixedItems';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
+import mergeSchemas from '../mergeSchemas';
 import {
   Experimental_DefaultFormStateBehavior,
   FormContextType,
@@ -214,7 +215,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         discriminator
       )
     ] as S;
-    schemaToCompute = { ...remaining, ...schemaToCompute };
+    schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
   } else if (ANY_OF_KEY in schema) {
     const { anyOf, ...remaining } = schema;
     if (anyOf!.length === 0) {
@@ -231,7 +232,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         discriminator
       )
     ] as S;
-    schemaToCompute = { ...remaining, ...schemaToCompute };
+    schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
   }
 
   if (schemaToCompute) {

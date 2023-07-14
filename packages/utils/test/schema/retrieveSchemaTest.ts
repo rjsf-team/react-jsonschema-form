@@ -1299,7 +1299,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(resolveAnyOrOneOfSchemas(testValidator, oneOfSchema, SUPER_SCHEMA, true)).toEqual([
           {
             ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
-            required: ['choice'],
+            required: ['choice', 'more'],
           },
           {
             ...(SUPER_SCHEMA.definitions?.choice2 as RJSFSchema),
