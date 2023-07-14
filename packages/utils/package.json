@@ -46,7 +46,6 @@
     "@babel/plugin-transform-react-jsx": "^7.22.5",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
-    "@types/jest-expect-message": "^1.1.0",
     "@types/json-schema": "^7.0.12",
     "@types/json-schema-merge-allof": "^0.6.1",
     "@types/lodash": "^4.14.195",
