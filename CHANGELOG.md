@@ -15,11 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.10.1
+# 5.11.0
 
 ## @rjsf/core
 
 - Updated `MultiSchemaField` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
+- Added new `extraErrorsBlockSubmit` prop to `Form` that allows the extra asynchronous errors to block a form submit, fixing [#3757](https://github.com/rjsf-team/react-jsonschema-form/issues/3757)
 
 ## @rjsf/utils
 

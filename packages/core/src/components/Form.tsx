@@ -143,9 +143,12 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Formerly the `validate` prop; Takes a function that specifies custom validation rules for the form */
   customValidate?: CustomValidator<T, S, F>;
   /** This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it
-   * can be used to implement asynchronous validation
+   * can be used to implement asynchronous validation. By default, these are non-blocking errors, meaning that you can
+   * still submit the form when these are the only errors displayed to the user.
    */
   extraErrors?: ErrorSchema<T>;
+  /** If set to true, causes the `extraErrors` to become blocking when the form is submitted */
+  extraErrorsBlockSubmit?: boolean;
   /** If set to true, turns off HTML5 validation on the form; Set to `false` by default */
   noHtml5Validate?: boolean;
   /** If set to true, turns off all validation. Set to `false` by default
@@ -603,7 +606,7 @@ export default class Form<
   /** Callback function to handle when the form is submitted. First, it prevents the default event behavior. Nothing
    * happens if the target and currentTarget of the event are not the same. It will omit any extra data in the
    * `formData` in the state if `omitExtraData` is true. It will validate the resulting `formData`, reporting errors
-   * via the `onError()` callback unless validation is disabled. Finally it will add in any `extraErrors` and then call
+   * via the `onError()` callback unless validation is disabled. Finally, it will add in any `extraErrors` and then call
    * back the `onSubmit` callback if it was provided.
    *
    * @param event - The submit HTML form event
@@ -725,14 +728,14 @@ export default class Form<
    * @returns - True if the form is valid, false otherwise.
    */
   validateForm() {
-    const { extraErrors, focusOnFirstError, onError } = this.props;
+    const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { formData } = this.state;
     const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    if (errors.length > 0) {
+    if (errors.length > 0 || (extraErrors && extraErrorsBlockSubmit)) {
       if (extraErrors) {
         const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
@@ -740,9 +743,9 @@ export default class Form<
       }
       if (focusOnFirstError) {
         if (typeof focusOnFirstError === 'function') {
-          focusOnFirstError(schemaValidation.errors[0]);
+          focusOnFirstError(errors[0]);
         } else {
-          this.focusOnError(schemaValidation.errors[0]);
+          this.focusOnError(errors[0]);
         }
       }
       this.setState(
