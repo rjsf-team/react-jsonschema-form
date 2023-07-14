@@ -112,7 +112,7 @@ exports[`single fields checkbox field 1`] = `
             readOnly={false}
             required={false}
             style={
-              Object {
+              {
                 "border": "0px",
                 "clip": "rect(0px, 0px, 0px, 0px)",
                 "height": "1px",
@@ -269,7 +269,7 @@ exports[`single fields checkbox field with label 1`] = `
             readOnly={false}
             required={false}
             style={
-              Object {
+              {
                 "border": "0px",
                 "clip": "rect(0px, 0px, 0px, 0px)",
                 "height": "1px",
@@ -458,7 +458,7 @@ exports[`single fields checkboxes field 1`] = `
               readOnly={false}
               required={false}
               style={
-                Object {
+                {
                   "border": "0px",
                   "clip": "rect(0px, 0px, 0px, 0px)",
                   "height": "1px",
@@ -513,7 +513,7 @@ exports[`single fields checkboxes field 1`] = `
               readOnly={false}
               required={false}
               style={
-                Object {
+                {
                   "border": "0px",
                   "clip": "rect(0px, 0px, 0px, 0px)",
                   "height": "1px",
@@ -568,7 +568,7 @@ exports[`single fields checkboxes field 1`] = `
               readOnly={false}
               required={false}
               style={
-                Object {
+                {
                   "border": "0px",
                   "clip": "rect(0px, 0px, 0px, 0px)",
                   "height": "1px",
@@ -623,7 +623,7 @@ exports[`single fields checkboxes field 1`] = `
               readOnly={false}
               required={false}
               style={
-                Object {
+                {
                   "border": "0px",
                   "clip": "rect(0px, 0px, 0px, 0px)",
                   "height": "1px",
@@ -1560,7 +1560,7 @@ exports[`single fields hidden field 1`] = `
       >
         <div
           style={
-            Object {
+            {
               "display": "none",
             }
           }
@@ -2140,7 +2140,7 @@ exports[`single fields radio field 1`] = `
                 readOnly={false}
                 required={false}
                 style={
-                  Object {
+                  {
                     "border": "0px",
                     "clip": "rect(0px, 0px, 0px, 0px)",
                     "height": "1px",
@@ -2189,7 +2189,7 @@ exports[`single fields radio field 1`] = `
                 readOnly={false}
                 required={false}
                 style={
-                  Object {
+                  {
                     "border": "0px",
                     "clip": "rect(0px, 0px, 0px, 0px)",
                     "height": "1px",
@@ -4771,7 +4771,7 @@ exports[`single fields slider field 1`] = `
           onBlur={[Function]}
           onFocus={[Function]}
           style={
-            Object {
+            {
               "WebkitTapHighlightColor": "rgba(0,0,0,0)",
               "outline": 0,
               "paddingBottom": 0,
@@ -4787,7 +4787,7 @@ exports[`single fields slider field 1`] = `
             className="chakra-slider__track emotion-0"
             id="slider-track-root"
             style={
-              Object {
+              {
                 "position": "absolute",
                 "top": "50%",
                 "transform": "translateY(-50%)",
@@ -4798,7 +4798,7 @@ exports[`single fields slider field 1`] = `
             <div
               className="chakra-slider__filled-track emotion-0"
               style={
-                Object {
+                {
                   "left": "0%",
                   "position": "absolute",
                   "top": "50%",
@@ -4820,7 +4820,7 @@ exports[`single fields slider field 1`] = `
             onKeyDown={[Function]}
             role="slider"
             style={
-              Object {
+              {
                 "MozUserSelect": "none",
                 "WebkitUserSelect": "none",
                 "left": "calc(56.89655172413793% - 0px)",

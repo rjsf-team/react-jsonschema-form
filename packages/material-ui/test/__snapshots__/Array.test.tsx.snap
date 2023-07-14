@@ -129,7 +129,7 @@ exports[`array fields array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -200,7 +200,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -243,7 +243,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -289,7 +289,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -335,7 +335,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -373,7 +373,7 @@ exports[`array fields array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -444,7 +444,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -490,7 +490,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -533,7 +533,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -579,7 +579,7 @@ exports[`array fields array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -732,7 +732,7 @@ exports[`array fields checkboxes 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -809,7 +809,7 @@ exports[`array fields empty errors array 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -817,7 +817,7 @@ exports[`array fields empty errors array 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -925,7 +925,7 @@ exports[`array fields fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -984,7 +984,7 @@ exports[`array fields fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -1137,7 +1137,7 @@ exports[`array fields has errors 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1145,7 +1145,7 @@ exports[`array fields has errors 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1257,7 +1257,7 @@ exports[`array fields no errors 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1265,7 +1265,7 @@ exports[`array fields no errors 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1384,7 +1384,7 @@ exports[`with title and description array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -1516,7 +1516,7 @@ exports[`with title and description array icons 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -1532,7 +1532,7 @@ exports[`with title and description array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -1600,7 +1600,7 @@ exports[`with title and description array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -1633,7 +1633,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1676,7 +1676,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1719,7 +1719,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1762,7 +1762,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1797,7 +1797,7 @@ exports[`with title and description array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -1865,7 +1865,7 @@ exports[`with title and description array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -1898,7 +1898,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1941,7 +1941,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1984,7 +1984,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2027,7 +2027,7 @@ exports[`with title and description array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2179,7 +2179,7 @@ exports[`with title and description checkboxes 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -2215,7 +2215,7 @@ exports[`with title and description checkboxes 1`] = `
           className="MuiTypography-root MuiTypography-subtitle2"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -2293,7 +2293,7 @@ exports[`with title and description fixed array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -2309,7 +2309,7 @@ exports[`with title and description fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -2377,7 +2377,7 @@ exports[`with title and description fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -2398,7 +2398,7 @@ exports[`with title and description fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -2467,7 +2467,7 @@ exports[`with title and description fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -2552,7 +2552,7 @@ exports[`with title and description from both array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -2684,7 +2684,7 @@ exports[`with title and description from both array icons 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -2700,7 +2700,7 @@ exports[`with title and description from both array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -2768,7 +2768,7 @@ exports[`with title and description from both array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -2801,7 +2801,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2844,7 +2844,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2887,7 +2887,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2930,7 +2930,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2965,7 +2965,7 @@ exports[`with title and description from both array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -3033,7 +3033,7 @@ exports[`with title and description from both array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -3066,7 +3066,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -3109,7 +3109,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -3152,7 +3152,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -3195,7 +3195,7 @@ exports[`with title and description from both array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -3347,7 +3347,7 @@ exports[`with title and description from both checkboxes 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -3383,7 +3383,7 @@ exports[`with title and description from both checkboxes 1`] = `
           className="MuiTypography-root MuiTypography-subtitle2"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -3461,7 +3461,7 @@ exports[`with title and description from both fixed array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -3477,7 +3477,7 @@ exports[`with title and description from both fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -3545,7 +3545,7 @@ exports[`with title and description from both fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -3566,7 +3566,7 @@ exports[`with title and description from both fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -3635,7 +3635,7 @@ exports[`with title and description from both fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -3720,7 +3720,7 @@ exports[`with title and description from uiSchema array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -3852,7 +3852,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -3868,7 +3868,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -3936,7 +3936,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -3969,7 +3969,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4012,7 +4012,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4055,7 +4055,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4098,7 +4098,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4133,7 +4133,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -4201,7 +4201,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -4234,7 +4234,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4277,7 +4277,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4320,7 +4320,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4363,7 +4363,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -4515,7 +4515,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -4551,7 +4551,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
           className="MuiTypography-root MuiTypography-subtitle2"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -4629,7 +4629,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -4645,7 +4645,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -4713,7 +4713,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -4734,7 +4734,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -4803,7 +4803,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                               className="MuiTypography-root MuiTypography-subtitle2"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -4988,7 +4988,7 @@ exports[`with title and description with global label off array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -5059,7 +5059,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5102,7 +5102,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5145,7 +5145,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5188,7 +5188,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5223,7 +5223,7 @@ exports[`with title and description with global label off array icons 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -5294,7 +5294,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5337,7 +5337,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5380,7 +5380,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5423,7 +5423,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -5575,7 +5575,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -5611,7 +5611,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
           className="MuiTypography-root MuiTypography-subtitle2"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -5681,7 +5681,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -5740,7 +5740,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }

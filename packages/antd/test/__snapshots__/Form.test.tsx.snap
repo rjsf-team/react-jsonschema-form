@@ -14,11 +14,11 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -32,7 +32,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -42,7 +42,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -56,11 +56,11 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -97,7 +97,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -109,7 +109,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -175,11 +175,11 @@ exports[`single fields checkbox field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -247,11 +247,11 @@ exports[`single fields checkbox field with label 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -319,11 +319,11 @@ exports[`single fields checkboxes field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -485,11 +485,11 @@ exports[`single fields field with description 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -503,7 +503,7 @@ exports[`single fields field with description 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -513,7 +513,7 @@ exports[`single fields field with description 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -527,11 +527,11 @@ exports[`single fields field with description 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -543,7 +543,7 @@ exports[`single fields field with description 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -555,7 +555,7 @@ exports[`single fields field with description 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -630,11 +630,11 @@ exports[`single fields field with description in uiSchema 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -648,7 +648,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -658,7 +658,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -672,11 +672,11 @@ exports[`single fields field with description in uiSchema 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -688,7 +688,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -700,7 +700,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -775,11 +775,11 @@ exports[`single fields format color 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -791,7 +791,7 @@ exports[`single fields format color 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -848,11 +848,11 @@ exports[`single fields format date 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -864,7 +864,7 @@ exports[`single fields format date 1`] = `
                 className="ant-picker ant-picker-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -947,11 +947,11 @@ exports[`single fields format datetime 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -963,7 +963,7 @@ exports[`single fields format datetime 1`] = `
                 className="ant-picker ant-picker-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1046,11 +1046,11 @@ exports[`single fields format time 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1062,7 +1062,7 @@ exports[`single fields format time 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1115,7 +1115,7 @@ exports[`single fields help and error display 1`] = `
     className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors"
     data-show={true}
     role="alert"
-    style={Object {}}
+    style={{}}
   >
     <div
       className="ant-alert-content"
@@ -1142,12 +1142,12 @@ exports[`single fields help and error display 1`] = `
               >
                 <div
                   className="ant-space ant-space-horizontal ant-space-align-center"
-                  style={Object {}}
+                  style={{}}
                 >
                   <div
                     className="ant-space-item"
                     style={
-                      Object {
+                      {
                         "marginRight": 8,
                       }
                     }
@@ -1177,7 +1177,7 @@ exports[`single fields help and error display 1`] = `
                   </div>
                   <div
                     className="ant-space-item"
-                    style={Object {}}
+                    style={{}}
                   >
                     . an error
                   </div>
@@ -1197,11 +1197,11 @@ exports[`single fields help and error display 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1213,7 +1213,7 @@ exports[`single fields help and error display 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-status-error ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1294,11 +1294,11 @@ exports[`single fields hidden field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1312,7 +1312,7 @@ exports[`single fields hidden field 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1354,11 +1354,11 @@ exports[`single fields hidden label 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1370,7 +1370,7 @@ exports[`single fields hidden label 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1427,11 +1427,11 @@ exports[`single fields null field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1471,11 +1471,11 @@ exports[`single fields number field 0 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1487,7 +1487,7 @@ exports[`single fields number field 0 1`] = `
                 className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                 onMouseUp={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1626,11 +1626,11 @@ exports[`single fields number field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1642,7 +1642,7 @@ exports[`single fields number field 1`] = `
                 className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                 onMouseUp={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -1781,11 +1781,11 @@ exports[`single fields password field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1876,11 +1876,11 @@ exports[`single fields radio field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1979,11 +1979,11 @@ exports[`single fields schema examples 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1995,7 +1995,7 @@ exports[`single fields schema examples 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2072,11 +2072,11 @@ exports[`single fields select field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2094,7 +2094,7 @@ exports[`single fields select field 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2128,7 +2128,7 @@ exports[`single fields select field 1`] = `
                       readOnly={true}
                       role="combobox"
                       style={
-                        Object {
+                        {
                           "opacity": 0,
                         }
                       }
@@ -2148,7 +2148,7 @@ exports[`single fields select field 1`] = `
                   className="ant-select-arrow"
                   onMouseDown={[Function]}
                   style={
-                    Object {
+                    {
                       "WebkitUserSelect": "none",
                       "userSelect": "none",
                     }
@@ -2209,11 +2209,11 @@ exports[`single fields select field multiple choice 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2231,7 +2231,7 @@ exports[`single fields select field multiple choice 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2247,7 +2247,7 @@ exports[`single fields select field multiple choice 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2262,7 +2262,7 @@ exports[`single fields select field multiple choice 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -2288,7 +2288,7 @@ exports[`single fields select field multiple choice 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -2344,11 +2344,11 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2366,7 +2366,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2382,7 +2382,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2397,7 +2397,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -2423,7 +2423,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -2479,11 +2479,11 @@ exports[`single fields select field multiple choice formData 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2501,7 +2501,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2517,7 +2517,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                     <div
                       className="ant-select-selection-overflow-item"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2542,7 +2542,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                           onClick={[Function]}
                           onMouseDown={[Function]}
                           style={
-                            Object {
+                            {
                               "WebkitUserSelect": "none",
                               "userSelect": "none",
                             }
@@ -2574,7 +2574,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                     <div
                       className="ant-select-selection-overflow-item"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2599,7 +2599,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                           onClick={[Function]}
                           onMouseDown={[Function]}
                           style={
-                            Object {
+                            {
                               "WebkitUserSelect": "none",
                               "userSelect": "none",
                             }
@@ -2631,7 +2631,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2646,7 +2646,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -2672,7 +2672,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -2725,11 +2725,11 @@ exports[`single fields select field multiple choice with labels 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2747,7 +2747,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2763,7 +2763,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2778,7 +2778,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -2804,7 +2804,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -2860,11 +2860,11 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2882,7 +2882,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2916,7 +2916,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                       readOnly={true}
                       role="combobox"
                       style={
-                        Object {
+                        {
                           "opacity": 0,
                         }
                       }
@@ -2936,7 +2936,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   className="ant-select-arrow"
                   onMouseDown={[Function]}
                   style={
-                    Object {
+                    {
                       "WebkitUserSelect": "none",
                       "userSelect": "none",
                     }
@@ -2997,11 +2997,11 @@ exports[`single fields select field single choice formData 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3019,7 +3019,7 @@ exports[`single fields select field single choice formData 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3053,7 +3053,7 @@ exports[`single fields select field single choice formData 1`] = `
                       readOnly={true}
                       role="combobox"
                       style={
-                        Object {
+                        {
                           "opacity": 0,
                         }
                       }
@@ -3074,7 +3074,7 @@ exports[`single fields select field single choice formData 1`] = `
                   className="ant-select-arrow"
                   onMouseDown={[Function]}
                   style={
-                    Object {
+                    {
                       "WebkitUserSelect": "none",
                       "userSelect": "none",
                     }
@@ -3135,11 +3135,11 @@ exports[`single fields slider field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3159,7 +3159,7 @@ exports[`single fields slider field 1`] = `
                   onMouseDown={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "left": "0%",
                       "width": "56.896551724137936%",
                     }
@@ -3183,7 +3183,7 @@ exports[`single fields slider field 1`] = `
                   onTouchStart={[Function]}
                   role="slider"
                   style={
-                    Object {
+                    {
                       "left": "56.896551724137936%",
                       "transform": "translateX(-50%)",
                     }
@@ -3224,11 +3224,11 @@ exports[`single fields string field format data-url 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3241,7 +3241,7 @@ exports[`single fields string field format data-url 1`] = `
                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                   onClick={[Function]}
                   style={
-                    Object {
+                    {
                       "width": "100%",
                     }
                   }
@@ -3299,11 +3299,11 @@ exports[`single fields string field format email 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3315,7 +3315,7 @@ exports[`single fields string field format email 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3372,11 +3372,11 @@ exports[`single fields string field format uri 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3388,7 +3388,7 @@ exports[`single fields string field format uri 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3445,11 +3445,11 @@ exports[`single fields string field regular 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3461,7 +3461,7 @@ exports[`single fields string field regular 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3518,11 +3518,11 @@ exports[`single fields string field with placeholder 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3534,7 +3534,7 @@ exports[`single fields string field with placeholder 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3591,11 +3591,11 @@ exports[`single fields textarea field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3607,7 +3607,7 @@ exports[`single fields textarea field 1`] = `
                 className="ant-input-textarea ant-input-textarea-in-form-item ant-input-textarea-has-feedback"
                 data-count="0"
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3627,7 +3627,7 @@ exports[`single fields textarea field 1`] = `
                   placeholder=""
                   rows={4}
                   style={
-                    Object {
+                    {
                       "width": "100%",
                     }
                   }
@@ -3671,11 +3671,11 @@ exports[`single fields title field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3689,7 +3689,7 @@ exports[`single fields title field 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -3698,7 +3698,7 @@ exports[`single fields title field 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3716,7 +3716,7 @@ exports[`single fields title field 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3730,11 +3730,11 @@ exports[`single fields title field 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -3746,7 +3746,7 @@ exports[`single fields title field 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -3758,7 +3758,7 @@ exports[`single fields title field 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -3824,11 +3824,11 @@ exports[`single fields unsupported field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3889,11 +3889,11 @@ exports[`single fields up/down field 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3905,7 +3905,7 @@ exports[`single fields up/down field 1`] = `
                 className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                 onMouseUp={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -4044,11 +4044,11 @@ exports[`single fields using custom tagName 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -4060,7 +4060,7 @@ exports[`single fields using custom tagName 1`] = `
                 className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }

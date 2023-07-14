@@ -978,7 +978,7 @@ exports[`single fields select field multiple choice 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"
@@ -1035,7 +1035,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         disabled={false}
@@ -1097,7 +1097,7 @@ exports[`single fields select field multiple choice formData 1`] = `
       onFocus={[Function]}
       required={false}
       value={
-        Array [
+        [
           "0",
           "1",
         ]
@@ -1158,7 +1158,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"

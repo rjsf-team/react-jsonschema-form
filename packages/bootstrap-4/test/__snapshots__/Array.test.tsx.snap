@@ -39,7 +39,7 @@ exports[`array fields array 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -52,7 +52,7 @@ exports[`array fields array 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -169,7 +169,7 @@ exports[`array fields array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -185,7 +185,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -207,7 +207,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -223,7 +223,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -245,7 +245,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -261,7 +261,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -289,7 +289,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -305,7 +305,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -377,7 +377,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -393,7 +393,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -415,7 +415,7 @@ exports[`array fields array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -431,7 +431,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -453,7 +453,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -469,7 +469,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -497,7 +497,7 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -513,7 +513,7 @@ exports[`array fields array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -548,7 +548,7 @@ exports[`array fields array icons 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -561,7 +561,7 @@ exports[`array fields array icons 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -632,7 +632,7 @@ exports[`array fields checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -690,7 +690,7 @@ exports[`array fields empty errors array 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -925,7 +925,7 @@ exports[`array fields has errors 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1019,7 +1019,7 @@ exports[`array fields no errors 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1105,7 +1105,7 @@ exports[`with title and description array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -1139,7 +1139,7 @@ exports[`with title and description array 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -1152,7 +1152,7 @@ exports[`with title and description array 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -1222,7 +1222,7 @@ exports[`with title and description array icons 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -1304,7 +1304,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1320,7 +1320,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1342,7 +1342,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1358,7 +1358,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1380,7 +1380,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1396,7 +1396,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1424,7 +1424,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1440,7 +1440,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1523,7 +1523,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1539,7 +1539,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1561,7 +1561,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1577,7 +1577,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1599,7 +1599,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1615,7 +1615,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1643,7 +1643,7 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -1659,7 +1659,7 @@ exports[`with title and description array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -1694,7 +1694,7 @@ exports[`with title and description array icons 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -1707,7 +1707,7 @@ exports[`with title and description array icons 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -1778,7 +1778,7 @@ exports[`with title and description checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -1857,7 +1857,7 @@ exports[`with title and description fixed array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -2034,7 +2034,7 @@ exports[`with title and description from both array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -2068,7 +2068,7 @@ exports[`with title and description from both array 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -2081,7 +2081,7 @@ exports[`with title and description from both array 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -2151,7 +2151,7 @@ exports[`with title and description from both array icons 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -2233,7 +2233,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2249,7 +2249,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2271,7 +2271,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2287,7 +2287,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2309,7 +2309,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2325,7 +2325,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2353,7 +2353,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2369,7 +2369,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2452,7 +2452,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2468,7 +2468,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2490,7 +2490,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2506,7 +2506,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2528,7 +2528,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2544,7 +2544,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2572,7 +2572,7 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -2588,7 +2588,7 @@ exports[`with title and description from both array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -2623,7 +2623,7 @@ exports[`with title and description from both array icons 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -2636,7 +2636,7 @@ exports[`with title and description from both array icons 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -2707,7 +2707,7 @@ exports[`with title and description from both checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -2786,7 +2786,7 @@ exports[`with title and description from both fixed array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -2963,7 +2963,7 @@ exports[`with title and description from uiSchema array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -2997,7 +2997,7 @@ exports[`with title and description from uiSchema array 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -3010,7 +3010,7 @@ exports[`with title and description from uiSchema array 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -3080,7 +3080,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -3162,7 +3162,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3178,7 +3178,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3200,7 +3200,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3216,7 +3216,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3238,7 +3238,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3254,7 +3254,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3282,7 +3282,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3298,7 +3298,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3381,7 +3381,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3397,7 +3397,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3419,7 +3419,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3435,7 +3435,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3457,7 +3457,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3473,7 +3473,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3501,7 +3501,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -3517,7 +3517,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -3552,7 +3552,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -3565,7 +3565,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -3636,7 +3636,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -3715,7 +3715,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               <hr
                 className="border-0 bg-secondary"
                 style={
-                  Object {
+                  {
                     "height": "1px",
                   }
                 }
@@ -3902,7 +3902,7 @@ exports[`with title and description with global label off array 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -3915,7 +3915,7 @@ exports[`with title and description with global label off array 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -4024,7 +4024,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4040,7 +4040,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4062,7 +4062,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4078,7 +4078,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4100,7 +4100,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4116,7 +4116,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4144,7 +4144,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4160,7 +4160,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4224,7 +4224,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4240,7 +4240,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4262,7 +4262,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={true}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4278,7 +4278,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4300,7 +4300,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4316,7 +4316,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4344,7 +4344,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           onClick={[Function]}
                           style={
-                            Object {
+                            {
                               "flex": 1,
                               "fontWeight": "bold",
                               "paddingLeft": 6,
@@ -4360,7 +4360,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             stroke="currentColor"
                             strokeWidth="0"
                             style={
-                              Object {
+                              {
                                 "color": undefined,
                               }
                             }
@@ -4395,7 +4395,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       disabled={false}
                       onClick={[Function]}
                       style={
-                        Object {
+                        {
                           "width": "100%",
                         }
                       }
@@ -4408,7 +4408,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         stroke="currentColor"
                         strokeWidth="0"
                         style={
-                          Object {
+                          {
                             "color": undefined,
                           }
                         }
@@ -4479,7 +4479,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}

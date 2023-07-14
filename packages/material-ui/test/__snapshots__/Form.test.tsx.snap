@@ -492,7 +492,7 @@ exports[`single fields field with description 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -500,7 +500,7 @@ exports[`single fields field with description 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -552,7 +552,7 @@ exports[`single fields field with description 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_my-field__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -615,7 +615,7 @@ exports[`single fields field with description in uiSchema 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -623,7 +623,7 @@ exports[`single fields field with description in uiSchema 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -675,7 +675,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_my-field__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -1160,14 +1160,14 @@ exports[`single fields hidden field 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
       >
         <div
           style={
-            Object {
+            {
               "display": "none",
             }
           }
@@ -1855,7 +1855,7 @@ exports[`single fields select field 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -1951,7 +1951,7 @@ exports[`single fields select field multiple choice 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -2049,7 +2049,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -2233,7 +2233,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -2328,7 +2328,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           >
             <span
               dangerouslySetInnerHTML={
-                Object {
+                {
                   "__html": "&#8203;",
                 }
               }
@@ -2517,7 +2517,7 @@ exports[`single fields slider field 1`] = `
         <span
           className="MuiSlider-track"
           style={
-            Object {
+            {
               "left": "0%",
               "width": "56.89655172413793%",
             }
@@ -2542,7 +2542,7 @@ exports[`single fields slider field 1`] = `
           onMouseOver={[Function]}
           role="slider"
           style={
-            Object {
+            {
               "left": "56.89655172413793%",
             }
           }
@@ -3057,7 +3057,7 @@ exports[`single fields title field 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -3065,7 +3065,7 @@ exports[`single fields title field 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
