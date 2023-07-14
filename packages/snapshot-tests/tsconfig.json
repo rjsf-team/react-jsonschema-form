@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "jsx": "react-jsx"
+  }
+}

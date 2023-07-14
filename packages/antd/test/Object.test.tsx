@@ -1,4 +1,4 @@
-import objectTests from '@rjsf/core/testSnap/objectTests';
+import { objectTests } from '@rjsf/snapshot-tests';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';

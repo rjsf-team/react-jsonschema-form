@@ -1,4 +1,4 @@
-import arrayTests, { CHECKBOXES_CUSTOMIZE } from '@rjsf/core/testSnap/arrayTests';
+import { arrayTests, CHECKBOXES_CUSTOMIZE } from '@rjsf/snapshot-tests';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';

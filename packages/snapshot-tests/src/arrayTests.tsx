@@ -3,7 +3,7 @@ import renderer, { TestRendererOptions } from 'react-test-renderer';
 import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { FormProps } from '../src';
+import { FormProps } from '@rjsf/core';
 
 const titleAndDesc = {
   title: 'Test field',
@@ -38,7 +38,7 @@ export type ArrayRenderCustomOptions = {
   checkboxes?: TestRendererOptions;
 };
 
-export default function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayRenderCustomOptions = {}) {
+export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayRenderCustomOptions = {}) {
   describe('array fields', () => {
     test('array', () => {
       const schema: RJSFSchema = {

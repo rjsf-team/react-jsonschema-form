@@ -1,4 +1,4 @@
-import formTests, { SLIDER_CUSTOMIZE } from '@rjsf/core/testSnap/formTests';
+import { formTests, SLIDER_CUSTOMIZE } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
 

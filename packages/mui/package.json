@@ -53,6 +53,7 @@
     "@mui/icons-material": "^5.14.8",
     "@mui/material": "^5.14.8",
     "@rjsf/core": "^5.13.6",
+    "@rjsf/snapshot-tests": "^5.13.6",
     "@rjsf/utils": "^5.13.6",
     "@rjsf/validator-ajv8": "^5.13.6",
     "@types/react": "^17.0.65",

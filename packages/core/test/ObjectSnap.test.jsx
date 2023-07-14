@@ -1,4 +1,4 @@
 import Form from '../src';
-import objectTests from '../testSnap/objectTests';
+import { objectTests } from '@rjsf/snapshot-tests';
 
 objectTests(Form);
