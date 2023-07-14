@@ -161,7 +161,13 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 
 ## extraErrors
 
-This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation. See [Validation](../usage/validation.md) for more information.
+This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation.
+By default, these are non-blocking errors, meaning that you can still submit the form when these are the only errors displayed to the user.
+See [Validation](../usage/validation.md) for more information.
+
+## extraErrorsBlockSubmit
+
+If set to true, causes the `extraErrors` to become blocking when the form is submitted.
 
 ## fields
 
