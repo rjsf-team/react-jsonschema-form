@@ -163,10 +163,6 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 
 This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation. See [Validation](../usage/validation.md) for more information.
 
-## ErrorList
-
-You can pass a React component to this prop to customize how form errors are displayed. See [Validation](../usage/validation.md) for more information.
-
 ## fields
 
 Dictionary of registered fields in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
