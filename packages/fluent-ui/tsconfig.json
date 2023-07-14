@@ -1,27 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"],
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib",
-    "baseUrl": "./",
-    "jsx": "react-jsx",
-    // There are type errors in @fluentui type definitions because of which skipLibCheck had to be added
-    // @fluentui/font-icons-mdl2/lib/IconNames.d.ts
-    // @fluentui/merge-styles/lib/mergeStyleSets.d.ts
-    // @fluentui/react/lib/components/SelectedItemsList/BaseSelectedItemsList.d.ts
-    // @fluentui/utilities/lib/styled.d.ts
-    "skipLibCheck": true
-  },
+  "files": [],
   "references": [
     {
-      "path": "../core"
+      "path": "./src"
     },
     {
-      "path": "../utils"
-    },
-    {
-      "path": "../validator-ajv8"
+      "path": "./test"
     }
   ]
 }

@@ -1,21 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"],
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib",
-    "baseUrl": "./",
-    "jsx": "react-jsx"
-  },
+  "files": [],
   "references": [
     {
-      "path": "../core"
+      "path": "./src"
     },
     {
-      "path": "../utils"
-    },
-    {
-      "path": "../validator-ajv8"
+      "path": "./test"
     }
   ]
 }
