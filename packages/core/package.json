@@ -13,8 +13,7 @@
     "test:debug": "node --inspect-brk node_modules/.bin/dts test",
     "test:update": "dts test --u",
     "test:watch": "dts test --watch",
-    "test-coverage": "dts test --coverage",
-    "bump-packages": "npm update --save --lockfile-version 2"
+    "test-coverage": "dts test --coverage"
   },
   "lint-staged": {
     "{src,test,testSnap}/**/*.[jt]s?(x)": [
