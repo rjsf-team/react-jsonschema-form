@@ -20,8 +20,7 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "compileSchemas": "node test/harness/compileTestSchema.js",
-    "test": "npm run compileSchemas && dts test",
-    "bump-packages": "npm update --save --lockfile-version 2"
+    "test": "npm run compileSchemas && dts test"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [

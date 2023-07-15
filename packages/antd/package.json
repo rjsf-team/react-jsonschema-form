@@ -12,8 +12,7 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "dts test",
-    "test:update": "dts test --u",
-    "bump-packages": "npm update --save --lockfile-version 2"
+    "test:update": "dts test --u"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [

@@ -28,6 +28,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `getDefaultFormState()` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
 - Updated `retrieveSchema()` to use `mergeSchema()` for merging in the remaining schema for `anyOf`/`oneOf`
 
+## Dev / docs / playground
+
+- Switched to using npm workspaces for the sub-package hierarchy
+  - NOTE: Developers may need to run the `npm run refresh-node-modules` script first to get the build and tests to work correctly
+
 # 5.10.0
 
 ## @rjsf/core
