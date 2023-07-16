@@ -48,7 +48,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 You can use an `ArrayFieldTemplate` to customize how your arrays are rendered.
 This allows you to customize your array, and each element in the array.
 If you only want to customize how the array's title, description or how the array items are presented, you may want to consider providing your own [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate), [ArrayFieldItemTemplate](#arrayfielditemtemplate) and/or [ArrayFieldTitleTemplate](#arrayfieldtitletemplate) instead.
-You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../usage/arrays.md#custom-widgets).
+You can also customize arrays by specifying a widget in the relevant `ui:widget` schema, more details over on [Custom Widgets](../json-schema/arrays.md#custom-widgets).
 
 ```tsx
 import { ArrayFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
@@ -369,11 +369,12 @@ import { BaseInputTemplateProps } from '@rjsf/utils';
 import { getDefaultRegistry } from '@rjsf/core';
 import { Templates } from '@rjsf/mui';
 
-const { templates: { BaseInputTemplate } } = getDefaultRegistry();  // To get templates from core
+const {
+  templates: { BaseInputTemplate },
+} = getDefaultRegistry(); // To get templates from core
 // const { BaseInputTemplate } = Templates; // To get templates from a theme do this
 
-function MyBaseInputTemplate(props: BaseInputTemplateProps)
-{
+function MyBaseInputTemplate(props: BaseInputTemplateProps) {
   const customProps = {};
   // get your custom props from where you need to
   return <BaseInputTemplate {...props} {...customProps} />;
