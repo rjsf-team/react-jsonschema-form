@@ -5,6 +5,9 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "baseUrl": "./",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // todo:
+    // ../../node_modules/@chakra-ui/menu/dist/declarations/src/use-menu.d.ts:986:61 - error TS2694: Namespace '"node_modules/csstype/index".Property' has no exported member 'ColorAdjust'.
+    "skipLibCheck": true
   }
 }
