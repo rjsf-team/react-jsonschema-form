@@ -5,6 +5,9 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "baseUrl": "./",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // todo:
+    // ../../node_modules/semantic-ui-react/dist/commonjs/generic.d.ts(73,73): error TS2344: Type 'TProps' does not satisfy the constraint 'Record<string, any>'.
+    "skipLibCheck": true
   }
 }
