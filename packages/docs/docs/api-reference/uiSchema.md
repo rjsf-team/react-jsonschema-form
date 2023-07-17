@@ -100,7 +100,7 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-NOTE: The properties specific to array items can be found [here](../usage/arrays.md#array-item-uiSchema-options)
+NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options)
 
 ### widget
 
@@ -324,7 +324,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ### order
 
-This property allows you to reorder the properties that are shown for a particular object. See [Objects](../usage/objects.md) for more information.
+This property allows you to reorder the properties that are shown for a particular object. See [Objects](../json-schema/objects.md) for more information.
 
 ### placeholder
 

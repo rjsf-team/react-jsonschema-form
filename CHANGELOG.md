@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Switched to using npm workspaces for the sub-package hierarchy
   - NOTE: Developers may need to run the `npm run refresh-node-modules` script first to get the build and tests to work correctly
+- Backfilled Docusaurus site with documentation for v3, v4
 
 # 5.10.0
 

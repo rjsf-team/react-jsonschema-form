@@ -41,6 +41,21 @@ const config = {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
+          lastVersion: 'current',
+          versions: {
+            'current': {
+              label: 'v5',
+              path: '',
+            },
+            '4.2.3': {
+              label: 'v4',
+              path: 'version-4.2.3',
+            },
+            '3.2.1': {
+              label: 'v3',
+              path: 'version-3.2.1',
+            },
+          },
         },
         blog: false,
         theme: {
@@ -57,10 +72,10 @@ const config = {
       // image: 'img/docusaurus-social-card.jpg',
       navbar: {
         title: 'react-jsonschema-form documentation',
-        // logo: {
-        //   alt: 'RJSF Logo',
-        //   src: 'img/logo.svg',
-        // },
+        logo: {
+          alt: 'RJSF Logo',
+          src: 'https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/core/logo.png',
+        },
         items: [
           {
             type: 'doc',
@@ -70,21 +85,26 @@ const config = {
           },
           {
             type: 'doc',
-            docId: '/api-reference',
+            docId: 'api-reference/index',
             position: 'left',
             label: 'API Reference',
           },
           {
             type: 'doc',
-            docId: '/advanced-customization',
+            docId: 'advanced-customization/index',
             position: 'left',
             label: 'Advanced Customization',
           },
           {
             type: 'doc',
-            docId: '/migration-guides',
+            docId: 'migration-guides/index',
             position: 'left',
             label: 'Upgrade Guide',
+          },
+          {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownActiveClassDisabled: true,
           },
           {
             href: 'https://rjsf-team.github.io/react-jsonschema-form',
@@ -145,11 +165,11 @@ const config = {
           from: '/react-jsonschema-form/docs/',
           to: '/',
         },
-        // We will need to tune `contextualSearch` and `searchParameters` to handle search for versioned docs
+        // We may need to tune `contextualSearch` and `searchParameters` to handle search for versioned docs
         // Optional: see doc section -- https://docusaurus.io/docs/search#contextual-search
         contextualSearch: true,
         // Optional: Algolia search parameters
-        searchParameters: {},
+        // searchParameters: {},
         // Optional: path for search page that enabled by default (`false` to disable it)
         searchPagePath: 'search',
       },

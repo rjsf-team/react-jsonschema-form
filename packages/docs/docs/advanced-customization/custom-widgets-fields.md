@@ -329,7 +329,7 @@ The `registry` is an object containing the registered core, theme and custom fie
 
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
-- `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../usage/definitions.md);
+- `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
 - `formContext`: The [formContext](../api-reference/form-props.md#formcontext) that was passed to `Form`;
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
 

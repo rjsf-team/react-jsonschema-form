@@ -41,7 +41,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](./usage/single.md).
+For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](json-schema/single.md).
 
 ## Form uiSchema
 
