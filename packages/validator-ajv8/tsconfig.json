@@ -3,6 +3,7 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "./src",
+    "outDir": "./lib",
     "resolveJsonModule": true,
     "baseUrl": "./",
     "jsx": "react-jsx"
