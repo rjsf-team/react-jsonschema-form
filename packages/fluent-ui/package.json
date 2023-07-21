@@ -6,7 +6,9 @@
   "typings": "lib/index.d.ts",
   "description": "Fluent UI theme, fields and widgets for react-jsonschema-form",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "scripts": {
     "build:ts": "tsc",

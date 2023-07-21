@@ -6,7 +6,9 @@
   "typings": "lib/index.d.ts",
   "description": "Utility functions for @rjsf/core",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {

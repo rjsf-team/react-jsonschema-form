@@ -6,7 +6,9 @@
   "typings": "lib/index.d.ts",
   "description": "Semantic UI theme, fields and widgets for react-jsonschema-form",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {

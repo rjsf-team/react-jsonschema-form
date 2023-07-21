@@ -6,7 +6,9 @@
   "typings": "lib/index.d.ts",
   "description": "The ajv-8 based validator for @rjsf/core",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {

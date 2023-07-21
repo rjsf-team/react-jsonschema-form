@@ -6,7 +6,9 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "scripts": {
     "build:ts": "tsc",

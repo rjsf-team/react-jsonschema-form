@@ -6,7 +6,9 @@
   "types": "./dist/index.d.ts",
   "description": "Material UI 5 theme, fields and widgets for react-jsonschema-form",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "scripts": {
     "build:ts": "tsc",

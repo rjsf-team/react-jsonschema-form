@@ -22,7 +22,9 @@
     ]
   },
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {

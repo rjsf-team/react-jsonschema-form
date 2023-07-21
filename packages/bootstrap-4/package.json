@@ -6,7 +6,9 @@
   "typings": "lib/index.d.ts",
   "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "src"
   ],
   "repository": {
     "type": "git",
