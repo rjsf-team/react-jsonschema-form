@@ -8,6 +8,8 @@ exemptLabels:
   - enhancement
   - feature
   - theme request
+  - help wanted
+  - p1
 # Label to use when marking an issue as stale
 staleLabel: possibly close
 # Comment to post when marking an issue as stale. Set to `false` to disable
@@ -16,4 +18,4 @@ markComment: >
   recent activity. It will be closed if no further activity occurs. Please
   leave a comment if this is still an issue for you. Thank you.
 # Comment to post when closing a stale issue. Set to `false` to disable
-closeComment: This issue was closed because of lack of recent activity. Reoopen if you still need assistance.
+closeComment: This issue was closed because of lack of recent activity. Reopen if you still need assistance.
