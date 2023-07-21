@@ -1,9 +1,9 @@
 {
   "name": "@rjsf/material-ui",
   "version": "5.11.2",
-  "module": "./dist/material-ui.esm.js",
+  "module": "./lib/index.js",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./lib/index.d.ts",
   "description": "Material UI 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist",
