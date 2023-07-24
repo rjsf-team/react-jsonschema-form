@@ -19,7 +19,7 @@ exports[`object fields additionalProperties 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -102,7 +102,7 @@ exports[`object fields additionalProperties 1`] = `
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -130,7 +130,7 @@ exports[`object fields additionalProperties 1`] = `
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -143,7 +143,7 @@ exports[`object fields additionalProperties 1`] = `
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -199,7 +199,7 @@ exports[`object fields object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -244,7 +244,7 @@ exports[`object fields object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -321,7 +321,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -404,7 +404,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -432,7 +432,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -445,7 +445,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -504,7 +504,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -524,7 +524,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -607,7 +607,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -635,7 +635,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -648,7 +648,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -707,7 +707,7 @@ exports[`object fields with title and description from both additionalProperties
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -727,7 +727,7 @@ exports[`object fields with title and description from both additionalProperties
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -810,7 +810,7 @@ exports[`object fields with title and description from both additionalProperties
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -838,7 +838,7 @@ exports[`object fields with title and description from both additionalProperties
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -851,7 +851,7 @@ exports[`object fields with title and description from both additionalProperties
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -910,7 +910,7 @@ exports[`object fields with title and description from both object 1`] = `
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -930,7 +930,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -986,7 +986,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1077,7 +1077,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -1097,7 +1097,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1180,7 +1180,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -1208,7 +1208,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -1221,7 +1221,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -1280,7 +1280,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -1300,7 +1300,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1356,7 +1356,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1447,7 +1447,7 @@ exports[`object fields with title and description from uiSchema show add button 
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -1467,7 +1467,7 @@ exports[`object fields with title and description from uiSchema show add button 
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1550,7 +1550,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -1578,7 +1578,7 @@ exports[`object fields with title and description from uiSchema show add button 
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -1591,7 +1591,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -1650,7 +1650,7 @@ exports[`object fields with title and description object 1`] = `
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -1670,7 +1670,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1726,7 +1726,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1817,7 +1817,7 @@ exports[`object fields with title and description show add button and fields if 
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -1837,7 +1837,7 @@ exports[`object fields with title and description show add button and fields if 
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1920,7 +1920,7 @@ exports[`object fields with title and description show add button and fields if 
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -1948,7 +1948,7 @@ exports[`object fields with title and description show add button and fields if 
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -1961,7 +1961,7 @@ exports[`object fields with title and description show add button and fields if 
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -2017,7 +2017,7 @@ exports[`object fields with title and description with global label off addition
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2093,7 +2093,7 @@ exports[`object fields with title and description with global label off addition
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -2121,7 +2121,7 @@ exports[`object fields with title and description with global label off addition
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -2134,7 +2134,7 @@ exports[`object fields with title and description with global label off addition
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }
@@ -2190,7 +2190,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2228,7 +2228,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2298,7 +2298,7 @@ exports[`object fields with title and description with global label off show add
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2374,7 +2374,7 @@ exports[`object fields with title and description with global label off show add
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -2402,7 +2402,7 @@ exports[`object fields with title and description with global label off show add
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -2415,7 +2415,7 @@ exports[`object fields with title and description with global label off show add
                 stroke="currentColor"
                 strokeWidth="0"
                 style={
-                  Object {
+                  {
                     "color": undefined,
                   }
                 }

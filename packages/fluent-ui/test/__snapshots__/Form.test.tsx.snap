@@ -9,7 +9,7 @@ exports[`single fields checkbox field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -96,7 +96,7 @@ exports[`single fields checkbox field with label 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -188,7 +188,7 @@ exports[`single fields checkboxes field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -358,9 +358,9 @@ exports[`single fields checkboxes field 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "color": "rgb(164, 38, 44)",
-          "fontFamily": "\\"Segoe UI\\", \\"Segoe UI Web (West European)\\", \\"Segoe UI\\", -apple-system, BlinkMacSystemFont, Roboto, \\"Helvetica Neue\\", sans-serif",
+          "fontFamily": ""Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif",
           "fontSize": 12,
           "fontWeight": "normal",
         }
@@ -416,7 +416,7 @@ exports[`single fields field with description 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -432,7 +432,7 @@ exports[`single fields field with description 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -535,7 +535,7 @@ exports[`single fields field with description in uiSchema 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -551,7 +551,7 @@ exports[`single fields field with description in uiSchema 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -654,7 +654,7 @@ exports[`single fields format color 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -684,7 +684,7 @@ exports[`single fields format color 1`] = `
           onMouseDown={[Function]}
           role="slider"
           style={
-            Object {
+            {
               "backgroundColor": "#ff0000",
             }
           }
@@ -705,7 +705,7 @@ exports[`single fields format color 1`] = `
           <div
             className="ms-ColorPicker-thumb thumb-144"
             style={
-              Object {
+              {
                 "backgroundColor": "#ffffff",
                 "left": "0%",
                 "top": "0%",
@@ -735,7 +735,7 @@ exports[`single fields format color 1`] = `
               <div
                 className="ms-ColorPicker-thumb is-slider sliderThumb-148"
                 style={
-                  Object {
+                  {
                     "left": "0%",
                   }
                 }
@@ -757,7 +757,7 @@ exports[`single fields format color 1`] = `
               <div
                 className="ms-ColorPicker-sliderOverlay sliderOverlay-147"
                 style={
-                  Object {
+                  {
                     "background": "linear-gradient(to right, transparent, #ffffff)",
                   }
                 }
@@ -765,7 +765,7 @@ exports[`single fields format color 1`] = `
               <div
                 className="ms-ColorPicker-thumb is-slider sliderThumb-148"
                 style={
-                  Object {
+                  {
                     "left": "100%",
                   }
                 }
@@ -778,7 +778,7 @@ exports[`single fields format color 1`] = `
             <div
               className="ms-ColorPicker-colorSquare colorSquare-136 is-preview"
               style={
-                Object {
+                {
                   "backgroundColor": "#ffffff",
                 }
               }
@@ -858,7 +858,7 @@ exports[`single fields format color 1`] = `
                     hidden={true}
                     id="tooltip63"
                     style={
-                      Object {
+                      {
                         "border": 0,
                         "height": 1,
                         "margin": -1,
@@ -912,7 +912,7 @@ exports[`single fields format color 1`] = `
                     hidden={true}
                     id="tooltip69"
                     style={
-                      Object {
+                      {
                         "border": 0,
                         "height": 1,
                         "margin": -1,
@@ -966,7 +966,7 @@ exports[`single fields format color 1`] = `
                     hidden={true}
                     id="tooltip75"
                     style={
-                      Object {
+                      {
                         "border": 0,
                         "height": 1,
                         "margin": -1,
@@ -1020,7 +1020,7 @@ exports[`single fields format color 1`] = `
                     hidden={true}
                     id="tooltip81"
                     style={
-                      Object {
+                      {
                         "border": 0,
                         "height": 1,
                         "margin": -1,
@@ -1074,7 +1074,7 @@ exports[`single fields format color 1`] = `
                     hidden={true}
                     id="tooltip87"
                     style={
-                      Object {
+                      {
                         "border": 0,
                         "height": 1,
                         "margin": -1,
@@ -1141,7 +1141,7 @@ exports[`single fields format date 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1257,7 +1257,7 @@ exports[`single fields format datetime 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1339,7 +1339,7 @@ exports[`single fields format time 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1451,7 +1451,7 @@ exports[`single fields help and error display 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1505,7 +1505,7 @@ exports[`single fields help and error display 1`] = `
         <div
           className="ms-List-page"
           role="presentation"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ms-List-cell"
@@ -1571,7 +1571,7 @@ exports[`single fields hidden field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1586,7 +1586,7 @@ exports[`single fields hidden field 1`] = `
       >
         <div
           style={
-            Object {
+            {
               "display": "none",
             }
           }
@@ -1647,7 +1647,7 @@ exports[`single fields hidden label 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1728,7 +1728,7 @@ exports[`single fields null field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-null"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1781,7 +1781,7 @@ exports[`single fields number field 0 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-number"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1864,7 +1864,7 @@ exports[`single fields number field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-number"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1947,7 +1947,7 @@ exports[`single fields password field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2029,7 +2029,7 @@ exports[`single fields radio field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-boolean"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2161,7 +2161,7 @@ exports[`single fields schema examples 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2263,7 +2263,7 @@ exports[`single fields select field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2356,7 +2356,7 @@ exports[`single fields select field multiple choice 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2450,7 +2450,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2544,7 +2544,7 @@ exports[`single fields select field multiple choice formData 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2638,7 +2638,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2732,7 +2732,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2825,7 +2825,7 @@ exports[`single fields select field single choice formData 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2920,7 +2920,7 @@ exports[`single fields slider field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-integer"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2960,7 +2960,7 @@ exports[`single fields slider field 1`] = `
             <span
               className="ms-Slider-thumb thumb-220"
               style={
-                Object {
+                {
                   "left": "0%",
                 }
               }
@@ -2968,7 +2968,7 @@ exports[`single fields slider field 1`] = `
             <span
               className="lineContainer-222 ms-Slider-inactive inactiveSection-224"
               style={
-                Object {
+                {
                   "width": "0%",
                 }
               }
@@ -2976,7 +2976,7 @@ exports[`single fields slider field 1`] = `
             <span
               className="lineContainer-222 ms-Slider-active activeSection-223"
               style={
-                Object {
+                {
                   "width": "0%",
                 }
               }
@@ -2984,7 +2984,7 @@ exports[`single fields slider field 1`] = `
             <span
               className="lineContainer-222 ms-Slider-inactive inactiveSection-224"
               style={
-                Object {
+                {
                   "width": "100%",
                 }
               }
@@ -3046,7 +3046,7 @@ exports[`single fields string field format data-url 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3130,7 +3130,7 @@ exports[`single fields string field format email 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3212,7 +3212,7 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3294,7 +3294,7 @@ exports[`single fields string field regular 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3376,7 +3376,7 @@ exports[`single fields string field with placeholder 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3458,7 +3458,7 @@ exports[`single fields textarea field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3540,7 +3540,7 @@ exports[`single fields title field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3561,7 +3561,7 @@ exports[`single fields title field 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -3655,7 +3655,7 @@ exports[`single fields unsupported field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-undefined"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3728,7 +3728,7 @@ exports[`single fields up/down field 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-number"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3795,8 +3795,8 @@ exports[`single fields up/down field 1`] = `
                 className="ms-Icon root-105 css-175 ms-Button-icon icon-172"
                 data-icon-name="ChevronUpSmall"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -3827,8 +3827,8 @@ exports[`single fields up/down field 1`] = `
                 className="ms-Icon root-105 css-177 ms-Button-icon icon-172"
                 data-icon-name="ChevronDownSmall"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-3\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-3"",
                   }
                 }
               >
@@ -3887,7 +3887,7 @@ exports[`single fields using custom tagName 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-string"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }

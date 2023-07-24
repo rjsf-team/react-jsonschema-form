@@ -1175,7 +1175,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -1261,7 +1261,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1302,7 +1302,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1346,7 +1346,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1390,7 +1390,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1425,7 +1425,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -1511,7 +1511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1555,7 +1555,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1596,7 +1596,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -1640,7 +1640,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -2732,7 +2732,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2740,7 +2740,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -3306,7 +3306,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -3379,7 +3379,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -4198,7 +4198,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-10"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -4206,7 +4206,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-11"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -4803,7 +4803,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -4811,7 +4811,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -5264,7 +5264,7 @@ exports[`with title and description array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -6256,7 +6256,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -6272,7 +6272,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -6354,7 +6354,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -6388,7 +6388,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6429,7 +6429,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6470,7 +6470,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6511,7 +6511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6543,7 +6543,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -6625,7 +6625,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -6659,7 +6659,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6700,7 +6700,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6741,7 +6741,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -6782,7 +6782,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -7453,7 +7453,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           className="MuiTypography-root MuiTypography-subtitle2 emotion-10"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -8066,7 +8066,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -8082,7 +8082,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -8164,7 +8164,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -8185,7 +8185,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -8268,7 +8268,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -8675,7 +8675,7 @@ exports[`with title and description from both array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -9667,7 +9667,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -9683,7 +9683,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -9765,7 +9765,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -9799,7 +9799,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -9840,7 +9840,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -9881,7 +9881,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -9922,7 +9922,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -9954,7 +9954,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -10036,7 +10036,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -10070,7 +10070,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -10111,7 +10111,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -10152,7 +10152,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -10193,7 +10193,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -10864,7 +10864,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           className="MuiTypography-root MuiTypography-subtitle2 emotion-10"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -11477,7 +11477,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -11493,7 +11493,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -11575,7 +11575,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -11596,7 +11596,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -11679,7 +11679,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -12086,7 +12086,7 @@ exports[`with title and description from uiSchema array 1`] = `
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -13078,7 +13078,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -13094,7 +13094,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -13176,7 +13176,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -13210,7 +13210,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13251,7 +13251,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13292,7 +13292,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13333,7 +13333,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13365,7 +13365,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -13447,7 +13447,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -13481,7 +13481,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13522,7 +13522,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13563,7 +13563,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -13604,7 +13604,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -14275,7 +14275,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           className="MuiTypography-root MuiTypography-subtitle2 emotion-10"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -14888,7 +14888,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
             className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             id="root__description"
             style={
-              Object {
+              {
                 "marginTop": "5px",
               }
             }
@@ -14904,7 +14904,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -14986,7 +14986,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_0__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -15007,7 +15007,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-9"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -15090,7 +15090,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                               className="MuiTypography-root MuiTypography-subtitle2 emotion-6"
                               id="root_1__description"
                               style={
-                                Object {
+                                {
                                   "marginTop": "5px",
                                 }
                               }
@@ -16379,7 +16379,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -16477,7 +16477,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16518,7 +16518,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16559,7 +16559,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16600,7 +16600,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16632,7 +16632,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -16730,7 +16730,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16771,7 +16771,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16812,7 +16812,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -16853,7 +16853,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
                   onTouchMove={[Function]}
                   onTouchStart={[Function]}
                   style={
-                    Object {
+                    {
                       "flex": 1,
                       "fontWeight": "bold",
                       "minWidth": 0,
@@ -17524,7 +17524,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           className="MuiTypography-root MuiTypography-subtitle2 emotion-10"
           id="root__description"
           style={
-            Object {
+            {
               "marginTop": "5px",
             }
           }
@@ -18085,7 +18085,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }
@@ -18170,7 +18170,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-14:focus::-ms-input-
               <div
                 className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-5"
                 style={
-                  Object {
+                  {
                     "overflow": "auto",
                   }
                 }

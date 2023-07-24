@@ -9,7 +9,7 @@ exports[`object fields additionalProperties 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -26,7 +26,7 @@ exports[`object fields additionalProperties 1`] = `
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -118,7 +118,7 @@ exports[`object fields additionalProperties 1`] = `
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -143,8 +143,8 @@ exports[`object fields additionalProperties 1`] = `
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -158,7 +158,7 @@ exports[`object fields additionalProperties 1`] = `
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -173,7 +173,7 @@ exports[`object fields additionalProperties 1`] = `
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -188,8 +188,8 @@ exports[`object fields additionalProperties 1`] = `
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -256,7 +256,7 @@ exports[`object fields object 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -272,7 +272,7 @@ exports[`object fields object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -320,7 +320,7 @@ exports[`object fields object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-number"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -415,7 +415,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -432,7 +432,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -524,7 +524,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -549,8 +549,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -564,7 +564,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -579,7 +579,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -594,8 +594,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -662,7 +662,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -690,7 +690,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -782,7 +782,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -807,8 +807,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -822,7 +822,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -837,7 +837,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -852,8 +852,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -920,7 +920,7 @@ exports[`object fields with title and description from both additionalProperties
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -948,7 +948,7 @@ exports[`object fields with title and description from both additionalProperties
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1040,7 +1040,7 @@ exports[`object fields with title and description from both additionalProperties
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -1065,8 +1065,8 @@ exports[`object fields with title and description from both additionalProperties
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -1080,7 +1080,7 @@ exports[`object fields with title and description from both additionalProperties
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -1095,7 +1095,7 @@ exports[`object fields with title and description from both additionalProperties
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -1110,8 +1110,8 @@ exports[`object fields with title and description from both additionalProperties
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -1178,7 +1178,7 @@ exports[`object fields with title and description from both object 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1205,7 +1205,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1262,7 +1262,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-number"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1366,7 +1366,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1394,7 +1394,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1486,7 +1486,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -1511,8 +1511,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -1526,7 +1526,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -1541,7 +1541,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -1556,8 +1556,8 @@ exports[`object fields with title and description from uiSchema additionalProper
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -1624,7 +1624,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1651,7 +1651,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1708,7 +1708,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-number"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1812,7 +1812,7 @@ exports[`object fields with title and description from uiSchema show add button 
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1840,7 +1840,7 @@ exports[`object fields with title and description from uiSchema show add button 
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1932,7 +1932,7 @@ exports[`object fields with title and description from uiSchema show add button 
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -1957,8 +1957,8 @@ exports[`object fields with title and description from uiSchema show add button 
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -1972,7 +1972,7 @@ exports[`object fields with title and description from uiSchema show add button 
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -1987,7 +1987,7 @@ exports[`object fields with title and description from uiSchema show add button 
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -2002,8 +2002,8 @@ exports[`object fields with title and description from uiSchema show add button 
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -2070,7 +2070,7 @@ exports[`object fields with title and description object 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2097,7 +2097,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2154,7 +2154,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-number"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2258,7 +2258,7 @@ exports[`object fields with title and description show add button and fields if 
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2286,7 +2286,7 @@ exports[`object fields with title and description show add button and fields if 
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2378,7 +2378,7 @@ exports[`object fields with title and description show add button and fields if 
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -2403,8 +2403,8 @@ exports[`object fields with title and description show add button and fields if 
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -2418,7 +2418,7 @@ exports[`object fields with title and description show add button and fields if 
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -2433,7 +2433,7 @@ exports[`object fields with title and description show add button and fields if 
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -2448,8 +2448,8 @@ exports[`object fields with title and description show add button and fields if 
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -2516,7 +2516,7 @@ exports[`object fields with title and description with global label off addition
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2533,7 +2533,7 @@ exports[`object fields with title and description with global label off addition
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2616,7 +2616,7 @@ exports[`object fields with title and description with global label off addition
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -2641,8 +2641,8 @@ exports[`object fields with title and description with global label off addition
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -2656,7 +2656,7 @@ exports[`object fields with title and description with global label off addition
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -2671,7 +2671,7 @@ exports[`object fields with title and description with global label off addition
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -2686,8 +2686,8 @@ exports[`object fields with title and description with global label off addition
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >
@@ -2754,7 +2754,7 @@ exports[`object fields with title and description with global label off object 1
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2770,7 +2770,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2809,7 +2809,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="ms-Grid-col ms-sm12  field field-number"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2895,7 +2895,7 @@ exports[`object fields with title and description with global label off show add
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2912,7 +2912,7 @@ exports[`object fields with title and description with global label off show add
           className="ms-Grid-col ms-sm12  field field-string"
           dir="ltr"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -2995,7 +2995,7 @@ exports[`object fields with title and description with global label off show add
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
               style={
-                Object {
+                {
                   "textAlign": "right",
                 }
               }
@@ -3020,8 +3020,8 @@ exports[`object fields with title and description with global label off show add
                     className="ms-Icon root-105 css-134 ms-Button-icon icon-126"
                     data-icon-name="Delete"
                     style={
-                      Object {
-                        "fontFamily": "\\"FabricMDL2Icons\\"",
+                      {
+                        "fontFamily": ""FabricMDL2Icons"",
                       }
                     }
                   >
@@ -3035,7 +3035,7 @@ exports[`object fields with title and description with global label off show add
       </div>
       <span
         style={
-          Object {
+          {
             "float": "right",
           }
         }
@@ -3050,7 +3050,7 @@ exports[`object fields with title and description with global label off show add
           onMouseDown={[Function]}
           onMouseUp={[Function]}
           style={
-            Object {
+            {
               "height": "32px",
             }
           }
@@ -3065,8 +3065,8 @@ exports[`object fields with title and description with global label off show add
               className="ms-Icon root-105 css-134 ms-Button-icon icon-136"
               data-icon-name="Add"
               style={
-                Object {
-                  "fontFamily": "\\"FabricMDL2Icons\\"",
+                {
+                  "fontFamily": ""FabricMDL2Icons"",
                 }
               }
             >

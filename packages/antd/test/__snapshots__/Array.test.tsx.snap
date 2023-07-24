@@ -14,11 +14,11 @@ exports[`array fields array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -33,7 +33,7 @@ exports[`array fields array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -43,7 +43,7 @@ exports[`array fields array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -52,7 +52,7 @@ exports[`array fields array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -61,7 +61,7 @@ exports[`array fields array 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -70,7 +70,7 @@ exports[`array fields array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -145,11 +145,11 @@ exports[`array fields array icons 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -164,7 +164,7 @@ exports[`array fields array icons 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -174,7 +174,7 @@ exports[`array fields array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -183,7 +183,7 @@ exports[`array fields array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -192,7 +192,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -207,11 +207,11 @@ exports[`array fields array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -223,7 +223,7 @@ exports[`array fields array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -257,7 +257,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -267,7 +267,7 @@ exports[`array fields array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -277,7 +277,7 @@ exports[`array fields array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -309,7 +309,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -341,7 +341,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -373,7 +373,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -406,7 +406,7 @@ exports[`array fields array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -415,7 +415,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -430,11 +430,11 @@ exports[`array fields array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -446,7 +446,7 @@ exports[`array fields array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -480,7 +480,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -490,7 +490,7 @@ exports[`array fields array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -500,7 +500,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -532,7 +532,7 @@ exports[`array fields array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -564,7 +564,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -596,7 +596,7 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -630,7 +630,7 @@ exports[`array fields array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -639,7 +639,7 @@ exports[`array fields array icons 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -648,7 +648,7 @@ exports[`array fields array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -723,11 +723,11 @@ exports[`array fields checkboxes 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -745,7 +745,7 @@ exports[`array fields checkboxes 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -761,7 +761,7 @@ exports[`array fields checkboxes 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -776,7 +776,7 @@ exports[`array fields checkboxes 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -802,7 +802,7 @@ exports[`array fields checkboxes 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -858,11 +858,11 @@ exports[`array fields empty errors array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -876,7 +876,7 @@ exports[`array fields empty errors array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -886,7 +886,7 @@ exports[`array fields empty errors array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -900,11 +900,11 @@ exports[`array fields empty errors array 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -916,7 +916,7 @@ exports[`array fields empty errors array 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -928,7 +928,7 @@ exports[`array fields empty errors array 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -994,11 +994,11 @@ exports[`array fields fixed array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1013,7 +1013,7 @@ exports[`array fields fixed array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1023,7 +1023,7 @@ exports[`array fields fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1032,7 +1032,7 @@ exports[`array fields fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -1041,7 +1041,7 @@ exports[`array fields fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -1056,11 +1056,11 @@ exports[`array fields fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -1072,7 +1072,7 @@ exports[`array fields fixed array 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -1107,7 +1107,7 @@ exports[`array fields fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -1116,7 +1116,7 @@ exports[`array fields fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -1131,11 +1131,11 @@ exports[`array fields fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -1147,7 +1147,7 @@ exports[`array fields fixed array 1`] = `
                                       className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                                       onMouseUp={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -1293,7 +1293,7 @@ exports[`array fields has errors 1`] = `
     className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors"
     data-show={true}
     role="alert"
-    style={Object {}}
+    style={{}}
   >
     <div
       className="ant-alert-content"
@@ -1320,12 +1320,12 @@ exports[`array fields has errors 1`] = `
               >
                 <div
                   className="ant-space ant-space-horizontal ant-space-align-center"
-                  style={Object {}}
+                  style={{}}
                 >
                   <div
                     className="ant-space-item"
                     style={
-                      Object {
+                      {
                         "marginRight": 8,
                       }
                     }
@@ -1355,7 +1355,7 @@ exports[`array fields has errors 1`] = `
                   </div>
                   <div
                     className="ant-space-item"
-                    style={Object {}}
+                    style={{}}
                   >
                     .name Bad input
                   </div>
@@ -1375,11 +1375,11 @@ exports[`array fields has errors 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1393,7 +1393,7 @@ exports[`array fields has errors 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1403,7 +1403,7 @@ exports[`array fields has errors 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1417,11 +1417,11 @@ exports[`array fields has errors 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -1433,7 +1433,7 @@ exports[`array fields has errors 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -1445,7 +1445,7 @@ exports[`array fields has errors 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-status-error ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -1535,11 +1535,11 @@ exports[`array fields no errors 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1553,7 +1553,7 @@ exports[`array fields no errors 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1563,7 +1563,7 @@ exports[`array fields no errors 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1577,11 +1577,11 @@ exports[`array fields no errors 1`] = `
                       >
                         <div
                           className="ant-row ant-form-item-row"
-                          style={Object {}}
+                          style={{}}
                         >
                           <div
                             className="ant-col ant-col-24 ant-form-item-label"
-                            style={Object {}}
+                            style={{}}
                           >
                             <label
                               className=""
@@ -1593,7 +1593,7 @@ exports[`array fields no errors 1`] = `
                           </div>
                           <div
                             className="ant-col ant-col-24 ant-form-item-control"
-                            style={Object {}}
+                            style={{}}
                           >
                             <div
                               className="ant-form-item-control-input"
@@ -1605,7 +1605,7 @@ exports[`array fields no errors 1`] = `
                                   className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                   onClick={[Function]}
                                   style={
-                                    Object {
+                                    {
                                       "width": "100%",
                                     }
                                   }
@@ -1671,11 +1671,11 @@ exports[`with title and description array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1690,7 +1690,7 @@ exports[`with title and description array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1699,7 +1699,7 @@ exports[`with title and description array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1717,7 +1717,7 @@ exports[`with title and description array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -1733,7 +1733,7 @@ exports[`with title and description array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1742,7 +1742,7 @@ exports[`with title and description array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1751,7 +1751,7 @@ exports[`with title and description array 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -1760,7 +1760,7 @@ exports[`with title and description array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -1844,11 +1844,11 @@ exports[`with title and description array icons 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -1863,7 +1863,7 @@ exports[`with title and description array icons 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -1872,7 +1872,7 @@ exports[`with title and description array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1890,7 +1890,7 @@ exports[`with title and description array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -1906,7 +1906,7 @@ exports[`with title and description array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -1915,7 +1915,7 @@ exports[`with title and description array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -1924,7 +1924,7 @@ exports[`with title and description array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -1939,11 +1939,11 @@ exports[`with title and description array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -1955,7 +1955,7 @@ exports[`with title and description array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -1967,7 +1967,7 @@ exports[`with title and description array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -2010,7 +2010,7 @@ exports[`with title and description array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2020,7 +2020,7 @@ exports[`with title and description array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -2030,7 +2030,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2062,7 +2062,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2094,7 +2094,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2126,7 +2126,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2159,7 +2159,7 @@ exports[`with title and description array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -2168,7 +2168,7 @@ exports[`with title and description array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2183,11 +2183,11 @@ exports[`with title and description array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -2199,7 +2199,7 @@ exports[`with title and description array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -2211,7 +2211,7 @@ exports[`with title and description array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -2254,7 +2254,7 @@ exports[`with title and description array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2264,7 +2264,7 @@ exports[`with title and description array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -2274,7 +2274,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2306,7 +2306,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2338,7 +2338,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2370,7 +2370,7 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -2404,7 +2404,7 @@ exports[`with title and description array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -2413,7 +2413,7 @@ exports[`with title and description array icons 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -2422,7 +2422,7 @@ exports[`with title and description array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2506,11 +2506,11 @@ exports[`with title and description checkboxes 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-label"
-          style={Object {}}
+          style={{}}
         >
           <label
             className=""
@@ -2522,7 +2522,7 @@ exports[`with title and description checkboxes 1`] = `
         </div>
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2540,7 +2540,7 @@ exports[`with title and description checkboxes 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -2556,7 +2556,7 @@ exports[`with title and description checkboxes 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -2571,7 +2571,7 @@ exports[`with title and description checkboxes 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -2597,7 +2597,7 @@ exports[`with title and description checkboxes 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -2662,11 +2662,11 @@ exports[`with title and description fixed array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -2681,7 +2681,7 @@ exports[`with title and description fixed array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -2690,7 +2690,7 @@ exports[`with title and description fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -2708,7 +2708,7 @@ exports[`with title and description fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -2724,7 +2724,7 @@ exports[`with title and description fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -2733,7 +2733,7 @@ exports[`with title and description fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -2742,7 +2742,7 @@ exports[`with title and description fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2757,11 +2757,11 @@ exports[`with title and description fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -2773,7 +2773,7 @@ exports[`with title and description fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -2785,7 +2785,7 @@ exports[`with title and description fixed array 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -2829,7 +2829,7 @@ exports[`with title and description fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -2838,7 +2838,7 @@ exports[`with title and description fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -2853,11 +2853,11 @@ exports[`with title and description fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -2869,7 +2869,7 @@ exports[`with title and description fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -2881,7 +2881,7 @@ exports[`with title and description fixed array 1`] = `
                                       className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                                       onMouseUp={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -3049,11 +3049,11 @@ exports[`with title and description from both array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3068,7 +3068,7 @@ exports[`with title and description from both array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -3077,7 +3077,7 @@ exports[`with title and description from both array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3095,7 +3095,7 @@ exports[`with title and description from both array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -3111,7 +3111,7 @@ exports[`with title and description from both array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3120,7 +3120,7 @@ exports[`with title and description from both array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3129,7 +3129,7 @@ exports[`with title and description from both array 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -3138,7 +3138,7 @@ exports[`with title and description from both array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3222,11 +3222,11 @@ exports[`with title and description from both array icons 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3241,7 +3241,7 @@ exports[`with title and description from both array icons 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -3250,7 +3250,7 @@ exports[`with title and description from both array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3268,7 +3268,7 @@ exports[`with title and description from both array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -3284,7 +3284,7 @@ exports[`with title and description from both array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3293,7 +3293,7 @@ exports[`with title and description from both array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -3302,7 +3302,7 @@ exports[`with title and description from both array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3317,11 +3317,11 @@ exports[`with title and description from both array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -3333,7 +3333,7 @@ exports[`with title and description from both array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -3345,7 +3345,7 @@ exports[`with title and description from both array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -3388,7 +3388,7 @@ exports[`with title and description from both array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3398,7 +3398,7 @@ exports[`with title and description from both array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -3408,7 +3408,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3440,7 +3440,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3472,7 +3472,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3504,7 +3504,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3537,7 +3537,7 @@ exports[`with title and description from both array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -3546,7 +3546,7 @@ exports[`with title and description from both array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3561,11 +3561,11 @@ exports[`with title and description from both array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -3577,7 +3577,7 @@ exports[`with title and description from both array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -3589,7 +3589,7 @@ exports[`with title and description from both array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -3632,7 +3632,7 @@ exports[`with title and description from both array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3642,7 +3642,7 @@ exports[`with title and description from both array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -3652,7 +3652,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3684,7 +3684,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3716,7 +3716,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3748,7 +3748,7 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -3782,7 +3782,7 @@ exports[`with title and description from both array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -3791,7 +3791,7 @@ exports[`with title and description from both array icons 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -3800,7 +3800,7 @@ exports[`with title and description from both array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -3884,11 +3884,11 @@ exports[`with title and description from both checkboxes 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-label"
-          style={Object {}}
+          style={{}}
         >
           <label
             className=""
@@ -3900,7 +3900,7 @@ exports[`with title and description from both checkboxes 1`] = `
         </div>
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -3918,7 +3918,7 @@ exports[`with title and description from both checkboxes 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -3934,7 +3934,7 @@ exports[`with title and description from both checkboxes 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -3949,7 +3949,7 @@ exports[`with title and description from both checkboxes 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -3975,7 +3975,7 @@ exports[`with title and description from both checkboxes 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -4040,11 +4040,11 @@ exports[`with title and description from both fixed array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -4059,7 +4059,7 @@ exports[`with title and description from both fixed array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -4068,7 +4068,7 @@ exports[`with title and description from both fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4086,7 +4086,7 @@ exports[`with title and description from both fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -4102,7 +4102,7 @@ exports[`with title and description from both fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4111,7 +4111,7 @@ exports[`with title and description from both fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -4120,7 +4120,7 @@ exports[`with title and description from both fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4135,11 +4135,11 @@ exports[`with title and description from both fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -4151,7 +4151,7 @@ exports[`with title and description from both fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -4163,7 +4163,7 @@ exports[`with title and description from both fixed array 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -4207,7 +4207,7 @@ exports[`with title and description from both fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -4216,7 +4216,7 @@ exports[`with title and description from both fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4231,11 +4231,11 @@ exports[`with title and description from both fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -4247,7 +4247,7 @@ exports[`with title and description from both fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -4259,7 +4259,7 @@ exports[`with title and description from both fixed array 1`] = `
                                       className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                                       onMouseUp={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -4427,11 +4427,11 @@ exports[`with title and description from uiSchema array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -4446,7 +4446,7 @@ exports[`with title and description from uiSchema array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -4455,7 +4455,7 @@ exports[`with title and description from uiSchema array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4473,7 +4473,7 @@ exports[`with title and description from uiSchema array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -4489,7 +4489,7 @@ exports[`with title and description from uiSchema array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4498,7 +4498,7 @@ exports[`with title and description from uiSchema array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4507,7 +4507,7 @@ exports[`with title and description from uiSchema array 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -4516,7 +4516,7 @@ exports[`with title and description from uiSchema array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4600,11 +4600,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -4619,7 +4619,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -4628,7 +4628,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4646,7 +4646,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -4662,7 +4662,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -4671,7 +4671,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -4680,7 +4680,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4695,11 +4695,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -4711,7 +4711,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -4723,7 +4723,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -4766,7 +4766,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4776,7 +4776,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -4786,7 +4786,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -4818,7 +4818,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -4850,7 +4850,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -4882,7 +4882,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -4915,7 +4915,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -4924,7 +4924,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -4939,11 +4939,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -4955,7 +4955,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -4967,7 +4967,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -5010,7 +5010,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -5020,7 +5020,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -5030,7 +5030,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -5062,7 +5062,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -5094,7 +5094,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -5126,7 +5126,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -5160,7 +5160,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5169,7 +5169,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -5178,7 +5178,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -5262,11 +5262,11 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-label"
-          style={Object {}}
+          style={{}}
         >
           <label
             className=""
@@ -5278,7 +5278,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         </div>
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -5296,7 +5296,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -5312,7 +5312,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -5327,7 +5327,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -5353,7 +5353,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -5418,11 +5418,11 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -5437,7 +5437,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -5446,7 +5446,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5464,7 +5464,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -5480,7 +5480,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5489,7 +5489,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -5498,7 +5498,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -5513,11 +5513,11 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -5529,7 +5529,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -5541,7 +5541,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -5585,7 +5585,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -5594,7 +5594,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -5609,11 +5609,11 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-label"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <label
                                   className="ant-form-item-required"
@@ -5625,7 +5625,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                               </div>
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -5637,7 +5637,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                       className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                                       onMouseUp={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -5805,11 +5805,11 @@ exports[`with title and description with global label off array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -5824,7 +5824,7 @@ exports[`with title and description with global label off array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -5833,7 +5833,7 @@ exports[`with title and description with global label off array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5842,7 +5842,7 @@ exports[`with title and description with global label off array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -5852,7 +5852,7 @@ exports[`with title and description with global label off array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5861,7 +5861,7 @@ exports[`with title and description with global label off array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -5870,7 +5870,7 @@ exports[`with title and description with global label off array 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -5879,7 +5879,7 @@ exports[`with title and description with global label off array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -5963,11 +5963,11 @@ exports[`with title and description with global label off array icons 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -5982,7 +5982,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -5991,7 +5991,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6000,7 +6000,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -6010,7 +6010,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6019,7 +6019,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -6028,7 +6028,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6043,11 +6043,11 @@ exports[`with title and description with global label off array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -6059,7 +6059,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -6102,7 +6102,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6112,7 +6112,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -6122,7 +6122,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6154,7 +6154,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6186,7 +6186,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6218,7 +6218,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6251,7 +6251,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -6260,7 +6260,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6275,11 +6275,11 @@ exports[`with title and description with global label off array icons 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -6291,7 +6291,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -6334,7 +6334,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6344,7 +6344,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         <div
                           className="ant-btn-group"
                           style={
-                            Object {
+                            {
                               "width": "100%",
                             }
                           }
@@ -6354,7 +6354,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6386,7 +6386,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={true}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6418,7 +6418,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6450,7 +6450,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             onClick={[Function]}
                             style={
-                              Object {
+                              {
                                 "width": "calc(100% / 4)",
                               }
                             }
@@ -6484,7 +6484,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6493,7 +6493,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <div
                       className="ant-row ant-row-end"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -6502,7 +6502,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "0 0 192px",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6586,11 +6586,11 @@ exports[`with title and description with global label off checkboxes 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-label"
-          style={Object {}}
+          style={{}}
         >
           <label
             className=""
@@ -6602,7 +6602,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         </div>
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -6620,7 +6620,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                 onKeyUp={[Function]}
                 onMouseDown={[Function]}
                 style={
-                  Object {
+                  {
                     "width": "100%",
                   }
                 }
@@ -6636,7 +6636,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                     <div
                       className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                       style={
-                        Object {
+                        {
                           "height": undefined,
                           "opacity": 1,
                           "order": undefined,
@@ -6651,7 +6651,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                         onBlur={[Function]}
                         onFocus={[Function]}
                         style={
-                          Object {
+                          {
                             "width": 100,
                           }
                         }
@@ -6677,7 +6677,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                           readOnly={true}
                           role="combobox"
                           style={
-                            Object {
+                            {
                               "opacity": 0,
                             }
                           }
@@ -6742,11 +6742,11 @@ exports[`with title and description with global label off fixed array 1`] = `
     >
       <div
         className="ant-row ant-form-item-row"
-        style={Object {}}
+        style={{}}
       >
         <div
           className="ant-col ant-col-24 ant-form-item-control"
-          style={Object {}}
+          style={{}}
         >
           <div
             className="ant-form-item-control-input"
@@ -6761,7 +6761,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                 <div
                   className="ant-row"
                   style={
-                    Object {
+                    {
                       "marginLeft": -12,
                       "marginRight": -12,
                     }
@@ -6770,7 +6770,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 ant-form-item-label"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6779,7 +6779,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24"
                     style={
-                      Object {
+                      {
                         "paddingBottom": "8px",
                         "paddingLeft": 12,
                         "paddingRight": 12,
@@ -6789,7 +6789,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   <div
                     className="ant-col ant-col-24 row array-item-list"
                     style={
-                      Object {
+                      {
                         "paddingLeft": 12,
                         "paddingRight": 12,
                       }
@@ -6798,7 +6798,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -6807,7 +6807,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6822,11 +6822,11 @@ exports[`with title and description with global label off fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -6838,7 +6838,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                       className="ant-input-affix-wrapper ant-input-affix-wrapper-has-feedback"
                                       onClick={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
@@ -6882,7 +6882,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     <div
                       className="ant-row ant-row-top"
                       style={
-                        Object {
+                        {
                           "marginLeft": -12,
                           "marginRight": -12,
                         }
@@ -6891,7 +6891,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                       <div
                         className="ant-col"
                         style={
-                          Object {
+                          {
                             "flex": "1",
                             "paddingLeft": 12,
                             "paddingRight": 12,
@@ -6906,11 +6906,11 @@ exports[`with title and description with global label off fixed array 1`] = `
                           >
                             <div
                               className="ant-row ant-form-item-row"
-                              style={Object {}}
+                              style={{}}
                             >
                               <div
                                 className="ant-col ant-col-24 ant-form-item-control"
-                                style={Object {}}
+                                style={{}}
                               >
                                 <div
                                   className="ant-form-item-control-input"
@@ -6922,7 +6922,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                       className="ant-input-number-affix-wrapper ant-input-number-affix-wrapper-has-feedback"
                                       onMouseUp={[Function]}
                                       style={
-                                        Object {
+                                        {
                                           "width": "100%",
                                         }
                                       }
