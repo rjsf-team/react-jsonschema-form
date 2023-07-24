@@ -15,6 +15,14 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.11.1
+
+## @rjsf/utils
+
+- Created new `resolveAllReferences()` function to resolve all references within a schema's properties and array items.
+- Updated `getClosestMatchingOption()` to use `resolveAllReferences()` for all oneOf/anyOf schemas
+- Updated `resolveAnyOrOneOfSchemas()` to use `resolveAllReferences()` for all oneOf/anyOf schemas
+
 # 5.11.0
 
 ## @rjsf/core
