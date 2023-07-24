@@ -9,14 +9,14 @@ exports[`array fields array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
   >
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -31,7 +31,7 @@ exports[`array fields array 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -46,8 +46,8 @@ exports[`array fields array 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -113,7 +113,7 @@ exports[`array fields array icons 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -134,7 +134,7 @@ exports[`array fields array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -176,7 +176,7 @@ exports[`array fields array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -203,8 +203,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -232,8 +232,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -261,8 +261,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -290,8 +290,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -318,7 +318,7 @@ exports[`array fields array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -360,7 +360,7 @@ exports[`array fields array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -385,8 +385,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -416,8 +416,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -445,8 +445,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -474,8 +474,8 @@ exports[`array fields array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -488,7 +488,7 @@ exports[`array fields array icons 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -503,7 +503,7 @@ exports[`array fields array icons 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -518,8 +518,8 @@ exports[`array fields array icons 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -585,7 +585,7 @@ exports[`array fields checkboxes 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -679,7 +679,7 @@ exports[`array fields empty errors array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -695,7 +695,7 @@ exports[`array fields empty errors array 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -789,7 +789,7 @@ exports[`array fields fixed array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -810,7 +810,7 @@ exports[`array fields fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -867,7 +867,7 @@ exports[`array fields fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-number"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -986,7 +986,7 @@ exports[`array fields has errors 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1002,7 +1002,7 @@ exports[`array fields has errors 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string field-error has-error has-danger"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1065,7 +1065,7 @@ exports[`array fields has errors 1`] = `
               <div
                 className="ms-List-page"
                 role="presentation"
-                style={Object {}}
+                style={{}}
               >
                 <div
                   className="ms-List-cell"
@@ -1128,7 +1128,7 @@ exports[`array fields no errors 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-object"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1144,7 +1144,7 @@ exports[`array fields no errors 1`] = `
         <div
           className="ms-Grid-col ms-sm12  field field-string"
           style={
-            Object {
+            {
               "marginBottom": 15,
             }
           }
@@ -1238,7 +1238,7 @@ exports[`with title and description array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1257,7 +1257,7 @@ exports[`with title and description array 1`] = `
     </span>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -1272,7 +1272,7 @@ exports[`with title and description array 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -1287,8 +1287,8 @@ exports[`with title and description array 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -1354,7 +1354,7 @@ exports[`with title and description array icons 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1387,7 +1387,7 @@ exports[`with title and description array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -1446,7 +1446,7 @@ exports[`with title and description array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -1473,8 +1473,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -1502,8 +1502,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -1531,8 +1531,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -1560,8 +1560,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -1588,7 +1588,7 @@ exports[`with title and description array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -1647,7 +1647,7 @@ exports[`with title and description array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -1672,8 +1672,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -1703,8 +1703,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -1732,8 +1732,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -1761,8 +1761,8 @@ exports[`with title and description array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -1775,7 +1775,7 @@ exports[`with title and description array icons 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -1790,7 +1790,7 @@ exports[`with title and description array icons 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -1805,8 +1805,8 @@ exports[`with title and description array icons 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -1872,7 +1872,7 @@ exports[`with title and description checkboxes 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -1982,7 +1982,7 @@ exports[`with title and description fixed array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2015,7 +2015,7 @@ exports[`with title and description fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -2089,7 +2089,7 @@ exports[`with title and description fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-number"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -2195,7 +2195,7 @@ exports[`with title and description from both array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2214,7 +2214,7 @@ exports[`with title and description from both array 1`] = `
     </span>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -2229,7 +2229,7 @@ exports[`with title and description from both array 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -2244,8 +2244,8 @@ exports[`with title and description from both array 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -2311,7 +2311,7 @@ exports[`with title and description from both array icons 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2344,7 +2344,7 @@ exports[`with title and description from both array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -2403,7 +2403,7 @@ exports[`with title and description from both array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -2430,8 +2430,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -2459,8 +2459,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -2488,8 +2488,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -2517,8 +2517,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -2545,7 +2545,7 @@ exports[`with title and description from both array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -2604,7 +2604,7 @@ exports[`with title and description from both array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -2629,8 +2629,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -2660,8 +2660,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -2689,8 +2689,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -2718,8 +2718,8 @@ exports[`with title and description from both array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -2732,7 +2732,7 @@ exports[`with title and description from both array icons 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -2747,7 +2747,7 @@ exports[`with title and description from both array icons 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -2762,8 +2762,8 @@ exports[`with title and description from both array icons 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -2829,7 +2829,7 @@ exports[`with title and description from both checkboxes 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2939,7 +2939,7 @@ exports[`with title and description from both fixed array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -2972,7 +2972,7 @@ exports[`with title and description from both fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -3046,7 +3046,7 @@ exports[`with title and description from both fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-number"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -3152,7 +3152,7 @@ exports[`with title and description from uiSchema array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3171,7 +3171,7 @@ exports[`with title and description from uiSchema array 1`] = `
     </span>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -3186,7 +3186,7 @@ exports[`with title and description from uiSchema array 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -3201,8 +3201,8 @@ exports[`with title and description from uiSchema array 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -3268,7 +3268,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3301,7 +3301,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -3360,7 +3360,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -3387,8 +3387,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -3416,8 +3416,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -3445,8 +3445,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -3474,8 +3474,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -3502,7 +3502,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -3561,7 +3561,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -3586,8 +3586,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -3617,8 +3617,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -3646,8 +3646,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -3675,8 +3675,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -3689,7 +3689,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -3704,7 +3704,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -3719,8 +3719,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -3786,7 +3786,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3896,7 +3896,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -3929,7 +3929,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -4003,7 +4003,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-number"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -4109,14 +4109,14 @@ exports[`with title and description with global label off array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
   >
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -4131,7 +4131,7 @@ exports[`with title and description with global label off array 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -4146,8 +4146,8 @@ exports[`with title and description with global label off array 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -4213,7 +4213,7 @@ exports[`with title and description with global label off array icons 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -4234,7 +4234,7 @@ exports[`with title and description with global label off array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -4275,7 +4275,7 @@ exports[`with title and description with global label off array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -4302,8 +4302,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -4331,8 +4331,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -4360,8 +4360,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -4389,8 +4389,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -4417,7 +4417,7 @@ exports[`with title and description with global label off array icons 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -4458,7 +4458,7 @@ exports[`with title and description with global label off array icons 1`] = `
         <div
           className="ms-Grid-col ms-sm6 ms-md4 ms-lg3"
           style={
-            Object {
+            {
               "textAlign": "right",
             }
           }
@@ -4483,8 +4483,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-121"
                 data-icon-name="Up"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -4514,8 +4514,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-160 ms-Button-icon icon-156"
                 data-icon-name="Down"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-0\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-0"",
                   }
                 }
               >
@@ -4543,8 +4543,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-163 ms-Button-icon icon-121"
                 data-icon-name="Copy"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons-2\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons-2"",
                   }
                 }
               >
@@ -4572,8 +4572,8 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="ms-Icon root-105 css-119 ms-Button-icon icon-121"
                 data-icon-name="Delete"
                 style={
-                  Object {
-                    "fontFamily": "\\"FabricMDL2Icons\\"",
+                  {
+                    "fontFamily": ""FabricMDL2Icons"",
                   }
                 }
               >
@@ -4586,7 +4586,7 @@ exports[`with title and description with global label off array icons 1`] = `
     </div>
     <span
       style={
-        Object {
+        {
           "float": "right",
         }
       }
@@ -4601,7 +4601,7 @@ exports[`with title and description with global label off array icons 1`] = `
         onMouseDown={[Function]}
         onMouseUp={[Function]}
         style={
-          Object {
+          {
             "height": "32px",
           }
         }
@@ -4616,8 +4616,8 @@ exports[`with title and description with global label off array icons 1`] = `
             className="ms-Icon root-105 css-119 ms-Button-icon icon-113"
             data-icon-name="Add"
             style={
-              Object {
-                "fontFamily": "\\"FabricMDL2Icons\\"",
+              {
+                "fontFamily": ""FabricMDL2Icons"",
               }
             }
           >
@@ -4683,7 +4683,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -4793,7 +4793,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   <div
     className="ms-Grid-col ms-sm12  field field-array"
     style={
-      Object {
+      {
         "marginBottom": 15,
       }
     }
@@ -4814,7 +4814,7 @@ exports[`with title and description with global label off fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-string"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }
@@ -4870,7 +4870,7 @@ exports[`with title and description with global label off fixed array 1`] = `
             <div
               className="ms-Grid-col ms-sm12  field field-number"
               style={
-                Object {
+                {
                   "marginBottom": 15,
                 }
               }

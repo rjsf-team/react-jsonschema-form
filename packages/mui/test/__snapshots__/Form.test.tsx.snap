@@ -1772,7 +1772,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1780,7 +1780,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1844,7 +1844,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   className="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                   id="root_my-field__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -2387,7 +2387,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2395,7 +2395,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2459,7 +2459,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   className="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                   id="root_my-field__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -4943,14 +4943,14 @@ exports[`single fields hidden field 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
       >
         <div
           style={
-            Object {
+            {
               "display": "none",
             }
           }
@@ -11679,7 +11679,7 @@ exports[`single fields slider field 1`] = `
         <span
           className="MuiSlider-track emotion-4"
           style={
-            Object {
+            {
               "left": "0%",
               "width": "56.89655172413793%",
             }
@@ -11691,7 +11691,7 @@ exports[`single fields slider field 1`] = `
           onMouseLeave={[Function]}
           onMouseOver={[Function]}
           style={
-            Object {
+            {
               "left": "56.89655172413793%",
               "pointerEvents": undefined,
             }
@@ -11712,7 +11712,7 @@ exports[`single fields slider field 1`] = `
             onFocus={[Function]}
             step={1}
             style={
-              Object {
+              {
                 "border": 0,
                 "clip": "rect(0 0 0 0)",
                 "direction": "ltr",
@@ -14160,7 +14160,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             required={false}
             rows={5}
             style={
-              Object {
+              {
                 "height": 500,
                 "overflow": undefined,
               }
@@ -14172,7 +14172,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-3"
             readOnly={true}
             style={
-              Object {
+              {
                 "height": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -14763,7 +14763,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-4"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -14771,7 +14771,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-5"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }

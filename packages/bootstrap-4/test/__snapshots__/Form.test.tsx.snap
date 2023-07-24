@@ -259,7 +259,7 @@ exports[`single fields field with description 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -346,7 +346,7 @@ exports[`single fields field with description in uiSchema 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -725,7 +725,7 @@ exports[`single fields hidden field 1`] = `
         <div
           className="d-none row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1229,7 +1229,7 @@ exports[`single fields select field multiple choice 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -1305,7 +1305,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -1382,7 +1382,7 @@ exports[`single fields select field multiple choice formData 1`] = `
         onFocus={[Function]}
         required={false}
         value={
-          Array [
+          [
             "0",
             "1",
           ]
@@ -1462,7 +1462,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
         onChange={[Function]}
         onFocus={[Function]}
         required={false}
-        value={Array []}
+        value={[]}
       >
         <option
           disabled={false}
@@ -2002,7 +2002,7 @@ exports[`single fields title field 1`] = `
         <hr
           className="border-0 bg-secondary"
           style={
-            Object {
+            {
               "height": "1px",
             }
           }
@@ -2014,7 +2014,7 @@ exports[`single fields title field 1`] = `
         <div
           className="row"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }

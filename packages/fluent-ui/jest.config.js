@@ -6,4 +6,5 @@ module.exports = {
   testEnvironmentOptions: {
     browsers: ['chrome', 'firefox', 'safari'],
   },
+  transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
 };

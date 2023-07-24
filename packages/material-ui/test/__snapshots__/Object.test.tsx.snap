@@ -16,7 +16,7 @@ exports[`object fields additionalProperties 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -24,7 +24,7 @@ exports[`object fields additionalProperties 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -129,7 +129,7 @@ exports[`object fields additionalProperties 1`] = `
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -258,7 +258,7 @@ exports[`object fields object 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -266,7 +266,7 @@ exports[`object fields object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -317,7 +317,7 @@ exports[`object fields object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -415,7 +415,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -423,7 +423,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -528,7 +528,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -661,7 +661,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -671,7 +671,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -679,7 +679,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -784,7 +784,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -917,7 +917,7 @@ exports[`object fields with title and description from both additionalProperties
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -927,7 +927,7 @@ exports[`object fields with title and description from both additionalProperties
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -935,7 +935,7 @@ exports[`object fields with title and description from both additionalProperties
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1040,7 +1040,7 @@ exports[`object fields with title and description from both additionalProperties
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1173,7 +1173,7 @@ exports[`object fields with title and description from both object 1`] = `
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -1183,7 +1183,7 @@ exports[`object fields with title and description from both object 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1191,7 +1191,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1243,7 +1243,7 @@ exports[`object fields with title and description from both object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_a__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -1257,7 +1257,7 @@ exports[`object fields with title and description from both object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1310,7 +1310,7 @@ exports[`object fields with title and description from both object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_b__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -1386,7 +1386,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -1396,7 +1396,7 @@ exports[`object fields with title and description from uiSchema additionalProper
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1404,7 +1404,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1509,7 +1509,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1651,7 +1651,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -1661,7 +1661,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1669,7 +1669,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1721,7 +1721,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_a__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -1735,7 +1735,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1788,7 +1788,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_b__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -1861,7 +1861,7 @@ exports[`object fields with title and description from uiSchema show add button 
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -1871,7 +1871,7 @@ exports[`object fields with title and description from uiSchema show add button 
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -1879,7 +1879,7 @@ exports[`object fields with title and description from uiSchema show add button 
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -1984,7 +1984,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2117,7 +2117,7 @@ exports[`object fields with title and description object 1`] = `
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -2127,7 +2127,7 @@ exports[`object fields with title and description object 1`] = `
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2135,7 +2135,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2187,7 +2187,7 @@ exports[`object fields with title and description object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_a__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -2201,7 +2201,7 @@ exports[`object fields with title and description object 1`] = `
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2254,7 +2254,7 @@ exports[`object fields with title and description object 1`] = `
                   className="MuiTypography-root MuiTypography-subtitle2"
                   id="root_b__description"
                   style={
-                    Object {
+                    {
                       "marginTop": "5px",
                     }
                   }
@@ -2330,7 +2330,7 @@ exports[`object fields with title and description show add button and fields if 
         className="MuiTypography-root MuiTypography-subtitle2"
         id="root__description"
         style={
-          Object {
+          {
             "marginTop": "5px",
           }
         }
@@ -2340,7 +2340,7 @@ exports[`object fields with title and description show add button and fields if 
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2348,7 +2348,7 @@ exports[`object fields with title and description show add button and fields if 
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2453,7 +2453,7 @@ exports[`object fields with title and description show add button and fields if 
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2582,7 +2582,7 @@ exports[`object fields with title and description with global label off addition
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2590,7 +2590,7 @@ exports[`object fields with title and description with global label off addition
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2687,7 +2687,7 @@ exports[`object fields with title and description with global label off addition
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2807,7 +2807,7 @@ exports[`object fields with title and description with global label off object 1
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2815,7 +2815,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2858,7 +2858,7 @@ exports[`object fields with title and description with global label off object 1
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -2951,7 +2951,7 @@ exports[`object fields with title and description with global label off show add
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
-          Object {
+          {
             "marginTop": "10px",
           }
         }
@@ -2959,7 +2959,7 @@ exports[`object fields with title and description with global label off show add
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
           style={
-            Object {
+            {
               "marginBottom": "10px",
             }
           }
@@ -3056,7 +3056,7 @@ exports[`object fields with title and description with global label off show add
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,

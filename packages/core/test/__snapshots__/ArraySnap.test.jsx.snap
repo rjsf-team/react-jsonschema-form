@@ -99,7 +99,7 @@ exports[`array fields array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -110,7 +110,7 @@ exports[`array fields array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -129,7 +129,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -148,7 +148,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -167,7 +167,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -218,7 +218,7 @@ exports[`array fields array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -229,7 +229,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -248,7 +248,7 @@ exports[`array fields array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -267,7 +267,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -286,7 +286,7 @@ exports[`array fields array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -358,7 +358,7 @@ exports[`array fields checkboxes 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"
@@ -813,7 +813,7 @@ exports[`with title and description array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -824,7 +824,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -843,7 +843,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -862,7 +862,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -881,7 +881,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -949,7 +949,7 @@ exports[`with title and description array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -960,7 +960,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -979,7 +979,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -998,7 +998,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1017,7 +1017,7 @@ exports[`with title and description array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1101,7 +1101,7 @@ exports[`with title and description checkboxes 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"
@@ -1405,7 +1405,7 @@ exports[`with title and description from both array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -1416,7 +1416,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1435,7 +1435,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1454,7 +1454,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1473,7 +1473,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1541,7 +1541,7 @@ exports[`with title and description from both array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -1552,7 +1552,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1571,7 +1571,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1590,7 +1590,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1609,7 +1609,7 @@ exports[`with title and description from both array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -1693,7 +1693,7 @@ exports[`with title and description from both checkboxes 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"
@@ -1997,7 +1997,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -2008,7 +2008,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2027,7 +2027,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2046,7 +2046,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2065,7 +2065,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2133,7 +2133,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -2144,7 +2144,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2163,7 +2163,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2182,7 +2182,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2201,7 +2201,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2285,7 +2285,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"
@@ -2550,7 +2550,7 @@ exports[`with title and description with global label off array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -2561,7 +2561,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2580,7 +2580,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2599,7 +2599,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2618,7 +2618,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2669,7 +2669,7 @@ exports[`with title and description with global label off array icons 1`] = `
             <div
               className="btn-group"
               style={
-                Object {
+                {
                   "display": "flex",
                   "justifyContent": "space-around",
                 }
@@ -2680,7 +2680,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2699,7 +2699,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={true}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2718,7 +2718,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2737,7 +2737,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 disabled={false}
                 onClick={[Function]}
                 style={
-                  Object {
+                  {
                     "flex": 1,
                     "fontWeight": "bold",
                     "paddingLeft": 6,
@@ -2821,7 +2821,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
-      value={Array []}
+      value={[]}
     >
       <option
         value="0"

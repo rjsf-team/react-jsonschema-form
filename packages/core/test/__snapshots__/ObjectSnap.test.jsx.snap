@@ -75,7 +75,7 @@ exports[`object fields additionalProperties 1`] = `
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -279,7 +279,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -411,7 +411,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -543,7 +543,7 @@ exports[`object fields with title and description from both additionalProperties
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -779,7 +779,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -1015,7 +1015,7 @@ exports[`object fields with title and description from uiSchema show add button 
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -1251,7 +1251,7 @@ exports[`object fields with title and description show add button and fields if 
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -1367,7 +1367,7 @@ exports[`object fields with title and description with global label off addition
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
@@ -1553,7 +1553,7 @@ exports[`object fields with title and description with global label off show add
               disabled={false}
               onClick={[Function]}
               style={
-                Object {
+                {
                   "border": "0",
                 }
               }
