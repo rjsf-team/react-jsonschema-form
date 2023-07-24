@@ -224,7 +224,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(sc
   ) {
     resolvedSchema.items = resolveAllReferences(resolvedSchema.items as S, rootSchema);
   }
-  console.log('outgoing schema', resolvedSchema);
+
   return resolvedSchema;
 }
 
