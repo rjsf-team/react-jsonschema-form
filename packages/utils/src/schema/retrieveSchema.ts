@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 import times from 'lodash/times';
+import forEach from 'lodash/forEach';
 import mergeAllOf, { Options } from 'json-schema-merge-allof';
 
 import {
@@ -12,6 +13,8 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
+  PROPERTIES_KEY,
+  ITEMS_KEY,
 } from '../constants';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -192,6 +195,39 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   );
 }
 
+/** Resolves all references within a schema's properties and array items.
+ *
+ * @param schema - The schema for which resolving all references is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @returns - given schema will all references resolved
+ */
+export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
+  let resolvedSchema: S = schema;
+  // resolve top level ref
+  if (REF_KEY in resolvedSchema) {
+    const { $ref, ...localSchema } = resolvedSchema;
+    // Retrieve the referenced schema definition.
+    const refSchema = findSchemaDefinition<S>($ref, rootSchema);
+    resolvedSchema = { ...refSchema, ...localSchema };
+  }
+
+  if (PROPERTIES_KEY in resolvedSchema) {
+    forEach(resolvedSchema[PROPERTIES_KEY], (value, key) => {
+      resolvedSchema[PROPERTIES_KEY]![key] = resolveAllReferences(value as S, rootSchema);
+    });
+  }
+
+  if (
+    ITEMS_KEY in resolvedSchema &&
+    !Array.isArray(resolvedSchema.items) &&
+    typeof resolvedSchema.items !== 'boolean'
+  ) {
+    resolvedSchema.items = resolveAllReferences(resolvedSchema.items as S, rootSchema);
+  }
+  console.log('outgoing schema', resolvedSchema);
+  return resolvedSchema;
+}
+
 /** Creates new 'properties' items for each key in the `formData`
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -333,11 +369,7 @@ export function resolveAnyOrOneOfSchemas<
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     anyOrOneOf = anyOrOneOf.map((s) => {
-      if (REF_KEY in s) {
-        // For this ref situation, don't expand all branches and just pick the first/only schema result
-        return resolveReference<T, S, F>(validator, s, rootSchema, false, formData)[0];
-      }
-      return s;
+      return resolveAllReferences(s, rootSchema);
     });
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
