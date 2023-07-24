@@ -1,8 +1,8 @@
 {
   "name": "@rjsf/mui",
   "version": "5.11.2",
-  "module": "./lib/index.js",
   "main": "./dist/index.js",
+  "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "description": "Material UI 5 theme, fields and widgets for react-jsonschema-form",
   "files": [
@@ -11,7 +11,7 @@
     "src"
   ],
   "scripts": {
-    "build:ts": "tsc",
+    "build:ts": "rimraf lib && tsc",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/mui.esm.js --format=umd --file=dist/mui.umd.js --name=@rjsf/mui",

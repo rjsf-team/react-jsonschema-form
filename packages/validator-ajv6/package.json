@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build:ts": "tsc",
+    "build:ts": "rimraf lib && tsc",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv6.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv6.esm.js --format=umd --file=dist/validator-ajv6.umd.js --name=@rjsf/validator-ajv6",

@@ -3,7 +3,7 @@
   "version": "5.11.2",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build:ts": "tsc",
+    "build:ts": "rimraf lib && tsc",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
@@ -30,7 +30,8 @@
   "typings": "lib/index.d.ts",
   "files": [
     "dist",
-    "lib"
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {

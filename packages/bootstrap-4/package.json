@@ -15,7 +15,7 @@
     "url": ""
   },
   "scripts": {
-    "build:ts": "tsc",
+    "build:ts": "rimraf lib && tsc",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/bootstrap-4.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/bootstrap-4.esm.js --format=umd --file=dist/bootstrap-4.umd.js --name=@rjsf/bootstrap-4",
