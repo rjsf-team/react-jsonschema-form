@@ -1307,6 +1307,64 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         ]);
       });
+      it('resolves oneOf with multiple $refs', () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            {
+              type: 'object',
+              properties: {
+                field: {
+                  $ref: '#/definitions/aObject',
+                },
+              },
+            },
+            {
+              type: 'array',
+              items: {
+                $ref: '#/definitions/bObject',
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            aObject: {
+              properties: {
+                a: { enum: ['typeA'] },
+                b: { type: 'number' },
+              },
+            },
+            bObject: {
+              properties: {
+                a: { enum: ['typeB'] },
+                c: { type: 'boolean' },
+              },
+            },
+          },
+        };
+        expect(resolveAnyOrOneOfSchemas(testValidator, schema, rootSchema, true)).toEqual([
+          {
+            type: 'object',
+            properties: {
+              field: {
+                properties: {
+                  a: { enum: ['typeA'] },
+                  b: { type: 'number' },
+                },
+              },
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              properties: {
+                a: { enum: ['typeB'] },
+                c: { type: 'boolean' },
+              },
+            },
+          },
+        ]);
+      });
     });
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {

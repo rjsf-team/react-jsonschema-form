@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
 import getFirstMatchingOption from './getFirstMatchingOption';
-import retrieveSchema from './retrieveSchema';
+import retrieveSchema, { resolveAllReferences } from './retrieveSchema';
 import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
 import guessType from '../guessType';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
@@ -145,10 +145,7 @@ export default function getClosestMatchingOption<
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => {
-    if (has(option, REF_KEY)) {
-      return retrieveSchema<T, S, F>(validator, option, rootSchema, formData);
-    }
-    return option;
+    return resolveAllReferences(option, rootSchema);
   });
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {

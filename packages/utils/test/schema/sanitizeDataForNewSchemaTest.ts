@@ -258,6 +258,37 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         })
       ).toEqual({});
     });
+    it('returns empty formData after resolving schema refs', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          string_def: {
+            type: 'string',
+          },
+        },
+      };
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          field: {
+            $ref: '#/definitions/string_def',
+          },
+          oldField: {
+            type: 'string',
+          },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          field: {
+            $ref: '#/definitions/string_def',
+          },
+        },
+      };
+      expect(sanitizeDataForNewSchema(testValidator, rootSchema, newSchema, oldSchema, { oldField: 'test' })).toEqual(
+        {}
+      );
+    });
     it('returns data when two arrays have same boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
