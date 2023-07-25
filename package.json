@@ -10,7 +10,7 @@
     "changed": "lerna changed",
     "test": "lerna run --concurrency 2 --stream test",
     "test:update": "lerna run --concurrency 2 --stream test:update",
-    "lint": "lerna run lint",
+    "lint": "eslint './packages/**/*.{ts,js,tsx,jsx}' --quiet",
     "cs-check": "lerna run cs-check",
     "cs-format": "lerna run cs-format",
     "build": "lerna run --stream build",
