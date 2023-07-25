@@ -25,7 +25,11 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": [{
+        "//": "use only dependencies to avoid cycle @rjsf/core:build --> @rjsf/snapshot-tests:build --> @rjsf/core:build",
+        "projects": "dependencies",
+        "target": "^build"
+      }]
     }
   },
   "affected": {
