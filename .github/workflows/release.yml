@@ -26,6 +26,7 @@ jobs:
       - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: git update-index --assume-unchanged .npmrc
       - run: npx lerna publish from-package --yes
       - if: always()
         run: rm .npmrc
