@@ -1,5 +1,6 @@
 import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants';
 import { RJSFSchema, StrictRJSFSchema } from './types';
+import isObject from 'lodash/isObject';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `withIdRefPrefix` for any other elements.
@@ -38,11 +39,11 @@ function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S): S | S[] {
-  if (schemaNode.constructor === Object) {
-    return withIdRefPrefixObject<S>({ ...schemaNode });
-  }
   if (Array.isArray(schemaNode)) {
     return withIdRefPrefixArray<S>([...schemaNode]);
+  }
+  if (isObject(schemaNode)) {
+    return withIdRefPrefixObject<S>({ ...schemaNode });
   }
   return schemaNode;
 }

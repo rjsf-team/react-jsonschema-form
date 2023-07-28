@@ -26,6 +26,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Created new `resolveAllReferences()` function to resolve all references within a schema's properties and array items.
 - Updated `getClosestMatchingOption()` to use `resolveAllReferences()` for all oneOf/anyOf schemas
 - Updated `resolveAnyOrOneOfSchemas()` to use `resolveAllReferences()` for all oneOf/anyOf schemas
+- Better handle the `null` case in `withIdRefPrefix`, fixing [#3792](https://github.com/rjsf-team/react-jsonschema-form/pull/3792)
 
 # 5.11.0
 
