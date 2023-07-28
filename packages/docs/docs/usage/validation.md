@@ -121,7 +121,9 @@ import ajvRuntimeUcs2length from 'ajv/dist/runtime/ucs2length';
 import ajvRuntimeUri from 'ajv/dist/runtime/uri';
 import * as ajvFormats from 'ajv-formats/dist/formats';
 
+// dependencies to replace in generated code, to be provided by at runtime 
 const validatorsBundleReplacements: Record<string, [string, unknown]> = {
+    // '<code to be replaced>': ['<variable name to use as replacement>', <runtime dependency>],
   'require("ajv/dist/runtime/equal").default': ['ajvRuntimeEqual', ajvRuntimeEqual],
   'require("ajv/dist/runtime/parseJson").parseJson': ['ajvRuntimeparseJson', ajvRuntimeparseJson],
   'require("ajv/dist/runtime/parseJson").parseJsonNumber': [
@@ -179,7 +181,13 @@ if (typeof window !== 'undefined') {
   };
 }
 
-export function loadSchema(id: string, code: string, nonce: string) {
+/**
+ * Evaluate precompiled validator in browser using script tag
+ * @param id Identifier to avoid evaluating the same code multiple times
+ * @param code Code generated server side using `compileSchemaValidatorsCode`
+ * @param nonce nonce attribute to be added to script tag (https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce#using_nonce_to_allowlist_a_script_element)
+ */
+export function evaluateValidator(id: string, code: string, nonce: string): Promise<ValidatorFunctions> {
   let maybeValidator = schemas.get(id);
   if (maybeValidator) return maybeValidator.promise;
   let resolveValidator: (result: ValidatorFunctions) => void;
@@ -207,13 +215,10 @@ From React component this can be used as following:
 ```tsx
 let [precompiledValidator, setPrecompiledValidator] = React.useState<ValidatorFunctions>();
 React.useEffect(() => {
-    loadSchema(
-        // some schema id to avoid evaluating it multiple times
-        schemaId,
-        // result of compileSchemaValidatorsCode returned from the server
-        code,
-        // nonce script tag attribute to allow this ib content security policy for the page
-        nonce
+    evaluateValidator(
+        schemaId, // some schema id to avoid evaluating it multiple times
+        code, // result of compileSchemaValidatorsCode returned from the server
+        nonce // nonce script tag attribute to allow this ib content security policy for the page
     ).then(setPrecompiledValidator);
 }, [entityType.id]);
 
