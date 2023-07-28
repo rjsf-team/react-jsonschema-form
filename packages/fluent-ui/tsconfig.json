@@ -6,8 +6,11 @@
     "outDir": "./lib",
     "baseUrl": "./",
     "jsx": "react-jsx",
-    // todo
-    // ../../node_modules/@chakra-ui/menu/dist/declarations/src/use-menu.d.ts:986:61 - error TS2694: Namespace '"react-jsonschema-form/node_modules/csstype/index".Property' has no exported member 'ColorAdjust'.
+    // There are type errors in @fluentui type definitions because of which skipLibCheck had to be added
+    // @fluentui/font-icons-mdl2/lib/IconNames.d.ts
+    // @fluentui/merge-styles/lib/mergeStyleSets.d.ts
+    // @fluentui/react/lib/components/SelectedItemsList/BaseSelectedItemsList.d.ts
+    // @fluentui/utilities/lib/styled.d.ts
     "skipLibCheck": true
   }
 }
