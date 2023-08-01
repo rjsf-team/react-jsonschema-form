@@ -229,16 +229,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       registry={registry}
     />
   );
-  const errorsComponent = hideError ? undefined : (
-    <FieldErrorTemplate
-      errors={__errors}
-      errorSchema={errorSchema}
-      idSchema={idSchema}
-      schema={schema}
-      uiSchema={uiSchema}
-      registry={registry}
-    />
-  );
+  /*
+   * AnyOf/OneOf errors handled by child schema
+   */
+  const errorsComponent =
+    hideError || schema.anyOf || schema.oneOf ? undefined : (
+      <FieldErrorTemplate
+        errors={__errors}
+        errorSchema={errorSchema}
+        idSchema={idSchema}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
+    );
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
     description: (
       <DescriptionFieldTemplate

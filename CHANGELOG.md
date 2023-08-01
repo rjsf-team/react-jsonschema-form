@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.11.1
 
+## @rjsf/core
+
+- Updated `SchemaField` to ignore errors for `anyOf`/`oneOf` parent schema, fixing [1295](https://github.com/rjsf-team/react-jsonschema-form/issues/1295)
+
 ## @rjsf/utils
 
 - Created new `resolveAllReferences()` function to resolve all references within a schema's properties and array items.
