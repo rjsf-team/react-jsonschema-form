@@ -1,4 +1,5 @@
 import reduce from 'lodash/reduce';
+import deepFreeze from 'deep-freeze-es6';
 
 import {
   EnumOptionsType,
@@ -21,7 +22,7 @@ export const oneOfData = {
     },
   },
 };
-export const oneOfSchema: RJSFSchema = {
+export const oneOfSchema: RJSFSchema = deepFreeze({
   type: 'object',
   title: 'Testing OneOfs',
   definitions: {
@@ -201,11 +202,11 @@ export const oneOfSchema: RJSFSchema = {
       title: 'second option',
     },
   ],
-};
+});
 export const ONE_OF_SCHEMA_OPTIONS = oneOfSchema[ONE_OF_KEY]! as RJSFSchema[];
 export const FIRST_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[0];
 export const SECOND_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[1];
-export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = {
+export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = deepFreeze({
   oneOf: [
     {
       type: 'object',
@@ -257,7 +258,7 @@ export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = {
       additionalProperties: false,
     },
   ],
-};
+});
 export const OPTIONAL_ONE_OF_SCHEMA_ONEOF = OPTIONAL_ONE_OF_SCHEMA[ONE_OF_KEY] as RJSFSchema[];
 export const OPTIONAL_ONE_OF_DATA = { flag: true, inner_obj: { foo: 'bar' } };
 export const SIMPLE_ONE_OF_SCHEMA = {
@@ -290,7 +291,7 @@ export const FALSY_OPTIONS: EnumOptionsType[] = [
   { value: 0, label: 'Zero' },
 ];
 
-export const RECURSIVE_REF_ALLOF: RJSFSchema = {
+export const RECURSIVE_REF_ALLOF: RJSFSchema = deepFreeze({
   definitions: {
     '@enum': {
       type: 'object',
@@ -332,9 +333,9 @@ export const RECURSIVE_REF_ALLOF: RJSFSchema = {
       minItems: 1,
     },
   },
-};
+});
 
-export const RECURSIVE_REF: RJSFSchema = {
+export const RECURSIVE_REF: RJSFSchema = deepFreeze({
   definitions: {
     '@enum': {
       type: 'object',
@@ -351,7 +352,7 @@ export const RECURSIVE_REF: RJSFSchema = {
     },
   },
   $ref: '#/definitions/@enum',
-};
+});
 
 export const ERROR_MAPPER = {
   '': 'root error',
@@ -390,7 +391,7 @@ export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
   []
 );
 
-export const SUPER_SCHEMA: RJSFSchema = {
+export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
   [ID_KEY]: 'super-schema',
   definitions: {
     foo: {
@@ -465,9 +466,9 @@ export const SUPER_SCHEMA: RJSFSchema = {
       },
     },
   },
-};
+});
 
-export const PROPERTY_DEPENDENCIES: RJSFSchema = {
+export const PROPERTY_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     a: { type: 'string' },
@@ -477,9 +478,9 @@ export const PROPERTY_DEPENDENCIES: RJSFSchema = {
   dependencies: {
     a: ['b'],
   },
-};
+});
 
-export const SCHEMA_DEPENDENCIES: RJSFSchema = {
+export const SCHEMA_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     a: { type: 'string' },
@@ -491,9 +492,9 @@ export const SCHEMA_DEPENDENCIES: RJSFSchema = {
       },
     },
   },
-};
+});
 
-export const SCHEMA_AND_ONEOF_REF_DEPENDENCIES: RJSFSchema = {
+export const SCHEMA_AND_ONEOF_REF_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
   definitions: {
     needsA: {
@@ -517,9 +518,9 @@ export const SCHEMA_AND_ONEOF_REF_DEPENDENCIES: RJSFSchema = {
       oneOf: [{ $ref: '#/definitions/needsA' }, { $ref: '#/definitions/needsB' }],
     },
   },
-};
+});
 
-export const SCHEMA_AND_REQUIRED_DEPENDENCIES: RJSFSchema = {
+export const SCHEMA_AND_REQUIRED_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     a: { type: 'string' },
@@ -534,9 +535,9 @@ export const SCHEMA_AND_REQUIRED_DEPENDENCIES: RJSFSchema = {
       required: ['b'],
     },
   },
-};
+});
 
-export const SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES: RJSFSchema = {
+export const SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
   dependencies: {
     employee_accounts: {
@@ -604,9 +605,9 @@ export const SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES: RJSFSchema = {
       title: 'Employee Accounts',
     },
   },
-};
+});
 
-export const SCHEMA_WITH_SINGLE_CONDITION: RJSFSchema = {
+export const SCHEMA_WITH_SINGLE_CONDITION: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     country: {
@@ -625,9 +626,9 @@ export const SCHEMA_WITH_SINGLE_CONDITION: RJSFSchema = {
       postal_code: { pattern: '[A-Z][0-9][A-Z] [0-9][A-Z][0-9]' },
     },
   },
-};
+});
 
-export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = {
+export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     Animal: {
@@ -731,9 +732,9 @@ export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = {
     },
   ],
   required: ['Animal'],
-};
+});
 
-export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = {
+export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     country: {
@@ -792,9 +793,9 @@ export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = {
       },
     },
   },
-};
+});
 
-export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = {
+export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     list: {
@@ -802,9 +803,9 @@ export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = {
       items: SCHEMA_WITH_SINGLE_CONDITION,
     },
   },
-};
+});
 
-export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = {
+export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = deepFreeze({
   type: 'object',
   properties: {
     animal: {
@@ -856,4 +857,4 @@ export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = {
       required: ['animal'],
     },
   ],
-};
+});
