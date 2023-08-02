@@ -45,7 +45,6 @@
     "@rjsf/core": "^5.11.1",
     "@rjsf/utils": "^5.11.1",
     "@rjsf/validator-ajv8": "^5.11.1",
-    "@types/material-ui": "^0.21.12",
     "@types/react": "^17.0.62",
     "@types/react-dom": "^17.0.20",
     "@types/react-test-renderer": "^17.0.2",
