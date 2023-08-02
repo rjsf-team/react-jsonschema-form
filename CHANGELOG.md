@@ -15,6 +15,16 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.11.2
+
+## @rjsf/material-ui
+
+- Removed unnecessary import of old `@types/material-ui` which can cause typescript issues in some situations
+
+## @rjsf/utils
+
+- Updated the `resolveAllReferences()` function to use object spreading to update properties and items in a schema rather than directly modifying the schema to avoid issues with frozen object, fixing [#3805](https://github.com/rjsf-team/react-jsonschema-form/issues/3805)
+
 # 5.11.1
 
 ## @rjsf/core

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 import times from 'lodash/times';
-import forEach from 'lodash/forEach';
+import transform from 'lodash/transform';
 import mergeAllOf, { Options } from 'json-schema-merge-allof';
 
 import {
@@ -212,9 +212,14 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(sc
   }
 
   if (PROPERTIES_KEY in resolvedSchema) {
-    forEach(resolvedSchema[PROPERTIES_KEY], (value, key) => {
-      resolvedSchema[PROPERTIES_KEY]![key] = resolveAllReferences(value as S, rootSchema);
-    });
+    const updatedProps = transform(
+      resolvedSchema[PROPERTIES_KEY]!,
+      (result, value, key: string) => {
+        result[key] = resolveAllReferences(value as S, rootSchema);
+      },
+      {} as RJSFSchema
+    );
+    resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
 
   if (
@@ -222,7 +227,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(sc
     !Array.isArray(resolvedSchema.items) &&
     typeof resolvedSchema.items !== 'boolean'
   ) {
-    resolvedSchema.items = resolveAllReferences(resolvedSchema.items as S, rootSchema);
+    resolvedSchema = { ...resolvedSchema, items: resolveAllReferences(resolvedSchema.items as S, rootSchema) };
   }
 
   return resolvedSchema;
