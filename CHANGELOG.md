@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
   - esbuild for CJS bundle
   - rollup for UMD bundle
 
+## @rjsf/validator-ajv8
+
+- Exposing new function `compileSchemaValidatorsCode` to allow creating precompiled validator without a file. This is useful in case when precompiled validator is to be created dynamically. [#3793](https://github.com/rjsf-team/react-jsonschema-form/pull/3793)
+
 # 5.11.2
 
 ## @rjsf/material-ui
