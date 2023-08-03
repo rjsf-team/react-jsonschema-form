@@ -15,6 +15,18 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.0
+
+## @rjsf/utils
+
+- Experimental feature:
+  - Added `experimental_defaultFormStateBehavior = { arrayMinItems: { populate: 'never' } }` (feature [#3796](https://github.com/rjsf-team/react-jsonschema-form/issues/3796))
+
+## Dev / docs / playground
+
+- Updated the `form-props` documentation `arrayMinItems`, added description for `never`.
+- Updated the `playground` to add the option for the new `arrayMinItems.populate = 'never'`.
+
 # 5.12.0
 
 ## Dev / playground
@@ -105,7 +117,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `utility-functions` documentation to add the new `mergeExtraArrayDefaults` flag for the `mergeDefaultWithFormData()` function
 - Updated the `form-props` documentation to update the `arrayMinItems` documentation for the new object behavior
-- Updated the `playground` to add a checkbox for the new `arrayMinItems.mergeExtraDefaults` flag 
+- Updated the `playground` to add a checkbox for the new `arrayMinItems.mergeExtraDefaults` flag
 
 # 5.8.2
 

@@ -412,6 +412,226 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ requiredArray: ['default0', 'default0'] });
       });
     });
+    describe('default form state behavior: arrayMinItems.populate = "never"', () => {
+      it('should not be filled if minItems defined and required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 1,
+            },
+          },
+          required: ['requiredArray'],
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ requiredArray: [] });
+      });
+      it('should not be filled if minItems defined and non required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 1,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: [] });
+      });
+
+      it('should be filled with default values if required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              default: ['raw0'],
+              items: { type: 'string' },
+              minItems: 1,
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ requiredArray: ['raw0'] });
+      });
+
+      it('should be filled with default values if non required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              default: ['raw0'],
+              items: { type: 'string' },
+              minItems: 1,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: ['raw0'] });
+      });
+
+      it('should be filled with default values partly and not fill others', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              default: ['raw0'],
+              items: { type: 'string' },
+              minItems: 2,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { nonRequiredArray: ['raw0'] },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: ['raw0'] });
+      });
+
+      it('should not add items to formData', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+              minItems: 2,
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { nonRequiredArray: ['not add'] },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: ['not add'] });
+      });
+
+      it('should be empty array if minItems not defined and required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+          required: ['requiredArray'],
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ requiredArray: [] });
+      });
+      it('should be empty array if minItems not defined and non required', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: [] });
+      });
+
+      it('injecting data should be stopped at the top level of tree', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              minItems: 2,
+              items: {
+                type: 'object',
+                properties: {
+                  nestedValue: { type: 'string' },
+                  nestedArray: { type: 'array', items: { type: 'string' } },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({ nonRequiredArray: [] });
+      });
+      it('no injecting for childs', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nonRequiredArray: {
+              type: 'array',
+              minItems: 2,
+              items: {
+                type: 'object',
+                properties: {
+                  nestedValue: { type: 'string' },
+                  nestedArray: { type: 'array', minItems: 3, items: { type: 'string' } },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: {
+              nonRequiredArray: [
+                {
+                  nestedArray: ['raw0'],
+                },
+              ],
+            },
+            experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
+          })
+        ).toStrictEqual({
+          nonRequiredArray: [
+            {
+              nestedArray: ['raw0'],
+            },
+          ],
+        });
+      });
+    });
     describe('default form state behavior: emptyObjectFields = "populateRequiredDefaults"', () => {
       it('test an object with an optional property that has a nested required property', () => {
         const schema: RJSFSchema = {

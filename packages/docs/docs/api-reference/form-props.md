@@ -77,10 +77,11 @@ When not specified, it defaults to `{ populate: 'all', mergeExtraDefaults: false
 
 Optional enumerated flag controlling how array minItems are populated, defaulting to `all`:
 
-| Flag Value     | Description                                                                                                                         |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `all`          | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined. |
-| `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required.                                                |
+| Flag Value     | Description                                                                                                                                        |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `all`          | Legacy behavior - populate minItems entries with default values initially and include empty array when no values have been defined.                |
+| `requiredOnly` | Ignore `minItems` on a field when calculating defaults unless the field is required.                                                               |
+| `never`        | Ignore `minItems` on a field when calculating defaults for required and non-required. Value will set only if defined `default` and from `formData` |
 
 #### `arrayMinItems.mergeExtraDefaults`
 
