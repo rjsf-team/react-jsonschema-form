@@ -22,7 +22,6 @@
   },
   "include": ["src"],
   "references": [
-//    { "path": "./tsconfig.node.json" },
     { "path": "../antd" },
     { "path": "../bootstrap-4" },
     { "path": "../chakra-ui" },
