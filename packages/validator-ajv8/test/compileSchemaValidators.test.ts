@@ -1,9 +1,8 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { RJSFSchema, schemaParser } from '@rjsf/utils';
+import { writeFileSync } from 'fs';
+import { RJSFSchema } from '@rjsf/utils';
 
-import compileSchemaValidators from '../src/compileSchemaValidators';
-import createAjvInstance from '../src/createAjvInstance';
-import superSchema from './harness/superSchema.json';
+import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators';
+
 import { CUSTOM_OPTIONS } from './harness/testData';
 
 jest.mock('fs', () => ({
@@ -11,12 +10,15 @@ jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
 }));
 
-jest.mock('../src/createAjvInstance', () =>
-  jest.fn().mockImplementation((...args) => jest.requireActual('../src/createAjvInstance').default(...args))
-);
+jest.mock('../src/compileSchemaValidatorsCode', () => {
+  return {
+    compileSchemaValidatorsCode: jest.fn(),
+  };
+});
 
 const OUTPUT_FILE = 'test.js';
 
+const testSchema = { $id: 'test-schema' } as RJSFSchema;
 describe('compileSchemaValidators()', () => {
   let consoleLogSpy: jest.SpyInstance;
   let expectedCode: string;
@@ -27,14 +29,14 @@ describe('compileSchemaValidators()', () => {
     consoleLogSpy.mockRestore();
   });
   describe('compiling without additional options', () => {
-    let schemas: RJSFSchema[];
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as RJSFSchema));
-      expectedCode = readFileSync('./test/harness/superSchema.js').toString();
-      compileSchemaValidators(superSchema as RJSFSchema, OUTPUT_FILE);
+      expectedCode = 'test output 1';
+      (compileSchemaValidatorsCode as jest.Mock).mockImplementation(() => expectedCode);
+      compileSchemaValidators(testSchema, OUTPUT_FILE);
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
+      (compileSchemaValidatorsCode as jest.Mock).mockClear();
       (writeFileSync as jest.Mock).mockClear();
     });
     it('called console.log twice', () => {
@@ -46,23 +48,21 @@ describe('compileSchemaValidators()', () => {
     it('the second time relates to writing the output file', () => {
       expect(consoleLogSpy).toHaveBeenNthCalledWith(2, `writing ${OUTPUT_FILE}`);
     });
-    it('create AJV instance was called with the expected options', () => {
-      const expectedCompileOpts = { code: { source: true, lines: true }, schemas };
-      expect(createAjvInstance).toHaveBeenCalledWith(undefined, undefined, expectedCompileOpts, undefined, undefined);
+    it('compileSchemaValidatorsCode was called with the expected options', () => {
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, {});
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);
     });
   });
   describe('compiling WITH additional options', () => {
-    let schemas: RJSFSchema[];
+    const customOptions = {
+      ...CUSTOM_OPTIONS,
+      ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
+    };
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as RJSFSchema));
-      expectedCode = readFileSync('./test/harness/superSchemaOptions.js').toString();
-      compileSchemaValidators(superSchema as RJSFSchema, OUTPUT_FILE, {
-        ...CUSTOM_OPTIONS,
-        ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
-      });
+      expectedCode = 'expected code 2';
+      compileSchemaValidators(testSchema, OUTPUT_FILE, customOptions);
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
@@ -77,22 +77,8 @@ describe('compileSchemaValidators()', () => {
     it('the second time relates to writing the output file', () => {
       expect(consoleLogSpy).toHaveBeenNthCalledWith(2, `writing ${OUTPUT_FILE}`);
     });
-    it('create AJV instance was called with the expected options', () => {
-      const {
-        additionalMetaSchemas,
-        customFormats,
-        ajvOptionsOverrides = {},
-        ajvFormatOptions,
-        AjvClass,
-      } = CUSTOM_OPTIONS;
-      const expectedCompileOpts = { ...ajvOptionsOverrides, code: { source: true, lines: false }, schemas };
-      expect(createAjvInstance).toHaveBeenCalledWith(
-        additionalMetaSchemas,
-        customFormats,
-        expectedCompileOpts,
-        ajvFormatOptions,
-        AjvClass
-      );
+    it('compileSchemaValidatorsCode was called with the expected options', () => {
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, customOptions);
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);

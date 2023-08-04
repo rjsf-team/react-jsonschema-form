@@ -1,9 +1,9 @@
 import fs from 'fs';
-import standaloneCode from 'ajv/dist/standalone';
-import { RJSFSchema, StrictRJSFSchema, schemaParser } from '@rjsf/utils';
-
-import createAjvInstance from './createAjvInstance';
+import { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { CustomValidatorOptionsType } from './types';
+import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode';
+
+export { compileSchemaValidatorsCode };
 
 /** The function used to compile a schema into an output file in the form that allows it to be used as a precompiled
  * validator. The main reasons for using a precompiled validator is reducing code size, improving validation speed and,
@@ -22,19 +22,8 @@ export default function compileSchemaValidators<S extends StrictRJSFSchema = RJS
   options: CustomValidatorOptionsType = {}
 ) {
   console.log('parsing the schema');
-  const schemaMaps = schemaParser(schema);
-  const schemas = Object.values(schemaMaps);
 
-  const { additionalMetaSchemas, customFormats, ajvOptionsOverrides = {}, ajvFormatOptions, AjvClass } = options;
-  // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
-  const compileOptions = {
-    ...ajvOptionsOverrides,
-    code: { lines: true, ...ajvOptionsOverrides.code, source: true },
-    schemas,
-  };
-  const ajv = createAjvInstance(additionalMetaSchemas, customFormats, compileOptions, ajvFormatOptions, AjvClass);
-
-  const moduleCode = standaloneCode(ajv);
+  const moduleCode = compileSchemaValidatorsCode(schema, options);
   console.log(`writing ${output}`);
   fs.writeFileSync(output, moduleCode);
 }

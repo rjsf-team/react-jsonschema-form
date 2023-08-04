@@ -90,6 +90,144 @@ const validator = createPrecompiledValidator(precompiledValidator as ValidatorFu
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+### Dynamically pre-compiling validators
+
+For more advanced cases when schema needs to be precompiled on request - `compileSchemaValidatorsCode` can be used.
+```ts
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/dist/compileSchemaValidators';
+
+const code = compileSchemaValidatorsCode(schema, options);
+```
+
+For the most part it is the same as `compileSchemaValidators`, but instead of writing the file - it returns generated code directly.
+
+To use it on browser side - some modifications are needed to provide runtime dependencies in generated code needs to be provided.
+
+Example implementation of it: 
+
+```tsx
+import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
+
+import ajvRuntimeEqual from 'ajv/dist/runtime/equal';
+import {
+  parseJson as ajvRuntimeparseJson,
+  parseJsonNumber as ajvRuntimeparseJsonNumber,
+  parseJsonString as ajvRuntimeparseJsonString,
+} from 'ajv/dist/runtime/parseJson';
+import ajvRuntimeQuote from 'ajv/dist/runtime/quote';
+// import ajvRuntimeRe2 from 'ajv/dist/runtime/re2';
+import ajvRuntimeTimestamp from 'ajv/dist/runtime/timestamp';
+import ajvRuntimeUcs2length from 'ajv/dist/runtime/ucs2length';
+import ajvRuntimeUri from 'ajv/dist/runtime/uri';
+import * as ajvFormats from 'ajv-formats/dist/formats';
+
+// dependencies to replace in generated code, to be provided by at runtime 
+const validatorsBundleReplacements: Record<string, [string, unknown]> = {
+    // '<code to be replaced>': ['<variable name to use as replacement>', <runtime dependency>],
+  'require("ajv/dist/runtime/equal").default': ['ajvRuntimeEqual', ajvRuntimeEqual],
+  'require("ajv/dist/runtime/parseJson").parseJson': ['ajvRuntimeparseJson', ajvRuntimeparseJson],
+  'require("ajv/dist/runtime/parseJson").parseJsonNumber': [
+    'ajvRuntimeparseJsonNumber',
+    ajvRuntimeparseJsonNumber,
+  ],
+  'require("ajv/dist/runtime/parseJson").parseJsonString': [
+    'ajvRuntimeparseJsonString',
+    ajvRuntimeparseJsonString,
+  ],
+  'require("ajv/dist/runtime/quote").default': ['ajvRuntimeQuote', ajvRuntimeQuote],
+  // re2 by default is not in dependencies for ajv and so is likely not normally used
+  // 'require("ajv/dist/runtime/re2").default': ['ajvRuntimeRe2', ajvRuntimeRe2],
+  'require("ajv/dist/runtime/timestamp").default': ['ajvRuntimeTimestamp', ajvRuntimeTimestamp],
+  'require("ajv/dist/runtime/ucs2length").default': ['ajvRuntimeUcs2length', ajvRuntimeUcs2length],
+  'require("ajv/dist/runtime/uri").default': ['ajvRuntimeUri', ajvRuntimeUri],
+  // formats
+  'require("ajv-formats/dist/formats")': ['ajvFormats', ajvFormats],
+};
+
+const regexp = new RegExp(
+  Object.keys(validatorsBundleReplacements)
+    .map((key) => key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
+    .join('|'),
+  'g'
+);
+
+function wrapAjvBundle(code: string) {
+  return `function(${Object.values(validatorsBundleReplacements)
+    .map(([name]) => name)
+    .join(', ')}){\nvar exports = {};\n${code.replace(
+    regexp,
+    (req) => validatorsBundleReplacements[req][0]
+  )};\nreturn exports;\n}`;
+}
+
+const windowValidatorOnLoad = '__rjsf_validatorOnLoad';
+const schemas = new Map<
+  string,
+  { promise: Promise<ValidatorFunctions>; resolve: (result: ValidatorFunctions) => void }
+>();
+if (typeof window !== 'undefined') {
+  // @ts-ignore
+  window[windowValidatorOnLoad] = (
+    loadedId: string,
+    fn: (...args: unknown[]) => ValidatorFunctions
+  ) => {
+    const validator = fn(...Object.values(validatorsBundleReplacements).map(([, dep]) => dep));
+    let validatorLoader = schemas.get(loadedId);
+    if (validatorLoader) {
+      validatorLoader.resolve(validator);
+    } else {
+      throw new Error(`Unknown validator loaded id="${loadedId}"`);
+    }
+  };
+}
+
+/**
+ * Evaluate precompiled validator in browser using script tag
+ * @param id Identifier to avoid evaluating the same code multiple times
+ * @param code Code generated server side using `compileSchemaValidatorsCode`
+ * @param nonce nonce attribute to be added to script tag (https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce#using_nonce_to_allowlist_a_script_element)
+ */
+export function evaluateValidator(id: string, code: string, nonce: string): Promise<ValidatorFunctions> {
+  let maybeValidator = schemas.get(id);
+  if (maybeValidator) return maybeValidator.promise;
+  let resolveValidator: (result: ValidatorFunctions) => void;
+  const validatorPromise = new Promise<ValidatorFunctions>((resolve) => {
+    resolveValidator = resolve;
+  });
+  schemas.set(id, {
+    promise: validatorPromise,
+    resolve: resolveValidator!,
+  });
+
+  const scriptElement = document.createElement('script');
+
+  scriptElement.setAttribute('nonce', nonce);
+  scriptElement.text = `window["${windowValidatorOnLoad}"]("${id}", ${wrapAjvBundle(code)})`;
+
+  document.body.appendChild(scriptElement);
+  return validatorPromise;
+}
+
+```
+
+From React component this can be used as following: 
+
+```tsx
+let [precompiledValidator, setPrecompiledValidator] = React.useState<ValidatorFunctions>();
+React.useEffect(() => {
+    evaluateValidator(
+        schemaId, // some schema id to avoid evaluating it multiple times
+        code, // result of compileSchemaValidatorsCode returned from the server
+        nonce // nonce script tag attribute to allow this ib content security policy for the page
+    ).then(setPrecompiledValidator);
+}, [entityType.id]);
+
+if (!precompiledValidator) {
+    // render loading screen
+}
+const validator = createPrecompiledValidator(precompiledValidator, schema);
+```
+
 
 ## Live validation
 
