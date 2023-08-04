@@ -206,7 +206,7 @@ export const oneOfSchema: RJSFSchema = deepFreeze({
 export const ONE_OF_SCHEMA_OPTIONS = oneOfSchema[ONE_OF_KEY]! as RJSFSchema[];
 export const FIRST_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[0];
 export const SECOND_ONE_OF: RJSFSchema = ONE_OF_SCHEMA_OPTIONS[1];
-export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = deepFreeze({
+export const OPTIONAL_ONE_OF_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
   oneOf: [
     {
       type: 'object',
@@ -668,7 +668,7 @@ export const SCHEMA_WITH_SINGLE_CONDITION: RJSFSchema = deepFreeze({
   },
 });
 
-export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = deepFreeze({
+export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = deepFreeze<RJSFSchema>({
   type: 'object',
   properties: {
     Animal: {
@@ -774,7 +774,7 @@ export const SCHEMA_WITH_MULTIPLE_CONDITIONS: RJSFSchema = deepFreeze({
   required: ['Animal'],
 });
 
-export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = deepFreeze({
+export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = deepFreeze<RJSFSchema>({
   type: 'object',
   properties: {
     country: {
@@ -835,7 +835,7 @@ export const SCHEMA_WITH_NESTED_CONDITIONS: RJSFSchema = deepFreeze({
   },
 });
 
-export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = deepFreeze({
+export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = deepFreeze<RJSFSchema>({
   type: 'object',
   properties: {
     list: {
@@ -845,7 +845,7 @@ export const SCHEMA_WITH_ARRAY_CONDITION: RJSFSchema = deepFreeze({
   },
 });
 
-export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = deepFreeze({
+export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = deepFreeze<RJSFSchema>({
   type: 'object',
   properties: {
     animal: {
