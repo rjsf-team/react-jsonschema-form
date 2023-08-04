@@ -1,6 +1,5 @@
 module.exports = {
   verbose: true,
-  setupFilesAfterEnv: ['jest-expect-message'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     browsers: ['chrome', 'firefox', 'safari'],

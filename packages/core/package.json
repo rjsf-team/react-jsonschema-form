@@ -3,7 +3,11 @@
   "version": "5.11.2",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build": "rimraf dist && dts build --rollupTypes --format cjs,esm,umd",
+    "build:ts": "rimraf lib && tsc",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
+    "build": "rimraf dist && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test,testSnap}/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"{src,test,testSnap}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",
@@ -22,11 +26,12 @@
     ]
   },
   "main": "dist/index.js",
-  "module": "dist/core.esm.js",
-  "typings": "dist/index.d.ts",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "files": [
     "dist",
-    "lib"
+    "lib",
+    "src"
   ],
   "engineStrict": false,
   "engines": {
@@ -61,7 +66,7 @@
     "atob": "^2.1.2",
     "babel-jest": "^29.6.1",
     "chai": "^3.5.0",
-    "dts-cli": "^1.6.3",
+    "esbuild": "^0.18.13",
     "eslint": "^8.44.0",
     "html": "^1.0.0",
     "jest": "^29.6.1",
@@ -73,7 +78,9 @@
     "react-portal": "^4.2.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^5.0.1",
-    "sinon": "^9.2.4"
+    "rollup": "^3.26.2",
+    "sinon": "^9.2.4",
+    "typescript": "^4.9.5"
   },
   "directories": {
     "test": "test"

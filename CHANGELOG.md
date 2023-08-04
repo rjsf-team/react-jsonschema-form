@@ -15,6 +15,16 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.12.0
+
+## Dev / playground
+
+- update playground vite config to use sources directly, allowing to reload changes in it without additional build step
+- moving from `dts-cli` to use individual dev tools directly, updating package publish config
+  - tsc for generating type definitions and esm modules
+  - esbuild for CJS bundle
+  - rollup for UMD bundle
+
 # 5.11.2
 
 ## @rjsf/material-ui

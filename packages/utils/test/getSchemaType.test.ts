@@ -68,12 +68,10 @@ const cases: { schema: object; expected: string | undefined }[] = [
 ];
 
 describe('getSchemaType()', () => {
-  it('should correctly guess the type of a schema', () => {
-    for (const test of cases) {
-      expect(
-        getSchemaType(test.schema),
-        `${JSON.stringify(test.schema)} should guess type of ${test.expected}`
-      ).toEqual(test.expected);
+  test.each(cases.map((c) => [c.expected, c.schema]))(
+    `should correctly guess the type "%s" of a schema %j`,
+    (expected, schema) => {
+      expect(getSchemaType(schema)).toBe(expected);
     }
-  });
+  );
 });
