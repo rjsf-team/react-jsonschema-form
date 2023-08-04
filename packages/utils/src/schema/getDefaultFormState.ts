@@ -321,6 +321,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       return objectDefaults;
     }
     case 'array': {
+      const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
+      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
         defaults = defaults.map((item, idx) => {
@@ -338,19 +341,25 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       // Deeply inject defaults into already existing form data
       if (Array.isArray(rawFormData)) {
         const schemaItem: S = getInnerSchemaForArrayItem<S>(schema);
-        defaults = rawFormData.map((item: T, idx: number) => {
-          return computeDefaults<T, S, F>(validator, schemaItem, {
-            rootSchema,
-            _recurseList,
-            experimental_defaultFormStateBehavior,
-            rawFormData: item,
-            parentDefaults: get(defaults, [idx]),
-            required,
-          });
-        }) as T[];
+        if (neverPopulate) {
+          defaults = rawFormData;
+        } else {
+          defaults = rawFormData.map((item: T, idx: number) => {
+            return computeDefaults<T, S, F>(validator, schemaItem, {
+              rootSchema,
+              _recurseList,
+              experimental_defaultFormStateBehavior,
+              rawFormData: item,
+              parentDefaults: get(defaults, [idx]),
+              required,
+            });
+          }) as T[];
+        }
       }
 
-      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+      if (neverPopulate) {
+        return defaults ?? [];
+      }
       if (ignoreMinItemsFlagSet && !required) {
         // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
         // return form data/defaults

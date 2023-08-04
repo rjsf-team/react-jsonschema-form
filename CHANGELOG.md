@@ -17,17 +17,24 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.12.0
 
-## Dev / playground
+## @rjsf/utils
+
+- Experimental feature:
+  - Added `experimental_defaultFormStateBehavior = { arrayMinItems: { populate: 'never' } }` (feature [#3796](https://github.com/rjsf-team/react-jsonschema-form/issues/3796))
+
+## @rjsf/validator-ajv8
+
+- Exposing new function `compileSchemaValidatorsCode` to allow creating precompiled validator without a file. This is useful in case when precompiled validator is to be created dynamically. [#3793](https://github.com/rjsf-team/react-jsonschema-form/pull/3793)
+
+## Dev / docs / playground
 
 - update playground vite config to use sources directly, allowing to reload changes in it without additional build step
 - moving from `dts-cli` to use individual dev tools directly, updating package publish config
   - tsc for generating type definitions and esm modules
   - esbuild for CJS bundle
   - rollup for UMD bundle
-
-## @rjsf/validator-ajv8
-
-- Exposing new function `compileSchemaValidatorsCode` to allow creating precompiled validator without a file. This is useful in case when precompiled validator is to be created dynamically. [#3793](https://github.com/rjsf-team/react-jsonschema-form/pull/3793)
+- Updated the `form-props` documentation `arrayMinItems`, added description for `never`.
+- Updated the `playground` to add the option for the new `arrayMinItems.populate = 'never'`.
 
 # 5.11.2
 
@@ -105,7 +112,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `utility-functions` documentation to add the new `mergeExtraArrayDefaults` flag for the `mergeDefaultWithFormData()` function
 - Updated the `form-props` documentation to update the `arrayMinItems` documentation for the new object behavior
-- Updated the `playground` to add a checkbox for the new `arrayMinItems.mergeExtraDefaults` flag 
+- Updated the `playground` to add a checkbox for the new `arrayMinItems.mergeExtraDefaults` flag
 
 # 5.8.2
 

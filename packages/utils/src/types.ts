@@ -38,8 +38,9 @@ export type Experimental_ArrayMinItems = {
    * - `all`: Legacy behavior, populate minItems entries with default values initially and include an empty array when
    *        no values have been defined.
    * - `requiredOnly`: Ignore `minItems` on a field when calculating defaults unless the field is required.
+   * - `never`: Ignore `minItems` on a field even the field is required.
    */
-  populate?: 'all' | 'requiredOnly';
+  populate?: 'all' | 'requiredOnly' | 'never';
   /** When `formData` is provided and does not contain `minItems` worth of data, this flag (`false` by default) controls
    * whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the
    * `minItems` condition is met. When false (legacy behavior), only the `formData` provided is merged into the default
