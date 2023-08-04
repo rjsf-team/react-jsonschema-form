@@ -17,6 +17,14 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.14.0
 
+## Dev / playground
+
+- update configuration to use typescript project references, start type checking the tests
+
+## @rjsf/snapshot-tests
+
+Move theme snapshot tests into separate package
+
 ## @rjsf/fluentui-rc
 
 - Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
