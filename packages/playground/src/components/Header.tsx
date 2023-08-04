@@ -93,12 +93,12 @@ const liveSettingsSelectSchema: RJSFSchema = {
                 },
                 {
                   type: 'string',
-                  title: 'Ignore minItems unless field is required',
+                  title: 'Only populate minItems with default values when field is required',
                   enum: ['requiredOnly'],
                 },
                 {
                   type: 'string',
-                  title: 'Ignore populating arrays even if settled minItems',
+                  title: 'Never populate minItems with default values',
                   enum: ['never'],
                 },
               ],

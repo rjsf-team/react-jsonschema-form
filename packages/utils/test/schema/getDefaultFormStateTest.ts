@@ -508,10 +508,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
-            rawFormData: { nonRequiredArray: ['raw0'] },
+            rawFormData: { nonRequiredArray: ['raw1'] },
             experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'never' } },
           })
-        ).toStrictEqual({ nonRequiredArray: ['raw0'] });
+        ).toStrictEqual({ nonRequiredArray: ['raw1'] });
       });
 
       it('should not add items to formData', () => {
