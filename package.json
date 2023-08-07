@@ -20,7 +20,7 @@
     "prepare": "husky install",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && npm update --save && npm install && npm run build && npm run test",
+    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && npm update --save && npm install && npm run build && npm run test && npm run lint",
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
     "commit-package-changes": "git add package-lock.json packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",

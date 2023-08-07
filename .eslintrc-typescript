@@ -8,6 +8,7 @@
     "plugin:react/jsx-runtime"
   ],
   "rules": {
+    "react/no-deprecated": "warn",
     "react/prop-types": 0,
     "react/no-find-dom-node": 0,
     "react/display-name": 0,
