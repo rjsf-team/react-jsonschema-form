@@ -495,7 +495,7 @@ describe('Validation', () => {
 
       const schema = {
         $ref: '#/definitions/Dataset',
-        $schema: 'http://json-schema.org/draft-04/schema#',
+        $schema: 'http://json-schema.org/draft-06/schema#',
         definitions: {
           Dataset: {
             properties: {
@@ -512,7 +512,7 @@ describe('Validation', () => {
 
       beforeEach(() => {
         const validator = customizeV6Validator({
-          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-04.json')],
+          additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
         });
         const withMetaSchema = createFormComponent({
           schema,
