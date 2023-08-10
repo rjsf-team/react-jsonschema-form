@@ -323,7 +323,8 @@ export function retrieveSchemaInternal<
     if (ALL_OF_KEY in resolvedSchema) {
       // resolve allOf schemas
       if (expandAllBranches) {
-        return [...(resolvedSchema.allOf as S[])];
+        const { allOf, ...restOfSchema } = resolvedSchema;
+        return [...(allOf as S[]), restOfSchema as S];
       }
       try {
         resolvedSchema = mergeAllOf(resolvedSchema, {
