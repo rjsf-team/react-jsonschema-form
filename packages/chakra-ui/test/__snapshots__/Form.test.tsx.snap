@@ -326,6 +326,11 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-2 {
+  display: block;
+  text-align: start;
+}
+
+.emotion-3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -335,7 +340,7 @@ exports[`single fields checkboxes field 1`] = `
   flex-direction: column;
 }
 
-.emotion-2>*:not(style)~*:not(style) {
+.emotion-3>*:not(style)~*:not(style) {
   margin-top: 0.5rem;
   -webkit-margin-end: 0px;
   margin-inline-end: 0px;
@@ -344,7 +349,7 @@ exports[`single fields checkboxes field 1`] = `
   margin-inline-start: 0px;
 }
 
-.emotion-3 {
+.emotion-4 {
   cursor: pointer;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -358,7 +363,7 @@ exports[`single fields checkboxes field 1`] = `
   position: relative;
 }
 
-.emotion-4 {
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -381,16 +386,16 @@ exports[`single fields checkboxes field 1`] = `
   flex-shrink: 0;
 }
 
-.emotion-5 {
+.emotion-6 {
   -webkit-margin-start: 0.5rem;
   margin-inline-start: 0.5rem;
 }
 
-.emotion-19 {
+.emotion-20 {
   margin-top: 3px;
 }
 
-.emotion-20 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -435,11 +440,18 @@ exports[`single fields checkboxes field 1`] = `
         className="chakra-form-control emotion-1"
         role="group"
       >
+        <label
+          className="chakra-form__label emotion-2"
+          htmlFor="root"
+          id="root-label"
+        >
+          An enum list rendered as checkboxes
+        </label>
         <div
-          className="chakra-stack emotion-2"
+          className="chakra-stack emotion-3"
         >
           <label
-            className="chakra-checkbox emotion-3"
+            className="chakra-checkbox emotion-4"
             onClick={[Function]}
           >
             <input
@@ -475,14 +487,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-4"
+              className="chakra-checkbox__control emotion-5"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-5"
+              className="chakra-checkbox__label emotion-6"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -494,7 +506,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-3"
+            className="chakra-checkbox emotion-4"
             onClick={[Function]}
           >
             <input
@@ -530,14 +542,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-4"
+              className="chakra-checkbox__control emotion-5"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-5"
+              className="chakra-checkbox__label emotion-6"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -549,7 +561,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-3"
+            className="chakra-checkbox emotion-4"
             onClick={[Function]}
           >
             <input
@@ -585,14 +597,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-4"
+              className="chakra-checkbox__control emotion-5"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-5"
+              className="chakra-checkbox__label emotion-6"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -604,7 +616,7 @@ exports[`single fields checkboxes field 1`] = `
             </span>
           </label>
           <label
-            className="chakra-checkbox emotion-3"
+            className="chakra-checkbox emotion-4"
             onClick={[Function]}
           >
             <input
@@ -640,14 +652,14 @@ exports[`single fields checkboxes field 1`] = `
             />
             <span
               aria-hidden={true}
-              className="chakra-checkbox__control emotion-4"
+              className="chakra-checkbox__control emotion-5"
               onMouseDown={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onMouseUp={[Function]}
             />
             <span
-              className="chakra-checkbox__label emotion-5"
+              className="chakra-checkbox__label emotion-6"
               onMouseDown={[Function]}
               onTouchStart={[Function]}
             >
@@ -663,10 +675,10 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <div
-    className="emotion-19"
+    className="emotion-20"
   >
     <button
-      className="chakra-button emotion-20"
+      className="chakra-button emotion-21"
       disabled={false}
       type="submit"
     >

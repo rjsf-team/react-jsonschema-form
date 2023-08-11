@@ -97,6 +97,12 @@ exports[`single fields checkboxes field 1`] = `
   <div
     className="form-group field field-array"
   >
+    <label
+      className="control-label"
+      htmlFor="root"
+    >
+      An enum list rendered as checkboxes
+    </label>
     <div
       className="checkboxes"
       id="root"

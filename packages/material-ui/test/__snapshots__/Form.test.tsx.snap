@@ -215,7 +215,9 @@ exports[`single fields checkboxes field 1`] = `
       <label
         className="MuiFormLabel-root"
         htmlFor="root"
-      />
+      >
+        An enum list rendered as checkboxes
+      </label>
       <div
         className="MuiFormGroup-root"
         id="root"

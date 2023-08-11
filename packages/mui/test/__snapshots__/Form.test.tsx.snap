@@ -1011,7 +1011,9 @@ exports[`single fields checkboxes field 1`] = `
       <label
         className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
         htmlFor="root"
-      />
+      >
+        An enum list rendered as checkboxes
+      </label>
       <div
         className="MuiFormGroup-root emotion-2"
         id="root"

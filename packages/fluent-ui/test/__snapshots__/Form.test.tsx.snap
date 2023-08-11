@@ -195,7 +195,9 @@ exports[`single fields checkboxes field 1`] = `
   >
     <label
       className="ms-Label root-130"
-    />
+    >
+      An enum list rendered as checkboxes
+    </label>
     <div
       className="ms-Checkbox is-enabled root-201"
     >
