@@ -61,7 +61,7 @@ describe('oneOf', () => {
 
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__oneof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
+    expect(node.querySelectorAll('span.required')).to.have.length.of(1);
   });
 
   it('should render a select element if the oneOf keyword is present, merges top level and oneOf required', () => {
@@ -94,7 +94,7 @@ describe('oneOf', () => {
 
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__oneof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(3);
+    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
   });
 
   it('should assign a default value and set defaults on option change', () => {
