@@ -688,13 +688,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.any(Error)
         );
       });
-      it('should return allOf as individual schemas when expand all', () => {
+      it('should return allOf and top level schemas when expand all', () => {
         const schema: RJSFSchema = {
+          properties: { test: { type: 'string' } },
           allOf: [{ type: 'string' }, { type: 'boolean' }],
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchemaInternal(testValidator, schema, rootSchema, formData, true)).toEqual(schema.allOf);
+        const { allOf, ...restOfSchema } = schema;
+        expect(retrieveSchemaInternal(testValidator, schema, rootSchema, formData, true)).toEqual([
+          ...allOf!,
+          restOfSchema,
+        ]);
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {

@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.12.1
+
+## @rjsf/utils
+
+- Updated `retrieveSchemaInternal` allOf logic for precompiled schemas to resolve top level properties fixing [#3817](https://github.com/rjsf-team/react-jsonschema-form/issues/3817)
+
 # 5.12.0
 
 ## @rjsf/utils
