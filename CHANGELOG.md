@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.12.1
 
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator.rawValidation()` to resolve root schema with formData when comparing input schema, fixing [#3825](https://github.com/rjsf-team/react-jsonschema-form/issues/3825)
+
 ## @rjsf/utils
 
 - Updated `retrieveSchemaInternal` allOf logic for precompiled schemas to resolve top level properties fixing [#3817](https://github.com/rjsf-team/react-jsonschema-form/issues/3817)
