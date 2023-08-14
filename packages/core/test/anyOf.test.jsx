@@ -60,7 +60,7 @@ describe('anyOf', () => {
 
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
+    expect(node.querySelectorAll('span.required')).to.have.length.of(1);
   });
 
   it('should render a select element if the anyOf keyword is present, merges top level and anyOf required', () => {
@@ -93,7 +93,7 @@ describe('anyOf', () => {
 
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
-    expect(node.querySelectorAll('span.required')).to.have.length.of(3);
+    expect(node.querySelectorAll('span.required')).to.have.length.of(2);
   });
 
   it('should render a root select element with default value', () => {
