@@ -172,7 +172,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let optionSchema: S;
 
     if (option) {
-      const { oneOf, anyOf, ...remaining } = schema;
+      // merge all top level fields except properties
+      const { oneOf, anyOf, properties, ...remaining } = schema;
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
       unset(remaining, ADDITIONAL_PROPERTY_FLAG);
       optionSchema = !isEmpty(remaining) ? (mergeSchemas(remaining, option) as S) : option;
