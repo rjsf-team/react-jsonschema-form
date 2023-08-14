@@ -268,6 +268,7 @@ export default function formTests(Form: ComponentType<FormProps>, customOptions:
     test('checkboxes field', () => {
       const schema: RJSFSchema = {
         type: 'array',
+        title: 'An enum list rendered as checkboxes',
         items: {
           type: 'string',
           enum: ['foo', 'bar', 'fuzz', 'qux'],

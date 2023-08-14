@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `MultiSchemaField` to merge all top level fields except properties for anyOf/oneOf options, fixing [#3808](https://github.com/rjsf-team/react-jsonschema-form/issues/3808) and [#3787](https://github.com/rjsf-team/react-jsonschema-form/issues/3787)
 
+## @rjsf/antd
+
+- Updated CheckboxesWidget to not show duplicate title, fixing [#3815](https://github.com/rjsf-team/react-jsonschema-form/issues/3815)
+
 ## @rjsf/utils
 
 - Updated `retrieveSchemaInternal` allOf logic for precompiled schemas to resolve top level properties fixing [#3817](https://github.com/rjsf-team/react-jsonschema-form/issues/3817)

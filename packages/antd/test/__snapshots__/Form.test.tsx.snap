@@ -322,6 +322,18 @@ exports[`single fields checkboxes field 1`] = `
         style={{}}
       >
         <div
+          className="ant-col ant-col-24 ant-form-item-label"
+          style={{}}
+        >
+          <label
+            className=""
+            htmlFor="root"
+            title="An enum list rendered as checkboxes"
+          >
+            An enum list rendered as checkboxes
+          </label>
+        </div>
+        <div
           className="ant-col ant-col-24 ant-form-item-control"
           style={{}}
         >

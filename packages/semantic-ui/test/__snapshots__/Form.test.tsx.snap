@@ -276,6 +276,12 @@ exports[`single fields checkboxes field 1`] = `
     <div
       className="grouped equal width fields"
     >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        An enum list rendered as checkboxes
+      </h5>
       <div
         className="grouped fields"
         id="root"
