@@ -20,6 +20,7 @@ import single from './single';
 import customArray from './customArray';
 import customFieldAnyOf from './customFieldAnyOf';
 import customObject from './customObject';
+import customObjectWithTabs from './customObjectWithTabs';
 import alternatives from './alternatives';
 import propertyDependencies from './propertyDependencies';
 import schemaDependencies from './schemaDependencies';
@@ -52,6 +53,7 @@ export const samples = Object.freeze({
   Single: single,
   'Custom Array': customArray,
   'Custom Object': customObject,
+  'Custom Object (With Tabs)': customObjectWithTabs,
   Alternatives: alternatives,
   'Property dependencies': propertyDependencies,
   'Schema dependencies': schemaDependencies,
