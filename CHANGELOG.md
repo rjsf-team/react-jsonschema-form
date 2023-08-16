@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.0
+
+## @rjsf/antd
+
+- Bump Antd version from v4 to v5. *Breaking Change* Requires Peer to install v5 now.
+
 # 5.12.1
 
 ## @rjsf/validator-ajv8

@@ -156,15 +156,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               head={
                 <>
                   <link rel='stylesheet' id='theme' href={stylesheet || ''} />
-                  {theme === 'antd' && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          (document.getElementById('antd-styles-iframe') as HTMLIFrameElement)?.contentDocument?.head
-                            .innerHTML || '',
-                      }}
-                    />
-                  )}
                 </>
               }
               style={{
