@@ -20,7 +20,20 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Bump Antd version from v4 to v5.
-- kept peer dependencies to v4 so that this changes doesn't make breaking change for @rfjs/antd users.
+- Intentionally kept peer dependencies to v4 so that this changes doesn't make breaking change for @rfjs/antd users.
+
+However, if users of @rjsf/antd want to use v5 styling.
+They need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`.
+They need not have to install this package, its a transitive package coming from antd.
+
+```tsx
+import { StyleProvider  } from '@ant-design/cssinjs';
+
+const Component = () => {
+return (<StyleProvider><YourFormComponents /></StyleProvider>);
+}
+```
+
 
 # 5.12.1
 
