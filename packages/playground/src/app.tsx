@@ -88,7 +88,7 @@ const themes: PlaygroundProps['themes'] = {
     },
   },
   antd: {
-    stylesheet: '//cdnjs.cloudflare.com/ajax/libs/antd/5.8.3/reset.min.css',
+    stylesheet: '//cdnjs.cloudflare.com/ajax/libs/antd/4.1.4/antd.min.css',
     theme: AntdTheme,
   },
   'bootstrap-4': {

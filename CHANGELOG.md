@@ -19,7 +19,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
-- Bump Antd version from v4 to v5. *Breaking Change* Requires Peer to install v5 now.
+- Bump Antd version from v4 to v5.
+- kept peer dependencies to v4 so that this changes doesn't make breaking change for @rfjs/antd users.
 
 # 5.12.1
 
