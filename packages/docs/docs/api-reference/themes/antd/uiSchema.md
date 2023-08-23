@@ -1,8 +1,8 @@
 # AntD Customization
 
-You can customize the look of the form by passing options to Ant-Design theme fields.
-
 ## formContext
+
+You can customize the look of the form by passing options to Ant-Design theme fields.
 
 The formContext antd object accepts `descriptionLocation`, `readonlyAsDisabled` properties.
 
@@ -26,3 +26,21 @@ These are the `formContext` properties that you can modify to adjust the `antd` 
 
 - `descriptionLocation`: Where to display the description, either 'below' or 'tooltip', defaults to 'below'
 - `readonlyAsDisabled`: Whether to make the antd theme treat readOnly fields as disabled, defaults to true
+
+## Optional Antd v5 Theme
+
+You can use AntD v5 styling by wrapping your application with `StyleProvider` from `@ant-design/cssinjs`.
+
+By default, @rjsf/antd components are having v4 styling.
+
+```tsx
+import { StyleProvider } from '@ant-design/cssinjs';
+
+const Component = () => {
+  return (
+    <StyleProvider>
+      <YourFormComponents />
+    </StyleProvider>
+  );
+};
+```
