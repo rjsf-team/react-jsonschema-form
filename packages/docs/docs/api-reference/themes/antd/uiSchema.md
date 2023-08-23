@@ -27,7 +27,7 @@ These are the `formContext` properties that you can modify to adjust the `antd` 
 - `descriptionLocation`: Where to display the description, either 'below' or 'tooltip', defaults to 'below'
 - `readonlyAsDisabled`: Whether to make the antd theme treat readOnly fields as disabled, defaults to true
 
-## Optional Antd v5 Theme
+## Using Antd v5 theme
 
 You can use AntD v5 styling by wrapping your application with `StyleProvider` from `@ant-design/cssinjs`.
 
