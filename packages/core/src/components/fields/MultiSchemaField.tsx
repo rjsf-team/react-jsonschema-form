@@ -2,9 +2,7 @@ import { Component } from 'react';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import unset from 'lodash/unset';
 import {
-  ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   ERRORS_KEY,
   FieldProps,
@@ -172,11 +170,10 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let optionSchema: S;
 
     if (option) {
-      // merge all top level fields except properties
-      const { oneOf, anyOf, properties, ...remaining } = schema;
+      // merge top level required field
+      const { required } = schema;
       // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-      unset(remaining, ADDITIONAL_PROPERTY_FLAG);
-      optionSchema = !isEmpty(remaining) ? (mergeSchemas(remaining, option) as S) : option;
+      optionSchema = required ? (mergeSchemas({ required }, option) as S) : option;
     }
 
     const translateEnum: TranslatableString = title
