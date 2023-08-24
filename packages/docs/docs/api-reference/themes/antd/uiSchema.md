@@ -31,7 +31,7 @@ These are the `formContext` properties that you can modify to adjust the `antd` 
 
 You can use AntD v5 styling by wrapping your application with `StyleProvider` from `@ant-design/cssinjs`.
 
-By default, @rjsf/antd components are having v4 styling.
+By default, `@rjsf/antd` components are using the v4 styling.
 
 ```tsx
 import { StyleProvider } from '@ant-design/cssinjs';
