@@ -314,6 +314,39 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schema: RJSFSchema = { type: 'string' };
         expect(computeDefaults(testValidator, schema)).toBe(undefined);
       });
+      it('test const value will populate as field defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: {
+              type: 'string',
+              const: 'bar',
+            },
+            foo2: {
+              type: 'object',
+              properties: {
+                attr1: {
+                  type: 'number',
+                },
+                attr2: {
+                  type: 'boolean',
+                },
+              },
+              const: {
+                attr1: 1,
+                attr2: true,
+              },
+            },
+          },
+        };
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
+          foo: 'bar',
+          foo2: {
+            attr1: 1,
+            attr2: true,
+          },
+        });
+      });
     });
     describe('default form state behavior: ignore min items unless required', () => {
       it('should return empty data for an optional array property with minItems', () => {

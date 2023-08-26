@@ -151,7 +151,14 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, idSchema, registry);
   const disabled = Boolean(props.disabled || uiOptions.disabled);
-  const readonly = Boolean(props.readonly || uiOptions.readonly || props.schema.readOnly || schema.readOnly);
+  const readonly = Boolean(
+    props.readonly ||
+      uiOptions.readonly ||
+      props.schema.readOnly ||
+      schema.readOnly ||
+      props.schema.const ||
+      schema.const
+  );
   const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
   const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);

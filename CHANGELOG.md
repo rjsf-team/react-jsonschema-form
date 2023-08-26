@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `MultiSchemaField` to merge all top level fields except properties for anyOf/oneOf options, fixing [#3808](https://github.com/rjsf-team/react-jsonschema-form/issues/3808) and [#3787](https://github.com/rjsf-team/react-jsonschema-form/issues/3787)
+- Updated `SchemaField` to make fields readonly when they have `const` defined, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
 
 ## @rjsf/antd
 
@@ -32,6 +33,11 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `retrieveSchemaInternal` allOf logic for precompiled schemas to resolve top level properties fixing [#3817](https://github.com/rjsf-team/react-jsonschema-form/issues/3817)
+- Updated `getDefaultFormState` to extract default value when fields have `const` definition, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
+
+## Dev / docs / playground
+
+- Updated the `playground` to add sample for `const` use cases
 
 # 5.12.0
 

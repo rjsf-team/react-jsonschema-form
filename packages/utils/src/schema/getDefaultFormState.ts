@@ -1,7 +1,15 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY } from '../constants';
+import {
+  ANY_OF_KEY,
+  CONST_KEY,
+  DEFAULT_KEY,
+  DEPENDENCIES_KEY,
+  PROPERTIES_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+} from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -177,6 +185,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
   } else if (DEFAULT_KEY in schema) {
     defaults = schema.default as unknown as T;
+  } else if (CONST_KEY in schema) {
+    defaults = schema.const as unknown as T;
   } else if (REF_KEY in schema) {
     const refName = schema[REF_KEY];
     // Use referenced schema defaults for this node.
