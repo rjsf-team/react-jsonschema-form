@@ -39,6 +39,7 @@ describe('oneOf', () => {
       properties: {
         baz: { type: 'number' },
       },
+      description: 'top level description',
       oneOf: [
         {
           properties: {
@@ -62,6 +63,8 @@ describe('oneOf', () => {
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__oneof_select');
     expect(node.querySelectorAll('span.required')).to.have.length.of(1);
+    expect(node.querySelectorAll('#root__description')).to.have.length.of(1);
+    expect(node.querySelectorAll('#root_baz')).to.have.length.of(1);
   });
 
   it('should render a select element if the oneOf keyword is present, merges top level and oneOf required', () => {

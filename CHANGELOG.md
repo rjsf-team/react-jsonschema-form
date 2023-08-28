@@ -31,6 +31,10 @@ return (<StyleProvider><YourFormComponents /></StyleProvider>);
 }
 ```
 
+## @rjsf/core
+
+- Updated `MultiSchemaField` to only merge top level required field fixing duplicate field and description.
+
 # 5.12.1
 
 ## @rjsf/validator-ajv8
