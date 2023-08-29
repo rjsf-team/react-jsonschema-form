@@ -15,6 +15,13 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.12.3
+
+## @rjsf/utils
+
+- Added `getOptionMatchingSimpleDiscriminator()` function
+- `getMatchingOption` and `getClosestMatchingOption` now bypass `validator.isValid()` calls when simple discriminator is provided, fixing [#3692](https://github.com/rjsf-team/react-jsonschema-form/issues/3692)
+
 # 5.12.2
 
 ## @rjsf/core
