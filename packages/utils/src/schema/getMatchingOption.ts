@@ -1,8 +1,10 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
+import isNumber from 'lodash/isNumber';
 
 import { PROPERTIES_KEY } from '../constants';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
  * Deprecated, use `getFirstMatchingOption()` instead.
@@ -32,6 +34,12 @@ export default function getMatchingOption<
   if (formData === undefined) {
     return 0;
   }
+
+  const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
+  if (isNumber(simpleDiscriminatorMatch)) {
+    return simpleDiscriminatorMatch;
+  }
+
   for (let i = 0; i < options.length; i++) {
     const option = options[i];
 

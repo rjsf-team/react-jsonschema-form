@@ -296,6 +296,22 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 - InputPropsType: The extracted `InputPropsType` object
 
+### getOptionMatchingSimpleDiscriminator()
+
+Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`. Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
+
+This function does not work with discriminators of `"type": "object"` and `"type": "array"`
+
+#### Parameters
+
+- [formData]: T | undefined - The current formData, if any, used to figure out a match
+- options: S[] - The list of options to find a matching options from
+- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
+
+#### Returns
+
+- number | undefined: index of the matched option
+
 ### getSchemaType()
 
 Gets the type of a given `schema`.

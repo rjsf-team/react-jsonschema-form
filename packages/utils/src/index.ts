@@ -49,6 +49,7 @@ import unwrapErrorHandler from './unwrapErrorHandler';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
+import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
 
 export * from './types';
 export * from './enums';
@@ -79,6 +80,7 @@ export {
   findSchemaDefinition,
   getDiscriminatorFieldFromSchema,
   getInputProps,
+  getOptionMatchingSimpleDiscriminator,
   getSchemaType,
   getSubmitButtonOptions,
   getTemplate,
