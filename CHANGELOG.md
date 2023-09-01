@@ -35,6 +35,10 @@ return (<StyleProvider><YourFormComponents /></StyleProvider>);
 
 - Updated `MultiSchemaField` to only merge top level required field fixing duplicate field and description.
 
+## @rjsf/chakra-ui
+
+- Fixed a faulty check of the `isMultiple` option in `MultiSchemaField`. It no longer offers multiple choice inside a select field in a `oneOf` case in Chakra UI, fixing [#3848](https://github.com/rjsf-team/react-jsonschema-form/issues/3848)
+
 # 5.12.1
 
 ## @rjsf/validator-ajv8
