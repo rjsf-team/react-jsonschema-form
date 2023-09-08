@@ -276,7 +276,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       description: uiOptions.label === false ? undefined : description,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
-        const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];
+        const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties || get(uiSchema, [name], {}) : uiSchema[name];
         const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
         const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
 
