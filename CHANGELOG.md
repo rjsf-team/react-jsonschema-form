@@ -34,6 +34,7 @@ return (<StyleProvider><YourFormComponents /></StyleProvider>);
 ## @rjsf/core
 
 - Updated `MultiSchemaField` to only merge top level required field fixing duplicate field and description.
+- Fixed programmatic validation (`validateForm()`) removes previous errors if all data is now valid.
 
 ## @rjsf/chakra-ui
 
