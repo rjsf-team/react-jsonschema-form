@@ -37,7 +37,7 @@
     "@ant-design/icons": "^4.0.0",
     "@rjsf/core": "^5.12.x",
     "@rjsf/utils": "^5.12.x",
-    "antd": "^4.0.0",
+    "antd": "^4.24.0 || ^5.8.5",
     "dayjs": "^1.8.0",
     "react": "^16.14.0 || >=17"
   },
@@ -65,7 +65,7 @@
     "@types/react": "^17.0.62",
     "@types/react-dom": "^17.0.20",
     "@types/react-test-renderer": "^17.0.2",
-    "antd": "^4.24.13",
+    "antd": "^5.0.0",
     "atob": "^2.1.2",
     "babel-jest": "^29.6.2",
     "dayjs": "^1.11.9",

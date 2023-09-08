@@ -15,7 +15,21 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.12.2
+# 5.13.0
+
+## @rjsf/antd
+
+- Bump Antd version from v4 to v5.
+- Intentionally kept peer dependencies to v4 so that this change doesn't make breaking change for @rfjs/antd users.
+- However, if users of @rjsf/antd want to use v5 styling, they need to wrap your application with the `StyleProvider` from `@ant-design/cssinjs`. They need not have to install this package, its a transitive package coming from antd.
+
+```tsx
+import { StyleProvider  } from '@ant-design/cssinjs';
+
+const Component = () => {
+return (<StyleProvider><YourFormComponents /></StyleProvider>);
+}
+```
 
 ## @rjsf/core
 
