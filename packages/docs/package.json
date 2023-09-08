@@ -1,5 +1,5 @@
 {
-  "name": "docs",
+  "name": "@rjsf/docs",
   "version": "5.13.0",
   "private": true,
   "scripts": {
@@ -29,6 +29,7 @@
     "@docusaurus/core": "^2.4.0",
     "@docusaurus/preset-classic": "^2.4.1",
     "@mdx-js/react": "^1.6.22",
+    "ajv": "^8.12.0",
     "clsx": "^1.2.1",
     "prism-react-renderer": "^1.3.5",
     "react": "^17.0.2",
