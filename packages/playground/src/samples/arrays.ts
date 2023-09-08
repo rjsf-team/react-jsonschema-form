@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const arrays: Sample = {
   schema: {
     definitions: {
       Thing: {
@@ -189,3 +191,5 @@ export default {
     fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],
   },
 };
+
+export default arrays;

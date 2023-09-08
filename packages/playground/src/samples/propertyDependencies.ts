@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const propertyDependencies: Sample = {
   schema: {
     title: 'Property dependencies',
     description: 'These samples are best viewed without live validation.',
@@ -6,7 +8,6 @@ export default {
     properties: {
       unidirectional: {
         title: 'Unidirectional',
-        src: 'https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies',
         type: 'object',
         properties: {
           name: {
@@ -26,7 +27,6 @@ export default {
       },
       bidirectional: {
         title: 'Bidirectional',
-        src: 'https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies',
         description:
           'Dependencies are not bidirectional, you can, of course, define the bidirectional dependencies explicitly.',
         type: 'object',
@@ -76,3 +76,5 @@ export default {
     },
   },
 };
+
+export default propertyDependencies;

@@ -1,10 +1,12 @@
-const UiField: React.FC<{
-  schema?: any;
-  idSchema: { $id: string };
-  formData?: any;
-  onChange: (...args: any[]) => void;
-  [key: string]: any;
-}> = ({ idSchema: { $id }, formData, onChange }) => {
+import { Sample } from './Sample';
+import { FieldProps } from '@rjsf/utils';
+
+function UiField(props: FieldProps) {
+  const {
+    idSchema: { $id },
+    formData,
+    onChange,
+  } = props;
   const changeHandlerFactory = (fieldName: string) => (event: any) => {
     onChange(formData ? { ...formData, [fieldName]: event.target.value } : { [fieldName]: event.target.value });
   };
@@ -71,9 +73,9 @@ const UiField: React.FC<{
       </div>
     </>
   );
-};
+}
 
-export default {
+const customFieldAnyOf: Sample = {
   schema: {
     title: 'Location',
     type: 'object',
@@ -106,3 +108,5 @@ export default {
   },
   formData: {},
 };
+
+export default customFieldAnyOf;

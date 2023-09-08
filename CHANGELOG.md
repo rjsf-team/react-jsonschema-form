@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed a faulty check of the `isMultiple` option in `MultiSchemaField`. It no longer offers multiple choice inside a select field in a `oneOf` case in Chakra UI, fixing [#3848](https://github.com/rjsf-team/react-jsonschema-form/issues/3848)
 
+## Dev / docs / playground
+
+- Fixed custom validation playground example ([#3856](https://github.com/rjsf-team/react-jsonschema-form/issues/3856))
+
 # 5.12.1
 
 ## @rjsf/validator-ajv8

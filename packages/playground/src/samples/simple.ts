@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const simple: Sample = {
   schema: {
     title: 'A registration form',
     description: 'A simple form example.',
@@ -76,3 +78,5 @@ export default {
     telephone: '1-800-KICKASS',
   },
 };
+
+export default simple;

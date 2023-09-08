@@ -1,7 +1,10 @@
-export default {
+import { Sample } from './Sample';
+
+const enumObjects: Sample = {
   schema: {
     definitions: {
       locations: {
+        // @ts-expect-error -- enumNames an RJSF keyword and is not in the JSON Schema spec
         enumNames: ['New York', 'Amsterdam', 'Hong Kong'],
         enum: [
           {
@@ -66,3 +69,5 @@ export default {
     },
   },
 };
+
+export default enumObjects;

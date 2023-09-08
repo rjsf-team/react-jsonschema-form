@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const nested: Sample = {
   schema: {
     title: 'A list of tasks',
     type: 'object',
@@ -62,3 +64,5 @@ export default {
     ],
   },
 };
+
+export default nested;

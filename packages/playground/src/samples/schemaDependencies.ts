@@ -1,11 +1,12 @@
-export default {
+import { Sample } from './Sample';
+
+const schemaDependencies: Sample = {
   schema: {
     title: 'Schema dependencies',
     description: 'These samples are best viewed without live validation.',
     type: 'object',
     properties: {
       simple: {
-        src: 'https://spacetelescope.github.io/understanding-json-schema/reference/object.html#dependencies',
         title: 'Simple',
         type: 'object',
         properties: {
@@ -167,3 +168,5 @@ export default {
     ],
   },
 };
+
+export default schemaDependencies;

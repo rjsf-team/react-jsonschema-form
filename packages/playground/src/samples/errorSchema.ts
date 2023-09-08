@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const errorSchema: Sample = {
   schema: {
     title: 'A registration form',
     description: 'A simple form example.',
@@ -67,8 +69,11 @@ export default {
     password: 'noneed',
   },
   extraErrors: {
+    // @ts-expect-error - extraErrors types are hard
     firstName: {
       __errors: ['some error that got added as a prop'],
     },
   },
 };
+
+export default errorSchema;
