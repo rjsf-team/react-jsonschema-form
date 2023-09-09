@@ -80,7 +80,7 @@ jobs:
           name: docs
           path: dist/docs
       - name: Deploy playground + docs to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        uses: crazy-max/ghaction-github-pages@v3.2.0
         with:
           keep_history: true
           target_branch: gh-pages
