@@ -60,27 +60,25 @@ export default function ArrayFieldTemplate<
           uiSchema={uiSchema}
           registry={registry}
         />
-        <Grid container={true} key={`array-item-list-${idSchema.$id}`}>
-          {items &&
-            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            ))}
-          {canAdd && (
-            <Grid container justifyContent='flex-end'>
-              <Grid item={true}>
-                <Box mt={2}>
-                  <AddButton
-                    className='array-item-add'
-                    onClick={onAddClick}
-                    disabled={disabled || readonly}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                  />
-                </Box>
-              </Grid>
+        {items &&
+          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} />
+          ))}
+        {canAdd && (
+          <Grid container justifyContent='flex-end'>
+            <Grid item={true}>
+              <Box mt={2}>
+                <AddButton
+                  className='array-item-add'
+                  onClick={onAddClick}
+                  disabled={disabled || readonly}
+                  uiSchema={uiSchema}
+                  registry={registry}
+                />
+              </Box>
             </Grid>
-          )}
-        </Grid>
+          </Grid>
+        )}
       </Box>
     </Paper>
   );
