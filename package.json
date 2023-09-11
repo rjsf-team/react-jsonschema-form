@@ -69,6 +69,7 @@
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv6",
-    "packages/validator-ajv8"
+    "packages/validator-ajv8",
+    "packages/react-gears"
   ]
 }
