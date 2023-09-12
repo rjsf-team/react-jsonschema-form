@@ -65,7 +65,7 @@ export default function SelectWidget<
       id={id}
       name={id}
       label={labelValue(label || undefined, hideLabel, false)}
-      value={isEmpty ? emptyValue : selectedIndexes}
+      value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
