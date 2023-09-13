@@ -8,6 +8,8 @@ import FieldHelpTemplate from './FieldHelpTemplate';
 import TitleFieldTemplate from './TitleFieldTemplate';
 import DescriptionFieldTemplate from './DescriptionFieldTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
+import ArrayFieldTemplate from './ArrayFieldTemplate';
 
 export function generateTemplates<
   T = any,
@@ -15,6 +17,8 @@ export function generateTemplates<
   F extends FormContextType = any
 >(): Partial<TemplatesType<T, S, F>> {
   return {
+    ArrayFieldItemTemplate,
+    ArrayFieldTemplate,
     ButtonTemplates: {
       AddButton,
       CopyButton,

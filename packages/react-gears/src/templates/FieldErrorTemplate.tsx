@@ -1,5 +1,5 @@
 import { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema, errorId } from '@rjsf/utils';
-import { ListGroup, ListGroupItem } from '@appfolio/react-gears';
+import { ListGroup } from '@appfolio/react-gears';
 
 export default function FieldErrorTemplate<
   T = any,
@@ -13,12 +13,12 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <ListGroup as='ul' id={id}>
+    <ListGroup tag='ul' id={id} type='unstyled'>
       {errors.map((error, i) => {
         return (
-          <ListGroupItem as='li' key={i} className='border-0 m-0 p-0'>
+          <li key={i}>
             <small className='m-0 text-danger'>{error}</small>
-          </ListGroupItem>
+          </li>
         );
       })}
     </ListGroup>

@@ -8,7 +8,6 @@ import {
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
-import DescriptionFieldTemplate from './DescriptionFieldTemplate';
 
 export default function FieldTemplate<
   T = any,
@@ -39,6 +38,11 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions
+  );
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
     registry,
     uiOptions
   );
