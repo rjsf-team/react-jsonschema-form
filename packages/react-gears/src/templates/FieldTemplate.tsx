@@ -4,10 +4,11 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  descriptionId,
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
-import { FormText } from 'react-bootstrap';
+import DescriptionFieldTemplate from './DescriptionFieldTemplate';
 
 export default function FieldTemplate<
   T = any,
@@ -31,7 +32,6 @@ export default function FieldTemplate<
     errors,
     help,
     description,
-    rawDescription,
     schema,
     uiSchema,
     registry,
@@ -69,7 +69,15 @@ export default function FieldTemplate<
         stacked
       >
         {children}
-        {displayLabel && rawDescription ? <FormText>{description}</FormText> : null}
+        {displayLabel && description && (
+          <DescriptionFieldTemplate
+            id={descriptionId<T>(id)}
+            description={description}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        )}
       </FormLabelGroup>
     </WrapIfAdditionalTemplate>
   );

@@ -44,15 +44,6 @@ export default function CheckboxWidget<
   const description = options.description || schema.description;
   return (
     <>
-      {!hideLabel && !!description && (
-        <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
       <CheckboxInput
         id={id}
         name={id}
@@ -66,6 +57,15 @@ export default function CheckboxWidget<
         onBlur={onBlur}
         onFocus={onFocus}
       />
+      {!hideLabel && description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
     </>
   );
 }
