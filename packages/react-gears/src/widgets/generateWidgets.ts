@@ -1,4 +1,5 @@
 import CheckboxWidget from './CheckboxWidget';
+import DateWidget from './DateWidget';
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export function generateWidgets<
@@ -8,6 +9,7 @@ export function generateWidgets<
 >(): RegistryWidgetsType<T, S, F> {
   return {
     CheckboxWidget,
+    DateWidget,
   };
 }
 
