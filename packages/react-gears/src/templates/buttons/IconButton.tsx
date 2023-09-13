@@ -6,7 +6,14 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
-    <Button outline block={iconType === 'block'} {...otherProps} color={props.color || 'secondary'} size='sm'>
+    <Button
+      outline
+      className='border-0'
+      block={iconType === 'block'}
+      {...otherProps}
+      color={props.color || 'secondary'}
+      size='sm'
+    >
       {icon}
     </Button>
   );
@@ -59,7 +66,7 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       confirmation={translateString(TranslatableString.RemoveButton)}
       aria-label='Delete'
       outline
-      className='p-2 align-self-stretch'
+      className='p-2 align-self-stretch border-0'
       {...props}
     >
       <Icon name='circle-xmark' />
