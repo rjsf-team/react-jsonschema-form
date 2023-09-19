@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { Simulate, act } from 'react-dom/test-utils';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
@@ -67,6 +67,89 @@ const CustomOnAddClickTemplate = function (props) {
           <button onClick={() => props.onAddClick()} type='button'>
             Add New
           </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ArrayFieldTestItemTemplate = (props) => {
+  const {
+    children,
+    className,
+    disabled,
+    hasToolbar,
+    hasMoveDown,
+    hasMoveUp,
+    hasRemove,
+    hasCopy,
+    canAdd,
+    index,
+    onAddIndexClick,
+    onCopyIndexClick,
+    onDropIndexClick,
+    onReorderClick,
+    readonly,
+  } = props;
+  const btnStyle = {
+    flex: 1,
+    paddingLeft: 6,
+    paddingRight: 6,
+    fontWeight: 'bold',
+  };
+  return (
+    <div className={className}>
+      <div className={hasToolbar ? 'col-xs-9' : 'col-xs-12'}>{children}</div>
+      {hasToolbar && (
+        <div className='col-xs-3 array-item-toolbox'>
+          <div
+            className='btn-group'
+            style={{
+              display: 'flex',
+              justifyContent: 'space-around',
+            }}
+          >
+            {hasMoveDown && (
+              <button
+                title='move-down'
+                style={btnStyle}
+                disabled={disabled || readonly}
+                onClick={onReorderClick(index, index + 1)}
+              >
+                move down
+              </button>
+            )}
+            {hasMoveUp && (
+              <button
+                title='move-up'
+                style={btnStyle}
+                disabled={disabled || readonly}
+                onClick={onReorderClick(index, index - 1)}
+              >
+                move up
+              </button>
+            )}
+            {hasCopy && (
+              <button title='copy' style={btnStyle} disabled={disabled || readonly} onClick={onCopyIndexClick(index)}>
+                copy
+              </button>
+            )}
+            {hasRemove && (
+              <button title='remove' style={btnStyle} disabled={disabled || readonly} onClick={onDropIndexClick(index)}>
+                remove
+              </button>
+            )}
+            {hasMoveDown && canAdd && (
+              <button
+                title='insert'
+                style={btnStyle}
+                disabled={disabled || readonly}
+                onClick={onAddIndexClick(index + 1)}
+              >
+                insert
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -2327,6 +2410,224 @@ describe('ArrayField', () => {
         } else {
           expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
         }
+      });
+    });
+  });
+
+  describe('ErrorSchema gets updated', () => {
+    const templates = { ArrayFieldItemTemplate: ArrayFieldTestItemTemplate };
+    const schema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          text: {
+            type: 'string',
+          },
+        },
+        required: ['text'],
+      },
+    };
+    const uiSchema = {
+      'ui:copyable': true,
+    };
+
+    const formData = [
+      {},
+      {
+        text: 'y',
+      },
+    ];
+
+    it('swaps errors when swapping elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="move-up"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{ text: 'y' }, {}]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        1: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
+      });
+    });
+
+    it('leaves errors when removing higher elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelectorAll('[title="remove"]')[1];
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{}]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        0: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
+      });
+    });
+
+    it('removes errors when removing elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="remove"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{ text: 'y' }]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({});
+    });
+
+    it('leaves errors in place when inserting elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData,
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="insert"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{}, {}, { text: 'y' }]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        0: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
+      });
+    });
+
+    it('moves errors when inserting elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: [{ text: 'y' }, {}],
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="insert"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{ text: 'y' }, {}, {}]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        2: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
+      });
+    });
+
+    it('leaves errors in place when copying elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema,
+        formData,
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="copy"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{}, {}, { text: 'y' }]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        0: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
+      });
+    });
+
+    it('moves errors when copying elements', () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema,
+        formData: [{ text: 'y' }, {}],
+        templates,
+      });
+
+      act(() => {
+        submitForm(node);
+      });
+
+      const button = node.querySelector('[title="copy"]');
+
+      act(() => {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      });
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.firstCall.firstArg.formData).to.eql([{ text: 'y' }, { text: 'y' }, {}]);
+      expect(onChange.firstCall.firstArg.errorSchema).to.eql({
+        2: {
+          text: {
+            __errors: ["must have required property 'text'"],
+          },
+        },
       });
     });
   });
