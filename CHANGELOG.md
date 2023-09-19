@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.13.1
 
+## @rjsf/core
+
+- Updated `ArrayField` to move errors in the errorSchema when the position of array items changes for the insert and copy cases.
+
 ## @rjsf/mui
 
 - Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
