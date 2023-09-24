@@ -24,7 +24,7 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
       ).toEqual(undefined);
     });
 
-    test('matching property, but different discriminatorField', () => {
+    test('matching property different from discriminatorField', () => {
       expect(
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
@@ -54,6 +54,28 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
           'foo'
         )
       ).toEqual(1);
+    });
+  });
+
+  describe('unsupported (non-simple) discriminator returns undefined', () => {
+    test('object discriminator', () => {
+      expect(
+        getOptionMatchingSimpleDiscriminator(
+          { foo: 'foo' },
+          [{}, { type: 'object', properties: { foo: { type: 'object' } } }],
+          'foo'
+        )
+      ).toEqual(undefined);
+    });
+
+    test('array discriminator', () => {
+      expect(
+        getOptionMatchingSimpleDiscriminator(
+          { foo: 'foo' },
+          [{}, { type: 'object', properties: { foo: { type: 'array' } } }],
+          'foo'
+        )
+      ).toEqual(undefined);
     });
   });
 });
