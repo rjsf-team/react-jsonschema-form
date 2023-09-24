@@ -4182,4 +4182,47 @@ describe('Form omitExtraData and liveOmit', () => {
       expect(checkbox.checked).to.eq(true);
     });
   });
+
+  describe('validateForm()', () => {
+    it('Should update state when data updated from invalid to valid', () => {
+      const ref = createRef();
+      const props = {
+        schema: {
+          type: 'object',
+          required: ['input'],
+          properties: {
+            input: {
+              type: 'string',
+            },
+          },
+        },
+        formData: {},
+        ref,
+      };
+      const { comp, node } = createFormComponent(props);
+
+      // trigger programmatic validation and make sure an error appears.
+      expect(ref.current.validateForm()).to.eql(false);
+      let errors = node.querySelectorAll('.error-detail');
+      expect(errors).to.have.lengthOf(1);
+      expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+
+      // populate the input and simulate a re-render from the parent.
+      const textNode = node.querySelector('#root_input');
+      Simulate.change(textNode, {
+        target: { value: 'populated value' },
+      });
+      setProps(comp, { ...props, formData: { input: 'populated value' } });
+
+      // error should still be present.
+      errors = node.querySelectorAll('.error-detail');
+      expect(errors).to.have.lengthOf(1);
+      expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+
+      // trigger programmatic validation again and make sure the error disappears.
+      expect(ref.current.validateForm()).to.eql(true);
+      errors = node.querySelectorAll('.error-detail');
+      expect(errors).to.have.lengthOf(0);
+    });
+  });
 });

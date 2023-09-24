@@ -6,6 +6,7 @@ import { create, Jss } from 'jss';
 import { jssPreset, StylesProvider } from '@material-ui/core/styles';
 import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
+import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -115,6 +116,10 @@ export default function DemoFrame(props: DemoFrameProps) {
     );
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
+  } else if (theme === 'antd') {
+    body = ready ? (
+      <AntdStyleProvider container={instanceRef.current.contentWindow['demo-frame-jss']}>{children}</AntdStyleProvider>
+    ) : null;
   }
 
   return (
