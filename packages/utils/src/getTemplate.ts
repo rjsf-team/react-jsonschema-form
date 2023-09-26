@@ -19,7 +19,11 @@ export default function getTemplate<
     return templates[name];
   }
   // Allow templates to be customized per-field by using string keys from the registry
-  if (Object.hasOwn(uiOptions, name) && Object.hasOwn(templates, uiOptions[name])) {
+  if (
+    Object.hasOwn(uiOptions, name) &&
+    typeof uiOptions[name] === 'string' &&
+    Object.hasOwn(templates, uiOptions[name])
+  ) {
     return templates[uiOptions[name]]
   }
   return (
