@@ -18,6 +18,10 @@ export default function getTemplate<
   if (name === 'ButtonTemplates') {
     return templates[name];
   }
+  // Allow templates to be customized per-field by using string keys from the registry
+  if (Object.hasOwn(uiOptions, name) && Object.hasOwn(templates, uiOptions[name])) {
+    return templates[uiOptions[name]]
+  }
   return (
     // Evaluating uiOptions[name] results in TS2590: Expression produces a union type that is too complex to represent
     // To avoid that, we cast uiOptions to `any` before accessing the name field
