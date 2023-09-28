@@ -25,7 +25,7 @@ export default function getTemplate<
     Object.hasOwn(templates, uiOptions[name] as string)
   ) {
     const key = uiOptions[name]
-    // Evaluating uiOptions[name] results in TS2590: Expression produces a union type that is too complex to represent
+    // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent
     // To avoid that, we cast templates to `any` before accessing the key field
     return (templates as any)[key]
   }
