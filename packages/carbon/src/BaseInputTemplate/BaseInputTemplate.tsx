@@ -1,0 +1,75 @@
+import { ChangeEvent, FocusEvent } from 'react';
+import {
+  ariaDescribedByIds,
+  BaseInputTemplateProps,
+  examplesId,
+  FormContextType,
+  getInputProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
+import { TextInput } from '@carbon/react';
+
+export default function BaseInputTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: BaseInputTemplateProps<T, S, F>) {
+  const {
+    id,
+    type,
+    value,
+    label,
+    hideLabel,
+    schema,
+    onChange,
+    onChangeOverride,
+    onBlur,
+    onFocus,
+    options,
+    required,
+    readonly,
+    rawErrors,
+    autofocus,
+    placeholder,
+    disabled,
+  } = props;
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
+
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(value === '' ? options.emptyValue : value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
+
+  return (
+    <>
+      <TextInput
+        id={id}
+        name={id}
+        value={value || value === 0 ? value : ''}
+        labelText={hideLabel ? '' : `${label}${required ? ' (required)' : ''}`}
+        onChange={onChangeOverride || _onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        autoFocus={autofocus}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled || readonly}
+        invalid={rawErrors && rawErrors.length > 0}
+        invalidText={rawErrors && rawErrors.length > 0 ? rawErrors[0] : ''}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        list={schema.examples ? examplesId<T>(id) : undefined}
+        {...inputProps}
+      />
+      {Array.isArray(schema.examples) ? (
+        <datalist id={examplesId<T>(id)}>
+          {(schema.examples as string[])
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      ) : null}
+    </>
+  );
+}

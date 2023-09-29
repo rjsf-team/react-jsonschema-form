@@ -2,6 +2,8 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 import AddButton from '../AddButton';
 import SubmitButton from '../SubmitButton';
 import { MoveDownButton, MoveUpButton, RemoveButton, CopyButton } from '../IconButton';
+import FieldTemplate from '../FieldTemplate';
+import BaseInputTemplate from '../BaseInputTemplate';
 
 export function generateTemplates<
   T = any,
@@ -9,6 +11,8 @@ export function generateTemplates<
   F extends FormContextType = any
 >(): Partial<TemplatesType<T, S, F>> {
   return {
+    BaseInputTemplate,
+    FieldTemplate,
     ButtonTemplates: {
       SubmitButton,
       AddButton,
