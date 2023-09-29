@@ -59,6 +59,7 @@
   "workspaces": [
     "packages/antd",
     "packages/bootstrap-4",
+    "packages/carbon",
     "packages/chakra-ui",
     "packages/core",
     "packages/docs",

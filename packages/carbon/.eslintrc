@@ -1,0 +1,5 @@
+{
+  "extends": ["../../.eslintrc-typescript"],
+  "plugins": ["@typescript-eslint", "jsx-a11y", "react", "import", "@emotion"],
+  "rules": { "@emotion/jsx-import": "error" }
+}
