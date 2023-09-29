@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "baseUrl": "./",
+    "jsx": "react-jsx",
+    // skip ts error in @carbon/react
+    "skipLibCheck": true
+  }
+}

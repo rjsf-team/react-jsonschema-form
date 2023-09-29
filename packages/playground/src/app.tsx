@@ -6,6 +6,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as CarbonTheme } from '@rjsf/carbon';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import v6Validator from '@rjsf/validator-ajv6';
 import localize_es from 'ajv-i18n/localize/es';
@@ -100,6 +101,10 @@ const themes: PlaygroundProps['themes'] = {
   'chakra-ui': {
     stylesheet: '',
     theme: ChakraUITheme,
+  },
+  carbon: {
+    stylesheet: '//cdn.jsdelivr.net/npm/@carbon/styles@1.38.0/css/styles.min.css',
+    theme: CarbonTheme,
   },
   'fluent-ui': {
     stylesheet: '//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css',
