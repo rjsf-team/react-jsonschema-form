@@ -87,7 +87,7 @@ yarn add @rjsf/core
 ```js
 import Form from '@rjsf/carbon';
 // load style from carbon
-import '@carbon/styles/css/styles.min.css'
+import '@carbon/styles/css/styles.min.css';
 ```
 
 or
@@ -96,11 +96,29 @@ or
 import { withTheme } from '@rjsf/core';
 import { Theme as CarbonTheme } from '@rjsf/carbon';
 // load style from carbon
-import '@carbon/styles/css/styles.min.css'
+import '@carbon/styles/css/styles.min.css';
 
 // Make modifications to the theme with your own fields and widgets
 
 const Form = withTheme(CarbonTheme);
+```
+
+## Optional Carbon Theme properties
+
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
+
+And, `uiSchema` allows for the use of a `"ui:carbon"` to customize the styling of the form widgets.
+
+#### Custom Carbon uiSchema Property
+
+```json
+{
+  "ui:options": {
+    "ui:carbon": {
+      "stackGap": 4
+    }
+  }
+}
 ```
 
 <!-- ROADMAP -->

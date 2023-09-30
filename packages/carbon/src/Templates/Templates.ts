@@ -4,6 +4,7 @@ import SubmitButton from '../SubmitButton';
 import { MoveDownButton, MoveUpButton, RemoveButton, CopyButton } from '../IconButton';
 import FieldTemplate from '../FieldTemplate';
 import BaseInputTemplate from '../BaseInputTemplate';
+import ObjectFieldTemplate from '../ObjectFieldTemplate';
 
 export function generateTemplates<
   T = any,
@@ -12,7 +13,6 @@ export function generateTemplates<
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     BaseInputTemplate,
-    FieldTemplate,
     ButtonTemplates: {
       SubmitButton,
       AddButton,
@@ -21,6 +21,8 @@ export function generateTemplates<
       RemoveButton,
       CopyButton,
     } as any,
+    FieldTemplate,
+    ObjectFieldTemplate,
   };
 }
 
