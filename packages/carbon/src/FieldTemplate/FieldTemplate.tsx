@@ -18,6 +18,7 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
+    displayLabel,
     hidden,
     label,
     onDropPropertyClick,
@@ -25,11 +26,11 @@ export default function FieldTemplate<
     readonly,
     registry,
     required,
-    // rawErrors = [],
+    rawErrors = [],
     errors,
     help,
-    // description,
-    // rawDescription,
+    description,
+    rawDescription,
     schema,
     uiSchema,
   } = props;
@@ -60,7 +61,12 @@ export default function FieldTemplate<
       registry={registry}
     >
       {children}
-      {errors}
+      {/* Carbon Design System hide description if there are errors and warnings */}
+      {rawErrors.length ? (
+        errors
+      ) : displayLabel && rawDescription ? (
+        <div className='cds--form__helper-text'>{description}</div>
+      ) : null}
       {help}
     </WrapIfAdditionalTemplate>
   );
