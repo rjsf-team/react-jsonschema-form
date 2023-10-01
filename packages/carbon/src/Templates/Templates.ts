@@ -5,6 +5,9 @@ import { MoveDownButton, MoveUpButton, RemoveButton, CopyButton } from '../IconB
 import FieldTemplate from '../FieldTemplate';
 import BaseInputTemplate from '../BaseInputTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
+import FieldHelpTemplate from '../FieldHelpTemplate';
+import DescriptionField from '../DescriptionField';
+import FieldErrorTemplate from '../FieldErrorTemplate';
 
 export function generateTemplates<
   T = any,
@@ -21,7 +24,10 @@ export function generateTemplates<
       RemoveButton,
       CopyButton,
     } as any,
+    DescriptionFieldTemplate: DescriptionField,
+    FieldErrorTemplate,
     FieldTemplate,
+    FieldHelpTemplate,
     ObjectFieldTemplate,
   };
 }

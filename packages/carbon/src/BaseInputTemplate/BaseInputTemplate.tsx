@@ -56,7 +56,6 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled || readonly}
         invalid={rawErrors && rawErrors.length > 0}
-        invalidText={rawErrors && rawErrors.length > 0 ? rawErrors[0] : ''}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
