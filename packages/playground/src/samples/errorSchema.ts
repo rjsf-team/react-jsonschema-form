@@ -1,4 +1,8 @@
 import { Sample } from './Sample';
+import { ErrorSchemaBuilder } from '@rjsf/utils';
+
+const errorSchemaBuilder = new ErrorSchemaBuilder();
+errorSchemaBuilder.addErrors('some error that got added as a prop', 'firstName');
 
 const errorSchema: Sample = {
   schema: {
@@ -68,12 +72,7 @@ const errorSchema: Sample = {
     bio: 'Roundhouse kicking asses since 1940',
     password: 'noneed',
   },
-  extraErrors: {
-    // @ts-expect-error - extraErrors types are hard
-    firstName: {
-      __errors: ['some error that got added as a prop'],
-    },
-  },
+  extraErrors: errorSchemaBuilder.ErrorSchema,
 };
 
 export default errorSchema;

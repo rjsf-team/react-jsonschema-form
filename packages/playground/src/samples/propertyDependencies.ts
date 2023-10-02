@@ -55,7 +55,7 @@ const propertyDependencies: Sample = {
         'ui:help': 'If you enter anything here then billing_address will become required.',
       },
       billing_address: {
-        'ui:help': 'It’s okay to have a billing address without a credit card number.',
+        'ui:help': "It's okay to have a billing address without a credit card number.",
       },
     },
     bidirectional: {
