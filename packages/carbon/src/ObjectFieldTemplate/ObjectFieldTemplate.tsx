@@ -74,9 +74,11 @@ export default function ObjectFieldTemplate<
       )}
       <LayerBackground>
         <Stack gap={carbonOptions.stackGap}>
-          <Layer>
-            <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
-          </Layer>
+          {properties.length > 0 && (
+            <Layer>
+              <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
+            </Layer>
+          )}
           {canExpand(schema, uiSchema, formData) && (
             <Button
               size='sm'
