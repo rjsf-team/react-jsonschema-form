@@ -11,3 +11,23 @@ export function Layer({ children }: { children: ReactNode }) {
     </CarbonLayer>
   );
 }
+
+export function LayerBackground({ children }: { children: ReactNode }) {
+  const nestDepth = useNestDepth();
+  return (
+    <div
+      style={
+        nestDepth
+          ? {
+              padding: '1rem',
+              backgroundColor: 'var(--cds-layer)',
+            }
+          : {
+              margin: '2.5rem 0',
+            }
+      }
+    >
+      {children}
+    </div>
+  );
+}

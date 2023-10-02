@@ -12,7 +12,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   return (
     <Button
       size='sm'
-      kind='tertiary'
+      kind='ghost'
       hasIconOnly
       iconDescription={translateString(TranslatableString.CopyButton)}
       renderIcon={Copy}
@@ -30,7 +30,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   return (
     <Button
       size='sm'
-      kind='tertiary'
+      kind='ghost'
       hasIconOnly
       iconDescription={translateString(TranslatableString.MoveDownButton)}
       renderIcon={ArrowDown}
@@ -48,7 +48,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   return (
     <Button
       size='sm'
-      kind='tertiary'
+      kind='ghost'
       hasIconOnly
       iconDescription={translateString(TranslatableString.MoveUpButton)}
       renderIcon={ArrowUp}
@@ -66,7 +66,9 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   return (
     <Button
       size='sm'
-      kind='danger--tertiary'
+      kind='danger--ghost'
+      // there's a css bug in carbon design
+      style={{ paddingRight: 0 }}
       hasIconOnly
       iconDescription={translateString(TranslatableString.RemoveButton)}
       {...props}
