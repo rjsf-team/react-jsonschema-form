@@ -63,33 +63,31 @@ export default function ObjectFieldTemplate<
         />
       )}
       {description && (
-        <DescriptionFieldTemplate
-          id={descriptionId<T>(idSchema)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
+        <div style={{ marginBlockEnd: '0.5rem' }}>
+          <DescriptionFieldTemplate
+            id={descriptionId<T>(idSchema)}
+            description={description}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
       )}
       <div
         style={
           nestDepth
             ? {
-                padding: '8px 16px',
+                padding: '1rem',
                 backgroundColor: 'var(--cds-layer)',
               }
-            : {}
+            : {
+                margin: '2.5rem 0',
+              }
         }
       >
         <Stack gap={carbonOptions.stackGap}>
           <Layer>
-            <Stack gap={carbonOptions.stackGap}>
-              {
-                // add a line of comment to dismiss type error:
-                // Expression produces a union type that is too complex to represent.ts(2590)
-                properties.map((item) => item.content)
-              }
-            </Stack>
+            <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
           </Layer>
           {canExpand(schema, uiSchema, formData) && (
             <Button

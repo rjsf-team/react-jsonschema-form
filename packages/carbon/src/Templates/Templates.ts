@@ -8,6 +8,7 @@ import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import FieldHelpTemplate from '../FieldHelpTemplate';
 import DescriptionField from '../DescriptionField';
 import FieldErrorTemplate from '../FieldErrorTemplate';
+import TitleField from '../TitleField';
 
 export function generateTemplates<
   T = any,
@@ -23,7 +24,8 @@ export function generateTemplates<
       MoveUpButton,
       RemoveButton,
       CopyButton,
-    } as any,
+    },
+    TitleFieldTemplate: TitleField,
     DescriptionFieldTemplate: DescriptionField,
     FieldErrorTemplate,
     FieldTemplate,
