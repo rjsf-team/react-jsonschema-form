@@ -271,6 +271,28 @@ export default function Header({
   return (
     <div className='page-header'>
       <h1>react-jsonschema-form</h1>
+      {/* TODO remove this before merge */}
+      <div
+        style={{
+          color: 'red',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          marginTop: '10px',
+          marginBottom: '10px',
+        }}
+      >
+        This is a dev preview for{' '}
+        <a
+          style={{
+            color: 'red',
+            textDecoration: 'underline',
+          }}
+          href='https://github.com/rjsf-team/react-jsonschema-form/pull/3883'
+        >
+          Carbon Design System Theme (#3883)
+        </a>
+        , not a RJSF playground.
+      </div>
       <div className='row'>
         <div className='col-sm-4'>
           <Selector onSelected={load} />
