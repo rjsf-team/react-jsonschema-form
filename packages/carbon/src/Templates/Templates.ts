@@ -9,6 +9,8 @@ import FieldHelpTemplate from '../FieldHelpTemplate';
 import DescriptionField from '../DescriptionField';
 import FieldErrorTemplate from '../FieldErrorTemplate';
 import TitleField from '../TitleField';
+import ArrayFieldTemplate from '../ArrayFieldTemplate';
+import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
 
 export function generateTemplates<
   T = any,
@@ -31,6 +33,8 @@ export function generateTemplates<
     FieldTemplate,
     FieldHelpTemplate,
     ObjectFieldTemplate,
+    ArrayFieldTemplate,
+    ArrayFieldItemTemplate,
   };
 }
 

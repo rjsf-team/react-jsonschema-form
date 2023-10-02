@@ -12,8 +12,8 @@ import {
   titleId,
   TranslatableString,
 } from '@rjsf/utils';
-import { useCarbonOptions, useNestDepth } from '../contexts';
-import { Layer } from '../components/Layer';
+import { useCarbonOptions } from '../contexts';
+import { Layer, LayerBackground } from '../components/Layer';
 import { Add } from '@carbon/icons-react';
 
 export default function ObjectFieldTemplate<
@@ -37,7 +37,6 @@ export default function ObjectFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const carbonOptions = useCarbonOptions();
-  const nestDepth = useNestDepth();
   const { translateString } = registry;
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
@@ -73,18 +72,7 @@ export default function ObjectFieldTemplate<
           />
         </div>
       )}
-      <div
-        style={
-          nestDepth
-            ? {
-                padding: '1rem',
-                backgroundColor: 'var(--cds-layer)',
-              }
-            : {
-                margin: '2.5rem 0',
-              }
-        }
-      >
+      <LayerBackground>
         <Stack gap={carbonOptions.stackGap}>
           <Layer>
             <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
@@ -103,7 +91,7 @@ export default function ObjectFieldTemplate<
             </Button>
           )}
         </Stack>
-      </div>
+      </LayerBackground>
     </>
   );
 }
