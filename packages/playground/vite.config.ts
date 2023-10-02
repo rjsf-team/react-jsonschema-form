@@ -17,6 +17,7 @@ export default defineConfig({
       // mapping packages in monorepo to make vite use sources directly avoiding build step
       '@rjsf/antd': path.resolve(__dirname, '../antd/src'),
       '@rjsf/bootstrap-4': path.resolve(__dirname, '../bootstrap-4/src'),
+      '@rjsf/carbon': path.resolve(__dirname, '../carbon/src'),
       '@rjsf/chakra-ui': path.resolve(__dirname, '../chakra-ui/src'),
       '@rjsf/core': path.resolve(__dirname, '../core/src'),
       '@rjsf/fluent-ui': path.resolve(__dirname, '../fluent-ui/src'),
