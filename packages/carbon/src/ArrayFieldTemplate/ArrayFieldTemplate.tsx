@@ -57,14 +57,15 @@ export default function ArrayFieldTemplate<
       />
       <LayerBackground>
         <Stack gap={7}>
-          <Layer>
-            <Stack gap={7}>
-              {items.length > 0 &&
-                items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+          {items.length > 0 && (
+            <Layer>
+              <Stack gap={7}>
+                {items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                   <ArrayFieldItemTemplate key={key} {...itemProps} />
                 ))}
-            </Stack>
-          </Layer>
+              </Stack>
+            </Layer>
+          )}
           {canAdd && (
             <AddButton
               className='array-item-add'
