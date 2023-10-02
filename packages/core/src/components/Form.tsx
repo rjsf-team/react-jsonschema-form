@@ -729,13 +729,14 @@ export default class Form<
    */
   validateForm() {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
-    const { formData } = this.state;
+    const { formData, errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    if (errors.length > 0 || (extraErrors && extraErrorsBlockSubmit)) {
+    const hasError = errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
+    if (hasError) {
       if (extraErrors) {
         const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
@@ -763,9 +764,15 @@ export default class Form<
           }
         }
       );
-      return false;
+    } else if (prevErrors.length > 0) {
+      this.setState({
+        errors: [],
+        errorSchema: {},
+        schemaValidationErrors: [],
+        schemaValidationErrorSchema: {},
+      });
     }
-    return true;
+    return !hasError;
   }
 
   /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if

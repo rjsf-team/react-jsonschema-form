@@ -104,7 +104,7 @@ export default function AltDateWidget<
     }
   };
 
-  const handleNow = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleNow = (event: MouseEvent) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
@@ -113,7 +113,7 @@ export default function AltDateWidget<
     onChange(toDateString(nextState, showTime));
   };
 
-  const handleClear = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClear = (event: MouseEvent) => {
     event.preventDefault();
     if (disabled || readonly) {
       return;
