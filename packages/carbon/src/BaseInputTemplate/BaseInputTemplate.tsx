@@ -9,6 +9,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { TextInput } from '@carbon/react';
+import { ConditionLabel } from '../components/ConditionLabel';
 
 export default function BaseInputTemplate<
   T = any,
@@ -47,7 +48,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         value={value || value === 0 ? value : ''}
-        labelText={hideLabel ? '' : `${label}${required ? ' (required)' : ''}`}
+        labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

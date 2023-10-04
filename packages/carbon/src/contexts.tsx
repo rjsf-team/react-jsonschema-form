@@ -2,12 +2,15 @@ import { ReactNode, createContext, useContext } from 'react';
 
 export interface CarbonOptionsContextType {
   stackGap: number;
+  labelMark: 'required' | 'optional';
 }
 const defaultContext: CarbonOptionsContextType = {
   stackGap: 7,
+  labelMark: 'required',
 };
 const CarbonOptionsContext = createContext<CarbonOptionsContextType>(defaultContext);
 
+// TODO use form context instead of this
 export function CarbonOptionsProvider(props: { value: Partial<CarbonOptionsContextType>; children?: ReactNode }) {
   return (
     <CarbonOptionsContext.Provider value={{ ...defaultContext, ...props.value }}>

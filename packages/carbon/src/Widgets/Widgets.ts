@@ -1,5 +1,7 @@
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import TextareaWidget from '../TextareaWidget';
+import CheckboxWidget from '../CheckboxWidget';
+import CheckboxesWidget from '../CheckboxesWidget';
 
 export function generateWidgets<
   T = any,
@@ -8,6 +10,8 @@ export function generateWidgets<
 >(): RegistryWidgetsType<T, S, F> {
   return {
     TextareaWidget,
+    CheckboxWidget,
+    CheckboxesWidget,
   };
 }
 
