@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const errors: Sample = {
   schema: {
     title: 'Contextualized errors',
     type: 'object',
@@ -40,3 +42,5 @@ export default {
     multipleChoicesList: ['foo', 'bar', 'fuzz'],
   },
 };
+
+export default errors;

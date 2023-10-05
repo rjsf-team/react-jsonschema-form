@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const references: Sample = {
   schema: {
     definitions: {
       address: {
@@ -59,3 +61,5 @@ export default {
     },
   },
 };
+
+export default references;

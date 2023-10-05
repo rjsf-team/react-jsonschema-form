@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const ifThenElse: Sample = {
   schema: {
     type: 'object',
     properties: {
@@ -43,3 +45,5 @@ export default {
   },
   formData: {},
 };
+
+export default ifThenElse;

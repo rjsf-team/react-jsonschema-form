@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const widgets: Sample = {
   schema: {
     title: 'Widgets',
     type: 'object',
@@ -212,3 +214,5 @@ export default {
     secret: "I'm a hidden string.",
   },
 };
+
+export default widgets;

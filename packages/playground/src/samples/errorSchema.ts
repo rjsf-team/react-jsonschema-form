@@ -1,4 +1,10 @@
-export default {
+import { Sample } from './Sample';
+import { ErrorSchemaBuilder } from '@rjsf/utils';
+
+const errorSchemaBuilder = new ErrorSchemaBuilder();
+errorSchemaBuilder.addErrors('some error that got added as a prop', 'firstName');
+
+const errorSchema: Sample = {
   schema: {
     title: 'A registration form',
     description: 'A simple form example.',
@@ -66,9 +72,7 @@ export default {
     bio: 'Roundhouse kicking asses since 1940',
     password: 'noneed',
   },
-  extraErrors: {
-    firstName: {
-      __errors: ['some error that got added as a prop'],
-    },
-  },
+  extraErrors: errorSchemaBuilder.ErrorSchema,
 };
+
+export default errorSchema;

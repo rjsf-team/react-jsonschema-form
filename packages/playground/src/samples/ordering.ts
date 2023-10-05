@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const ordering: Sample = {
   schema: {
     title: 'A registration form',
     type: 'object',
@@ -46,3 +48,5 @@ export default {
     password: 'noneed',
   },
 };
+
+export default ordering;

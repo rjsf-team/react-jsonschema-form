@@ -1,3 +1,5 @@
+import { Sample } from './Sample';
+
 function largeEnum(n: number) {
   const list = [];
   for (let i = 0; i < n; i++) {
@@ -6,7 +8,7 @@ function largeEnum(n: number) {
   return list;
 }
 
-export default {
+const large: Sample = {
   schema: {
     definitions: {
       largeEnum: { type: 'string', enum: largeEnum(100) },
@@ -37,3 +39,5 @@ export default {
   },
   formData: {},
 };
+
+export default large;
