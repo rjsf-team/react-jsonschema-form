@@ -131,7 +131,9 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       expect(getFirstMatchingOption(testValidator, null, options, schema, 'code')).toEqual(0);
     });
-    it('should return Bar when schema has discriminator for bar', () => {
+
+    // simple in the sense of getOptionMatchingSimpleDiscriminator
+    it('should return Bar when schema has simple discriminator for bar', () => {
       // Mock isValid to pass the second value
       testValidator.setReturnValues({ isValid: [false, true] });
       const schema: RJSFSchema = {
@@ -162,6 +164,40 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
       const formData = { code: 'bar_coding' };
+      const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
+      // Use the schemaUtils to verify the discriminator prop gets passed
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+      expect(schemaUtils.getFirstMatchingOption(formData, options, 'code')).toEqual(1);
+    });
+
+    // simple in the sense of getOptionMatchingSimpleDiscriminator
+    it('should return Bar when schema has non-simple discriminator for bar', () => {
+      // Mock isValid to pass the second value
+      testValidator.setReturnValues({ isValid: [false, true] });
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Foo: {
+            title: 'Foo',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', type: 'array', items: { type: 'string', enum: ['foo_coding'] } },
+            },
+          },
+          Bar: {
+            title: 'Bar',
+            type: 'object',
+            properties: {
+              code: { title: 'Code', type: 'array', items: { type: 'string', enum: ['bar_coding'] } },
+            },
+          },
+        },
+        discriminator: {
+          propertyName: 'code',
+        },
+        oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+      };
+      const formData = { code: ['bar_coding'] };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       // Use the schemaUtils to verify the discriminator prop gets passed
       const schemaUtils = createSchemaUtils(testValidator, schema);
