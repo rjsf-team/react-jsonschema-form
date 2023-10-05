@@ -224,7 +224,7 @@ render((
 ), document.getElementById("app"));
 ```
 
-Format values can be anything AJV’s [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+Format values can be anything AJV's [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
 
 ## Async validation
 

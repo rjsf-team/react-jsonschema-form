@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const files: Sample = {
   schema: {
     title: 'Files',
     type: 'object',
@@ -30,3 +32,5 @@ export default {
   },
   formData: {},
 };
+
+export default files;

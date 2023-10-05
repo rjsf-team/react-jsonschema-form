@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const examples: Sample = {
   schema: {
     title: 'Examples',
     description: 'A text field with example values.',
@@ -12,3 +14,5 @@ export default {
     },
   },
 };
+
+export default examples;

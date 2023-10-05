@@ -1,6 +1,6 @@
-import { useCallback, useState, useRef, useEffect, ComponentType, FormEvent } from 'react';
-import { withTheme, IChangeEvent, FormProps } from '@rjsf/core';
-import { ErrorSchema, RJSFSchema, RJSFValidationError, TemplatesType, UiSchema, ValidatorType } from '@rjsf/utils';
+import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
+import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';
@@ -10,6 +10,7 @@ import GeoPosition from './GeoPosition';
 import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
+import { Sample } from '../samples/Sample';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -39,7 +40,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
   });
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
-  const [templates, setTemplates] = useState<Partial<TemplatesType>>();
+  const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
 
@@ -54,12 +55,21 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const load = useCallback(
-    (data: any) => {
-      // Reset the ArrayFieldTemplate whenever you load new data
-      const { templates = {}, extraErrors, liveSettings } = data;
-      // uiSchema is missing on some examples. Provide a default to
-      // clear the field in all cases.
-      const { schema, uiSchema = {}, formData, theme: dataTheme = theme } = data;
+    (data: Sample & { theme: string; liveSettings: LiveSettings }) => {
+      const {
+        schema,
+        // uiSchema is missing on some examples. Provide a default to
+        // clear the field in all cases.
+        uiSchema = {},
+        // Always reset templates and fields
+        templates = {},
+        fields = {},
+        formData,
+        theme: dataTheme = theme,
+        extraErrors,
+        liveSettings,
+        ...rest
+      } = data;
 
       onThemeSelected(dataTheme, themes[dataTheme]);
 
@@ -70,9 +80,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(formData);
       setExtraErrors(extraErrors);
       setTheme(dataTheme);
-      setTemplates(templates);
       setShowForm(true);
       setLiveSettings(liveSettings);
+      setOtherFormProps({ fields, templates, ...rest });
     },
     [theme, onThemeSelected, themes]
   );
@@ -166,8 +176,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               theme={theme}
             >
               <FormComponent
+                {...otherFormProps}
                 {...liveSettings}
-                templates={templates}
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}
