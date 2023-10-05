@@ -15,7 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-
 # 5.13.1
 
 ## @rjsf/utils
