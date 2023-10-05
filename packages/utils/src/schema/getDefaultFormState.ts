@@ -307,7 +307,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             rawFormData: get(formData, [key]),
             required: schema.required?.includes(key),
           });
-          // Since these are additional properties we don’t need to add the `experimental_defaultFormStateBehavior` prop
+          // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
           maybeAddDefaultToObject<T>(
             objectDefaults as GenericObjectType,
             key,

@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const nullField: Sample = {
   schema: {
     title: 'Null field example',
     description: 'A short form with a null field',
@@ -25,3 +27,5 @@ export default {
   },
   formData: {},
 };
+
+export default nullField;

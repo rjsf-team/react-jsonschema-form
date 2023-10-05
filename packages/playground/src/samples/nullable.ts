@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const nullable: Sample = {
   schema: {
     title: 'A registration form (nullable)',
     description: 'A simple form example using nullable types',
@@ -70,3 +72,5 @@ export default {
     password: 'noneed',
   },
 };
+
+export default nullable;
