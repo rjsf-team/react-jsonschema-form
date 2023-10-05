@@ -16,16 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-## @rjsf/utils
-- Fix data type in `FieldTemplateProps['onChange']`
-
-
 # 5.13.1
 
 ## @rjsf/utils
 
 - Added `getOptionMatchingSimpleDiscriminator()` function
 - `getMatchingOption` and `getClosestMatchingOption` now bypass `validator.isValid()` calls when simple discriminator is provided, fixing [#3692](https://github.com/rjsf-team/react-jsonschema-form/issues/3692)
+- Fix data type in `FieldTemplateProps['onChange']`
 
 
 # 5.13.0
