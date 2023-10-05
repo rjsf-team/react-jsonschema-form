@@ -17,6 +17,14 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.13.1
 
+## @rjsf/mui
+
+- Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
+
+## @rjsf/material-ui
+
+- Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
+
 ## @rjsf/utils
 
 - Added `getOptionMatchingSimpleDiscriminator()` function
