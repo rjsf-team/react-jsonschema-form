@@ -440,7 +440,7 @@ export type FieldTemplateProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
   /** The formData for this field */
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
-  onChange: FieldProps['onChange'];
+  onChange: FieldProps<T, S, F>['onChange'];
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
   onKeyChange: (value: string) => () => void;
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context */
