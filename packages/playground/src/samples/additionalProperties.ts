@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const additionalProperties: Sample = {
   schema: {
     title: 'A customizable registration form',
     description: 'A simple form with additional properties example.',
@@ -30,3 +32,5 @@ export default {
     assKickCount: 'infinity',
   },
 };
+
+export default additionalProperties;

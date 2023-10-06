@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const custom: Sample = {
   schema: {
     title: 'A localisation form',
     type: 'object',
@@ -20,3 +22,5 @@ export default {
     lon: 0,
   },
 };
+
+export default custom;

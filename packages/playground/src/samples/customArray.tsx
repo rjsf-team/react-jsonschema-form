@@ -1,9 +1,8 @@
-const ArrayFieldTemplate: React.FC<{ className: string; items?: any[]; canAdd?: boolean; onAddClick: () => void }> = ({
-  className,
-  items,
-  canAdd,
-  onAddClick,
-}) => {
+import { Sample } from './Sample';
+import { ArrayFieldTemplateProps } from '@rjsf/utils';
+
+function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+  const { className, items, canAdd, onAddClick } = props;
   return (
     <div className={className}>
       {items &&
@@ -32,9 +31,9 @@ const ArrayFieldTemplate: React.FC<{ className: string; items?: any[]; canAdd?: 
       )}
     </div>
   );
-};
+}
 
-export default {
+export const customArray: Sample = {
   schema: {
     title: 'Custom array of strings',
     type: 'array',
@@ -45,3 +44,5 @@ export default {
   formData: ['react', 'jsonschema', 'form'],
   templates: { ArrayFieldTemplate },
 };
+
+export default customArray;

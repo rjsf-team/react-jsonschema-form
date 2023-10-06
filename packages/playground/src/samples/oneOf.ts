@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const oneOf: Sample = {
   schema: {
     type: 'object',
     oneOf: [
@@ -22,3 +24,5 @@ export default {
   },
   formData: {},
 };
+
+export default oneOf;

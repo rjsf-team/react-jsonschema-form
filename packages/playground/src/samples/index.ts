@@ -31,8 +31,10 @@ import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
 import customField from './customField';
+import { Sample } from './Sample';
+import deepFreeze from 'deep-freeze-es6';
 
-export const samples = Object.freeze({
+const _samples: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
   Simple: simple,
   'UI Options': options,
@@ -67,6 +69,6 @@ export const samples = Object.freeze({
   ErrorSchema: errorSchema,
   Defaults: defaults,
   'Custom Field': customField,
-} as const);
+};
 
-export type Sample = keyof typeof samples;
+export const samples = deepFreeze(_samples);

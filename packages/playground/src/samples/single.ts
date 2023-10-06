@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const single: Sample = {
   schema: {
     title: 'A single-field form',
     type: 'string',
@@ -6,3 +8,5 @@ export default {
   formData: 'initial value',
   uiSchema: {},
 };
+
+export default single;

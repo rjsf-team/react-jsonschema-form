@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const defaults: Sample = {
   schema: {
     title: 'Schema default properties',
     type: 'object',
@@ -68,3 +70,5 @@ export default {
     },
   },
 };
+
+export default defaults;

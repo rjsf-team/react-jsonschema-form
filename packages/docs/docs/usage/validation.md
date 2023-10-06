@@ -90,9 +90,11 @@ const validator = createPrecompiledValidator(precompiledValidator as ValidatorFu
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+
 ### Dynamically pre-compiling validators
 
 For more advanced cases when schema needs to be precompiled on request - `compileSchemaValidatorsCode` can be used.
+
 ```ts
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/dist/compileSchemaValidators';
 
@@ -103,7 +105,7 @@ For the most part it is the same as `compileSchemaValidators`, but instead of wr
 
 To use it on browser side - some modifications are needed to provide runtime dependencies in generated code needs to be provided.
 
-Example implementation of it: 
+Example implementation of it:
 
 ```tsx
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
@@ -121,19 +123,13 @@ import ajvRuntimeUcs2length from 'ajv/dist/runtime/ucs2length';
 import ajvRuntimeUri from 'ajv/dist/runtime/uri';
 import * as ajvFormats from 'ajv-formats/dist/formats';
 
-// dependencies to replace in generated code, to be provided by at runtime 
+// dependencies to replace in generated code, to be provided by at runtime
 const validatorsBundleReplacements: Record<string, [string, unknown]> = {
-    // '<code to be replaced>': ['<variable name to use as replacement>', <runtime dependency>],
+  // '<code to be replaced>': ['<variable name to use as replacement>', <runtime dependency>],
   'require("ajv/dist/runtime/equal").default': ['ajvRuntimeEqual', ajvRuntimeEqual],
   'require("ajv/dist/runtime/parseJson").parseJson': ['ajvRuntimeparseJson', ajvRuntimeparseJson],
-  'require("ajv/dist/runtime/parseJson").parseJsonNumber': [
-    'ajvRuntimeparseJsonNumber',
-    ajvRuntimeparseJsonNumber,
-  ],
-  'require("ajv/dist/runtime/parseJson").parseJsonString': [
-    'ajvRuntimeparseJsonString',
-    ajvRuntimeparseJsonString,
-  ],
+  'require("ajv/dist/runtime/parseJson").parseJsonNumber': ['ajvRuntimeparseJsonNumber', ajvRuntimeparseJsonNumber],
+  'require("ajv/dist/runtime/parseJson").parseJsonString': ['ajvRuntimeparseJsonString', ajvRuntimeparseJsonString],
   'require("ajv/dist/runtime/quote").default': ['ajvRuntimeQuote', ajvRuntimeQuote],
   // re2 by default is not in dependencies for ajv and so is likely not normally used
   // 'require("ajv/dist/runtime/re2").default': ['ajvRuntimeRe2', ajvRuntimeRe2],
@@ -167,10 +163,7 @@ const schemas = new Map<
 >();
 if (typeof window !== 'undefined') {
   // @ts-ignore
-  window[windowValidatorOnLoad] = (
-    loadedId: string,
-    fn: (...args: unknown[]) => ValidatorFunctions
-  ) => {
+  window[windowValidatorOnLoad] = (loadedId: string, fn: (...args: unknown[]) => ValidatorFunctions) => {
     const validator = fn(...Object.values(validatorsBundleReplacements).map(([, dep]) => dep));
     let validatorLoader = schemas.get(loadedId);
     if (validatorLoader) {
@@ -207,27 +200,25 @@ export function evaluateValidator(id: string, code: string, nonce: string): Prom
   document.body.appendChild(scriptElement);
   return validatorPromise;
 }
-
 ```
 
-From React component this can be used as following: 
+From React component this can be used as following:
 
 ```tsx
 let [precompiledValidator, setPrecompiledValidator] = React.useState<ValidatorFunctions>();
 React.useEffect(() => {
-    evaluateValidator(
-        schemaId, // some schema id to avoid evaluating it multiple times
-        code, // result of compileSchemaValidatorsCode returned from the server
-        nonce // nonce script tag attribute to allow this ib content security policy for the page
-    ).then(setPrecompiledValidator);
+  evaluateValidator(
+    schemaId, // some schema id to avoid evaluating it multiple times
+    code, // result of compileSchemaValidatorsCode returned from the server
+    nonce // nonce script tag attribute to allow this ib content security policy for the page
+  ).then(setPrecompiledValidator);
 }, [entityType.id]);
 
 if (!precompiledValidator) {
-    // render loading screen
+  // render loading screen
 }
 const validator = createPrecompiledValidator(precompiledValidator, schema);
 ```
-
 
 ## Live validation
 
@@ -526,7 +517,7 @@ const validator = customizeValidator({ customFormats });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-Format values can be anything AJV’s [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
+Format values can be anything AJV's [`addFormat` method](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#addformatstring-name-stringregexpfunctionobject-format---ajv) accepts.
 
 ### Async validation
 
