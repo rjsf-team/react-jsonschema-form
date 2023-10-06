@@ -33,6 +33,7 @@
     "@babel/eslint-parser": "^7.22.15",
     "@nrwl/nx-cloud": "^15.3.5",
     "@types/estree": "^1.0.1",
+    "@types/jest": "^29.5.5",
     "@types/node": "^18.17.14",
     "@types/prettier": "^2.7.3",
     "@types/react": "^17.0.65",

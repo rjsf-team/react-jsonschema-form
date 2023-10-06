@@ -92,6 +92,10 @@ describe('getWidget()', () => {
     expect(() => getWidget(schema, 'blabla')).toThrowError(`No widget for type 'object'`);
   });
 
+  it('should fail if schema `type` has no widget property', () => {
+    expect(() => getWidget(subschema, 'blabla')).toThrowError(`No widget 'blabla' for type 'boolean'`);
+  });
+
   it('should fail if schema has no type property', () => {
     expect(() => getWidget({}, 'blabla')).toThrowError(`No widget 'blabla' for type 'undefined'`);
   });

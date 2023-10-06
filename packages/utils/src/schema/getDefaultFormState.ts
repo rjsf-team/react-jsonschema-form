@@ -185,7 +185,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
   } else if (DEPENDENCIES_KEY in schema) {
-    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, formData);
+    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], formData);
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
@@ -287,16 +287,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             .filter((key) => !schema.properties || !schema.properties[key])
             .forEach((key) => keys.add(key));
         }
-        let formDataRequired: string[];
-        if (isObject(formData)) {
-          formDataRequired = [];
-          Object.keys(formData as GenericObjectType)
-            .filter((key) => !schema.properties || !schema.properties[key])
-            .forEach((key) => {
-              keys.add(key);
-              formDataRequired.push(key);
-            });
-        }
+        const formDataRequired: string[] = [];
+        Object.keys(formData as GenericObjectType)
+          .filter((key) => !schema.properties || !schema.properties[key])
+          .forEach((key) => {
+            keys.add(key);
+            formDataRequired.push(key);
+          });
         keys.forEach((key) => {
           const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
             rootSchema,
