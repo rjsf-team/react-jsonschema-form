@@ -12,10 +12,7 @@ import {
 import { Checkbox } from '@carbon/react';
 import { ConditionLabel } from '../components/ConditionLabel';
 
-/** The `CheckBoxWidget` is a widget for rendering boolean properties.
- *  It is typically used to represent a boolean.
- *
- * @param props - The `WidgetProps` for this component
+/** Implement `CheckboxWidget`
  */
 export default function CheckboxWidget<
   T = any,
