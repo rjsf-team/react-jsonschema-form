@@ -10,7 +10,6 @@ export default function FieldErrorTemplate<
   F extends FormContextType = any
 >(props: FieldErrorProps<T, S, F>) {
   const { errors = [], idSchema } = props;
-  console.log('FieldErrorTemplate errors', errors);
   if (errors.length === 0) {
     return null;
   }

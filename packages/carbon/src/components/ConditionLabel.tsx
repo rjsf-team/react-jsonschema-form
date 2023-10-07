@@ -1,7 +1,13 @@
 import { ReactNode } from 'react';
 import { CarbonOptionsContextType, useCarbonOptions } from '../contexts';
 
-function getMark(required: boolean, labelMark: CarbonOptionsContextType['labelMark']) {
+/** Get the mark for the label, marking it as required or optional
+ *
+ * @param required - Whether the field is required
+ * @param labelMark - The label mark type
+ * @returns
+ */
+function getMark(required: boolean, labelMark: CarbonOptionsContextType['labelMark']): ReactNode {
   if (required && labelMark === 'required') {
     return ' (required)';
   }
@@ -11,12 +17,22 @@ function getMark(required: boolean, labelMark: CarbonOptionsContextType['labelMa
   return null;
 }
 
-export function ConditionLabel({ hide, required, label }: { label: ReactNode; hide?: boolean; required?: boolean }) {
+/** The `ConditionLabel` render a label conditionally and append a required or optional mark
+ */
+export function ConditionLabel({
+  hide = false,
+  required = false,
+  label,
+}: {
+  label: ReactNode;
+  hide?: boolean;
+  required?: boolean;
+}) {
   const carbonOptions = useCarbonOptions();
   if (hide) {
     return null;
   }
-  const mark = getMark(required ?? false, carbonOptions.labelMark);
+  const mark = getMark(required, carbonOptions.labelMark);
   return (
     <>
       {label}

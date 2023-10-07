@@ -14,6 +14,11 @@ import {
 } from '@rjsf/utils';
 import { ConditionLabel } from '../components/ConditionLabel';
 
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

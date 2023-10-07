@@ -11,6 +11,10 @@ import {
 } from '@rjsf/utils';
 import { Layer, LayerBackground } from '../components/Layer';
 
+/** The `ArrayFieldTemplate` component is the template used to render all items in an array.
+ *
+ * @param props - The `ArrayFieldTemplateItemType` props for the component
+ */
 export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
