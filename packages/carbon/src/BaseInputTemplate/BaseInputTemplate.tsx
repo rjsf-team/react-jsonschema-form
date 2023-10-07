@@ -49,6 +49,7 @@ export default function BaseInputTemplate<
       <TextInput
         id={id}
         name={id}
+        className='form-control'
         value={value || value === 0 ? value : ''}
         labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
         onChange={onChangeOverride || _onChange}

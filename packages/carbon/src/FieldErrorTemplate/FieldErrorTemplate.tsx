@@ -14,7 +14,7 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <>
+    <div className='error-detail'>
       {errors.map((error, i: number) => {
         return (
           <div
@@ -38,6 +38,6 @@ export default function FieldErrorTemplate<
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
