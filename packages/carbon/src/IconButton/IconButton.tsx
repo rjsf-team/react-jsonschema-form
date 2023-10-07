@@ -3,8 +3,7 @@ import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, Transla
 import { Button } from '@carbon/react';
 import { Copy, ArrowDown, ArrowUp, TrashCan } from '@carbon/icons-react';
 
-/** The `CopyButton` is used to render a copy action on a `Form` for elements in an array.
- * @param props - The `IconButtonProps` props
+/** Implement `ButtonTemplates.CopyButton`
  */
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
@@ -24,8 +23,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 }
 
-/** The `MoveDownButton` is used to render a move down action on a `Form` for elements in an array.
- * @param props - The `IconButtonProps` props
+/** Implement `ButtonTemplates.MoveDownButton`
  */
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
@@ -45,8 +43,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   );
 }
 
-/** The `MoveUpButton` is used to render a move up action on a `Form` for elements in an array.
- * @param props - The `IconButtonProps` props
+/** Implement `ButtonTemplates.MoveUpButton`
  */
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
@@ -66,8 +63,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   );
 }
 
-/** The `RemoveButton` is used to render a remove action on a `Form` for both a existing `additionalProperties` element for an object or an existing element in an array.
- * @param props - The `IconButtonProps` props
+/** Implement `ButtonTemplates.RemoveButton`
  */
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>

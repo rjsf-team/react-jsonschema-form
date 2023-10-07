@@ -11,11 +11,7 @@ import {
 import { TextInput } from '@carbon/react';
 import { ConditionLabel } from '../components/ConditionLabel';
 
-/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
- * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
- * It can be customized/overridden for other themes or individual implementations as needed.
- *
- * @param props - The `WidgetProps` for this template
+/** Implement `BaseInputTemplate`
  */
 export default function BaseInputTemplate<
   T = any,

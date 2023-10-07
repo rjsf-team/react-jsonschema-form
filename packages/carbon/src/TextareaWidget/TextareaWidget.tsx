@@ -3,9 +3,7 @@ import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, Widg
 import { TextArea } from '@carbon/react';
 import { ConditionLabel } from '../components/ConditionLabel';
 
-/** The `TextareaWidget` is a widget for rendering input fields as textarea.
- *
- * @param props - The `WidgetProps` for this component
+/** Implement `TextareaWidget`
  */
 export default function TextareaWidget<
   T = any,
