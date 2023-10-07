@@ -9,6 +9,7 @@ export default function ArrayFieldItemTemplate<
   F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
   const {
+    className,
     children,
     disabled,
     hasToolbar,
@@ -34,10 +35,11 @@ export default function ArrayFieldItemTemplate<
   const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+    <div className={className} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
       <div style={{ flex: 1 }}>{children}</div>
       {hasToolbar && (
         <div
+          className='array-item-toolbox'
           style={{
             marginLeft: '1rem',
             maxWidth: '4rem',

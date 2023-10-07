@@ -18,8 +18,20 @@ export default function ArrayFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: ArrayFieldTemplateProps<T, S, F>) {
-  const { canAdd, disabled, idSchema, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
-    props;
+  const {
+    className,
+    canAdd,
+    disabled,
+    idSchema,
+    uiSchema,
+    items,
+    onAddClick,
+    readonly,
+    registry,
+    required,
+    schema,
+    title,
+  } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
@@ -41,7 +53,7 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <div>
+    <div className={className} id={idSchema.$id}>
       <ArrayFieldTitleTemplate
         idSchema={idSchema}
         title={uiOptions.title || title}
@@ -61,7 +73,7 @@ export default function ArrayFieldTemplate<
         <Stack gap={7}>
           {items.length > 0 && (
             <Layer>
-              <Stack gap={7}>
+              <Stack gap={7} className='array-item-list'>
                 {items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                   <ArrayFieldItemTemplate key={key} {...itemProps} />
                 ))}

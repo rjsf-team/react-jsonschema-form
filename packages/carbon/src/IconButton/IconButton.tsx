@@ -13,6 +13,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   } = props;
   return (
     <Button
+      className='array-item-copy'
       size='sm'
       kind='ghost'
       hasIconOnly
@@ -33,6 +34,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   } = props;
   return (
     <Button
+      className='array-item-move-down'
       size='sm'
       kind='ghost'
       hasIconOnly
@@ -53,6 +55,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   } = props;
   return (
     <Button
+      className='array-item-move-up'
       size='sm'
       kind='ghost'
       hasIconOnly
@@ -73,6 +76,7 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   } = props;
   return (
     <Button
+      className='array-item-remove'
       size='sm'
       kind='danger--ghost'
       // there's a css bug in carbon design

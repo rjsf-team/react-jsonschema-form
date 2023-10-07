@@ -59,6 +59,7 @@ export default function CheckboxesWidget<
 
   return (
     <CheckboxGroup
+      className='checkboxes'
       legendId={id}
       legendText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
       aria-describedby={ariaDescribedByIds<T>(id)}
@@ -70,6 +71,7 @@ export default function CheckboxesWidget<
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           return (
             <Checkbox
+              className='checkbox'
               labelText={option.label}
               key={index}
               onChange={() => onCheckboxChange(index)}

@@ -32,6 +32,7 @@ export default function TextareaWidget<
 
   return (
     <TextArea
+      className='form-control'
       labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
       disabled={disabled || readonly}
       id={id}

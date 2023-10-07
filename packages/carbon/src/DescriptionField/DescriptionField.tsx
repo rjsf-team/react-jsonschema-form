@@ -12,7 +12,7 @@ export default function DescriptionField<
   }
 
   return (
-    <div id={id} className='cds--form__helper-text'>
+    <div id={id} className='field-description cds--form__helper-text'>
       {description}
     </div>
   );

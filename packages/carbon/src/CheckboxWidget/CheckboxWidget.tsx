@@ -54,6 +54,7 @@ export default function CheckboxWidget<
     <>
       <Checkbox
         id={id}
+        className='checkbox'
         labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
         checked={typeof value === 'undefined' ? false : value}
         disabled={disabled || readonly}

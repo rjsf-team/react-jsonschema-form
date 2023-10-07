@@ -13,7 +13,7 @@ export default function FieldHelpTemplate<
   }
   const id = helpId<T>(idSchema);
   return (
-    <div id={id} className='cds--form__helper-text'>
+    <div id={id} className='help-block cds--form__helper-text'>
       {help}
     </div>
   );
