@@ -3,6 +3,9 @@ import { withTheme, FormProps } from '@rjsf/core';
 import { generateTheme } from '../Theme';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
+/** Generate a `Form` component that is customized with the `carbon` theme.
+ *
+ */
 export function generateForm<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

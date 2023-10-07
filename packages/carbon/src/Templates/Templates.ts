@@ -12,6 +12,8 @@ import TitleField from '../TitleField';
 import ArrayFieldTemplate from '../ArrayFieldTemplate';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
 
+/** Generates a set of templates `carbon` theme uses.
+ */
 export function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

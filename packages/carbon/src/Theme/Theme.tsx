@@ -4,6 +4,8 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { generateTemplates } from '../Templates';
 import { generateWidgets } from '../Widgets';
 
+/** Generates a theme for the Carbon Design System
+ */
 export function generateTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

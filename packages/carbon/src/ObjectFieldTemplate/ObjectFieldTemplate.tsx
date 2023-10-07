@@ -1,5 +1,5 @@
 // @ts-expect-error there's no type definition for Stack
-import { Button, Stack } from '@carbon/react';
+import { Stack } from '@carbon/react';
 import {
   canExpand,
   descriptionId,
@@ -10,12 +10,16 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
-  TranslatableString,
 } from '@rjsf/utils';
 import { useCarbonOptions } from '../contexts';
 import { Layer, LayerBackground } from '../components/Layer';
-import { Add } from '@carbon/icons-react';
 
+/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
+ * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
+ * the properties.
+ *
+ * @param props - The `ObjectFieldTemplateProps` for this component
+ */
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -37,7 +41,6 @@ export default function ObjectFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const carbonOptions = useCarbonOptions();
-  const { translateString } = registry;
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -45,9 +48,9 @@ export default function ObjectFieldTemplate<
     uiOptions
   );
   // Button templates are not overridden in the uiSchema
-  // const {
-  //   ButtonTemplates: { AddButton },
-  // } = registry.templates;
+  const {
+    ButtonTemplates: { AddButton },
+  } = registry.templates;
 
   return (
     <>
@@ -80,17 +83,13 @@ export default function ObjectFieldTemplate<
             </Layer>
           )}
           {canExpand(schema, uiSchema, formData) && (
-            <Button
-              size='sm'
-              kind='tertiary'
-              renderIcon={Add}
-              disabled={disabled || readonly}
+            <AddButton
               onClick={onAddClick(schema)}
+              disabled={disabled || readonly}
+              className='object-property-expand'
               uiSchema={uiSchema}
               registry={registry}
-            >
-              {translateString(TranslatableString.AddItemButton)}
-            </Button>
+            />
           )}
         </Stack>
       </LayerBackground>

@@ -25,6 +25,9 @@ export function useCarbonOptions() {
 
 export const NestDepthContext = createContext<number>(0);
 
+/**
+ * Get the current nest depth, used for rendering proper [carbon layers](https://carbondesignsystem.com/guidelines/color/usage#layering-tokens)
+ */
 export function useNestDepth() {
   return useContext(NestDepthContext);
 }
