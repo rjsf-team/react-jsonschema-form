@@ -51,6 +51,10 @@ export default function BaseInputTemplate<
           .form-control .cds--text-input__field-wrapper[data-invalid]~.cds--form-requirement {
             display: none;
           }
+
+          .form-control .cds--text-area__label-wrapper {
+            display: none;
+          }
         `}
       </style>
       <TextInput
@@ -58,6 +62,7 @@ export default function BaseInputTemplate<
         name={id}
         className='form-control'
         value={value || value === 0 ? value : ''}
+        hideLabel
         labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}

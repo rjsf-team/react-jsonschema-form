@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import { FormGroup, RadioButtonGroup, RadioButton } from '@carbon/react';
+import { RadioButtonGroup, RadioButton } from '@carbon/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -10,7 +10,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
 
 /** Implement `RadioWidget`
  */
@@ -18,11 +17,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   id,
   options,
   value,
-  required,
   disabled,
   readonly,
-  label,
-  hideLabel,
   rawErrors,
   onChange,
   onBlur,
@@ -42,51 +38,46 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     <>
       <style>
         {`
-          .field-radio-group .cds--radio-button-group--invalid+.cds--radio-button__validation-msg {
+          .field-radio-group.cds--radio-button-group--invalid+.cds--radio-button__validation-msg {
             display: none;
           }
-          .field-radio-group .block .cds--radio-button-group {
+          .field-radio-group.block.cds--radio-button-group {
             flex-direction: column;
             align-items: flex-start;
           }
-          .field-radio-group .block .cds--radio-button-group > .cds--radio-button-wrapper:not(:last-of-type) {
+          .field-radio-group.block.cds--radio-button-group > .cds--radio-button-wrapper:not(:last-of-type) {
             margin-inline-end: 0;
             margin-block-end: 0.5rem;
           }
         `}
       </style>
-      <FormGroup
-        legendText={<ConditionLabel label={label} hide={hideLabel || !label} required={required} />}
-        legendId={id}
+      <RadioButtonGroup
+        id={id}
+        name={id}
+        className={['field-radio-group', !inline && 'block'].filter(Boolean).join(' ')}
+        valueSelected={selectedIndex}
+        disabled={disabled || readonly}
+        invalid={rawErrors && rawErrors.length > 0}
+        onChange={_onChange}
         aria-describedby={ariaDescribedByIds<T>(id)}
-        className='field-radio-group'
       >
-        <RadioButtonGroup
-          name={id}
-          valueSelected={selectedIndex}
-          disabled={disabled || readonly}
-          className={[!inline && 'block'].filter(Boolean).join(' ')}
-          invalid={rawErrors && rawErrors.length > 0}
-          onChange={_onChange}
-        >
-          {Array.isArray(enumOptions) &&
-            enumOptions.map((option, index) => {
-              console.log(option);
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
-              return (
-                <RadioButton
-                  key={index}
-                  id={optionId(id, index)}
-                  labelText={option.label}
-                  value={String(index)}
-                  disabled={disabled || readonly || itemDisabled}
-                  onBlur={_onBlur}
-                  onFocus={_onFocus}
-                />
-              );
-            })}
-        </RadioButtonGroup>
-      </FormGroup>
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, index) => {
+            console.log(option);
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            return (
+              <RadioButton
+                key={index}
+                id={optionId(id, index)}
+                labelText={option.label}
+                value={String(index)}
+                disabled={disabled || readonly || itemDisabled}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+              />
+            );
+          })}
+      </RadioButtonGroup>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { FormGroup } from '@carbon/react';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -6,6 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+import { ConditionLabel } from '../components/ConditionLabel';
 
 /** Implement `FieldTemplate`
  */
@@ -62,7 +64,13 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      {children}
+      <FormGroup
+        legendId={id}
+        legendText={<ConditionLabel label={label} hide={!displayLabel || !label} required={required} />}
+        invalid={rawErrors.length > 0}
+      >
+        {children}
+      </FormGroup>
       {/* Carbon Design System hide description if there are errors and warnings */}
       {rawErrors.length ? (
         errors
