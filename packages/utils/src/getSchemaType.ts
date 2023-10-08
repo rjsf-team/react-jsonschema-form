@@ -29,8 +29,12 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
     return 'object';
   }
 
-  if (Array.isArray(type) && type.length === 2 && type.includes('null')) {
-    type = type.find((type) => type !== 'null');
+  if (Array.isArray(type)) {
+    if (type.length === 2 && type.includes('null')) {
+      type = type.find((type) => type !== 'null');
+    } else {
+      type = type[0];
+    }
   }
 
   return type;
