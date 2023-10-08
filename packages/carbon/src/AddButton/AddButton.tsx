@@ -11,7 +11,7 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
 }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Button size='sm' kind='ghost' renderIcon={Add} {...props}>
+    <Button size='sm' kind='tertiary' renderIcon={Add} {...props}>
       {translateString(TranslatableString.AddItemButton)}
     </Button>
   );
