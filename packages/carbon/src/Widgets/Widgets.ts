@@ -2,6 +2,7 @@ import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } fr
 import TextareaWidget from '../TextareaWidget';
 import CheckboxWidget from '../CheckboxWidget';
 import CheckboxesWidget from '../CheckboxesWidget';
+import RadioWidget from '../RadioWidget';
 
 /** Generates a set of widgets `carbon` theme uses.
  */
@@ -14,6 +15,7 @@ export function generateWidgets<
     TextareaWidget,
     CheckboxWidget,
     CheckboxesWidget,
+    RadioWidget,
   };
 }
 
