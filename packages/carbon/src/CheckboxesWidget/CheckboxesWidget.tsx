@@ -12,7 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
 
 /** Implement `CheckboxesWidget`
  */
@@ -30,9 +29,6 @@ export default function CheckboxesWidget<
     onChange,
     onBlur,
     onFocus,
-    required,
-    label,
-    hideLabel,
     // uiSchema,
     rawErrors = [],
   } = props;
@@ -64,12 +60,15 @@ export default function CheckboxesWidget<
         .checkboxes.cds--checkbox-group--invalid .cds--checkbox-group__validation-msg {
           display: none;
         }
+        .checkboxes .cds--label {
+          display: none;
+        }
       `}
       </style>
       <CheckboxGroup
         className='checkboxes'
         legendId={id}
-        legendText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+        legendText={null}
         aria-describedby={ariaDescribedByIds<T>(id)}
         invalid={rawErrors && rawErrors.length > 0}
       >
