@@ -11,6 +11,7 @@ import FieldErrorTemplate from '../FieldErrorTemplate';
 import TitleField from '../TitleField';
 import ArrayFieldTemplate from '../ArrayFieldTemplate';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
+import ErrorList from '../ErrorList';
 
 /** Generates a set of templates `carbon` theme uses.
  */
@@ -31,6 +32,7 @@ export function generateTemplates<
     },
     TitleFieldTemplate: TitleField,
     DescriptionFieldTemplate: DescriptionField,
+    ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
     FieldTemplate,
     FieldHelpTemplate,

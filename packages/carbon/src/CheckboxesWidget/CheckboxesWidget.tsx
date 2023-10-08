@@ -58,35 +58,44 @@ export default function CheckboxesWidget<
   };
 
   return (
-    <CheckboxGroup
-      className='checkboxes'
-      legendId={id}
-      legendText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-      invalid={rawErrors && rawErrors.length > 0}
-    >
-      {Array.isArray(enumOptions) &&
-        enumOptions.map((option, index) => {
-          const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
-          return (
-            <Checkbox
-              className='checkbox'
-              labelText={option.label}
-              key={index}
-              onChange={() => onCheckboxChange(index)}
-              id={optionId(id, index)}
-              name={id}
-              value={String(index)}
-              checked={checked}
-              disabled={disabled || itemDisabled || readonly}
-              onBlur={_onBlur}
-              onFocus={_onFocus}
-              readOnly={readonly}
-              defaultChecked={selectedIndexes.indexOf(String(index)) !== -1}
-            />
-          );
-        })}
-    </CheckboxGroup>
+    <>
+      <style>
+        {`
+        .checkboxes.cds--checkbox-group--invalid .cds--checkbox-group__validation-msg {
+          display: none;
+        }
+      `}
+      </style>
+      <CheckboxGroup
+        className='checkboxes'
+        legendId={id}
+        legendText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+        invalid={rawErrors && rawErrors.length > 0}
+      >
+        {Array.isArray(enumOptions) &&
+          enumOptions.map((option, index) => {
+            const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
+            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
+            return (
+              <Checkbox
+                className='checkbox'
+                labelText={option.label}
+                key={index}
+                onChange={() => onCheckboxChange(index)}
+                id={optionId(id, index)}
+                name={id}
+                value={String(index)}
+                checked={checked}
+                disabled={disabled || itemDisabled || readonly}
+                onBlur={_onBlur}
+                onFocus={_onFocus}
+                readOnly={readonly}
+                defaultChecked={selectedIndexes.indexOf(String(index)) !== -1}
+              />
+            );
+          })}
+      </CheckboxGroup>
+    </>
   );
 }

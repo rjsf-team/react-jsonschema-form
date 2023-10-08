@@ -46,6 +46,13 @@ export default function BaseInputTemplate<
 
   return (
     <>
+      <style>
+        {`
+          .form-control .cds--text-input__field-wrapper[data-invalid]~.cds--form-requirement {
+            display: none;
+          }
+        `}
+      </style>
       <TextInput
         id={id}
         name={id}
