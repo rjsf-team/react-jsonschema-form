@@ -4,18 +4,21 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Stack } from '@carbon/react';
 import { generateTemplates } from '../Templates';
 import { generateWidgets } from '../Widgets';
-import { ElementType } from 'react';
+import { ElementType, forwardRef } from 'react';
 
 /** Implement `_internalFormWrapper`, in order to better layout
  */
-export function InternalForm({ children, as, ...props }: { children: React.ReactNode; as?: ElementType }) {
+export const InternalFormWrapper = forwardRef(function InternalFormWrapper(
+  { children, as, ...props }: { children: React.ReactNode; as?: ElementType },
+  ref
+) {
   const FormTag: ElementType = as || 'form';
   return (
-    <FormTag {...props}>
+    <FormTag ref={ref} {...props}>
       <Stack gap={8}>{children}</Stack>
     </FormTag>
   );
-}
+});
 
 /** Generates a theme for the Carbon Design System
  */
@@ -27,7 +30,7 @@ export function generateTheme<
   return {
     templates: generateTemplates<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
-    _internalFormWrapper: InternalForm,
+    _internalFormWrapper: InternalFormWrapper,
   };
 }
 
