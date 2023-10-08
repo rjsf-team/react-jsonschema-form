@@ -52,6 +52,13 @@ export default function CheckboxWidget<
 
   return (
     <>
+      <style>
+        {`
+          .checkbox.cds--checkbox-wrapper--invalid>.cds--checkbox__validation-msg {
+            display: none;
+          }
+        `}
+      </style>
       <Checkbox
         id={id}
         className='checkbox'

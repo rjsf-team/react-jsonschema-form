@@ -14,30 +14,28 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <div className='error-detail'>
-      {errors.map((error, i: number) => {
-        return (
-          <div
-            key={i}
-            id={id}
-            className='cds--form-requirement'
-            style={{
-              // TODO can we use css file?
-              // apply the same styles as cds--form-requirement does
-              display: 'block',
-              fontWeight: '400',
-              maxBlockSize: '12.5rem',
-              overflow: 'visible',
-              color: 'var(--cds-text-error,#da1e28)',
-              // FIXME remove margin in input components, NOT HERE
-              // there are margin in input components, so we need to remove the margin from the first error
-              ...(i === 0 && { marginTop: 0 }),
-            }}
-          >
-            {error}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      {/* TODO can we use css file? */}
+      <style>
+        {`
+          .error-detail .cds--form-requirement {
+            display: block;
+            font-weight: 400;
+            max-block-size: 12.5rem;
+            overflow: visible;
+            color: var(--cds-text-error, #da1e28);
+          }
+        `}
+      </style>
+      <div className='error-detail'>
+        {errors.map((error, i: number) => {
+          return (
+            <div key={i} id={id} className='cds--form-requirement'>
+              {error}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
