@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `RangeWidget`
  */
@@ -61,7 +61,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         className='form-control'
         value={typeof value === 'number' ? value : undefined}
         hideLabel
-        label={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+        label={<LabelValue label={label} required={required} hide={hideLabel || !label} />}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

@@ -9,7 +9,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `UpDownWidget`
  */
@@ -60,7 +60,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
         className='form-control'
         value={typeof value === 'number' ? value : undefined}
         hideLabel
-        label={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+        label={<LabelValue label={label} required={required} hide={hideLabel || !label} />}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

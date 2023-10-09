@@ -7,7 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `FieldTemplate`
  */
@@ -67,7 +67,7 @@ export default function FieldTemplate<
       <FormGroup
         legendText={
           <label htmlFor={id}>
-            <ConditionLabel label={label} hide={!displayLabel || !label} required={required} />
+            <LabelValue label={label} hide={!displayLabel || !label} required={required} />
           </label>
         }
         invalid={rawErrors.length > 0}

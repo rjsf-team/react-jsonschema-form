@@ -17,9 +17,9 @@ function getMark(required: boolean, labelMark: CarbonOptionsContextType['labelMa
   return null;
 }
 
-/** The `ConditionLabel` render a label conditionally and append a required or optional mark
+/** The `LabelValue` render a label conditionally and append a required or optional mark
  */
-export function ConditionLabel({
+export function LabelValue({
   hide = false,
   required = false,
   label,

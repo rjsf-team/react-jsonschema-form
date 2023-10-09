@@ -12,6 +12,7 @@ import TitleField from '../TitleField';
 import ArrayFieldTemplate from '../ArrayFieldTemplate';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate';
 import ErrorList from '../ErrorList';
+import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate';
 
 /** Generates a set of templates `carbon` theme uses.
  */
@@ -39,6 +40,7 @@ export function generateTemplates<
     ObjectFieldTemplate,
     ArrayFieldTemplate,
     ArrayFieldItemTemplate,
+    WrapIfAdditionalTemplate,
   };
 }
 

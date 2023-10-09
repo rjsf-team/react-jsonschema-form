@@ -26,9 +26,7 @@ export function LayerBackground({ children }: { children: ReactNode }) {
               padding: '1rem',
               backgroundColor: 'var(--cds-layer)',
             }
-          : {
-              marginBlockStart: '2.5rem',
-            }
+          : {}
       }
     >
       {children}
