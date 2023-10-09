@@ -103,8 +103,11 @@ const themes: PlaygroundProps['themes'] = {
     theme: ChakraUITheme,
   },
   carbon: {
-    stylesheet: '//cdn.jsdelivr.net/npm/@carbon/styles@1.38.0/css/styles.min.css',
+    stylesheet: '//cdn.jsdelivr.net/npm/@carbon/styles@1.39.0/css/styles.min.css',
     theme: CarbonTheme,
+    formContext: {
+      environment: () => (document.getElementById('demo-frame') as HTMLIFrameElement)?.contentWindow || window,
+    },
   },
   'fluent-ui': {
     stylesheet: '//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css',
