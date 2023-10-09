@@ -37,7 +37,7 @@
     "@ant-design/icons": "^4.8.1",
     "@babel/runtime": "^7.22.15",
     "@carbon/icons-react": "^11.27.0",
-    "@carbon/react": "^1.38.0",
+    "@carbon/react": "^1.39.0",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.9",
     "@fluentui/react": "^8.115.3",
