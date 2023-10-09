@@ -123,7 +123,7 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={handleRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+    <Frame id='demo-frame' ref={handleRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
       <div id='demo-frame-jss' />
       {body}
     </Frame>
