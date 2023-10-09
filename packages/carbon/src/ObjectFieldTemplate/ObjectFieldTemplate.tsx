@@ -12,7 +12,7 @@ import {
   titleId,
 } from '@rjsf/utils';
 import { useCarbonOptions } from '../contexts';
-import { Layer, LayerBackground } from '../components/Layer';
+import { LayerBackground } from '../components/Layer';
 
 /** Implement `ObjectFieldTemplate`
  */
@@ -48,8 +48,11 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
+  if (!(properties.length > 0 || canExpand(schema, uiSchema, formData))) {
+    return null;
+  }
   return (
-    <>
+    <div>
       {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
@@ -74,9 +77,7 @@ export default function ObjectFieldTemplate<
       <LayerBackground>
         <Stack gap={carbonOptions.stackGap}>
           {properties.length > 0 && (
-            <Layer>
-              <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
-            </Layer>
+            <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
           )}
           {canExpand(schema, uiSchema, formData) && (
             <AddButton
@@ -89,6 +90,6 @@ export default function ObjectFieldTemplate<
           )}
         </Stack>
       </LayerBackground>
-    </>
+    </div>
   );
 }

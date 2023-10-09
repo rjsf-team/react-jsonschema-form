@@ -1,4 +1,5 @@
-import { FormGroup } from '@carbon/react';
+// @ts-expect-error miss types for `Stack`
+import { FormGroup, Stack } from '@carbon/react';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -72,7 +73,7 @@ export default function FieldTemplate<
         }
         invalid={rawErrors.length > 0}
       >
-        {children}
+        <Stack gap={7}>{children}</Stack>
       </FormGroup>
       {/* Carbon Design System hide description if there are errors and warnings */}
       {rawErrors.length ? (

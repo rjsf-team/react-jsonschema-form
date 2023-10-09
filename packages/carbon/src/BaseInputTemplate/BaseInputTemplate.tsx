@@ -45,7 +45,7 @@ export default function BaseInputTemplate<
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
   return (
-    <>
+    <div>
       <style>
         {`
           .form-control .cds--text-input__field-wrapper[data-invalid]~.cds--form-requirement {
@@ -85,6 +85,6 @@ export default function BaseInputTemplate<
             })}
         </datalist>
       ) : null}
-    </>
+    </div>
   );
 }

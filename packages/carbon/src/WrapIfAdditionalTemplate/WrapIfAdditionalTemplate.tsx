@@ -8,7 +8,7 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { Layer, LayerBackground } from '../components/Layer';
+import { LayerBackground } from '../components/Layer';
 import { LabelValue } from '../components/LabelValue';
 
 export default function WrapIfAdditionalTemplate<
@@ -51,18 +51,16 @@ export default function WrapIfAdditionalTemplate<
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <div style={{ flex: 1 }}>
             <LayerBackground>
-              <Layer>
-                <Stack gap={7}>
-                  <TextInput
-                    labelText={keyLabel}
-                    type='text'
-                    id={`${id}-key`}
-                    onBlur={(event) => onKeyChange(event.target.value)}
-                    defaultValue={label}
-                  />
-                  {children}
-                </Stack>
-              </Layer>
+              <Stack gap={7}>
+                <TextInput
+                  labelText={keyLabel}
+                  type='text'
+                  id={`${id}-key`}
+                  onBlur={(event) => onKeyChange(event.target.value)}
+                  defaultValue={label}
+                />
+                {children}
+              </Stack>
             </LayerBackground>
           </div>
           <div
