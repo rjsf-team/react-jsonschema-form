@@ -1,5 +1,5 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `TitleFieldTemplate`
  */
@@ -15,7 +15,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
         marginBlockEnd: '0.5rem',
       }}
     >
-      <ConditionLabel label={title} required={required} hide={false} />
+      <LabelValue label={title} required={required} hide={false} />
     </div>
   );
 }

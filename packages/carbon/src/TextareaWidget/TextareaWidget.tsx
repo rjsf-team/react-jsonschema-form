@@ -1,7 +1,7 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { TextArea } from '@carbon/react';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `TextareaWidget`
  */
@@ -34,7 +34,7 @@ export default function TextareaWidget<
     <TextArea
       className='form-control'
       hideLabel
-      labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+      labelText={<LabelValue label={label} required={required} hide={hideLabel || !label} />}
       disabled={disabled || readonly}
       id={id}
       name={id}

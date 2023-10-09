@@ -10,7 +10,7 @@ import {
   FormContextType,
 } from '@rjsf/utils';
 import { Checkbox } from '@carbon/react';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `CheckboxWidget`
  */
@@ -63,7 +63,7 @@ export default function CheckboxWidget<
         id={id}
         name={id}
         className='checkbox'
-        labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
+        labelText={<LabelValue label={label} required={required} hide={hideLabel || !label} />}
         checked={typeof value === 'undefined' ? false : value}
         disabled={disabled || readonly}
         invalid={rawErrors && rawErrors.length > 0}

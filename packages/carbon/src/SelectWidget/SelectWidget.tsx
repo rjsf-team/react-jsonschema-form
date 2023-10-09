@@ -11,7 +11,7 @@ import {
 } from '@rjsf/utils';
 // @ts-expect-error missing types for `FilterableMultiSelect`
 import { Select, SelectItem, FilterableMultiSelect } from '@carbon/react';
-import { ConditionLabel } from '../components/ConditionLabel';
+import { LabelValue } from '../components/LabelValue';
 
 /** Implement `SelectWidget`
  */
@@ -93,7 +93,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       <FilterableMultiSelect
         id={id}
         hideLabel
-        labelText={<ConditionLabel label={label} hide={hideLabel || !label} required={required} />}
+        labelText={<LabelValue label={label} hide={hideLabel || !label} required={required} />}
         placeholder={placeholder}
         onChange={_onMultipleChange}
         onBlur={_onBlur}
@@ -121,7 +121,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     <Select
       id={id}
       hideLabel
-      labelText={<ConditionLabel label={label} hide={hideLabel || !label} required={required} />}
+      labelText={<LabelValue label={label} hide={hideLabel || !label} required={required} />}
       placeholder={placeholder}
       onChange={_onChange}
       onBlur={_onBlur}
