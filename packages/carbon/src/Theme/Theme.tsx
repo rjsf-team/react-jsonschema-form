@@ -4,6 +4,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Stack } from '@carbon/react';
 import { generateTemplates } from '../Templates';
 import { generateWidgets } from '../Widgets';
+import { generateFields } from '../Fields';
 import { ElementType, forwardRef } from 'react';
 
 /** Implement `_internalFormWrapper`, in order to better layout
@@ -30,6 +31,7 @@ export function generateTheme<
   return {
     templates: generateTemplates<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
+    fields: generateFields<T, S, F>(),
     _internalFormWrapper: InternalFormWrapper,
   };
 }

@@ -9,7 +9,7 @@ import {
   RJSFSchema,
   FormContextType,
 } from '@rjsf/utils';
-import { Layer, LayerBackground } from '../components/Layer';
+import { LayerBackground } from '../components/Layer';
 
 /** Implement `ArrayFieldTemplate`
  */
@@ -72,13 +72,11 @@ export default function ArrayFieldTemplate<
       <LayerBackground>
         <Stack gap={7}>
           {items.length > 0 && (
-            <Layer>
-              <Stack gap={7} className='array-item-list'>
-                {items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-                  <ArrayFieldItemTemplate key={key} {...itemProps} />
-                ))}
-              </Stack>
-            </Layer>
+            <Stack gap={7} className='array-item-list'>
+              {items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                <ArrayFieldItemTemplate key={key} {...itemProps} />
+              ))}
+            </Stack>
           )}
           {canAdd && (
             <AddButton
