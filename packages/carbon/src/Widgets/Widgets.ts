@@ -4,6 +4,8 @@ import CheckboxWidget from '../CheckboxWidget';
 import CheckboxesWidget from '../CheckboxesWidget';
 import RadioWidget from '../RadioWidget';
 import SelectWidget from '../SelectWidget';
+import UpDownWidget from '../UpDownWidget';
+import RangeWidget from '../RangeWidget';
 
 /** Generates a set of widgets `carbon` theme uses.
  */
@@ -17,7 +19,9 @@ export function generateWidgets<
     CheckboxWidget,
     CheckboxesWidget,
     RadioWidget,
+    RangeWidget,
     SelectWidget,
+    UpDownWidget,
   };
 }
 
