@@ -61,6 +61,7 @@ export default function CheckboxWidget<
       </style>
       <Checkbox
         id={id}
+        name={id}
         className='checkbox'
         labelText={<ConditionLabel label={label} required={required} hide={hideLabel || !label} />}
         checked={typeof value === 'undefined' ? false : value}
@@ -70,6 +71,8 @@ export default function CheckboxWidget<
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        readOnly={readonly}
+        required={required}
       />
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
