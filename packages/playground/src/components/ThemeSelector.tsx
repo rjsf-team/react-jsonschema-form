@@ -7,6 +7,7 @@ export interface ThemesType {
   theme: any;
   stylesheet: string;
   subthemes?: SubthemesType;
+  formContext?: any;
 }
 
 interface ThemeSelectorProps {

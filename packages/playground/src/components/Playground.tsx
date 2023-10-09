@@ -42,16 +42,18 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
   });
   const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+  const [formContext, setFormContext] = useState<any>({});
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
 
   const onThemeSelected = useCallback(
-    (theme: string, { stylesheet, theme: themeObj }: ThemesType) => {
+    (theme: string, { stylesheet, theme: themeObj, formContext }: ThemesType) => {
       setTheme(theme);
       setSubtheme(null);
       setFormComponent(withTheme(themeObj));
       setStylesheet(stylesheet);
+      setFormContext(formContext);
     },
     [setTheme, setSubtheme, setFormComponent, setStylesheet]
   );
@@ -185,6 +187,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
+                formContext={formContext}
                 fields={{
                   geo: GeoPosition,
                   '/schemas/specialString': SpecialInput,
