@@ -13,6 +13,8 @@ import {
 import { Select, SelectItem, FilterableMultiSelect } from '@carbon/react';
 import { ConditionLabel } from '../components/ConditionLabel';
 
+/** Implement `SelectWidget`
+ */
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
 ) {
