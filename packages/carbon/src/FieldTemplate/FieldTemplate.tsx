@@ -65,8 +65,11 @@ export default function FieldTemplate<
       registry={registry}
     >
       <FormGroup
-        legendId={id}
-        legendText={<ConditionLabel label={label} hide={!displayLabel || !label} required={required} />}
+        legendText={
+          <label htmlFor={id}>
+            <ConditionLabel label={label} hide={!displayLabel || !label} required={required} />
+          </label>
+        }
         invalid={rawErrors.length > 0}
       >
         {children}
