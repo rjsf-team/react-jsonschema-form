@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `ArrayField` to move errors in the errorSchema when the position of array items changes for the insert and copy cases.
+- Updated `getSchemaType` to return the first schema `type` when it is an array not containing `'null'`, fixing [#3875](https://github.com/rjsf-team/react-jsonschema-form/issues/3875)
 
 ## @rjsf/material-ui
 
