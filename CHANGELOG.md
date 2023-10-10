@@ -40,6 +40,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Updated `schemaParser()` and `getClosestMatchingOption()` to pass the new `recursiveRef` parameter added to internal `retrieveSchema()` APIs
 - Added/updated all the necessary tests to restore the `100%` test coverage that was lost when updating to Jest 29
   - Updated `getDefaultFormState()` to remove an unnecessary check for `formData` being an object since it is always guaranteed to be one, thereby allowing full testing coverage
+- Updated `getSchemaType()` to return the first schema `type` when it is an array not containing `'null'`, fixing [#3875](https://github.com/rjsf-team/react-jsonschema-form/issues/3875)
 
 ## @rjsf/validator-ajv8
 
