@@ -105,17 +105,41 @@ const Form = withTheme(CarbonTheme);
 
 ## Optional Carbon Theme properties
 
-- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
+Available carbon options are:
 
-And, `uiSchema` allows for the use of a `"ui:carbon"` to customize the styling of the form widgets.
+```ts
+interface CarbonOptions {
+  /**Gap between each form item, default to `7` (2.5rem)
+   * @see https://carbondesignsystem.com/guidelines/spacing/overview/#spacing-scale
+   */
+  gap: number;
+  /** Size of form item.
+   *
+   * Note that some of the `@carbon/react` component doesn't support `xl` and will fallback to `lg`
+   */
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+}
+```
 
-#### Custom Carbon uiSchema Property
+### Custom Carbon through `formContext`
+
+```js
+const formContext = {
+  carbon: {
+    // carbon options here
+  },
+};
+```
+
+### Custom Carbon uiSchema Property
+
+`uiSchema` allows for the use of a `carbon` to customize the styling of the form widgets.
 
 ```json
 {
   "ui:options": {
-    "ui:carbon": {
-      "stackGap": 4
+    "carbon": {
+      // carbon options here
     }
   }
 }

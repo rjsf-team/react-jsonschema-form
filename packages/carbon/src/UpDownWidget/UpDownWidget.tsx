@@ -5,11 +5,13 @@ import {
   examplesId,
   FormContextType,
   getInputProps,
+  getUiOptions,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions, { maxLgSize } from '../utils';
 
 /** Implement `UpDownWidget`
  */
@@ -35,6 +37,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
     placeholder,
     disabled,
   } = props;
+  const uiOptions = getUiOptions<T, S, F>(props.uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(props.registry.formContext, uiOptions);
   const inputProps = getInputProps<T, S, F>(schema, type, options);
 
   const _onChange = (value: string | number) => onChange(value);
@@ -73,6 +77,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         step={typeof inputProps.step === 'number' ? inputProps.step : undefined}
+        // NumberInput doesn't support `xl` size, fallback to `lg`
+        size={maxLgSize(carbonOptions.size)}
       />
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId<T>(id)}>

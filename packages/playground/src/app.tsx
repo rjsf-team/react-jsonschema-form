@@ -106,7 +106,11 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '//cdn.jsdelivr.net/npm/@carbon/styles@1.39.0/css/styles.min.css',
     theme: CarbonTheme,
     formContext: {
-      environment: () => (document.getElementById('demo-frame') as HTMLIFrameElement)?.contentWindow || window,
+      carbon: {
+        get environment() {
+          return (document.getElementById('demo-frame') as HTMLIFrameElement)?.contentWindow || window;
+        },
+      },
     },
   },
   'fluent-ui': {

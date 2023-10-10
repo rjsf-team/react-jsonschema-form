@@ -10,6 +10,7 @@ import {
   FormContextType,
 } from '@rjsf/utils';
 import { LayerBackground } from '../components/Layer';
+import getCarbonOptions from '../utils';
 
 /** Implement `ArrayFieldTemplate`
  */
@@ -33,6 +34,7 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(registry.formContext, uiOptions);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
     registry,
@@ -70,9 +72,9 @@ export default function ArrayFieldTemplate<
         registry={registry}
       />
       <LayerBackground>
-        <Stack gap={7}>
+        <Stack gap={carbonOptions.gap}>
           {items.length > 0 && (
-            <Stack gap={7} className='array-item-list'>
+            <Stack gap={carbonOptions.gap} className='array-item-list'>
               {items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
                 <ArrayFieldItemTemplate key={key} {...itemProps} />
               ))}

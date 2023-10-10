@@ -7,9 +7,11 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
+  getUiOptions,
 } from '@rjsf/utils';
 import { LayerBackground } from '../components/Layer';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions from '../utils';
 
 export default function WrapIfAdditionalTemplate<
   T = any,
@@ -31,6 +33,8 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(registry.formContext, uiOptions);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -51,7 +55,7 @@ export default function WrapIfAdditionalTemplate<
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <div style={{ flex: 1 }}>
             <LayerBackground>
-              <Stack gap={7}>
+              <Stack gap={carbonOptions.gap}>
                 <TextInput
                   labelText={keyLabel}
                   type='text'

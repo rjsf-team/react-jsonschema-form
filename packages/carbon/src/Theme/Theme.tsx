@@ -6,6 +6,7 @@ import { generateTemplates } from '../Templates';
 import { generateWidgets } from '../Widgets';
 import { generateFields } from '../Fields';
 import { ElementType, forwardRef } from 'react';
+import getCarbonOptions from '../utils';
 
 /** Implement `_internalFormWrapper`, in order to better layout
  */
@@ -14,9 +15,10 @@ export const InternalFormWrapper = forwardRef(function InternalFormWrapper(
   ref
 ) {
   const FormTag: ElementType = as || 'form';
+  const carbonOptions = getCarbonOptions((props as any).formContext);
   return (
     <FormTag ref={ref} {...props}>
-      <Stack gap={8}>{children}</Stack>
+      <Stack gap={carbonOptions.gap}>{children}</Stack>
     </FormTag>
   );
 });

@@ -8,10 +8,12 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  getUiOptions,
 } from '@rjsf/utils';
 // @ts-expect-error missing types for `FilterableMultiSelect`
 import { Select, SelectItem, FilterableMultiSelect } from '@carbon/react';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions, { maxLgSize } from '../utils';
 
 /** Implement `SelectWidget`
  */
@@ -38,6 +40,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     formContext,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const uiOptions = getUiOptions<T, S, F>(props.uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(props.registry.formContext, uiOptions);
 
   const _onFocus = (event: FocusEvent<HTMLSelectElement>) => {
     const newValue = getValue(event, multiple);
@@ -83,10 +87,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   );
 
   // window environment for `downshift`
-  const environment =
-    (formContext?.environment &&
-      (typeof formContext.environment === 'function' ? formContext.environment() : formContext.environment)) ||
-    window;
+  const environment = formContext?.carbon?.environment || window;
 
   if (multiple) {
     return (
@@ -113,6 +114,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           environment,
         }}
         selectionFeedback='fixed'
+        size={carbonOptions.size}
       />
     );
   }
@@ -132,6 +134,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       invalid={rawErrors && rawErrors.length > 0}
       disabled={disabled || readonly}
       readOnly={readonly}
+      size={maxLgSize(carbonOptions.size)}
     >
       {!multiple && schema.default === undefined && <SelectItem value='' text={placeholder} />}
       {displayEnumOptions.map((item) => (

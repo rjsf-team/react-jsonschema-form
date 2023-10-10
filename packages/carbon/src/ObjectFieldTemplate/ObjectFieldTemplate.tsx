@@ -1,5 +1,7 @@
 // @ts-expect-error there's no type definition for Stack
 import { Stack } from '@carbon/react';
+// @ts-expect-error miss types for `@carbon/layout`
+import { spacing } from '@carbon/layout';
 import {
   canExpand,
   descriptionId,
@@ -11,8 +13,9 @@ import {
   StrictRJSFSchema,
   titleId,
 } from '@rjsf/utils';
-import { useCarbonOptions } from '../contexts';
 import { LayerBackground } from '../components/Layer';
+import getCarbonOptions from '../utils';
+import { useNestDepth } from '../contexts';
 
 /** Implement `ObjectFieldTemplate`
  */
@@ -36,7 +39,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const carbonOptions = useCarbonOptions();
+  const carbonOptions = getCarbonOptions<T, S, F>(registry.formContext, uiOptions);
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -47,6 +50,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const depth = useNestDepth();
 
   if (!(properties.length > 0 || canExpand(schema, uiSchema, formData))) {
     return null;
@@ -74,11 +78,13 @@ export default function ObjectFieldTemplate<
           />
         </div>
       )}
+      {/* If this object is the very top one, add margin after title section */}
+      {!depth && (title || description) && (
+        <div style={{ height: `calc(${spacing[carbonOptions.gap - 1]} - 0.5rem)` }} />
+      )}
       <LayerBackground>
-        <Stack gap={carbonOptions.stackGap}>
-          {properties.length > 0 && (
-            <Stack gap={carbonOptions.stackGap}>{properties.map((item) => item.content)}</Stack>
-          )}
+        <Stack gap={carbonOptions.gap}>
+          {properties.length > 0 && <Stack gap={carbonOptions.gap}>{properties.map((item) => item.content)}</Stack>}
           {canExpand(schema, uiSchema, formData) && (
             <AddButton
               onClick={onAddClick(schema)}
