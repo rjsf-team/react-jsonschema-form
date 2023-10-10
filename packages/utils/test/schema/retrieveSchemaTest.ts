@@ -268,6 +268,70 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
       });
     });
+    it('should `resolve` refs inside of a properties key with bad property', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          firstName: 'some mame' as unknown as RJSFSchema,
+        },
+      };
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+      };
+      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(schema);
+    });
+    it('should `resolve` refs inside of a properties key', () => {
+      const entity: RJSFSchema = {
+        type: 'string',
+        title: 'Entity',
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          entity: {
+            $ref: '#/definitions/entity',
+          },
+        },
+      };
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          entity,
+        },
+      };
+      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+        type: 'object',
+        properties: {
+          entity: {
+            ...entity,
+          },
+        },
+      });
+    });
+    it('should `resolve` refs inside of an items key', () => {
+      const entity: RJSFSchema = {
+        type: 'string',
+        title: 'Entity',
+      };
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          $ref: '#/definitions/entity',
+        },
+      };
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          entity,
+        },
+      };
+      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+        type: 'array',
+        items: {
+          ...entity,
+        },
+      });
+    });
     describe('property dependencies', () => {
       describe('false condition', () => {
         it('should not add required properties', () => {
@@ -300,6 +364,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 b: { type: 'integer' },
               },
               required: ['b'],
+            });
+          });
+          it('should not define required properties, when the dependency is a boolean', () => {
+            const schema: RJSFSchema = {
+              ...PROPERTY_DEPENDENCIES,
+              required: undefined,
+              dependencies: {
+                a: true,
+              },
+            };
+            const rootSchema: RJSFSchema = { definitions: {} };
+            const formData = { a: '1' };
+            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+              type: 'object',
+              properties: {
+                a: { type: 'string' },
+                b: { type: 'integer' },
+              },
             });
           });
         });
@@ -1088,7 +1170,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { properties: undefined },
           { properties: { foo: { type: 'string' } } },
         ];
-        expect(withExactlyOneSubschema(testValidator, schema, schema, 'bar', oneOf, false)).toEqual([schema]);
+        expect(withExactlyOneSubschema(testValidator, schema, schema, 'bar', oneOf, false, [])).toEqual([schema]);
       });
     });
     describe('stubExistingAdditionalProperties()', () => {
@@ -1292,7 +1374,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveAnyOrOneOfSchemas()', () => {
       it('resolves anyOf with $ref for single element, merging schemas', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
-        expect(resolveAnyOrOneOfSchemas(testValidator, anyOfSchema, SUPER_SCHEMA, false)).toEqual([
+        expect(resolveAnyOrOneOfSchemas(testValidator, anyOfSchema, SUPER_SCHEMA, false, [])).toEqual([
           {
             ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
             title: 'multi',
@@ -1301,7 +1383,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
       it('resolves oneOf with $ref for expandedAll elements, merging schemas', () => {
         const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
-        expect(resolveAnyOrOneOfSchemas(testValidator, oneOfSchema, SUPER_SCHEMA, true)).toEqual([
+        expect(resolveAnyOrOneOfSchemas(testValidator, oneOfSchema, SUPER_SCHEMA, true, [])).toEqual([
           {
             ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
             required: ['choice', 'more'],
@@ -1347,7 +1429,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         };
-        expect(resolveAnyOrOneOfSchemas(testValidator, schema, rootSchema, true)).toEqual([
+        expect(resolveAnyOrOneOfSchemas(testValidator, schema, rootSchema, true, [])).toEqual([
           {
             type: 'object',
             properties: {
@@ -1374,7 +1456,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {
         expect(
-          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true)
+          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, [])
         ).toEqual([
           {
             type: 'object',
@@ -1388,6 +1470,30 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             properties: {
               ...SCHEMA_WITH_SINGLE_CONDITION.properties,
               ...(SCHEMA_WITH_SINGLE_CONDITION.else as RJSFSchema).properties,
+            },
+          },
+        ]);
+      });
+      it('returns neither condition with expandAll, using boolean based then/else', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: {
+              default: 'United States of America',
+              enum: ['United States of America', 'Canada'],
+            },
+          },
+          if: {
+            properties: { country: { const: 'United States of America' } },
+          },
+          then: false,
+          else: true,
+        };
+        expect(resolveCondition(testValidator, schema, schema, true, [])).toEqual([
+          {
+            type: 'object',
+            properties: {
+              ...SCHEMA_WITH_SINGLE_CONDITION.properties,
             },
           },
         ]);

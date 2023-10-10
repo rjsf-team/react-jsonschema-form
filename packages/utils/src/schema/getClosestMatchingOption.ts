@@ -147,7 +147,7 @@ export default function getClosestMatchingOption<
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => {
-    return resolveAllReferences(option, rootSchema);
+    return resolveAllReferences<S>(option, rootSchema, []);
   });
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);

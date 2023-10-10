@@ -21,20 +21,34 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `ArrayField` to move errors in the errorSchema when the position of array items changes for the insert and copy cases.
 
-## @rjsf/mui
-
-- Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
-
 ## @rjsf/material-ui
 
 - Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
+- Fixed an issue where `SelectWidget` switches from controlled to uncontrolled when `enumOptions` does not include a value, fixing [#3844](https://github.com/rjsf-team/react-jsonschema-form/issues/3844)
+
+## @rjsf/mui
+
+- Removed an unnecessary `Grid` container component in the `ArrayFieldTemplate` component that wrapped the `ArrayFieldItemTemplate`, fixing [#3863](https://github.com/rjsf-team/react-jsonschema-form/issues/3863)
+- Fixed an issue where `SelectWidget` switches from controlled to uncontrolled when `enumOptions` does not include a value, fixing [#3844](https://github.com/rjsf-team/react-jsonschema-form/issues/3844)
 
 ## @rjsf/utils
 
 - Added `getOptionMatchingSimpleDiscriminator()` function
 - `getMatchingOption` and `getClosestMatchingOption` now bypass `validator.isValid()` calls when simple discriminator is provided, fixing [#3692](https://github.com/rjsf-team/react-jsonschema-form/issues/3692)
 - Fix data type in `FieldTemplateProps['onChange']`
+- Updated `retrieveSchema()` to properly resolve references inside of `properties` and array `items` while also dealing with recursive `$ref`s, fixing [#3761](https://github.com/rjsf-team/react-jsonschema-form/issues/3761)
+  - Updated `schemaParser()` and `getClosestMatchingOption()` to pass the new `recursiveRef` parameter added to internal `retrieveSchema()` APIs
+- Added/updated all the necessary tests to restore the `100%` test coverage that was lost when updating to Jest 29
+  - Updated `getDefaultFormState()` to remove an unnecessary check for `formData` being an object since it is always guaranteed to be one, thereby allowing full testing coverage
 
+## @rjsf/validator-ajv8
+
+- Updated the `validator` and `precompiledValidator` tests to the restore `100%` coverage that was lost when updating to Jest 29
+  - Updated `isValid()` for the `validator` commenting out an if condition that was preventing `100%` coverage, with a TODO to fix it later
+
+## Dev / docs / playground
+
+- Added the `@types/jest` as a global `devDependency` so that developer tools properly recognize the jest function types
 
 # 5.13.0
 

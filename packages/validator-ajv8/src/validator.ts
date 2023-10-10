@@ -134,9 +134,10 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      if (this.ajv.getSchema(rootSchemaId) === undefined) {
-        this.ajv.addSchema(rootSchema, rootSchemaId);
-      }
+      // if (this.ajv.getSchema(rootSchemaId) === undefined) {
+      // TODO restore the commented out `if` above when the TODO in the `finally` is completed
+      this.ajv.addSchema(rootSchema, rootSchemaId);
+      // }
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       const schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       let compiledValidator: ValidateFunction | undefined;

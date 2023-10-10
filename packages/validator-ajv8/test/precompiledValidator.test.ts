@@ -7,6 +7,7 @@ import {
   RJSFValidationError,
   UiSchema,
   JUNK_OPTION_ID,
+  retrieveSchema,
 } from '@rjsf/utils';
 
 import AJV8PrecompiledValidator from '../src/precompiledValidator';
@@ -30,8 +31,11 @@ describe('AJV8PrecompiledValidator', () => {
   describe('default options', () => {
     // Use the AJV8PrecompiledValidator
     let validator: AJV8PrecompiledValidator;
+    let resolvedRootSchema: RJSFSchema;
     beforeAll(() => {
       validator = new AJV8PrecompiledValidator(validateFns, rootSchema);
+      // Since the root schema is retrieved in core before calling the validator emulate that here
+      resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -129,7 +133,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ foo: '42' }, rootSchema);
+          const result = validator.validateFormData({ foo: '42' }, resolvedRootSchema);
           errors = result.errors;
         });
 
@@ -142,7 +146,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errorSchema: ErrorSchema;
 
         beforeAll(() => {
-          const result = validator.validateFormData({ foo: 42 }, rootSchema);
+          const result = validator.validateFormData({ foo: 42 }, resolvedRootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -159,7 +163,7 @@ describe('AJV8PrecompiledValidator', () => {
       describe('Validating multipleOf with a float', () => {
         let errors: RJSFValidationError[];
         beforeAll(() => {
-          const result = validator.validateFormData({ price: 1.05 }, rootSchema);
+          const result = validator.validateFormData({ price: 1.05 }, resolvedRootSchema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -170,7 +174,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
         beforeAll(() => {
-          const result = validator.validateFormData({ price: 0.14 }, rootSchema);
+          const result = validator.validateFormData({ price: 0.14 }, resolvedRootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -194,7 +198,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData(formData, rootSchema);
+            const result = validator.validateFormData(formData, resolvedRootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -205,7 +209,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is not provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema);
+            const result = validator.validateFormData(formData, resolvedRootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -223,7 +227,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ anything: { foo: '42' } }, rootSchema);
+          const result = validator.validateFormData({ anything: { foo: '42' } }, resolvedRootSchema);
           errors = result.errors;
         });
 
@@ -236,7 +240,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errorSchema: ErrorSchema;
 
         beforeAll(() => {
-          const result = validator.validateFormData({ anything: { foo: 42 } }, rootSchema);
+          const result = validator.validateFormData({ anything: { foo: 42 } }, resolvedRootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -263,7 +267,13 @@ describe('AJV8PrecompiledValidator', () => {
           transformErrors = jest.fn((errors: RJSFValidationError[]) => {
             return [Object.assign({}, errors[0], { message: newErrorMessage })];
           });
-          const result = validator.validateFormData({ name: 42 }, rootSchema, undefined, transformErrors, uiSchema);
+          const result = validator.validateFormData(
+            { name: 42 },
+            resolvedRootSchema,
+            undefined,
+            transformErrors,
+            uiSchema
+          );
           errors = result.errors;
         });
 
@@ -295,7 +305,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided and passes custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
+            const result = validator.validateFormData(formData, resolvedRootSchema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -309,7 +319,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided, but fails custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
+            const result = validator.validateFormData(formData, resolvedRootSchema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -328,7 +338,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is missing data', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema, validate);
+            const result = validator.validateFormData(formData, resolvedRootSchema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -349,21 +359,21 @@ describe('AJV8PrecompiledValidator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData(formData, resolvedRootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData(formData, resolvedRootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url with bad data generates error', () => {
           const formData = {
             dataUrlWithName: 'x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData(formData, resolvedRootSchema);
           expect(result.errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors![0]).toEqual('must match format "data-url"');
@@ -373,16 +383,19 @@ describe('AJV8PrecompiledValidator', () => {
   });
   describe('validator.validateFormData(), custom options, and localizer', () => {
     let validator: AJV8PrecompiledValidator;
+    let resolvedRootSchema: RJSFSchema;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = jest.fn().mockImplementation();
       validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, localizer);
+      // Since the root schema is retrieved in core before calling the validator emulate that here
+      resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
     });
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         (localizer as jest.Mock).mockClear();
-        const result = validator.validateFormData({ foo: 42 }, rootSchema);
+        const result = validator.validateFormData({ foo: 42 }, resolvedRootSchema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -412,14 +425,14 @@ describe('AJV8PrecompiledValidator', () => {
     });
     describe('validating using custom string formats', () => {
       it('should not return a validation error if proper string format is used', () => {
-        const result = validator.validateFormData({ phone: '800-555-2368' }, rootSchema);
+        const result = validator.validateFormData({ phone: '800-555-2368' }, resolvedRootSchema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ phone: '800.555.2368' }, rootSchema);
+          const result = validator.validateFormData({ phone: '800.555.2368' }, resolvedRootSchema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
