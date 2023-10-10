@@ -5,11 +5,13 @@ import {
   examplesId,
   FormContextType,
   getInputProps,
+  getUiOptions,
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { TextInput } from '@carbon/react';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions from '../utils';
 
 /** Implement `BaseInputTemplate`
  */
@@ -36,8 +38,11 @@ export default function BaseInputTemplate<
     autofocus,
     placeholder,
     disabled,
+    uiSchema,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(props.registry.formContext, uiOptions);
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -75,6 +80,7 @@ export default function BaseInputTemplate<
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
+        size={carbonOptions.size}
       />
       {Array.isArray(schema.examples) ? (
         <datalist id={examplesId<T>(id)}>

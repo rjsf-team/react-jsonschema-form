@@ -9,6 +9,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions from '../utils';
 
 /** Implement `FieldTemplate`
  */
@@ -40,6 +41,7 @@ export default function FieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const carbonOptions = getCarbonOptions<T, S, F>(registry.formContext, uiOptions);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -73,7 +75,7 @@ export default function FieldTemplate<
         }
         invalid={rawErrors.length > 0}
       >
-        <Stack gap={7}>{children}</Stack>
+        <Stack gap={carbonOptions.gap}>{children}</Stack>
       </FormGroup>
       {/* Carbon Design System hide description if there are errors and warnings */}
       {rawErrors.length ? (

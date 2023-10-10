@@ -5,8 +5,6 @@ export { default as Templates, generateTemplates } from './Templates';
 export { default as Theme, generateTheme } from './Theme';
 export { default as Widgets, generateWidgets } from './Widgets';
 export { LayerBackground } from './components/Layer';
-
-export { CarbonOptionsProvider, useCarbonOptions } from './contexts';
-export type { CarbonOptionsContextType } from './contexts';
+export * from './utils';
 
 export default Form;
