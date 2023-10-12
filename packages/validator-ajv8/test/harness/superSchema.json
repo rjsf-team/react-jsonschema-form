@@ -1,5 +1,8 @@
 {
   "definitions": {
+    "test": {
+      "type": "string"
+    },
     "foo": {
       "type": "object",
       "properties": {
@@ -72,5 +75,27 @@
         "type": "string"
       }
     }
-  }
+  },
+  "anyOf": [
+    {
+      "title": "First method of identification",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "title": "First name"
+        },
+        "lastName": {
+          "$ref": "#/definitions/test"
+        }
+      }
+    },
+    {
+      "title": "Second method of identification",
+      "properties": {
+        "idCode": {
+          "$ref": "#/definitions/test"
+        }
+      }
+    }
+  ]
 }

@@ -923,8 +923,71 @@ exports[`schemaParser() parses superSchema properly 1`] = `
     },
     "type": "object",
   },
+  "-7df52035": {
+    "$id": "-7df52035",
+    "anyOf": [
+      {
+        "required": [
+          "firstName",
+        ],
+      },
+      {
+        "required": [
+          "lastName",
+        ],
+      },
+    ],
+    "properties": {
+      "firstName": {
+        "title": "First name",
+        "type": "string",
+      },
+      "lastName": {
+        "type": "string",
+      },
+    },
+    "title": "First method of identification",
+  },
+  "587c7f18": {
+    "$id": "587c7f18",
+    "anyOf": [
+      {
+        "required": [
+          "idCode",
+        ],
+      },
+    ],
+    "properties": {
+      "idCode": {
+        "type": "string",
+      },
+    },
+    "title": "Second method of identification",
+  },
   "super-schema": {
     "$id": "super-schema",
+    "anyOf": [
+      {
+        "properties": {
+          "firstName": {
+            "title": "First name",
+            "type": "string",
+          },
+          "lastName": {
+            "$ref": "#/definitions/test",
+          },
+        },
+        "title": "First method of identification",
+      },
+      {
+        "properties": {
+          "idCode": {
+            "$ref": "#/definitions/test",
+          },
+        },
+        "title": "Second method of identification",
+      },
+    ],
     "definitions": {
       "choice1": {
         "properties": {
@@ -987,6 +1050,9 @@ exports[`schemaParser() parses superSchema properly 1`] = `
         "multipleOf": 0.03,
         "title": "Price per task ($)",
         "type": "number",
+      },
+      "test": {
+        "type": "string",
       },
     },
     "properties": {

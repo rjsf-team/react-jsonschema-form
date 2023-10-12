@@ -83,6 +83,27 @@ export default class AJV8PrecompiledValidator<
     return validator;
   }
 
+  /** Ensures that the validator is using the same schema as the root schema used to construct the precompiled
+   * validator. It first compares the given `schema` against the root schema and if they aren't the same, then it
+   * checks against the resolved root schema, on the chance that a resolved version of the root schema was passed in
+   * instead of the raw root schema.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate if any
+   */
+  ensureSameRootSchema(schema: S, formData?: T) {
+    if (!isEqual(schema, this.rootSchema)) {
+      // Resolve the root schema with the passed in form data since that may affect the resolution
+      const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
+      if (!isEqual(schema, resolvedRootSchema)) {
+        throw new Error(
+          'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
+        );
+      }
+    }
+    return true;
+  }
+
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
@@ -97,17 +118,12 @@ export default class AJV8PrecompiledValidator<
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
-    if (!isEqual(schema, resolvedRootSchema)) {
-      throw new Error(
-        'The schema associated with the precompiled schema differs from the schema provided for validation'
-      );
-    }
+    this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
     if (typeof this.localizer === 'function') {
@@ -154,11 +170,7 @@ export default class AJV8PrecompiledValidator<
    *        isn't a precompiled validator function associated with the schema
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S) {
-    if (!isEqual(rootSchema, this.rootSchema)) {
-      throw new Error(
-        'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
-      );
-    }
+    this.ensureSameRootSchema(rootSchema, formData);
     if (get(schema, ID_KEY) === JUNK_OPTION_ID) {
       return false;
     }

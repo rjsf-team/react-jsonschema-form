@@ -25,7 +25,7 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "jest",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest"
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
