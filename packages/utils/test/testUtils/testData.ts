@@ -409,6 +409,9 @@ export const TEST_ERROR_LIST_OUTPUT: RJSFValidationError[] = reduce(
 export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
   [ID_KEY]: 'super-schema',
   definitions: {
+    test: {
+      type: 'string',
+    },
     foo: {
       type: 'object',
       properties: {
@@ -481,6 +484,28 @@ export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
       },
     },
   },
+  anyOf: [
+    {
+      title: 'First method of identification',
+      properties: {
+        firstName: {
+          type: 'string',
+          title: 'First name',
+        },
+        lastName: {
+          $ref: '#/definitions/test',
+        },
+      },
+    },
+    {
+      title: 'Second method of identification',
+      properties: {
+        idCode: {
+          $ref: '#/definitions/test',
+        },
+      },
+    },
+  ],
 });
 
 export const PROPERTY_DEPENDENCIES: RJSFSchema = deepFreeze({

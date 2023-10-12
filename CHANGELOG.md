@@ -15,6 +15,18 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.2
+
+## @rjsf/utils
+
+- Updated `resolveAnyOrOneOfSchemas()` to not take a `recurseList` anymore, and instead always pass an empty array down to `resolveAllReferences()`, fixing [#3902](https://github.com/rjsf-team/react-jsonschema-form/issues/3902)
+  - Also updated `parseSchema()` and `resolveDependencies()` to no longer pass `recurseList` to `resolveAnyOrOneOfSchemas()`
+
+## @rjsf/validator-ajv8
+
+- Updated `AJV8PrecompiledValidator` to add a new `ensureSameRootSchema()` function that is called in both `rawValidation()` and `isValid()`
+  - This function adds an optimization to avoid resolving the root schema unless necessary
+
 # 5.13.1
 
 ## @rjsf/core

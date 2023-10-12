@@ -52,6 +52,7 @@ export default function retrieveSchema<
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
@@ -142,6 +143,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
@@ -206,6 +208,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list schemas retrieved after having all references resolved
  */
@@ -356,6 +359,7 @@ export function stubExistingAdditionalProperties<
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
+ * @param [recurseList=[]] - The optional, list of recursive references already processed
  * @returns - The schema(s) resulting from having its conditions, additional properties, references and dependencies
  *          resolved. Multiple schemas may be returned if `expandAllBranches` is true.
  */
@@ -436,14 +440,7 @@ export function resolveAnyOrOneOfSchemas<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(
-  validator: ValidatorType<T, S, F>,
-  schema: S,
-  rootSchema: S,
-  expandAllBranches: boolean,
-  recurseList: string[],
-  rawFormData?: T
-) {
+>(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
   if (Array.isArray(oneOf)) {
@@ -456,7 +453,9 @@ export function resolveAnyOrOneOfSchemas<
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     anyOrOneOf = anyOrOneOf.map((s) => {
-      return resolveAllReferences(s, rootSchema, recurseList);
+      // Due to anyOf/oneOf possibly using the same $ref we always pass a fresh recurse list array so that each option
+      // can resolve recursive references independently
+      return resolveAllReferences(s, rootSchema, []);
     });
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
@@ -476,6 +475,7 @@ export function resolveAnyOrOneOfSchemas<
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list of schemas with their dependencies resolved
  */
@@ -494,7 +494,6 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
     remainingSchema as S,
     rootSchema,
     expandAllBranches,
-    recurseList,
     formData
   );
   return resolvedSchemas.flatMap((resolvedSchema) =>
@@ -519,6 +518,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The schema with the `dependencies` resolved into it
  */
@@ -604,6 +604,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  * @param dependencyValue - The potentially dependent schema
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData]- The current formData to assist retrieving a schema
  * @returns - The list of schemas with the dependent schema resolved into them
  */
@@ -666,6 +667,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param oneOf - The list of schemas representing the oneOf options
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
+ * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
