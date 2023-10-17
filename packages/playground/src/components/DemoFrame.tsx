@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode, useMemo } from 'react';
+import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode } from 'react';
 import { CssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
 import createCache, { EmotionCache } from '@emotion/cache';
@@ -7,7 +7,7 @@ import { jssPreset, StylesProvider } from '@material-ui/core/styles';
 import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
-import { FluentProvider, teamsLightTheme, createDOMRenderer, RendererProvider } from '@fluentui/react-components';
+import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -116,24 +116,7 @@ export default function DemoFrame(props: DemoFrameProps) {
       </>
     );
   } else if (theme === 'fluentui-rc') {
-    const FluentWrapper = (props: { children: ReactNode; targetDocument?: HTMLDocument }) => {
-      const { children, targetDocument } = props;
-      const renderer = useMemo(() => createDOMRenderer(targetDocument), [targetDocument]);
-
-      return (
-        <RendererProvider renderer={renderer} targetDocument={targetDocument}>
-          <FluentProvider targetDocument={targetDocument} theme={teamsLightTheme}>
-            {children}
-          </FluentProvider>
-        </RendererProvider>
-      );
-    };
-
-    body = (
-      <FrameContextConsumer>
-        {({ document }) => <FluentWrapper targetDocument={document}>{children}</FluentWrapper>}
-      </FrameContextConsumer>
-    );
+    body = <FrameContextConsumer>{__createFluentUIRCFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'antd') {

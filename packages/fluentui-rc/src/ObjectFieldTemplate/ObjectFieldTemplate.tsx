@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import { Flex } from '@fluentui/react-migration-v0-v9';
 import {
   FormContextType,
   ObjectFieldTemplateProps,
@@ -68,32 +68,30 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+      <Flex fill column gap='gap.medium'>
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Grid item={true} xs={12} key={index} style={{ marginBottom: '10px' }}>
+            <Flex column fill key={index} style={{ marginBottom: '10px' }}>
               {element.content}
-            </Grid>
+            </Flex>
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <Grid container justifyContent='flex-end'>
-            <Grid item={true}>
-              <AddButton
-                className='object-property-expand'
-                onClick={onAddClick(schema)}
-                disabled={disabled || readonly}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </Grid>
-          </Grid>
+          <Flex hAlign='end'>
+            <AddButton
+              className='object-property-expand'
+              onClick={onAddClick(schema)}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Flex>
         )}
-      </Grid>
+      </Flex>
     </>
   );
 }

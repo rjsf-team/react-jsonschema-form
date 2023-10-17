@@ -1,12 +1,12 @@
 // import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
-// import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
+import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
 // import ColorWidget from '../ColorWidget/ColorWidget';
 // import DateWidget from '../DateWidget/DateWidget';
 // import DateTimeWidget from '../DateTimeWidget/DateTimeWidget';
-// import RadioWidget from '../RadioWidget/RadioWidget';
+import RadioWidget from '../RadioWidget/RadioWidget';
 // import RangeWidget from '../RangeWidget/RangeWidget';
-// import SelectWidget from '../SelectWidget/SelectWidget';
-// import TextareaWidget from '../TextareaWidget/TextareaWidget';
+import SelectWidget from '../SelectWidget/SelectWidget';
+import TextareaWidget from '../TextareaWidget/TextareaWidget';
 // import UpDownWidget from '../UpDownWidget/UpDownWidget';
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
@@ -17,14 +17,14 @@ export function generateWidgets<
 >(): RegistryWidgetsType<T, S, F> {
   return {
     // CheckboxWidget,
-    // CheckboxesWidget,
+    CheckboxesWidget,
     // ColorWidget,
     // DateWidget,
     // DateTimeWidget,
-    // RadioWidget,
+    RadioWidget,
     // RangeWidget,
-    // SelectWidget,
-    // TextareaWidget,
+    SelectWidget,
+    TextareaWidget,
     // UpDownWidget,
   };
 }

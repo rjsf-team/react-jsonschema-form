@@ -1,5 +1,5 @@
 import { Button } from '@fluentui/react-components';
-import { ArrowSortUpRegular, ArrowSortDownRegular, CopyRegular, DeleteRegular } from '@fluentui/react-icons';
+import { ArrowSortUpRegular, ArrowSortDownRegular, CopyRegular, SubtractRegular } from '@fluentui/react-icons';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 export default function FluentIconButton<
@@ -7,7 +7,7 @@ export default function FluentIconButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: IconButtonProps<T, S, F>) {
-  const { icon, color, uiSchema, registry, ...otherProps } = props;
+  const { color, uiSchema, registry, ...otherProps } = props;
 
   return <Button {...otherProps} color='secondary' />;
 }
@@ -67,7 +67,7 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     <FluentIconButton<T, S, F>
       title={translateString(TranslatableString.RemoveButton)}
       {...props}
-      icon={<DeleteRegular />}
+      icon={<SubtractRegular />}
     />
   );
 }
