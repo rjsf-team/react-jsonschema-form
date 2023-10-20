@@ -62,6 +62,9 @@ describe('ParserValidator', () => {
       [TINY_HASH]: { ...TINY_SCHEMA, [ID_KEY]: TINY_HASH },
     });
   });
+  it('calling isValid() with TINY_SCHEMA again returns false, and tests other branch', () => {
+    expect(validator.isValid(TINY_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
+  });
   it('calling isValid() with ID_SCHEMA returns false', () => {
     expect(validator.isValid(ID_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
   });

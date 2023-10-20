@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const numbers: Sample = {
   schema: {
     type: 'object',
     title: 'Number fields & widgets',
@@ -61,3 +63,5 @@ export default {
     integerRangeSteps: 80,
   },
 };
+
+export default numbers;

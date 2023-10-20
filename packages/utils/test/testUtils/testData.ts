@@ -358,6 +358,7 @@ export const ERROR_MAPPER = {
   '': 'root error',
   foo: 'foo error',
   list: 'list error',
+  noMessage: '',
   'list.0': 'list 0 error',
   'list.1': 'list 1 error',
   nested: 'nested error',
@@ -377,7 +378,10 @@ export const TEST_FORM_DATA = {
 export const TEST_ERROR_SCHEMA: ErrorSchema = reduce(
   ERROR_MAPPER,
   (builder: ErrorSchemaBuilder, value, key) => {
-    return builder.addErrors(value, key === '' ? undefined : key);
+    if (value) {
+      return builder.addErrors(value, key === '' ? undefined : key);
+    }
+    return builder;
   },
   new ErrorSchemaBuilder()
 ).ErrorSchema;
@@ -391,9 +395,23 @@ export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
   []
 );
 
+export const TEST_ERROR_LIST_OUTPUT: RJSFValidationError[] = reduce(
+  ERROR_MAPPER,
+  (list: RJSFValidationError[], value, key) => {
+    if (value) {
+      list.push({ property: `.${key}`, message: value, stack: `.${key} ${value}` });
+    }
+    return list;
+  },
+  []
+);
+
 export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
   [ID_KEY]: 'super-schema',
   definitions: {
+    test: {
+      type: 'string',
+    },
     foo: {
       type: 'object',
       properties: {
@@ -466,6 +484,28 @@ export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
       },
     },
   },
+  anyOf: [
+    {
+      title: 'First method of identification',
+      properties: {
+        firstName: {
+          type: 'string',
+          title: 'First name',
+        },
+        lastName: {
+          $ref: '#/definitions/test',
+        },
+      },
+    },
+    {
+      title: 'Second method of identification',
+      properties: {
+        idCode: {
+          $ref: '#/definitions/test',
+        },
+      },
+    },
+  ],
 });
 
 export const PROPERTY_DEPENDENCIES: RJSFSchema = deepFreeze({

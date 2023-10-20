@@ -1,5 +1,6 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
+import isNumber from 'lodash/isNumber';
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
 import reduce from 'lodash/reduce';
@@ -11,6 +12,7 @@ import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants';
 import guessType from '../guessType';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
+import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -145,8 +147,14 @@ export default function getClosestMatchingOption<
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => {
-    return resolveAllReferences(option, rootSchema);
+    return resolveAllReferences<S>(option, rootSchema, []);
   });
+
+  const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
+  if (isNumber(simpleDiscriminatorMatch)) {
+    return simpleDiscriminatorMatch;
+  }
+
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
     const testOptions: S[] = [JUNK_OPTION as S, option];

@@ -444,5 +444,17 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         })
       ).toEqual({ foo: undefined });
     });
+    it('returns formData when the new schema has field that is not in the old schema', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {},
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'object' } },
+      };
+      const formData = { foo: '1' };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, formData)).toEqual(formData);
+    });
   });
 }

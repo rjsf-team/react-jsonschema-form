@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const date: Sample = {
   schema: {
     title: 'Date and time widgets',
     type: 'object',
@@ -57,3 +59,5 @@ export default {
   },
   formData: {},
 };
+
+export default date;

@@ -198,8 +198,22 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       event.preventDefault();
     }
 
-    const { onChange } = this.props;
+    const { onChange, errorSchema } = this.props;
     const { keyedFormData } = this.state;
+    // refs #195: revalidate to ensure properly reindexing errors
+    let newErrorSchema: ErrorSchema<T>;
+    if (errorSchema) {
+      newErrorSchema = {};
+      for (const idx in errorSchema) {
+        const i = parseInt(idx);
+        if (index === undefined || i < index) {
+          set(newErrorSchema, [i], errorSchema[idx]);
+        } else if (i >= index) {
+          set(newErrorSchema, [i + 1], errorSchema[idx]);
+        }
+      }
+    }
+
     const newKeyedFormDataRow: KeyedFormDataType<T> = {
       key: generateRowId(),
       item: this._getNewFormDataRow(),
@@ -215,7 +229,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         keyedFormData: newKeyedFormData,
         updatedKeyedFormData: true,
       },
-      () => onChange(keyedToPlainFormData(newKeyedFormData))
+      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
     );
   }
 
@@ -253,8 +267,22 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         event.preventDefault();
       }
 
-      const { onChange } = this.props;
+      const { onChange, errorSchema } = this.props;
       const { keyedFormData } = this.state;
+      // refs #195: revalidate to ensure properly reindexing errors
+      let newErrorSchema: ErrorSchema<T>;
+      if (errorSchema) {
+        newErrorSchema = {};
+        for (const idx in errorSchema) {
+          const i = parseInt(idx);
+          if (i <= index) {
+            set(newErrorSchema, [i], errorSchema[idx]);
+          } else if (i > index) {
+            set(newErrorSchema, [i + 1], errorSchema[idx]);
+          }
+        }
+      }
+
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
         item: cloneDeep(keyedFormData[index].item),
@@ -270,7 +298,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData))
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
       );
     };
   };

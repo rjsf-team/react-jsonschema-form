@@ -6,7 +6,9 @@ import {
   RJSFSchema,
   FormContextType,
   ObjectFieldTemplateProps,
+  ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
+import { Sample } from './Sample';
 
 function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldTemplateProps<T, S, F>
@@ -28,7 +30,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       )}{' '}
       {description}
       <div className='row'>
-        {properties.map((prop) => (
+        {properties.map((prop: ObjectFieldTemplatePropertyType) => (
           <div className='col-lg-1 col-md-2 col-sm-4 col-xs-6' key={prop.content.key}>
             {prop.content}
           </div>
@@ -38,7 +40,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   );
 }
 
-export default {
+const customObject: Sample = {
   schema: {
     title: 'A registration form',
     description:
@@ -85,3 +87,5 @@ export default {
     ObjectFieldTemplate,
   },
 };
+
+export default customObject;

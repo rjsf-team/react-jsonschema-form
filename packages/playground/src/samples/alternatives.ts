@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const alternatives: Sample = {
   schema: {
     definitions: {
       Color: {
@@ -90,3 +92,5 @@ export default {
     blendMode: 'screen',
   },
 };
+
+export default alternatives;

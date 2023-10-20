@@ -1,5 +1,9 @@
 import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
-import { computeDefaults } from '../../src/schema/getDefaultFormState';
+import {
+  AdditionalItemsHandling,
+  computeDefaults,
+  getInnerSchemaForArrayItem,
+} from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
 
@@ -14,6 +18,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     it('throws error when schema is not an object', () => {
       expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrowError('Invalid schema:');
+    });
+    it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {
+      expect(getInnerSchemaForArrayItem({ items: [true] }, AdditionalItemsHandling.Ignore, 0)).toEqual({});
     });
     describe('computeDefaults()', () => {
       it('test computeDefaults that is passed a schema with a ref', () => {
@@ -285,6 +292,41 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             newKey: {},
           },
         });
+      });
+      it('test an object with additionalProperties type object with no defaults and non-object formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: {},
+          })
+        ).toEqual({});
       });
       it('test computeDefaults handles an invalid property schema', () => {
         const schema: RJSFSchema = {

@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const customField: Sample = {
   schema: {
     title: 'A registration form',
     description: 'A custom-field form example.',
@@ -26,3 +28,5 @@ export default {
     mySpecialStringField: 'special-text',
   },
 };
+
+export default customField;

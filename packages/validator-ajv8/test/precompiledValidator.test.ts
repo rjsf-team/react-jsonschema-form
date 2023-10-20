@@ -7,6 +7,7 @@ import {
   RJSFValidationError,
   UiSchema,
   JUNK_OPTION_ID,
+  retrieveSchema,
 } from '@rjsf/utils';
 
 import AJV8PrecompiledValidator from '../src/precompiledValidator';
@@ -32,6 +33,28 @@ describe('AJV8PrecompiledValidator', () => {
     let validator: AJV8PrecompiledValidator;
     beforeAll(() => {
       validator = new AJV8PrecompiledValidator(validateFns, rootSchema);
+    });
+    describe('validator.ensureSameRootSchema', () => {
+      it('using rootSchema returns true', () => {
+        expect(validator.ensureSameRootSchema(rootSchema)).toBe(true);
+      });
+      it('using resolved rootSchema returns true', () => {
+        const resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
+        expect(validator.ensureSameRootSchema(resolvedRootSchema)).toBe(true);
+      });
+      it('using a different schema throws', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        expect(() => validator.ensureSameRootSchema(schema)).toThrowError(
+          new Error(
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
+          )
+        );
+      });
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
@@ -122,7 +145,9 @@ describe('AJV8PrecompiledValidator', () => {
           },
         };
         expect(() => validator.validateFormData({}, schema)).toThrowError(
-          new Error('The schema associated with the precompiled schema differs from the schema provided for validation')
+          new Error(
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
+          )
         );
       });
       describe('No custom validate function, single value of correct type generates no errors', () => {

@@ -1,4 +1,6 @@
-export default {
+import { Sample } from './Sample';
+
+const optionsSample: Sample = {
   schema: {
     title: 'A registration form',
     description: 'A simple form example. Demonstrating ui options',
@@ -68,3 +70,5 @@ export default {
     password: 'noneed',
   },
 };
+
+export default optionsSample;

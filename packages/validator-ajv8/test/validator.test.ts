@@ -94,7 +94,6 @@ describe('AJV8Validator', () => {
 
         // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
         const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
-        addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
         validator.isValid(schema, formData, rootSchema);

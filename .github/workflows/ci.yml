@@ -14,7 +14,7 @@ jobs:
         node-version: [14.x, 16.x, 18.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -80,7 +80,7 @@ jobs:
           name: docs
           path: dist/docs
       - name: Deploy playground + docs to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v3.2.0
+        uses: crazy-max/ghaction-github-pages@v4.0.0
         with:
           keep_history: true
           target_branch: gh-pages
