@@ -7,13 +7,13 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/core/logo.png" alt="Logo" width="180" height="120">
+    <img src="./logo.png" alt="Logo" width="120" height="120">
   </a>
 
-  <h3 align="center">@rjsf/core</h3>
+  <h3 align="center">@rjsf/fluentui-rc</h3>
 
   <p align="center">
-  Core logic and classic Bootstrap 3 theme for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+    Fluent UI React Components (v9) theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -45,12 +45,13 @@
 
 ## About The Project
 
-Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
+Fluent UI React Components (v9) theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [Bootstrap 3](https://getbootstrap.com/docs/3.3/)
+- [Fluent UI React Components (v9)](https://react.fluentui.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
 
@@ -58,31 +59,43 @@ Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `Bootstrap 3`
+- `@fluentui/react-components >= 9.35.0`
+- `@rjsf/core >= 2.0.0`
 
-To use the default Bootstrap 3 theme, add a Bootstrap 3 CSS tag to your HTML page:
-
-```html
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+```bash
+yarn add @fluentui/react-components @rjsf/core @rjsf/utils @rjsf/validator-ajv6
 ```
 
 ### Installation
 
-```sh
-npm install @rjsf/core
+```bash
+yarn add @rjsf/fluentui-rc
 ```
+
+<!-- USAGE EXAMPLES -->
 
 ## Usage
 
-```javascript
-import Form from '@rjsf/core';
+```js
+import Form from '@rjsf/fluentui-rc';
+```
+
+or
+
+```js
+import { withTheme } from '@rjsf/core';
+import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
+
+// Make modifications to the theme with your own fields and widgets
+
+const Form = withTheme(FluentUIRCTheme);
 ```
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-See the general [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues).
+See the [open issues](https://github.com/rjsf-team/react-jsonschema-form/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -107,8 +120,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/core/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/core
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/core.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/core
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/core/screenshot.png
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/fluent-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluent-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/screenshot.png

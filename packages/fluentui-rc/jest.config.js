@@ -1,7 +1,8 @@
 module.exports = {
-  verbose: true,
+  snapshotSerializers: ['@emotion/jest/serializer'],
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['./test/setup-jest-env.js'],
-  testMatch: ['**/test/**/*.test.[jt]s?(x)'],
+  testEnvironmentOptions: {
+    browsers: ['chrome', 'firefox', 'safari'],
+  },
   transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
 };
