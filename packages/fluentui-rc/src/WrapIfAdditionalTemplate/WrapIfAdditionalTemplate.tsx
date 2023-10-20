@@ -1,7 +1,4 @@
-// TODO
 import { CSSProperties, FocusEvent } from 'react';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -10,6 +7,17 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
+import { Field, Input, makeStyles } from '@fluentui/react-components';
+import { Flex } from '@fluentui/react-migration-v0-v9';
+
+const useStyles = makeStyles({
+  input: {
+    width: '100%',
+  },
+  label: {
+    marginBottom: '4px',
+  },
+});
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -37,6 +45,7 @@ export default function WrapIfAdditionalTemplate<
     registry,
   } = props;
   const { templates, translateString } = registry;
+  const classes = useStyles();
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -58,24 +67,25 @@ export default function WrapIfAdditionalTemplate<
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
   return (
-    <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
-      <Grid item xs>
-        <TextField
-          fullWidth={true}
-          required={required}
-          label={keyLabel}
-          defaultValue={label}
-          disabled={disabled || readonly}
-          id={`${id}-key`}
-          name={`${id}-key`}
-          onBlur={!readonly ? handleBlur : undefined}
-          type='text'
-        />
-      </Grid>
-      <Grid item={true} xs>
-        {children}
-      </Grid>
-      <Grid item={true}>
+    <Flex gap='gap.medium' vAlign='center' key={`${id}-key`} className={classNames} style={style}>
+      <div>
+        <Field label={keyLabel} required={required}>
+          <Input
+            required={required}
+            defaultValue={label}
+            disabled={disabled || readonly}
+            id={`${id}-key`}
+            name={`${id}-key`}
+            onBlur={!readonly ? handleBlur : undefined}
+            type='text'
+            input={{
+              className: classes.input,
+            }}
+          />
+        </Field>
+      </div>
+      <div>{children}</div>
+      <div>
         <RemoveButton
           iconType='default'
           style={btnStyle}
@@ -84,7 +94,7 @@ export default function WrapIfAdditionalTemplate<
           uiSchema={uiSchema}
           registry={registry}
         />
-      </Grid>
-    </Grid>
+      </div>
+    </Flex>
   );
 }

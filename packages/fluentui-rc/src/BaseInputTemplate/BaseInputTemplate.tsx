@@ -15,7 +15,9 @@ const useStyles = makeStyles({
     width: '100%',
   },
   label: {
-    marginBottom: '4px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    marginBottom: '2px',
   },
 });
 
@@ -69,6 +71,8 @@ export default function BaseInputTemplate<
         {...(inputProps as InputProps)}
         input={{
           className: classes.input,
+          // Due to Fluent UI this does not work correctly
+          list: schema.examples ? examplesId<T>(id) : undefined,
         }}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}

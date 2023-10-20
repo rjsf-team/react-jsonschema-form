@@ -10,7 +10,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Label, Radio, RadioGroup } from '@fluentui/react-components';
+import { Label, Radio, RadioGroup, RadioGroupOnChangeData } from '@fluentui/react-components';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -32,7 +32,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
-  const _onChange = (_: any, value: any) => onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onChange = (_: any, data: RadioGroupOnChangeData) =>
+    onChange(enumOptionsValueForIndex<S>(data.value, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>

@@ -4,7 +4,9 @@ import { ChangeEvent, FocusEvent } from 'react';
 
 const useStyles = makeStyles({
   label: {
-    marginBottom: '4px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    marginBottom: '2px',
   },
 });
 

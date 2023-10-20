@@ -1,13 +1,9 @@
-// import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
+import CheckboxWidget from '../CheckboxWidget/CheckboxWidget';
 import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
-// import ColorWidget from '../ColorWidget/ColorWidget';
-// import DateWidget from '../DateWidget/DateWidget';
-// import DateTimeWidget from '../DateTimeWidget/DateTimeWidget';
 import RadioWidget from '../RadioWidget/RadioWidget';
-// import RangeWidget from '../RangeWidget/RangeWidget';
+import RangeWidget from '../RangeWidget/RangeWidget';
 import SelectWidget from '../SelectWidget/SelectWidget';
 import TextareaWidget from '../TextareaWidget/TextareaWidget';
-// import UpDownWidget from '../UpDownWidget/UpDownWidget';
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export function generateWidgets<
@@ -16,16 +12,12 @@ export function generateWidgets<
   F extends FormContextType = any
 >(): RegistryWidgetsType<T, S, F> {
   return {
-    // CheckboxWidget,
+    CheckboxWidget,
     CheckboxesWidget,
-    // ColorWidget,
-    // DateWidget,
-    // DateTimeWidget,
     RadioWidget,
-    // RangeWidget,
+    RangeWidget,
     SelectWidget,
     TextareaWidget,
-    // UpDownWidget,
   };
 }
 
