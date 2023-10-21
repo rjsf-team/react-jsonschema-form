@@ -467,7 +467,7 @@ export default class Form<
       Object.keys(_obj).forEach((key: string) => {
         if (typeof _obj[key] === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
-          // If an object is marked with additionalProperties or additionalItems, all its keys are valid
+          // If an object is marked with additionalProperties, all its keys are valid
           if (_obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
             acc.push(_obj[key][NAME_KEY]);
           } else {
