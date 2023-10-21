@@ -3586,7 +3586,6 @@ describe('Form omitExtraData and liveOmit', () => {
               $name: 'array.1.name',
             },
           },
-          __rjsf_additionalItems: true,
         },
       };
 

@@ -459,7 +459,6 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           '2': {
             $name: 'fixedItemsList.2',
           },
-          __rjsf_additionalItems: true,
         },
         fixedNoToolbar: {
           $name: 'fixedNoToolbar',
@@ -475,7 +474,6 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           '3': {
             $name: 'fixedNoToolbar.3',
           },
-          __rjsf_additionalItems: true,
         },
         listOfObjects: {
           $name: 'listOfObjects',
@@ -786,7 +784,6 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           '1': {
             $name: 'arr.1',
           },
-          __rjsf_additionalItems: true,
         },
         str: {
           $name: 'str',
@@ -831,7 +828,6 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
               $name: 'arr.0.name',
             },
           },
-          __rjsf_additionalItems: true,
         },
         str: {
           $name: 'str',
