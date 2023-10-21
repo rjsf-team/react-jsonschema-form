@@ -3,7 +3,7 @@ import addFormats, { FormatsPluginOptions } from 'ajv-formats';
 import isObject from 'lodash/isObject';
 
 import { CustomValidatorOptionsType } from './types';
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITONAL_PROPERTIES_FLAG, RJSF_ADDITONAL_ITEMS_FLAG } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,
@@ -51,7 +51,6 @@ export default function createAjvInstance(
   // Add RJSF-specific additional properties keywords so Ajv doesn't report errors if strict is enabled.
   ajv.addKeyword(ADDITIONAL_PROPERTY_FLAG);
   ajv.addKeyword(RJSF_ADDITONAL_PROPERTIES_FLAG);
-  ajv.addKeyword(RJSF_ADDITONAL_ITEMS_FLAG);
 
   // add more schemas to validate against
   if (Array.isArray(additionalMetaSchemas)) {

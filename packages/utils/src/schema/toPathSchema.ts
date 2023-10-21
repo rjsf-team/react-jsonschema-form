@@ -6,7 +6,6 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   ADDITIONAL_PROPERTIES_KEY,
-  ADDITIONAL_ITEMS_KEY,
   DEPENDENCIES_KEY,
   ITEMS_KEY,
   NAME_KEY,
@@ -14,7 +13,6 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_ADDITONAL_PROPERTIES_FLAG,
-  RJSF_ADDITONAL_ITEMS_FLAG,
 } from '../constants';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
 import { FormContextType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
@@ -72,8 +70,6 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 
   if (ADDITIONAL_PROPERTIES_KEY in schema && schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
     set(pathSchema, RJSF_ADDITONAL_PROPERTIES_FLAG, true);
-  } else if (ADDITIONAL_ITEMS_KEY in schema && schema[ADDITIONAL_ITEMS_KEY] !== false) {
-    set(pathSchema, RJSF_ADDITONAL_ITEMS_FLAG, true);
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {

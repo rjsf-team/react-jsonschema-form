@@ -33,7 +33,6 @@ import {
   validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
-  RJSF_ADDITONAL_ITEMS_FLAG,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -469,10 +468,7 @@ export default class Form<
         if (typeof _obj[key] === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties or additionalItems, all its keys are valid
-          if (
-            (_obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] || _obj[key][RJSF_ADDITONAL_ITEMS_FLAG]) &&
-            _obj[key][NAME_KEY] !== ''
-          ) {
+          if (_obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
             acc.push(_obj[key][NAME_KEY]);
           } else {
             getAllPaths(_obj[key], acc, newPaths);
