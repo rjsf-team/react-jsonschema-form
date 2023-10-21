@@ -5,6 +5,7 @@
  */
 export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
+export const ADDITIONAL_ITEMS_KEY = 'additionalItems';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';
 export const CONST_KEY = 'const';
@@ -24,6 +25,7 @@ export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
 export const RJSF_ADDITONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
+export const RJSF_ADDITONAL_ITEMS_FLAG = '__rjsf_additionalItems';
 export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';

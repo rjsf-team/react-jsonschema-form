@@ -3544,6 +3544,56 @@ describe('Form omitExtraData and liveOmit', () => {
       expect(fieldNames.sort()).eql([['level1', 'level2'], 'level1.mixedMap', ['level1a']].sort());
     });
 
+    it('should get field marked as additionalItems', () => {
+      const schema = {};
+
+      const formData = {
+        extra: {
+          foo: 'bar',
+        },
+        array: [
+          'foo',
+          {
+            name: 'bar',
+          },
+        ],
+        level1a: 1.23,
+      };
+
+      const onSubmit = sandbox.spy();
+      const { comp } = createFormComponent({
+        schema,
+        formData,
+        onSubmit,
+      });
+
+      const pathSchema = {
+        $name: '',
+        extra: {
+          $name: 'extra',
+          foo: {
+            $name: 'extra.foo',
+          },
+        },
+        array: {
+          $name: 'array',
+          0: {
+            $name: 'array.0',
+          },
+          1: {
+            $name: 'array.1',
+            name: {
+              $name: 'array.1.name',
+            },
+          },
+          __rjsf_additionalItems: true,
+        },
+      };
+
+      const fieldNames = comp.getFieldNames(pathSchema, formData);
+      expect(fieldNames.sort()).eql([['extra', 'foo'], 'array'].sort());
+    });
+
     it('should get field names from pathSchema with array', () => {
       const schema = {};
 

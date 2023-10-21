@@ -459,6 +459,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           '2': {
             $name: 'fixedItemsList.2',
           },
+          __rjsf_additionalItems: true,
         },
         fixedNoToolbar: {
           $name: 'fixedNoToolbar',
@@ -474,6 +475,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           '3': {
             $name: 'fixedNoToolbar.3',
           },
+          __rjsf_additionalItems: true,
         },
         listOfObjects: {
           $name: 'listOfObjects',
@@ -699,6 +701,140 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         $name: '',
         value: {
           $name: 'value',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects and which have additionalItems with the latter reflecting in the form data', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }, 'name2'],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+          '1': {
+            $name: 'arr.1',
+          },
+          __rjsf_additionalItems: true,
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects and which have additionalItems with the latter not reflecting in the form data', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+          __rjsf_additionalItems: true,
+        },
+        str: {
+          $name: 'str',
         },
       });
     });
