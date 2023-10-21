@@ -5,7 +5,6 @@
  */
 export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
-export const ADDITIONAL_ITEMS_KEY = 'additionalItems';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';
 export const CONST_KEY = 'const';
