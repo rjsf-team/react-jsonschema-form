@@ -744,7 +744,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       });
     });
 
-    it('should handle fixed array items which are objects and which have additionalItems in the schema and have additional items in the form data', () => {
+    it('should handle fixed array items which are objects, which have additionalItems in the schema and have additional items in the form data', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -791,7 +791,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       });
     });
 
-    it("should handle fixed array items which are objects and which have additionalItems in the schema but don't have additional items in the form data", () => {
+    it("should handle fixed array items which are objects, which have additionalItems in the schema but don't have additional items in the form data", () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -816,6 +816,48 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const formData = {
         str: 'string',
         arr: [{ name: 'name1' }],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects, which have additionalItems as false in the schema and have additional items in the form data', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: false,
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }, 'name2'],
       };
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
