@@ -744,7 +744,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       });
     });
 
-    it('should handle fixed array items which are objects and which have additionalItems with the latter reflecting in the form data', () => {
+    it('should handle fixed array items which are objects and which have additionalItems in the schema and have additional items in the form data', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -791,7 +791,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       });
     });
 
-    it('should handle fixed array items which are objects and which have additionalItems with the latter not reflecting in the form data', () => {
+    it("should handle fixed array items which are objects and which have additionalItems in the schema but don't have additional items in the form data", () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
