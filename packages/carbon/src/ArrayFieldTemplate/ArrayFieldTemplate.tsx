@@ -71,7 +71,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         registry={registry}
       />
-      <LayerBackground>
+      <LayerBackground padding={carbonOptions.padding}>
         <Stack gap={carbonOptions.gap}>
           {items.length > 0 && (
             <Stack gap={carbonOptions.gap} className='array-item-list'>

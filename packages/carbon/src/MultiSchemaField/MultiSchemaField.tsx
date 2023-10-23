@@ -18,6 +18,7 @@ import {
 import { LayerBackground } from '../components/Layer';
 import { FormGroup } from '@carbon/react';
 import { LabelValue } from '../components/LabelValue';
+import getCarbonOptions from '../utils';
 
 /** Type used for the state of the `AnyOfField` component */
 type AnyOfFieldState<S extends StrictRJSFSchema = RJSFSchema> = {
@@ -165,6 +166,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       title = schema.title,
       ...uiOptions
     } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+    const carbonOptions = getCarbonOptions<T, S, F>(formContext || ({} as F), uiOptions);
     const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
     const rawErrors = get(errorSchema, ERRORS_KEY, []);
     const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
@@ -197,7 +199,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           </label>
         }
       >
-        <LayerBackground ignoreFirstLayer={false}>
+        <LayerBackground ignoreFirstLayer={false} padding={carbonOptions.padding}>
           <div className='panel panel-default panel-body'>
             <div className='form-group'>
               <Widget

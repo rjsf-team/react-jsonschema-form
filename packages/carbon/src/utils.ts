@@ -7,6 +7,10 @@ export interface CarbonOptions {
    * @see https://carbondesignsystem.com/guidelines/spacing/overview/#spacing-scale
    */
   gap: number;
+  /**Padding in layer background, default to `3` (0.5rem)
+   * @see https://carbondesignsystem.com/guidelines/spacing/overview/#spacing-scale
+   */
+  padding: number;
   /** Size of form item.
    *
    * Note that some of the `@carbon/react` component doesn't support `xl` and will fallback to `lg`
@@ -18,6 +22,7 @@ export interface CarbonOptions {
  */
 const defaultCarbonOptions: CarbonOptions = {
   gap: 7,
+  padding: 3,
 };
 
 /** Get carbon theme options from `formContext` and `ui:carbon` uiSchema options.

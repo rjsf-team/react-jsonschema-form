@@ -1,5 +1,6 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 import { LabelValue } from '../components/LabelValue';
+import { FormGroup } from '@carbon/react';
 
 /** Implement `TitleFieldTemplate`
  */
@@ -9,13 +10,10 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   required,
 }: TitleFieldProps<T, S, F>) {
   return (
-    <div
-      id={id}
-      style={{
-        marginBlockEnd: '0.5rem',
-      }}
-    >
-      <LabelValue label={title} required={required} hide={false} />
+    <div className='title-field'>
+      <FormGroup legendId={id} legendText={<LabelValue label={title} required={required} hide={false} />}>
+        {null}
+      </FormGroup>
     </div>
   );
 }
