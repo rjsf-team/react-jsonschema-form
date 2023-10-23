@@ -22,7 +22,7 @@ export interface CarbonOptions {
  */
 const defaultCarbonOptions: CarbonOptions = {
   gap: 7,
-  padding: 3,
+  padding: 5,
 };
 
 /** Get carbon theme options from `formContext` and `ui:carbon` uiSchema options.

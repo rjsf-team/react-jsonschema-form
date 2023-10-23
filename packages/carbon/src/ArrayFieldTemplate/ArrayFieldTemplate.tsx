@@ -11,6 +11,9 @@ import {
 } from '@rjsf/utils';
 import { LayerBackground } from '../components/Layer';
 import getCarbonOptions from '../utils';
+import { useNestDepth } from '../contexts';
+// @ts-expect-error miss types for `@carbon/layout`
+import { spacing } from '@carbon/layout';
 
 /** Implement `ArrayFieldTemplate`
  */
@@ -50,6 +53,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions
   );
+  const depth = useNestDepth();
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -71,6 +75,10 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         registry={registry}
       />
+      {/* If this object is the very top one, add margin after title section */}
+      {!depth && (uiOptions.title || title || uiOptions.description || schema.description) && (
+        <div style={{ height: `calc(${spacing[carbonOptions.gap - 1]} - 0.5rem)` }} />
+      )}
       <LayerBackground padding={carbonOptions.padding}>
         <Stack gap={carbonOptions.gap}>
           {items.length > 0 && (
