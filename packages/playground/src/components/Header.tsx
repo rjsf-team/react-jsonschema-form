@@ -281,17 +281,28 @@ export default function Header({
           marginBottom: '10px',
         }}
       >
-        This is a dev preview for{' '}
-        <a
-          style={{
-            color: 'red',
-            textDecoration: 'underline',
-          }}
-          href='https://github.com/rjsf-team/react-jsonschema-form/pull/3883'
-        >
-          Carbon Design System Theme (#3883)
-        </a>
-        , not a RJSF playground.
+        <div>
+          This is a dev preview for{' '}
+          <a
+            style={{
+              color: 'red',
+              textDecoration: 'underline',
+            }}
+            href='https://github.com/rjsf-team/react-jsonschema-form/pull/3883'
+          >
+            Carbon Design System Theme (#3883)
+          </a>
+          , not a RJSF playground.
+        </div>
+        <div>
+          Latest Demo Build Status:{' '}
+          <a href='https://app.netlify.com/sites/taupe-gumption-4ba0b4/deploys' target='_blank' rel='noreferrer'>
+            <img
+              src='https://api.netlify.com/api/v1/badges/e00f6cbe-02cc-436d-b847-9e78096e746d/deploy-status'
+              alt='Netlify Status'
+            />
+          </a>
+        </div>
       </div>
       <div className='row'>
         <div className='col-sm-4'>
