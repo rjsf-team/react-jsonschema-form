@@ -82,7 +82,7 @@ export default function ObjectFieldTemplate<
       {!depth && (title || description) && (
         <div style={{ height: `calc(${spacing[carbonOptions.gap - 1]} - 0.5rem)` }} />
       )}
-      <LayerBackground>
+      <LayerBackground padding={carbonOptions.padding}>
         <Stack gap={carbonOptions.gap}>
           {properties.length > 0 && <Stack gap={carbonOptions.gap}>{properties.map((item) => item.content)}</Stack>}
           {canExpand(schema, uiSchema, formData) && (

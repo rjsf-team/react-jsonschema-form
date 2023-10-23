@@ -54,7 +54,7 @@ export default function WrapIfAdditionalTemplate<
       <FormGroup legendText={<LabelValue hide={false} label={label} required={required} />}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <div style={{ flex: 1 }}>
-            <LayerBackground>
+            <LayerBackground padding={carbonOptions.padding}>
               <Stack gap={carbonOptions.gap}>
                 <TextInput
                   labelText={keyLabel}
