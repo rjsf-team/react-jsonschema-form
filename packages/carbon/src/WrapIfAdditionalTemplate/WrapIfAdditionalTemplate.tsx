@@ -1,5 +1,4 @@
-// @ts-expect-error missing types for `Stack`
-import { FormGroup, Stack, TextInput } from '@carbon/react';
+import { FormGroup, TextInput } from '@carbon/react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   FormContextType,
@@ -12,6 +11,8 @@ import {
 import { LayerBackground } from '../components/Layer';
 import { LabelValue } from '../components/LabelValue';
 import getCarbonOptions from '../utils';
+// @ts-expect-error miss types for `@carbon/layout`
+import { spacing } from '@carbon/layout';
 
 export default function WrapIfAdditionalTemplate<
   T = any,
@@ -55,16 +56,18 @@ export default function WrapIfAdditionalTemplate<
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <div style={{ flex: 1 }}>
             <LayerBackground padding={carbonOptions.padding}>
-              <Stack gap={carbonOptions.gap}>
-                <TextInput
-                  labelText={keyLabel}
-                  type='text'
-                  id={`${id}-key`}
-                  onBlur={(event) => onKeyChange(event.target.value)}
-                  defaultValue={label}
-                />
-                {children}
-              </Stack>
+              <div style={{ display: 'flex' }}>
+                <div style={{ flex: 1, marginInlineEnd: spacing[carbonOptions.padding - 1] }}>
+                  <TextInput
+                    labelText={keyLabel}
+                    type='text'
+                    id={`${id}-key`}
+                    onBlur={(event) => onKeyChange(event.target.value)}
+                    defaultValue={label}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>{children}</div>
+              </div>
             </LayerBackground>
           </div>
           <div
