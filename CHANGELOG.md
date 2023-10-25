@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.3
+
+## @rjsf/core
+
+- Replaced the deprecated `UNSAFE_componentWillReceiveProps()` method in the Form.tsx component with an improved solution utilizing the React lifecycle methods: `getSnapshotBeforeUpdate()` and `componentDidUpdate()`. Fixing [#1794](https://github.com/rjsf-team/react-jsonschema-form/issues/1794)
+
 # 5.13.2
 
 ## @rjsf/utils

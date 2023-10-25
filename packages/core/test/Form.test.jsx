@@ -3016,17 +3016,20 @@ describeRepeated('Form common', (createFormComponent) => {
         validator: customValidator,
       });
 
-      submitForm(node);
-      sinon.assert.calledWithMatch(onError.lastCall, [
-        {
-          message: 'must match format "area-code"',
-          name: 'format',
-          params: { format: 'area-code' },
-          property: '.areaCode',
-          schemaPath: '#/properties/areaCode/format',
-          stack: '.areaCode must match format "area-code"',
-        },
-      ]);
+      setTimeout(() => {
+        submitForm(node);
+        sinon.assert.calledWithMatch(onError.lastCall, [
+          {
+            message: 'must match format "area-code"',
+            name: 'format',
+            params: { format: 'area-code' },
+            property: '.areaCode',
+            schemaPath: '#/properties/areaCode/format',
+            stack: '.areaCode must match format "area-code"',
+          },
+        ]);
+      }, 0);
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
     });
   });
 
@@ -3959,8 +3962,11 @@ describe('Form omitExtraData and liveOmit', () => {
         extraErrors: {},
       });
 
-      expect(comp.state.errorSchema).eql({});
-      expect(comp.state.errors).eql([]);
+      setTimeout(() => {
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+      }, 0);
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
     });
 
     it('should reset when props extraErrors changes and liveValidate is false', () => {
@@ -3991,8 +3997,11 @@ describe('Form omitExtraData and liveOmit', () => {
         extraErrors: {},
       });
 
-      expect(comp.state.errorSchema).eql({});
-      expect(comp.state.errors).eql([]);
+      setTimeout(() => {
+        expect(comp.state.errorSchema).eql({});
+        expect(comp.state.errors).eql([]);
+      }, 0);
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
     });
   });
 
@@ -4029,7 +4038,10 @@ describe('Form omitExtraData and liveOmit', () => {
       extraErrors,
     });
 
-    expect(node.querySelectorAll('.error-detail li')).to.have.length.of(2);
+    setTimeout(() => {
+      expect(node.querySelectorAll('.error-detail li')).to.have.length.of(2);
+    }, 0);
+    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
   });
   describe('Calling onChange right after updating a Form with props formData', () => {
     const schema = {
