@@ -7,7 +7,6 @@ import { jssPreset, StylesProvider } from '@material-ui/core/styles';
 import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
-import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -115,8 +114,6 @@ export default function DemoFrame(props: DemoFrameProps) {
         {children}
       </>
     );
-  } else if (theme === 'fluentui-rc') {
-    body = <FrameContextConsumer>{__createFluentUIRCFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'chakra-ui') {
     body = <FrameContextConsumer>{__createChakraFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'antd') {

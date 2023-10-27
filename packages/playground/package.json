@@ -46,7 +46,6 @@
     "@rjsf/chakra-ui": "^5.13.2",
     "@rjsf/core": "^5.13.2",
     "@rjsf/fluent-ui": "^5.13.2",
-    "@rjsf/fluentui-rc": "^5.13.2",
     "@rjsf/material-ui": "^5.13.2",
     "@rjsf/mui": "^5.13.2",
     "@rjsf/semantic-ui": "^5.13.2",
