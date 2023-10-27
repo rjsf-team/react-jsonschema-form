@@ -3029,7 +3029,8 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         ]);
       }, 0);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
   });
 
@@ -3966,7 +3967,8 @@ describe('Form omitExtraData and liveOmit', () => {
         expect(comp.state.errorSchema).eql({});
         expect(comp.state.errors).eql([]);
       }, 0);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
 
     it('should reset when props extraErrors changes and liveValidate is false', () => {
@@ -4001,7 +4003,8 @@ describe('Form omitExtraData and liveOmit', () => {
         expect(comp.state.errorSchema).eql({});
         expect(comp.state.errors).eql([]);
       }, 0);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
+      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
   });
 
@@ -4041,7 +4044,8 @@ describe('Form omitExtraData and liveOmit', () => {
     setTimeout(() => {
       expect(node.querySelectorAll('.error-detail li')).to.have.length.of(2);
     }, 0);
-    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component. Even though this is an "around" approach, it turned out to be the only effective method to handle this particular test case.
+    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+    // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
   });
   describe('Calling onChange right after updating a Form with props formData', () => {
     const schema = {

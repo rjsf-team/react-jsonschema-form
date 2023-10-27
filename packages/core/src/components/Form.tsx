@@ -293,7 +293,6 @@ export default class Form<
    * @param prevProps - The previous set of props before the update.
    * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object with a flag indicating that an update is not necessary.
    */
-
   getSnapshotBeforeUpdate(
     prevProps: FormProps<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
@@ -316,7 +315,6 @@ export default class Form<
    * @param prevState - The previous state of the component before the update.
    * @param snapshot - The value returned from `getSnapshotBeforeUpdate`.
    */
-
   componentDidUpdate(
     _: FormProps<T, S, F>,
     prevState: FormState<T, S, F>,
