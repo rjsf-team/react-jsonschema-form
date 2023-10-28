@@ -4,6 +4,17 @@ import { TestValidatorType } from './types';
 
 export default function toPathSchemaTest(testValidator: TestValidatorType) {
   describe('toPathSchema()', () => {
+    let consoleWarnSpy: jest.SpyInstance;
+
+    beforeAll(() => {
+      // spy on console.warn() and make it do nothing to avoid making noise in the test
+      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    });
+
+    afterAll(() => {
+      consoleWarnSpy.mockRestore();
+    });
+
     it('should return a pathSchema for root field', () => {
       const schema: RJSFSchema = { type: 'string' };
 
@@ -701,6 +712,183 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
           $name: 'value',
         },
       });
+    });
+
+    it('should handle fixed array items which are objects', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects, which have additionalItems in the schema and have additional items in the form data', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }, 'name2'],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+          '1': {
+            $name: 'arr.1',
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it("should handle fixed array items which are objects, which have additionalItems in the schema but don't have additional items in the form data", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+    });
+
+    it('should handle fixed array items which are objects, which have additionalItems as false in the schema but have additional items in the form data', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          arr: {
+            type: 'array',
+            items: [
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                },
+              },
+            ],
+            additionalItems: false,
+          },
+        },
+      };
+
+      const formData = {
+        str: 'string',
+        arr: [{ name: 'name1' }, 'name2'],
+      };
+
+      expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
+        $name: '',
+        arr: {
+          $name: 'arr',
+          '0': {
+            $name: 'arr.0',
+            name: {
+              $name: 'arr.0.name',
+            },
+          },
+        },
+        str: {
+          $name: 'str',
+        },
+      });
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Unable to generate path schema for ".arr.1". No schema defined for it'
+      );
     });
   });
 }
