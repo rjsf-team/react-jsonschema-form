@@ -281,35 +281,45 @@ export default class Form<
   }
 
   /**
-   * `getSnapshotBeforeUpdate` is a React lifecycle method that is invoked right before the most recently rendered output is committed to the DOM.
-   * It enables your component to capture current values (e.g., scroll position) before they are potentially changed.
+   * `getSnapshotBeforeUpdate` is a React lifecycle method that is invoked right before the most recently rendered
+   * output is committed to the DOM. It enables your component to capture current values (e.g., scroll position) before
+   * they are potentially changed.
    *
-   * In this case, it checks if the `formData` prop has changed since the last render. If it has, it computes the next state of the component
-   * using `getStateFromProps` method and returns it along with a `shouldUpdate` flag set to `true`. This ensures that we have the most up-to-date
+   * In this case, it checks if the props have changed since the last render. If they have, it computes the next state
+   * of the component using `getStateFromProps` method and returns it along with a `shouldUpdate` flag set to `true` IF
+   * the `nextState` and `prevState` are different, otherwise `false`. This ensures that we have the most up-to-date
    * state ready to be applied in `componentDidUpdate`.
    *
-   * If `formData` hasn't changed, it simply returns an object with `shouldUpdate` set to `false`, indicating that a state update is not necessary.
+   * If `formData` hasn't changed, it simply returns an object with `shouldUpdate` set to `false`, indicating that a
+   * state update is not necessary.
    *
    * @param prevProps - The previous set of props before the update.
-   * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object with a flag indicating that an update is not necessary.
+   * @param prevState - The previous state before the update.
+   * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object
+   *        with a flag indicating that an update is not necessary.
    */
   getSnapshotBeforeUpdate(
-    prevProps: FormProps<T, S, F>
+    prevProps: FormProps<T, S, F>,
+    prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
-    if (!deepEquals(this.props.formData, prevProps.formData)) {
+    if (!deepEquals(this.props, prevProps)) {
       const nextState = this.getStateFromProps(this.props, this.props.formData);
-      return { nextState, shouldUpdate: true };
+      const shouldUpdate = !deepEquals(nextState, prevState);
+      return { nextState, shouldUpdate };
     }
     return { shouldUpdate: false };
   }
 
   /**
-   * `componentDidUpdate` is a React lifecycle method that is invoked immediately after updating occurs. This method is not called for the initial render.
+   * `componentDidUpdate` is a React lifecycle method that is invoked immediately after updating occurs. This method is
+   * not called for the initial render.
    *
-   * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`. If an update is required,
-   * it applies the next state and, if needed, triggers the `onChange` handler to inform about changes.
+   * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`.
+   * If an update is required, it applies the next state and, if needed, triggers the `onChange` handler to inform about
+   * changes.
    *
-   * This method effectively replaces the deprecated `UNSAFE_componentWillReceiveProps`, providing a safer alternative to handle prop changes and state updates.
+   * This method effectively replaces the deprecated `UNSAFE_componentWillReceiveProps`, providing a safer alternative
+   * to handle prop changes and state updates.
    *
    * @param _ - The previous set of props.
    * @param prevState - The previous state of the component before the update.
