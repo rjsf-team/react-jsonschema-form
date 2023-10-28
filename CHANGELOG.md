@@ -21,6 +21,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `toPathSchemaInternal()` util to generate correct path schemas for fixed arrays by picking up individual schemas in the `items` array, fixing [#3909](https://github.com/rjsf-team/react-jsonschema-form/issues/3909)
 
+## @rjsf/core
+
+- Replaced the deprecated `UNSAFE_componentWillReceiveProps()` method in the Form.tsx component with an improved solution utilizing the React lifecycle methods: `getSnapshotBeforeUpdate()` and `componentDidUpdate()`. Fixing [#1794](https://github.com/rjsf-team/react-jsonschema-form/issues/1794)
+
 # 5.13.2
 
 ## @rjsf/utils
