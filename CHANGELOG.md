@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.4
+
+## @rjsf/core
+
+- Fix render fixed Array with addditional formData in this array. Fixing [#3924](https://github.com/rjsf-team/react-jsonschema-form/issues/3924)
+
 # 5.13.3
 
 ## @rjsf/core

@@ -17,6 +17,7 @@ import {
   TranslatableString,
   UiSchema,
   ITEMS_KEY,
+  ArrayFieldTemplateItemType,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -737,7 +738,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       disabled,
       idSchema,
       formData,
-      items: keyedFormData.map((keyedItem, index) => {
+      items: keyedFormData.reduce<ArrayFieldTemplateItemType<T[], S, F>[]>((acc, keyedItem, index) => {
         const { key, item } = keyedItem;
         // While we are actually dealing with a single item of type T, the types require a T[], so cast
         const itemCast = item as unknown as T[];
@@ -746,6 +747,12 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           additional && isObject(schema.additionalItems)
             ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
             : itemSchemas[index];
+
+        if (!itemSchema) {
+          // If we can't get schema for formData item, then ignore this item
+          return acc;
+        }
+
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
         const itemUiSchema = additional
@@ -755,26 +762,30 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           : uiSchema.items || {};
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
-        return this.renderArrayFieldItem({
-          key,
-          index,
-          name: name && `${name}-${index}`,
-          canAdd,
-          canRemove: additional,
-          canMoveUp: index >= itemSchemas.length + 1,
-          canMoveDown: additional && index < items.length - 1,
-          itemSchema,
-          itemData: itemCast,
-          itemUiSchema,
-          itemIdSchema,
-          itemErrorSchema,
-          autofocus: autofocus && index === 0,
-          onBlur,
-          onFocus,
-          rawErrors,
-          totalItems: keyedFormData.length,
-        });
-      }),
+        acc.push(
+          this.renderArrayFieldItem({
+            key,
+            index,
+            name: name && `${name}-${index}`,
+            canAdd,
+            canRemove: additional,
+            canMoveUp: index >= itemSchemas.length + 1,
+            canMoveDown: additional && index < items.length - 1,
+            itemSchema,
+            itemData: itemCast,
+            itemUiSchema,
+            itemIdSchema,
+            itemErrorSchema,
+            autofocus: autofocus && index === 0,
+            onBlur,
+            onFocus,
+            rawErrors,
+            totalItems: keyedFormData.length,
+          })
+        );
+
+        return acc;
+      }, []),
       onAddClick: this.onAddClick,
       readonly,
       required,

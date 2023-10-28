@@ -1862,6 +1862,15 @@ describe('ArrayField', () => {
       );
     });
 
+    it('should render fieldset with additional formData', () => {
+      const form = createFormComponent({
+        schema,
+        formData: [null, null, null],
+      });
+
+      expect(form.node.querySelectorAll('fieldset')).to.have.length.of(1);
+    });
+
     it('should generate additional fields and fill data', () => {
       const { node } = createFormComponent({
         schema: schemaAdditional,
