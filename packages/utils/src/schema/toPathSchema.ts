@@ -95,6 +95,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             element,
             _recurseList
           );
+        } else {
+          console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
         }
       });
     } else {
