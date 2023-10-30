@@ -743,9 +743,9 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemCast = item as unknown as T[];
         const additional = index >= itemSchemas.length;
         const itemSchema =
-          additional && isObject(schema.additionalItems)
+          (additional && isObject(schema.additionalItems)
             ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
-            : itemSchemas[index];
+            : itemSchemas[index]) || {};
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
         const itemUiSchema = additional
