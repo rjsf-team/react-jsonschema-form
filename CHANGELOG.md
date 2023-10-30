@@ -25,7 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Replaced the deprecated `UNSAFE_componentWillReceiveProps()` method in the Form.tsx component with an improved solution utilizing the React lifecycle methods: `getSnapshotBeforeUpdate()` and `componentDidUpdate()`. Fixing [#1794](https://github.com/rjsf-team/react-jsonschema-form/issues/1794)
 - Fixed the `ArrayField` implementation to never pass an undefined schema for fixed arrays to other methods, fixing [#3924](https://github.com/rjsf-team/react-jsonschema-form/issues/3924)
-- Fixed a refresh issue in `getSnapshotBeforeUpdate()` and `componentDidUpdate()` caused by the fix for #1794, fixing [#3927](https://github.com/rjsf-team/react-jsonschema-form/issues/3927)
+- Fixed a refresh issue in `getSnapshotBeforeUpdate()` caused by the fix for #1794, fixing [#3927](https://github.com/rjsf-team/react-jsonschema-form/issues/3927)
 
 ## @rjsf/utils
 
