@@ -1985,6 +1985,29 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('textarea').length).to.eql(2);
     });
 
+    it('[fixed] should silently handle additional formData not covered by fixed array', () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: [
+            {
+              type: 'string',
+            },
+            {
+              type: 'string',
+            },
+          ],
+        },
+        formData: ['foo', 'bar', 'baz'],
+      });
+      expect(node.querySelectorAll('input').length).to.eql(2);
+      submitForm(node);
+
+      sinon.assert.calledWithMatch(onSubmit.lastCall, {
+        formData: ['foo', 'bar', 'baz'],
+      });
+    });
+
     describe('operations for additional items', () => {
       const { node, onChange } = createFormComponent({
         schema: schemaAdditional,
