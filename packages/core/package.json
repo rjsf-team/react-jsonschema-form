@@ -80,7 +80,7 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.29.0",
     "sinon": "^9.2.4",
-    "typescript": "^4.9.5"
+    "typescript": "^5.2.2"
   },
   "directories": {
     "test": "test"
