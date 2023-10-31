@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.4
+
+## @rjsf/core
+
+- Updated `SchemaField` to show errors for `anyOf`/`oneOf` when being rendered as select control, fixing [3908](https://github.com/rjsf-team/react-jsonschema-form/issues/3908)
+
 # 5.13.3
 
 ## @rjsf/antd
