@@ -22,7 +22,7 @@ import superSchema from './harness/superSchema.json';
 
 const validateFns = superSchemaFns as ValidatorFunctions;
 const validateOptionsFns = superSchemaOptionsFns as ValidatorFunctions;
-const rootSchema = superSchema as RJSFSchema;
+const rootSchema = superSchema as unknown as RJSFSchema;
 
 describe('AJV8PrecompiledValidator', () => {
   let builder: ErrorSchemaBuilder;

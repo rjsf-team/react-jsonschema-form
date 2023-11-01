@@ -16,7 +16,7 @@ type TestType = {
 };
 
 const validateFns = superSchemaFns as ValidatorFunctions;
-const rootSchema = superSchema as RJSFSchema;
+const rootSchema = superSchema as unknown as RJSFSchema;
 const mockedValidator = jest.mocked(AJV8PrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {

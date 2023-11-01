@@ -406,7 +406,7 @@ export const TEST_ERROR_LIST_OUTPUT: RJSFValidationError[] = reduce(
   []
 );
 
-export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
+export const SUPER_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({
   [ID_KEY]: 'super-schema',
   definitions: {
     test: {
@@ -506,7 +506,7 @@ export const SUPER_SCHEMA: RJSFSchema = deepFreeze({
       },
     },
   ],
-});
+} satisfies RJSFSchema);
 
 export const PROPERTY_DEPENDENCIES: RJSFSchema = deepFreeze({
   type: 'object',
