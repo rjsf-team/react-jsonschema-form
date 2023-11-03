@@ -43,7 +43,7 @@ const config = {
           editUrl: 'https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/',
           lastVersion: 'current',
           versions: {
-            'current': {
+            current: {
               label: 'v5',
               path: '',
             },
