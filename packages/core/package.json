@@ -21,8 +21,7 @@
   },
   "lint-staged": {
     "{src,test,testSnap}/**/*.[jt]s?(x)": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix"
     ]
   },
   "main": "dist/index.js",

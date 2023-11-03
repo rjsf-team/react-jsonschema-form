@@ -29,8 +29,7 @@
   },
   "lint-staged": {
     "{src,test}/**/*.ts(x)": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix"
     ]
   },
   "peerDependencies": {
