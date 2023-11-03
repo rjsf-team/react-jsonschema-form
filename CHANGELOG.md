@@ -21,6 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
 
+# 5.13.4
+
+## @rjsf/core
+
+- Updated `SchemaField` to show errors for `anyOf`/`oneOf` when being rendered as select control, fixing [3908](https://github.com/rjsf-team/react-jsonschema-form/issues/3908)
+
 # 5.13.3
 
 ## @rjsf/antd

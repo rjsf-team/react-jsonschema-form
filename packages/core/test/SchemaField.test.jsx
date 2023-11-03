@@ -506,6 +506,42 @@ describe('SchemaField', () => {
       expect(matches[0].textContent).to.contain('test');
     });
 
+    it('should show errors for top level anyOf/oneOf when schema is select control', () => {
+      const testSchema = {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'string',
+            title: 'Media Type',
+            oneOf: [
+              {
+                const: 'tv',
+                title: 'Television',
+              },
+              {
+                const: 'pc',
+                title: 'Computer',
+              },
+              {
+                const: 'console',
+                title: 'Console',
+              },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({
+        schema: testSchema,
+        uiSchema,
+        customValidate,
+      });
+      Simulate.submit(node);
+
+      const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
+      expect(matches).to.have.length.of(1);
+      expect(matches[0].textContent).to.contain('test');
+    });
+
     it('should pass errors to custom FieldErrorTemplate', () => {
       const customFieldError = (props) => {
         return <div className='custom-field-error'>{props.errors}</div>;
