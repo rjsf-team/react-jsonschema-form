@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.13.5
+
+## @rjsf/core
+
+- Updated `StringField` and `BooleanField` to pass `hideError` prop to `Widget` so that all fields are consistent
+
 # 5.13.4
 
 ## @rjsf/core
