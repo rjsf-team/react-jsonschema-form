@@ -247,7 +247,7 @@ describe('BooleanField', () => {
     });
   });
 
-  it('should focus on required radio missing data when focusOnFirstField', () => {
+  it('should focus on required radio missing data when focusOnFirstField and shows error', () => {
     const { node, onError } = createFormComponent({
       schema: {
         type: 'object',
@@ -264,6 +264,8 @@ describe('BooleanField', () => {
     const focusSpys = [sinon.spy(), sinon.spy()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs.length).eql(2);
+    let errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    expect(errorInputs).to.have.length.of(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
     inputs[0].focus = focusSpys[0];
     inputs[1].focus = focusSpys[1];
@@ -273,6 +275,40 @@ describe('BooleanField', () => {
     });
     sinon.assert.calledOnce(focusSpys[0]);
     sinon.assert.notCalled(focusSpys[1]);
+    errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    expect(errorInputs).to.have.length.of(2);
+  });
+
+  it('should focus on required radio missing data when focusOnFirstField and hides error', () => {
+    const { node, onError } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          bool: {
+            type: 'boolean',
+          },
+        },
+        required: ['bool'],
+      },
+      focusOnFirstError: true,
+      uiSchema: { bool: { 'ui:widget': 'radio', 'ui:hideError': true } },
+    });
+    const focusSpys = [sinon.spy(), sinon.spy()];
+    const inputs = node.querySelectorAll('input[id^=root_bool]');
+    expect(inputs.length).eql(2);
+    let errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    expect(errorInputs).to.have.length.of(0);
+    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+    inputs[0].focus = focusSpys[0];
+    inputs[1].focus = focusSpys[1];
+    submitForm(node);
+    sinon.assert.calledWithMatch(onError.lastCall, {
+      formData: undefined,
+    });
+    sinon.assert.calledOnce(focusSpys[0]);
+    sinon.assert.notCalled(focusSpys[1]);
+    errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    expect(errorInputs).to.have.length.of(0);
   });
 
   it('should handle a change event', () => {
