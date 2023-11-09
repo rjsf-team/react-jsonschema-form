@@ -8,6 +8,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  labelValue,
 } from '@rjsf/utils';
 
 const useStyles = makeStyles({
@@ -41,6 +42,7 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
+    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -58,9 +60,12 @@ export default function BaseInputTemplate<
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
   return (
     <>
-      <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
-        {label}
-      </Label>
+      {labelValue(
+        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+          {label}
+        </Label>,
+        hideLabel
+      )}
       <Input
         id={id}
         name={id}
