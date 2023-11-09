@@ -137,7 +137,7 @@ export default function sanitizeDataForNewSchema<
     });
 
     newFormData = {
-      ...data,
+      ...(typeof data == 'string' || Array.isArray(data) ? {} : data),
       ...removeOldSchemaData,
       ...nestedData,
     };
