@@ -27,16 +27,14 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   const classes = useStyles();
   return (
     <Card appearance='outline' className={classes.errorCard}>
-      <>
-        <Text as='h6' size={400} className={classes.errorTitle}>
-          {translateString(TranslatableString.ErrorsLabel)}
-        </Text>
-        <ul>
-          {errors.map((error, i: number) => {
-            return <li key={i}>{error.stack}</li>;
-          })}
-        </ul>
-      </>
+      <Text as='h6' size={400} className={classes.errorTitle}>
+        {translateString(TranslatableString.ErrorsLabel)}
+      </Text>
+      <ul>
+        {errors.map((error, i: number) => {
+          return <li key={i}>{error.stack}</li>;
+        })}
+      </ul>
     </Card>
   );
 }

@@ -1,5 +1,12 @@
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, ariaDescribedByIds } from '@rjsf/utils';
+import {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  ariaDescribedByIds,
+  labelValue,
+} from '@rjsf/utils';
 import { ChangeEvent, FocusEvent } from 'react';
 
 const useStyles = makeStyles({
@@ -27,6 +34,7 @@ export default function TextareaWidget<
     disabled,
     value,
     label,
+    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -48,9 +56,12 @@ export default function TextareaWidget<
 
   return (
     <>
-      <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
-        {label}
-      </Label>
+      {labelValue(
+        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+          {label}
+        </Label>,
+        hideLabel
+      )}
       <Textarea
         id={id}
         name={id}

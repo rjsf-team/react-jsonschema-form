@@ -61,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
-            const radio = (
+            return (
               <Radio
                 id={optionId(id, index)}
                 label={option.label}
@@ -70,8 +70,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
                 disabled={disabled || itemDisabled || readonly}
               />
             );
-
-            return radio;
           })}
       </RadioGroup>
     </>

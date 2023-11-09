@@ -63,7 +63,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 
   return (
     <Field
-      // @ts-expect-error todo: TS2322: Type 'string | false | ReactElement<any, string | JSXElementConstructor<any>> | undefined' is not assignable to type 'string | undefined'.
+      // @ts-expect-error todo: TS2322: Type 'false' is not assignable to type 'WithSlotShorthandValue<WithSlotRenderFunction<Omit<ComponentProps<LabelSlots>, "required"> & ...
+      // See https://github.com/rjsf-team/react-jsonschema-form/issues/3946
       label={labelValue(label, hideLabel)}
       validationState={rawErrors.length ? 'error' : undefined}
       required={required}
