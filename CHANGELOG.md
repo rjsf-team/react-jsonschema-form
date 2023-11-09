@@ -21,6 +21,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
 
+# 5.13.6
+
+## @rjsf/core
+
+- Updated `StringField` to pass `hideError` prop to `Widget` so that all fields are consistent. Missed this file in previous patch
+
+
 # 5.13.5
 
 ## @rjsf/core
