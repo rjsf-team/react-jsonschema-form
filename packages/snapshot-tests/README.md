@@ -13,7 +13,7 @@
   <h3 align="center">@rjsf/snapshot-tests</h3>
 
   <p align="center">
-  A set of snapshot tests to be used for testing RJSF theme.
+  A set of snapshot tests to be used for testing RJSF themes.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
