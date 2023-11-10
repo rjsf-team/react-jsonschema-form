@@ -10,7 +10,16 @@ import { ReactElement } from 'react';
  * @param [fallback] - One of 3 values, `undefined` (the default), `false` or an empty string
  * @returns - `fallback` if `hideLabel` is true, otherwise `label`
  */
-export function labelValue(label?: string | ReactElement, hideLabel?: boolean, fallback?: ''): undefined | string;
+export default function labelValue<T extends string | ReactElement = string | ReactElement>(
+  label?: T,
+  hideLabel?: boolean,
+  fallback?: ''
+): T | undefined;
+export default function labelValue<T extends string | ReactElement = string | ReactElement>(
+  label?: T,
+  hideLabel?: boolean,
+  fallback?: false
+): T | undefined | false;
 export default function labelValue(label?: string | ReactElement, hideLabel?: boolean, fallback?: false | '') {
   return hideLabel ? fallback : label;
 }
