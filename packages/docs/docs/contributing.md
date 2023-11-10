@@ -73,9 +73,9 @@ There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
 ```tsx
-import arrayTests from '@rjsf/core/testSnap/arrayTests'; // OR
-// import arrayTests from '@rjsf/core/testSnap/formTests'
-// import arrayTests from '@rjsf/core/testSnap/objectTests'
+import { arrayTests } from '@rjsf/snapshot-tests'; // OR
+// import { formTests } from '@rjsf/snapshot-tests';
+// import { objectTests } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
 
@@ -90,7 +90,7 @@ For example:
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import arrayTests from '@rjsf/core/testSnap/formTests';
+import { arrayTests } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
 

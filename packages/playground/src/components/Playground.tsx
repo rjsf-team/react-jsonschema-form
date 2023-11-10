@@ -20,7 +20,7 @@ export interface PlaygroundProps {
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
-  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema!);
   const [formData, setFormData] = useState<any>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);

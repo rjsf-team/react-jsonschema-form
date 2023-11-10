@@ -17,9 +17,9 @@ describe('compileSchemaValidatorsCode()', () => {
   describe('compiling without additional options', () => {
     let schemas: RJSFSchema[];
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as RJSFSchema));
+      schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
       expectedCode = readFileSync('./test/harness/superSchema.js').toString();
-      generatedCode = compileSchemaValidatorsCode(superSchema as RJSFSchema);
+      generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema);
     });
     it('create AJV instance was called with the expected options', () => {
       const expectedCompileOpts = { code: { source: true, lines: true }, schemas };
@@ -33,9 +33,9 @@ describe('compileSchemaValidatorsCode()', () => {
     let schemas: RJSFSchema[];
     let expectedCode: string;
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema as RJSFSchema));
+      schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
       expectedCode = readFileSync('./test/harness/superSchemaOptions.js').toString();
-      generatedCode = compileSchemaValidatorsCode(superSchema as RJSFSchema, {
+      generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema, {
         ...CUSTOM_OPTIONS,
         ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
       });

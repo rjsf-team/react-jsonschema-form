@@ -1,0 +1,26 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "./"
+  ],
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "../lib",
+    "baseUrl": "../",
+    "jsx": "react-jsx",
+    // There are type errors in @chakra-ui/menu type definitions because of which skipLibCheck had to be added
+    // @chakra-ui/menu/dist/declarations/src/use-menu.d.ts:986:61 - error TS2694: Namespace '"node_modules/csstype/index".Property' has no exported member 'ColorAdjust'.
+    "skipLibCheck": true
+  },
+  "references": [
+    {
+      "path": "../../core"
+    },
+    {
+      "path": "../../utils"
+    },
+    {
+      "path": "../../validator-ajv8"
+    }
+  ]
+}

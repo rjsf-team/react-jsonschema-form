@@ -1,14 +1,14 @@
 import { useState, MouseEvent } from 'react';
-import { Sample, samples } from '../samples';
+import { samples } from '../samples';
 
 interface SelectorProps {
   onSelected: (data: any) => void;
 }
 
 export default function Selector({ onSelected }: SelectorProps) {
-  const [current, setCurrent] = useState<Sample>('Simple');
+  const [current, setCurrent] = useState<string>('Simple');
 
-  function onLabelClick(label: Sample) {
+  function onLabelClick(label: string) {
     return (event: MouseEvent) => {
       event.preventDefault();
       setCurrent(label);
@@ -21,7 +21,7 @@ export default function Selector({ onSelected }: SelectorProps) {
       {Object.keys(samples).map((label, i) => {
         return (
           <li key={i} role='presentation' className={current === label ? 'active' : ''}>
-            <a href='#' onClick={onLabelClick(label as Sample)}>
+            <a href='#' onClick={onLabelClick(label)}>
               {label}
             </a>
           </li>

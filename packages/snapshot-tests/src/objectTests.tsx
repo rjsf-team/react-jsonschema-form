@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { FormProps } from '../src';
+import { FormProps } from '@rjsf/core';
 
 const titleAndDesc = {
   title: 'Test field',
@@ -33,7 +33,7 @@ const labelsOff: UiSchema = {
   'ui:globalOptions': { label: false },
 };
 
-export default function arrayTests(Form: ComponentType<FormProps>) {
+export function objectTests(Form: ComponentType<FormProps>) {
   describe('object fields', () => {
     test('object', () => {
       const schema: RJSFSchema = {

@@ -3,7 +3,7 @@ import renderer, { TestRendererOptions } from 'react-test-renderer';
 import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { FormProps } from '../src';
+import { FormProps } from '@rjsf/core';
 
 export const SELECT_CUSTOMIZE = 'selectMulti';
 export const SLIDER_CUSTOMIZE = 'slider';
@@ -15,7 +15,7 @@ export type FormRenderCustomOptions = {
   textarea?: TestRendererOptions;
 };
 
-export default function formTests(Form: ComponentType<FormProps>, customOptions: FormRenderCustomOptions = {}) {
+export function formTests(Form: ComponentType<FormProps>, customOptions: FormRenderCustomOptions = {}) {
   describe('single fields', () => {
     describe('string field', () => {
       test('regular', () => {
