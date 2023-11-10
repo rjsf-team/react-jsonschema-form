@@ -13,7 +13,7 @@
   <h3 align="center">@rjsf/snapshot-tests</h3>
 
   <p align="center">
-  Core logic and classic Bootstrap 3 theme for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  A set of snapshot tests to be used for testing RJSF theme.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -32,9 +32,7 @@
 
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
-  - [Built With](#built-with)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
