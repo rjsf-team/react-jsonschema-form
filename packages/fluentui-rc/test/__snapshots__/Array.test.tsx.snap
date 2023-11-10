@@ -1,0 +1,3931 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="a"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="b"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          htmlFor="field-6__control"
+          id="field-6__label"
+        >
+          
+        </label>
+        <div
+          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+        >
+          <button
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            aria-labelledby="field-6__label"
+            autoFocus={false}
+            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseOver={[Function]}
+            role="combobox"
+            type="button"
+            value=""
+          >
+            <span
+              className="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields empty errors array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      
+      <div
+        className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+      >
+        <div
+          className="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+            >
+              <label
+                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                htmlFor="root_name"
+              >
+                name
+              </label>
+              <span
+                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+              >
+                <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
+                  autoFocus={false}
+                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value=""
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields has errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="fui-Card ___49eetv0_1h8kscz f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
+    role="group"
+  >
+    <h6
+      className="fui-Text ___1j4m6ob_ffsath0 fk6fouc fod5ikn faaz57k figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649 f1hu3pq6 f19f4twv"
+    >
+      Errors
+    </h6>
+    <ul>
+      <li>
+        .name Bad input
+      </li>
+    </ul>
+  </div>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      
+      <div
+        className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+      >
+        <div
+          className="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string field-error has-error has-danger"
+          >
+            <div
+              className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+            >
+              <label
+                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                htmlFor="root_name"
+              >
+                name
+              </label>
+              <span
+                className="fui-Input r1jtohuq ___3k9dro0_uo2dlw0 fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm fs4k3qj fcee079 f1fgmyf4 fmyw78r"
+              >
+                <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
+                  aria-invalid={true}
+                  autoFocus={false}
+                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </span>
+              <ul
+                className="___1f4kp4s_0000000 f1hu3pq6 f19f4twv f1cnd47f ftrb29c"
+              >
+                <li
+                  className="___hlfurj0_0000000 fhx4nu f1ywm7hm f14wxoun"
+                >
+                  <small
+                    className="___9491ub0_0000000 f1hcrxcs"
+                    id="root_name__error"
+                  >
+                    Bad input
+                  </small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      
+      <div
+        className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+      >
+        <div
+          className="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="form-group field field-string"
+          >
+            <div
+              className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+            >
+              <label
+                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                htmlFor="root_name"
+              >
+                name
+              </label>
+              <span
+                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+              >
+                <input
+                  aria-describedby="root_name__error root_name__description root_name__help"
+                  autoFocus={false}
+                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  disabled={false}
+                  id="root_name"
+                  name="root_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          Test field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a test description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          Test field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a test description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  Test item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="a"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a test item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  Test item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="b"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a test item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          htmlFor="field-24__control"
+          id="field-24__label"
+        >
+          Test field
+        </label>
+        <div
+          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+        >
+          <button
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            aria-labelledby="field-24__label"
+            autoFocus={false}
+            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseOver={[Function]}
+            role="combobox"
+            type="button"
+            value=""
+          >
+            <span
+              className="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <p
+        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        style={
+          {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      >
+        <span
+          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a test description
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          Test field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a test description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  Test item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a test item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  Test item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a test item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="a"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="b"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          htmlFor="field-50__control"
+          id="field-50__label"
+        >
+          My Field
+        </label>
+        <div
+          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+        >
+          <button
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            aria-labelledby="field-50__label"
+            autoFocus={false}
+            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseOver={[Function]}
+            role="combobox"
+            type="button"
+            value=""
+          >
+            <span
+              className="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <p
+        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        style={
+          {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      >
+        <span
+          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from both fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="a"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="b"
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          htmlFor="field-37__control"
+          id="field-37__label"
+        >
+          My Field
+        </label>
+        <div
+          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+        >
+          <button
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            aria-labelledby="field-37__label"
+            autoFocus={false}
+            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseOver={[Function]}
+            role="combobox"
+            type="button"
+            value=""
+          >
+            <span
+              className="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <p
+        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        style={
+          {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      >
+        <span
+          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="___12hmf4e_0000000 f2zxqi febqm8h"
+        id="root__title"
+      >
+        <h5
+          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        >
+          My Field
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="fui-Divider ___14drqcq_2rxt2r0 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+          role="separator"
+        />
+      </div>
+      <span
+        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        id="root__description"
+      >
+        a fancier description
+      </span>
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_0"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_0__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <label
+                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                  htmlFor="root_1"
+                >
+                  My Item
+                  <span
+                    aria-hidden="true"
+                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                  >
+                    *
+                  </span>
+                </label>
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+                <p
+                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  style={
+                    {
+                      "marginBottom": 0,
+                      "marginTop": 0,
+                    }
+                  }
+                >
+                  <span
+                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    id="root_1__description"
+                  >
+                    a fancier item description
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="a"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value="b"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Move up"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={true}
+              onClick={[Function]}
+              title="Move down"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Copy"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8ZM7 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4ZM4 6a2 2 0 0 1 1-1.73V14.5A2.5 2.5 0 0 0 7.5 17h6.23A2 2 0 0 1 12 18H7.5A3.5 3.5 0 0 1 4 14.5V6Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              disabled={false}
+              onClick={[Function]}
+              title="Remove"
+              type="button"
+            >
+              <span
+                className="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+        >
+          <button
+            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            disabled={false}
+            onClick={[Function]}
+            title="Add Item"
+            type="button"
+          >
+            <span
+              className="fui-Button__icon rywnvv2"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <label
+          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          htmlFor="field-61__control"
+          id="field-61__label"
+        >
+          Test field
+        </label>
+        <div
+          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+        >
+          <button
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            aria-labelledby="field-61__label"
+            autoFocus={false}
+            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseOver={[Function]}
+            role="combobox"
+            type="button"
+            value=""
+          >
+            <span
+              className="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+            >
+              <svg
+                aria-hidden={true}
+                className="___12fm75w_v8ls9a0 f1w7gpdv fez10in fg4l7m0"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 20 20"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <p
+        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        style={
+          {
+            "marginBottom": 0,
+            "marginTop": 0,
+          }
+        }
+      >
+        <span
+          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          id="root__description"
+        >
+          a test description
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+    >
+      <div
+        className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
+      >
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    type="text"
+                    value=""
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fui-Flex ___14l2n00_8jr2f20 f22iagw fgs5rwf"
+        >
+          <div
+            className="fui-Flex ___1gzszts_10anl4a f22iagw"
+          >
+            <div
+              className="form-group field field-number"
+            >
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+              >
+                <span
+                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                >
+                  <input
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    autoFocus={false}
+                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    disabled={false}
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="___fko12g0_0000000 f1wswflg"
+  >
+    <button
+      className="fui-Button r1alrhcs ___1akj6hk_ih97uj0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc fnp9lpt f1h0usnq fs4ktlq f16h9ulv fx2bmrt f1d6v5y2 f1rirnrt f1uu00uk fkvaka8 f1ux7til f9a0qzu f1lkg8j3 fkc42ay fq7113v ff1wgvm fiob0tu f1j6scgf f1x4h75k f4xjyn1 fbgcvur f1ks1yx8 f1o6qegi fcnxywj fmxjhhp f9ddjv3 f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv f12k37oa fr96u23"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

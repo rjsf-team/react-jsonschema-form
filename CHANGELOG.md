@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.0
+
+## @rjsf/fluentui-rc
+
+- Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
+
 # 5.13.6
 
 ## @rjsf/core
