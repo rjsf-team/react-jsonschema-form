@@ -2003,12 +2003,6 @@ exports[`object fields with title and description with global label off addition
               <div
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <label
-                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  htmlFor="root_foo"
-                >
-                  foo
-                </label>
                 <span
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
@@ -2146,12 +2140,6 @@ exports[`object fields with title and description with global label off object 1
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
-              <label
-                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                htmlFor="root_a"
-              >
-                A
-              </label>
               <span
                 className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
@@ -2188,12 +2176,6 @@ exports[`object fields with title and description with global label off object 1
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
-              <label
-                className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                htmlFor="root_b"
-              >
-                B
-              </label>
               <span
                 className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
@@ -2295,12 +2277,6 @@ exports[`object fields with title and description with global label off show add
               <div
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <label
-                  className="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
-                  htmlFor="root_additionalProperty"
-                >
-                  additionalProperty
-                </label>
                 <span
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
