@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.1
+
+## Dev / playground
+
+- Added Fluent UI v9 (React Components) theme to playground
+
 # 5.14.0
 
 ## @rjsf/fluentui-rc

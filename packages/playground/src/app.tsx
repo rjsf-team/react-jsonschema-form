@@ -1,6 +1,7 @@
 import { Theme as MuiV4Theme } from '@rjsf/material-ui';
 import { Theme as MuiV5Theme } from '@rjsf/mui';
 import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
+import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
 import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
@@ -103,6 +104,10 @@ const themes: PlaygroundProps['themes'] = {
   'fluent-ui': {
     stylesheet: '//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css',
     theme: FluentUITheme,
+  },
+  'fluentui-rc': {
+    stylesheet: '',
+    theme: FluentUIRCTheme,
   },
   'material-ui-4': {
     stylesheet: '',
