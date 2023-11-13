@@ -15,6 +15,14 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.2
+
+## @rjsf/mui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
+## @rjsf/material-ui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
 # 5.14.1
 
 ## @rjsf/utils
@@ -25,7 +33,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added Fluent UI v9 (React Components) theme to playground
 - Update Fluent UI v9 and playground project references
-- Update eslint ignores to exclude new typescript build output folders 
+- Update eslint ignores to exclude new typescript build output folders
 
 # 5.14.0
 
