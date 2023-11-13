@@ -27,6 +27,7 @@
     { "path": "../chakra-ui" },
     { "path": "../core" },
     { "path": "../fluent-ui" },
+    { "path": "../fluentui-rc" },
     { "path": "../material-ui" },
     { "path": "../mui" },
     { "path": "../semantic-ui" },
