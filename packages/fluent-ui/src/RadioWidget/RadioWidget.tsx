@@ -76,7 +76,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={_onChange}
       onFocus={_onFocus}
       onBlur={_onBlur}
-      // @ts-expect-error todo: TS2322: Type 'string | false | ReactElement<any, string | JSXElementConstructor<any>> | undefined' is not assignable to type 'string | undefined'.
       label={labelValue(label, hideLabel || !label)}
       required={required}
       selectedKey={selectedIndex}

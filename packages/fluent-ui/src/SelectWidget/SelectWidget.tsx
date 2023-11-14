@@ -112,7 +112,6 @@ export default function SelectWidget<
   return (
     <Dropdown
       id={id}
-      // @ts-expect-error todo: TS2322: Type 'string | false | ReactElement<any, string | JSXElementConstructor<any>> | undefined' is not assignable to type 'string | undefined'.
       label={labelValue(label, hideLabel)}
       multiSelect={multiple}
       defaultSelectedKey={multiple ? undefined : selectedIndexes}

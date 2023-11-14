@@ -15,12 +15,24 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.2
+
+## @rjsf/utils
+
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+
 # 5.14.1
 
 ## @rjsf/utils
 
-- Updated `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+- update types for `labelValue` to have more granular return types, fixing [#3946](https://github.com/rjsf-team/react-jsonschema-form/issues/3946)
 
+## Dev / playground
+
+- Added Fluent UI v9 (React Components) theme to playground
+- Update Fluent UI v9 and playground project references
+- Update eslint ignores to exclude new typescript build output folders 
 
 # 5.14.0
 
