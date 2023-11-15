@@ -34,6 +34,7 @@ export default function BaseInputTemplate<
     type,
     label,
     hideLabel,
+    hideError,
     value,
     onChange,
     onChangeOverride,
