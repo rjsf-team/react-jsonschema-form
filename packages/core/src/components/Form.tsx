@@ -394,7 +394,7 @@ export default class Form<
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(formData, schema, schemaUtils);
+      const schemaValidation = this.validate(formData, schema, schemaUtils, retrievedSchema);
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
       schemaValidationErrors = errors;
@@ -451,11 +451,12 @@ export default class Form<
   validate(
     formData: T | undefined,
     schema = this.props.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>
+    altSchemaUtils?: SchemaUtilsType<T, S, F>,
+    retrievedSchema?: S
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
       .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
