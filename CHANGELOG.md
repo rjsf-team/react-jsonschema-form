@@ -15,12 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.14.3
-
-## @rjsf/core
-
-- avoid call `retrieveSchema` twice during `getStateFromProps` and `mustValidate` is true [#3959](https://github.com/rjsf-team/react-jsonschema-form/pull/3959)
-
 # 5.14.2
 
 ## @rjsf/mui
@@ -32,6 +26,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+
+## @rjsf/core
+
+- avoid call `retrieveSchema` twice during `getStateFromProps` and `mustValidate` is true [#3959](https://github.com/rjsf-team/react-jsonschema-form/pull/3959)
 
 # 5.14.1
 
