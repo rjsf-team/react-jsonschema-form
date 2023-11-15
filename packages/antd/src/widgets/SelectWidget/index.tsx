@@ -81,17 +81,16 @@ export default function SelectWidget<
       {...extraProps}
       filterOption={filterOption}
       aria-describedby={ariaDescribedByIds<T>(id)}
-    >
-      {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value: optionValue, label: optionLabel }, index) => (
-          <Select.Option
-            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1}
-            key={String(index)}
-            value={String(index)}
-          >
-            {optionLabel}
-          </Select.Option>
-        ))}
-    </Select>
+      options={
+        Array.isArray(enumOptions)
+          ? enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
+              disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
+              key: String(index),
+              value: String(index),
+              label: optionLabel,
+            }))
+          : undefined
+      }
+    />
   );
 }

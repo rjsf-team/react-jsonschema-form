@@ -15,6 +15,81 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.2
+
+## @rjsf/mui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
+## @rjsf/material-ui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
+## @rjsf/utils
+
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+
+# 5.14.1
+
+## @rjsf/utils
+
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+- update types for `labelValue` to have more granular return types, fixing [#3946](https://github.com/rjsf-team/react-jsonschema-form/issues/3946)
+
+## Dev / playground
+
+- Added Fluent UI v9 (React Components) theme to playground
+- Update Fluent UI v9 and playground project references
+- Update eslint ignores to exclude new typescript build output folders
+
+# 5.14.0
+
+## @rjsf/fluentui-rc
+
+- Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
+
+## @rjsf/snapshot-tests
+
+Move theme snapshot tests into separate package
+
+## Dev / playground
+
+- update configuration to use typescript project references, start type checking the tests
+
+
+# 5.13.6
+
+## @rjsf/core
+
+- Updated `StringField` to pass `hideError` prop to `Widget` so that all fields are consistent. Missed this file in previous patch
+
+
+# 5.13.5
+
+## @rjsf/core
+
+- Updated `StringField` and `BooleanField` to pass `hideError` prop to `Widget` so that all fields are consistent
+
+# 5.13.4
+
+## @rjsf/core
+
+- Updated `SchemaField` to show errors for `anyOf`/`oneOf` when being rendered as select control, fixing [3908](https://github.com/rjsf-team/react-jsonschema-form/issues/3908)
+
+# 5.13.3
+
+## @rjsf/antd
+
+- Fixed the `SelectWidget` so that filtering works by reworking how `options` are passed to the underlying `Select`
+
+## @rjsf/core
+
+- Replaced the deprecated `UNSAFE_componentWillReceiveProps()` method in the Form.tsx component with an improved solution utilizing the React lifecycle methods: `getSnapshotBeforeUpdate()` and `componentDidUpdate()`. Fixing [#1794](https://github.com/rjsf-team/react-jsonschema-form/issues/1794)
+- Fixed the `ArrayField` implementation to never pass an undefined schema for fixed arrays to other methods, fixing [#3924](https://github.com/rjsf-team/react-jsonschema-form/issues/3924)
+- Fixed a refresh issue in `getSnapshotBeforeUpdate()` caused by the fix for #1794, fixing [#3927](https://github.com/rjsf-team/react-jsonschema-form/issues/3927)
+
+## @rjsf/utils
+
+- Updated `toPathSchemaInternal()` util to generate correct path schemas for fixed arrays by picking up individual schemas in the `items` array, fixing [#3909](https://github.com/rjsf-team/react-jsonschema-form/issues/3909)
+
 # 5.13.2
 
 ## @rjsf/utils

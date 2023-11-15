@@ -116,7 +116,6 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       placeholder={placeholder}
       ariaLabel={translateString(TranslatableString.AriaDateLabel)}
       isRequired={required}
-      // @ts-expect-error todo: TS2322: Type 'string | false | ReactElement<any, string | JSXElementConstructor<any>> | undefined' is not assignable to type 'string | undefined'.
       label={labelValue(label, hideLabel)}
       onSelectDate={_onSelectDate}
       onBlur={_onBlur}

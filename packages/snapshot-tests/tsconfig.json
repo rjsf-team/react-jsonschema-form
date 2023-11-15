@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../core/src"
+    },
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../validator-ajv6"
+    },
+    {
+      "path": "../validator-ajv8"
+    }
+  ]
+}

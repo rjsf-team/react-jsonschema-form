@@ -648,7 +648,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=datetime-local]').id).eql('root');
     });
 
-    it('should reject an invalid entered datetime', () => {
+    it('should reject an invalid entered datetime and shows error', () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'string',
@@ -656,11 +656,11 @@ describe('StringField', () => {
         },
         liveValidate: true,
       });
-
+      let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      expect(inputs).to.have.length.of(0);
       Simulate.change(node.querySelector('[type=datetime-local]'), {
         target: { value: 'invalid' },
       });
-
       sinon.assert.calledWithMatch(onChange.lastCall, {
         errorSchema: { __errors: ['must be string'] },
         errors: [
@@ -674,6 +674,41 @@ describe('StringField', () => {
           },
         ],
       });
+      inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      expect(inputs).to.have.length.of(1);
+    });
+    it('should reject an invalid entered datetime and hides error', () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'date-time',
+        },
+        uiSchema: {
+          'ui:hideError': true,
+        },
+        liveValidate: true,
+      });
+      let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+
+      expect(inputs).to.have.length.of(0);
+      Simulate.change(node.querySelector('[type=datetime-local]'), {
+        target: { value: 'invalid' },
+      });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        errorSchema: { __errors: ['must be string'] },
+        errors: [
+          {
+            message: 'must be string',
+            name: 'type',
+            params: { type: 'string' },
+            property: '',
+            schemaPath: '#/type',
+            stack: 'must be string',
+          },
+        ],
+      });
+      inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      expect(inputs).to.have.length.of(0);
     });
 
     it('should render customized DateTimeWidget', () => {

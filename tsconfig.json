@@ -1,0 +1,47 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/antd"
+    },
+    {
+      "path": "./packages/bootstrap-4"
+    },
+    {
+      "path": "./packages/chakra-ui"
+    },
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/snapshot-tests"
+    },
+    {
+      "path": "./packages/fluent-ui"
+    },
+    {
+      "path": "./packages/fluentui-rc"
+    },
+    {
+      "path": "./packages/material-ui"
+    },
+    {
+      "path": "./packages/mui"
+    },
+    {
+      "path": "./packages/playground"
+    },
+    {
+      "path": "./packages/semantic-ui"
+    },
+    {
+      "path": "./packages/utils"
+    },
+    {
+      "path": "./packages/validator-ajv6"
+    },
+    {
+      "path": "./packages/validator-ajv8"
+    }
+  ]
+}

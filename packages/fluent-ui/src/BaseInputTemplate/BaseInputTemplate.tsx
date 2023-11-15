@@ -91,7 +91,6 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        // @ts-expect-error todo: TS2322: Type 'string | false | ReactElement<any, string | JSXElementConstructor<any>> | undefined' is not assignable to type 'string | undefined'.
         label={labelValue(label, hideLabel)}
         autoFocus={autofocus}
         required={required}

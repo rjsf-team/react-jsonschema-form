@@ -12,6 +12,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | Bootstrap 4           | Published | `@rjsf/bootstrap-4` |
 | Chakra UI             | Published | `@rjsf/chakra-ui`   |
 | fluent-ui             | Published | `@rjsf/fluent-ui`   |
+| fluentui-rc           | Published | `@rjsf/fluentui-rc` |
 | material-ui 4         | Published | `@rjsf/material-ui` |
 | material-ui 5         | Published | `@rjsf/mui`         |
 | Semantic UI           | Published | `@rjsf/semantic-ui` |
