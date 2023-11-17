@@ -33,7 +33,7 @@
     "node": ">=14"
   },
   "peerDependencies": {
-    "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons": "^4.0.0 || ^5.0.0",
     "@rjsf/core": "^5.12.x",
     "@rjsf/utils": "^5.12.x",
     "antd": "^4.24.0 || ^5.8.5",
