@@ -266,7 +266,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       // This is a custom addition that fixes this issue:
       // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
       const retrievedSchema =
-        experimental_defaultFormStateBehavior?.allOf && ALL_OF_KEY in schema
+        experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
           ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
           : schema;
       const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(

@@ -111,9 +111,21 @@ const liveSettingsSelectSchema: RJSFSchema = {
           },
         },
         allOf: {
-          type: 'boolean',
-          title: 'Merge allOf defaults with formData',
-          default: false,
+          type: 'string',
+          title: 'allOf defaults behaviour',
+          default: 'skipDefaults',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Populate defaults with allOf',
+              enum: ['populateDefaults'],
+            },
+            {
+              type: 'string',
+              title: 'Skip populating defaults with allOf',
+              enum: ['skipDefaults'],
+            },
+          ],
         },
         emptyObjectFields: {
           type: 'string',
