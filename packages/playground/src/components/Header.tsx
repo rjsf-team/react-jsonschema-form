@@ -110,6 +110,11 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           },
         },
+        allOf: {
+          type: 'boolean',
+          title: 'Merge allOf defaults with formData',
+          default: false,
+        },
         emptyObjectFields: {
           type: 'string',
           title: 'Object fields default behavior',

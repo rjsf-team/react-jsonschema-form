@@ -67,6 +67,10 @@ export type Experimental_DefaultFormStateBehavior = {
    * - `skipDefaults`: Does not set defaults                                                                                                      |
    */
   emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults';
+  /**
+   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `false.
+   */
+  allOf?: boolean;
 };
 
 /** The interface representing a Date object that contains an optional time */
