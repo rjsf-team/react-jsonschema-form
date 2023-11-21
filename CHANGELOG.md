@@ -15,12 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.14.4
-
-## @rjsf/fluentui-rc
-- Updated README.md references
-- Fixed width of `ArrayFieldItemTemplate` items
-
 # 5.14.3
 
 ## Dev
@@ -28,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
   - `"importHelpers": false` to remove need for tslib dependency [#3958](https://github.com/rjsf-team/react-jsonschema-form/issues/3958)
   - increase compilation target level from es6 to es2018 (so there are no need for transpiling object spread/rest feature)
   - add missing typescript project reference for `snapshot-tests` in a root tsconfig, update it to also use es modules
+
+## @rjsf/fluentui-rc
+- Updated README.md references
+- Fixed width of `ArrayFieldItemTemplate` items
 
 # 5.14.2
 
