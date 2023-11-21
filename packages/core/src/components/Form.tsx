@@ -238,6 +238,8 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
+  // Private
+  /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
   retrievedSchema: S;
 }
 
@@ -304,7 +306,11 @@ export default class Form<
     prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
-      const nextState = this.getStateFromProps(this.props, this.props.formData);
+      const nextState = this.getStateFromProps(
+        this.props,
+        this.props.formData,
+        prevProps.schema !== this.props.schema ? undefined : this.state.retrievedSchema
+      );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
     }
@@ -553,17 +559,17 @@ export default class Form<
   onChange = (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
     const { schemaUtils, schema, retrievedSchema } = this.state;
-    let _retrievedSchema: S | undefined;
+
     if (isObject(formData) || Array.isArray(formData)) {
       const newState = this.getStateFromProps(this.props, formData, retrievedSchema);
       formData = newState.formData;
-      _retrievedSchema = newState.retrievedSchema;
     }
 
     const mustValidate = !noValidate && liveValidate;
     let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
+    let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
       _retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
       const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
@@ -604,8 +610,8 @@ export default class Form<
         errors: toErrorList(errorSchema),
       };
     }
-    if (retrievedSchema) {
-      state.retrievedSchema = retrievedSchema;
+    if (_retrievedSchema) {
+      state.retrievedSchema = _retrievedSchema;
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
   };
