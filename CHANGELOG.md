@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.14.3
 
+## @rjsf/core
+
+- add `retrieveSchema` at `Form` state to memoize the result of `schemUtils.retrieveSchema`
+
 ## @rjsf/fluentui-rc
 - Updated README.md references
 - Fixed width of `ArrayFieldItemTemplate` items
