@@ -1,5 +1,14 @@
 import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { Flex } from '@fluentui/react-migration-v0-v9';
+import { makeStyles } from '@fluentui/react-components';
+
+const useStyles = makeStyles({
+  arrayFieldItem: {
+    '> .form-group': {
+      width: '100%',
+    },
+  },
+});
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -26,11 +35,14 @@ export default function ArrayFieldItemTemplate<
     uiSchema,
     registry,
   } = props;
+  const classes = useStyles();
   const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
 
   return (
     <Flex vAlign='end'>
-      <Flex>{children}</Flex>
+      <Flex fill className={classes.arrayFieldItem}>
+        {children}
+      </Flex>
       {hasToolbar && (
         <Flex style={{ marginLeft: '8px' }}>
           {(hasMoveUp || hasMoveDown) && (

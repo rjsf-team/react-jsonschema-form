@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.14.3
 
+## @rjsf/fluentui-rc
+- Updated README.md references
+- Fixed width of `ArrayFieldItemTemplate` items
+
 ## Dev
 - update tsconfigs:
   - `"importHelpers": false` to remove need for tslib dependency [#3958](https://github.com/rjsf-team/react-jsonschema-form/issues/3958)
