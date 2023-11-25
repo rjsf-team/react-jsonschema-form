@@ -2,13 +2,13 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="./react-bootstrap-4-logo.png" alt="Logo" width="140" height="120">
+    <img src="bootstrap-logo.png" alt="Logo" width="140" height="120">
   </a>
 
-  <h3 align="center">@rjsf/bootstrap-4</h3>
+  <h3 align="center">@rjsf/react-bootstrap</h3>
 
   <p align="center">
-  Bootstrap-4 theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Bootstrap 5 theme, fields and widgets for <a href="https://github.com/mozilla-services/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -39,12 +39,12 @@
 
 ## About The Project
 
-Exports `bootstrap-4` theme, fields and widgets for `react-jsonschema-form`.
+Exports `react-bootstrap` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Bootstrap-4](https://getbootstrap.com/docs/4.0/)
+- [Bootstrap-5](https://getbootstrap.com/docs/4.0/)
 - [Typescript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -63,20 +63,20 @@ yarn add react-bootstrap @rjsf/core
 ### Installation
 
 ```bash
-yarn add @rjsf/bootstrap-4
+yarn add @rjsf/react-bootstrap
 ```
 
 ## Usage
 
 ```js
-import Form from '@rjsf/bootstrap-4';
+import Form from 'packages/react-bootstrap';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Theme as Bootstrap4Theme } from 'packages/react-bootstrap';
 
 const Form = withTheme(Bootstrap4Theme);
 ```
@@ -104,8 +104,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/bootstrap-4/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/bootstrap-4
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/bootstrap-4.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/bootstrap-4
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/bootstrap-4/screenshot.png
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/react-bootstrap/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/react-bootstrap
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/react-bootstrap.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/react-bootstrap
+[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/react-bootstrap/screenshot.png

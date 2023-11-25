@@ -65,9 +65,8 @@ export default function WrapIfAdditionalTemplate<
         </Form.Group>
       </Col>
       <Col xs={5}>{children}</Col>
-      <Col xs={2} className='py-4'>
+      <Col xs={2} className='py-4 d-grid gap-2'>
         <RemoveButton
-          iconType='block'
           className='w-100'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}

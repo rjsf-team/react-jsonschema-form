@@ -10,7 +10,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
-    <Button block={iconType === 'block'} {...otherProps} variant={props.variant || 'light'} size='sm'>
+    <Button {...otherProps} variant={props.variant || 'light'} size='sm'>
       {icon}
     </Button>
   );

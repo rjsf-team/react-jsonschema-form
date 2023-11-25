@@ -29,7 +29,7 @@
 
 - [Ant Design](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
 - [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
-- [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/bootstrap-4)
+- [React-Bootstrap (Bootstrap 5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
 - [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
 - [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluent-ui)
 - [Fluent UI 9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
