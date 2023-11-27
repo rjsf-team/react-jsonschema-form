@@ -238,6 +238,9 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
+  // Private
+  /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
+  retrievedSchema: S;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -303,7 +306,11 @@ export default class Form<
     prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
-      const nextState = this.getStateFromProps(this.props, this.props.formData);
+      const nextState = this.getStateFromProps(
+        this.props,
+        this.props.formData,
+        prevProps.schema !== this.props.schema ? undefined : this.state.retrievedSchema
+      );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
     }
@@ -352,7 +359,7 @@ export default class Form<
    * @param inputFormData - The new or current data for the `Form`
    * @returns - The new state for the `Form`
    */
-  getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T): FormState<T, S, F> {
+  getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T, retrievedSchema?: S): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
@@ -372,7 +379,7 @@ export default class Form<
       schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, experimental_defaultFormStateBehavior);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
-    const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
 
     const getCurrentErrors = (): ValidationData<T> => {
       if (props.noValidate) {
@@ -394,7 +401,7 @@ export default class Form<
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(formData, schema, schemaUtils);
+      const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
       schemaValidationErrors = errors;
@@ -410,7 +417,7 @@ export default class Form<
       errors = merged.errors;
     }
     const idSchema = schemaUtils.toIdSchema(
-      retrievedSchema,
+      _retrievedSchema,
       uiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
@@ -427,6 +434,7 @@ export default class Form<
       errorSchema,
       schemaValidationErrors,
       schemaValidationErrorSchema,
+      retrievedSchema: _retrievedSchema,
     };
     return nextState;
   }
@@ -451,11 +459,12 @@ export default class Form<
   validate(
     formData: T | undefined,
     schema = this.props.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>
+    altSchemaUtils?: SchemaUtilsType<T, S, F>,
+    retrievedSchema?: S
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
       .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
@@ -549,9 +558,10 @@ export default class Form<
    */
   onChange = (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
-    const { schemaUtils, schema } = this.state;
+    const { schemaUtils, schema, retrievedSchema } = this.state;
+
     if (isObject(formData) || Array.isArray(formData)) {
-      const newState = this.getStateFromProps(this.props, formData);
+      const newState = this.getStateFromProps(this.props, formData, retrievedSchema);
       formData = newState.formData;
     }
 
@@ -559,9 +569,10 @@ export default class Form<
     let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
+    let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
-      const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
-      const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
+      _retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
+      const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
 
       const fieldNames = this.getFieldNames(pathSchema, formData);
 
@@ -572,7 +583,7 @@ export default class Form<
     }
 
     if (mustValidate) {
-      const schemaValidation = this.validate(newFormData);
+      const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;
       const schemaValidationErrors = errors;
@@ -598,6 +609,9 @@ export default class Form<
         errorSchema: errorSchema,
         errors: toErrorList(errorSchema),
       };
+    }
+    if (_retrievedSchema) {
+      state.retrievedSchema = _retrievedSchema;
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
   };

@@ -140,6 +140,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schemaValidationErrors: undefined,
           schemaValidationErrorSchema: undefined,
           schemaUtils: sinon.match.object,
+          retrievedSchema: schema,
         });
       });
     });
@@ -1480,6 +1481,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schemaValidationErrors: undefined,
           schemaValidationErrorSchema: undefined,
           schemaUtils: sinon.match.object,
+          retrievedSchema: formProps.schema,
         });
       });
     });

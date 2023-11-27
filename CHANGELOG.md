@@ -15,7 +15,31 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.3
+
+## @rjsf/core
+
+- add `retrieveSchema` at `Form` state to memoize the result of `schemUtils.retrieveSchema`
+
+## @rjsf/fluentui-rc
+- Updated README.md references
+- Fixed width of `ArrayFieldItemTemplate` items
+
+## Dev
+- update tsconfigs:
+  - `"importHelpers": false` to remove need for tslib dependency [#3958](https://github.com/rjsf-team/react-jsonschema-form/issues/3958)
+  - increase compilation target level from es6 to es2018 (so there are no need for transpiling object spread/rest feature)
+  - add missing typescript project reference for `snapshot-tests` in a root tsconfig, update it to also use es modules
+
 # 5.14.2
+
+## @rjsf/antd
+
+- Fixed the `peerDependencies` for `@ant-design/icons` to also support v5, fixing [#3507](https://github.com/rjsf-team/react-jsonschema-form/issues/3507)
+
+## @rjsf/core
+
+- avoid call `retrieveSchema` twice during `getStateFromProps` and `mustValidate` is true [#3959](https://github.com/rjsf-team/react-jsonschema-form/pull/3959)
 
 ## @rjsf/mui
 - Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
