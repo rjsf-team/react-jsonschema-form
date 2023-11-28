@@ -21,6 +21,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `resolveAllReferences()` to use own recurse list for each object properties, fixing [#3961](https://github.com/rjsf-team/react-jsonschema-form/issues/3961)
 
+## Dev
+
+- add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
+
 # 5.14.3
 
 ## @rjsf/core
