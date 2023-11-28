@@ -3,6 +3,9 @@ import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 import times from 'lodash/times';
 import transform from 'lodash/transform';
+import merge from 'lodash/merge';
+import flattenDeep from 'lodash/flattenDeep';
+import uniq from 'lodash/uniq';
 import mergeAllOf, { Options } from 'json-schema-merge-allof';
 
 import {
@@ -265,13 +268,17 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (PROPERTIES_KEY in resolvedSchema) {
+    const childrenLists: string[][] = [];
     const updatedProps = transform(
       resolvedSchema[PROPERTIES_KEY]!,
       (result, value, key: string) => {
-        result[key] = resolveAllReferences(value as S, rootSchema, recurseList);
+        const childList: string[] = [...recurseList];
+        result[key] = resolveAllReferences(value as S, rootSchema, childList);
+        childrenLists.push(childList);
       },
       {} as RJSFSchema
     );
+    merge(recurseList, uniq(flattenDeep(childrenLists)));
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
 

@@ -1354,7 +1354,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'street_address' },
           property: '.shipping_address.street_address',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'street_address'",
         },
         {
@@ -1362,7 +1362,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'city' },
           property: '.shipping_address.city',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'city'",
         },
         {
@@ -1370,7 +1370,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'state' },
           property: '.shipping_address.state',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'state'",
         },
       ]);
