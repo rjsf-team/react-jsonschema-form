@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.14.4
+
+## Dev
+- add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
+
 # 5.14.3
 
 ## @rjsf/core
