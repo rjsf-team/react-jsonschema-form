@@ -15,6 +15,16 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.15.0
+
+## @rjsf/utils
+
+- Added an experimental flag `allOf` to `experimental_defaultFormStateBehavior` for populating defaults when using `allOf` schemas [#3969](https://github.com/rjsf-team/react-jsonschema-form/pull/3969)
+
+## Dev / playground
+
+- Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
+
 # 5.14.4
 
 ## @rjsf/utils
