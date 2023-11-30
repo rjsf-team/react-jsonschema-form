@@ -64,7 +64,7 @@ export default function SelectWidget<
     <TextField
       id={id}
       name={id}
-      label={labelValue(label || undefined, hideLabel, false)}
+      label={labelValue(label || undefined, hideLabel, undefined)}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       required={required}
       disabled={disabled || readonly}
