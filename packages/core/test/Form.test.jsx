@@ -3463,6 +3463,7 @@ describe('Form omitExtraData and liveOmit', () => {
             extra: 'asdf',
             anotherThingNested2: 0,
           },
+          stringArray: ['scobochka'],
         },
         level1a: 1.23,
       };
@@ -3488,6 +3489,9 @@ describe('Form omitExtraData and liveOmit', () => {
               $name: 'level1.anotherThing.anotherThingNested2',
             },
           },
+          stringArray: {
+            $name: 'level1.stringArray',
+          },
         },
         level1a: {
           $name: 'level1a',
@@ -3500,6 +3504,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['level1', 'anotherThing', 'anotherThingNested'],
           ['level1', 'anotherThing', 'anotherThingNested2'],
           ['level1', 'level2'],
+          ['level1', 'stringArray'],
           ['level1a'],
         ].sort()
       );

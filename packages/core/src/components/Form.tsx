@@ -533,7 +533,11 @@ export default class Form<
             const formValue = _get(formData, path);
             // adds path to fieldNames if it points to a value
             // or an empty object/array
-            if (typeof formValue !== 'object' || _isEmpty(formValue)) {
+            if (
+              typeof formValue !== 'object' ||
+              _isEmpty(formValue) ||
+              (Array.isArray(formValue) && formValue.every((val) => typeof val !== 'object'))
+            ) {
               acc.push(path);
             }
           });
