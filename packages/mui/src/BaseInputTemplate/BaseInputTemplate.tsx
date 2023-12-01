@@ -79,7 +79,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={labelValue(label || undefined, hideLabel, false)}
+        label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}

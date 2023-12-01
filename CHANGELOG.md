@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.15.0
 
+## @rjsf/mui
+
+- fix gap in text and select widget outlines when `"ui:label": false` is specified.
+
 ## @rjsf/utils
 
 - Added an experimental flag `allOf` to `experimental_defaultFormStateBehavior` for populating defaults when using `allOf` schemas [#3969](https://github.com/rjsf-team/react-jsonschema-form/pull/3969)
