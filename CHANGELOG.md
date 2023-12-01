@@ -23,21 +23,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Updated `resolveAllReferences()` to use own recurse list for each object properties, fixing [#3961](https://github.com/rjsf-team/react-jsonschema-form/issues/3961)
 - Added an experimental flag `allOf` to `experimental_defaultFormStateBehavior` for populating defaults when using `allOf` schemas [#3969](https://github.com/rjsf-team/react-jsonschema-form/pull/3969)
 
 ## Dev / playground
 
-- Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
-
-# 5.14.4
-
-## @rjsf/utils
-
-- Updated `resolveAllReferences()` to use own recurse list for each object properties, fixing [#3961](https://github.com/rjsf-team/react-jsonschema-form/issues/3961)
-
-## Dev
-
 - add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
+- Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
 
 # 5.14.3
 
