@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.15.1
+
+## @rjsf/core
+
+- fix `getFieldNames`. Now correctly defines an array of primitives.
+
 # 5.15.0
 
 ## @rjsf/mui
