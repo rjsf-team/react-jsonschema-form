@@ -588,7 +588,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 ## Using the raw Ajv instance
 
 The `customizeValidator()` function returns the `AJV8Validator` (or `AJV6Validator` depending on the library you use) implementation class, which has an internal raw `ajv` instance within it.
-If you need to do some deep customization of the instance using any of the `ajv` libraries (like `ajv-keywords`), you can do so using this raw instanse as follows:
+If you need to do some deep customization of the instance using any of the `ajv` libraries (like `ajv-keywords`), you can do so using this raw instance as follows:
 
 ```ts
 import { customizeValidator } from '@rjsf/validator-ajv6';
