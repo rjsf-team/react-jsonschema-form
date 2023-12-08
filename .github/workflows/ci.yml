@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, rjsf-v6],
+    branches: [main, rjsf-v6]
   pull_request:
     branches: [main, rjsf-v6]
 
