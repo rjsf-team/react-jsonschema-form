@@ -15,6 +15,24 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.15.1
+
+## @rjsf/core
+
+- fix `getFieldNames`. Now correctly defines an array of primitives.
+
+## @rjsf/validator-ajv6
+
+- Updated the `AJV6Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## @rjsf/validator-ajv8
+
+- Updated the `AJV8Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## Dev / docs / playground
+
+- Updated the documentation to describe how to use the newly exposed `ajv` variable 
+
 # 5.15.0
 
 ## @rjsf/mui

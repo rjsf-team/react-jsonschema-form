@@ -585,6 +585,21 @@ const validator = customizeValidator({ ajvOptionsOverrides });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
+## Using the raw Ajv instance
+
+The `customizeValidator()` function returns the `AJV8Validator` (or `AJV6Validator` depending on the library you use) implementation class, which has an internal raw `ajv` instance within it.
+If you need to do some deep customization of the instance using any of the `ajv` libraries (like `ajv-keywords`), you can do so using this raw instance as follows:
+
+```ts
+import { customizeValidator } from '@rjsf/validator-ajv6';
+import ajvKeywords from 'ajv-keywords';
+
+const validator = customizeValidator();
+ajvKeywords(validator.ajv, ['your-keyword']);
+
+// use your update validator with a `Form`
+```
+
 ## Ajv8 validator differences
 
 There are a few differences in configuring the Ajv 8 validator.
