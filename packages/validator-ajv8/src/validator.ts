@@ -29,7 +29,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @private
    */
-  private ajv: Ajv;
+  ajv: Ajv;
 
   /** The Localizer function to use for localizing Ajv errors
    *

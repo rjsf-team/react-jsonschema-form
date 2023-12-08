@@ -1354,7 +1354,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'street_address' },
           property: '.shipping_address.street_address',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'street_address'",
         },
         {
@@ -1362,7 +1362,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'city' },
           property: '.shipping_address.city',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'city'",
         },
         {
@@ -1370,7 +1370,7 @@ describeRepeated('Form common', (createFormComponent) => {
           name: 'required',
           params: { missingProperty: 'state' },
           property: '.shipping_address.state',
-          schemaPath: '#/definitions/address/required',
+          schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'state'",
         },
       ]);
@@ -3463,6 +3463,7 @@ describe('Form omitExtraData and liveOmit', () => {
             extra: 'asdf',
             anotherThingNested2: 0,
           },
+          stringArray: ['scobochka'],
         },
         level1a: 1.23,
       };
@@ -3488,6 +3489,9 @@ describe('Form omitExtraData and liveOmit', () => {
               $name: 'level1.anotherThing.anotherThingNested2',
             },
           },
+          stringArray: {
+            $name: 'level1.stringArray',
+          },
         },
         level1a: {
           $name: 'level1a',
@@ -3500,6 +3504,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['level1', 'anotherThing', 'anotherThingNested'],
           ['level1', 'anotherThing', 'anotherThingNested2'],
           ['level1', 'level2'],
+          ['level1', 'stringArray'],
           ['level1a'],
         ].sort()
       );
