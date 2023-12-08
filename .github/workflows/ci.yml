@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, rjsf-v6],
   pull_request:
-    branches: [main]
+    branches: [main, rjsf-v6]
 
 jobs:
   build:
