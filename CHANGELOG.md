@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.16.1
+
+## @rjsf/core
+
+- Pass indexed title from array into its items, adding enhancement asked in [#3983](https://github.com/rjsf-team/react-jsonschema-form/issues/3983)
+
 # 5.15.1
 
 ## @rjsf/core
