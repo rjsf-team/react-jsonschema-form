@@ -73,16 +73,44 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {
-    formData.forEach((element, i: number) => {
-      pathSchema[i] = toPathSchemaInternal<T, S, F>(
-        validator,
-        schema.items as S,
-        `${name}.${i}`,
-        rootSchema,
-        element,
-        _recurseList
-      );
-    });
+    const { items: schemaItems, additionalItems: schemaAdditionalItems } = schema;
+
+    if (Array.isArray(schemaItems)) {
+      formData.forEach((element, i: number) => {
+        if (schemaItems[i]) {
+          pathSchema[i] = toPathSchemaInternal<T, S, F>(
+            validator,
+            schemaItems[i] as S,
+            `${name}.${i}`,
+            rootSchema,
+            element,
+            _recurseList
+          );
+        } else if (schemaAdditionalItems) {
+          pathSchema[i] = toPathSchemaInternal<T, S, F>(
+            validator,
+            schemaAdditionalItems as S,
+            `${name}.${i}`,
+            rootSchema,
+            element,
+            _recurseList
+          );
+        } else {
+          console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
+        }
+      });
+    } else {
+      formData.forEach((element, i: number) => {
+        pathSchema[i] = toPathSchemaInternal<T, S, F>(
+          validator,
+          schemaItems as S,
+          `${name}.${i}`,
+          rootSchema,
+          element,
+          _recurseList
+        );
+      });
+    }
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, property]);

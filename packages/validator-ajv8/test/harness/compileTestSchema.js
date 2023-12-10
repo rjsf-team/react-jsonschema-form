@@ -9,6 +9,7 @@
  * Then add the two updated `superSchema.js` and `superSchemaOptions.js` files to your PR
  */
 
+// @ts-ignore todo: update this to use sources directly
 const compileSchemaValidators = require('../../dist/compileSchemaValidators').default;
 const superSchema = require('./superSchema.json');
 

@@ -29,6 +29,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     required,
     disabled,
     readonly,
+    hideError,
     autofocus,
     onChange,
     onFocus,
@@ -103,6 +104,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       required={required}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       registry={registry}
       formContext={formContext}
       autofocus={autofocus}

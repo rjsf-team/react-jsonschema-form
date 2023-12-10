@@ -9,6 +9,7 @@ describe('toErrorList()', () => {
     expect(toErrorList({})).toEqual([]);
   });
   it('Returns an empty array when an object with a non-plain child object is provided', () => {
+    // @ts-expect-error testing unexpected argument handling
     expect(toErrorList({ nonObject: new Error('non-object') })).toEqual([]);
   });
   it('Returns the expected list of errors when given an ErrorSchema', () => {

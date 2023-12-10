@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "5.13.2",
+  "version": "5.15.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -15,11 +15,11 @@
     "node": ">=14"
   },
   "scripts": {
-    "build:ts": "rimraf lib && tsc",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv8.esm.js --sourcemap --packages=external --format=esm  && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv8.esm.js --format=umd --file=dist/validator-ajv8.umd.js --name=@rjsf/validator-ajv8",
-    "build": "rimraf dist && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -29,8 +29,7 @@
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix"
     ]
   },
   "dependencies": {
@@ -49,7 +48,8 @@
     "@babel/preset-env": "^7.22.15",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.22.15",
-    "@rjsf/utils": "^5.13.2",
+    "@rjsf/utils": "^5.15.1",
+    "@types/jest": "^29.5.7",
     "@types/json-schema": "^7.0.12",
     "@types/lodash": "^4.14.198",
     "babel-jest": "^29.6.4",

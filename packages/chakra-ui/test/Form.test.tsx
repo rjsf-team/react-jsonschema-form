@@ -1,4 +1,4 @@
-import formTests from '@rjsf/core/testSnap/formTests';
+import { formTests } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
 

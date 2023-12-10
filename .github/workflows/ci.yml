@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -24,7 +24,6 @@ jobs:
       - run: npm i -g npm@9
       - run: npm ci
       - run: npm run lint
-      - run: npm run cs-check
 
       - name: Build with Netlify badge
         if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'

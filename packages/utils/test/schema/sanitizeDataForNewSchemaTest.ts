@@ -456,5 +456,32 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const formData = { foo: '1' };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, formData)).toEqual(formData);
     });
+    it('returns empty object when the old schema is of type string and the new contains "property" field', () => {
+      const oldSchema: RJSFSchema = { type: 'string' };
+      const newSchema: RJSFSchema = {
+        properties: {
+          foo: {
+            type: 'string',
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, 'qwerty')).toEqual({});
+    });
+    it('returns empty object when the old schema is of type array and the new contains "property" field', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      };
+      const newSchema: RJSFSchema = {
+        properties: {
+          foo: {
+            type: 'string',
+          },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['qwerty', 'asdfg'])).toEqual({});
+    });
   });
 }

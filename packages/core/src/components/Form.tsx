@@ -238,6 +238,9 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
+  // Private
+  /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
+  retrievedSchema: S;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -281,35 +284,49 @@ export default class Form<
   }
 
   /**
-   * `getSnapshotBeforeUpdate` is a React lifecycle method that is invoked right before the most recently rendered output is committed to the DOM.
-   * It enables your component to capture current values (e.g., scroll position) before they are potentially changed.
+   * `getSnapshotBeforeUpdate` is a React lifecycle method that is invoked right before the most recently rendered
+   * output is committed to the DOM. It enables your component to capture current values (e.g., scroll position) before
+   * they are potentially changed.
    *
-   * In this case, it checks if the `formData` prop has changed since the last render. If it has, it computes the next state of the component
-   * using `getStateFromProps` method and returns it along with a `shouldUpdate` flag set to `true`. This ensures that we have the most up-to-date
+   * In this case, it checks if the props have changed since the last render. If they have, it computes the next state
+   * of the component using `getStateFromProps` method and returns it along with a `shouldUpdate` flag set to `true` IF
+   * the `nextState` and `prevState` are different, otherwise `false`. This ensures that we have the most up-to-date
    * state ready to be applied in `componentDidUpdate`.
    *
-   * If `formData` hasn't changed, it simply returns an object with `shouldUpdate` set to `false`, indicating that a state update is not necessary.
+   * If `formData` hasn't changed, it simply returns an object with `shouldUpdate` set to `false`, indicating that a
+   * state update is not necessary.
    *
    * @param prevProps - The previous set of props before the update.
-   * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object with a flag indicating that an update is not necessary.
+   * @param prevState - The previous state before the update.
+   * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object
+   *        with a flag indicating that an update is not necessary.
    */
   getSnapshotBeforeUpdate(
-    prevProps: FormProps<T, S, F>
+    prevProps: FormProps<T, S, F>,
+    prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
-    if (!deepEquals(this.props.formData, prevProps.formData)) {
-      const nextState = this.getStateFromProps(this.props, this.props.formData);
-      return { nextState, shouldUpdate: true };
+    if (!deepEquals(this.props, prevProps)) {
+      const nextState = this.getStateFromProps(
+        this.props,
+        this.props.formData,
+        prevProps.schema !== this.props.schema ? undefined : this.state.retrievedSchema
+      );
+      const shouldUpdate = !deepEquals(nextState, prevState);
+      return { nextState, shouldUpdate };
     }
     return { shouldUpdate: false };
   }
 
   /**
-   * `componentDidUpdate` is a React lifecycle method that is invoked immediately after updating occurs. This method is not called for the initial render.
+   * `componentDidUpdate` is a React lifecycle method that is invoked immediately after updating occurs. This method is
+   * not called for the initial render.
    *
-   * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`. If an update is required,
-   * it applies the next state and, if needed, triggers the `onChange` handler to inform about changes.
+   * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`.
+   * If an update is required, it applies the next state and, if needed, triggers the `onChange` handler to inform about
+   * changes.
    *
-   * This method effectively replaces the deprecated `UNSAFE_componentWillReceiveProps`, providing a safer alternative to handle prop changes and state updates.
+   * This method effectively replaces the deprecated `UNSAFE_componentWillReceiveProps`, providing a safer alternative
+   * to handle prop changes and state updates.
    *
    * @param _ - The previous set of props.
    * @param prevState - The previous state of the component before the update.
@@ -342,7 +359,7 @@ export default class Form<
    * @param inputFormData - The new or current data for the `Form`
    * @returns - The new state for the `Form`
    */
-  getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T): FormState<T, S, F> {
+  getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T, retrievedSchema?: S): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
@@ -362,7 +379,7 @@ export default class Form<
       schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, experimental_defaultFormStateBehavior);
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
-    const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
 
     const getCurrentErrors = (): ValidationData<T> => {
       if (props.noValidate) {
@@ -384,7 +401,7 @@ export default class Form<
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(formData, schema, schemaUtils);
+      const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
       errorSchema = schemaValidation.errorSchema;
       schemaValidationErrors = errors;
@@ -400,7 +417,7 @@ export default class Form<
       errors = merged.errors;
     }
     const idSchema = schemaUtils.toIdSchema(
-      retrievedSchema,
+      _retrievedSchema,
       uiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
@@ -417,6 +434,7 @@ export default class Form<
       errorSchema,
       schemaValidationErrors,
       schemaValidationErrorSchema,
+      retrievedSchema: _retrievedSchema,
     };
     return nextState;
   }
@@ -441,11 +459,12 @@ export default class Form<
   validate(
     formData: T | undefined,
     schema = this.props.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>
+    altSchemaUtils?: SchemaUtilsType<T, S, F>,
+    retrievedSchema?: S
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
-    const resolvedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const resolvedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
     return schemaUtils
       .getValidator()
       .validateFormData(formData, resolvedSchema, customValidate, transformErrors, uiSchema);
@@ -514,7 +533,11 @@ export default class Form<
             const formValue = _get(formData, path);
             // adds path to fieldNames if it points to a value
             // or an empty object/array
-            if (typeof formValue !== 'object' || _isEmpty(formValue)) {
+            if (
+              typeof formValue !== 'object' ||
+              _isEmpty(formValue) ||
+              (Array.isArray(formValue) && formValue.every((val) => typeof val !== 'object'))
+            ) {
               acc.push(path);
             }
           });
@@ -539,9 +562,10 @@ export default class Form<
    */
   onChange = (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
-    const { schemaUtils, schema } = this.state;
+    const { schemaUtils, schema, retrievedSchema } = this.state;
+
     if (isObject(formData) || Array.isArray(formData)) {
-      const newState = this.getStateFromProps(this.props, formData);
+      const newState = this.getStateFromProps(this.props, formData, retrievedSchema);
       formData = newState.formData;
     }
 
@@ -549,9 +573,10 @@ export default class Form<
     let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
+    let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
-      const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
-      const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
+      _retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
+      const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
 
       const fieldNames = this.getFieldNames(pathSchema, formData);
 
@@ -562,7 +587,7 @@ export default class Form<
     }
 
     if (mustValidate) {
-      const schemaValidation = this.validate(newFormData);
+      const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;
       const schemaValidationErrors = errors;
@@ -588,6 +613,9 @@ export default class Form<
         errorSchema: errorSchema,
         errors: toErrorList(errorSchema),
       };
+    }
+    if (_retrievedSchema) {
+      state.retrievedSchema = _retrievedSchema;
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
   };

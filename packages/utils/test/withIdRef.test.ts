@@ -34,8 +34,8 @@ describe('withIdRefPrefix()', () => {
 
     expect(withIdRefPrefix(schema)).toEqual(schema);
   });
-  it('should handle null schema', () => {
-    const schema: RJSFSchema = null;
-    expect(withIdRefPrefix(schema)).toEqual(schema);
+  it('should handle null schemaNode', () => {
+    const schemaNode = null;
+    expect(withIdRefPrefix(schemaNode)).toEqual(schemaNode);
   });
 });

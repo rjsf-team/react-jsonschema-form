@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mui",
-  "version": "5.13.2",
+  "version": "5.15.1",
   "main": "./dist/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -11,11 +11,11 @@
     "src"
   ],
   "scripts": {
-    "build:ts": "rimraf lib && tsc",
+    "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/mui.esm.js --format=umd --file=dist/mui.umd.js --name=@rjsf/mui",
-    "build": "rimraf dist && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -25,8 +25,7 @@
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix"
     ]
   },
   "engines": {
@@ -53,9 +52,11 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.8",
     "@mui/material": "^5.14.8",
-    "@rjsf/core": "^5.13.2",
-    "@rjsf/utils": "^5.13.2",
-    "@rjsf/validator-ajv8": "^5.13.2",
+    "@rjsf/core": "^5.15.1",
+    "@rjsf/snapshot-tests": "^5.15.1",
+    "@rjsf/utils": "^5.15.1",
+    "@rjsf/validator-ajv8": "^5.15.1",
+    "@types/jest": "^29.5.7",
     "@types/react": "^17.0.65",
     "@types/react-dom": "^17.0.20",
     "@types/react-test-renderer": "^17.0.3",

@@ -231,9 +231,10 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
   /*
    * AnyOf/OneOf errors handled by child schema
+   * unless it can be rendered as select control
    */
   const errorsComponent =
-    hideError || schema.anyOf || schema.oneOf ? undefined : (
+    hideError || ((schema.anyOf || schema.oneOf) && !schemaUtils.isSelect(schema)) ? undefined : (
       <FieldErrorTemplate
         errors={__errors}
         errorSchema={errorSchema}

@@ -1,7 +1,7 @@
 import renderer from 'react-test-renderer';
 import validator from '@rjsf/validator-ajv8';
 import { RJSFSchema } from '@rjsf/utils';
-import formTests, { SELECT_CUSTOMIZE } from '@rjsf/core/testSnap/formTests';
+import { formTests, SELECT_CUSTOMIZE } from '@rjsf/snapshot-tests';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';

@@ -15,11 +15,138 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.15.1
+
+## @rjsf/core
+
+- fix `getFieldNames`. Now correctly defines an array of primitives.
+
+## @rjsf/validator-ajv6
+
+- Updated the `AJV6Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## @rjsf/validator-ajv8
+
+- Updated the `AJV8Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## Dev / docs / playground
+
+- Updated the documentation to describe how to use the newly exposed `ajv` variable 
+
+# 5.15.0
+
+## @rjsf/mui
+
+- fix gap in text and select widget outlines when `"ui:label": false` is specified.
+
+## @rjsf/utils
+
+- Updated `resolveAllReferences()` to use own recurse list for each object properties, fixing [#3961](https://github.com/rjsf-team/react-jsonschema-form/issues/3961)
+- Added an experimental flag `allOf` to `experimental_defaultFormStateBehavior` for populating defaults when using `allOf` schemas [#3969](https://github.com/rjsf-team/react-jsonschema-form/pull/3969)
+
+## Dev / playground
+
+- add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
+- Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
+
+# 5.14.3
+
+## @rjsf/core
+
+- add `retrieveSchema` at `Form` state to memoize the result of `schemUtils.retrieveSchema`
+
+## @rjsf/fluentui-rc
+- Updated README.md references
+- Fixed width of `ArrayFieldItemTemplate` items
+
+## Dev
+- update tsconfigs:
+  - `"importHelpers": false` to remove need for tslib dependency [#3958](https://github.com/rjsf-team/react-jsonschema-form/issues/3958)
+  - increase compilation target level from es6 to es2018 (so there are no need for transpiling object spread/rest feature)
+  - add missing typescript project reference for `snapshot-tests` in a root tsconfig, update it to also use es modules
+
+# 5.14.2
+
+## @rjsf/antd
+
+- Fixed the `peerDependencies` for `@ant-design/icons` to also support v5, fixing [#3507](https://github.com/rjsf-team/react-jsonschema-form/issues/3507)
+
+## @rjsf/core
+
+- avoid call `retrieveSchema` twice during `getStateFromProps` and `mustValidate` is true [#3959](https://github.com/rjsf-team/react-jsonschema-form/pull/3959)
+
+## @rjsf/mui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
+## @rjsf/material-ui
+- Resolve the React error caused by the propagation of the `hideError` property to the DOM element, fixing [#3945](https://github.com/rjsf-team/react-jsonschema-form/issues/3945)
+
+## @rjsf/utils
+
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+
+# 5.14.1
+
+## @rjsf/utils
+
+- Update `sanitizeDataForNewSchema()` to avoid spreading strings and Arrays into the returned value when the old schema is of type `string` or `array` and the new schema is of type `object`. Fixing [#3922](https://github.com/rjsf-team/react-jsonschema-form/issues/3922)
+- update types for `labelValue` to have more granular return types, fixing [#3946](https://github.com/rjsf-team/react-jsonschema-form/issues/3946)
+
+## Dev / playground
+
+- Added Fluent UI v9 (React Components) theme to playground
+- Update Fluent UI v9 and playground project references
+- Update eslint ignores to exclude new typescript build output folders
+
+# 5.14.0
+
+## @rjsf/fluentui-rc
+
+- Added theme for Fluent UI v9 (React Components), fixing [#3659](https://github.com/rjsf-team/react-jsonschema-form/issues/3659)
+
+## @rjsf/snapshot-tests
+
+Move theme snapshot tests into separate package
+
+## Dev / playground
+
+- update configuration to use typescript project references, start type checking the tests
+
+
+# 5.13.6
+
+## @rjsf/core
+
+- Updated `StringField` to pass `hideError` prop to `Widget` so that all fields are consistent. Missed this file in previous patch
+
+
+# 5.13.5
+
+## @rjsf/core
+
+- Updated `StringField` and `BooleanField` to pass `hideError` prop to `Widget` so that all fields are consistent
+
+# 5.13.4
+
+## @rjsf/core
+
+- Updated `SchemaField` to show errors for `anyOf`/`oneOf` when being rendered as select control, fixing [3908](https://github.com/rjsf-team/react-jsonschema-form/issues/3908)
+
 # 5.13.3
+
+## @rjsf/antd
+
+- Fixed the `SelectWidget` so that filtering works by reworking how `options` are passed to the underlying `Select`
 
 ## @rjsf/core
 
 - Replaced the deprecated `UNSAFE_componentWillReceiveProps()` method in the Form.tsx component with an improved solution utilizing the React lifecycle methods: `getSnapshotBeforeUpdate()` and `componentDidUpdate()`. Fixing [#1794](https://github.com/rjsf-team/react-jsonschema-form/issues/1794)
+- Fixed the `ArrayField` implementation to never pass an undefined schema for fixed arrays to other methods, fixing [#3924](https://github.com/rjsf-team/react-jsonschema-form/issues/3924)
+- Fixed a refresh issue in `getSnapshotBeforeUpdate()` caused by the fix for #1794, fixing [#3927](https://github.com/rjsf-team/react-jsonschema-form/issues/3927)
+
+## @rjsf/utils
+
+- Updated `toPathSchemaInternal()` util to generate correct path schemas for fixed arrays by picking up individual schemas in the `items` array, fixing [#3909](https://github.com/rjsf-team/react-jsonschema-form/issues/3909)
 
 # 5.13.2
 

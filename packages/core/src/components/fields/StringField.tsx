@@ -31,6 +31,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     onFocus,
     registry,
     rawErrors,
+    hideError,
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
@@ -52,6 +53,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       name={name}
       label={label}
       hideLabel={!displayLabel}
+      hideError={hideError}
       value={formData}
       onChange={onChange}
       onBlur={onBlur}

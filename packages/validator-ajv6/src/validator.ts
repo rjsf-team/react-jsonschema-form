@@ -31,10 +31,8 @@ export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSch
   implements ValidatorType<T, S, F>
 {
   /** The AJV instance to use for all validations
-   *
-   * @private
    */
-  private ajv: Ajv;
+  ajv: Ajv;
 
   /** Constructs an `AJV6Validator` instance using the `options`
    *

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "composite": true,
+    "target": "ES2018",
     "module": "esnext",
     "lib": ["dom", "esnext"],
-    "importHelpers": true,
+    "importHelpers": false,
     "declaration": true,
     "sourceMap": true,
     "strict": true,
