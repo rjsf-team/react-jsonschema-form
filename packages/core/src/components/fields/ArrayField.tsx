@@ -503,6 +503,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           key,
           index,
           name: name && `${name}-${index}`,
+          title: title ? `${title} - ${index + 1}` : undefined,
           canAdd,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
@@ -759,6 +760,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           key,
           index,
           name: name && `${name}-${index}`,
+          title: title ? `${title} - ${index + 1}` : undefined,
           canAdd,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
@@ -799,6 +801,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     key: string;
     index: number;
     name: string;
+    title: string | undefined;
     canAdd: boolean;
     canRemove?: boolean;
     canMoveUp: boolean;
@@ -832,6 +835,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       onFocus,
       rawErrors,
       totalItems,
+      title,
     } = props;
     const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
     const {
@@ -853,6 +857,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       children: (
         <ItemSchemaField
           name={name}
+          title={title}
           index={index}
           schema={itemSchema}
           uiSchema={itemUiSchema}
