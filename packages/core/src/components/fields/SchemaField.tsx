@@ -193,7 +193,10 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   if (wasPropertyKeyModified) {
     label = name;
   } else {
-    label = ADDITIONAL_PROPERTY_FLAG in schema ? name : uiOptions.title || props.schema.title || schema.title || name;
+    label =
+      ADDITIONAL_PROPERTY_FLAG in schema
+        ? name
+        : uiOptions.title || props.schema.title || schema.title || props.title || name;
   }
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
