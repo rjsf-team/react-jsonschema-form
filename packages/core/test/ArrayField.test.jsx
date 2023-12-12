@@ -2275,6 +2275,145 @@ describe('ArrayField', () => {
 
   describe('Item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
+      const widgetTestData = [
+        {
+          widgetName: 'AltDateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-date',
+          },
+        },
+        {
+          widgetName: 'AltDateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-datetime',
+          },
+        },
+        {
+          widgetName: 'CheckboxesWidget',
+          itemSchema: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['foo', 'bar', 'fuzz', 'qux'],
+            },
+            uniqueItems: true,
+          },
+        },
+        {
+          widgetName: 'ColorWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'color',
+          },
+        },
+        {
+          widgetName: 'DateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'date',
+          },
+        },
+        {
+          widgetName: 'DateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+        {
+          widgetName: 'EmailWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'email',
+          },
+        },
+        {
+          widgetName: 'FileWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'file',
+          },
+        },
+        {
+          widgetName: 'PasswordWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'password',
+          },
+        },
+        {
+          widgetName: 'RadioWidget',
+          itemSchema: {
+            type: 'boolean',
+          },
+          itemUiSchema: {
+            'ui:widget': 'radio',
+          },
+        },
+        {
+          widgetName: 'RangeWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'range',
+          },
+        },
+        {
+          widgetName: 'SelectWidget',
+          itemSchema: {
+            type: 'string',
+            enum: ['A', 'B'],
+          },
+        },
+        {
+          widgetName: 'TextWidget',
+          itemSchema: {
+            type: 'string',
+          },
+        },
+        {
+          widgetName: 'TextareaWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'textarea',
+          },
+        },
+        {
+          widgetName: 'TimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'time',
+          },
+        },
+        {
+          widgetName: 'UpDownWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'updown',
+          },
+        },
+        {
+          widgetName: 'UrlWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'url',
+          },
+        },
+      ];
+
       it("Should show indexed title for `CheckboxWidget` widget if no title is mentioned in the latter's UI Schema", () => {
         const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
 
@@ -2322,6 +2461,60 @@ describe('ArrayField', () => {
         expect(node.querySelector('#title-Boolean')).to.not.be.null;
         expect(node.querySelector('#title-Array-1')).to.be.null;
       });
+
+      it.each(widgetTestData)(
+        "Should show indexed title for `$widgetName` widget if no title is mentioned in the latter's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(widgetTestData)(
+        "Should not show indexed title for `$widgetName` widget if title is mentioned in the latter's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Title',
+            },
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          const widgetLabelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(widgetLabelTextContent).not.to.contain('Array-1');
+          expect(widgetLabelTextContent).to.contain('Item Title');
+        }
+      );
     });
   });
 
