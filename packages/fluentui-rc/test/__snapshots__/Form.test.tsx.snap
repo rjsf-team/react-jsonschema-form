@@ -13,7 +13,7 @@ exports[`single fields checkbox field 1`] = `
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
       <span
-        className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+        className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -31,7 +31,7 @@ exports[`single fields checkbox field 1`] = `
         />
         <div
           aria-hidden={true}
-          className="fui-Checkbox__indicator rrh91wr"
+          className="fui-Checkbox__indicator rl7ci6d"
         />
         <label
           className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -70,7 +70,7 @@ exports[`single fields checkbox field with label 1`] = `
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
       <span
-        className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+        className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
       >
         <input
           aria-describedby="root__error root__description root__help"
@@ -88,7 +88,7 @@ exports[`single fields checkbox field with label 1`] = `
         />
         <div
           aria-hidden={true}
-          className="fui-Checkbox__indicator rrh91wr"
+          className="fui-Checkbox__indicator rl7ci6d"
         />
         <label
           className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -136,7 +136,7 @@ exports[`single fields checkboxes field 1`] = `
         className="fui-Flex ___1ccp5kb_1s932w9 f22iagw f1vx9l62"
       >
         <span
-          className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+          className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -153,7 +153,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <div
             aria-hidden={true}
-            className="fui-Checkbox__indicator rrh91wr"
+            className="fui-Checkbox__indicator rl7ci6d"
           />
           <label
             className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -163,7 +163,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+          className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -180,7 +180,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <div
             aria-hidden={true}
-            className="fui-Checkbox__indicator rrh91wr"
+            className="fui-Checkbox__indicator rl7ci6d"
           />
           <label
             className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -190,7 +190,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+          className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -207,7 +207,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <div
             aria-hidden={true}
-            className="fui-Checkbox__indicator rrh91wr"
+            className="fui-Checkbox__indicator rl7ci6d"
           />
           <label
             className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -217,7 +217,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Checkbox r1qaeuiq ___chqxef0_oa7yjl0 f3p8bqa ffqb913 f42z0vd f10v6cc1 f1j37kh1 f1r2dosr f1oarbgq fo8gord fviagcr f18ci1af"
+          className="fui-Checkbox r10zo65y ___1v6wcsu_941lme0 f3p8bqa fium13f f1r2dosr f1729es6"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -234,7 +234,7 @@ exports[`single fields checkboxes field 1`] = `
           />
           <div
             aria-hidden={true}
-            className="fui-Checkbox__indicator rrh91wr"
+            className="fui-Checkbox__indicator rl7ci6d"
           />
           <label
             className="fui-Label fui-Checkbox__label ___noxlvg0_1xjoun4 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
@@ -664,7 +664,7 @@ exports[`single fields help and error display 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="fui-Card ___49eetv0_1h8kscz f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
+    className="fui-Card ___1fs342g_1c2667o f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f226i61 f13kzufm flujwa2 fsx75g8 f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
     role="group"
   >
     <h6
@@ -1056,7 +1056,7 @@ exports[`single fields radio field 1`] = `
         role="radiogroup"
       >
         <span
-          className="fui-Radio r12l4eqc"
+          className="fui-Radio rm0dkue"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -1095,7 +1095,7 @@ exports[`single fields radio field 1`] = `
           </label>
         </span>
         <span
-          className="fui-Radio r12l4eqc"
+          className="fui-Radio rm0dkue"
         >
           <input
             aria-describedby="root__error root__description root__help"
@@ -1264,6 +1264,7 @@ exports[`single fields select field 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1345,6 +1346,7 @@ exports[`single fields select field multiple choice 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1426,6 +1428,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1507,6 +1510,7 @@ exports[`single fields select field multiple choice formData 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value="foo, bar"
           >
@@ -1589,6 +1593,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1670,6 +1675,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1751,6 +1757,7 @@ exports[`single fields select field single choice formData 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value="bar"
           >
@@ -1810,7 +1817,7 @@ exports[`single fields slider field 1`] = `
         htmlFor="root"
       />
       <div
-        className="fui-Slider ___1gqg76l_1x27rxc f10pi13n fwk3njj f1sdsnyy f122n59 f1oiokrs ftqa4ok f2hkw1w f1b1k54r f4ne723 fh7aioi fqqcjud ffht0p2 f1p0ul1q f1c901ms f1alokd7 f78i1la f1kvsw7t f8k7e5g f1bw8brt f1pmxfrl fszkfcr f57dp0y f1ap5ily f11dm2qb f136rfnd fdsq1qd f1khssms fq4eyks f1ya6x16 f1e2iu44 ftuszwa f1pffoy2 f1bmyog6 fs6b7xr f15fv2gd f1a78h9h fuok0yf f1nxs5xn fyvtabn fgfd48t f4t5rw1 f4l8x3l f671q34 fvfzmw5 faw1t00 fxdgx5 fii04fa f36hzz8 f1volkfw f1xddb6 fcdikl fhpzgm6 f1q6pm3h"
+        className="fui-Slider ___1nhhlq1_dfqmgh0 f10pi13n fwk3njj f1sdsnyy f122n59 f1oiokrs ftqa4ok f2hkw1w f1b1k54r f4ne723 fh7aioi fqqcjud f1k55ka9 fgclinu fycbxed f16pcs8n ffht0p2 f1p0ul1q f1c901ms f1alokd7 f78i1la f1kvsw7t f8k7e5g f1bw8brt f1pmxfrl fszkfcr f57dp0y f1ap5ily f11dm2qb f136rfnd fdsq1qd f1khssms fq4eyks f1ya6x16 f1e2iu44 ftuszwa f1pffoy2 f1bmyog6 fs6b7xr f15fv2gd f1a78h9h fuok0yf f1nxs5xn fyvtabn fgfd48t f4t5rw1 f4l8x3l f671q34 fvfzmw5 faw1t00 fxdgx5 fii04fa f36hzz8 f1volkfw f1xddb6 fcdikl fhpzgm6 f1q6pm3h"
         style={
           {
             "--fui-Slider--direction": "90deg",
