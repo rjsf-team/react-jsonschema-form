@@ -2273,6 +2273,58 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('Item title', () => {
+    describe('Should show indexed title for widgets when necessary', () => {
+      it("Should show indexed title for `CheckboxWidget` widget if no title is mentioned in the latter's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('#title-Array-1')).to.not.be.null;
+      });
+
+      it("Should not show indexed title for `CheckboxWidget` widget if title is mentioned in the latter's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Boolean',
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('#title-Boolean')).to.not.be.null;
+        expect(node.querySelector('#title-Array-1')).to.be.null;
+      });
+    });
+  });
+
   describe('should handle nested idPrefix and idSeparator parameter', () => {
     it('should render nested input widgets with the expected ids', () => {
       const complexSchema = {
