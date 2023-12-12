@@ -2414,7 +2414,7 @@ describe('ArrayField', () => {
         },
       ];
 
-      it("Should show indexed title for `CheckboxWidget` widget if no title is mentioned in the latter's UI Schema", () => {
+      it("Should show indexed title for the `CheckboxWidget` widget if no title is mentioned in it's UI Schema", () => {
         const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
 
         const widgets = { CheckboxWidget };
@@ -2437,7 +2437,7 @@ describe('ArrayField', () => {
         expect(node.querySelector('#title-Array-1')).to.not.be.null;
       });
 
-      it("Should not show indexed title for `CheckboxWidget` widget if title is mentioned in the latter's UI Schema", () => {
+      it("Should not show indexed title for the `CheckboxWidget` widget if title is mentioned in it's UI Schema", () => {
         const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
 
         const widgets = { CheckboxWidget };
@@ -2463,7 +2463,7 @@ describe('ArrayField', () => {
       });
 
       it.each(widgetTestData)(
-        "Should show indexed title for `$widgetName` widget if no title is mentioned in the latter's UI Schema",
+        "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
         ({ itemSchema, itemUiSchema }) => {
           const schema = {
             type: 'array',
@@ -2487,7 +2487,7 @@ describe('ArrayField', () => {
       );
 
       it.each(widgetTestData)(
-        "Should not show indexed title for `$widgetName` widget if title is mentioned in the latter's UI Schema",
+        "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
         ({ itemSchema, itemUiSchema }) => {
           const schema = {
             type: 'array',
@@ -2515,6 +2515,202 @@ describe('ArrayField', () => {
           expect(widgetLabelTextContent).to.contain('Item Title');
         }
       );
+    });
+
+    describe('Should show indexed title for fields when necessary', () => {
+      it("Should show indexed title for the Object field if no title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            properties: {
+              string: {
+                type: 'string',
+              },
+            },
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+      });
+
+      it("Should not show indexed title for the Object field if title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Object',
+            properties: {
+              string: {
+                type: 'string',
+              },
+            },
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Object');
+        expect(node.querySelector('legend#root_0__title').textContent).not.to.contain('Array-1');
+      });
+
+      it("Should show indexed title for the Array field if no title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+      });
+
+      it("Should not show indexed title for the Array field if title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Nested Array',
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Nested Array');
+        expect(node.querySelector('legend#root_0__title').textContent).not.to.contain('Array-1');
+      });
+
+      it("Should show indexed title for the OneOf field if no title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            oneOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+      });
+
+      it("Should not show indexed title for the OneOf field if title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'One Of',
+            oneOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('One Of');
+        expect(node.querySelector('label[for="root_0"]').textContent).to.not.contain('Array-1');
+      });
+
+      it("Should show indexed title for the AnyOf field if no title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+      });
+
+      it("Should not show indexed title for the AnyOf field if title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Any Of',
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Any Of');
+        expect(node.querySelector('label[for="root_0"]').textContent).to.not.contain('Array-1');
+      });
     });
   });
 
