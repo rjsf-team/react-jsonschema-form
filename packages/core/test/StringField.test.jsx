@@ -1258,6 +1258,54 @@ describe('StringField', () => {
 
       expect(node.querySelector('#custom')).to.exist;
     });
+
+    describe('AltDateTimeWidget with format option', () => {
+      const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { format: 'YMD' } };
+
+      it('should render a date field with YMD format', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_year', 'root_month', 'root_day', 'root_hour', 'root_minute', 'root_second']);
+      });
+
+      it('should render a date field with DMY format', () => {
+        uiSchema['ui:options']['format'] = 'DMY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_day', 'root_month', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+      });
+
+      it('should render a date field with MDY format', () => {
+        uiSchema['ui:options']['format'] = 'MDY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_month', 'root_day', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+      });
+    });
   });
 
   describe('AltDateWidget', () => {
@@ -1446,6 +1494,54 @@ describe('StringField', () => {
       } catch (err) {
         expect(err.message).eql('Unable to parse date 2012-1212');
       }
+    });
+
+    describe('AltDateWidget with format option', () => {
+      const uiSchema = { 'ui:widget': 'alt-date', 'ui:options': { format: 'YMD' } };
+
+      it('should render a date field with YMD format', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_year', 'root_month', 'root_day']);
+      });
+
+      it('should render a date field with MDY format', () => {
+        uiSchema['ui:options']['format'] = 'MDY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_month', 'root_day', 'root_year']);
+      });
+
+      it('should render a date field with DMY format', () => {
+        uiSchema['ui:options']['format'] = 'DMY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_day', 'root_month', 'root_year']);
+      });
     });
 
     describe('Action buttons', () => {

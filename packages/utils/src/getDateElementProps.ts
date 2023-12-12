@@ -1,5 +1,7 @@
 import { type DateObject } from './types';
 
+export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
+
 type DateElementProp = {
   type: string;
   range: [number, number];
@@ -10,7 +12,7 @@ export default function getDateElementProps(
   date: DateObject,
   time: boolean,
   yearRange: [number, number] = [1900, new Date().getFullYear() + 2],
-  format: 'DMY' | 'MDY' | 'YMD' = 'YMD'
+  format: DateElementFormat = 'YMD'
 ) {
   const { day, month, year, hour, minute, second } = date;
 
