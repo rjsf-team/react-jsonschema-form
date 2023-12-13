@@ -2273,7 +2273,7 @@ describe('ArrayField', () => {
     });
   });
 
-  describe('Item title', () => {
+  describe('Tests for item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
       const widgetTestData = [
         {
@@ -2518,101 +2518,41 @@ describe('ArrayField', () => {
     });
 
     describe('Should show indexed title for fields when necessary', () => {
-      it("Should show indexed title for the Object field if no title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
+      const fieldTestDataWithLegend = [
+        {
+          fieldName: 'ObjectField',
+          itemSchema: {
             properties: {
               string: {
                 type: 'string',
               },
             },
           },
-        };
-
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
-      });
-
-      it("Should not show indexed title for the Object field if title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            title: 'Object',
-            properties: {
-              string: {
-                type: 'string',
-              },
-            },
-          },
-        };
-
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Object');
-        expect(node.querySelector('legend#root_0__title').textContent).not.to.contain('Array-1');
-      });
-
-      it("Should show indexed title for the Array field if no title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
+        },
+        {
+          fieldName: 'ArrayField',
+          itemSchema: {
             type: 'array',
             items: {
               type: 'string',
             },
           },
-        };
-
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
-      });
-
-      it("Should not show indexed title for the Array field if title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            title: 'Nested Array',
+        },
+        {
+          fieldName: 'MultiSchemaField(AllOf)',
+          itemSchema: {
             type: 'array',
             items: {
               type: 'string',
             },
           },
-        };
+        },
+      ];
 
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Nested Array');
-        expect(node.querySelector('legend#root_0__title').textContent).not.to.contain('Array-1');
-      });
-
-      it("Should show indexed title for the OneOf field if no title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
+      const fieldTestDataWithLabel = [
+        {
+          fieldName: 'MultiSchemaField(OneOf)',
+          itemSchema: {
             oneOf: [
               {
                 type: 'string',
@@ -2622,49 +2562,10 @@ describe('ArrayField', () => {
               },
             ],
           },
-        };
-
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
-      });
-
-      it("Should not show indexed title for the OneOf field if title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            title: 'One Of',
-            oneOf: [
-              {
-                type: 'string',
-              },
-              {
-                type: 'number',
-              },
-            ],
-          },
-        };
-
-        const { node } = createFormComponent({
-          schema,
-        });
-
-        Simulate.click(node.querySelector('.array-item-add button'));
-
-        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('One Of');
-        expect(node.querySelector('label[for="root_0"]').textContent).to.not.contain('Array-1');
-      });
-
-      it("Should show indexed title for the AnyOf field if no title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
+        },
+        {
+          fieldName: 'MultiSchemaField(AnyOf)',
+          itemSchema: {
             anyOf: [
               {
                 type: 'string',
@@ -2674,119 +2575,96 @@ describe('ArrayField', () => {
               },
             ],
           },
-        };
+        },
+      ];
 
-        const { node } = createFormComponent({
-          schema,
-        });
+      it.each(fieldTestDataWithLegend)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+          const { node } = createFormComponent({
+            schema,
+          });
 
-        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
-      });
+          Simulate.click(node.querySelector('.array-item-add button'));
 
-      it("Should not show indexed title for the AnyOf field if title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            title: 'Any Of',
-            anyOf: [
-              {
-                type: 'string',
-              },
-              {
-                type: 'number',
-              },
-            ],
-          },
-        };
+          expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+        }
+      );
 
-        const { node } = createFormComponent({
-          schema,
-        });
+      it.each(fieldTestDataWithLegend)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+          const { node } = createFormComponent({
+            schema,
+          });
 
-        expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Any Of');
-        expect(node.querySelector('label[for="root_0"]').textContent).to.not.contain('Array-1');
-      });
+          Simulate.click(node.querySelector('.array-item-add button'));
 
-      it("Should show indexed title for the AllOf field if no title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            allOf: [
-              {
-                properties: {
-                  lorem: {
-                    type: ['string', 'boolean'],
-                    default: true,
-                  },
-                },
-              },
-              {
-                properties: {
-                  lorem: {
-                    type: 'boolean',
-                  },
-                  ipsum: {
-                    type: 'string',
-                  },
-                },
-              },
-            ],
-          },
-        };
+          const legendTextContent = node.querySelector('legend#root_0__title').textContent;
 
-        const { node } = createFormComponent({
-          schema,
-        });
+          expect(legendTextContent).to.contain('Item Field Title');
+          expect(legendTextContent).not.to.contain('Array-1');
+        }
+      );
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+      it.each(fieldTestDataWithLabel)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
 
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
-      });
+          const { node } = createFormComponent({
+            schema,
+          });
 
-      it("Should not show indexed title for the AllOf field if title is mentioned in it's UI Schema", () => {
-        const schema = {
-          type: 'array',
-          title: 'Array',
-          items: {
-            title: 'All Of',
-            allOf: [
-              {
-                properties: {
-                  lorem: {
-                    type: ['string', 'boolean'],
-                    default: true,
-                  },
-                },
-              },
-              {
-                properties: {
-                  lorem: {
-                    type: 'boolean',
-                  },
-                  ipsum: {
-                    type: 'string',
-                  },
-                },
-              },
-            ],
-          },
-        };
+          Simulate.click(node.querySelector('.array-item-add button'));
 
-        const { node } = createFormComponent({
-          schema,
-        });
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+      it.each(fieldTestDataWithLabel)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
 
-        expect(node.querySelector('legend#root_0__title').textContent).to.contain('All Of');
-        expect(node.querySelector('legend#root_0__title').textContent).to.not.contain('Array-1');
-      });
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          const labelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(labelTextContent).to.contain('Item Field Title');
+          expect(labelTextContent).to.not.contain('Array-1');
+        }
+      );
     });
   });
 
