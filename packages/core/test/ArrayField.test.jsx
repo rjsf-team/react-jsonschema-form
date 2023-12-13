@@ -2711,6 +2711,82 @@ describe('ArrayField', () => {
         expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Any Of');
         expect(node.querySelector('label[for="root_0"]').textContent).to.not.contain('Array-1');
       });
+
+      it("Should show indexed title for the AllOf field if no title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            allOf: [
+              {
+                properties: {
+                  lorem: {
+                    type: ['string', 'boolean'],
+                    default: true,
+                  },
+                },
+              },
+              {
+                properties: {
+                  lorem: {
+                    type: 'boolean',
+                  },
+                  ipsum: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+      });
+
+      it("Should not show indexed title for the AllOf field if title is mentioned in it's UI Schema", () => {
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'All Of',
+            allOf: [
+              {
+                properties: {
+                  lorem: {
+                    type: ['string', 'boolean'],
+                    default: true,
+                  },
+                },
+              },
+              {
+                properties: {
+                  lorem: {
+                    type: 'boolean',
+                  },
+                  ipsum: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('legend#root_0__title').textContent).to.contain('All Of');
+        expect(node.querySelector('legend#root_0__title').textContent).to.not.contain('Array-1');
+      });
     });
   });
 
