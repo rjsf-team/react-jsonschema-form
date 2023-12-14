@@ -470,6 +470,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       errorSchema,
       idSchema,
       name,
+      title,
       disabled = false,
       readonly = false,
       autofocus = false,
@@ -482,7 +483,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
     } = this.props;
     const { keyedFormData } = this.state;
-    const title = schema.title === undefined ? name : schema.title;
+    const fieldTitle = schema.title || title || name;
     const { schemaUtils, formContext } = registry;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
@@ -503,6 +504,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           key,
           index,
           name: name && `${name}-${index}`,
+          title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
           canAdd,
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
@@ -526,7 +528,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       readonly,
       required,
       schema,
-      title,
+      title: fieldTitle,
       formContext,
       formData,
       rawErrors,
@@ -701,6 +703,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       idSeparator = '_',
       idSchema,
       name,
+      title,
       disabled = false,
       readonly = false,
       autofocus = false,
@@ -712,7 +715,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
     const { keyedFormData } = this.state;
     let { formData: items = [] } = this.props;
-    const title = schema.title || name;
+    const fieldTitle = schema.title || title || name;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { schemaUtils, formContext } = registry;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
@@ -759,6 +762,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           key,
           index,
           name: name && `${name}-${index}`,
+          title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
           canAdd,
           canRemove: additional,
           canMoveUp: index >= itemSchemas.length + 1,
@@ -781,7 +785,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       schema,
       uiSchema,
-      title,
+      title: fieldTitle,
       formContext,
       rawErrors,
     };
@@ -799,6 +803,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     key: string;
     index: number;
     name: string;
+    title: string | undefined;
     canAdd: boolean;
     canRemove?: boolean;
     canMoveUp: boolean;
@@ -832,6 +837,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       onFocus,
       rawErrors,
       totalItems,
+      title,
     } = props;
     const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
     const {
@@ -853,6 +859,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       children: (
         <ItemSchemaField
           name={name}
+          title={title}
           index={index}
           schema={itemSchema}
           uiSchema={itemUiSchema}

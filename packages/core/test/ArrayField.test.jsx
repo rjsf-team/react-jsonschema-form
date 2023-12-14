@@ -2273,6 +2273,417 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('Tests for item title', () => {
+    describe('Should show indexed title for widgets when necessary', () => {
+      const widgetTestData = [
+        {
+          widgetName: 'AltDateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-date',
+          },
+        },
+        {
+          widgetName: 'AltDateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-datetime',
+          },
+        },
+        {
+          widgetName: 'CheckboxesWidget',
+          itemSchema: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['foo', 'bar', 'fuzz', 'qux'],
+            },
+            uniqueItems: true,
+          },
+        },
+        {
+          widgetName: 'ColorWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'color',
+          },
+        },
+        {
+          widgetName: 'DateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'date',
+          },
+        },
+        {
+          widgetName: 'DateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+        {
+          widgetName: 'EmailWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'email',
+          },
+        },
+        {
+          widgetName: 'FileWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'file',
+          },
+        },
+        {
+          widgetName: 'PasswordWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'password',
+          },
+        },
+        {
+          widgetName: 'RadioWidget',
+          itemSchema: {
+            type: 'boolean',
+          },
+          itemUiSchema: {
+            'ui:widget': 'radio',
+          },
+        },
+        {
+          widgetName: 'RangeWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'range',
+          },
+        },
+        {
+          widgetName: 'SelectWidget',
+          itemSchema: {
+            type: 'string',
+            enum: ['A', 'B'],
+          },
+        },
+        {
+          widgetName: 'TextWidget',
+          itemSchema: {
+            type: 'string',
+          },
+        },
+        {
+          widgetName: 'TextareaWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'textarea',
+          },
+        },
+        {
+          widgetName: 'TimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'time',
+          },
+        },
+        {
+          widgetName: 'UpDownWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'updown',
+          },
+        },
+        {
+          widgetName: 'UrlWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'url',
+          },
+        },
+      ];
+
+      it("Should show indexed title for the `CheckboxWidget` widget if no title is mentioned in it's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('#title-Array-1')).to.not.be.null;
+      });
+
+      it("Should not show indexed title for the `CheckboxWidget` widget if title is mentioned in it's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Boolean',
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        Simulate.click(node.querySelector('.array-item-add button'));
+
+        expect(node.querySelector('#title-Boolean')).to.not.be.null;
+        expect(node.querySelector('#title-Array-1')).to.be.null;
+      });
+
+      it.each(widgetTestData)(
+        "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(widgetTestData)(
+        "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Title',
+            },
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          const widgetLabelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(widgetLabelTextContent).not.to.contain('Array-1');
+          expect(widgetLabelTextContent).to.contain('Item Title');
+        }
+      );
+    });
+
+    describe('Should show indexed title for fields when necessary', () => {
+      const fieldTestDataWithLegend = [
+        {
+          fieldName: 'ObjectField',
+          itemSchema: {
+            properties: {
+              string: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        {
+          fieldName: 'ArrayField',
+          itemSchema: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        },
+        {
+          fieldName: 'MultiSchemaField(AllOf)',
+          itemSchema: {
+            allOf: [
+              {
+                properties: {
+                  lorem: {
+                    type: ['string', 'boolean'],
+                    default: true,
+                  },
+                },
+              },
+              {
+                properties: {
+                  lorem: {
+                    type: 'boolean',
+                  },
+                  ipsum: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ];
+
+      const fieldTestDataWithLabel = [
+        {
+          fieldName: 'MultiSchemaField(OneOf)',
+          itemSchema: {
+            oneOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        },
+        {
+          fieldName: 'MultiSchemaField(AnyOf)',
+          itemSchema: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        },
+      ];
+
+      it.each(fieldTestDataWithLegend)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLegend)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          const legendTextContent = node.querySelector('legend#root_0__title').textContent;
+
+          expect(legendTextContent).to.contain('Item Field Title');
+          expect(legendTextContent).not.to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLabel)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLabel)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          Simulate.click(node.querySelector('.array-item-add button'));
+
+          const labelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(labelTextContent).to.contain('Item Field Title');
+          expect(labelTextContent).to.not.contain('Array-1');
+        }
+      );
+    });
+  });
+
   describe('should handle nested idPrefix and idSeparator parameter', () => {
     it('should render nested input widgets with the expected ids', () => {
       const complexSchema = {

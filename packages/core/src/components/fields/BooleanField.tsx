@@ -31,12 +31,13 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     readonly,
     hideError,
     autofocus,
+    title,
     onChange,
     onFocus,
     onBlur,
     rawErrors,
   } = props;
-  const { title } = schema;
+  const { title: schemaTitle } = schema;
   const { widgets, formContext, translateString, globalUiOptions } = registry;
   const {
     widget = 'checkbox',
@@ -49,7 +50,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
-  const label = uiTitle ?? title ?? name;
+  const label = uiTitle ?? schemaTitle ?? title ?? name;
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList<S>({
       oneOf: schema.oneOf
