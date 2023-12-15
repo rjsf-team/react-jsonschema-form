@@ -4,15 +4,15 @@ title: Introduction
 slug: /
 ---
 
-English | [中文](./00-introduction-zh-cn.mdx)
+中文 | [English](./00-introduction.mdx)
 
 # react-jsonschema-form
 
 ![Build Status](https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg)
 
-A simple [React](https://reactjs.org/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/).
+一个简单易用，能够将 [JSON schema](http://json-schema.org/) 编译成HTML表单的 [React](https://reactjs.org/) 组件。
 
-A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on GitHub Pages:
+我们在 GitHub Pages 上托管了一个 [在线训练场](https://rjsf-team.github.io/react-jsonschema-form/)。
 
 <a target='_blank' href='https://rjsf-team.github.io/react-jsonschema-form/'>
     <img alt='Playground' src='https://i.imgur.com/M8ZCES5.gif'/>
@@ -20,26 +20,26 @@ A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hoste
 
 ## Philosophy
 
-react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have _a priori_ knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.
+react-jsonschema-form 旨在自动将 [JSON schema](http://json-schema.org/) 编译成 [React](https://reactjs.org/)HTML表单。如果你想要任何不可见的数据转换为表单，你只需要给我们一个 [JSON schema](http://json-schema.org/)，然后我们将会给你一个表单。如果您对数据有先验的了解，并且想要一个用于为其生成表单的工具包，则可以在其他地方寻找。
 
-react-jsonschema-form also comes with tools such as `uiSchema` and other form props to customize the look and feel of the form beyond the default themes.
+react-jsonschema-form 还附带了 `uiSchema` 和其他表单属性等工具用于自定义表单的外观。
 
 ## Installation
 
-First install the dependencies from npm, along with a validator implementation (such as `@rjsf/validator-ajv8`):
+首先从 npm 安装依赖项，以及一个验证器实现安装包（例如）：@rjsf/validator-ajv8：
 
 ```bash
 $ npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8 --save
 ```
 
-Then import the dependencies as follows:
+然后导入依赖项，如下所示：
 
 ```ts
 import validator from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 ```
 
-Our latest version requires React 16+. You can also install `react-jsonschema-form` (the 1.x version) which works with React 15+.
+我们的最新版本需要 React 16+。您也可以安装适用于 React 15+ 的react-jsonschema-form（1.x 版本）。
 
 ## Usage
 
@@ -73,7 +73,7 @@ render(
 
 ## Theming
 
-For more information on what themes we support, see [Using Themes](usage/themes).
+有关我们支持哪些主题的更多信息，请参阅 [Using Themes](usage/themes)。
 
 <!--
 
@@ -133,4 +133,4 @@ Apache 2
 
 - ...
 
-Add your own company / organization by making a [pull request](https://github.com/rjsf-team/react-jsonschema-form/pulls).
+通过提出 [pull request](https://github.com/rjsf-team/react-jsonschema-form/pulls) 添加您自己的公司/组织。
