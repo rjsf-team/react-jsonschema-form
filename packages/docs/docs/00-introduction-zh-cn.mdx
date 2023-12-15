@@ -1,0 +1,134 @@
+---
+id: intro
+title: Introduction
+slug: /
+---
+
+# react-jsonschema-form
+
+![Build Status](https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg)
+
+一个简单易用，能够将 [JSON schema](http://json-schema.org/) 编译成HTML表单的 [React](https://reactjs.org/) 组件。
+
+我们在 GitHub Pages 上托管了一个 [在线训练场](https://rjsf-team.github.io/react-jsonschema-form/)。
+
+<a target='_blank' href='https://rjsf-team.github.io/react-jsonschema-form/'>
+    <img alt='Playground' src='https://i.imgur.com/M8ZCES5.gif'/>
+</a>
+
+## Philosophy
+
+react-jsonschema-form 旨在自动将 [JSON schema](http://json-schema.org/) 编译成 [React](https://reactjs.org/)HTML表单。如果你想要任何不可见的数据转换为表单，你只需要给我们一个 [JSON schema](http://json-schema.org/)，然后我们将会给你一个表单。如果您对数据有先验的了解，并且想要一个用于为其生成表单的工具包，则可以在其他地方寻找。
+
+react-jsonschema-form 还附带了 `uiSchema` 和其他表单属性等工具用于自定义表单的外观。
+
+## Installation
+
+首先从 npm 安装依赖项，以及一个验证器实现安装包（例如）：@rjsf/validator-ajv8：
+
+```bash
+$ npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8 --save
+```
+
+然后导入依赖项，如下所示：
+
+```ts
+import validator from '@rjsf/validator-ajv8';
+import Form from '@rjsf/core';
+```
+
+我们的最新版本需要 React 16+。您也可以安装适用于 React 15+ 的react-jsonschema-form（1.x 版本）。
+
+## Usage
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  title: 'Todo',
+  type: 'object',
+  required: ['title'],
+  properties: {
+    title: { type: 'string', title: 'Title', default: 'A new task' },
+    done: { type: 'boolean', title: 'Done?', default: false },
+  },
+};
+
+const log = (type) => console.log.bind(console, type);
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    onChange={log('changed')}
+    onSubmit={log('submitted')}
+    onError={log('errors')}
+  />,
+  document.getElementById('app')
+);
+```
+
+## Theming
+
+有关我们支持哪些主题的更多信息，请参阅 [Using Themes](usage/themes)。
+
+<!--
+
+disabled until https://github.com/rjsf-team/react-jsonschema-form/issues/1584 is resolved
+
+## Useful samples
+
+ - Custom field template: <https://jsfiddle.net/hdp1kgn6/1/>
+ - Multi-step wizard: <https://jsfiddle.net/sn4bnw9h/1/>
+ - Using classNames with uiSchema: <https://jsfiddle.net/gfwp25we/1/>
+ - Conditional fields: <https://jsfiddle.net/69z2wepo/88541/>
+ - Advanced conditional fields: <https://jsfiddle.net/cowbellerina/zbfh96b1/>
+ - Use radio list for enums: <https://jsfiddle.net/f2y3fq7L/2/>
+ - Reading file input data: <https://jsfiddle.net/f9vcb6pL/1/>
+ - Custom errors messages with transformErrors: <https://jsfiddle.net/revolunet/5r3swnr4/>
+ - 2 columns form with CSS and FieldTemplate: <https://jsfiddle.net/n1k0/bw0ffnz4/1/>
+ - Validate and submit form from external control: <https://jsfiddle.net/spacebaboon/g5a1re63/>
+ - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
+ - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
+
+-->
+
+## License
+
+Apache 2
+
+## Credits
+
+<table>
+    <tr>
+        <th>
+            <img src="https://avatars1.githubusercontent.com/u/1066228?s=200&v=4" alt="mozilla-services-logo" style={{maxHeight: '100px'}} />
+        </th>
+        <td>
+            This project initially started as a <a href="https://github.com/mozilla-services">mozilla-services</a> project.
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <img src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png" alt='browserstack logo'  style={{maxHeight: '100px'}}/>
+        </th>
+        <td>
+            Testing is powered by <a href="https://www.browserstack.com/" >BrowserStack</a>.
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt='netlify logo'  style={{maxHeight: '100px'}}/>
+        </th>
+        <td>
+            Deploy Previews are provided by <a href="https://www.netlify.com">Netlify</a>.
+        </td>
+    </tr>
+</table>
+
+## Who uses react-jsonschema-form?
+
+- ...
+
+通过提出 [pull request](https://github.com/rjsf-team/react-jsonschema-form/pulls) 添加您自己的公司/组织。
