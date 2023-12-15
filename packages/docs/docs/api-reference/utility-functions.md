@@ -281,6 +281,21 @@ Returns `undefined` when a valid discriminator is not present.
 
 - string | undefined: The `discriminator.propertyName` if it exists in the schema, otherwise `undefined`
 
+### getDateElementProps( date: DateObject, time: boolean, yearRange: [number, number] = [1900, new Date().getFullYear() + 2], format: DateElementFormat = 'YMD')
+
+Given date & time information with optional yearRange & format, returns props for DateElement
+
+#### Parameters
+
+- date: DateObject - Object containing date with optional time information
+- time: boolean - Determines whether to include time or not
+- [yearRange=[1900, new Date().getFullYear() + 2]]: [number, number] - Controls the list of years to be displayed
+- [format='YMD']: DateElementFormat - Controls the order in which day, month and year input element will be displayed
+
+#### Returns
+
+- Array of props for DateElement
+
 ### getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
