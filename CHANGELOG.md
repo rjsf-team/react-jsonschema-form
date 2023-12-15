@@ -15,6 +15,28 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.15.3
+
+## @rjsf/utils
+
+- Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
+
+## @rjsf/core
+
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## @rjsf/antd
+
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## @rjsf/chakra-ui
+
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## Dev / docs / playground
+
+- Updated docs and playground with the implementation guide of newly added date re-order feature.
+
 # 5.15.2
 
 ## @rjsf/core
