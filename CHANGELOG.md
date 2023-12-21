@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 6.0.0
+# 6.0.0-beta.1
 
 ## @rjsf/bootstrap-4
 

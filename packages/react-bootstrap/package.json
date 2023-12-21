@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "description": "Bootstrap 5 theme, fields and widgets for react-jsonschema-form, powered by react-bootstrap",
+  "description": "React Bootstrap theme, fields and widgets for react-jsonschema-form, powered by react-bootstrap",
   "files": [
     "dist",
     "lib",
@@ -83,7 +83,9 @@
     "form",
     "react",
     "bootstrap-5",
-    "rjsf-bootstrap-5"
+    "rjsf-bootstrap-5",
+    "react-bootstrap",
+    "rjsf-react-bootstrap"
   ],
   "contributors": [
     "Heath Chiavettone <heath.chiavettone@freenome.com"

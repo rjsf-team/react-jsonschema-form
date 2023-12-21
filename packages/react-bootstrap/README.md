@@ -44,8 +44,8 @@ Exports `react-bootstrap` theme, fields and widgets for `react-jsonschema-form`.
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
-- [Bootstrap-5](https://getbootstrap.com/docs/4.0/)
-- [Typescript](https://www.typescriptlang.org/)
+- [Bootstrap-5](https://getbootstrap.com/docs/5.3/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
 
