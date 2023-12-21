@@ -23,9 +23,6 @@
       "path": "./packages/fluentui-rc"
     },
     {
-      "path": "./packages/material-ui"
-    },
-    {
       "path": "./packages/mui"
     },
     {

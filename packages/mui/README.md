@@ -47,9 +47,9 @@
 
 ## About The Project
 
-[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
+[![@rjsf/mui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
 
-Exports `material-ui` version 4 and 5 themes, fields and widgets for `react-jsonschema-form`.
+Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 
 ### Built With
 

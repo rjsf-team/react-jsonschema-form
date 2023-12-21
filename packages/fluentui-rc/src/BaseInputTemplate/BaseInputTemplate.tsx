@@ -53,7 +53,7 @@ export default function BaseInputTemplate<
   } = props;
   const classes = useStyles();
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
+  // Now we need to pull out the step, min, max into an inner `inputProps` for fluent-ui
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
