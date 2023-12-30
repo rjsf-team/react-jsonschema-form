@@ -69,6 +69,7 @@
     "packages/fluentui-rc",
     "packages/material-ui",
     "packages/mui",
+    "packages/mui-joy",
     "packages/playground",
     "packages/semantic-ui",
     "packages/utils",

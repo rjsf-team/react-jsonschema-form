@@ -2,12 +2,16 @@ import {
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   FormContextType,
+  labelValue,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
  *
@@ -18,15 +22,12 @@ export default function SelectWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({
-  schema,
   id,
-  name, // remove this from textFieldProps
   options,
-  label,
-  hideLabel,
   required,
   disabled,
   placeholder,
+  label,
   readonly,
   value,
   multiple,
@@ -35,11 +36,7 @@ export default function SelectWidget<
   onBlur,
   onFocus,
   rawErrors = [],
-  registry,
-  uiSchema,
-  hideError,
-  formContext,
-  ...textFieldProps
+  hideLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
@@ -61,32 +58,44 @@ export default function SelectWidget<
     onFocus(id, enumOptionsValueForIndex<S>(event.target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
+  const theLabel = labelValue(label, hideLabel);
+
   return (
     <>
-      <Select
-        id={id}
-        name={id}
-        multiple={multiple}
-        value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
-        required={required}
-        disabled={disabled || readonly}
-        autoFocus={autofocus}
-        placeholder={placeholder}
-        color={rawErrors.length > 0 ? 'danger' : 'primary'}
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-      >
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value, label }, i: number) => {
-            const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
-            return (
-              <Option key={i} value={String(i)} disabled={disabled}>
-                {label}
-              </Option>
-            );
-          })}
-      </Select>
+      <FormControl error={rawErrors.length > 0} disabled={disabled || readonly} required={required}>
+        <FormLabel id={`select-${id}-label`} htmlFor={`select-${id}-button`}>
+          {theLabel}
+        </FormLabel>
+        <Select
+          id={id}
+          name={id}
+          multiple={multiple}
+          value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+          autoFocus={autofocus}
+          placeholder={placeholder}
+          onChange={_onChange}
+          onBlur={_onBlur}
+          onFocus={_onFocus}
+          slotProps={{
+            button: {
+              id: `select-${id}-button`,
+              // TODO: Material UI set aria-labelledby correctly & automatically
+              // but Base UI and Joy UI don't yet.
+              'aria-labelledby': `select-${id}-label select-${id}-button`,
+            },
+          }}
+        >
+          {Array.isArray(enumOptions) &&
+            enumOptions.map(({ value, label }, i: number) => {
+              const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+              return (
+                <Option key={i} value={String(i)} disabled={disabled}>
+                  {label}
+                </Option>
+              );
+            })}
+        </Select>
+      </FormControl>
     </>
   );
 }
