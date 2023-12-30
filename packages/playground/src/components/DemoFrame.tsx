@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode } from 'react';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline as MuiCssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
 import createCache, { EmotionCache } from '@emotion/cache';
 import { create, Jss } from 'jss';
@@ -8,6 +8,9 @@ import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-co
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
+import '@fontsource/inter';
+import { CssVarsProvider } from '@mui/joy/styles';
+import CssBaseline from '@mui/joy/CssBaseline';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -98,11 +101,23 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'material-ui-5') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
-        <CssBaseline />
+        <MuiCssBaseline />
         {cloneElement(children, {
           container: container,
           window: window,
         })}
+      </CacheProvider>
+    ) : null;
+  } else if (theme === 'mui-joy') {
+    body = ready ? (
+      <CacheProvider value={emotionCache}>
+        <CssVarsProvider>
+          <CssBaseline />
+          {cloneElement(children, {
+            container: container,
+            window: window,
+          })}
+        </CssVarsProvider>
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluent-ui') {
