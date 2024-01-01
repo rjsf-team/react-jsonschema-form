@@ -6,6 +6,8 @@ import RadioWidget from '../RadioWidget/RadioWidget';
 import RangeWidget from '../RangeWidget/RangeWidget';
 import SelectWidget from '../SelectWidget/SelectWidget';
 import TextareaWidget from '../TextareaWidget/TextareaWidget';
+import AltDateWidget from '../AltDateWidget/AltDateWidget';
+import AltDateTimeWidget from '../AltDateTimeWidget/AltDateTimeWidget';
 
 export function generateWidgets<
   T = any,
@@ -19,6 +21,8 @@ export function generateWidgets<
     RangeWidget,
     SelectWidget,
     TextareaWidget,
+    AltDateWidget,
+    AltDateTimeWidget,
   };
 }
 
