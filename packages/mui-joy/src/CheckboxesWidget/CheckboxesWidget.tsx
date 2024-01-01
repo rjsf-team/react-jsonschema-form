@@ -74,8 +74,9 @@ export default function CheckboxesWidget<
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
-            const checkbox = (
+            return (
               <Checkbox
+                key={index}
                 id={optionId(id, index)}
                 name={id}
                 checked={checked}
@@ -88,7 +89,6 @@ export default function CheckboxesWidget<
                 label={option.label}
               />
             );
-            return checkbox;
           })}
       </Box>
     </>

@@ -8,6 +8,7 @@ import {
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
+import { useMemo } from 'react';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -48,9 +49,17 @@ export default function FieldTemplate<
     uiOptions
   );
 
+  const isCheckboxOrRadio = useMemo(() => {
+    let widget = (uiSchema?.['ui:widget'] ?? '') as string;
+    widget = widget.toLowerCase();
+    const toReturn = widget.includes('checkbox') || widget.includes('radio');
+    return toReturn;
+  }, [uiSchema]);
+
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -66,16 +75,29 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl error={rawErrors.length ? true : false} required={required}>
-        {children}
-        {displayLabel && rawDescription ? (
-          <Typography level="body-md" color="neutral">
-            {description}
-          </Typography>
-        ) : null}
-        {errors}
-        {help}
-      </FormControl>
+      {isCheckboxOrRadio ? (
+        <>
+          {children}
+          {displayLabel && rawDescription ? (
+            <Typography level='body-md' color='neutral'>
+              {description}
+            </Typography>
+          ) : null}
+          {errors}
+          {help}
+        </>
+      ) : (
+        <FormControl error={rawErrors.length ? true : false} required={required}>
+          {children}
+          {displayLabel && rawDescription ? (
+            <Typography level='body-md' color='neutral'>
+              {description}
+            </Typography>
+          ) : null}
+          {errors}
+          {help}
+        </FormControl>
+      )}
     </WrapIfAdditionalTemplate>
   );
 }
