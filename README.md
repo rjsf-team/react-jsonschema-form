@@ -35,6 +35,7 @@
 - [Fluent UI 9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
 - [Material UI 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/material-ui)
 - [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
+- [Mui-Joy](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui-joy)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
 
 ## Documentation
