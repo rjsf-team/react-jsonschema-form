@@ -73,14 +73,30 @@ NOTE: Mui Joy requires React 17, so you will need to upgrade
 - `@rjsf/utils >= 5.0.0`
 - `@rjsf/validator-ajv6 >= 5.0.0`
 
+With NPM
+
+```bash
+npm install @mui/joy @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv6
+```
+
+With Yarn
+
 ```bash
 yarn add @mui/joy @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv6
 ```
 
 ### Installation
 
+With Yarn
+
 ```bash
 yarn add @rjsf/mui-joy
+```
+
+With NPM
+
+```bash
+npm add @rjsf/mui-joy
 ```
 
 <!-- USAGE EXAMPLES -->

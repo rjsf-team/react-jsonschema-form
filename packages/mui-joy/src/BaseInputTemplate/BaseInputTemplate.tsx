@@ -63,31 +63,29 @@ export default function BaseInputTemplate<
   const theLabel = labelValue(label, hideLabel);
 
   return (
-    <>
-      <FormControl error={rawErrors.length > 0} disabled={disabled || readonly} required={required}>
-        <FormLabel>{theLabel}</FormLabel>
-        <Input
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          type={inputProps.type}
-          autoComplete={otherProps.autoComplete}
-          autoFocus={autofocus}
-          value={value || value === 0 ? value : ''}
-          onChange={onChangeOverride || _onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-        />
-        {Array.isArray(schema.examples) && (
-          <datalist id={examplesId<T>(id)}>
-            {(schema.examples as string[])
-              .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
-              .map((example: any) => {
-                return <option key={example} value={example} />;
-              })}
-          </datalist>
-        )}
-      </FormControl>
-    </>
+    <FormControl error={rawErrors.length > 0} disabled={disabled || readonly} required={required}>
+      <FormLabel>{theLabel}</FormLabel>
+      <Input
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        type={inputProps.type}
+        autoComplete={otherProps.autoComplete}
+        autoFocus={autofocus}
+        value={value || value === 0 ? value : ''}
+        onChange={onChangeOverride || _onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+      />
+      {Array.isArray(schema.examples) && (
+        <datalist id={examplesId<T>(id)}>
+          {(schema.examples as string[])
+            .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
+            .map((example: any) => {
+              return <option key={example} value={example} />;
+            })}
+        </datalist>
+      )}
+    </FormControl>
   );
 }

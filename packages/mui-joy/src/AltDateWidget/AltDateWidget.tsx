@@ -101,7 +101,79 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   );
 }
 
+const Stacks = memo(
+  ({ id, name, handleChange, state, time, options, disabled, readonly, registry, onBlur, onFocus, autofocus }: any) => {
+    const dateTimeElements = dateElementProps(state, time, options.yearsRange as [number, number] | undefined);
+    if (!dateTimeElements) {
+      return null;
+    }
+    const dateElements = dateTimeElements.slice(0, 3);
+    const timeElements = dateTimeElements.slice(3);
+    if (time) {
+      return (
+        <>
+          <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
+            {dateElements.map((elemProps, i) => (
+              <DateElement
+                key={i}
+                rootId={id}
+                name={name}
+                select={handleChange}
+                {...elemProps}
+                disabled={disabled}
+                readonly={readonly}
+                registry={registry}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                autofocus={autofocus && i === 0}
+              />
+            ))}
+          </Stack>
+          <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
+            {timeElements.map((elemProps, i) => (
+              <DateElement
+                key={i}
+                rootId={id}
+                name={name}
+                select={handleChange}
+                {...elemProps}
+                disabled={disabled}
+                readonly={readonly}
+                registry={registry}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                autofocus={autofocus && i === 0}
+              />
+            ))}
+          </Stack>
+        </>
+      );
+    } else {
+      return (
+        <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
+          {dateElements.map((elemProps, i) => (
+            <DateElement
+              key={i}
+              rootId={id}
+              name={name}
+              select={handleChange}
+              {...elemProps}
+              disabled={disabled}
+              readonly={readonly}
+              registry={registry}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              autofocus={autofocus && i === 0}
+            />
+          ))}
+        </Stack>
+      );
+    }
+  }
+);
+
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
+ *
  * @param props - The `WidgetProps` for this component
  */
 function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
@@ -201,74 +273,3 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 }
 
 export default AltDateWidget;
-
-const Stacks = memo(
-  ({ id, name, handleChange, state, time, options, disabled, readonly, registry, onBlur, onFocus, autofocus }: any) => {
-    const dateTimeElements = dateElementProps(state, time, options.yearsRange as [number, number] | undefined);
-    if (!dateTimeElements) {
-      return null;
-    }
-    const dateElements = dateTimeElements.slice(0, 3);
-    const timeElements = dateTimeElements.slice(3);
-    if (time) {
-      return (
-        <>
-          <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
-            {dateElements.map((elemProps, i) => (
-              <DateElement
-                key={i}
-                rootId={id}
-                name={name}
-                select={handleChange}
-                {...elemProps}
-                disabled={disabled}
-                readonly={readonly}
-                registry={registry}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                autofocus={autofocus && i === 0}
-              />
-            ))}
-          </Stack>
-          <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
-            {timeElements.map((elemProps, i) => (
-              <DateElement
-                key={i}
-                rootId={id}
-                name={name}
-                select={handleChange}
-                {...elemProps}
-                disabled={disabled}
-                readonly={readonly}
-                registry={registry}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                autofocus={autofocus && i === 0}
-              />
-            ))}
-          </Stack>
-        </>
-      );
-    } else {
-      return (
-        <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
-          {dateElements.map((elemProps, i) => (
-            <DateElement
-              key={i}
-              rootId={id}
-              name={name}
-              select={handleChange}
-              {...elemProps}
-              disabled={disabled}
-              readonly={readonly}
-              registry={registry}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              autofocus={autofocus && i === 0}
-            />
-          ))}
-        </Stack>
-      );
-    }
-  }
-);

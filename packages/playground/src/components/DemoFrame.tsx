@@ -10,7 +10,7 @@ import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
+import MuiJoyCssBaseline from '@mui/joy/CssBaseline';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -112,7 +112,7 @@ export default function DemoFrame(props: DemoFrameProps) {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssVarsProvider>
-          <CssBaseline />
+          <MuiJoyCssBaseline />
           {cloneElement(children, {
             container: container,
             window: window,

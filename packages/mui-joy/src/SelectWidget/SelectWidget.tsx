@@ -61,41 +61,39 @@ export default function SelectWidget<
   const theLabel = labelValue(label, hideLabel);
 
   return (
-    <>
-      <FormControl error={rawErrors.length > 0} disabled={disabled || readonly} required={required}>
-        <FormLabel id={`select-${id}-label`} htmlFor={`select-${id}-button`}>
-          {theLabel}
-        </FormLabel>
-        <Select
-          id={id}
-          name={id}
-          multiple={multiple}
-          value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
-          autoFocus={autofocus}
-          placeholder={placeholder}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          slotProps={{
-            button: {
-              id: `select-${id}-button`,
-              // TODO: Material UI set aria-labelledby correctly & automatically
-              // but Base UI and Joy UI don't yet.
-              'aria-labelledby': `select-${id}-label select-${id}-button`,
-            },
-          }}
-        >
-          {Array.isArray(enumOptions) &&
-            enumOptions.map(({ value, label }, i: number) => {
-              const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
-              return (
-                <Option key={i} value={String(i)} disabled={disabled}>
-                  {label}
-                </Option>
-              );
-            })}
-        </Select>
-      </FormControl>
-    </>
+    <FormControl error={rawErrors.length > 0} disabled={disabled || readonly} required={required}>
+      <FormLabel id={`select-${id}-label`} htmlFor={`select-${id}-button`}>
+        {theLabel}
+      </FormLabel>
+      <Select
+        id={id}
+        name={id}
+        multiple={multiple}
+        value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
+        autoFocus={autofocus}
+        placeholder={placeholder}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        slotProps={{
+          button: {
+            id: `select-${id}-button`,
+            // TODO: Material UI set aria-labelledby correctly & automatically
+            // but Base UI and Joy UI don't yet.
+            'aria-labelledby': `select-${id}-label select-${id}-button`,
+          },
+        }}
+      >
+        {Array.isArray(enumOptions) &&
+          enumOptions.map(({ value, label }, i: number) => {
+            const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
+            return (
+              <Option key={i} value={String(i)} disabled={disabled}>
+                {label}
+              </Option>
+            );
+          })}
+      </Select>
+    </FormControl>
   );
 }
