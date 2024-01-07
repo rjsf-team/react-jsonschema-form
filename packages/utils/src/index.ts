@@ -13,6 +13,7 @@ import enumOptionsSelectValue from './enumOptionsSelectValue';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder';
 import findSchemaDefinition from './findSchemaDefinition';
+import getDateElementProps, { type DateElementFormat } from './getDateElementProps';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getSchemaType from './getSchemaType';
@@ -65,6 +66,7 @@ export {
   canExpand,
   createErrorHandler,
   createSchemaUtils,
+  DateElementFormat,
   dataURItoBlob,
   deepEquals,
   descriptionId,
@@ -78,6 +80,7 @@ export {
   examplesId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
+  getDateElementProps,
   getDiscriminatorFieldFromSchema,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
