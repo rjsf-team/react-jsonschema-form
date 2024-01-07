@@ -281,7 +281,7 @@ Returns `undefined` when a valid discriminator is not present.
 
 - string | undefined: The `discriminator.propertyName` if it exists in the schema, otherwise `undefined`
 
-### getDateElementProps( date: DateObject, time: boolean, yearRange: [number, number] = [1900, new Date().getFullYear() + 2], format: DateElementFormat = 'YMD')
+### getDateElementProps()
 
 Given date & time information with optional yearRange & format, returns props for DateElement
 
