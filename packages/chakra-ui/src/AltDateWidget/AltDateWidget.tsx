@@ -1,8 +1,10 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import {
   ariaDescribedByIds,
+  DateElementFormat,
   DateObject,
   FormContextType,
+  getDateElementProps,
   pad,
   parseDateString,
   RJSFSchema,
@@ -91,30 +93,15 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     onChange(undefined);
   };
 
-  const dateElementProps = () => {
-    const { year, month, day, hour, minute, second } = state;
-
-    const data: { type: string; range: any; value?: number }[] = [
-      { type: 'year', range: options.yearsRange, value: year },
-      { type: 'month', range: [1, 12], value: month },
-      { type: 'day', range: [1, 31], value: day },
-    ];
-
-    if (showTime) {
-      data.push(
-        { type: 'hour', range: [0, 23], value: hour },
-        { type: 'minute', range: [0, 59], value: minute },
-        { type: 'second', range: [0, 59], value: second }
-      );
-    }
-
-    return data;
-  };
-
   return (
     <Box>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
-        {dateElementProps().map((elemProps: any, i) => {
+        {getDateElementProps(
+          state,
+          showTime,
+          options.yearsRange as [number, number] | undefined,
+          options.format as DateElementFormat | undefined
+        ).map((elemProps: any, i) => {
           const elemId = id + '_' + elemProps.type;
           return (
             <Box key={elemId} mr='2' mb='2'>
