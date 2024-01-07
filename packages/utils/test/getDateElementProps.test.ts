@@ -3,6 +3,7 @@ import getDateElementProps from '../src/getDateElementProps';
 describe('getDateElementProps', () => {
   const monthRange = [1, 12];
   const dayRange = [1, 31];
+  const defaultYearRange = [1900, new Date().getFullYear() + 2] as [number, number];
 
   it('returns date in default(YMD) format when time is false and format is not passed', () => {
     const date = { day: 11, month: 12, year: 2023 };
@@ -10,7 +11,7 @@ describe('getDateElementProps', () => {
     const prop = getDateElementProps(date, false);
 
     expect(prop).toEqual([
-      { type: 'year', range: [1900, 2025], value: date.year },
+      { type: 'year', range: defaultYearRange, value: date.year },
       { type: 'month', range: monthRange, value: date.month },
       { type: 'day', range: dayRange, value: date.day },
     ]);
@@ -61,7 +62,7 @@ describe('getDateElementProps', () => {
     const prop = getDateElementProps(date, true);
 
     expect(prop).toEqual([
-      { type: 'year', range: [1900, 2025], value: date.year },
+      { type: 'year', range: defaultYearRange, value: date.year },
       { type: 'month', range: monthRange, value: date.month },
       { type: 'day', range: dayRange, value: date.day },
       { type: 'hour', range: [0, 23], value: date.hour },
@@ -78,7 +79,7 @@ describe('getDateElementProps', () => {
     expect(prop).toEqual([
       { type: 'day', range: dayRange, value: date.day },
       { type: 'month', range: monthRange, value: date.month },
-      { type: 'year', range: [1900, 2025], value: date.year },
+      { type: 'year', range: defaultYearRange, value: date.year },
       { type: 'hour', range: [0, 23], value: date.hour },
       { type: 'minute', range: [0, 59], value: date.minute },
       { type: 'second', range: [0, 59], value: date.second },
