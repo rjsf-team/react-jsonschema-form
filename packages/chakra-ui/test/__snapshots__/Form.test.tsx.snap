@@ -2366,7 +2366,6 @@ exports[`single fields select field 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -2683,7 +2682,6 @@ exports[`single fields select field multiple choice 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -3006,7 +3004,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -3329,7 +3326,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -3772,7 +3768,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -4095,7 +4090,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -4412,7 +4406,6 @@ exports[`single fields select field single choice formData 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {

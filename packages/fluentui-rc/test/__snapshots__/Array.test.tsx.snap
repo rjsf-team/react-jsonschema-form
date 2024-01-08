@@ -486,6 +486,7 @@ exports[`array fields checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -738,7 +739,7 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="fui-Card ___49eetv0_1h8kscz f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
+    className="fui-Card ___1fs342g_1c2667o f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f226i61 f13kzufm flujwa2 fsx75g8 f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
     role="group"
   >
     <h6
@@ -1473,6 +1474,7 @@ exports[`with title and description checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -2271,6 +2273,7 @@ exports[`with title and description from both checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -3069,6 +3072,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -3769,6 +3773,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >

@@ -8124,7 +8124,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             <span
@@ -8629,6 +8629,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls="mui-2"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -8638,7 +8639,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             <span
@@ -9142,7 +9143,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             <span
@@ -9643,7 +9644,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             foo
@@ -10142,7 +10143,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             <span
@@ -10646,6 +10647,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls="mui-4"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -10655,7 +10657,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             <span
@@ -11163,6 +11165,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls="mui-6"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -11172,7 +11175,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             onKeyDown={[Function]}
             onMouseDown={[Function]}
-            role="button"
+            role="combobox"
             tabIndex={0}
           >
             bar
@@ -11390,7 +11393,7 @@ exports[`single fields slider field 1`] = `
   transform: translate(-50%, -50%);
 }
 
-.emotion-5:before {
+.emotion-5::before {
   position: absolute;
   content: "";
   border-radius: inherit;
@@ -11475,7 +11478,7 @@ exports[`single fields slider field 1`] = `
   transform: translateY(-100%) scale(1);
 }
 
-.emotion-6:before {
+.emotion-6::before {
   position: absolute;
   content: "";
   width: 8px;
