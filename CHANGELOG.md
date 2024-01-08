@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.15.3
+# 5.16.0
 
 ## @rjsf/utils
 
@@ -33,6 +33,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 
 - Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## @rjsf/mui
+
+- Updated the `FieldErrorTemplate` and `FieldHelpTemplate` to support html-based errors that cause `<xxxx> cannot appear as a descendant of <p>` browser warnings, fixing [#4031](https://github.com/rjsf-team/react-jsonschema-form/issues/4031)
 
 ## Dev / docs / playground
 
