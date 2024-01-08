@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+- Modify submit methond and make it a public method.
 
 ## @rjsf/antd
 
