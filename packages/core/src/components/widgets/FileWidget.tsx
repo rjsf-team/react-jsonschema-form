@@ -167,10 +167,14 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
   const rmFile = useCallback(
     (index: number) => {
-      const newValue = value.filter((_, i) => i !== index);
-      onChange(newValue);
+      if (multiple) {
+        const newValue = value.filter((_: any, i: number) => i !== index);
+        onChange(newValue);
+      } else {
+        onChange(undefined);
+      }
     },
-    [value, onChange]
+    [multiple, value, onChange]
   );
   return (
     <div>
