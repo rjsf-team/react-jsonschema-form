@@ -646,7 +646,6 @@ exports[`array fields checkboxes 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -2399,7 +2398,6 @@ exports[`with title and description checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -3800,7 +3798,6 @@ exports[`with title and description from both checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -5201,7 +5198,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -6477,7 +6473,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {

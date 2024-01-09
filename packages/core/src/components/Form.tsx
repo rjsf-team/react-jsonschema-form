@@ -742,7 +742,7 @@ export default class Form<
   }
 
   /** Provides a function that can be used to programmatically submit the `Form` */
-  submit() {
+  submit = () => {
     if (this.formElement.current) {
       this.formElement.current.dispatchEvent(
         new CustomEvent('submit', {
@@ -751,7 +751,7 @@ export default class Form<
       );
       this.formElement.current.requestSubmit();
     }
-  }
+  };
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
    * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
