@@ -3,31 +3,32 @@
  * By default, btoa() and atob() only support the latin1 character range.
  */
 const base64 = (function () {
-  let textEncoder: any;
-  let textDecoder: any;
-
   // If we are in the browser, we can use the built-in TextEncoder and TextDecoder
   // Otherwise, it is assumed that we are in node.js, and we can use the util module's TextEncoder and TextDecoder
-  if (typeof TextEncoder !== 'undefined') {
-    textEncoder = new TextEncoder();
-  } else {
-    const { TextEncoder } = require('util');
-    textEncoder = new TextEncoder();
+  function makeEncoder() {
+    if (typeof TextEncoder !== 'undefined') {
+      return new TextEncoder();
+    } else {
+      const { TextEncoder } = require('util');
+      return new TextEncoder();
+    }
   }
 
-  if (typeof TextDecoder !== 'undefined') {
-    textDecoder = new TextDecoder();
-  } else {
-    const { TextDecoder } = require('util');
-    textDecoder = new TextDecoder();
+  function makeDecoder() {
+    if (typeof TextDecoder !== 'undefined') {
+      return new TextDecoder();
+    } else {
+      const { TextDecoder } = require('util');
+      return new TextDecoder();
+    }
   }
 
   return {
     encode(text: string): string {
-      return btoa(String.fromCharCode(...textEncoder.encode(text)));
+      return btoa(String.fromCharCode(...makeEncoder().encode(text)));
     },
     decode(text: string): string {
-      return textDecoder.decode(Uint8Array.from(atob(text), (c) => c.charCodeAt(0)));
+      return makeDecoder().decode(Uint8Array.from(atob(text), (c) => c.charCodeAt(0)));
     },
   };
 })();
