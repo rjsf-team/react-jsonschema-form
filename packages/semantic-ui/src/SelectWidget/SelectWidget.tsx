@@ -80,10 +80,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
     onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));
   // eslint-disable-next-line no-shadow
-  const _onBlur = (_: FocusEvent<HTMLElement>, { target: { value } }: DropdownProps) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onFocus = (_: FocusEvent<HTMLElement>, { target: { value } }: DropdownProps) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const _onBlur = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onFocus = (_: FocusEvent<HTMLElement>, { target }: DropdownProps) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
 
   return (

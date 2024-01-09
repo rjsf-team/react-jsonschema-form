@@ -558,6 +558,10 @@ return (<StyleProvider><YourFormComponents /></StyleProvider>);
 - Updated the `playground` to properly restore `liveSettings` from shared links and added a switch for `noHtml5Validation` in the live settings rather than having it set to `true` always
     - Also added a new `Blank` example to help users easily paste their code
 
+# 5.5.3
+## @rjsf/semantic-ui
+- Updated `SelectWidget` to handle undefined `target` in `onFocus` and `onBlur` handlers
+
 # 5.5.2
 
 ## @rjsf/material-ui
@@ -688,8 +692,6 @@ return (<StyleProvider><YourFormComponents /></StyleProvider>);
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
 
 ## @rjsf/semantic-ui
-
--
 - Updated `ObjectFieldTemplate` to hide the titles and descriptions when `displayLabel` is true (including globally), fixing [#3231](https://github.com/rjsf-team/react-jsonschema-form/issues/3231)
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget` and `TextareaWidget` to hide labels when `hideLabel` is true using the new `labelValue()` helper (including globally)
 - Updated `CheckboxWidget` to show the `description` using the `DescriptionFieldTemplate`, fixing [#2791](https://github.com/rjsf-team/react-jsonschema-form/issues/2791)
