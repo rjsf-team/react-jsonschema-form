@@ -50,6 +50,7 @@ import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
+import base64 from './base64';
 
 export * from './types';
 export * from './enums';
@@ -117,4 +118,5 @@ export {
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
+  base64,
 };
