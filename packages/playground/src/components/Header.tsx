@@ -9,6 +9,7 @@ import Selector from './Selector';
 import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
+import { base64 } from '@rjsf/utils';
 
 const HeaderButton: React.FC<
   {
@@ -245,7 +246,7 @@ export default function Header({
     } = document;
 
     try {
-      const hash = btoa(
+      const hash = base64.encode(
         JSON.stringify({
           formData,
           schema,

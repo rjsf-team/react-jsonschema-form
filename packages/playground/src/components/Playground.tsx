@@ -11,6 +11,7 @@ import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
 import { Sample } from '../samples/Sample';
+import { base64 } from '@rjsf/utils';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -92,7 +93,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
     if (hash && typeof hash[1] === 'string' && hash[1].length > 0 && !loaded) {
       try {
-        load(JSON.parse(atob(hash[1])));
+        const decoded = base64.decode(hash[1]);
+        load(JSON.parse(decoded));
         setLoaded(true);
       } catch (error) {
         alert('Unable to load form setup data.');
