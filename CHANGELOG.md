@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
-- Added `base64` to support `encoding` and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
+- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding` and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
 
 ## @rjsf/core
 
@@ -38,7 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated docs and playground with the implementation guide of newly added date re-order feature.
-- Updated the base64 references from (`atob` and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
+- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Updated the base64 references from (`atob` and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
 
 # 5.15.2
 
