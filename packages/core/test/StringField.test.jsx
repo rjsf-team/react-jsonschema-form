@@ -2071,6 +2071,58 @@ describe('StringField', () => {
       });
     });
 
+    it('should reflect the change into the dom (multi)', async () => {
+      sandbox.stub(window, 'FileReader').returns({
+        set onload(fn) {
+          fn({ target: { result: 'data:text/plain;base64,x=' } });
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        readAsDataUrl() {},
+      });
+
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'data-url',
+          },
+        },
+      });
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file2.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file3.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: [
+          'data:text/plain;name=file1.txt;base64,x=',
+          'data:text/plain;name=file2.txt;base64,x=',
+          'data:text/plain;name=file3.txt;base64,x=',
+        ],
+      });
+    });
+
     it('should encode file name with encodeURIComponent', async () => {
       const nonUriEncodedValue = 'fileáéí óú1.txt';
       const uriEncodedValue = 'file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt';
@@ -2179,6 +2231,63 @@ describe('StringField', () => {
       expect(download).to.exist;
       expect(download.href).eql(formData);
       expect(download.textContent).eql(TranslatableString.PreviewLabel);
+    });
+
+    it('should delete the file when delete button is pressed (single)', () => {
+      const formData = 'data:text/plain;name=file1.txt;base64,x=';
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        formData,
+      });
+
+      // Find the delete button
+      const deleteButton = node.querySelector('button[title="Remove"]');
+      expect(deleteButton).to.exist;
+
+      // Click the delete button
+      act(() => {
+        Simulate.click(deleteButton);
+      });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: undefined,
+      });
+    });
+    it('should delete the file when delete button is pressed (multi)', () => {
+      const formData = [
+        'data:text/plain;name=file1.txt;base64,x=',
+        'data:text/plain;name=file2.txt;base64,x=',
+        'data:text/plain;name=file3.txt;base64,x=',
+      ];
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'data-url',
+          },
+        },
+        formData,
+      });
+
+      // Find the 2nd file and check the file name
+      const file2 = node.querySelectorAll('li')[1];
+      expect(file2.textContent).to.contain('file2.txt');
+
+      // Find the delete button and click it
+      const deleteButton = file2.querySelector('button[title="Remove"]');
+      expect(deleteButton).to.exist;
+      act(() => {
+        Simulate.click(deleteButton);
+      });
+
+      // Check that the file is deleted
+      expect(node.querySelectorAll('li')).to.have.length.of(2);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file3.txt;base64,x='],
+      });
     });
   });
 
