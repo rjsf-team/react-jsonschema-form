@@ -4205,17 +4205,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
               </div>
               <ul
                 className="MuiList-root MuiList-dense emotion-19"
+                id="root_name__error"
               >
                 <li
                   className="MuiListItem-root MuiListItem-dense MuiListItem-padding emotion-20"
                   disabled={false}
                 >
-                  <p
+                  <div
                     className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-21"
-                    id="root_name__error"
+                    id="root_name__error-0"
                   >
                     Bad input
-                  </p>
+                  </div>
                 </li>
               </ul>
             </div>
