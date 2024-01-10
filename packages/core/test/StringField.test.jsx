@@ -2156,7 +2156,7 @@ describe('StringField', () => {
       });
     });
 
-    it('should render the widget with the expected id', () => {
+    it('should render the file widget with accept attribute', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -2170,7 +2170,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=file]').accept).eql('.pdf');
     });
 
-    it('should render the file widget with accept attribute', () => {
+    it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'string',
