@@ -16,11 +16,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.16.1
+
+## Dev / docs / playground
+
+- Bumped peer dependencies due to new utils function
+
 # 5.16.0
-
-## @rjsf/utils
-
-- Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
 
 ## @rjsf/core
 
@@ -40,6 +42,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mui
 
 - Updated the `FieldErrorTemplate` and `FieldHelpTemplate` to support html-based errors that cause `<xxxx> cannot appear as a descendant of <p>` browser warnings, fixing [#4031](https://github.com/rjsf-team/react-jsonschema-form/issues/4031)
+
+## @rjsf/utils
+
+- Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
 
 ## Dev / docs / playground
 
