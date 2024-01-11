@@ -19,11 +19,13 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <List dense={true} disablePadding={true}>
+    <List id={id} dense={true} disablePadding={true}>
       {errors.map((error, i: number) => {
         return (
           <ListItem key={i} disableGutters={true}>
-            <FormHelperText id={id}>{error}</FormHelperText>
+            <FormHelperText component='div' id={`${id}-${i}`}>
+              {error}
+            </FormHelperText>
           </ListItem>
         );
       })}

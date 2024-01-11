@@ -15,5 +15,9 @@ export default function FieldHelpTemplate<
     return null;
   }
   const id = helpId<T>(idSchema);
-  return <FormHelperText id={id}>{help}</FormHelperText>;
+  return (
+    <FormHelperText component='div' id={id}>
+      {help}
+    </FormHelperText>
+  );
 }
