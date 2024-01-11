@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "5.15.1",
+  "version": "5.16.0",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -48,7 +48,7 @@
     "@babel/preset-env": "^7.23.7",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/utils": "^5.15.1",
+    "@rjsf/utils": "^5.16.0",
     "@types/jest": "^29.5.11",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.14.202",
