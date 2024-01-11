@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Pass indexed title from array into its items, adding enhancement asked in [#3983](https://github.com/rjsf-team/react-jsonschema-form/issues/3983)
 - Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
 - Modify submit method to make it a public method, fixing [#4015](https://github.com/rjsf-team/react-jsonschema-form/issues/4015)
 - Support file deletion for `format: "data-url"` in `FileWidget`, fixing [#3957](https://github.com/rjsf-team/react-jsonschema-form/issues/3957).
@@ -43,12 +44,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated docs and playground with the implementation guide of newly added date re-order feature.
-
-# 5.15.2
-
-## @rjsf/core
-
-- Pass indexed title from array into its items, adding enhancement asked in [#3983](https://github.com/rjsf-team/react-jsonschema-form/issues/3983)
 
 # 5.15.1
 
