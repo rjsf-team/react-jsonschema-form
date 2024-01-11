@@ -25,19 +25,34 @@ describe('base64', () => {
   it('should successfully decode a Chinese characters', () => {
     expect(base64.decode('5oiR5piv')).toEqual('我是');
   });
+});
+
+describe('nodejs behavior', () => {
   it('should successfully create a base64 object and encode/decode string in node.js', () => {
-    delete global.TextDecoder;
-    delete global.TextEncoder;
     expect(base64.encode('我是')).toEqual('5oiR5piv');
     expect(base64.decode('5oiR5piv')).toEqual('我是');
   });
-  it('should successfully create a base64 object and encode/decode string in browser', () => {
+});
+
+describe('browser behavior', () => {
+  // capture the TextEncoder and TextDecoder from the util module and assign them to the global object (for mocking browser environment)
+  beforeAll(() => {
     const { TextDecoder } = require('util');
     global.TextDecoder = TextDecoder;
 
     const { TextEncoder } = require('util');
     global.TextEncoder = TextEncoder;
-
+  });
+  // restore the TextEncoder and TextDecoder to undefined
+  afterAll(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    global.TextEncoder = undefined;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    global.TextDecoder = undefined;
+  });
+  it('should successfully create a base64 object and encode/decode string in browser', () => {
     expect(base64.encode('我是')).toEqual('5oiR5piv');
     expect(base64.decode('5oiR5piv')).toEqual('我是');
   });

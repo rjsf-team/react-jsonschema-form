@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { base64, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import CopyLink from './CopyLink';
@@ -9,7 +9,6 @@ import Selector from './Selector';
 import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
-import { base64 } from '@rjsf/utils';
 
 const HeaderButton: React.FC<
   {

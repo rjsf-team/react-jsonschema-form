@@ -1,6 +1,6 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { base64, ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';
@@ -11,7 +11,6 @@ import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
 import { Sample } from '../samples/Sample';
-import { base64 } from '@rjsf/utils';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
