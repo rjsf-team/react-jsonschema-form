@@ -151,6 +151,10 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '//cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
     theme: BootstrapTheme,
   },
+  'react-bootstrap': {
+    stylesheet: '//cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+    theme: BootstrapTheme,
+  },
   'semantic-ui': {
     stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
     theme: SuiTheme,
