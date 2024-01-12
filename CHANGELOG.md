@@ -17,10 +17,22 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.1
 
+## @rjsf/bootstrap-4
+
+- Package has been replaced with `@rjsf/react-bootstrap`. `react-boostrap` v1 / Bootstrap 4 are no longer supported in RJSF v6.
+
 ## @rjsf/material-ui
 
 - Removed `@rjsf/material-ui` package. Material UI v4 (`@material-ui/core`) has been deprecated since September 2021. To use Material UI v5 (`@mui/core`) with RJSF, please use the `@rjsf/mui` theme instead.
 
+## @rjsf/react-bootstrap
+
+- Added new package to replace `@rjsf/bootstrap-4`
+- `react-bootstrap` peer dependency bumped to `^2.0.0`, corresponding to Bootstrap 5
+- CheckboxesWidget: Remove deprecated prop `custom`
+- IconButton: Remove deprecated `block` prop
+- RangeWidget: Use `FormRange` component
+- SelectWidget: Use new FormSelect component, remove `bsPrefix` prop to achieve correct styling
 
 # 5.15.1
 

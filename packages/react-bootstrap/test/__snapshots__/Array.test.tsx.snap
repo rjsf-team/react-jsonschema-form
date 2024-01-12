@@ -9,9 +9,7 @@ exports[`array fields array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -102,9 +100,7 @@ exports[`array fields array icons 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -125,9 +121,7 @@ exports[`array fields array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -333,9 +327,7 @@ exports[`array fields array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -611,9 +603,7 @@ exports[`array fields checkboxes 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -623,7 +613,7 @@ exports[`array fields checkboxes 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -680,9 +670,7 @@ exports[`array fields empty errors array 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -702,9 +690,7 @@ exports[`array fields empty errors array 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_name"
@@ -756,9 +742,7 @@ exports[`array fields fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -779,9 +763,7 @@ exports[`array fields fixed array 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -824,9 +806,7 @@ exports[`array fields fixed array 1`] = `
                     <div
                       className="form-group field field-number"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -901,8 +881,7 @@ exports[`array fields has errors 1`] = `
       >
         <div
           className="border-0 list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
+          data-rr-ui-event-key={null}
           onClick={[Function]}
         >
           <span>
@@ -915,9 +894,7 @@ exports[`array fields has errors 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -937,9 +914,7 @@ exports[`array fields has errors 1`] = `
             <div
               className="form-group field field-string field-error has-error has-danger"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="text-danger form-label"
                   htmlFor="root_name"
@@ -970,8 +945,7 @@ exports[`array fields has errors 1`] = `
                 >
                   <li
                     className="border-0 m-0 p-0 list-group-item"
-                    data-rb-event-key={null}
-                    disabled={false}
+                    data-rr-ui-event-key={null}
                     onClick={[Function]}
                   >
                     <small
@@ -1009,9 +983,7 @@ exports[`array fields no errors 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -1031,9 +1003,7 @@ exports[`array fields no errors 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_name"
@@ -1085,9 +1055,7 @@ exports[`with title and description array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -1202,9 +1170,7 @@ exports[`with title and description array icons 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -1249,9 +1215,7 @@ exports[`with title and description array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -1468,9 +1432,7 @@ exports[`with title and description array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -1757,9 +1719,7 @@ exports[`with title and description checkboxes 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1769,7 +1729,7 @@ exports[`with title and description checkboxes 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -1837,9 +1797,7 @@ exports[`with title and description fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -1884,9 +1842,7 @@ exports[`with title and description fixed array 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -1940,9 +1896,7 @@ exports[`with title and description fixed array 1`] = `
                     <div
                       className="form-group field field-number"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -2014,9 +1968,7 @@ exports[`with title and description from both array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -2131,9 +2083,7 @@ exports[`with title and description from both array icons 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -2178,9 +2128,7 @@ exports[`with title and description from both array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -2397,9 +2345,7 @@ exports[`with title and description from both array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -2686,9 +2632,7 @@ exports[`with title and description from both checkboxes 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -2698,7 +2642,7 @@ exports[`with title and description from both checkboxes 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -2766,9 +2710,7 @@ exports[`with title and description from both fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -2813,9 +2755,7 @@ exports[`with title and description from both fixed array 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -2869,9 +2809,7 @@ exports[`with title and description from both fixed array 1`] = `
                     <div
                       className="form-group field field-number"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -2943,9 +2881,7 @@ exports[`with title and description from uiSchema array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -3060,9 +2996,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -3107,9 +3041,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -3326,9 +3258,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -3615,9 +3545,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -3627,7 +3555,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -3695,9 +3623,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -3742,9 +3668,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_0"
@@ -3798,9 +3722,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <div
                       className="form-group field field-number"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <label
                           className="form-label"
                           htmlFor="root_1"
@@ -3872,9 +3794,7 @@ exports[`with title and description with global label off array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -3965,9 +3885,7 @@ exports[`with title and description with global label off array icons 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -3988,9 +3906,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <input
                           aria-describedby="root_0__error root_0__description root_0__help"
                           autoFocus={false}
@@ -4188,9 +4104,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <input
                           aria-describedby="root_1__error root_1__description root_1__help"
                           autoFocus={false}
@@ -4458,9 +4372,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -4470,7 +4382,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -4538,9 +4450,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div>
         <div
           className="p-0 m-0 row"
@@ -4561,9 +4471,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     <div
                       className="form-group field field-string"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <input
                           aria-describedby="root_0__error root_0__description root_0__help"
                           autoFocus={false}
@@ -4598,9 +4506,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     <div
                       className="form-group field field-number"
                     >
-                      <div
-                        className="form-group"
-                      >
+                      <div>
                         <input
                           aria-describedby="root_1__error root_1__description root_1__help"
                           autoFocus={false}

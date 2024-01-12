@@ -61,7 +61,6 @@
   },
   "workspaces": [
     "packages/antd",
-    "packages/bootstrap-4",
     "packages/chakra-ui",
     "packages/core",
     "packages/docs",
@@ -69,6 +68,7 @@
     "packages/fluentui-rc",
     "packages/mui",
     "packages/playground",
+    "packages/react-bootstrap",
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv6",

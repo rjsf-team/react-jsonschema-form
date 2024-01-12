@@ -18,10 +18,10 @@ body:
       options:
         - core
         - antd
-        - bootstrap-4
         - chakra-ui
         - fluent-ui
         - mui
+        - react-bootstrap
         - semantic-ui
         - utils
         - validator-ajv6
