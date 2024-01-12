@@ -5,7 +5,7 @@
       "path": "./packages/antd"
     },
     {
-      "path": "./packages/bootstrap-4"
+      "path": "./packages/react-bootstrap"
     },
     {
       "path": "./packages/chakra-ui"

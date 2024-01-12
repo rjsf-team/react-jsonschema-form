@@ -1,10 +1,10 @@
 {
-  "name": "@rjsf/bootstrap-4",
+  "name": "@rjsf/react-bootstrap",
   "version": "5.24.3",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
+  "description": "React Bootstrap theme, fields and widgets for react-jsonschema-form, powered by react-bootstrap",
   "files": [
     "dist",
     "lib",
@@ -17,8 +17,8 @@
   "scripts": {
     "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/bootstrap-4.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/bootstrap-4.esm.js --format=umd --file=dist/bootstrap-4.umd.js --name=@rjsf/bootstrap-4",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/react-bootstrap.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/react-bootstrap.esm.js --format=umd --file=dist/react-bootstrap.umd.js --name=@rjsf/react-bootstrap",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
@@ -36,7 +36,7 @@
     "@rjsf/core": "^5.24.x",
     "@rjsf/utils": "^5.24.x",
     "react": "^16.14.0 || >=17",
-    "react-bootstrap": "^1.6.5"
+    "react-bootstrap": "^2.0.0"
   },
   "engineStrict": false,
   "engines": {
@@ -62,7 +62,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^1.6.8",
+    "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.5",
@@ -73,7 +73,7 @@
     "access": "public"
   },
   "keywords": [
-    "Bootstrap 4",
+    "Bootstrap 5",
     "react-jsonschema-form",
     "jsonschema",
     "json-schema",
@@ -81,8 +81,10 @@
     "schema",
     "form",
     "react",
-    "bootstrap-4",
-    "rjsf-bootstrap-4"
+    "bootstrap-5",
+    "rjsf-bootstrap-5",
+    "react-bootstrap",
+    "rjsf-react-bootstrap"
   ],
   "contributors": [
     "Heath Chiavettone <heath.chiavettone@freenome.com"

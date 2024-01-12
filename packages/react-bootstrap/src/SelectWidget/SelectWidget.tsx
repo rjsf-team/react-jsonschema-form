@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import Form from 'react-bootstrap/Form';
+import FormSelect from 'react-bootstrap/FormSelect';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -48,9 +48,7 @@ export default function SelectWidget<
   const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
-    <Form.Control
-      as='select'
-      bsPrefix='custom-select'
+    <FormSelect
       id={id}
       name={id}
       value={typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes}
@@ -88,6 +86,6 @@ export default function SelectWidget<
           </option>
         );
       })}
-    </Form.Control>
+    </FormSelect>
   );
 }
