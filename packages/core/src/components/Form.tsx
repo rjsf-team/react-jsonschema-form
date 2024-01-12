@@ -869,9 +869,9 @@ export default class Form<
     const registry = this.getRegistry();
     const { SchemaField: _SchemaField } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
-    // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the
+    // The `semantic-ui` theme has an `_internalFormWrapper` that take an `as` prop that is the
     // PropTypes.elementType to use for the inner tag, so we'll need to pass `tagName` along if it is provided.
-    // NOTE, the `as` prop is native to `semantic-ui` and is emulated in the `material-ui` theme
+    // NOTE, the `as` prop is native to `semantic-ui`
     const as = _internalFormWrapper ? tagName : undefined;
     const FormTag = _internalFormWrapper || tagName || 'form';
 

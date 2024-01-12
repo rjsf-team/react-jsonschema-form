@@ -27,7 +27,6 @@
     { "path": "../core" },
     { "path": "../fluent-ui" },
     { "path": "../fluentui-rc" },
-    { "path": "../material-ui" },
     { "path": "../mui" },
     { "path": "../react-bootstrap"},
     { "path": "../semantic-ui" },

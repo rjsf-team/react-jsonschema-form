@@ -26,7 +26,6 @@ body:
         - antd
         - chakra-ui
         - fluent-ui
-        - material-ui
         - mui
         - react-bootstrap
         - semantic-ui

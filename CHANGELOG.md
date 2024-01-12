@@ -21,6 +21,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Package has been replaced with `@rjsf/react-bootstrap`. `react-boostrap` v1 / Bootstrap 4 are no longer supported in RJSF v6.
 
+## @rjsf/material-ui
+
+- Removed `@rjsf/material-ui` package. Material UI v4 (`@material-ui/core`) has been deprecated since September 2021. To use Material UI v5 (`@mui/core`) with RJSF, please use the `@rjsf/mui` theme instead.
+
 ## @rjsf/react-bootstrap
 
 - Added new package to replace `@rjsf/bootstrap-4`
