@@ -1,17 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CheckboxesWidget inline 1`] = `
-<div
-  className="form-group"
->
+<div>
   <div
-    className="bg-transparent border-0 custom-control custom-checkbox custom-control-inline"
+    className="bg-transparent border-0 form-check form-check-inline"
   >
     <input
       aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
       checked={false}
-      className="custom-control-input"
+      className="form-check-input"
       disabled={true}
       id="_id-0"
       name="_id"
@@ -22,7 +20,7 @@ exports[`CheckboxesWidget inline 1`] = `
       type="checkbox"
     />
     <label
-      className="custom-control-label"
+      className="form-check-label"
       htmlFor="_id-0"
       title=""
     >
@@ -33,17 +31,15 @@ exports[`CheckboxesWidget inline 1`] = `
 `;
 
 exports[`CheckboxesWidget simple 1`] = `
-<div
-  className="form-group"
->
+<div>
   <div
-    className="bg-transparent border-0 custom-control custom-checkbox"
+    className="bg-transparent border-0 form-check"
   >
     <input
       aria-describedby="_id__error _id__description _id__help"
       autoFocus={true}
       checked={false}
-      className="custom-control-input"
+      className="form-check-input"
       disabled={true}
       id="_id-0"
       name="_id"
@@ -54,7 +50,7 @@ exports[`CheckboxesWidget simple 1`] = `
       type="checkbox"
     />
     <label
-      className="custom-control-label"
+      className="form-check-label"
       htmlFor="_id-0"
       title=""
     >

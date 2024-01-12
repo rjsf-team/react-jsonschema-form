@@ -9,20 +9,18 @@ exports[`single fields checkbox field 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         aria-describedby="root__error root__description root__help"
-        className="checkbox  form-group"
+        className="checkbox "
       >
         <div
-          className="form-check"
+          className=""
         >
           <input
             autoFocus={false}
             checked={false}
-            className="form-check-input position-static"
+            className="form-check-input"
             disabled={false}
             id="root"
             name="root"
@@ -57,12 +55,10 @@ exports[`single fields checkbox field with label 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         aria-describedby="root__error root__description root__help"
-        className="checkbox  form-group"
+        className="checkbox "
       >
         <div
           className="form-check"
@@ -112,26 +108,22 @@ exports[`single fields checkboxes field 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
       >
         An enum list rendered as checkboxes
       </label>
-      <div
-        className="form-group"
-      >
+      <div>
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="bg-transparent border-0 form-check"
         >
           <input
             aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
-            className="custom-control-input"
+            className="form-check-input"
             disabled={false}
             id="root-0"
             name="root"
@@ -142,7 +134,7 @@ exports[`single fields checkboxes field 1`] = `
             type="checkbox"
           />
           <label
-            className="custom-control-label"
+            className="form-check-label"
             htmlFor="root-0"
             title=""
           >
@@ -150,13 +142,13 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="bg-transparent border-0 form-check"
         >
           <input
             aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
-            className="custom-control-input"
+            className="form-check-input"
             disabled={false}
             id="root-1"
             name="root"
@@ -167,7 +159,7 @@ exports[`single fields checkboxes field 1`] = `
             type="checkbox"
           />
           <label
-            className="custom-control-label"
+            className="form-check-label"
             htmlFor="root-1"
             title=""
           >
@@ -175,13 +167,13 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="bg-transparent border-0 form-check"
         >
           <input
             aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
-            className="custom-control-input"
+            className="form-check-input"
             disabled={false}
             id="root-2"
             name="root"
@@ -192,7 +184,7 @@ exports[`single fields checkboxes field 1`] = `
             type="checkbox"
           />
           <label
-            className="custom-control-label"
+            className="form-check-label"
             htmlFor="root-2"
             title=""
           >
@@ -200,13 +192,13 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="bg-transparent border-0 custom-control custom-checkbox"
+          className="bg-transparent border-0 form-check"
         >
           <input
             aria-describedby="root__error root__description root__help"
             autoFocus={false}
             checked={false}
-            className="custom-control-input"
+            className="form-check-input"
             disabled={false}
             id="root-3"
             name="root"
@@ -217,7 +209,7 @@ exports[`single fields checkboxes field 1`] = `
             type="checkbox"
           />
           <label
-            className="custom-control-label"
+            className="form-check-label"
             htmlFor="root-3"
             title=""
           >
@@ -249,9 +241,7 @@ exports[`single fields field with description 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -271,9 +261,7 @@ exports[`single fields field with description 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_my-field"
@@ -336,9 +324,7 @@ exports[`single fields field with description in uiSchema 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -358,9 +344,7 @@ exports[`single fields field with description in uiSchema 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_my-field"
@@ -423,9 +407,7 @@ exports[`single fields format color 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -435,7 +417,7 @@ exports[`single fields format color 1`] = `
       <input
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="form-control"
+        className="form-control form-control-color"
         disabled={false}
         id="root"
         name="root"
@@ -471,9 +453,7 @@ exports[`single fields format date 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -519,9 +499,7 @@ exports[`single fields format datetime 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -567,9 +545,7 @@ exports[`single fields format time 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -629,8 +605,7 @@ exports[`single fields help and error display 1`] = `
       >
         <div
           className="border-0 list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
+          data-rr-ui-event-key={null}
           onClick={[Function]}
         >
           <span>
@@ -643,9 +618,7 @@ exports[`single fields help and error display 1`] = `
   <div
     className="form-group field field-string field-error has-error has-danger"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="text-danger form-label"
         htmlFor="root"
@@ -675,8 +648,7 @@ exports[`single fields help and error display 1`] = `
       >
         <li
           className="border-0 m-0 p-0 list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
+          data-rr-ui-event-key={null}
           onClick={[Function]}
         >
           <small
@@ -715,9 +687,7 @@ exports[`single fields hidden field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       
       <div
         className="p-0 container-fluid"
@@ -770,9 +740,7 @@ exports[`single fields hidden label 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <input
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
@@ -811,9 +779,7 @@ exports[`single fields null field 1`] = `
   <div
     className="form-group field field-null"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -844,9 +810,7 @@ exports[`single fields number field 0 1`] = `
   <div
     className="form-group field field-number"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -893,9 +857,7 @@ exports[`single fields number field 1`] = `
   <div
     className="form-group field field-number"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -942,9 +904,7 @@ exports[`single fields password field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -990,9 +950,7 @@ exports[`single fields radio field 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1000,7 +958,7 @@ exports[`single fields radio field 1`] = `
         
       </label>
       <div
-        className="mb-0 form-group"
+        className="mb-0"
       >
         <div
           className="form-check"
@@ -1075,9 +1033,7 @@ exports[`single fields schema examples 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1143,9 +1099,7 @@ exports[`single fields select field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1155,7 +1109,7 @@ exports[`single fields select field 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         name="root"
@@ -1208,9 +1162,7 @@ exports[`single fields select field multiple choice 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1220,7 +1172,7 @@ exports[`single fields select field multiple choice 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -1284,9 +1236,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1296,7 +1246,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -1360,9 +1310,7 @@ exports[`single fields select field multiple choice formData 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1372,7 +1320,7 @@ exports[`single fields select field multiple choice formData 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -1441,9 +1389,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1453,7 +1399,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         multiple={true}
@@ -1510,9 +1456,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1522,7 +1466,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         name="root"
@@ -1575,9 +1519,7 @@ exports[`single fields select field single choice formData 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1587,7 +1529,7 @@ exports[`single fields select field single choice formData 1`] = `
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="custom-select"
+        className="form-select"
         disabled={false}
         id="root"
         name="root"
@@ -1640,9 +1582,7 @@ exports[`single fields slider field 1`] = `
   <div
     className="form-group field field-integer"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1650,9 +1590,7 @@ exports[`single fields slider field 1`] = `
         
       </label>
       <input
-        aria-describedby="root__error root__description root__help"
-        autoFocus={false}
-        className="form-control"
+        className="form-range"
         disabled={false}
         id="root"
         max={100}
@@ -1661,10 +1599,7 @@ exports[`single fields slider field 1`] = `
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        placeholder=""
-        readOnly={false}
-        step={1}
-        type="number"
+        type="range"
         value={75}
       />
       <span
@@ -1696,9 +1631,7 @@ exports[`single fields string field format data-url 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1709,7 +1642,7 @@ exports[`single fields string field format data-url 1`] = `
         <input
           aria-describedby="root__error root__description root__help"
           autoFocus={false}
-          className="form-control-file"
+          className="form-control"
           disabled={false}
           id="root"
           name="root"
@@ -1746,9 +1679,7 @@ exports[`single fields string field format email 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1794,9 +1725,7 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1842,9 +1771,7 @@ exports[`single fields string field regular 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1890,9 +1817,7 @@ exports[`single fields string field with placeholder 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1938,9 +1863,7 @@ exports[`single fields textarea field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -1989,9 +1912,7 @@ exports[`single fields title field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -2026,9 +1947,7 @@ exports[`single fields title field 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_title"
@@ -2080,9 +1999,7 @@ exports[`single fields unsupported field 1`] = `
   <div
     className="form-group field field-undefined"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -2133,9 +2050,7 @@ exports[`single fields up/down field 1`] = `
   <div
     className="form-group field field-number"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
@@ -2181,9 +2096,7 @@ exports[`single fields using custom tagName 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <label
         className="form-label"
         htmlFor="root"
