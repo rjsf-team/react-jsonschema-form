@@ -82,8 +82,8 @@
     "schema",
     "form",
     "react",
-    "material-ui",
-    "rjsf-material-ui"
+    "fluent-ui",
+    "rjsf-fluent-ui"
   ],
   "repository": {
     "type": "git",

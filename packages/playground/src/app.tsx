@@ -1,4 +1,3 @@
-import { Theme as MuiV4Theme } from '@rjsf/material-ui';
 import { Theme as MuiV5Theme } from '@rjsf/mui';
 import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
 import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
@@ -109,11 +108,7 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '',
     theme: FluentUIRCTheme,
   },
-  'material-ui-4': {
-    stylesheet: '',
-    theme: MuiV4Theme,
-  },
-  mui: {
+  'material-ui-5': {
     stylesheet: '',
     theme: MuiV5Theme,
   },

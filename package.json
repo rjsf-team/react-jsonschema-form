@@ -70,7 +70,6 @@
     "packages/docs",
     "packages/fluent-ui",
     "packages/fluentui-rc",
-    "packages/material-ui",
     "packages/mui",
     "packages/playground",
     "packages/react-bootstrap",

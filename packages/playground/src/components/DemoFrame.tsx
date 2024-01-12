@@ -2,8 +2,6 @@ import { useState, useRef, useCallback, cloneElement, ReactElement, ReactNode } 
 import { CssBaseline } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
 import createCache, { EmotionCache } from '@emotion/cache';
-import { create, Jss } from 'jss';
-import { jssPreset, StylesProvider } from '@material-ui/core/styles';
 import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-component';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
@@ -46,9 +44,7 @@ interface DemoFrameProps extends FrameComponentProps {
 export default function DemoFrame(props: DemoFrameProps) {
   const { children, head, theme, ...frameProps } = props;
 
-  const [jss, setJss] = useState<Jss>();
   const [ready, setReady] = useState(false);
-  const [sheetsManager, setSheetsManager] = useState(new Map());
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
   const [container, setContainer] = useState();
   const [window, setWindow] = useState();
@@ -67,13 +63,6 @@ export default function DemoFrame(props: DemoFrameProps) {
 
   const onContentDidMount = useCallback(() => {
     setReady(true);
-    setJss(
-      create({
-        plugins: jssPreset().plugins,
-        insertionPoint: instanceRef.current.contentWindow['demo-frame-jss'],
-      })
-    );
-    setSheetsManager(new Map());
     setEmotionCache(
       createCache({
         key: 'css',
@@ -86,16 +75,7 @@ export default function DemoFrame(props: DemoFrameProps) {
   }, []);
 
   let body: ReactNode = children;
-  if (theme === 'material-ui-4') {
-    body = ready ? (
-      <StylesProvider jss={jss} sheetsManager={sheetsManager}>
-        {cloneElement(children, {
-          container: container,
-          window: window,
-        })}
-      </StylesProvider>
-    ) : null;
-  } else if (theme === 'mui') {
+  if (theme === 'material-ui-5') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssBaseline />
