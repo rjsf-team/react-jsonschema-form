@@ -29,12 +29,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.16.0
 
-## @rjsf/utils
-
-- Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
-
 ## @rjsf/core
 
+- Pass indexed title from array into its items, adding enhancement asked in [#3983](https://github.com/rjsf-team/react-jsonschema-form/issues/3983)
 - Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
 - Modify submit method to make it a public method, fixing [#4015](https://github.com/rjsf-team/react-jsonschema-form/issues/4015)
 - Support file deletion for `format: "data-url"` in `FileWidget`, fixing [#3957](https://github.com/rjsf-team/react-jsonschema-form/issues/3957).
