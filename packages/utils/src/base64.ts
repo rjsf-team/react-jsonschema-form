@@ -5,30 +5,26 @@
 const base64 = (function () {
   // If we are in the browser, we can use the built-in TextEncoder and TextDecoder
   // Otherwise, it is assumed that we are in node.js, and we can use the util module's TextEncoder and TextDecoder
-  function makeEncoder() {
-    if (typeof TextEncoder !== 'undefined') {
-      return new TextEncoder();
-    } else {
-      const { TextEncoder } = require('util');
-      return new TextEncoder();
-    }
-  }
-
-  function makeDecoder() {
-    if (typeof TextDecoder !== 'undefined') {
-      return new TextDecoder();
-    } else {
-      const { TextDecoder } = require('util');
-      return new TextDecoder();
-    }
-  }
-
   return {
     encode(text: string): string {
-      return btoa(String.fromCharCode(...makeEncoder().encode(text)));
+      let encoder: any;
+      if (typeof TextEncoder !== 'undefined') {
+        encoder = new TextEncoder();
+      } else {
+        const { TextEncoder } = require('util');
+        encoder = new TextEncoder();
+      }
+      return btoa(String.fromCharCode(...encoder.encode(text)));
     },
     decode(text: string): string {
-      return makeDecoder().decode(Uint8Array.from(atob(text), (c) => c.charCodeAt(0)));
+      let decoder: any;
+      if (typeof TextDecoder !== 'undefined') {
+        decoder = new TextDecoder();
+      } else {
+        const { TextDecoder } = require('util');
+        decoder = new TextDecoder();
+      }
+      return decoder.decode(Uint8Array.from(atob(text), (c) => c.charCodeAt(0)));
     },
   };
 })();
