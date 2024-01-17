@@ -16,16 +16,23 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.16.1
+# 5.16.2
 
 ## @rjsf/utils
 
-- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding` and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
+- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding`
+  and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
+
+## Dev / docs / playground
+
+- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Updated the base64 references from (`atob`
+  and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
+
+# 5.16.1
 
 ## Dev / docs / playground
 
 - Bumped peer dependencies due to new utils function
-- [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Updated the base64 references from (`atob` and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
 
 # 5.16.0
 
