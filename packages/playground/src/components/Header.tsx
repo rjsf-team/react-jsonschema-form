@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { base64, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import CopyLink from './CopyLink';
@@ -245,7 +245,7 @@ export default function Header({
     } = document;
 
     try {
-      const hash = btoa(
+      const hash = base64.encode(
         JSON.stringify({
           formData,
           schema,

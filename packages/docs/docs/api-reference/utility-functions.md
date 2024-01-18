@@ -1181,3 +1181,34 @@ For more information about how to specify the path see the [eslint lodash plugin
 #### Returns
 
 - ErrorSchemaBuilder&lt;T> - The instance of the `ErrorSchemaBuilder` class
+
+## utility object
+
+### base64
+
+An object providing base64 encoding and decoding functions using the UTF-8 charset.
+By default, the `btoa()` and `atob()` built-in functions are only support the Latin-1 character range that means that non Latin-1 characters are not supported(for example, Chinese characters).
+
+#### encode()
+
+Encodes the given `input` string into a base64 encoded string
+
+##### Parameters
+
+- input: string - The string to encode
+
+##### Returns
+
+- string: The base64 encoded string
+
+#### decode()
+
+Decodes the given `input` string from a base64 encoded string
+
+##### Parameters
+
+- input: string - The string to decode
+
+##### Returns
+
+- string: The decoded string

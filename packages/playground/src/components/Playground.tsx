@@ -1,6 +1,6 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { base64, ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';
@@ -92,7 +92,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
     if (hash && typeof hash[1] === 'string' && hash[1].length > 0 && !loaded) {
       try {
-        load(JSON.parse(atob(hash[1])));
+        const decoded = base64.decode(hash[1]);
+        load(JSON.parse(decoded));
         setLoaded(true);
       } catch (error) {
         alert('Unable to load form setup data.');
