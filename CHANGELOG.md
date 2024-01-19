@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.16.2
 
+## @rjsf/core
+
+- Added support for `anyOf`/`oneOf` in `uiSchema`s in the `MultiSchemaField`, fixing [#4039](https://github.com/rjsf-team/react-jsonschema-form/issues/4039)
+
 ## @rjsf/utils
 
 - [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding`
@@ -27,6 +31,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - [4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Updated the base64 references from (`atob`
   and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
+- Updated the `uiSchema.md` documentation to describe how to use the new `anyOf`/`oneOf` support
 
 # 5.16.1
 
