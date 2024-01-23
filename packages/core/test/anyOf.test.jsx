@@ -57,8 +57,6 @@ describe('anyOf', () => {
       schema,
     });
 
-    console.log(node.innerHTML);
-
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
     expect(node.querySelectorAll('span.required')).to.have.length.of(1);
@@ -91,8 +89,6 @@ describe('anyOf', () => {
     const { node } = createFormComponent({
       schema,
     });
-
-    console.log(node.innerHTML);
 
     expect(node.querySelectorAll('select')).to.have.length.of(1);
     expect(node.querySelector('select').id).eql('root__anyof_select');
@@ -1139,6 +1135,61 @@ describe('anyOf', () => {
       Simulate.change(strInputs[1], { target: { value: 'bar' } });
       expect(strInputs[1].value).eql('bar');
     });
+    it('should correctly render mixed types for anyOf inside array items', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              anyOf: [
+                {
+                  type: 'string',
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    foo: {
+                      type: 'integer',
+                    },
+                    bar: {
+                      type: 'string',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector('.array-item-add button')).not.eql(null);
+
+      Simulate.click(node.querySelector('.array-item-add button'));
+
+      const $select = node.querySelector('select');
+      expect($select).not.eql(null);
+      Simulate.change($select, {
+        target: { value: $select.options[1].value },
+      });
+
+      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
+      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(1);
+    });
+  });
+
+  describe('definitions', () => {
+    beforeEach(() => {
+      sandbox = createSandbox();
+      sandbox.stub(console, 'warn');
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
 
     it('should correctly set the label of the options', () => {
       const schema = {
@@ -1262,29 +1313,30 @@ describe('anyOf', () => {
       expect($select.options[2].text).eql('Baz');
     });
 
-    it('should correctly render mixed types for anyOf inside array items', () => {
+    it('should correctly set the label of the options, with uiSchema-based titles, for each anyOf option', () => {
       const schema = {
         type: 'object',
-        properties: {
-          items: {
-            type: 'array',
-            items: {
-              anyOf: [
-                {
-                  type: 'string',
-                },
-                {
-                  type: 'object',
-                  properties: {
-                    foo: {
-                      type: 'integer',
-                    },
-                    bar: {
-                      type: 'string',
-                    },
-                  },
-                },
-              ],
+        anyOf: [
+          {
+            title: 'Foo',
+            properties: {
+              foo: { type: 'string' },
+            },
+          },
+          {
+            properties: {
+              bar: { type: 'string' },
+            },
+          },
+          {
+            $ref: '#/definitions/baz',
+          },
+        ],
+        definitions: {
+          baz: {
+            title: 'Baz',
+            properties: {
+              baz: { type: 'string' },
             },
           },
         },
@@ -1292,20 +1344,79 @@ describe('anyOf', () => {
 
       const { node } = createFormComponent({
         schema,
+        uiSchema: {
+          anyOf: [
+            {
+              'ui:title': 'Custom foo',
+            },
+            {
+              'ui:title': 'Custom bar',
+            },
+            {
+              'ui:title': 'Custom baz',
+            },
+          ],
+        },
+      });
+      const $select = node.querySelector('select');
+
+      expect($select.options[0].text).eql('Custom foo');
+      expect($select.options[1].text).eql('Custom bar');
+      expect($select.options[2].text).eql('Custom baz');
+
+      // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
+      // matches the selected option's title
+      expect($select.value).eql('0');
+      const inputLabel = node.querySelector('legend#root__title');
+      expect(inputLabel.innerHTML).eql($select.options[$select.value].text);
+    });
+
+    it('should warn when the anyOf in the uiSchema is not an array, and pass the base uiSchema down', () => {
+      const schema = {
+        type: 'object',
+        anyOf: [
+          {
+            title: 'Foo',
+            properties: {
+              foo: { type: 'string' },
+            },
+          },
+          {
+            properties: {
+              bar: { type: 'string' },
+            },
+          },
+          {
+            $ref: '#/definitions/baz',
+          },
+        ],
+        definitions: {
+          baz: {
+            title: 'Baz',
+            properties: {
+              baz: { type: 'string' },
+            },
+          },
+        },
+      };
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:title': 'My Title',
+          anyOf: { 'ui:title': 'UiSchema title' },
+        },
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
-
-      Simulate.click(node.querySelector('.array-item-add button'));
+      expect(console.warn.calledWithMatch(/uiSchema.anyOf is not an array for "My Title"/)).to.be.true;
 
       const $select = node.querySelector('select');
-      expect($select).not.eql(null);
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
-      });
 
-      expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
-      expect(node.querySelectorAll('input#root_items_0_bar')).to.have.length.of(1);
+      // Also verify the base uiSchema was passed down to the underlying widget by confirming the label (in the legend)
+      // matches the selected option's title
+      expect($select.value).eql('0');
+      const inputLabel = node.querySelector('legend#root__title');
+      expect(inputLabel.innerHTML).eql('My Title');
     });
 
     it('should correctly infer the selected option based on value', () => {

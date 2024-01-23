@@ -45,11 +45,9 @@ describe('browser behavior', () => {
   });
   // restore the TextEncoder and TextDecoder to undefined
   afterAll(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error The TextEncoder type is not allowed to be undefined, but we do need to do it for tests
     global.TextEncoder = undefined;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error The TextDecoder type is not allowed to be undefined, but we do need to do it for tests
     global.TextDecoder = undefined;
   });
   it('should successfully create a base64 object and encode/decode string in browser', () => {
