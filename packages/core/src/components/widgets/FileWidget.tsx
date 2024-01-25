@@ -126,17 +126,26 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
 }
 
 function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-  return dataURLs
-    .filter((dataURL) => dataURL)
-    .map((dataURL) => {
+  return dataURLs.reduce((acc, dataURL) => {
+    if (!dataURL) {
+      return acc;
+    }
+    try {
       const { blob, name } = dataURItoBlob(dataURL);
-      return {
-        dataURL,
-        name: name,
-        size: blob.size,
-        type: blob.type,
-      };
-    });
+      return [
+        ...acc,
+        {
+          dataURL,
+          name: name,
+          size: blob.size,
+          type: blob.type,
+        },
+      ];
+    } catch (e) {
+      // Invalid dataURI, so just ignore it.
+      return acc;
+    }
+  }, [] as FileInfoType[]);
 }
 
 /**
