@@ -40,10 +40,6 @@ export default function dataURItoBlob(dataURILike: string) {
 
     return { blob, name };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error('File is invalid: ' + error.message);
-    } else {
-      throw new Error('File is invalid: failed to decode base64');
-    }
+    throw new Error('File is invalid: ' + (error as Error).message);
   }
 }
