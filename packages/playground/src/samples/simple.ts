@@ -44,7 +44,7 @@ const simple: Sample = {
       'ui:autocomplete': 'family-name',
       'ui:enableMarkdownInDescription': true,
       'ui:description':
-        'Make text **bold** or *italic*. Take a look at other options [here](https://probablyup.com/markdown-to-jsx/).',
+        'Make text **bold** or *italic*. Take a look at other options [here](https://markdown-to-jsx.quantizor.dev/).',
     },
     lastName: {
       'ui:autocomplete': 'given-name',
