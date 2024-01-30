@@ -69,9 +69,9 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
     return null;
   }
 
-  // If type is JPEG, PNG, or GIF, then show image preview.
+  // If type is JPEG or PNG then show image preview.
   // Originally, any type of image was supported, but this was changed into a whitelist
-  // since SVGs are also images, which is generally considered a security risk.
+  // since SVGs and animated GIFs are also images, which are generally considered a security risk.
   if (['image/jpeg', 'image/png'].includes(type)) {
     return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
   }
