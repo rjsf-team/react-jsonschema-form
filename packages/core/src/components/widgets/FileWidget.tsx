@@ -69,9 +69,14 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
     return null;
   }
 
-  if (type.indexOf('image') !== -1) {
+  // If type is JPEG or PNG then show image preview.
+  // Originally, any type of image was supported, but this was changed into a whitelist
+  // since SVGs and animated GIFs are also images, which are generally considered a security risk.
+  if (['image/jpeg', 'image/png'].includes(type)) {
     return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
   }
+
+  // otherwise, let users download file
 
   return (
     <>
@@ -121,17 +126,26 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
 }
 
 function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-  return dataURLs
-    .filter((dataURL) => dataURL)
-    .map((dataURL) => {
+  return dataURLs.reduce((acc, dataURL) => {
+    if (!dataURL) {
+      return acc;
+    }
+    try {
       const { blob, name } = dataURItoBlob(dataURL);
-      return {
-        dataURL,
-        name: name,
-        size: blob.size,
-        type: blob.type,
-      };
-    });
+      return [
+        ...acc,
+        {
+          dataURL,
+          name: name,
+          size: blob.size,
+          type: blob.type,
+        },
+      ];
+    } catch (e) {
+      // Invalid dataURI, so just ignore it.
+      return acc;
+    }
+  }, [] as FileInfoType[]);
 }
 
 /**

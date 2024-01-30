@@ -21,11 +21,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Added support for `anyOf`/`oneOf` in `uiSchema`s in the `MultiSchemaField`, fixing [#4039](https://github.com/rjsf-team/react-jsonschema-form/issues/4039)
+- Fix potential XSS vulnerability in the preview button of FileWidget, fixing [#4057](https://github.com/rjsf-team/react-jsonschema-form/issues/4057)
 
 ## @rjsf/utils
 
 - [#4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding` and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
 - Updated `enumOptionsValueForIndex()` to fix issue that filtered enum options with a value that was 0, fixing [#4067](https://github.com/rjsf-team/react-jsonschema-form/issues/4067)
+- Changes the way of parsing the data URL, to fix [#4057](https://github.com/rjsf-team/react-jsonschema-form/issues/4057)
 
 ## Dev / docs / playground
 
