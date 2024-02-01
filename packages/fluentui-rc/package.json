@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluentui-rc",
-  "version": "5.16.1",
+  "version": "5.17.0",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
     "build:ts": "tsc -b",
@@ -41,23 +41,23 @@
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
-    "@fluentui/react-components": "^9.44.0",
-    "@fluentui/react-icons": "^2.0.224",
-    "@fluentui/react-migration-v0-v9": "^9.1.4"
+    "@fluentui/react-components": "^9.46.3",
+    "@fluentui/react-icons": "^2.0.226",
+    "@fluentui/react-migration-v0-v9": "^9.1.14"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.23.9",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
-    "@babel/preset-env": "^7.23.7",
+    "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.16.1",
-    "@rjsf/snapshot-tests": "^5.16.1",
-    "@rjsf/utils": "^5.16.1",
-    "@rjsf/validator-ajv8": "^5.16.1",
-    "@types/jest": "^29.5.11",
-    "@types/react": "^17.0.74",
+    "@rjsf/core": "^5.17.0",
+    "@rjsf/snapshot-tests": "^5.17.0",
+    "@rjsf/utils": "^5.17.0",
+    "@rjsf/validator-ajv8": "^5.17.0",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^17.0.75",
     "@types/react-dom": "^17.0.25",
     "@types/react-test-renderer": "^17.0.9",
     "babel-jest": "^29.7.0",
