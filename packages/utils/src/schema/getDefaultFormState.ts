@@ -110,10 +110,17 @@ function maybeAddDefaultToObject<T = any>(
       // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
       // the field key itself in the `requiredField` list
       const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
-      // Store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+
+      // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
+      if (emptyObjectFields === 'skipEmptyDefaults') {
+        if (!isEmpty(computedDefault)) {
+          obj[key] = computedDefault;
+        }
+      }
+      // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
-      if (
+      else if (
         (!isEmpty(computedDefault) || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
@@ -340,6 +347,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     case 'array': {
       const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
       const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+      const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
+
+      const emptyDefault = isSkipEmptyDefaults ? undefined : [];
 
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
@@ -375,7 +385,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       }
 
       if (neverPopulate) {
-        return defaults ?? [];
+        return defaults ?? emptyDefault;
       }
       if (ignoreMinItemsFlagSet && !required) {
         // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
@@ -389,7 +399,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
         schema.minItems <= defaultsLength
       ) {
-        return defaults ? defaults : [];
+        return defaults ? defaults : emptyDefault;
       }
 
       const defaultEntries: T[] = (defaults || []) as T[];

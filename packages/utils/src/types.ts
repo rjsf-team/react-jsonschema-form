@@ -65,8 +65,9 @@ export type Experimental_DefaultFormStateBehavior = {
    * - `populateRequiredDefaults`: Only sets default when a value is an object and its parent field is required, or it
    *        is a primitive value and it is required |
    * - `skipDefaults`: Does not set defaults                                                                                                      |
+   * - `skipEmptyDefaults`: Does not set an empty default. It will still apply the default value if a default property is defined in your schema.                                                                                                 |
    */
-  emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults';
+  emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults' | 'skipEmptyDefaults';
   /**
    * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
    */
