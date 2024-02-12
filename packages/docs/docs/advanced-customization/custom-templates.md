@@ -480,7 +480,7 @@ function ErrorListTemplate(props: ErrorListProps) {
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
+  <Form schema={schema} validator={validator} templates={{ ErrorListTemplate }} />,
   document.getElementById('app')
 );
 ```
