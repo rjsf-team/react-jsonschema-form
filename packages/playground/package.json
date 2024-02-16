@@ -93,6 +93,8 @@
     "@monaco-editor/react": "^4.6.0",
     "@mui/icons-material": "5.15.2",
     "@types/lodash": "^4.14.202",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^18.19.14",
     "@types/react-frame-component": "^4.1.6",
     "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
