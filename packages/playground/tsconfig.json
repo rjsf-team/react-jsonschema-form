@@ -20,7 +20,7 @@
     "jsx": "react-jsx",
     "types": ["vite/client"]
   },
-  "include": ["src"],
+  "include": ["src", "test"],
   "references": [
     { "path": "../antd" },
     { "path": "../bootstrap-4" },
