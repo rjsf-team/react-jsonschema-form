@@ -129,9 +129,11 @@ function maybeAddDefaultToObject<T = any>(
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
       // Condition 1: computedDefault is not undefined
-      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or if the key is a required field
+      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults) or if the key is a required field
       computedDefault !== undefined &&
-      (emptyObjectFields === 'populateAllDefaults' || requiredFields.includes(key))
+      (emptyObjectFields === 'populateAllDefaults' ||
+        emptyObjectFields === 'skipEmptyDefaults' ||
+        requiredFields.includes(key))
     ) {
       obj[key] = computedDefault;
     }
