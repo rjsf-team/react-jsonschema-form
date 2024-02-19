@@ -18,16 +18,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.17.1
 
+## @rjsf/chakra-ui
+
+- Added support for `UiSchema` `"ui:rows"` option for `textarea` elements, fixing [#4070](https://github.com/rjsf-team/react-jsonschema-form/issues/4070).
+
 ## @rjsf/utils
 
-- Added a new `skipEmptyDefault` option  in  `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
+- Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
 
 ## Dev / docs / playground
 
 - Updated the documentation to describe how to use the `skipEmptyDefault` option.
-## @rjsf/chakra-ui
-
-- Added support for `UiSchema` `"ui:rows"` option for `textarea` elements, fixing [#4070](https://github.com/rjsf-team/react-jsonschema-form/issues/4070).
 
 # 5.17.0
 
