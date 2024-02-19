@@ -602,6 +602,8 @@ export type ArrayFieldTemplateProps<
   formContext?: F;
   /** The formData for this array */
   formData?: T;
+  /** The tree of errors for this field and its children */
+  errorSchema?: ErrorSchema<T>;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
   /** The `registry` object */

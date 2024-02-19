@@ -1,6 +1,7 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import { base64, ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import base64 from '../utils/base64';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';

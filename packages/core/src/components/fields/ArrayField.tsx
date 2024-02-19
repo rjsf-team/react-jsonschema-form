@@ -787,6 +787,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       uiSchema,
       title: fieldTitle,
       formContext,
+      errorSchema,
       rawErrors,
     };
 
