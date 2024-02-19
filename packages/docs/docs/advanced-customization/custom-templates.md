@@ -104,6 +104,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
+- `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
 - `registry`: The `registry` object.
 
