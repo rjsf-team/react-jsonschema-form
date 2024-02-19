@@ -22,15 +22,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for `UiSchema` `"ui:rows"` option for `textarea` elements, fixing [#4070](https://github.com/rjsf-team/react-jsonschema-form/issues/4070).
 
-# @rjsf/utils
+## @rjsf/core
+
+- [#4091](https://github.com/rjsf-team/react-jsonschema-form/issues/4091) Added `errorSchema` to `ArrayFieldTemplate` props.
+
+## @rjsf/utils
 
 - [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - BREAKING CHANGE: Removed the `base64` object from the `@rjsf/utils` package. Note that this is a breaking change if you relied on the `base64` object exported by `@rjsf/utils`. Since this change caused [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080), and was only internally used by playground code, we are shipping this change in a patch release.
+- [#4091](https://github.com/rjsf-team/react-jsonschema-form/issues/4091) Added `errorSchema` to the `ArrayFieldTemplateProps` type.
 
 ## Dev / docs / playground
 
 - [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package. 
-- Added test configuration and script to the Playground. 
-
+- Added test configuration and script to the Playground.
 
 # 5.17.0
 
