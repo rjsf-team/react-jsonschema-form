@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluentui-rc",
-  "version": "5.17.0",
+  "version": "5.17.1",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
     "build:ts": "tsc -b",
@@ -52,10 +52,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.17.0",
-    "@rjsf/snapshot-tests": "^5.17.0",
-    "@rjsf/utils": "^5.17.0",
-    "@rjsf/validator-ajv8": "^5.17.0",
+    "@rjsf/core": "^5.17.1",
+    "@rjsf/snapshot-tests": "^5.17.1",
+    "@rjsf/utils": "^5.17.1",
+    "@rjsf/validator-ajv8": "^5.17.1",
     "@types/jest": "^29.5.12",
     "@types/react": "^17.0.75",
     "@types/react-dom": "^17.0.25",
