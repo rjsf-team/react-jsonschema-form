@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.0
+
+## @rjsf/utils
+
+- Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
+
+## Dev / docs / playground
+
+- Updated the documentation to describe how to use the `skipEmptyDefault` option.
+
 # 5.17.1
 
 ## @rjsf/chakra-ui

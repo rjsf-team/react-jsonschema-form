@@ -147,6 +147,11 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
             {
               type: 'string',
+              title: 'Assign value to formData when only default is set',
+              enum: ['skipEmptyDefaults'],
+            },
+            {
+              type: 'string',
               title: 'Does not set defaults',
               enum: ['skipDefaults'],
             },
