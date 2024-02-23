@@ -382,7 +382,9 @@ export default class Form<
     const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
 
     const getCurrentErrors = (): ValidationData<T> => {
-      if (props.noValidate) {
+      // f the `props.novalidate` option is set, we reset the error state.
+      // Or if the `retrievedSchema` param is undefined, this indicates that the schema has changed. Therefore, we also reset the error state.
+      if (props.noValidate || typeof retrievedSchema === 'undefined') {
         return { errors: [], errorSchema: {} };
       } else if (!props.liveValidate) {
         return {
