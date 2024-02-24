@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 
@@ -136,7 +137,7 @@ describe('ObjectField', () => {
     it('should handle object fields change events', () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.change(node.querySelector('input[type=text]'), {
+      fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'changed' },
       });
 
@@ -154,7 +155,7 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, onBlur });
 
       const input = node.querySelector('input[type=text]');
-      Simulate.blur(input, {
+      fireEvent.blur(input, {
         target: { value: 'changed' },
       });
 
@@ -166,7 +167,7 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, onFocus });
 
       const input = node.querySelector('input[type=text]');
-      Simulate.focus(input, {
+      fireEvent.focus(input, {
         target: { value: 'changed' },
       });
 
@@ -591,7 +592,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'newFirst' },
       });
 
@@ -617,7 +618,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'Renamed custom title' },
       });
 
@@ -649,7 +650,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'Renamed custom title' },
       });
 
@@ -664,7 +665,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_second-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'newSecond' },
       });
 
@@ -690,7 +691,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'second' },
       });
 
@@ -717,7 +718,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'second' },
       });
 
@@ -746,7 +747,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'second' },
       });
 
@@ -769,7 +770,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode);
+      fireEvent.blur(textNode);
 
       sinon.assert.notCalled(onChange);
     });
@@ -791,7 +792,7 @@ describe('ObjectField', () => {
       });
 
       const textNode = node.querySelector('#root_first-key');
-      Simulate.blur(textNode, {
+      fireEvent.blur(textNode, {
         target: { value: 'second' },
       });
 
@@ -827,7 +828,7 @@ describe('ObjectField', () => {
     it('should add a new property when clicking the expand button', () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -842,7 +843,7 @@ describe('ObjectField', () => {
         formData: { newKey: 1 },
       });
 
-      Simulate.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.object-property-expand button'));
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
           'newKey-1': 'New Value',
@@ -866,7 +867,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      Simulate.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -886,7 +887,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      Simulate.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -954,7 +955,7 @@ describe('ObjectField', () => {
 
       expect(node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger')).eql(null);
 
-      Simulate.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.object-property-expand button'));
 
       expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).to.not.be.null;
     });
@@ -965,7 +966,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
       expect(node.querySelector('#root_first-key').value).to.eql('first');
-      Simulate.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'));
+      fireEvent.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger'));
       expect(node.querySelector('#root_first-key')).to.not.exist;
     });
 
@@ -976,7 +977,7 @@ describe('ObjectField', () => {
       });
       const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
       expect(node.querySelectorAll(selector).length).to.eql(3);
-      Simulate.click(node.querySelectorAll(selector)[1]);
+      fireEvent.click(node.querySelectorAll(selector)[1]);
       expect(node.querySelector('#root_second-key')).to.not.exist;
       expect(node.querySelectorAll(selector).length).to.eql(2);
     });
@@ -987,7 +988,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      Simulate.change(node.querySelector('#root_first'), {
+      fireEvent.change(node.querySelector('#root_first'), {
         target: { value: '' },
       });
 
@@ -1005,8 +1006,8 @@ describe('ObjectField', () => {
         formData: { first: true },
       });
 
-      Simulate.change(node.querySelector('#root_first'), {
-        target: { checked: false },
+      act(() => {
+        fireEvent.click(node.querySelector('#root_first'));
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1023,7 +1024,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      Simulate.change(node.querySelector('#root_first'), {
+      fireEvent.change(node.querySelector('#root_first'), {
         target: { value: 0 },
       });
 
@@ -1038,8 +1039,10 @@ describe('ObjectField', () => {
         formData: { first: 'str' },
       });
 
-      Simulate.change(node.querySelector('#root_first'), {
-        target: { value: null },
+      act(() => {
+        Simulate.change(node.querySelector('#root_first'), {
+          target: { value: null },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {

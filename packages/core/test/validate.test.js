@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 
 import { createFormComponent, submitForm } from './test_utils';
 import v6Validator, { customizeValidator as customizeV6Validator } from '@rjsf/validator-ajv6';
@@ -210,8 +210,11 @@ describe('Validation', () => {
           liveValidate: true,
           validator: v6Validator,
         });
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '1234' },
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '1234' },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -538,8 +541,10 @@ describe('Validation', () => {
         ]);
         onError.resetHistory();
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '1234' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '1234' },
+          });
         });
         expect(node.querySelectorAll('.errors li')).to.have.length.of(0);
         sinon.assert.notCalled(onError);
@@ -687,8 +692,11 @@ describe('Validation', () => {
           formData,
           liveValidate: true,
         });
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '1234' },
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '1234' },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1008,8 +1016,10 @@ describe('Validation', () => {
         ]);
         onError.resetHistory();
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '1234' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '1234' },
+          });
         });
         expect(node.querySelectorAll('.errors li')).to.have.length.of(0);
         sinon.assert.notCalled(onError);

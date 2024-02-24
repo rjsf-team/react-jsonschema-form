@@ -64,9 +64,7 @@ exports[`single fields checkbox field 1`] = `
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-        >
-          
-        </span>
+        />
       </label>
     </div>
   </div>
@@ -490,7 +488,6 @@ exports[`single fields field with description 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -613,7 +610,6 @@ exports[`single fields field with description in uiSchema 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -1158,7 +1154,6 @@ exports[`single fields hidden field 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={

@@ -43,7 +43,6 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -230,9 +229,7 @@ exports[`single fields checkbox field 1`] = `
                     className="ant-checkbox-inner"
                   />
                 </span>
-                <span>
-                  
-                </span>
+                <span />
               </label>
             </div>
           </div>
@@ -562,7 +559,6 @@ exports[`single fields field with description 1`] = `
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -718,7 +714,6 @@ exports[`single fields field with description in uiSchema 1`] = `
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -1418,9 +1413,7 @@ exports[`single fields hidden field 1`] = `
                       "rowGap": undefined,
                     }
                   }
-                >
-                  
-                </div>
+                />
               </fieldset>
             </div>
           </div>
@@ -2284,9 +2277,7 @@ exports[`single fields select field 1`] = `
                   </span>
                   <span
                     className="ant-select-selection-placeholder"
-                  >
-                    
-                  </span>
+                  />
                 </div>
                 <span
                   aria-hidden={true}
@@ -2450,7 +2441,6 @@ exports[`single fields select field multiple choice 1`] = `
                           aria-hidden={true}
                           className="ant-select-selection-search-mirror"
                         >
-                          
                            
                         </span>
                       </div>
@@ -2622,7 +2612,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                           aria-hidden={true}
                           className="ant-select-selection-search-mirror"
                         >
-                          
                            
                         </span>
                       </div>
@@ -2910,7 +2899,6 @@ exports[`single fields select field multiple choice formData 1`] = `
                           aria-hidden={true}
                           className="ant-select-selection-search-mirror"
                         >
-                          
                            
                         </span>
                       </div>
@@ -3079,7 +3067,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
                           aria-hidden={true}
                           className="ant-select-selection-search-mirror"
                         >
-                          
                            
                         </span>
                       </div>
@@ -3227,9 +3214,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   </span>
                   <span
                     className="ant-select-selection-placeholder"
-                  >
-                    
-                  </span>
+                  />
                 </div>
                 <span
                   aria-hidden={true}

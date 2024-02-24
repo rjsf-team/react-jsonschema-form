@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { act, Simulate } from 'react-dom/test-utils';
+import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 
@@ -122,7 +123,7 @@ describe('StringField', () => {
       });
 
       act(() => {
-        Simulate.change(node.querySelector('input'), {
+        fireEvent.change(node.querySelector('input'), {
           target: { value: 'yo' },
         });
       });
@@ -145,7 +146,7 @@ describe('StringField', () => {
         onBlur,
       });
       const input = node.querySelector('input');
-      Simulate.blur(input, {
+      fireEvent.blur(input, {
         target: { value: 'yo' },
       });
 
@@ -161,7 +162,7 @@ describe('StringField', () => {
         onFocus,
       });
       const input = node.querySelector('input');
-      Simulate.focus(input, {
+      fireEvent.focus(input, {
         target: { value: 'yo' },
       });
 
@@ -174,7 +175,7 @@ describe('StringField', () => {
         formData: 'x',
       });
 
-      Simulate.change(node.querySelector('input'), {
+      fireEvent.change(node.querySelector('input'), {
         target: { value: '' },
       });
 
@@ -188,7 +189,7 @@ describe('StringField', () => {
         formData: 'x',
       });
 
-      Simulate.change(node.querySelector('input'), {
+      fireEvent.change(node.querySelector('input'), {
         target: { value: '' },
       });
 
@@ -209,7 +210,7 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('input'), {
+      fireEvent.change(node.querySelector('input'), {
         target: { value: '' },
       });
 
@@ -352,7 +353,7 @@ describe('StringField', () => {
         },
       });
       act(() => {
-        Simulate.change(node.querySelector('select'), {
+        fireEvent.change(node.querySelector('select'), {
           target: { value: 0 }, // use index
         });
       });
@@ -373,8 +374,10 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: '' },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -394,8 +397,10 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 0 }, // use index
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: 0 }, // use index
+        });
       });
 
       expect(getSelectedOptionValue(node.querySelector('select'))).eql('foo');
@@ -409,8 +414,10 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: '' },
+        });
       });
 
       expect(getSelectedOptionValue(node.querySelector('select'))).eql('');
@@ -528,8 +535,10 @@ describe('StringField', () => {
         formData: 'x',
       });
 
-      Simulate.change(node.querySelector('textarea'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('textarea'), {
+          target: { value: '' },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -551,8 +560,10 @@ describe('StringField', () => {
         formData: 'x',
       });
 
-      Simulate.change(node.querySelector('textarea'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('textarea'), {
+          target: { value: '' },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -615,8 +626,10 @@ describe('StringField', () => {
 
       const newDatetime = new Date().toJSON();
 
-      Simulate.change(node.querySelector('[type=datetime-local]'), {
-        target: { value: newDatetime },
+      act(() => {
+        Simulate.change(node.querySelector('[type=datetime-local]'), {
+          target: { value: newDatetime },
+        });
       });
 
       expect(node.querySelector('[type=datetime-local]').value).eql(utcToLocal(newDatetime));
@@ -658,8 +671,10 @@ describe('StringField', () => {
       });
       let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
       expect(inputs).to.have.length.of(0);
-      Simulate.change(node.querySelector('[type=datetime-local]'), {
-        target: { value: 'invalid' },
+      act(() => {
+        Simulate.change(node.querySelector('[type=datetime-local]'), {
+          target: { value: 'invalid' },
+        });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
         errorSchema: { __errors: ['must be string'] },
@@ -691,8 +706,10 @@ describe('StringField', () => {
       let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
 
       expect(inputs).to.have.length.of(0);
-      Simulate.change(node.querySelector('[type=datetime-local]'), {
-        target: { value: 'invalid' },
+      act(() => {
+        Simulate.change(node.querySelector('[type=datetime-local]'), {
+          target: { value: 'invalid' },
+        });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
         errorSchema: { __errors: ['must be string'] },
@@ -783,8 +800,10 @@ describe('StringField', () => {
 
       const newDatetime = '2012-12-12';
 
-      Simulate.change(node.querySelector('[type=date]'), {
-        target: { value: newDatetime },
+      act(() => {
+        fireEvent.change(node.querySelector('[type=date]'), {
+          target: { value: newDatetime },
+        });
       });
 
       expect(node.querySelector('[type=date]').value)
@@ -830,8 +849,10 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=date]'), {
-        target: { value: '2012-12-12' },
+      act(() => {
+        fireEvent.change(node.querySelector('[type=date]'), {
+          target: { value: '2012-12-12' },
+        });
       });
 
       sinon.assert.notCalled(onError);
@@ -851,8 +872,10 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=date]'), {
-        target: { value: 'invalid' },
+      act(() => {
+        Simulate.change(node.querySelector('[type=date]'), {
+          target: { value: 'invalid' },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -936,8 +959,10 @@ describe('StringField', () => {
 
       const newTime = '11:10';
 
-      Simulate.change(node.querySelector('[type=time]'), {
-        target: { value: newTime },
+      act(() => {
+        fireEvent.change(node.querySelector('[type=time]'), {
+          target: { value: newTime },
+        });
       });
 
       expect(node.querySelector('[type=time]').value).eql(`${newTime}:00`);
@@ -978,8 +1003,10 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=time]'), {
-        target: { value: 'invalid' },
+      act(() => {
+        Simulate.change(node.querySelector('[type=time]'), {
+          target: { value: 'invalid' },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1055,7 +1082,9 @@ describe('StringField', () => {
     });
 
     it('should assign a default value', () => {
-      const datetime = new Date().toJSON();
+      const current = new Date();
+      current.setMilliseconds(0);
+      const datetime = current.toJSON();
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -1080,22 +1109,22 @@ describe('StringField', () => {
       });
 
       act(() => {
-        Simulate.change(node.querySelector('#root_year'), {
+        fireEvent.change(node.querySelector('#root_year'), {
           target: { value: 2012 - 1900 }, // convert year to index
         });
-        Simulate.change(node.querySelector('#root_month'), {
+        fireEvent.change(node.querySelector('#root_month'), {
           target: { value: 9 }, // Month index
         });
-        Simulate.change(node.querySelector('#root_day'), {
+        fireEvent.change(node.querySelector('#root_day'), {
           target: { value: 1 }, // Day index
         });
-        Simulate.change(node.querySelector('#root_hour'), {
+        fireEvent.change(node.querySelector('#root_hour'), {
           target: { value: 1 },
         });
-        Simulate.change(node.querySelector('#root_minute'), {
+        fireEvent.change(node.querySelector('#root_minute'), {
           target: { value: 2 },
         });
-        Simulate.change(node.querySelector('#root_second'), {
+        fireEvent.change(node.querySelector('#root_second'), {
           target: { value: 3 },
         });
       });
@@ -1196,7 +1225,7 @@ describe('StringField', () => {
         });
 
         act(() => {
-          Simulate.click(node.querySelector('a.btn-now'));
+          fireEvent.click(node.querySelector('a.btn-now'));
         });
         const formValue = onChange.lastCall.args[0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
@@ -1215,8 +1244,8 @@ describe('StringField', () => {
         });
 
         act(() => {
-          Simulate.click(node.querySelector('a.btn-now'));
-          Simulate.click(node.querySelector('a.btn-clear'));
+          fireEvent.click(node.querySelector('a.btn-now'));
+          fireEvent.click(node.querySelector('a.btn-clear'));
         });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1362,13 +1391,13 @@ describe('StringField', () => {
       });
 
       act(() => {
-        Simulate.change(node.querySelector('#root_year'), {
+        fireEvent.change(node.querySelector('#root_year'), {
           target: { value: 2012 - 1900 }, // convert year to index
         });
-        Simulate.change(node.querySelector('#root_month'), {
+        fireEvent.change(node.querySelector('#root_month'), {
           target: { value: 9 }, // Month index
         });
-        Simulate.change(node.querySelector('#root_day'), {
+        fireEvent.change(node.querySelector('#root_day'), {
           target: { value: 1 }, // Day index
         });
       });
@@ -1387,10 +1416,10 @@ describe('StringField', () => {
       });
 
       act(() => {
-        Simulate.change(node.querySelector('#root_year'), {
+        fireEvent.change(node.querySelector('#root_year'), {
           target: { value: 2012 - 1900 }, // convert year to index
         });
-        Simulate.change(node.querySelector('#root_month'), {
+        fireEvent.change(node.querySelector('#root_month'), {
           target: { value: 9 }, // Month index
         });
       });
@@ -1568,7 +1597,7 @@ describe('StringField', () => {
         });
 
         act(() => {
-          Simulate.click(node.querySelector('a.btn-now'));
+          fireEvent.click(node.querySelector('a.btn-now'));
         });
 
         const expected = toDateString(parseDateString(new Date().toJSON()), false);
@@ -1588,8 +1617,8 @@ describe('StringField', () => {
         });
 
         act(() => {
-          Simulate.click(node.querySelector('a.btn-now'));
-          Simulate.click(node.querySelector('a.btn-clear'));
+          fireEvent.click(node.querySelector('a.btn-now'));
+          fireEvent.click(node.querySelector('a.btn-clear'));
         });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1679,7 +1708,7 @@ describe('StringField', () => {
 
       const newDatetime = new Date().toJSON();
 
-      Simulate.change(node.querySelector('[type=email]'), {
+      fireEvent.change(node.querySelector('[type=email]'), {
         target: { value: newDatetime },
       });
 
@@ -1722,7 +1751,7 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=email]'), {
+      fireEvent.change(node.querySelector('[type=email]'), {
         target: { value: 'invalid' },
       });
 
@@ -1818,7 +1847,7 @@ describe('StringField', () => {
       });
 
       const newDatetime = new Date().toJSON();
-      Simulate.change(node.querySelector('[type=url]'), {
+      fireEvent.change(node.querySelector('[type=url]'), {
         target: { value: newDatetime },
       });
 
@@ -1862,7 +1891,7 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=url]'), {
+      fireEvent.change(node.querySelector('[type=url]'), {
         target: { value: 'invalid' },
       });
 
@@ -1937,8 +1966,10 @@ describe('StringField', () => {
 
       const newColor = '#654321';
 
-      Simulate.change(node.querySelector('[type=color]'), {
-        target: { value: newColor },
+      act(() => {
+        fireEvent.change(node.querySelector('[type=color]'), {
+          target: { value: newColor },
+        });
       });
 
       expect(node.querySelector('[type=color]').value).eql(newColor);
@@ -1979,8 +2010,10 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
-      Simulate.change(node.querySelector('[type=color]'), {
-        target: { value: 'invalid' },
+      act(() => {
+        Simulate.change(node.querySelector('[type=color]'), {
+          target: { value: 'invalid' },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -2058,10 +2091,12 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('[type=file]'), {
-        target: {
-          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
-        },
+      await act(() => {
+        fireEvent.change(node.querySelector('[type=file]'), {
+          target: {
+            files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
       await new Promise(setImmediate);
@@ -2090,26 +2125,32 @@ describe('StringField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('[type=file]'), {
-        target: {
-          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
-        },
+      await act(() => {
+        fireEvent.change(node.querySelector('[type=file]'), {
+          target: {
+            files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
       await new Promise(setImmediate);
 
-      Simulate.change(node.querySelector('[type=file]'), {
-        target: {
-          files: [{ name: 'file2.txt', size: 1, type: 'type' }],
-        },
+      await act(() => {
+        fireEvent.change(node.querySelector('[type=file]'), {
+          target: {
+            files: [{ name: 'file2.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
       await new Promise(setImmediate);
 
-      Simulate.change(node.querySelector('[type=file]'), {
-        target: {
-          files: [{ name: 'file3.txt', size: 1, type: 'type' }],
-        },
+      await act(() => {
+        fireEvent.change(node.querySelector('[type=file]'), {
+          target: {
+            files: [{ name: 'file3.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
       await new Promise(setImmediate);
@@ -2142,8 +2183,8 @@ describe('StringField', () => {
         },
       });
 
-      act(() => {
-        Simulate.change(node.querySelector('[type=file]'), {
+      await act(() => {
+        fireEvent.change(node.querySelector('[type=file]'), {
           target: {
             files: [{ name: nonUriEncodedValue, size: 1, type: 'type' }],
           },
@@ -2249,7 +2290,7 @@ describe('StringField', () => {
 
       // Click the delete button
       act(() => {
-        Simulate.click(deleteButton);
+        fireEvent.click(deleteButton);
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: undefined,
@@ -2280,7 +2321,7 @@ describe('StringField', () => {
       const deleteButton = file2.querySelector('button[title="Remove"]');
       expect(deleteButton).to.exist;
       act(() => {
-        Simulate.click(deleteButton);
+        fireEvent.click(deleteButton);
       });
 
       // Check that the file is deleted

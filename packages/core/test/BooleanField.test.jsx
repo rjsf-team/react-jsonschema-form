@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
@@ -319,9 +319,10 @@ describe('BooleanField', () => {
       },
     });
 
-    Simulate.change(node.querySelector('input'), {
-      target: { checked: true },
+    act(() => {
+      fireEvent.click(node.querySelector('input'));
     });
+
     sinon.assert.calledWithMatch(onChange.lastCall, { formData: true }, 'root');
   });
 
@@ -464,7 +465,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    Simulate.focus(node.querySelector('input'), {
+    fireEvent.focus(node.querySelector('input'), {
       target: {
         value: 1, // use index
       },
@@ -486,7 +487,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    Simulate.blur(node.querySelector('input'), {
+    fireEvent.blur(node.querySelector('input'), {
       target: {
         value: 1, // use index
       },
@@ -523,7 +524,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    Simulate.focus(element, {
+    fireEvent.focus(element, {
       target: {
         value: 1, // use index
       },
@@ -545,7 +546,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    Simulate.blur(element, {
+    fireEvent.blur(element, {
       target: {
         value: 1, // use index
       },
@@ -590,7 +591,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    Simulate.focus(element, {
+    fireEvent.focus(element, {
       target: {
         checked: false,
       },
@@ -612,7 +613,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    Simulate.blur(element, {
+    fireEvent.blur(element, {
       target: {
         checked: false,
       },
@@ -694,8 +695,10 @@ describe('BooleanField', () => {
       const $select = node.querySelector('.field select');
       expect($select.value).eql('');
 
-      Simulate.change($select, {
-        target: { value: 0 }, // use index
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: 0 }, // use index
+        });
       });
       expect(getSelectedOptionValue($select)).eql('true');
       expect(spy.lastCall.args[0].formData).eql(true);
@@ -732,8 +735,10 @@ describe('BooleanField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 1 }, // use index
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: 1 }, // use index
+        });
       });
 
       sinon.assert.calledWithMatch(
