@@ -1022,7 +1022,6 @@ exports[`array fields empty errors array 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -1419,7 +1418,6 @@ exports[`array fields has errors 1`] = `
       className="chakra-form-control emotion-1"
       role="group"
     >
-      
       <div
         className="emotion-6"
       >
@@ -1560,7 +1558,6 @@ exports[`array fields no errors 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >

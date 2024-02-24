@@ -367,10 +367,7 @@ exports[`single fields checkboxes field 1`] = `
           "fontWeight": "normal",
         }
       }
-    >
-      
-    </span>
-    
+    />
   </div>
   <div>
     <br />
@@ -423,7 +420,6 @@ exports[`single fields field with description 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -542,7 +538,6 @@ exports[`single fields field with description in uiSchema 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -1095,7 +1090,6 @@ exports[`single fields format color 1`] = `
         </table>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1185,9 +1179,7 @@ exports[`single fields format date 1`] = `
               >
                 <span
                   className="readOnlyPlaceholder-157"
-                >
-                  
-                </span>
+                />
               </div>
               <i
                 aria-hidden={true}
@@ -1206,12 +1198,10 @@ exports[`single fields format date 1`] = `
               aria-live="assertive"
               className="statusMessage-155"
             />
-            
           </span>
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1293,7 +1283,6 @@ exports[`single fields format datetime 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1375,7 +1364,6 @@ exports[`single fields format time 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1494,7 +1482,6 @@ exports[`single fields help and error display 1`] = `
         />
       </span>
     </div>
-    
     <div
       className="ms-List"
       id="root__error"
@@ -1514,9 +1501,7 @@ exports[`single fields help and error display 1`] = `
             data-automationid="ListCell"
             data-list-index={0}
             role="listitem"
-          >
-            
-          </div>
+          />
         </div>
       </div>
     </div>
@@ -1578,7 +1563,6 @@ exports[`single fields hidden field 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -1734,9 +1718,7 @@ exports[`single fields null field 1`] = `
         "marginBottom": 15,
       }
     }
-  >
-    
-  </div>
+  />
   <div>
     <br />
     <div
@@ -1818,7 +1800,6 @@ exports[`single fields number field 0 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1901,7 +1882,6 @@ exports[`single fields number field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -1983,7 +1963,6 @@ exports[`single fields password field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2115,7 +2094,6 @@ exports[`single fields radio field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2217,7 +2195,6 @@ exports[`single fields schema examples 1`] = `
         value="Safari"
       />
     </datalist>
-    
   </div>
   <div>
     <br />
@@ -2310,7 +2287,6 @@ exports[`single fields select field 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2404,7 +2380,6 @@ exports[`single fields select field multiple choice 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2498,7 +2473,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2592,7 +2566,6 @@ exports[`single fields select field multiple choice formData 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2686,7 +2659,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2779,7 +2751,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -2874,7 +2845,6 @@ exports[`single fields select field single choice formData 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3000,7 +2970,6 @@ exports[`single fields slider field 1`] = `
         </label>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3084,7 +3053,6 @@ exports[`single fields string field format data-url 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3166,7 +3134,6 @@ exports[`single fields string field format email 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3248,7 +3215,6 @@ exports[`single fields string field format uri 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3330,7 +3296,6 @@ exports[`single fields string field regular 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3412,7 +3377,6 @@ exports[`single fields string field with placeholder 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3494,7 +3458,6 @@ exports[`single fields textarea field 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3606,7 +3569,6 @@ exports[`single fields title field 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -3682,7 +3644,6 @@ exports[`single fields unsupported field 1`] = `
         {}
       </pre>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3742,7 +3703,6 @@ exports[`single fields up/down field 1`] = `
     <div
       className="root-165"
     >
-      
       <div
         aria-describedby="root__error root__description root__help"
         className="spinButtonWrapper-169"
@@ -3841,7 +3801,6 @@ exports[`single fields up/down field 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -3923,7 +3882,6 @@ exports[`single fields using custom tagName 1`] = `
         </div>
       </div>
     </div>
-    
   </div>
   <div>
     <br />

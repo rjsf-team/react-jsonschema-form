@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, setProps } from './test_utils';
@@ -122,8 +123,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -164,8 +167,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -202,8 +207,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -271,8 +278,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     expect(node.querySelectorAll('#root_foo')).to.have.length.of(0);
@@ -300,8 +309,10 @@ describe('oneOf', () => {
       schema,
     });
 
-    Simulate.change(node.querySelector('input#root_foo'), {
-      target: { value: 'Lorem ipsum dolor sit amet' },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_foo'), {
+        target: { value: 'Lorem ipsum dolor sit amet' },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -337,8 +348,10 @@ describe('oneOf', () => {
       schema,
     });
 
-    Simulate.change(node.querySelector('input#root_buzz'), {
-      target: { value: 'Lorem ipsum dolor sit amet' },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_buzz'), {
+        target: { value: 'Lorem ipsum dolor sit amet' },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -351,8 +364,10 @@ describe('oneOf', () => {
       'root_buzz'
     );
 
-    Simulate.change(node.querySelector('input#root_foo'), {
-      target: { value: 'Consectetur adipiscing elit' },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_foo'), {
+        target: { value: 'Consectetur adipiscing elit' },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -368,8 +383,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -401,8 +418,10 @@ describe('oneOf', () => {
       schema,
     });
 
-    Simulate.change(node.querySelector('input#root_userId'), {
-      target: { value: 12345 },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_userId'), {
+        target: { value: 12345 },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -417,8 +436,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     sinon.assert.calledWithMatch(
@@ -431,9 +452,12 @@ describe('oneOf', () => {
       'root_userId'
     );
 
-    Simulate.change(node.querySelector('input#root_userId'), {
-      target: { value: 'Lorem ipsum dolor sit amet' },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_userId'), {
+        target: { value: 'Lorem ipsum dolor sit amet' },
+      });
     });
+
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
@@ -519,8 +543,10 @@ describe('oneOf', () => {
     const select = node.querySelector('select');
     expect(select.value).eql(select.options[1].value);
 
-    Simulate.change(select, {
-      target: { value: select.options[0].value },
+    act(() => {
+      fireEvent.change(select, {
+        target: { value: select.options[0].value },
+      });
     });
 
     expect(select.value).eql(select.options[0].value);
@@ -615,6 +641,7 @@ describe('oneOf', () => {
     };
 
     const { comp, node } = createFormComponent({
+      ref: React.createRef(),
       schema,
     });
 
@@ -664,14 +691,18 @@ describe('oneOf', () => {
 
     expect($select.value).eql('0');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     expect($select.value).eql('1');
 
-    Simulate.change(node.querySelector('input#root_items_bar'), {
-      target: { value: 'Lorem ipsum dolor sit amet' },
+    act(() => {
+      fireEvent.change(node.querySelector('input#root_items_bar'), {
+        target: { value: 'Lorem ipsum dolor sit amet' },
+      });
     });
 
     expect($select.value).eql('1');
@@ -708,8 +739,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     expect($select.value).eql('1');
@@ -743,8 +776,10 @@ describe('oneOf', () => {
 
     const $select = node.querySelector('select');
 
-    Simulate.change($select, {
-      target: { value: $select.options[1].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
     });
 
     expect($select.value).eql('1');
@@ -808,8 +843,10 @@ describe('oneOf', () => {
 
     expect($select.value).eql('1');
 
-    Simulate.change($select, {
-      target: { value: $select.options[0].value },
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[0].value },
+      });
     });
 
     expect($select.value).eql('0');
@@ -856,12 +893,14 @@ describe('oneOf', () => {
 
       expect(node.querySelector('.array-item-add button')).not.eql(null);
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: $select.options[1].value },
+        });
       });
 
       expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
@@ -914,7 +953,7 @@ describe('oneOf', () => {
       expect(selects[1].value).eql('1');
 
       const moveUpBtns = node.querySelectorAll('.array-item-move-up');
-      Simulate.click(moveUpBtns[1]);
+      fireEvent.click(moveUpBtns[1]);
 
       selects = node.querySelectorAll('select');
       expect(selects[0].value).eql('1');
@@ -958,11 +997,14 @@ describe('oneOf', () => {
       });
 
       const moveDownBtns = node.querySelectorAll('.array-item-move-down');
-      Simulate.click(moveDownBtns[0]);
+      fireEvent.click(moveDownBtns[0]);
 
       const strInputs = node.querySelectorAll('fieldset .field-string input[type=text]');
 
-      Simulate.change(strInputs[1], { target: { value: 'bar' } });
+      act(() => {
+        fireEvent.change(strInputs[1], { target: { value: 'bar' } });
+      });
+
       expect(strInputs[1].value).eql('bar');
     });
 
@@ -1071,17 +1113,21 @@ describe('oneOf', () => {
 
       expect(node.querySelector('.array-item-add button')).not.eql(null);
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: $select.options[1].value },
+        });
       });
 
       // This works because the nested "add" button will now be the first to
       // appear in the dom
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect($select.value).to.eql($select.options[1].value);
     });
@@ -1348,12 +1394,15 @@ describe('oneOf', () => {
 
       expect(node.querySelector('.array-item-add button')).not.eql(null);
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
+
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: $select.options[1].value },
+        });
       });
 
       expect(node.querySelectorAll('input#root_items_0_foo')).to.have.length.of(1);
@@ -1519,8 +1568,10 @@ describe('oneOf', () => {
 
       const select = node.querySelector('select#root_craftTypes_0__oneof_select');
 
-      Simulate.change(select, {
-        target: { value: select.options[1].value },
+      act(() => {
+        fireEvent.change(select, {
+          target: { value: select.options[1].value },
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1558,24 +1609,30 @@ describe('oneOf', () => {
         customValidate,
       });
 
-      Simulate.change(node.querySelector('input#root_userId'), {
-        target: { value: 12345 },
+      act(() => {
+        fireEvent.change(node.querySelector('input#root_userId'), {
+          target: { value: 12345 },
+        });
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
       expect(inputs[0].id).eql('root_userId');
 
       const $select = node.querySelector('select');
 
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: $select.options[1].value },
+        });
       });
 
-      Simulate.change(node.querySelector('input#root_userId'), {
-        target: { value: 'Lorem ipsum dolor sit amet' },
+      act(() => {
+        fireEvent.change(node.querySelector('input#root_userId'), {
+          target: { value: 'Lorem ipsum dolor sit amet' },
+        });
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs[0].id).eql('root_userId');
@@ -1589,24 +1646,30 @@ describe('oneOf', () => {
         customValidate,
       });
 
-      Simulate.change(node.querySelector('input#root_userId'), {
-        target: { value: 12345 },
+      act(() => {
+        fireEvent.change(node.querySelector('input#root_userId'), {
+          target: { value: 12345 },
+        });
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
       expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector('select');
 
-      Simulate.change($select, {
-        target: { value: $select.options[1].value },
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: $select.options[1].value },
+        });
       });
 
-      Simulate.change(node.querySelector('input#root_userId'), {
-        target: { value: 'Lorem ipsum dolor sit amet' },
+      act(() => {
+        fireEvent.change(node.querySelector('input#root_userId'), {
+          target: { value: 'Lorem ipsum dolor sit amet' },
+        });
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs).to.have.length.of(0);

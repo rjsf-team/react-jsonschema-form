@@ -12,7 +12,6 @@ exports[`object fields additionalProperties 1`] = `
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -33,8 +32,8 @@ exports[`object fields additionalProperties 1`] = `
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-5__control"
-                  id="field-5__label"
+                  htmlFor="field-r4__control"
+                  id="field-r4__label"
                 >
                   foo Key
                 </label>
@@ -42,7 +41,7 @@ exports[`object fields additionalProperties 1`] = `
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-5__label"
+                    aria-labelledby="field-r4__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
@@ -185,7 +184,6 @@ exports[`object fields object 1`] = `
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -304,7 +302,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -325,8 +322,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-8__control"
-                  id="field-8__label"
+                  htmlFor="field-r7__control"
+                  id="field-r7__label"
                 >
                   additionalProperty Key
                 </label>
@@ -334,7 +331,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-8__label"
+                    aria-labelledby="field-r7__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
@@ -518,8 +515,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-16__control"
-                  id="field-16__label"
+                  htmlFor="field-rf__control"
+                  id="field-rf__label"
                 >
                   foo Key
                 </label>
@@ -527,7 +524,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-16__label"
+                    aria-labelledby="field-rf__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
@@ -711,8 +708,8 @@ exports[`object fields with title and description from both additionalProperties
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-40__control"
-                  id="field-40__label"
+                  htmlFor="field-r17__control"
+                  id="field-r17__label"
                 >
                   foo Key
                 </label>
@@ -720,7 +717,7 @@ exports[`object fields with title and description from both additionalProperties
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-40__label"
+                    aria-labelledby="field-r17__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
@@ -1075,8 +1072,8 @@ exports[`object fields with title and description from uiSchema additionalProper
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-28__control"
-                  id="field-28__label"
+                  htmlFor="field-rr__control"
+                  id="field-rr__label"
                 >
                   foo Key
                 </label>
@@ -1084,7 +1081,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-28__label"
+                    aria-labelledby="field-rr__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
@@ -1439,8 +1436,8 @@ exports[`object fields with title and description from uiSchema show add button 
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-32__control"
-                  id="field-32__label"
+                  htmlFor="field-rv__control"
+                  id="field-rv__label"
                 >
                   additionalProperty Key
                 </label>
@@ -1448,7 +1445,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-32__label"
+                    aria-labelledby="field-rv__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
@@ -1803,8 +1800,8 @@ exports[`object fields with title and description show add button and fields if 
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-20__control"
-                  id="field-20__label"
+                  htmlFor="field-rj__control"
+                  id="field-rj__label"
                 >
                   additionalProperty Key
                 </label>
@@ -1812,7 +1809,7 @@ exports[`object fields with title and description show add button and fields if 
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-20__label"
+                    aria-labelledby="field-rj__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
@@ -1955,7 +1952,6 @@ exports[`object fields with title and description with global label off addition
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -1976,8 +1972,8 @@ exports[`object fields with title and description with global label off addition
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-46__control"
-                  id="field-46__label"
+                  htmlFor="field-r1d__control"
+                  id="field-r1d__label"
                 >
                   foo Key
                 </label>
@@ -1985,7 +1981,7 @@ exports[`object fields with title and description with global label off addition
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-46__label"
+                    aria-labelledby="field-r1d__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
@@ -2122,7 +2118,6 @@ exports[`object fields with title and description with global label off object 1
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -2229,7 +2224,6 @@ exports[`object fields with title and description with global label off show add
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
     >
-      
       <div
         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
       >
@@ -2250,8 +2244,8 @@ exports[`object fields with title and description with global label off show add
               >
                 <label
                   className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                  htmlFor="field-49__control"
-                  id="field-49__label"
+                  htmlFor="field-r1g__control"
+                  id="field-r1g__label"
                 >
                   additionalProperty Key
                 </label>
@@ -2259,7 +2253,7 @@ exports[`object fields with title and description with global label off show add
                   className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-labelledby="field-49__label"
+                    aria-labelledby="field-r1g__label"
                     className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"

@@ -797,7 +797,6 @@ exports[`array fields empty errors array 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -1121,7 +1120,6 @@ exports[`array fields has errors 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -1241,7 +1239,6 @@ exports[`array fields no errors 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={

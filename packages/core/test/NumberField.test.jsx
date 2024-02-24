@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, setProps, submitForm } from './test_utils';
@@ -149,8 +150,10 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '2' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '2' },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -173,7 +176,7 @@ describe('NumberField', () => {
         });
 
         const input = node.querySelector('input');
-        Simulate.blur(input, {
+        fireEvent.blur(input, {
           target: { value: '2' },
         });
 
@@ -191,7 +194,7 @@ describe('NumberField', () => {
         });
 
         const input = node.querySelector('input');
-        Simulate.focus(input, {
+        fireEvent.focus(input, {
           target: { value: '2' },
         });
 
@@ -211,15 +214,6 @@ describe('NumberField', () => {
       });
 
       describe('when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value', () => {
-        const { node, onChange } = createFormComponent({
-          schema: {
-            type: 'number',
-          },
-          uiSchema,
-        });
-
-        const $input = node.querySelector('input');
-
         const tests = [
           {
             input: '2.',
@@ -265,20 +259,33 @@ describe('NumberField', () => {
 
         tests.forEach((test) => {
           it(`should work with an input value of ${test.input}`, () => {
-            Simulate.change($input, {
-              target: { value: test.input },
+            const { node, onChange } = createFormComponent({
+              schema: {
+                type: 'number',
+              },
+              uiSchema,
             });
 
-            sinon.assert.calledWithMatch(
-              onChange.lastCall,
-              {
-                formData: test.output,
-              },
-              'root'
-            );
-            // "2." is not really a valid number in a input field of type number
-            // so we need to use getAttribute("value") instead since .value outputs the empty string
-            expect($input.getAttribute('value')).eql(test.input);
+            const $input = node.querySelector('input');
+
+            act(() => {
+              fireEvent.change($input, {
+                target: { value: test.input },
+              });
+            });
+
+            setTimeout(() => {
+              sinon.assert.calledWithMatch(
+                onChange.lastCall,
+                {
+                  formData: test.output,
+                },
+                'root'
+              );
+              // "2." is not really a valid number in a input field of type number
+              // so we need to use getAttribute("value") instead since .value outputs the empty string
+              expect($input.getAttribute('value')).eql(test.input);
+            }, 0);
           });
         });
       });
@@ -293,8 +300,10 @@ describe('NumberField', () => {
 
         const $input = node.querySelector('input');
 
-        Simulate.change($input, {
-          target: { value: '.00' },
+        act(() => {
+          fireEvent.change($input, {
+            target: { value: '.00' },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -313,6 +322,7 @@ describe('NumberField', () => {
         };
 
         const { comp, node } = createFormComponent({
+          ref: React.createRef(),
           schema,
           uiSchema,
           formData: 2.03,
@@ -349,25 +359,36 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '2.' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '2.' },
+          });
         });
+
         // "2." is not really a valid number in a input field of type number
         // so we need to use getAttribute("value") instead since .value outputs the empty string
-        expect(node.querySelector('.field input').getAttribute('value')).eql('2.');
+        setTimeout(() => {
+          expect(node.querySelector('.field input').getAttribute('value')).eql('2.');
+        });
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '2.0' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '2.0' },
+          });
         });
         expect(node.querySelector('.field input').value).eql('2.0');
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '2.00' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '2.00' },
+          });
         });
         expect(node.querySelector('.field input').value).eql('2.00');
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '2.000' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '2.000' },
+          });
         });
         expect(node.querySelector('.field input').value).eql('2.000');
       });
@@ -380,8 +401,10 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        Simulate.change(node.querySelector('input'), {
-          target: { value: '0' },
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '0' },
+          });
         });
         expect(node.querySelector('.field input').value).eql('0');
       });
@@ -429,8 +452,10 @@ describe('NumberField', () => {
       const $select = node.querySelector('.field select');
       expect($select.value).eql('');
 
-      Simulate.change(node.querySelector('.field select'), {
-        target: { value: 0 }, // use index
+      act(() => {
+        fireEvent.change(node.querySelector('.field select'), {
+          target: { value: 0 }, // use index
+        });
       });
       expect(getSelectedOptionValue($select)).eql('1');
       expect(spy.lastCall.args[0].formData).eql(1);
@@ -470,8 +495,10 @@ describe('NumberField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 1 }, // useIndex
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: 1 }, // useIndex
+        });
       });
 
       sinon.assert.calledWithMatch(onChange.lastCall, { formData: 2 }, 'root');

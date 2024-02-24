@@ -12,7 +12,6 @@ exports[`object fields additionalProperties 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -89,7 +88,6 @@ exports[`object fields additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -163,7 +161,6 @@ exports[`object fields object 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -197,7 +194,6 @@ exports[`object fields object 1`] = `
               />
             </div>
           </div>
-          
         </div>
       </div>
       <div
@@ -234,7 +230,6 @@ exports[`object fields object 1`] = `
               />
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -261,7 +256,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -338,7 +332,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -500,7 +493,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -662,7 +654,6 @@ exports[`object fields with title and description from both additionalProperties
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -943,7 +934,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -1224,7 +1214,6 @@ exports[`object fields with title and description from uiSchema show add button 
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -1505,7 +1494,6 @@ exports[`object fields with title and description show add button and fields if 
                     />
                   </div>
                 </div>
-                
               </div>
             </div>
             <div
@@ -1579,7 +1567,6 @@ exports[`object fields with title and description with global label off addition
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -1724,7 +1711,6 @@ exports[`object fields with title and description with global label off object 1
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -1810,7 +1796,6 @@ exports[`object fields with title and description with global label off show add
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
