@@ -4013,6 +4013,41 @@ describe('Form omitExtraData and liveOmit', () => {
       // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
       // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
+
+    it('should reset when schema changes', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+
+      const extraErrors = {
+        foo: {
+          __errors: ['foo'],
+        },
+      };
+
+      const { comp } = createFormComponent({
+        schema,
+        extraErrors,
+        liveValidate: true,
+        formData: { foo: 1 },
+      });
+
+      setProps(comp, {
+        schema: {
+          type: 'object',
+          properties: {
+            foo: { type: 'string' },
+          },
+          required: ['foo'],
+        },
+      });
+
+      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errors).eql([]);
+    });
   });
 
   it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {
