@@ -74,6 +74,7 @@ A simple [React](http://facebook.github.io/react/) component capable of building
      - [Development server](#development-server)
      - [Tests](#tests)
         - [TDD](#tdd)
+  - [Not a member of the repository and want to be added?](#not-a-member-of-the-repository-and-want-to-be-added)
   - [License](#license)
 
 ---
@@ -1320,6 +1321,11 @@ $ npm test
 ```
 $ npm run tdd
 ```
+
+## Not a member of the repository and want to be added?
+- If you're on a VA.gov Platform team, contact your Program Manager.
+- If you're on a VFS team, you must complete [Platform Orientation](https://depo-platform-documentation.scrollhelp.site/getting-started/platform-orientation) to be added to this repository. This includes completing your Platform Orientation ticket(s) in GitHub.
+
 
 ## License
 
