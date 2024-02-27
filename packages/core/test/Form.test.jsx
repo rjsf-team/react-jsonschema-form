@@ -4020,31 +4020,37 @@ describe('Form omitExtraData and liveOmit', () => {
         properties: {
           foo: { type: 'string' },
         },
+        required: ['foo'],
       };
 
-      const extraErrors = {
-        foo: {
-          __errors: ['foo'],
-        },
-      };
-
-      const { comp } = createFormComponent({
+      const { comp, node } = createFormComponent({
         schema,
-        extraErrors,
-        liveValidate: true,
-        formData: { foo: 1 },
       });
 
+      Simulate.submit(node);
+      expect(comp.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
+      expect(comp.state.errors).eql([
+        {
+          message: "must have required property 'foo'",
+          property: 'foo',
+          name: 'required',
+          params: {
+            missingProperty: 'foo',
+          },
+          schemaPath: '#/required',
+          stack: "must have required property 'foo'",
+        },
+      ]);
+
+      // Changing schema to reset errors state.
       setProps(comp, {
         schema: {
           type: 'object',
           properties: {
             foo: { type: 'string' },
           },
-          required: ['foo'],
         },
       });
-
       expect(comp.state.errorSchema).eql({});
       expect(comp.state.errors).eql([]);
     });
