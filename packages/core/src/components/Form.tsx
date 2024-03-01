@@ -307,14 +307,14 @@ export default class Form<
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
+      const isFormDataChanged = !deepEquals(prevProps.formData, this.props.formData);
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
         // If the `schema` has changed, we need to update the retrieved schema.
-        // Or if the `formData` changes, for example in the case of a schema with dependencies that need to match one of the subSchemas, the retrieved schema must be updated.
-        isSchemaChanged || !deepEquals(prevProps.formData, this.props.formData)
-          ? undefined
-          : this.state.retrievedSchema,
+        // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
+        //  match one of the subSchemas, the retrieved schema must be updated.
+        isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
