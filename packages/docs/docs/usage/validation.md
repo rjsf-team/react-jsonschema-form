@@ -36,7 +36,7 @@ The `@rjsf/validator-ajv8` package exports the `compileSchemaValidators()` funct
 It is expected that this function will be used in a manner similar to the following:
 
 ```cjs
-const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
+const compileSchemaValidators = require('@rjsf/validator-ajv8/dist/compileSchemaValidators').default;
 const yourSchema = require('path_to/yourSchema'); // If your schema is a js file
 
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
