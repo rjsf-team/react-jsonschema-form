@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.18.0
 
+## @rjsf/core
+
+- Fix Error state not resetting when schema changes [#4079](https://github.com/rjsf-team/react-jsonschema-form/issues/4079)
+
 ## @rjsf/utils
 
 - Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
