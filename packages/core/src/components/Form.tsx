@@ -317,7 +317,6 @@ export default class Form<
           : this.state.retrievedSchema,
         isSchemaChanged
       );
-      console.log('nextState _retrieved', nextState.retrievedSchema);
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
     }
