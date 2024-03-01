@@ -306,10 +306,16 @@ export default class Form<
     prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
+      const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
+      const isFormDataChanged = !deepEquals(prevProps.formData, this.props.formData);
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
-        prevProps.schema !== this.props.schema ? undefined : this.state.retrievedSchema
+        // If the `schema` has changed, we need to update the retrieved schema.
+        // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
+        //  match one of the subSchemas, the retrieved schema must be updated.
+        isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
+        isSchemaChanged
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
@@ -357,9 +363,16 @@ export default class Form<
    *
    * @param props - The props passed to the `Form`
    * @param inputFormData - The new or current data for the `Form`
+   * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
+   * @param isSchemaChanged - A flag indicating whether the schema has changed.
    * @returns - The new state for the `Form`
    */
-  getStateFromProps(props: FormProps<T, S, F>, inputFormData?: T, retrievedSchema?: S): FormState<T, S, F> {
+  getStateFromProps(
+    props: FormProps<T, S, F>,
+    inputFormData?: T,
+    retrievedSchema?: S,
+    isSchemaChanged = false
+  ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
@@ -382,7 +395,8 @@ export default class Form<
     const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
 
     const getCurrentErrors = (): ValidationData<T> => {
-      if (props.noValidate) {
+      // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
+      if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       } else if (!props.liveValidate) {
         return {
