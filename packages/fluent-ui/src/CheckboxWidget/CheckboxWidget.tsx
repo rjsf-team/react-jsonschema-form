@@ -66,7 +66,7 @@ export default function CheckboxWidget<
   );
 
   const _onChange = useCallback(
-    (_, checked?: boolean): void => {
+    (_: any, checked?: boolean): void => {
       onChange(checked);
     },
     [onChange]
