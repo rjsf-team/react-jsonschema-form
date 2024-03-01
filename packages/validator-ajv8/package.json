@@ -59,7 +59,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
-    "typescript": "^4.9.5"
+    "typescript": "^5.3.3"
   },
   "publishConfig": {
     "access": "public"
