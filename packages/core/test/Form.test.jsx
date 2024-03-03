@@ -4106,12 +4106,16 @@ describe('Form omitExtraData and liveOmit', () => {
       };
 
       const { comp, node } = createFormComponent({
+        ref: React.createRef(),
         schema,
       });
 
-      Simulate.submit(node);
-      expect(comp.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
-      expect(comp.state.errors).eql([
+      act(() => {
+        fireEvent.submit(node);
+      });
+
+      expect(comp.ref.current.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
+      expect(comp.ref.current.state.errors).eql([
         {
           message: "must have required property 'foo'",
           property: 'foo',
@@ -4126,6 +4130,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       // Changing schema to reset errors state.
       setProps(comp, {
+        ref: comp.ref,
         schema: {
           type: 'object',
           properties: {
@@ -4133,8 +4138,8 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         },
       });
-      expect(comp.state.errorSchema).eql({});
-      expect(comp.state.errors).eql([]);
+      expect(comp.ref.current.state.errorSchema).eql({});
+      expect(comp.ref.current.state.errors).eql([]);
     });
   });
 
