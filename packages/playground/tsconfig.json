@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["./"],
+  "include": ["./", "src", "test"],
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
@@ -21,7 +21,6 @@
     "jsx": "react-jsx",
     "types": ["vite/client", "jest", "node"]
   },
-  "include": ["src", "test"],
   "references": [
     { "path": "../antd" },
     { "path": "../bootstrap-4" },
