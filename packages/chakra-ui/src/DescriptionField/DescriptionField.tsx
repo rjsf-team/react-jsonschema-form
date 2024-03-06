@@ -12,7 +12,7 @@ export default function DescriptionField<
 
   if (typeof description === 'string') {
     return (
-      <Text id={id} mt={2} mb={4}>
+      <Text as='sup' fontSize='md' id={id}>
         {description}
       </Text>
     );
