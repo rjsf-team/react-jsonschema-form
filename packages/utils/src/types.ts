@@ -41,6 +41,12 @@ export type Experimental_ArrayMinItems = {
    * - `never`: Ignore `minItems` on a field even the field is required.
    */
   populate?: 'all' | 'requiredOnly' | 'never';
+  /** TODO */
+  skipPopulate?: <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    validator: ValidatorType<T, S, F>,
+    schema: S,
+    rootSchema?: S
+  ) => boolean;
   /** When `formData` is provided and does not contain `minItems` worth of data, this flag (`false` by default) controls
    * whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the
    * `minItems` condition is met. When false (legacy behavior), only the `formData` provided is merged into the default

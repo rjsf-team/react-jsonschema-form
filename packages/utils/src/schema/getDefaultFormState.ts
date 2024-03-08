@@ -350,6 +350,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
       const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
       const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
+      const skipPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.skipPopulate ?? (() => false);
 
       const emptyDefault = isSkipEmptyDefaults ? undefined : [];
 
@@ -399,6 +400,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       if (
         !schema.minItems ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
+        skipPopulate<T, S, F>(validator, schema, rootSchema) ||
         schema.minItems <= defaultsLength
       ) {
         return defaults ? defaults : emptyDefault;
