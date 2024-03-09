@@ -2872,5 +2872,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         })
       ).toEqual({ requiredArray: ['raw0', 'default0'] });
     });
+    it('should not populate defaults for array items when computeSkipPopulate returns true', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          stringArray: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 1,
+          },
+          numberArray: {
+            type: 'array',
+            items: { type: 'number' },
+            minItems: 1,
+          },
+        },
+        required: ['stringArray', 'numberArray'],
+      };
+      expect(
+        getDefaultFormState(testValidator, schema, {}, schema, false, {
+          arrayMinItems: {
+            computeSkipPopulate: (_, schema) =>
+              !Array.isArray(schema?.items) && typeof schema?.items !== 'boolean' && schema?.items?.type === 'number',
+          },
+        })
+      ).toEqual({ stringArray: [undefined], numberArray: [] });
+    });
   });
 }

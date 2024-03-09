@@ -41,8 +41,16 @@ export type Experimental_ArrayMinItems = {
    * - `never`: Ignore `minItems` on a field even the field is required.
    */
   populate?: 'all' | 'requiredOnly' | 'never';
-  /** TODO */
-  skipPopulate?: <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  /** A function that determines whether to skip populating the array with default values based on the provided validator,
+   * schema, and root schema.
+   * If the function returns true, the array will not be populated with default values.
+   * If the function returns false, the array will be populated with default values according to the `populate` option.
+   * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+   * @param schema - The schema for which resolving a condition is desired
+   * @param rootSchema - The root schema that will be forwarded to all the APIs
+   * @returns A boolean indicating whether to skip populating the array with default values.
+   */
+  computeSkipPopulate?: <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     validator: ValidatorType<T, S, F>,
     schema: S,
     rootSchema?: S

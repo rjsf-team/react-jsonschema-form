@@ -25,6 +25,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
+- Added a new `computeSkipPopulate` option in `arrayMinItems`, allowing custom logic to skip populating arrays with default values, implementing [#4121](https://github.com/rjsf-team/react-jsonschema-form/pull/4121).
+
 
 ## Dev / docs / playground
 
