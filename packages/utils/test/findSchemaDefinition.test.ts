@@ -13,6 +13,21 @@ const schema: RJSFSchema = {
       $ref: '#/definitions/stringRef',
       title: 'foo',
     },
+    // Reference accidentally pointing to itself.
+    badCircularNestedRef: {
+      $ref: '#/definitions/badCircularNestedRef',
+    },
+    // Reference accidentally pointing to a chain of references which ultimately
+    // point back to the original reference.
+    badCircularDeepNestedRef: {
+      $ref: '#/definitions/badCircularDeeperNestedRef',
+    },
+    badCircularDeeperNestedRef: {
+      $ref: '#/definitions/badCircularDeepestNestedRef',
+    },
+    badCircularDeepestNestedRef: {
+      $ref: '#/definitions/badCircularDeepNestedRef',
+    },
   },
 };
 
@@ -40,5 +55,15 @@ describe('findSchemaDefinition()', () => {
   });
   it('returns a combined schema made from its nested definition with the extra props', () => {
     expect(findSchemaDefinition('#/definitions/extraNestedRef', schema)).toEqual(EXTRA_EXPECTED);
+  });
+  it('throws error when ref is a circular reference', () => {
+    expect(() => findSchemaDefinition('#/definitions/badCircularNestedRef', schema)).toThrowError(
+      'Definition for #/definitions/badCircularNestedRef is a circular reference'
+    );
+  });
+  it('throws error when ref is a deep circular reference', () => {
+    expect(() => findSchemaDefinition('#/definitions/badCircularDeepNestedRef', schema)).toThrowError(
+      'Definition for #/definitions/badCircularDeepNestedRef contains a circular reference through #/definitions/badCircularDeeperNestedRef -> #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef'
+    );
   });
 });
