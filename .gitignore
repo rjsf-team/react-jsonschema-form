@@ -140,3 +140,7 @@ out/
 
 # typescript tsbuildinfo
 *.tsbuildinfo
+
+yalc.lock
+
+.yalc
