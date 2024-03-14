@@ -709,8 +709,7 @@ exports[`single fields field with description 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-9 {
@@ -803,12 +802,12 @@ exports[`single fields field with description 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                <p
+                <sup
                   className="chakra-text emotion-8"
                   id="root_my-field__description"
                 >
                   some description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -851,8 +850,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 }
 
 .emotion-8 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-9 {
@@ -945,12 +943,12 @@ exports[`single fields field with description in uiSchema 1`] = `
               <p
                 className="chakra-text emotion-7"
               >
-                <p
+                <sup
                   className="chakra-text emotion-8"
                   id="root_my-field__description"
                 >
                   some other description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
