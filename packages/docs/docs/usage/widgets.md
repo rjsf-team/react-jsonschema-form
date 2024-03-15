@@ -5,6 +5,7 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 Example:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -94,6 +95,7 @@ You can customize the list of years displayed in the `year` dropdown by providin
 You can also, customize the order in which date input fields are displayed by providing `format` property to `ui:options` in your uiSchema, available values are `YMD`(default), `MDY` and `DMY`.
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -128,6 +130,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -159,6 +162,7 @@ There are two ways to use file widgets.
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
