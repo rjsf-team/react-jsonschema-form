@@ -29,6 +29,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the documentation to describe how to use the `skipEmptyDefault` option.
+- Fixed missing import of `Form` in usage documentation - fixing [#4127](https://github.com/rjsf-team/react-jsonschema-form/issues/4127)
 
 # 5.17.1
 

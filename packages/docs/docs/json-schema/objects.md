@@ -5,6 +5,7 @@
 Objects are defined with a type equal to `object` and properties specified in the `properties` keyword.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -30,6 +31,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 You can specify which properties are required using the `required` attribute:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -56,6 +58,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -89,6 +92,7 @@ const uiSchema: UiSchema = {
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
