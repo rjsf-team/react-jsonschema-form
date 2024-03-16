@@ -26,6 +26,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
 
+## @rjsf/antd
+- Fix issue where the theme provided by the ConfigProvider under antd v5 wasn't respected thereby rendering the form items unusable under dark themes [#4129](https://github.com/rjsf-team/react-jsonschema-form/issues/4129)
+
 ## Dev / docs / playground
 
 - Updated the documentation to describe how to use the `skipEmptyDefault` option.

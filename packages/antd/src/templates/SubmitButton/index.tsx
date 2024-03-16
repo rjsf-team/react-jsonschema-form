@@ -1,5 +1,7 @@
-import Button, { ButtonType } from 'antd/lib/button';
+import { Button, ButtonProps } from 'antd';
 import { getSubmitButtonOptions, FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+
+type ButtonType = NonNullable<ButtonProps['type']>;
 
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */

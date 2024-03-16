@@ -9,9 +9,8 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import classNames from 'classnames';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
+import { Col, Row, ConfigProvider } from 'antd';
+import { useContext } from 'react';
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -63,70 +62,64 @@ export default function ArrayFieldTemplate<
   } = registry.templates;
   const { labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
 
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
+  const prefixCls = getPrefixCls('form');
+  const labelClsBasic = `${prefixCls}-item-label`;
+  const labelColClassName = classNames(
+    labelClsBasic,
+    labelAlign === 'left' && `${labelClsBasic}-left`
+    // labelCol.className,
+  );
+
   return (
-    <ConfigConsumer>
-      {(configProps: ConfigConsumerProps) => {
-        const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls('form');
-        const labelClsBasic = `${prefixCls}-item-label`;
-        const labelColClassName = classNames(
-          labelClsBasic,
-          labelAlign === 'left' && `${labelClsBasic}-left`
-          // labelCol.className,
-        );
+    <fieldset className={className} id={idSchema.$id}>
+      <Row gutter={rowGutter}>
+        {(uiOptions.title || title) && (
+          <Col className={labelColClassName} span={24}>
+            <ArrayFieldTitleTemplate
+              idSchema={idSchema}
+              required={required}
+              title={uiOptions.title || title}
+              schema={schema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+        {(uiOptions.description || schema.description) && (
+          <Col span={24} style={DESCRIPTION_COL_STYLE}>
+            <ArrayFieldDescriptionTemplate
+              description={uiOptions.description || schema.description}
+              idSchema={idSchema}
+              schema={schema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+        <Col className='row array-item-list' span={24}>
+          {items &&
+            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+              <ArrayFieldItemTemplate key={key} {...itemProps} />
+            ))}
+        </Col>
 
-        return (
-          <fieldset className={className} id={idSchema.$id}>
-            <Row gutter={rowGutter}>
-              {(uiOptions.title || title) && (
-                <Col className={labelColClassName} span={24}>
-                  <ArrayFieldTitleTemplate
-                    idSchema={idSchema}
-                    required={required}
-                    title={uiOptions.title || title}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                  />
-                </Col>
-              )}
-              {(uiOptions.description || schema.description) && (
-                <Col span={24} style={DESCRIPTION_COL_STYLE}>
-                  <ArrayFieldDescriptionTemplate
-                    description={uiOptions.description || schema.description}
-                    idSchema={idSchema}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                  />
-                </Col>
-              )}
-              <Col className='row array-item-list' span={24}>
-                {items &&
-                  items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-                    <ArrayFieldItemTemplate key={key} {...itemProps} />
-                  ))}
+        {canAdd && (
+          <Col span={24}>
+            <Row gutter={rowGutter} justify='end'>
+              <Col flex='192px'>
+                <AddButton
+                  className='array-item-add'
+                  disabled={disabled || readonly}
+                  onClick={onAddClick}
+                  uiSchema={uiSchema}
+                  registry={registry}
+                />
               </Col>
-
-              {canAdd && (
-                <Col span={24}>
-                  <Row gutter={rowGutter} justify='end'>
-                    <Col flex='192px'>
-                      <AddButton
-                        className='array-item-add'
-                        disabled={disabled || readonly}
-                        onClick={onAddClick}
-                        uiSchema={uiSchema}
-                        registry={registry}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-              )}
             </Row>
-          </fieldset>
-        );
-      }}
-    </ConfigConsumer>
+          </Col>
+        )}
+      </Row>
+    </fieldset>
   );
 }

@@ -1,7 +1,5 @@
 import { MouseEvent, useEffect, useState } from 'react';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
+import { Row, Col, Button } from 'antd';
 import {
   ariaDescribedByIds,
   getDateElementProps,

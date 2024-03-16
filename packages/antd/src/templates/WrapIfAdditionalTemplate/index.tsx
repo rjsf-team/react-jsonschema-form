@@ -1,8 +1,5 @@
 import { FocusEvent } from 'react';
-import Col from 'antd/lib/col';
-import Form from 'antd/lib/form';
-import Input from 'antd/lib/input';
-import Row from 'antd/lib/row';
+import { Col, Row, Form, Input } from 'antd';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
