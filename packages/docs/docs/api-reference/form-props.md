@@ -84,7 +84,49 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 | `never`        | Ignore `minItems` on a field when calculating defaults for required and non-required. Value will set only if defined `default` and from `formData` |
 
 #### `arrayMinItems.computeSkipPopulate`
+
 A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema. If the function returns `true`, the array will not be populated with default values. If the function returns `false`, the array will be populated with default values according to the `populate` option.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    stringArray: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 1,
+    },
+    numberArray: {
+      type: 'array',
+      items: { type: 'number' },
+      minItems: 1,
+    },
+  },
+  required: ['stringArray', 'numberArray'],
+};
+
+const computeSkipPopulateNumberArrays = (validator, schema, rootSchema) =>
+  // These conditions are needed to narrow down the type of the schema.items
+  !Array.isArray(schema?.items) &&
+  typeof schema?.items !== 'boolean' &&
+  schema?.items?.type === 'number',
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    experimental_defaultFormStateBehavior={{
+      arrayMinItems: {
+        computeSkipPopulate: computeSkipPopulateNumberArrays,
+      },
+    }}
+  />,
+  document.getElementById('app')
+);
+```
 
 #### `arrayMinItems.mergeExtraDefaults`
 
