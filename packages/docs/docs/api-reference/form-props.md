@@ -33,6 +33,7 @@ You can provide custom buttons to your form via the `Form` component's `children
 For other ways to modify the default `Submit` button, see both the [Submit Button Options](./uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../advanced-customization/custom-templates.md#submitbutton) documentation.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -147,6 +148,7 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 | `skipEmptyDefaults`        | Does not set an empty default. It will still apply the default value if a default property is defined in your schema        |
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -178,6 +180,7 @@ Optional enumerated flag controlling how empty defaults are populated when `allO
 | `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax |
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -235,6 +238,7 @@ render(
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -252,6 +256,7 @@ If you just want to disable some fields, see the `ui:disabled` parameter in `uiS
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -289,7 +294,9 @@ If set to true, then the first field with an error will receive the focus when t
 You can also provide a custom callback function to handle what happens when this function is called.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
   type: 'string',
@@ -299,7 +306,7 @@ const focusOnError = (error: RJSFValidationError) => {
   console.log('I need to handle focusing this error');
 };
 
-render(<Form schema={schema} focusOnFirstError={focusOnError} />, document.getElementById('app'));
+render(<Form schema={schema} validator={validator} focusOnFirstError={focusOnError} />, document.getElementById('app'));
 ```
 
 ## formContext
@@ -322,6 +329,7 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -339,6 +347,7 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -401,6 +410,7 @@ In the case of adding/removing of new fields in arrays or objects with `addition
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -423,6 +433,7 @@ It will be passed a result object having a `formData` attribute, which is the va
 The original event will also be passed as a second parameter:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
