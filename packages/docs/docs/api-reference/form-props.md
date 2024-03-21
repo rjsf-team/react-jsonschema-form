@@ -88,6 +88,8 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema. If the function returns `true`, the array will not be populated with default values. If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
+##### Example
+
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
