@@ -293,6 +293,7 @@ Field labels are rendered by default.
 Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -309,6 +310,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -331,6 +333,7 @@ This property allows you to reorder the properties that are shown for a particul
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -345,6 +348,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -367,6 +371,7 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 You can set the initial height of a textarea widget by specifying `rows` option.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
