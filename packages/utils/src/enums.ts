@@ -70,5 +70,5 @@ export enum TranslatableString {
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
-  FilesInfo = '<strong>%1</strong> (%2, %3 bytes)',
+  FilesInfo = '**%1** (%2, %3 bytes)',
 }
