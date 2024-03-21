@@ -47,7 +47,7 @@ export type Experimental_ArrayMinItems = {
    * If the function returns false, the array will be populated with default values according to the `populate` option.
    * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
    * @param schema - The schema for which resolving a condition is desired
-   * @param rootSchema - The root schema that will be forwarded to all the APIs
+   * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.
    */
   computeSkipPopulate?: <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
