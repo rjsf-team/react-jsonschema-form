@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
+- Fixed bug where the string `"\</strong>"` would get printed next to filenames when uploading files, and restored intended bolding of filenames fixing [#4120](https://github.com/rjsf-team/react-jsonschema-form/issues/4120).
 
 ## Dev / docs / playground
 
