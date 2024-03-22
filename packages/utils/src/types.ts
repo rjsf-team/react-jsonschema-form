@@ -1157,4 +1157,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T>;
+
+  omitExtraData(schema: S, formData?: T, retrievedSchema?: S): T | undefined;
 }
