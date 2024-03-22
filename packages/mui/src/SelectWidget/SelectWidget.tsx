@@ -38,6 +38,7 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
+  errorSchema,
   rawErrors = [],
   registry,
   uiSchema,
@@ -59,6 +60,7 @@ export default function SelectWidget<
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
 
   return (
     <TextField
@@ -69,19 +71,20 @@ export default function SelectWidget<
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
+      autoComplete={autocomplete}
       placeholder={placeholder}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      {...(textFieldProps as TextFieldProps)}
+      {...(textFieldRemainingProps as TextFieldProps)}
       select // Apply this and the following props after the potential overrides defined in textFieldProps
       InputLabelProps={{
-        ...textFieldProps.InputLabelProps,
+        ...InputLabelProps,
         shrink: !isEmpty,
       }}
       SelectProps={{
-        ...textFieldProps.SelectProps,
+        ...SelectProps,
         multiple,
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}

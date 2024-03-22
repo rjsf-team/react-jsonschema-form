@@ -45,6 +45,7 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     rawErrors = [],
+    errorSchema,
     formContext,
     registry,
     InputLabelProps,
