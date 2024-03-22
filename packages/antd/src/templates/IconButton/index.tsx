@@ -1,4 +1,4 @@
-import Button, { ButtonProps, ButtonType } from 'antd/lib/button';
+import { Button, ButtonProps } from 'antd';
 import ArrowDownOutlined from '@ant-design/icons/ArrowDownOutlined';
 import ArrowUpOutlined from '@ant-design/icons/ArrowUpOutlined';
 import CopyOutlined from '@ant-design/icons/CopyOutlined';
@@ -28,7 +28,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
   return (
     <Button
       onClick={onClick as MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>}
-      type={iconType as ButtonType}
+      type={iconType as ButtonProps['type']}
       icon={icon}
       {...otherProps}
     />

@@ -16,9 +16,8 @@ import {
   getUiOptions,
   titleId,
 } from '@rjsf/utils';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
+import { Col, Row, ConfigProvider } from 'antd';
+import { useContext } from 'react';
 
 const DESCRIPTION_COL_STYLE = {
   paddingBottom: '8px',
@@ -105,71 +104,65 @@ export default function ObjectFieldTemplate<
     return defaultColSpan;
   };
 
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
+  const prefixCls = getPrefixCls('form');
+  const labelClsBasic = `${prefixCls}-item-label`;
+  const labelColClassName = classNames(
+    labelClsBasic,
+    labelAlign === 'left' && `${labelClsBasic}-left`
+    // labelCol.className,
+  );
+
   return (
-    <ConfigConsumer>
-      {(configProps: ConfigConsumerProps) => {
-        const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls('form');
-        const labelClsBasic = `${prefixCls}-item-label`;
-        const labelColClassName = classNames(
-          labelClsBasic,
-          labelAlign === 'left' && `${labelClsBasic}-left`
-          // labelCol.className,
-        );
+    <fieldset id={idSchema.$id}>
+      <Row gutter={rowGutter}>
+        {title && (
+          <Col className={labelColClassName} span={24}>
+            <TitleFieldTemplate
+              id={titleId<T>(idSchema)}
+              title={title}
+              required={required}
+              schema={schema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+        {description && (
+          <Col span={24} style={DESCRIPTION_COL_STYLE}>
+            <DescriptionFieldTemplate
+              id={descriptionId<T>(idSchema)}
+              description={description}
+              schema={schema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </Col>
+        )}
+        {properties
+          .filter((e) => !e.hidden)
+          .map((element: ObjectFieldTemplatePropertyType) => (
+            <Col key={element.name} span={calculateColSpan(element)}>
+              {element.content}
+            </Col>
+          ))}
+      </Row>
 
-        return (
-          <fieldset id={idSchema.$id}>
-            <Row gutter={rowGutter}>
-              {title && (
-                <Col className={labelColClassName} span={24}>
-                  <TitleFieldTemplate
-                    id={titleId<T>(idSchema)}
-                    title={title}
-                    required={required}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                  />
-                </Col>
-              )}
-              {description && (
-                <Col span={24} style={DESCRIPTION_COL_STYLE}>
-                  <DescriptionFieldTemplate
-                    id={descriptionId<T>(idSchema)}
-                    description={description}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                  />
-                </Col>
-              )}
-              {properties
-                .filter((e) => !e.hidden)
-                .map((element: ObjectFieldTemplatePropertyType) => (
-                  <Col key={element.name} span={calculateColSpan(element)}>
-                    {element.content}
-                  </Col>
-                ))}
-            </Row>
-
-            {canExpand(schema, uiSchema, formData) && (
-              <Col span={24}>
-                <Row gutter={rowGutter} justify='end'>
-                  <Col flex='192px'>
-                    <AddButton
-                      className='object-property-expand'
-                      disabled={disabled || readonly}
-                      onClick={onAddClick(schema)}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            )}
-          </fieldset>
-        );
-      }}
-    </ConfigConsumer>
+      {canExpand(schema, uiSchema, formData) && (
+        <Col span={24}>
+          <Row gutter={rowGutter} justify='end'>
+            <Col flex='192px'>
+              <AddButton
+                className='object-property-expand'
+                disabled={disabled || readonly}
+                onClick={onAddClick(schema)}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            </Col>
+          </Row>
+        </Col>
+      )}
+    </fieldset>
   );
 }

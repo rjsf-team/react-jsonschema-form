@@ -28,6 +28,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Added a new `computeSkipPopulate` option in `arrayMinItems`, allowing custom logic to skip populating arrays with default values, implementing [#4121](https://github.com/rjsf-team/react-jsonschema-form/pull/4121).
 - Fixed bug where the string `"\</strong>"` would get printed next to filenames when uploading files, and restored intended bolding of filenames fixing [#4120](https://github.com/rjsf-team/react-jsonschema-form/issues/4120).
 
+## @rjsf/antd
+- Fix issue where the theme provided by the ConfigProvider under antd v5 wasn't respected thereby rendering the form items unusable under dark themes [#4129](https://github.com/rjsf-team/react-jsonschema-form/issues/4129)
+
 ## Dev / docs / playground
 
 - Updated the documentation to describe how to use the `skipEmptyDefault` option.

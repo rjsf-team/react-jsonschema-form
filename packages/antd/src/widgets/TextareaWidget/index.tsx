@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import Input from 'antd/lib/input';
+import { Input } from 'antd';
 import {
   ariaDescribedByIds,
   FormContextType,
