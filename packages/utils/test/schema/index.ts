@@ -10,6 +10,7 @@ import retrieveSchemaTest from './retrieveSchemaTest';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
 import toIdSchemaTest from './toIdSchemaTest';
 import toPathSchemaTest from './toPathSchemaTest';
+import omitExtraDataTest from './omitExtraDataTest';
 
 export * from './types';
 
@@ -26,4 +27,5 @@ export {
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
   toPathSchemaTest,
+  omitExtraDataTest,
 };
