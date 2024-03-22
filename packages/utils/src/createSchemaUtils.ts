@@ -27,6 +27,7 @@ import {
   sanitizeDataForNewSchema,
   toIdSchema,
   toPathSchema,
+  omitExtraData,
 } from './schema';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
@@ -274,6 +275,10 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
     return toPathSchema<T, S, F>(this.validator, schema, name, this.rootSchema, formData);
+  }
+
+  omitExtraData(schema: S, formData?: T): T | undefined {
+    return omitExtraData<T, S, F>(this.validator, schema, this.rootSchema, formData);
   }
 }
 

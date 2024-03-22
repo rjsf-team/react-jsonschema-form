@@ -11,6 +11,7 @@ import retrieveSchema from './retrieveSchema';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema';
 import toIdSchema from './toIdSchema';
 import toPathSchema from './toPathSchema';
+import omitExtraData from './omitExtraData';
 
 export {
   getDefaultFormState,
@@ -22,6 +23,7 @@ export {
   isMultiSelect,
   isSelect,
   mergeValidationData,
+  omitExtraData,
   retrieveSchema,
   sanitizeDataForNewSchema,
   toIdSchema,
