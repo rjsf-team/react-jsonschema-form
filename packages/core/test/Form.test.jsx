@@ -3229,7 +3229,7 @@ describe('Form omitExtraData and liveOmit', () => {
     sandbox.restore();
   });
 
-  it('should call getUsedFormData when the omitExtraData prop is true and liveOmit is true', () => {
+  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', () => {
     const schema = {
       type: 'object',
       properties: {
@@ -3252,7 +3252,7 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    sandbox.stub(comp, 'getUsedFormData').returns({
+    sandbox.stub(comp.state.schemaUtils, 'omitExtraData').returns({
       foo: '',
     });
 
@@ -3260,10 +3260,10 @@ describe('Form omitExtraData and liveOmit', () => {
       target: { value: 'new' },
     });
 
-    sinon.assert.calledOnce(comp.getUsedFormData);
+    sinon.assert.calledOnce(comp.state.schemaUtils.omitExtraData);
   });
 
-  it('should not call getUsedFormData when the omitExtraData prop is true and liveOmit is unspecified', () => {
+  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', () => {
     const schema = {
       type: 'object',
       properties: {
@@ -3284,7 +3284,7 @@ describe('Form omitExtraData and liveOmit', () => {
       omitExtraData,
     });
 
-    sandbox.stub(comp, 'getUsedFormData').returns({
+    sandbox.stub(comp.state.schemaUtils, 'omitExtraData').returns({
       foo: '',
     });
 
@@ -3292,336 +3292,7 @@ describe('Form omitExtraData and liveOmit', () => {
       target: { value: 'new' },
     });
 
-    sinon.assert.notCalled(comp.getUsedFormData);
-  });
-
-  describe('getUsedFormData', () => {
-    it('should call getUsedFormData when the omitExtraData prop is true', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: {
-            type: 'string',
-          },
-        },
-      };
-      const formData = {
-        foo: '',
-      };
-      const onSubmit = sandbox.spy();
-      const onError = sandbox.spy();
-      const omitExtraData = true;
-      const { comp, node } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-        onError,
-        omitExtraData,
-      });
-
-      sandbox.stub(comp, 'getUsedFormData').returns({
-        foo: '',
-      });
-
-      Simulate.submit(node);
-
-      sinon.assert.calledOnce(comp.getUsedFormData);
-    });
-    it('should just return the single input form value', () => {
-      const schema = {
-        title: 'A single-field form',
-        type: 'string',
-      };
-      const formData = 'foo';
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.getUsedFormData(formData, []);
-      expect(result).eql('foo');
-    });
-
-    it('should return the root level array', () => {
-      const schema = {
-        type: 'array',
-        items: {
-          type: 'string',
-        },
-      };
-      const formData = [];
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.getUsedFormData(formData, []);
-      expect(result).eql([]);
-    });
-
-    it('should call getUsedFormData with data from fields in event', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = {
-        foo: 'bar',
-      };
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.getUsedFormData(formData, ['foo']);
-      expect(result).eql({ foo: 'bar' });
-    });
-
-    it('unused form values should be omitted', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-          baz: { type: 'string' },
-          list: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                title: { type: 'string' },
-                details: { type: 'string' },
-              },
-            },
-          },
-        },
-      };
-
-      const formData = {
-        foo: 'bar',
-        baz: 'buzz',
-        list: [
-          { title: 'title0', details: 'details0' },
-          { title: 'title1', details: 'details1' },
-        ],
-      };
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.getUsedFormData(formData, ['foo', 'list.0.title', 'list.1.details']);
-      expect(result).eql({
-        foo: 'bar',
-        list: [{ title: 'title0' }, { details: 'details1' }],
-      });
-    });
-  });
-
-  describe('getFieldNames()', () => {
-    it('should return an empty array for a single input form', () => {
-      const schema = {
-        type: 'string',
-      };
-
-      const formData = 'foo';
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-      };
-
-      const fieldNames = comp.getFieldNames(pathSchema, formData);
-      expect(fieldNames).eql([]);
-    });
-
-    it('should get field names from pathSchema', () => {
-      const schema = {};
-
-      const formData = {
-        extra: {
-          foo: 'bar',
-        },
-        level1: {
-          level2: 'test',
-          anotherThing: {
-            anotherThingNested: 'abc',
-            extra: 'asdf',
-            anotherThingNested2: 0,
-          },
-          stringArray: ['scobochka'],
-        },
-        level1a: 1.23,
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        level1: {
-          $name: 'level1',
-          level2: { $name: 'level1.level2' },
-          anotherThing: {
-            $name: 'level1.anotherThing',
-            anotherThingNested: {
-              $name: 'level1.anotherThing.anotherThingNested',
-            },
-            anotherThingNested2: {
-              $name: 'level1.anotherThing.anotherThingNested2',
-            },
-          },
-          stringArray: {
-            $name: 'level1.stringArray',
-          },
-        },
-        level1a: {
-          $name: 'level1a',
-        },
-      };
-
-      const fieldNames = comp.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql(
-        [
-          ['level1', 'anotherThing', 'anotherThingNested'],
-          ['level1', 'anotherThing', 'anotherThingNested2'],
-          ['level1', 'level2'],
-          ['level1', 'stringArray'],
-          ['level1a'],
-        ].sort()
-      );
-    });
-
-    it('should get field marked as additionalProperties', () => {
-      const schema = {};
-
-      const formData = {
-        extra: {
-          foo: 'bar',
-        },
-        level1: {
-          level2: 'test',
-          extra: 'foo',
-          mixedMap: {
-            namedField: 'foo',
-            key1: 'val1',
-          },
-        },
-        level1a: 1.23,
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        level1: {
-          $name: 'level1',
-          level2: { $name: 'level1.level2' },
-          mixedMap: {
-            $name: 'level1.mixedMap',
-            __rjsf_additionalProperties: true,
-            namedField: { $name: 'level1.mixedMap.namedField' }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
-          },
-        },
-        level1a: {
-          $name: 'level1a',
-        },
-      };
-
-      const fieldNames = comp.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql([['level1', 'level2'], 'level1.mixedMap', ['level1a']].sort());
-    });
-
-    it('should get field names from pathSchema with array', () => {
-      const schema = {};
-
-      const formData = {
-        address_list: [
-          {
-            street_address: '21, Jump Street',
-            city: 'Babel',
-            state: 'Neverland',
-          },
-          {
-            street_address: '1234 Schema Rd.',
-            city: 'New York',
-            state: 'Arizona',
-          },
-        ],
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        address_list: {
-          0: {
-            $name: 'address_list.0',
-            city: {
-              $name: 'address_list.0.city',
-            },
-            state: {
-              $name: 'address_list.0.state',
-            },
-            street_address: {
-              $name: 'address_list.0.street_address',
-            },
-          },
-          1: {
-            $name: 'address_list.1',
-            city: {
-              $name: 'address_list.1.city',
-            },
-            state: {
-              $name: 'address_list.1.state',
-            },
-            street_address: {
-              $name: 'address_list.1.street_address',
-            },
-          },
-        },
-      };
-
-      const fieldNames = comp.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql(
-        [
-          ['address_list', '0', 'city'],
-          ['address_list', '0', 'state'],
-          ['address_list', '0', 'street_address'],
-          ['address_list', '1', 'city'],
-          ['address_list', '1', 'state'],
-          ['address_list', '1', 'street_address'],
-        ].sort()
-      );
-    });
+    sinon.assert.notCalled(comp.state.schemaUtils.omitExtraData);
   });
 
   it('should not omit data on change with omitExtraData=false and liveOmit=false', () => {

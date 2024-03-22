@@ -6,21 +6,17 @@ import {
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
-  GenericObjectType,
   getTemplate,
   getUiOptions,
   IdSchema,
   isObject,
   mergeObjects,
-  NAME_KEY,
-  PathSchema,
   StrictRJSFSchema,
   Registry,
   RegistryFieldsType,
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  RJSF_ADDITONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -34,9 +30,6 @@ import {
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
 } from '@rjsf/utils';
-import _get from 'lodash/get';
-import _isEmpty from 'lodash/isEmpty';
-import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
 
 import getDefaultRegistry from '../getDefaultRegistry';
@@ -506,63 +499,6 @@ export default class Form<
     return null;
   }
 
-  /** Returns the `formData` with only the elements specified in the `fields` list
-   *
-   * @param formData - The data for the `Form`
-   * @param fields - The fields to keep while filtering
-   */
-  getUsedFormData = (formData: T | undefined, fields: string[][]): T | undefined => {
-    // For the case of a single input form
-    if (fields.length === 0 && typeof formData !== 'object') {
-      return formData;
-    }
-
-    // _pick has incorrect type definition, it works with string[][], because lodash/hasIn supports it
-    const data: GenericObjectType = _pick(formData, fields as unknown as string[]);
-    if (Array.isArray(formData)) {
-      return Object.keys(data).map((key: string) => data[key]) as unknown as T;
-    }
-
-    return data as T;
-  };
-
-  /** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
-   *
-   * @param pathSchema - The `PathSchema` object for the form
-   * @param [formData] - The form data to use while checking for empty objects/arrays
-   */
-  getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
-    const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-      Object.keys(_obj).forEach((key: string) => {
-        if (typeof _obj[key] === 'object') {
-          const newPaths = paths.map((path) => [...path, key]);
-          // If an object is marked with additionalProperties, all its keys are valid
-          if (_obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
-            acc.push(_obj[key][NAME_KEY]);
-          } else {
-            getAllPaths(_obj[key], acc, newPaths);
-          }
-        } else if (key === NAME_KEY && _obj[key] !== '') {
-          paths.forEach((path) => {
-            const formValue = _get(formData, path);
-            // adds path to fieldNames if it points to a value
-            // or an empty object/array
-            if (
-              typeof formValue !== 'object' ||
-              _isEmpty(formValue) ||
-              (Array.isArray(formValue) && formValue.every((val) => typeof val !== 'object'))
-            ) {
-              acc.push(path);
-            }
-          });
-        }
-      });
-      return acc;
-    };
-
-    return getAllPaths(pathSchema);
-  };
-
   /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
    * `formData` along with a new `ErrorSchema`. It will first update the `formData` with any missing default fields and
    * then, if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filterer to remove any extra data not
@@ -590,11 +526,8 @@ export default class Form<
     let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
       _retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
-      const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
+      newFormData = schemaUtils.omitExtraData(_retrievedSchema, formData);
 
-      const fieldNames = this.getFieldNames(pathSchema, formData);
-
-      newFormData = this.getUsedFormData(formData, fieldNames);
       state = {
         formData: newFormData,
       };
@@ -702,11 +635,7 @@ export default class Form<
 
     if (omitExtraData === true) {
       const retrievedSchema = schemaUtils.retrieveSchema(schema, newFormData);
-      const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', newFormData);
-
-      const fieldNames = this.getFieldNames(pathSchema, newFormData);
-
-      newFormData = this.getUsedFormData(newFormData, fieldNames);
+      newFormData = schemaUtils.omitExtraData(retrievedSchema, newFormData);
     }
 
     if (noValidate || this.validateForm()) {
