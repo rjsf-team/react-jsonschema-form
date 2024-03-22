@@ -12,6 +12,7 @@ import {
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
   toPathSchemaTest,
+  omitExtraDataTest,
 } from './schema';
 
 const testValidator = getTestValidator({});
@@ -29,3 +30,4 @@ retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
 toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);
+omitExtraDataTest(testValidator);
