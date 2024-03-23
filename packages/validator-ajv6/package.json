@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv6",
-  "version": "5.18.0",
+  "version": "5.18.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -37,7 +37,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.16.x"
+    "@rjsf/utils": "^5.18.x"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -46,7 +46,7 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/utils": "^5.18.0",
+    "@rjsf/utils": "^5.18.1",
     "@types/jest": "^29.5.12",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.14.202",

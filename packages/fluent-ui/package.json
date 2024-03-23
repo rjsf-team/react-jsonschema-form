@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluent-ui",
-  "version": "5.18.0",
+  "version": "5.18.1",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "@fluentui/react": ">= 7",
-    "@rjsf/core": "^5.16.x",
-    "@rjsf/utils": "^5.16.x",
+    "@rjsf/core": "^5.18.x",
+    "@rjsf/utils": "^5.18.x",
     "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
@@ -46,10 +46,10 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@fluentui/react": "^8.115.3",
-    "@rjsf/core": "^5.18.0",
-    "@rjsf/snapshot-tests": "^5.18.0",
-    "@rjsf/utils": "^5.18.0",
-    "@rjsf/validator-ajv8": "^5.18.0",
+    "@rjsf/core": "^5.18.1",
+    "@rjsf/snapshot-tests": "^5.18.1",
+    "@rjsf/utils": "^5.18.1",
+    "@rjsf/validator-ajv8": "^5.18.1",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
     "@types/react": "^17.0.75",
