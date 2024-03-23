@@ -37,7 +37,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.16.x"
+    "@rjsf/utils": "^5.18.x"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
