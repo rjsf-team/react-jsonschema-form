@@ -34,8 +34,8 @@
   "peerDependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@rjsf/core": "^5.16.x",
-    "@rjsf/utils": "^5.16.x",
+    "@rjsf/core": "^5.18.x",
+    "@rjsf/utils": "^5.18.x",
     "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
