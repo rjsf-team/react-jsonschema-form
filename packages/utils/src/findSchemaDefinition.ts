@@ -18,37 +18,69 @@ export function splitKeyElementFromObject(key: string, object: GenericObjectType
   return [remaining, value];
 }
 
-/** Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the
- * path provided by that reference. If `#` is not the first character of the reference, or the path does not exist in
- * the schema, then throw an Error. Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
+/** Given the name of a `$ref` from within a schema, using the `rootSchema`, recursively look up and return the
+ * sub-schema using the path provided by that reference. If `#` is not the first character of the reference, the path
+ * does not exist in the schema, or the reference resolves circularly back to itself, then throw an Error.
+ * Otherwise return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
  *
  * @param $ref - The ref string for which the schema definition is desired
  * @param [rootSchema={}] - The root schema in which to search for the definition
+ * @param recurseList - List of $refs already resolved to prevent recursion
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
- * @throws - Error indicating that no schema for that reference exists
+ * @throws - Error indicating that no schema for that reference could be resolved
  */
-export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
-  rootSchema: S = {} as S
+  rootSchema: S = {} as S,
+  recurseList: string[] = []
 ): S {
-  let ref = $ref || '';
+  const ref = $ref || '';
+  let decodedRef;
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
-    ref = decodeURIComponent(ref.substring(1));
+    decodedRef = decodeURIComponent(ref.substring(1));
   } else {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  const current: S = jsonpointer.get(rootSchema, ref);
+  const current: S = jsonpointer.get(rootSchema, decodedRef);
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  if (current[REF_KEY]) {
+  const nextRef = current[REF_KEY];
+  if (nextRef) {
+    // Check for circular references.
+    if (recurseList.includes(nextRef)) {
+      if (recurseList.length === 1) {
+        throw new Error(`Definition for ${$ref} is a circular reference`);
+      }
+      const [firstRef, ...restRefs] = recurseList;
+      const circularPath = [...restRefs, ref, firstRef].join(' -> ');
+      throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
+    }
     const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinition<S>(theRef, rootSchema);
+    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref]);
     if (Object.keys(remaining).length > 0) {
       return { ...remaining, ...subSchema };
     }
     return subSchema;
   }
   return current;
+}
+
+/** Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the
+ * path provided by that reference. If `#` is not the first character of the reference, the path does not exist in
+ * the schema, or the reference resolves circularly back to itself, then throw an Error. Otherwise return the
+ * sub-schema. Also deals with nested `$ref`s in the sub-schema.
+ *
+ * @param $ref - The ref string for which the schema definition is desired
+ * @param [rootSchema={}] - The root schema in which to search for the definition
+ * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
+ * @throws - Error indicating that no schema for that reference could be resolved
+ */
+export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+  $ref?: string,
+  rootSchema: S = {} as S
+): S {
+  const recurseList: string[] = [];
+  return findSchemaDefinitionRecursive($ref, rootSchema, recurseList);
 }
