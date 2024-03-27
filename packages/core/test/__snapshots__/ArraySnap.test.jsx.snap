@@ -401,7 +401,6 @@ exports[`array fields empty errors array 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -567,7 +566,6 @@ exports[`array fields has errors 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string field-error has-error has-danger"
       >
@@ -633,7 +631,6 @@ exports[`array fields no errors 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >

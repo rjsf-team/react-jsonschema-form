@@ -12,7 +12,6 @@ exports[`object fields additionalProperties 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -254,7 +253,6 @@ exports[`object fields object 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -411,7 +409,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -2578,7 +2575,6 @@ exports[`object fields with title and description with global label off addition
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -2803,7 +2799,6 @@ exports[`object fields with title and description with global label off object 1
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
@@ -2947,7 +2942,6 @@ exports[`object fields with title and description with global label off show add
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
         style={
