@@ -1080,6 +1080,67 @@ Generates an `PathSchema` object for the `schema`, recursively
 
 - PathSchema&lt;T> - The `PathSchema` object for the `schema`
 
+### omitExtraData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+The function takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed. This is useful for ensuring that only data that is relevant to the schema is preserved. Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+
+```ts
+const schema = {
+  type: 'object',
+  properties: {
+    child1: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+    child2: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      additionalProperties: true,
+    },
+  },
+};
+
+const formData = {
+  child1: {
+    name: 'John Doe',
+    extraField: 'This should be removed',
+  },
+  child2: {
+    name: 'Jane Doe',
+    extraField: 'This should NOT be removed',
+  },
+};
+
+const filteredFormData = omitExtraData(validator, schema, schema, formData);
+console.log(filteredFormData);
+/*
+{
+  child1: {
+    name: "John Doe",
+  },
+  child2: {
+    name: "Jane Doe",
+    extraField: "This should NOT be removed",
+  },
+}
+*/
+```
+
+#### Parameters
+
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The schema to use for filtering the formData
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [formData]: T | undefined - The formData to filter
+
+#### Returns
+
+- T: The new form data, with any fields not defined in the schema removed
+
 ## Schema utils creation function
 
 ### createSchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()

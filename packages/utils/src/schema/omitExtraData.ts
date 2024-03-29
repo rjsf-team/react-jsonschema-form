@@ -6,6 +6,13 @@ import _isEmpty from 'lodash/isEmpty';
 import toPathSchema from './toPathSchema';
 import { NAME_KEY, RJSF_ADDITONAL_PROPERTIES_FLAG } from '../constants';
 
+/**
+ * A helper function that extracts all the existing paths from the given `pathSchema` and `formData`.
+ *
+ * @param pathSchema - The `PathSchema` from which to extract the field names
+ * @param [formData] - The formData to use to determine which fields are valid
+ * @returns A list of paths represented as string arrays
+ */
 export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
   const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
     Object.keys(_obj).forEach((key: string) => {
@@ -38,6 +45,12 @@ export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T):
   return getAllPaths(pathSchema);
 }
 
+/**
+ * A helper function to keep only the fields in the `formData` that are defined in the `fields` array.
+ *
+ * @param formData - The formData to extract the fields from
+ * @param fields - The fields to keep in the `formData`
+ */
 export function getUsedFormData<T = any>(formData: T | undefined, fields: string[][]): T | undefined {
   // For the case of a single input form
   if (fields.length === 0 && typeof formData !== 'object') {
@@ -53,6 +66,17 @@ export function getUsedFormData<T = any>(formData: T | undefined, fields: string
   return data as T;
 }
 
+/**
+ * The function takes a `schema` and `formData` and returns a copy of the formData with any fields not defined in the schema removed.
+ * This is useful for ensuring that only data that is relevant to the schema is preserved. Objects with `additionalProperties`
+ * keyword set to `true` will not have their extra fields removed.
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param schema - The schema to use for filtering the formData
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [formData] - The formData to filter
+ * @returns The new form data, with any fields not defined in the schema removed
+ */
 export default function omitExtraData<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
