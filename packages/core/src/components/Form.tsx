@@ -758,11 +758,11 @@ export default class Form<
   /** Provides a function that can be used to programmatically submit the `Form` */
   submit = () => {
     if (this.formElement.current) {
-      this.formElement.current.dispatchEvent(
-        new CustomEvent('submit', {
-          cancelable: true,
-        })
-      );
+      const submitCustomEvent = new CustomEvent('submit', {
+        cancelable: true,
+      });
+      submitCustomEvent.preventDefault();
+      this.formElement.current.dispatchEvent(submitCustomEvent);
       this.formElement.current.requestSubmit();
     }
   };
