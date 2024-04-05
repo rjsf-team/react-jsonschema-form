@@ -16,6 +16,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.1
+
+## @rjsf/core
+- Fixed Programmatic submit not working properly in Firefox [#3121](https://github.com/rjsf-team/react-jsonschema-form/issues/3121)
+
 # 5.18.0
 
 ## @rjsf/antd
