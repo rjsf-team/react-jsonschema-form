@@ -16,10 +16,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.18.1
+# 5.18.2
 
 ## @rjsf/core
+
 - Fixed Programmatic submit not working properly in Firefox [#3121](https://github.com/rjsf-team/react-jsonschema-form/issues/3121)
+
+## @rjsf/utils
+
+- [#4116](https://github.com/rjsf-team/react-jsonschema-form/issues/4116) Fix Maximum call stack size exceeded when encountering circular definitions ([Link to PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4123))
 
 # 5.18.0
 
