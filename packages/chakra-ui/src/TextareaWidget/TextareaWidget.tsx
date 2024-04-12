@@ -57,6 +57,7 @@ export default function TextareaWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
+        rows={options.rows}
         aria-describedby={ariaDescribedByIds<T>(id)}
       />
     </FormControl>

@@ -4013,6 +4013,47 @@ describe('Form omitExtraData and liveOmit', () => {
       // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
       // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     });
+
+    it('should reset when schema changes', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+        required: ['foo'],
+      };
+
+      const { comp, node } = createFormComponent({
+        schema,
+      });
+
+      Simulate.submit(node);
+      expect(comp.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
+      expect(comp.state.errors).eql([
+        {
+          message: "must have required property 'foo'",
+          property: 'foo',
+          name: 'required',
+          params: {
+            missingProperty: 'foo',
+          },
+          schemaPath: '#/required',
+          stack: "must have required property 'foo'",
+        },
+      ]);
+
+      // Changing schema to reset errors state.
+      setProps(comp, {
+        schema: {
+          type: 'object',
+          properties: {
+            foo: { type: 'string' },
+          },
+        },
+      });
+      expect(comp.state.errorSchema).eql({});
+      expect(comp.state.errors).eql([]);
+    });
   });
 
   it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {

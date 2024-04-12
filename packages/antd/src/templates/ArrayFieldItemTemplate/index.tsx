@@ -1,6 +1,4 @@
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
+import { Button, Col, Row } from 'antd';
 import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 const BTN_GRP_STYLE = {

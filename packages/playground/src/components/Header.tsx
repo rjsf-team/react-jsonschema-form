@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
+import base64 from '../utils/base64';
 
 import CopyLink from './CopyLink';
 import ThemeSelector, { ThemesType } from './ThemeSelector';
@@ -146,6 +147,11 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
             {
               type: 'string',
+              title: 'Assign value to formData when only default is set',
+              enum: ['skipEmptyDefaults'],
+            },
+            {
+              type: 'string',
               title: 'Does not set defaults',
               enum: ['skipDefaults'],
             },
@@ -245,7 +251,7 @@ export default function Header({
     } = document;
 
     try {
-      const hash = btoa(
+      const hash = base64.encode(
         JSON.stringify({
           formData,
           schema,

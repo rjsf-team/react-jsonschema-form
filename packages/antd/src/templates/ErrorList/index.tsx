@@ -1,6 +1,4 @@
-import Alert from 'antd/lib/alert';
-import List from 'antd/lib/list';
-import Space from 'antd/lib/space';
+import { Alert, List, Space } from 'antd';
 import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 

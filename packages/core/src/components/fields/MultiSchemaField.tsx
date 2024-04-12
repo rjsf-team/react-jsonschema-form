@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import {
+  ANY_OF_KEY,
   deepEquals,
   ERRORS_KEY,
   FieldProps,
@@ -11,9 +12,11 @@ import {
   getUiOptions,
   getWidget,
   mergeSchemas,
+  ONE_OF_KEY,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
+  UiSchema,
 } from '@rjsf/utils';
 
 /** Type used for the state of the `AnyOfField` component */
@@ -167,7 +170,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
     const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
-    let optionSchema: S;
+    let optionSchema: S | undefined | null;
 
     if (option) {
       // merge top level required field
@@ -176,14 +179,39 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       optionSchema = required ? (mergeSchemas({ required }, option) as S) : option;
     }
 
+    // First we will check to see if there is an anyOf/oneOf override for the UI schema
+    let optionsUiSchema: UiSchema<T, S, F>[] = [];
+    if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
+      if (Array.isArray(uiSchema[ONE_OF_KEY])) {
+        optionsUiSchema = uiSchema[ONE_OF_KEY];
+      } else {
+        console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
+      }
+    } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
+      if (Array.isArray(uiSchema[ANY_OF_KEY])) {
+        optionsUiSchema = uiSchema[ANY_OF_KEY];
+      } else {
+        console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
+      }
+    }
+    // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
+    let optionUiSchema = uiSchema;
+    if (selectedOption >= 0 && optionsUiSchema.length > selectedOption) {
+      optionUiSchema = optionsUiSchema[selectedOption];
+    }
+
     const translateEnum: TranslatableString = title
       ? TranslatableString.TitleOptionPrefix
       : TranslatableString.OptionPrefix;
     const translateParams = title ? [title] : [];
-    const enumOptions = retrievedOptions.map((opt: { title?: string }, index: number) => ({
-      label: opt.title || translateString(translateEnum, translateParams.concat(String(index + 1))),
-      value: index,
-    }));
+    const enumOptions = retrievedOptions.map((opt: { title?: string }, index: number) => {
+      // Also see if there is an override title in the uiSchema for each option, otherwise use the title from the option
+      const { title: uiTitle = opt.title } = getUiOptions<T, S, F>(optionsUiSchema[index]);
+      return {
+        label: uiTitle || translateString(translateEnum, translateParams.concat(String(index + 1))),
+        value: index,
+      };
+    });
 
     return (
       <div className='panel panel-default panel-body'>
@@ -210,7 +238,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             hideLabel={!displayLabel}
           />
         </div>
-        {option !== null && <_SchemaField {...this.props} schema={optionSchema!} />}
+        {optionSchema && <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />}
       </div>
     );
   }

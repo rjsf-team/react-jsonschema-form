@@ -97,7 +97,7 @@ exports[`array fields array icons 1`] = `
                   
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -257,7 +257,7 @@ exports[`array fields array icons 1`] = `
                   
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -469,7 +469,7 @@ exports[`array fields checkboxes 1`] = `
           
         </label>
         <div
-          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
@@ -486,6 +486,7 @@ exports[`array fields checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -637,7 +638,7 @@ exports[`array fields fixed array 1`] = `
                   
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -684,7 +685,7 @@ exports[`array fields fixed array 1`] = `
                   
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -738,7 +739,7 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="fui-Card ___49eetv0_1h8kscz f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1su8t2g f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
+    className="fui-Card ___tvq26a0_10panks f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f226i61 f13kzufm flujwa2 fsx75g8 f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
     role="group"
   >
     <h6
@@ -1052,7 +1053,7 @@ exports[`with title and description array icons 1`] = `
                   Test item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -1228,7 +1229,7 @@ exports[`with title and description array icons 1`] = `
                   Test item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -1456,7 +1457,7 @@ exports[`with title and description checkboxes 1`] = `
           Test field
         </label>
         <div
-          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
@@ -1473,6 +1474,7 @@ exports[`with title and description checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -1585,7 +1587,7 @@ exports[`with title and description fixed array 1`] = `
                   Test item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -1648,7 +1650,7 @@ exports[`with title and description fixed array 1`] = `
                   Test item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -1850,7 +1852,7 @@ exports[`with title and description from both array icons 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -2026,7 +2028,7 @@ exports[`with title and description from both array icons 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -2254,7 +2256,7 @@ exports[`with title and description from both checkboxes 1`] = `
           My Field
         </label>
         <div
-          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
@@ -2271,6 +2273,7 @@ exports[`with title and description from both checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -2383,7 +2386,7 @@ exports[`with title and description from both fixed array 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -2446,7 +2449,7 @@ exports[`with title and description from both fixed array 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -2648,7 +2651,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -2824,7 +2827,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -3052,7 +3055,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
           My Field
         </label>
         <div
-          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
@@ -3069,6 +3072,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >
@@ -3181,7 +3185,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -3244,7 +3248,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   My Item
                   <span
                     aria-hidden="true"
-                    className="fui-Label__required ___1dfrsq9_q52x0p0 f1whyuy6 fycuoez"
+                    className="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
                   >
                     *
                   </span>
@@ -3752,7 +3756,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
           Test field
         </label>
         <div
-          className="fui-Dropdown form-control ___88nkp20_1nwmw84 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl f14t3ns0 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
@@ -3769,6 +3773,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
             onKeyDown={[Function]}
             onMouseOver={[Function]}
             role="combobox"
+            tabIndex={0}
             type="button"
             value=""
           >

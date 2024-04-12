@@ -1,5 +1,5 @@
 import { enumOptionsValueForIndex } from '../src';
-import { ALL_OPTIONS } from './testUtils/testData';
+import { ALL_OPTIONS, FALSY_OPTIONS } from './testUtils/testData';
 
 const EMPTY_VALUE = 'empty';
 
@@ -37,5 +37,9 @@ describe('enumOptionsValueForIndex()', () => {
   it('returns array of values for a list of good indexes', () => {
     const expected = [ALL_OPTIONS[2].value, ALL_OPTIONS[1].value];
     expect(enumOptionsValueForIndex([2, 1], ALL_OPTIONS)).toEqual(expected);
+  });
+  it('keeps falsy values in the options', () => {
+    const expected = [FALSY_OPTIONS[1].value];
+    expect(enumOptionsValueForIndex([1], FALSY_OPTIONS)).toEqual(expected);
   });
 });

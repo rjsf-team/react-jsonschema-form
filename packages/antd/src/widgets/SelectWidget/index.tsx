@@ -1,4 +1,4 @@
-import Select, { DefaultOptionType } from 'antd/lib/select';
+import { Select, SelectProps } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -48,7 +48,7 @@ export default function SelectWidget<
 
   const handleFocus = () => onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
 
-  const filterOption = (input: string, option?: DefaultOptionType) => {
+  const filterOption: SelectProps['filterOption'] = (input, option) => {
     if (option && isString(option.label)) {
       // labels are strings in this context
       return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
