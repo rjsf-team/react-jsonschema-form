@@ -757,7 +757,6 @@ exports[`single fields field with description 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -898,7 +897,6 @@ exports[`single fields field with description in uiSchema 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -1564,7 +1562,6 @@ exports[`single fields hidden field 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -2597,9 +2594,7 @@ exports[`single fields select field 1`] = `
             >
               <div
                 className=" emotion-7"
-              >
-                
-              </div>
+              />
               <div
                 className=" emotion-8"
                 data-value=""
@@ -4321,9 +4316,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             >
               <div
                 className=" emotion-7"
-              >
-                
-              </div>
+              />
               <div
                 className=" emotion-8"
                 data-value=""

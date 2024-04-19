@@ -12,7 +12,6 @@ exports[`object fields additionalProperties 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -134,7 +133,6 @@ exports[`object fields object 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -216,7 +214,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -1310,7 +1307,6 @@ exports[`object fields with title and description with global label off addition
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -1426,7 +1422,6 @@ exports[`object fields with title and description with global label off object 1
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -1496,7 +1491,6 @@ exports[`object fields with title and description with global label off show add
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >

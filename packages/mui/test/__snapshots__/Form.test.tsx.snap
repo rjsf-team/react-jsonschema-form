@@ -322,9 +322,7 @@ exports[`single fields checkbox field 1`] = `
         </span>
         <span
           className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-6"
-        >
-          
-        </span>
+        />
       </label>
     </div>
   </div>
@@ -1770,7 +1768,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
@@ -2385,7 +2382,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
@@ -4942,7 +4938,6 @@ exports[`single fields hidden field 1`] = `
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
-      
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
         style={
@@ -8116,6 +8111,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls=":rf:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -8630,7 +8626,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls="mui-2"
+            aria-controls=":rh:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -9135,6 +9131,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls=":rn:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -9636,6 +9633,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls=":rr:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -10135,6 +10133,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
+            aria-controls=":rj:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -10648,7 +10647,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls="mui-4"
+            aria-controls=":rl:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -11166,7 +11165,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls="mui-6"
+            aria-controls=":rp:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"

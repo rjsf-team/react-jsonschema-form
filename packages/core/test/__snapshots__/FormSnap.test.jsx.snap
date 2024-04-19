@@ -26,9 +26,7 @@ exports[`single fields checkbox field 1`] = `
           required={false}
           type="checkbox"
         />
-        <span>
-          
-        </span>
+        <span />
       </label>
     </div>
   </div>
@@ -229,7 +227,6 @@ exports[`single fields field with description 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -289,7 +286,6 @@ exports[`single fields field with description in uiSchema 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -579,7 +575,6 @@ exports[`single fields hidden field 1`] = `
     <fieldset
       id="root"
     >
-      
       <div
         className="hidden"
       >
@@ -936,9 +931,7 @@ exports[`single fields select field 1`] = `
     >
       <option
         value=""
-      >
-        
-      </option>
+      />
       <option
         value="0"
       >
@@ -1219,9 +1212,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     >
       <option
         value=""
-      >
-        
-      </option>
+      />
       <option
         disabled={false}
         value="0"
@@ -1272,9 +1263,7 @@ exports[`single fields select field single choice formData 1`] = `
     >
       <option
         value=""
-      >
-        
-      </option>
+      />
       <option
         value="0"
       >
