@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import Radio, { RadioChangeEvent } from 'antd/lib/radio';
+import { Radio, RadioChangeEvent } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,

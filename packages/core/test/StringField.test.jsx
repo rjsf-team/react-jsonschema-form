@@ -1258,6 +1258,54 @@ describe('StringField', () => {
 
       expect(node.querySelector('#custom')).to.exist;
     });
+
+    describe('AltDateTimeWidget with format option', () => {
+      const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { format: 'YMD' } };
+
+      it('should render a date field with YMD format', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_year', 'root_month', 'root_day', 'root_hour', 'root_minute', 'root_second']);
+      });
+
+      it('should render a date field with DMY format', () => {
+        uiSchema['ui:options']['format'] = 'DMY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_day', 'root_month', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+      });
+
+      it('should render a date field with MDY format', () => {
+        uiSchema['ui:options']['format'] = 'MDY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_month', 'root_day', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+      });
+    });
   });
 
   describe('AltDateWidget', () => {
@@ -1446,6 +1494,54 @@ describe('StringField', () => {
       } catch (err) {
         expect(err.message).eql('Unable to parse date 2012-1212');
       }
+    });
+
+    describe('AltDateWidget with format option', () => {
+      const uiSchema = { 'ui:widget': 'alt-date', 'ui:options': { format: 'YMD' } };
+
+      it('should render a date field with YMD format', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_year', 'root_month', 'root_day']);
+      });
+
+      it('should render a date field with MDY format', () => {
+        uiSchema['ui:options']['format'] = 'MDY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_month', 'root_day', 'root_year']);
+      });
+
+      it('should render a date field with DMY format', () => {
+        uiSchema['ui:options']['format'] = 'DMY';
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const ids = [].map.call(node.querySelectorAll('select'), (node) => node.id);
+
+        expect(ids).eql(['root_day', 'root_month', 'root_year']);
+      });
     });
 
     describe('Action buttons', () => {
@@ -1975,6 +2071,58 @@ describe('StringField', () => {
       });
     });
 
+    it('should reflect the change into the dom (multi)', async () => {
+      sandbox.stub(window, 'FileReader').returns({
+        set onload(fn) {
+          fn({ target: { result: 'data:text/plain;base64,x=' } });
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        readAsDataUrl() {},
+      });
+
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'data-url',
+          },
+        },
+      });
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file2.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      Simulate.change(node.querySelector('[type=file]'), {
+        target: {
+          files: [{ name: 'file3.txt', size: 1, type: 'type' }],
+        },
+      });
+
+      await new Promise(setImmediate);
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: [
+          'data:text/plain;name=file1.txt;base64,x=',
+          'data:text/plain;name=file2.txt;base64,x=',
+          'data:text/plain;name=file3.txt;base64,x=',
+        ],
+      });
+    });
+
     it('should encode file name with encodeURIComponent', async () => {
       const nonUriEncodedValue = 'fileáéí óú1.txt';
       const uriEncodedValue = 'file%C3%A1%C3%A9%C3%AD%20%C3%B3%C3%BA1.txt';
@@ -2008,7 +2156,7 @@ describe('StringField', () => {
       });
     });
 
-    it('should render the widget with the expected id', () => {
+    it('should render the file widget with accept attribute', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -2022,7 +2170,7 @@ describe('StringField', () => {
       expect(node.querySelector('[type=file]').accept).eql('.pdf');
     });
 
-    it('should render the file widget with accept attribute', () => {
+    it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'string',
@@ -2083,6 +2231,63 @@ describe('StringField', () => {
       expect(download).to.exist;
       expect(download.href).eql(formData);
       expect(download.textContent).eql(TranslatableString.PreviewLabel);
+    });
+
+    it('should delete the file when delete button is pressed (single)', () => {
+      const formData = 'data:text/plain;name=file1.txt;base64,x=';
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        formData,
+      });
+
+      // Find the delete button
+      const deleteButton = node.querySelector('button[title="Remove"]');
+      expect(deleteButton).to.exist;
+
+      // Click the delete button
+      act(() => {
+        Simulate.click(deleteButton);
+      });
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: undefined,
+      });
+    });
+    it('should delete the file when delete button is pressed (multi)', () => {
+      const formData = [
+        'data:text/plain;name=file1.txt;base64,x=',
+        'data:text/plain;name=file2.txt;base64,x=',
+        'data:text/plain;name=file3.txt;base64,x=',
+      ];
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'data-url',
+          },
+        },
+        formData,
+      });
+
+      // Find the 2nd file and check the file name
+      const file2 = node.querySelectorAll('li')[1];
+      expect(file2.textContent).to.contain('file2.txt');
+
+      // Find the delete button and click it
+      const deleteButton = file2.querySelector('button[title="Remove"]');
+      expect(deleteButton).to.exist;
+      act(() => {
+        Simulate.click(deleteButton);
+      });
+
+      // Check that the file is deleted
+      expect(node.querySelectorAll('li')).to.have.length.of(2);
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file3.txt;base64,x='],
+      });
     });
   });
 

@@ -293,6 +293,7 @@ Field labels are rendered by default.
 Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -309,6 +310,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -331,6 +333,7 @@ This property allows you to reorder the properties that are shown for a particul
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -345,6 +348,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -367,6 +371,7 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 You can set the initial height of a textarea widget by specifying `rows` option.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -453,6 +458,90 @@ const uiSchema = {
   },
 };
 ```
+
+## Using uiSchema with oneOf, anyOf
+
+### anyOf
+
+The uiSchema will work with elements inside an `anyOf` as long as the uiSchema defines the `anyOf` key at the same level as the `anyOf` within the `schema`.
+Because the `anyOf` in the `schema` is an array, so must be the one in the `uiSchema`.
+If you want to override the titles of the first two elements within the `anyOf` list you would do the following:
+
+```ts
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  anyOf: [
+    {
+      title: 'Strings',
+      type: 'string',
+    },
+    {
+      title: 'Numbers',
+      type: 'number',
+    },
+    {
+      title: 'Booleans',
+      type: 'boolean',
+    },
+  ],
+};
+
+const uiSchema: UiSchema = {
+  anyOf: [
+    {
+      'ui:title': 'Custom String Title',
+    },
+    {
+      'ui:title': 'Custom Number Title',
+    },
+  ],
+};
+```
+
+> NOTE: Because the third element in the `schema` does not have an associated element in the `uiSchema`, it will keep its original title.
+
+### oneOf
+
+The uiSchema will work with elements inside an `oneOf` as long as the uiSchema defines the `oneOf` key at the same level as the `oneOf` within the `schema`.
+Because the `oneOf` in the `schema` is an array, so must be the one in the `uiSchema`.
+If you want to override the titles of the first two elements within the `oneOf` list you would do the following:
+
+```ts
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  oneOf: [
+    {
+      title: 'Strings',
+      type: 'string',
+    },
+    {
+      title: 'Numbers',
+      type: 'number',
+    },
+    {
+      title: 'Booleans',
+      type: 'boolean',
+    },
+  ],
+};
+
+const uiSchema: UiSchema = {
+  oneOf: [
+    {
+      'ui:title': 'Custom String Title',
+    },
+    {
+      'ui:title': 'Custom Number Title',
+    },
+  ],
+};
+```
+
+> NOTE: Because the third element in the `schema` does not have an associated element in the `uiSchema`, it will keep its original title.
 
 ## Theme Options
 

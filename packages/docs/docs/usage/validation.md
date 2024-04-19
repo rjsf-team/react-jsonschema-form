@@ -36,7 +36,7 @@ The `@rjsf/validator-ajv8` package exports the `compileSchemaValidators()` funct
 It is expected that this function will be used in a manner similar to the following:
 
 ```cjs
-const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
+const compileSchemaValidators = require('@rjsf/validator-ajv8/dist/compileSchemaValidators').default;
 const yourSchema = require('path_to/yourSchema'); // If your schema is a js file
 
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
@@ -229,6 +229,7 @@ You can enable live form data validation by passing a `liveValidate` prop to the
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -251,6 +252,7 @@ If you have provided an `onError` callback it will be called with the list of er
 
 ```tsx
 import { createRef } from 'react';
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -273,6 +275,7 @@ if (formRef.current.validateForm()) {
 By default, the form uses HTML5 validation. This may cause unintuitive results because the HTML5 validation errors (such as when a field is `required`) may be displayed before the form is submitted, and thus these errors will display differently from the react-jsonschema-form validation errors. You can turn off HTML validation by setting the `noHtml5Validate` to `true`.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -297,6 +300,7 @@ But it is possible to define your own custom validation rules that will run in a
 This is especially useful when the validation depends on several interdependent fields.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -331,6 +335,7 @@ Validation error messages are provided by the JSON Schema validation by default.
 If you need to change these messages or make any other modifications to the errors from the JSON Schema validation, you can define a transform function that receives the list of JSON Schema errors and returns a new list.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -379,6 +384,7 @@ This list is the form global error list that appears at the top of your forms.
 An error list template is basically a React stateless component being passed errors as props, so you can render them as you like:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, ErrorListProps } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 
@@ -461,6 +467,7 @@ const metaSchemaDraft04 = require('ajv/lib/refs/json-schema-draft-04.json');
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv6';
 
@@ -479,6 +486,7 @@ return <Form schema={schema} validator={validator} />;
 NOTE: This syntax works only for the `@rjsf/validator-ajv6` validator; if you only use the `draft-04` schema, and you want to use the `@rjsf/validator-ajv8` you can do the following:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import AjvDraft04 from 'ajv-draft-04';
@@ -500,6 +508,7 @@ react-jsonschema-form adds two formats, `color` and `data-url`, to support certa
 To add formats of your own, you can create and pass to the `Form` component a customized `@rjsf/validator-ajv8`:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 
@@ -526,6 +535,7 @@ Handling async errors is an important part of many applications. Support for thi
 For example, a request could be made to some backend when the user submits the form. If that request fails, the errors returned by the backend should be formatted like in the following example.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -568,6 +578,7 @@ In version 5, with the advent of the decoupling of the validation implementation
 For instance, if you need more information from `ajv` about errors via the `verbose` option, now you can turn it on!
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 
@@ -621,6 +632,7 @@ Finally, the Ajv 8 validator supports the localization of error messages.
 By default, ALL formats are being added to the default `@rjsf/validator-ajv8` that you get when you import it.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -635,6 +647,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 If you don't actually need any of the [ajv-formats](https://github.com/ajv-validator/ajv-formats#formats) and want to reduce the memory footprint, then you can turn it off as follows:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 
@@ -650,6 +663,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 If you only need some of them, you can pass any of the [options](https://github.com/ajv-validator/ajv-formats#options) to the formatter:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 
@@ -672,6 +686,7 @@ It is possible to use one of the other version it supports, like `draft-2019-09`
 NOTE: `draft-2020-12` has breaking changes and hasn't been fully tested with `@rjsf`.
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2019 from 'ajv/dist/2019';
@@ -707,6 +722,7 @@ NOTE: The `ajv-i18n` validators implement the `Localizer` interface.
 Using a specific locale while including all of `ajv-i18n`:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import localizer from 'ajv-i18n';
@@ -723,6 +739,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 Using a specific locale minimizing the bundle size
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import spanishLocalizer from 'ajv-i18n/localize/es';
@@ -739,6 +756,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 An example of a custom `Localizer` implementation:
 
 ```tsx
+import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { ErrorObject } from 'ajv';

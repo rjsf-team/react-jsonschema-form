@@ -1,4 +1,4 @@
-import Slider from 'antd/lib/slider';
+import { Slider } from 'antd';
 import {
   ariaDescribedByIds,
   rangeSpec,

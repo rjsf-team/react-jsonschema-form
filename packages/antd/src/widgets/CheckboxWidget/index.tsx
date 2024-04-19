@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { Checkbox, CheckboxProps } from 'antd';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -23,7 +23,7 @@ export default function CheckboxWidget<
   const { autofocus, disabled, formContext, id, label, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = ({ target }: CheckboxChangeEvent) => onChange(target.checked);
+  const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.checked);
 

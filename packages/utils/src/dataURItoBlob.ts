@@ -4,39 +4,42 @@
  * @param dataURI - The `DataUrl` potentially containing name and raw data to be converted to a Blob
  * @returns - an object containing a Blob and its name, extracted from the URI
  */
-export default function dataURItoBlob(dataURI: string) {
-  // Split metadata from data
-  const splitted: string[] = dataURI.split(',');
-  // Split params
-  const params: string[] = splitted[0].split(';');
-  // Get mime-type from params
-  const type: string = params[0].replace('data:', '');
-  // Filter the name property from params
-  const properties = params.filter((param) => {
-    return param.split('=')[0] === 'name';
-  });
-  // Look for the name and use unknown if no name property.
-  let name: string;
-  if (properties.length !== 1) {
-    name = 'unknown';
-  } else {
-    // Because we filtered out the other property,
-    // we only have the name case here, which we decode to make it human-readable
-    name = decodeURI(properties[0].split('=')[1]);
+export default function dataURItoBlob(dataURILike: string) {
+  // check if is dataURI
+  if (dataURILike.indexOf('data:') === -1) {
+    throw new Error('File is invalid: URI must be a dataURI');
   }
+  const dataURI = dataURILike.slice(5);
+  // split the dataURI into media and base64, with the base64 signature
+  const splitted = dataURI.split(';base64,');
+  // if the base64 signature is not present, the latter part will become empty
+  if (splitted.length !== 2) {
+    throw new Error('File is invalid: dataURI must be base64');
+  }
+  // extract the mime type, media parameters including the name, and the base64 string
+  const [media, base64] = splitted;
+  const [mime, ...mediaparams] = media.split(';');
+  const type = mime || '';
+
+  // extract the name from the parameters
+  const name = decodeURI(
+    // parse the parameters into key-value pairs, find a key, and extract a value
+    // if no key is found, then the name is unknown
+    mediaparams.map((param) => param.split('=')).find(([key]) => key === 'name')?.[1] || 'unknown'
+  );
 
   // Built the Uint8Array Blob parameter from the base64 string.
   try {
-    const binary = atob(splitted[1]);
-    const array = [];
+    const binary = atob(base64);
+    const array = new Array(binary.length);
     for (let i = 0; i < binary.length; i++) {
-      array.push(binary.charCodeAt(i));
+      array[i] = binary.charCodeAt(i);
     }
     // Create the blob object
     const blob = new window.Blob([new Uint8Array(array)], { type });
 
     return { blob, name };
   } catch (error) {
-    return { blob: { size: 0, type: (error as Error).message }, name: dataURI };
+    throw new Error('File is invalid: ' + (error as Error).message);
   }
 }

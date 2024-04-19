@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider/context';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ConfigProvider } from 'antd';
+import { useContext } from 'react';
 
 /** The `TitleField` is the template to use to render the title of a field
  *
@@ -31,27 +32,21 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     }
   };
 
-  return title ? (
-    <ConfigConsumer>
-      {(configProps: ConfigConsumerProps) => {
-        const { getPrefixCls } = configProps;
-        const prefixCls = getPrefixCls('form');
-        const labelClassName = classNames({
-          [`${prefixCls}-item-required`]: required,
-          [`${prefixCls}-item-no-colon`]: !colon,
-        });
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
+  const prefixCls = getPrefixCls('form');
+  const labelClassName = classNames({
+    [`${prefixCls}-item-required`]: required,
+    [`${prefixCls}-item-no-colon`]: !colon,
+  });
 
-        return (
-          <label
-            className={labelClassName}
-            htmlFor={id}
-            onClick={handleLabelClick}
-            title={typeof title === 'string' ? title : ''}
-          >
-            {labelChildren}
-          </label>
-        );
-      }}
-    </ConfigConsumer>
+  return title ? (
+    <label
+      className={labelClassName}
+      htmlFor={id}
+      onClick={handleLabelClick}
+      title={typeof title === 'string' ? title : ''}
+    >
+      {labelChildren}
+    </label>
   ) : null;
 }

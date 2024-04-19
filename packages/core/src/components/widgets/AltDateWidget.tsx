@@ -5,11 +5,13 @@ import {
   toDateString,
   pad,
   DateObject,
+  type DateElementFormat,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
+  getDateElementProps,
 } from '@rjsf/utils';
 
 function rangeOptions(start: number, stop: number) {
@@ -22,31 +24,6 @@ function rangeOptions(start: number, stop: number) {
 
 function readyForChange(state: DateObject) {
   return Object.values(state).every((value) => value !== -1);
-}
-
-function dateElementProps(
-  state: DateObject,
-  time: boolean,
-  yearsRange: [number, number] = [1900, new Date().getFullYear() + 2]
-) {
-  const { year, month, day, hour, minute, second } = state;
-  const data = [
-    {
-      type: 'year',
-      range: yearsRange,
-      value: year,
-    },
-    { type: 'month', range: [1, 12], value: month },
-    { type: 'day', range: [1, 31], value: day },
-  ] as { type: string; range: [number, number]; value: number | undefined }[];
-  if (time) {
-    data.push(
-      { type: 'hour', range: [0, 23], value: hour },
-      { type: 'minute', range: [0, 59], value: minute },
-      { type: 'second', range: [0, 59], value: second }
-    );
-  }
-  return data;
 }
 
 type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
@@ -161,7 +138,12 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
   return (
     <ul className='list-inline'>
-      {dateElementProps(state, time, options.yearsRange as [number, number] | undefined).map((elemProps, i) => (
+      {getDateElementProps(
+        state,
+        time,
+        options.yearsRange as [number, number] | undefined,
+        options.format as DateElementFormat | undefined
+      ).map((elemProps, i) => (
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}

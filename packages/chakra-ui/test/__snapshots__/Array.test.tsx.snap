@@ -646,7 +646,6 @@ exports[`array fields checkboxes 1`] = `
 
 .emotion-2 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-3 {
@@ -1636,8 +1635,7 @@ exports[`with title and description array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -1741,12 +1739,12 @@ exports[`with title and description array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a test description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -1815,8 +1813,7 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -2015,12 +2012,12 @@ exports[`with title and description array icons 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a test description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -2079,12 +2076,12 @@ exports[`with title and description array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a test item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -2234,12 +2231,12 @@ exports[`with title and description array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a test item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -2399,7 +2396,6 @@ exports[`with title and description checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -2566,8 +2562,7 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-17 {
@@ -2718,12 +2713,12 @@ exports[`with title and description checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        <p
+        <sup
           className="chakra-text emotion-16"
           id="root__description"
         >
           a test description
-        </p>
+        </sup>
       </p>
     </div>
   </div>
@@ -2754,8 +2749,7 @@ exports[`with title and description fixed array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -2866,12 +2860,12 @@ exports[`with title and description fixed array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a test description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -2930,12 +2924,12 @@ exports[`with title and description fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a test item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -2994,12 +2988,12 @@ exports[`with title and description fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a test item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -3037,8 +3031,7 @@ exports[`with title and description from both array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -3142,12 +3135,12 @@ exports[`with title and description from both array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -3216,8 +3209,7 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -3416,12 +3408,12 @@ exports[`with title and description from both array icons 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -3480,12 +3472,12 @@ exports[`with title and description from both array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -3635,12 +3627,12 @@ exports[`with title and description from both array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -3800,7 +3792,6 @@ exports[`with title and description from both checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -3967,8 +3958,7 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-17 {
@@ -4119,12 +4109,12 @@ exports[`with title and description from both checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        <p
+        <sup
           className="chakra-text emotion-16"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
       </p>
     </div>
   </div>
@@ -4155,8 +4145,7 @@ exports[`with title and description from both fixed array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -4267,12 +4256,12 @@ exports[`with title and description from both fixed array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -4331,12 +4320,12 @@ exports[`with title and description from both fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -4395,12 +4384,12 @@ exports[`with title and description from both fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -4438,8 +4427,7 @@ exports[`with title and description from uiSchema array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -4543,12 +4531,12 @@ exports[`with title and description from uiSchema array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -4617,8 +4605,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -4817,12 +4804,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -4881,12 +4868,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -5036,12 +5023,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -5201,7 +5188,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -5368,8 +5354,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-17 {
@@ -5520,12 +5505,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        <p
+        <sup
           className="chakra-text emotion-16"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
       </p>
     </div>
   </div>
@@ -5556,8 +5541,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 }
 
 .emotion-5 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-6 {
@@ -5668,12 +5652,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             className="chakra-divider emotion-4"
           />
         </div>
-        <p
+        <sup
           className="chakra-text emotion-5"
           id="root__description"
         >
           a fancier description
-        </p>
+        </sup>
         <div
           className="emotion-6"
         >
@@ -5732,12 +5716,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_0__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -5796,12 +5780,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     <p
                       className="chakra-text emotion-15"
                     >
-                      <p
+                      <sup
                         className="chakra-text emotion-5"
                         id="root_1__description"
                       >
                         a fancier item description
-                      </p>
+                      </sup>
                     </p>
                   </div>
                 </div>
@@ -6477,7 +6461,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 
 .emotion-3 {
   position: relative;
-  pointer-events: auto;
 }
 
 .emotion-4 {
@@ -6644,8 +6627,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-16 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-17 {
@@ -6796,12 +6778,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
       <p
         className="chakra-text emotion-15"
       >
-        <p
+        <sup
           className="chakra-text emotion-16"
           id="root__description"
         >
           a test description
-        </p>
+        </sup>
       </p>
     </div>
   </div>

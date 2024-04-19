@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo } from 'react';
 import {
   dataURItoBlob,
   FormContextType,
@@ -7,6 +7,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
+  UIOptionsType,
   WidgetProps,
 } from '@rjsf/utils';
 import Markdown from 'markdown-to-jsx';
@@ -68,9 +69,14 @@ function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
     return null;
   }
 
-  if (type.indexOf('image') !== -1) {
+  // If type is JPEG or PNG then show image preview.
+  // Originally, any type of image was supported, but this was changed into a whitelist
+  // since SVGs and animated GIFs are also images, which are generally considered a security risk.
+  if (['image/jpeg', 'image/png'].includes(type)) {
     return <img src={dataURL} style={{ maxWidth: '100%' }} className='file-preview' />;
   }
+
+  // otherwise, let users download file
 
   return (
     <>
@@ -86,23 +92,32 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   filesInfo,
   registry,
   preview,
+  onRemove,
+  options,
 }: {
   filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
   preview?: boolean;
+  onRemove: (index: number) => void;
+  options: UIOptionsType<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
     return null;
   }
   const { translateString } = registry;
+
+  const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
+
   return (
     <ul className='file-info'>
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type } = fileInfo;
+        const handleRemove = () => onRemove(key);
         return (
           <li key={key}>
             <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
             {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />}
+            <RemoveButton onClick={handleRemove} registry={registry} />
           </li>
         );
       })}
@@ -111,17 +126,26 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
 }
 
 function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-  return dataURLs
-    .filter((dataURL) => dataURL)
-    .map((dataURL) => {
+  return dataURLs.reduce((acc, dataURL) => {
+    if (!dataURL) {
+      return acc;
+    }
+    try {
       const { blob, name } = dataURItoBlob(dataURL);
-      return {
-        dataURL,
-        name: name,
-        size: blob.size,
-        type: blob.type,
-      };
-    });
+      return [
+        ...acc,
+        {
+          dataURL,
+          name: name,
+          size: blob.size,
+          type: blob.type,
+        },
+      ];
+    } catch (e) {
+      // Invalid dataURI, so just ignore it.
+      return acc;
+    }
+  }, [] as FileInfoType[]);
 }
 
 /**
@@ -133,9 +157,6 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 ) {
   const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
-  const [filesInfo, setFilesInfo] = useState<FileInfoType[]>(
-    Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value])
-  );
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -148,17 +169,27 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       processFiles(event.target.files).then((filesInfoEvent) => {
         const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL);
         if (multiple) {
-          setFilesInfo(filesInfo.concat(filesInfoEvent[0]));
           onChange(value.concat(newValue[0]));
         } else {
-          setFilesInfo(filesInfoEvent);
           onChange(newValue[0]);
         }
       });
     },
-    [multiple, value, filesInfo, onChange]
+    [multiple, value, onChange]
   );
 
+  const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+  const rmFile = useCallback(
+    (index: number) => {
+      if (multiple) {
+        const newValue = value.filter((_: any, i: number) => i !== index);
+        onChange(newValue);
+      } else {
+        onChange(undefined);
+      }
+    },
+    [multiple, value, onChange]
+  );
   return (
     <div>
       <BaseInputTemplate
@@ -170,7 +201,13 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         value=''
         accept={options.accept ? String(options.accept) : undefined}
       />
-      <FilesInfo<T, S, F> filesInfo={filesInfo} registry={registry} preview={options.filePreview} />
+      <FilesInfo<T, S, F>
+        filesInfo={filesInfo}
+        onRemove={rmFile}
+        registry={registry}
+        preview={options.filePreview}
+        options={options}
+      />
     </div>
   );
 }

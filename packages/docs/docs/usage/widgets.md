@@ -5,6 +5,7 @@ The uiSchema `ui:widget` property tells the form which UI widget should be used 
 Example:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -91,7 +92,10 @@ Please note that, even though they are standardized, `datetime-local`, `date` an
 
 You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema. It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
+You can also, customize the order in which date input fields are displayed by providing `format` property to `ui:options` in your uiSchema, available values are `YMD`(default), `MDY` and `DMY`.
+
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -103,6 +107,7 @@ const uiSchema: UiSchema = {
   'ui:widget': 'alt-datetime',
   'ui:options': {
     yearsRange: [1980, 2030],
+    format: 'MDY',
     hideNowButton: true,
     hideClearButton: true,
   },
@@ -125,6 +130,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 It's possible to use a hidden widget for a field by setting its `ui:widget` uiSchema directive to `hidden`:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -156,6 +162,7 @@ There are two ways to use file widgets.
 1. By declaring a `string` json schema type along a `data-url` [format](#string-formats):
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
