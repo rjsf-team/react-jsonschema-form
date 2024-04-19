@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.3
+
+## @rjsf/semantic-ui
+
+- Added support for version 2 in the `peerDependencies`
+
+## Dev / docs / playground
+
+- Bumped devDependencies on `react` to `18.x`
+
 # 5.18.2
 
 ## @rjsf/core
