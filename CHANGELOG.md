@@ -579,6 +579,148 @@ should change the heading of the (upcoming) version to include a major version b
 - add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
 - Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
 
+
+# 5.18.2
+
+## @rjsf/core
+
+- Fixed Programmatic submit not working properly in Firefox [#3121](https://github.com/rjsf-team/react-jsonschema-form/issues/3121)
+
+## @rjsf/utils
+
+- [#4116](https://github.com/rjsf-team/react-jsonschema-form/issues/4116) Fix Maximum call stack size exceeded when encountering circular definitions ([Link to PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4123))
+
+# 5.18.0
+
+## @rjsf/antd
+- Fix issue where the theme provided by the ConfigProvider under antd v5 wasn't respected thereby rendering the form items unusable under dark themes [#4129](https://github.com/rjsf-team/react-jsonschema-form/issues/4129)
+
+## @rjsf/core
+
+- Fix Error state not resetting when schema changes [#4079](https://github.com/rjsf-team/react-jsonschema-form/issues/4079)
+
+## @rjsf/mui
+
+- Fixed the `SelectWidget` and `BaseInputTemplate` to filter out `errorSchema` and `autocomplete` from the `textFieldProps` being spread onto the `TextField`, fixing [#4134](https://github.com/rjsf-team/react-jsonschema-form/issues/4134)
+
+## @rjsf/utils
+
+- Added a new `skipEmptyDefault` option in `emptyObjectFields`, fixing [#3880](https://github.com/rjsf-team/react-jsonschema-form/issues/3880)
+- Added a new `computeSkipPopulate` option in `arrayMinItems`, allowing custom logic to skip populating arrays with default values, implementing [#4121](https://github.com/rjsf-team/react-jsonschema-form/pull/4121).
+- Fixed bug where the string `"\</strong>"` would get printed next to filenames when uploading files, and restored intended bolding of filenames fixing [#4120](https://github.com/rjsf-team/react-jsonschema-form/issues/4120).
+
+## Dev / docs / playground
+
+- Updated the documentation to describe how to use the `skipEmptyDefault` option.
+- Fixed missing import of `Form` in usage documentation - fixing [#4127](https://github.com/rjsf-team/react-jsonschema-form/issues/4127)
+
+# 5.17.1
+
+## @rjsf/chakra-ui
+
+- Added support for `UiSchema` `"ui:rows"` option for `textarea` elements, fixing [#4070](https://github.com/rjsf-team/react-jsonschema-form/issues/4070).
+
+## @rjsf/core
+
+- [#4091](https://github.com/rjsf-team/react-jsonschema-form/issues/4091) Added `errorSchema` to `ArrayFieldTemplate` props.
+
+## @rjsf/utils
+
+- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - BREAKING CHANGE: Removed the `base64` object from the `@rjsf/utils` package. Note that this is a breaking change if you relied on the `base64` object exported by `@rjsf/utils`. Since this change caused [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080), and was only internally used by playground code, we are shipping this change in a patch release.
+- [#4091](https://github.com/rjsf-team/react-jsonschema-form/issues/4091) Added `errorSchema` to the `ArrayFieldTemplateProps` type.
+
+## Dev / docs / playground
+
+- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package. 
+- Added test configuration and script to the Playground.
+
+# 5.17.0
+
+## @rjsf/core
+
+- Added support for `anyOf`/`oneOf` in `uiSchema`s in the `MultiSchemaField`, fixing [#4039](https://github.com/rjsf-team/react-jsonschema-form/issues/4039)
+- Fix potential XSS vulnerability in the preview button of FileWidget, fixing [#4057](https://github.com/rjsf-team/react-jsonschema-form/issues/4057)
+
+## @rjsf/utils
+
+- [#4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Added `base64` to support `encoding` and `decoding` using the `UTF-8` charset to support the characters out of the `Latin1` range.
+- Updated `enumOptionsValueForIndex()` to fix issue that filtered enum options with a value that was 0, fixing [#4067](https://github.com/rjsf-team/react-jsonschema-form/issues/4067)
+- Changes the way of parsing the data URL, to fix [#4057](https://github.com/rjsf-team/react-jsonschema-form/issues/4057)
+
+## Dev / docs / playground
+
+- [#4024](https://github.com/rjsf-team/react-jsonschema-form/issues/4024) Updated the base64 references from (`atob` and `btoa`) to invoke the functions from the new `base64` object in `@rjsf/utils`.
+- Updated the `uiSchema.md` documentation to describe how to use the new `anyOf`/`oneOf` support
+
+# 5.16.1
+
+## Dev / docs / playground
+
+- Bumped peer dependencies due to new utils function
+
+# 5.16.0
+
+## @rjsf/core
+
+- Pass indexed title from array into its items, adding enhancement asked in [#3983](https://github.com/rjsf-team/react-jsonschema-form/issues/3983)
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+- Modify submit method to make it a public method, fixing [#4015](https://github.com/rjsf-team/react-jsonschema-form/issues/4015)
+- Support file deletion for `format: "data-url"` in `FileWidget`, fixing [#3957](https://github.com/rjsf-team/react-jsonschema-form/issues/3957).
+
+## @rjsf/antd
+
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## @rjsf/chakra-ui
+
+- Removed `dateElementProps` function implementation, and replaced it with `getDateElementProps` from `@rjsf/utils`.
+
+## @rjsf/mui
+
+- Updated the `FieldErrorTemplate` and `FieldHelpTemplate` to support html-based errors that cause `<xxxx> cannot appear as a descendant of <p>` browser warnings, fixing [#4031](https://github.com/rjsf-team/react-jsonschema-form/issues/4031)
+
+## @rjsf/utils
+
+- Added `getDateElementProps()` to refactor duplicate function in `core`, `antd` & `chakra-ui` AltDateWidget's source code. The same function, implements the feature requested in [#297](https://github.com/rjsf-team/react-jsonschema-form/issues/297)
+
+## Dev / docs / playground
+
+- Updated docs and playground with the implementation guide of newly added date re-order feature.
+
+# 5.15.1
+
+## @rjsf/core
+
+- fix `getFieldNames`. Now correctly defines an array of primitives.
+
+## @rjsf/validator-ajv6
+
+- Updated the `AJV6Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## @rjsf/validator-ajv8
+
+- Updated the `AJV8Validator` class to expose the internal `ajv` object, allowing access to support a fix related to [#3972](https://github.com/rjsf-team/react-jsonschema-form/issues/3972)
+
+## Dev / docs / playground
+
+- Updated the documentation to describe how to use the newly exposed `ajv` variable
+
+# 5.15.0
+
+## @rjsf/mui
+
+- fix gap in text and select widget outlines when `"ui:label": false` is specified.
+
+## @rjsf/utils
+
+- Updated `resolveAllReferences()` to use own recurse list for each object properties, fixing [#3961](https://github.com/rjsf-team/react-jsonschema-form/issues/3961)
+- Added an experimental flag `allOf` to `experimental_defaultFormStateBehavior` for populating defaults when using `allOf` schemas [#3969](https://github.com/rjsf-team/react-jsonschema-form/pull/3969)
+
+## Dev / playground
+
+- add missing typescript project reference for `utils` in `validator-ajv6` and `validator-ajv8` packages tsconfigs
+- Added a dropdown for changing the `experimental_defaultFormStateBehavior.allOf` behaviour in the playground
+
 # 5.14.3
 
 ## @rjsf/core
