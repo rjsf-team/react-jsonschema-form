@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "5.18.2",
+  "version": "5.18.3",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
