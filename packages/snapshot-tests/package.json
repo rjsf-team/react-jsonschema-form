@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/snapshot-tests",
-  "version": "5.18.2",
+  "version": "5.18.3",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
     "build": "tsc -b .",
@@ -32,9 +32,9 @@
     "react-test-renderer": "^17.0.2"
   },
   "dependencies": {
-    "@rjsf/core": "^5.18.2",
-    "@rjsf/utils": "^5.18.2",
-    "@rjsf/validator-ajv8": "^5.18.2"
+    "@rjsf/core": "^5.18.3",
+    "@rjsf/utils": "^5.18.3",
+    "@rjsf/validator-ajv8": "^5.18.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

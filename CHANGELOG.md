@@ -25,6 +25,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Bumped devDependencies on `react` to `18.x`
+- Fixed typo in `custom-widgets-fields.md` in the documentation
+- Updated the `LICENSE.md` to include the proper copyright dates and owner
 
 # 5.18.2
 
