@@ -150,6 +150,7 @@ As shown in previous examples, overriding the default `Form` from `@rjsf/core` i
 Using the `withTheme()` function is just as easy:
 
 ```tsx
+import { JSONSchemaType } from 'ajv';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { withTheme, ThemeProps } from '@rjsf/core';
@@ -225,6 +226,7 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
+import { JSONSchemaType } from 'ajv';
 import { WidgetProps } from '@rjsf/utils';
 import { ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
