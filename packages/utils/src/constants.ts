@@ -1,6 +1,6 @@
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and
- * `RJSF_ADDITONAL_PROPERTIES_FLAG` flags that is added to a schema under certain conditions by the `retrieveSchema()`
+ * `RJSF_ADDITIONAL_PROPERTIES_FLAG` flags that is added to a schema under certain conditions by the `retrieveSchema()`
  * utility.
  */
 export const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
@@ -23,7 +23,7 @@ export const PROPERTIES_KEY = 'properties';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
-export const RJSF_ADDITONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
+export const RJSF_ADDITIONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
 export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';

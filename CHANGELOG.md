@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.4
+
+## Dev / docs / playground
+
+- Fixed typo in `constants.ts`, `Form.tsx`
+
 # 5.18.3
 
 ## @rjsf/semantic-ui
