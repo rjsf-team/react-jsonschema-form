@@ -32,6 +32,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     registry,
     rawErrors,
     hideError,
+    raiseFieldErrors,
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
@@ -66,6 +67,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       registry={registry}
       placeholder={placeholder}
       rawErrors={rawErrors}
+      raiseFieldErrors={raiseFieldErrors}
     />
   );
 }

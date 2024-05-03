@@ -33,6 +33,7 @@ import {
   validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
+  FieldError,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -271,6 +272,7 @@ export default class Form<
    */
   constructor(props: FormProps<T, S, F>) {
     super(props);
+    this.raiseFieldErrors = this.raiseFieldErrors.bind(this);
 
     if (!props.validator) {
       throw new Error('A validator is required for Form functionality to work');
@@ -417,7 +419,13 @@ export default class Form<
     if (mustValidate) {
       const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
-      errorSchema = schemaValidation.errorSchema;
+      // If the schema has changed, we do not merge state.errorSchema.
+      // Else in the case where it hasn't changed, we merge 'state.errorSchema' with 'schemaValidation.errorSchema.' This done to display the raised field error.
+      if (isSchemaChanged) {
+        errorSchema = schemaValidation.errorSchema;
+      } else {
+        errorSchema = mergeObjects(this.state?.errorSchema, schemaValidation.errorSchema, true) as ErrorSchema<T>;
+      }
       schemaValidationErrors = errors;
       schemaValidationErrorSchema = errorSchema;
     } else {
@@ -461,6 +469,15 @@ export default class Form<
    */
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
     return shouldRender(this, nextProps, nextState);
+  }
+
+  raiseFieldErrors(fieldName: string, errors: FieldError[]) {
+    console.log('this', this);
+    const { noValidate } = this.props;
+    if (!noValidate) {
+      const errorSchema = { [fieldName]: { __errors: errors } } as ErrorSchema<T>;
+      this.setState({ errorSchema });
+    }
   }
 
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
@@ -928,6 +945,7 @@ export default class Form<
           registry={registry}
           disabled={disabled}
           readonly={readonly}
+          raiseFieldErrors={this.raiseFieldErrors}
         />
 
         {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}

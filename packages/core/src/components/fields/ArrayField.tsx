@@ -17,6 +17,7 @@ import {
   TranslatableString,
   UiSchema,
   ITEMS_KEY,
+  FieldError,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -481,6 +482,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       idPrefix,
       idSeparator = '_',
       rawErrors,
+      raiseFieldErrors,
     } = this.props;
     const { keyedFormData } = this.state;
     const fieldTitle = schema.title || title || name;
@@ -518,6 +520,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           onFocus,
           rawErrors,
           totalItems: keyedFormData.length,
+          raiseFieldErrors,
         });
       }),
       className: `field field-array field-array-of-${itemsSchema.type}`,
@@ -558,6 +561,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       rawErrors,
       name,
+      raiseFieldErrors,
     } = this.props;
     const { widgets, formContext, globalUiOptions, schemaUtils } = registry;
     const { widget, title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
@@ -587,6 +591,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        raiseFieldErrors={raiseFieldErrors}
       />
     );
   }
@@ -609,6 +614,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       rawErrors,
       name,
+      raiseFieldErrors,
     } = this.props;
     const { widgets, schemaUtils, formContext, globalUiOptions } = registry;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
@@ -639,6 +645,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        raiseFieldErrors={raiseFieldErrors}
       />
     );
   }
@@ -660,6 +667,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       formData: items = [],
       rawErrors,
+      raiseFieldErrors,
     } = this.props;
     const { widgets, formContext, globalUiOptions, schemaUtils } = registry;
     const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
@@ -687,6 +695,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         rawErrors={rawErrors}
         label={label}
         hideLabel={!displayLabel}
+        raiseFieldErrors={raiseFieldErrors}
       />
     );
   }
@@ -712,6 +721,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       onBlur,
       onFocus,
       rawErrors,
+      raiseFieldErrors,
     } = this.props;
     const { keyedFormData } = this.state;
     let { formData: items = [] } = this.props;
@@ -777,6 +787,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           onFocus,
           rawErrors,
           totalItems: keyedFormData.length,
+          raiseFieldErrors,
         });
       }),
       onAddClick: this.onAddClick,
@@ -819,6 +830,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     onFocus: FieldProps<T[], S, F>['onFocus'];
     rawErrors?: string[];
     totalItems: number;
+    raiseFieldErrors: (fieldName: string, error: FieldError[]) => void;
   }) {
     const {
       key,
@@ -839,6 +851,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
       totalItems,
       title,
+      raiseFieldErrors,
     } = props;
     const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
     const {
@@ -880,6 +893,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           hideError={hideError}
           autofocus={autofocus}
           rawErrors={rawErrors}
+          raiseFieldErrors={raiseFieldErrors}
         />
       ),
       className: 'array-item',

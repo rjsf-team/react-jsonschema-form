@@ -401,6 +401,7 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
+  raiseFieldErrors: (fieldName: string, errors: FieldError[]) => void;
 }
 
 /** The definition of a React-based Field component */
@@ -466,6 +467,7 @@ export type FieldTemplateProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
   onDropPropertyClick: (value: string) => () => void;
   /** The `registry` object */
   registry: Registry<T, S, F>;
+  raiseFieldErrors: (fieldName: string, errors: FieldError[]) => void;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
@@ -757,6 +759,7 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
+  raiseFieldErrors: (fieldName: string, errors: FieldError[]) => void;
 }
 
 /** The definition of a React-based Widget component */

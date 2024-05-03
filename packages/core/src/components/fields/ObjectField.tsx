@@ -242,6 +242,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       onFocus,
       registry,
       title,
+      raiseFieldErrors,
     } = this.props;
 
     const { fields, formContext, schemaUtils, translateString, globalUiOptions } = registry;
@@ -305,6 +306,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               readonly={readonly}
               hideError={hideError}
               onDropPropertyClick={this.onDropPropertyClick}
+              raiseFieldErrors={raiseFieldErrors}
             />
           ),
           name,
