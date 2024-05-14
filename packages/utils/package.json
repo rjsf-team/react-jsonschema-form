@@ -71,7 +71,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Heath Chiavettone <heath.chiavettone@freenome.com",
+  "author": "Heath Chiavettone <heath.chiavettone@freenome.com>",
   "contributors": [],
   "keywords": [
     "react-jsonschema-form",
