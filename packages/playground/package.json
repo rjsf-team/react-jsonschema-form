@@ -63,7 +63,7 @@
     "core-js": "^3.35.1",
     "dayjs": "^1.11.10",
     "deep-freeze-es6": "^1.4.1",
-    "framer-motion": "^5.6.0",
+    "framer-motion": "^11.2.4",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.38.0",
