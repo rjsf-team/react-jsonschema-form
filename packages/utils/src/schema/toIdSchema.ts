@@ -64,7 +64,11 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema[ID_KEY] + idSeparator + name;
-      idSchema[name] = toIdSchemaInternal<T, S, F>(
+      (idSchema as { [key in keyof IdSchema<T>]: IdSchema<T> })[name as keyof IdSchema<T>] = toIdSchemaInternal<
+        T,
+        S,
+        F
+      >(
         validator,
         isObject(field) ? field : {},
         idPrefix,
