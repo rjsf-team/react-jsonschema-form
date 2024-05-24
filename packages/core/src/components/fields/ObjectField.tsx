@@ -202,13 +202,16 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const newFormData = { ...formData } as T;
 
     let type: RJSFSchema['type'] = undefined;
+    let defaultValue: RJSFSchema['default'] = undefined;
     if (isObject(schema.additionalProperties)) {
       type = schema.additionalProperties.type;
+      defaultValue = schema.additionalProperties.default;
       let apSchema = schema.additionalProperties;
       if (REF_KEY in apSchema) {
         const { schemaUtils } = registry;
         apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
         type = apSchema.type;
+        defaultValue = apSchema.default;
       }
       if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
         type = 'object';
@@ -217,7 +220,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
     const newKey = this.getAvailableKey('newKey', newFormData);
     // Cast this to make the `set` work properly
-    set(newFormData as GenericObjectType, newKey, this.getDefaultValue(type));
+    set(newFormData as GenericObjectType, newKey, defaultValue ?? this.getDefaultValue(type));
 
     onChange(newFormData);
   };
