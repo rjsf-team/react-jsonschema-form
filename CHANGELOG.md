@@ -18,9 +18,34 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.19.2
 
+## @rjsf/antd
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/chakra-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
 ## @rjsf/core
 
 - Removed `.only` on tests that was accidentally added in `5.19.0`
+- Added support for `default` values in `additionalProperties` in [#4199](https://github.com/rjsf-team/react-jsonschema-form/issues/4199), fixing [#3195](https://github.com/rjsf-team/react-jsonschema-form/issues/3915)
+
+## @rjsf/fluentui-rc
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/material-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/mui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/semantic-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
 
 # 5.19.1
 

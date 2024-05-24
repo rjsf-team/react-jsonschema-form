@@ -3639,9 +3639,9 @@ exports[`single fields select field single choice formData 1`] = `
                   </span>
                   <span
                     className="ant-select-selection-item"
-                    title="bar"
+                    title="foo"
                   >
-                    bar
+                    foo
                   </span>
                 </div>
                 <span

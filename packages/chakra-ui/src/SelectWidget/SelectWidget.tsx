@@ -1,4 +1,4 @@
-import { FocusEvent } from 'react';
+import { FocusEvent, useMemo } from 'react';
 import { FormControl, FormLabel } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -34,6 +34,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus,
     rawErrors = [],
     uiSchema,
+    schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
@@ -61,8 +62,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const _valueLabelMap: any = {};
-  const displayEnumOptions: OptionsOrGroups<any, any> = Array.isArray(enumOptions)
-    ? enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+  const displayEnumOptions: OptionsOrGroups<any, any> = useMemo(() => {
+    if (Array.isArray(enumOptions)) {
+      if (!multiple && schema.default === undefined) {
+        enumOptions.unshift({ value: '', label: placeholder || '' });
+      }
+      return enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
         _valueLabelMap[index] = label || String(value);
         return {
@@ -70,8 +75,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           value: String(index),
           isDisabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
-      })
-    : [];
+      });
+    }
+    return [];
+  }, [_valueLabelMap, enumDisabled, enumOptions, multiple, placeholder, schema.default]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
