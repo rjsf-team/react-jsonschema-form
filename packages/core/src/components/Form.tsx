@@ -33,7 +33,6 @@ import {
   validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
-  FieldError,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -272,7 +271,6 @@ export default class Form<
    */
   constructor(props: FormProps<T, S, F>) {
     super(props);
-    this.raiseFieldErrors = this.raiseFieldErrors.bind(this);
 
     if (!props.validator) {
       throw new Error('A validator is required for Form functionality to work');
@@ -424,7 +422,11 @@ export default class Form<
       if (isSchemaChanged) {
         errorSchema = schemaValidation.errorSchema;
       } else {
-        errorSchema = mergeObjects(this.state?.errorSchema, schemaValidation.errorSchema, true) as ErrorSchema<T>;
+        errorSchema = mergeObjects(
+          this.state?.errorSchema,
+          schemaValidation.errorSchema,
+          'preventDuplicates'
+        ) as ErrorSchema<T>;
       }
       schemaValidationErrors = errors;
       schemaValidationErrorSchema = errorSchema;
@@ -469,15 +471,6 @@ export default class Form<
    */
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
     return shouldRender(this, nextProps, nextState);
-  }
-
-  raiseFieldErrors(fieldName: string, errors: FieldError[]) {
-    console.log('this', this);
-    const { noValidate } = this.props;
-    if (!noValidate) {
-      const errorSchema = { [fieldName]: { __errors: errors } } as ErrorSchema<T>;
-      this.setState({ errorSchema });
-    }
   }
 
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
@@ -627,6 +620,9 @@ export default class Form<
         const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
         errors = merged.errors;
+      }
+      if (newErrorSchema) {
+        errorSchema = mergeObjects(errorSchema, newErrorSchema) as ErrorSchema<T>;
       }
       state = {
         formData: newFormData,
@@ -945,7 +941,6 @@ export default class Form<
           registry={registry}
           disabled={disabled}
           readonly={readonly}
-          raiseFieldErrors={this.raiseFieldErrors}
         />
 
         {children ? children : <SubmitButton uiSchema={submitUiSchema} registry={registry} />}

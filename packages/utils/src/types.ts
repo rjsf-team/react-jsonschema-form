@@ -401,7 +401,6 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
-  raiseFieldErrors: (fieldName: string, errors: FieldError[]) => void;
 }
 
 /** The definition of a React-based Field component */
@@ -467,7 +466,6 @@ export type FieldTemplateProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
   onDropPropertyClick: (value: string) => () => void;
   /** The `registry` object */
   registry: Registry<T, S, F>;
-  raiseFieldErrors: (fieldName: string, errors: FieldError[]) => void;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
@@ -744,7 +742,7 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   /** The input blur event handler; call it with the widget id and value */
   onBlur: (id: string, value: any) => void;
   /** The value change event handler; call it with the new value every time it changes */
-  onChange: (value: any) => void;
+  onChange: (value: any, es?: ErrorSchema<T>, id?: string) => void;
   /** The input focus event handler; call it with the widget id and value */
   onFocus: (id: string, value: any) => void;
   /** The computed label for this widget, as a string */

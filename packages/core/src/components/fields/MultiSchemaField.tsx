@@ -151,7 +151,6 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       schema,
       uiSchema,
-      raiseFieldErrors,
     } = this.props;
 
     const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
@@ -237,7 +236,6 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             autofocus={autofocus}
             label={title ?? name}
             hideLabel={!displayLabel}
-            raiseFieldErrors={raiseFieldErrors}
           />
         </div>
         {optionSchema && <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />}

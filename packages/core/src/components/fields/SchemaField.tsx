@@ -120,7 +120,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     required,
     registry,
     wasPropertyKeyModified = false,
-    raiseFieldErrors,
   } = props;
   const { formContext, schemaUtils, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
@@ -184,7 +183,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       errorSchema={fieldErrorSchema}
       formContext={formContext}
       rawErrors={__errors}
-      raiseFieldErrors={raiseFieldErrors}
     />
   );
 
@@ -282,7 +280,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     schema,
     uiSchema,
     registry,
-    raiseFieldErrors,
   };
 
   const _AnyOfField = registry.fields.AnyOfField;
@@ -312,7 +309,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
-            raiseFieldErrors={raiseFieldErrors}
             onFocus={props.onFocus}
             options={schema.anyOf.map((_schema) =>
               schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)
@@ -336,7 +332,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
-            raiseFieldErrors={raiseFieldErrors}
             onFocus={props.onFocus}
             options={schema.oneOf.map((_schema) =>
               schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)

@@ -28,7 +28,7 @@ function readyForChange(state: DateObject) {
 
 type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
   WidgetProps<T, S, F>,
-  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'raiseFieldErrors'
+  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus'
 > & {
   rootId: string;
   select: (property: keyof DateObject, value: any) => void;
@@ -49,7 +49,6 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   registry,
   onBlur,
   onFocus,
-  raiseFieldErrors,
 }: DateElementProps<T, S, F>) {
   const id = rootId + '_' + type;
   const { SelectWidget } = registry.widgets;
@@ -71,7 +70,6 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       registry={registry}
       label=''
       aria-describedby={ariaDescribedByIds<T>(rootId)}
-      raiseFieldErrors={raiseFieldErrors}
     />
   );
 }
@@ -92,7 +90,6 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   onFocus,
   onChange,
   value,
-  raiseFieldErrors,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
   const [lastValue, setLastValue] = useState(value);
@@ -159,7 +156,6 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
             onBlur={onBlur}
             onFocus={onFocus}
             autofocus={autofocus && i === 0}
-            raiseFieldErrors={raiseFieldErrors}
           />
         </li>
       ))}

@@ -36,7 +36,6 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onFocus,
     onBlur,
     rawErrors,
-    raiseFieldErrors,
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets, formContext, translateString, globalUiOptions } = registry;
@@ -111,7 +110,6 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       formContext={formContext}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      raiseFieldErrors={raiseFieldErrors}
     />
   );
 }
