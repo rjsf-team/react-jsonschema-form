@@ -86,7 +86,7 @@ export default function SelectWidget<
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {!multiple && schema.default === undefined && <MenuItem value=''>{placeholder || ''}</MenuItem>}
+      {!multiple && schema.default === undefined && <MenuItem value=''>{placeholder}</MenuItem>}
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i: number) => {
           const disabled: boolean = Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1;
