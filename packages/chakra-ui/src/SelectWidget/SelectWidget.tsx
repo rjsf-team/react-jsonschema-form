@@ -64,10 +64,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _valueLabelMap: any = {};
   const displayEnumOptions: OptionsOrGroups<any, any> = useMemo(() => {
     if (Array.isArray(enumOptions)) {
+      const options = [...enumOptions];
       if (!multiple && schema.default === undefined) {
-        enumOptions.unshift({ value: '', label: placeholder || '' });
+        options.unshift({ value: '', label: placeholder || '' });
       }
-      return enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+      return options.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
         _valueLabelMap[index] = label || String(value);
         return {

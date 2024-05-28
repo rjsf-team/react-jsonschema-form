@@ -71,11 +71,11 @@ export default function SelectWidget<
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
+      const options = [...enumOptions];
       if (!multiple && schema.default === undefined) {
-        enumOptions.unshift({ value: '', label: placeholder || '' });
+        options.unshift({ value: '', label: placeholder || '' });
       }
-
-      return enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
+      return options.map(({ value: optionValue, label: optionLabel }, index) => ({
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
         key: String(index),
         value: String(index),
