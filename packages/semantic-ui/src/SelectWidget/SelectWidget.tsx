@@ -17,30 +17,21 @@ import { getSemanticProps } from '../util';
 
 /**
  * Returns and creates an array format required for semantic drop down
- * @param {array} enumOptions- array of items for the dropdown
+ * @param {array} enumOptions - array of items for the dropdown
  * @param {array} enumDisabled - array of enum option values to disable
  * @returns {*}
  */
 function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
   enumOptions?: EnumOptionsType<S>[],
-  enumDisabled?: UIOptionsType['enumDisabled'],
-  multiple?: boolean,
-  placeholder?: string
+  enumDisabled?: UIOptionsType['enumDisabled']
 ) {
   const disabledOptions = enumDisabled || [];
-  const options: DropdownItemProps[] = [];
-  if (!multiple && schema.default === undefined) {
-    options.push({ value: '', text: placeholder || '' });
-  }
-  options.push(
-    ...map(enumOptions, ({ label, value }, index) => ({
-      disabled: disabledOptions.indexOf(value) !== -1,
-      key: label,
-      text: label,
-      value: String(index),
-    }))
-  );
+  const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
+    disabled: disabledOptions.indexOf(value) !== -1,
+    key: label,
+    text: label,
+    value: String(index),
+  }));
   return options;
 }
 
@@ -70,7 +61,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur,
     onFocus,
     rawErrors = [],
-    schema,
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
@@ -86,13 +76,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
-  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
-    schema,
-    enumOptions,
-    enumDisabled,
-    multiple,
-    placeholder
-  );
+  const dropdownOptions = createDefaultValueOptionsForDropDown<S>(enumOptions, enumDisabled);
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
     onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));
   // eslint-disable-next-line no-shadow

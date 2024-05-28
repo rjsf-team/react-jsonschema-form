@@ -58,7 +58,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       id={id}
       name={name}
       className='form-control'
-      options={{ enumOptions: rangeOptions(range[0], range[1]) }}
+      options={{ enumOptions: [{ label: type, value: '' }, ...rangeOptions(range[0], range[1])] }}
       placeholder={type}
       value={value}
       disabled={disabled}

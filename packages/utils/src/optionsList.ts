@@ -7,10 +7,14 @@ import { RJSFSchema, EnumOptionsType, StrictRJSFSchema } from './types';
  * `const` values from the schema and the label is either the `schema.title` or the value.
  *
  * @param schema - The schema from which to extract the options list
+ * @param multiple - Whether the user can select mutliple enum values. Default is false.
+ * @param placeholder - The placeholder text for the enum field
  * @returns - The list of options from the schema
  */
 export default function optionsList<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
+  schema: S,
+  multiple = false,
+  placeholder = ''
 ): EnumOptionsType<S>[] | undefined {
   // enumNames was deprecated in v5 and is intentionally omitted from the RJSFSchema type.
   // Cast the type to include enumNames so the feature still works.
@@ -18,16 +22,17 @@ export default function optionsList<S extends StrictRJSFSchema = RJSFSchema>(
   if (schemaWithEnumNames.enumNames && process.env.NODE_ENV !== 'production') {
     console.warn('The enumNames property is deprecated and may be removed in a future major release.');
   }
+
+  const altSchemas = schema.oneOf || schema.anyOf;
+
+  let options: EnumOptionsType<S>[] | undefined = undefined;
   if (schema.enum) {
-    return schema.enum.map((value, i) => {
+    options = schema.enum.map((value, i) => {
       const label = (schemaWithEnumNames.enumNames && schemaWithEnumNames.enumNames[i]) || String(value);
       return { label, value };
     });
-  }
-  const altSchemas = schema.oneOf || schema.anyOf;
-  return (
-    altSchemas &&
-    altSchemas.map((aSchemaDef) => {
+  } else if (altSchemas) {
+    options = altSchemas.map((aSchemaDef) => {
       const aSchema = aSchemaDef as S;
       const value = toConstant(aSchema);
       const label = aSchema.title || String(value);
@@ -36,6 +41,11 @@ export default function optionsList<S extends StrictRJSFSchema = RJSFSchema>(
         label,
         value,
       };
-    })
-  );
+    });
+  }
+  if (options && !multiple && schema.default === undefined) {
+    options.unshift({ value: undefined, label: placeholder });
+  }
+
+  return options;
 }

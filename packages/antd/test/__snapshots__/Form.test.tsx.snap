@@ -878,7 +878,7 @@ exports[`single fields format color 1`] = `
                   onFocus={[Function]}
                   onKeyDown={[Function]}
                   placeholder=""
-                  type="color"
+                  type="text"
                   value=""
                 />
                 <span
@@ -935,8 +935,8 @@ exports[`single fields format date 1`] = `
             <div
               className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-1b0bdye"
+              <span
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -944,52 +944,26 @@ exports[`single fields format date 1`] = `
                   }
                 }
               >
-                <div
-                  className="ant-picker-input"
-                >
-                  <input
-                    aria-describedby="root__error root__description root__help"
-                    autoComplete="off"
-                    disabled={false}
-                    id="root"
-                    name="root"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    placeholder=""
-                    readOnly={true}
-                    size={12}
-                    title=""
-                    value=""
-                  />
-                  <span
-                    className="ant-picker-suffix"
-                    onMouseDown={[Function]}
-                  >
-                    <span
-                      aria-label="calendar"
-                      className="anticon anticon-calendar"
-                      role="img"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        data-icon="calendar"
-                        fill="currentColor"
-                        focusable="false"
-                        height="1em"
-                        viewBox="64 64 896 896"
-                        width="1em"
-                      >
-                        <path
-                          d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </div>
-              </div>
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  disabled={false}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -1040,8 +1014,8 @@ exports[`single fields format datetime 1`] = `
             <div
               className="ant-form-item-control-input-content"
             >
-              <div
-                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-1b0bdye"
+              <span
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -1049,52 +1023,26 @@ exports[`single fields format datetime 1`] = `
                   }
                 }
               >
-                <div
-                  className="ant-picker-input"
-                >
-                  <input
-                    aria-describedby="root__error root__description root__help"
-                    autoComplete="off"
-                    disabled={false}
-                    id="root"
-                    name="root"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    placeholder=""
-                    readOnly={true}
-                    size={21}
-                    title=""
-                    value=""
-                  />
-                  <span
-                    className="ant-picker-suffix"
-                    onMouseDown={[Function]}
-                  >
-                    <span
-                      aria-label="calendar"
-                      className="anticon anticon-calendar"
-                      role="img"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        data-icon="calendar"
-                        fill="currentColor"
-                        focusable="false"
-                        height="1em"
-                        viewBox="64 64 896 896"
-                        width="1em"
-                      >
-                        <path
-                          d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </div>
-              </div>
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  disabled={false}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -1167,7 +1115,7 @@ exports[`single fields format time 1`] = `
                   onFocus={[Function]}
                   onKeyDown={[Function]}
                   placeholder=""
-                  type="time"
+                  type="text"
                   value=""
                 />
                 <span
@@ -3354,9 +3302,9 @@ exports[`single fields select field single choice formData 1`] = `
                   </span>
                   <span
                     className="ant-select-selection-item"
-                    title="foo"
+                    title="bar"
                   >
-                    foo
+                    bar
                   </span>
                 </div>
                 <span
@@ -3542,37 +3490,35 @@ exports[`single fields string field format data-url 1`] = `
             <div
               className="ant-form-item-control-input-content"
             >
-              <div>
-                <span
-                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
-                  onClick={[Function]}
-                  style={
-                    {
-                      "width": "100%",
-                    }
+              <span
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                onClick={[Function]}
+                style={
+                  {
+                    "width": "100%",
                   }
-                >
-                  <input
-                    aria-describedby="root__error root__description root__help"
-                    className="ant-input css-dev-only-do-not-override-1b0bdye"
-                    disabled={false}
-                    id="root"
-                    name="root"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onCompositionEnd={[Function]}
-                    onCompositionStart={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    placeholder=""
-                    type="file"
-                    value=""
-                  />
-                  <span
-                    className="ant-input-suffix"
-                  />
-                </span>
-              </div>
+                }
+              >
+                <input
+                  aria-describedby="root__error root__description root__help"
+                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  disabled={false}
+                  id="root"
+                  name="root"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="ant-input-suffix"
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -3645,7 +3591,7 @@ exports[`single fields string field format email 1`] = `
                   onFocus={[Function]}
                   onKeyDown={[Function]}
                   placeholder=""
-                  type="email"
+                  type="text"
                   value=""
                 />
                 <span
@@ -3724,7 +3670,7 @@ exports[`single fields string field format uri 1`] = `
                   onFocus={[Function]}
                   onKeyDown={[Function]}
                   placeholder=""
-                  type="url"
+                  type="text"
                   value=""
                 />
                 <span

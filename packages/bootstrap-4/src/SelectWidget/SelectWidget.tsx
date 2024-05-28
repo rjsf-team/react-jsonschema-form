@@ -15,7 +15,6 @@ export default function SelectWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >({
-  schema,
   id,
   options,
   required,
@@ -27,7 +26,6 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
-  placeholder,
   rawErrors = [],
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
@@ -78,7 +76,6 @@ export default function SelectWidget<
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {!multiple && schema.default === undefined && <option value=''>{placeholder}</option>}
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (

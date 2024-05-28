@@ -10,8 +10,6 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import isString from 'lodash/isString';
-import { DefaultOptionType } from 'antd/es/select';
-import { useMemo } from 'react';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -39,7 +37,6 @@ export default function SelectWidget<
   placeholder,
   readonly,
   value,
-  schema,
 }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -68,23 +65,6 @@ export default function SelectWidget<
   const extraProps = {
     name: id,
   };
-
-  const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
-    if (Array.isArray(enumOptions)) {
-      const options = [...enumOptions];
-      if (!multiple && schema.default === undefined) {
-        options.unshift({ value: '', label: placeholder || '' });
-      }
-      return options.map(({ value: optionValue, label: optionLabel }, index) => ({
-        disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
-        key: String(index),
-        value: String(index),
-        label: optionLabel,
-      }));
-    }
-    return undefined;
-  }, [enumDisabled, enumOptions, multiple, placeholder, schema.default]);
-
   return (
     <Select
       autoFocus={autofocus}
@@ -101,7 +81,16 @@ export default function SelectWidget<
       {...extraProps}
       filterOption={filterOption}
       aria-describedby={ariaDescribedByIds<T>(id)}
-      options={selectOptions}
+      options={
+        Array.isArray(enumOptions)
+          ? enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
+              disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
+              key: String(index),
+              value: String(index),
+              label: optionLabel,
+            }))
+          : undefined
+      }
     />
   );
 }

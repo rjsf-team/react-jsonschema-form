@@ -35,12 +35,14 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
-  const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema) : undefined;
+  const { widget: widgetFromUiOptions, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
+  const enumOptions = schemaUtils.isSelect(schema) ? optionsList(schema, false, placeholder) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
     defaultWidget = format;
   }
-  const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
+  const widget = widgetFromUiOptions || defaultWidget;
+
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? name;
   const Widget = getWidget<T, S, F>(schema, widget, widgets);

@@ -38,8 +38,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   onChange,
   onBlur,
   onFocus,
-  schema,
-  placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
 
@@ -83,7 +81,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         selectedOptions={selectedIndexesAsArray}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        {!multiple && schema.default === undefined && <Option value=''>{placeholder || ''}</Option>}
         {Array.isArray(enumOptions) &&
           enumOptions.map(({ value, label }, i) => {
             const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;

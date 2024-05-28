@@ -439,7 +439,7 @@ exports[`single fields format color 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="color"
+        type="text"
         value=""
       />
     </div>
@@ -484,7 +484,7 @@ exports[`single fields format date 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="date"
+        type="text"
         value=""
       />
     </div>
@@ -529,7 +529,7 @@ exports[`single fields format datetime 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="datetime-local"
+        type="text"
         value=""
       />
     </div>
@@ -574,7 +574,7 @@ exports[`single fields format time 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="time"
+        type="text"
         value=""
       />
     </div>
@@ -1126,19 +1126,21 @@ exports[`single fields select field 1`] = `
         value=""
       >
         <option
-          value=""
+          disabled={false}
+          id=""
+          value="0"
         />
         <option
           disabled={false}
           id="foo"
-          value="0"
+          value="1"
         >
           foo
         </option>
         <option
           disabled={false}
           id="bar"
-          value="1"
+          value="2"
         >
           bar
         </option>
@@ -1476,19 +1478,21 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         value=""
       >
         <option
-          value=""
+          disabled={false}
+          id=""
+          value="0"
         />
         <option
           disabled={false}
           id="foo"
-          value="0"
+          value="1"
         >
           foo
         </option>
         <option
           disabled={true}
           id="bar"
-          value="1"
+          value="2"
         >
           bar
         </option>
@@ -1533,22 +1537,24 @@ exports[`single fields select field single choice formData 1`] = `
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        value="1"
+        value="2"
       >
         <option
-          value=""
+          disabled={false}
+          id=""
+          value="0"
         />
         <option
           disabled={false}
           id="foo"
-          value="0"
+          value="1"
         >
           foo
         </option>
         <option
           disabled={false}
           id="bar"
-          value="1"
+          value="2"
         >
           bar
         </option>
@@ -1636,23 +1642,21 @@ exports[`single fields string field format data-url 1`] = `
         className="form-label"
         htmlFor="root"
       />
-      <div>
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="form-control-file"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          type="file"
-          value=""
-        />
-      </div>
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="form-control"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        readOnly={false}
+        type="text"
+        value=""
+      />
     </div>
   </div>
   <div>
@@ -1695,7 +1699,7 @@ exports[`single fields string field format email 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="email"
+        type="text"
         value=""
       />
     </div>
@@ -1740,7 +1744,7 @@ exports[`single fields string field format uri 1`] = `
         onFocus={[Function]}
         placeholder=""
         readOnly={false}
-        type="url"
+        type="text"
         value=""
       />
     </div>
