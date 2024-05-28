@@ -2,6 +2,7 @@ import { Ajv, ErrorObject } from 'ajv';
 import {
   createErrorHandler,
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -158,6 +159,16 @@ export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     return validationDataMerge<T>({ errors, errorSchema }, userErrorSchema);
   }
 
+  /**
+   * This function is called when the root schema changes. It removes the old root schema from the ajv instance and adds the new one.
+   * @param rootSchema - The root schema used to provide $ref resolutions
+   */
+  handleRootSchemaChange(rootSchema: RJSFSchema): void {
+    const rootSchemaId = ROOT_SCHEMA_PREFIX;
+    this.ajv.removeSchema(rootSchemaId);
+    this.ajv.addSchema(rootSchema, rootSchemaId);
+  }
+
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
@@ -169,16 +180,21 @@ export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSch
   isValid(schema: RJSFSchema, formData: T | undefined, rootSchema: RJSFSchema) {
     try {
       // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+      // if schema validator instance doesn't exist, add it.
+      // else 'handleRootSchemaChange' should be called if the root schema changes so we don't have to remove and recompile the schema every run.
+      if (this.ajv.getSchema(ROOT_SCHEMA_PREFIX) === undefined) {
+        // TODO restore the commented out `if` above when the TODO in the `finally` is completed
+        this.ajv.addSchema(rootSchema, ROOT_SCHEMA_PREFIX);
+      } else if (!deepEquals(rootSchema, this.ajv.getSchema(ROOT_SCHEMA_PREFIX)?.schema)) {
+        this.handleRootSchemaChange(rootSchema);
+      }
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      const result = this.ajv.addSchema(rootSchema, ROOT_SCHEMA_PREFIX).validate(withIdRefPrefix(schema), formData);
+      const result = this.ajv.validate(withIdRefPrefix(schema), formData);
       return result as boolean;
     } catch (e) {
       return false;
-    } finally {
-      // make sure we remove the rootSchema from the global ajv instance
-      this.ajv.removeSchema(ROOT_SCHEMA_PREFIX);
     }
   }
 }
