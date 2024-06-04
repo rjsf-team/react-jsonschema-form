@@ -380,11 +380,11 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   /** A boolean value stating if the field should autofocus */
   autofocus?: boolean;
   /** A boolean value stating if the field is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** A boolean value stating if the field is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** The required status of this field */
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
@@ -545,7 +545,7 @@ export type ArrayFieldTemplateItemType<
   /** The className string */
   className: string;
   /** A boolean value stating if the array item is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating whether new items can be added to the array */
   canAdd: boolean;
   /** A boolean value stating whether the array item can be copied, assumed false if missing */
@@ -571,7 +571,7 @@ export type ArrayFieldTemplateItemType<
   /** Returns a function that swaps the items at `index` with `newIndex` */
   onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** A stable, unique key for the array item */
   key: string;
   /** The schema object for this array item */
@@ -631,9 +631,9 @@ export type ObjectFieldTemplatePropertyType = {
   /** A string representing the property name */
   name: string;
   /** A boolean value stating if the object property is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating if the property is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** A boolean value stating if the property should be hidden */
   hidden: boolean;
 };
