@@ -51,7 +51,7 @@ export default function CheckboxWidget<
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
-    <div>
+    <>
       <style>
         {`
           .checkbox.cds--checkbox-wrapper--invalid>.cds--checkbox__validation-msg {
@@ -83,6 +83,6 @@ export default function CheckboxWidget<
           registry={registry}
         />
       )}
-    </div>
+    </>
   );
 }

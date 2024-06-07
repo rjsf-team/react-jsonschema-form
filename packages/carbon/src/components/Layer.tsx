@@ -1,4 +1,4 @@
-// @ts-expect-error there's no type definition for Stack
+// @ts-expect-error there's no type definition
 import { Layer as CarbonLayer } from '@carbon/react';
 import { ReactNode } from 'react';
 import { NestDepth, useNestDepth } from '../contexts';
