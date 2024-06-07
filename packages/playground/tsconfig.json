@@ -24,6 +24,7 @@
   "references": [
     { "path": "../antd" },
     { "path": "../bootstrap-4" },
+    { "path": "../carbon" },
     { "path": "../chakra-ui" },
     { "path": "../core" },
     { "path": "../fluent-ui" },

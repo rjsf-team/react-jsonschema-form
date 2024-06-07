@@ -8,6 +8,9 @@
       "path": "./packages/bootstrap-4"
     },
     {
+      "path": "./packages/carbon"
+    },
+    {
       "path": "./packages/chakra-ui"
     },
     {
