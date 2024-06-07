@@ -1,4 +1,3 @@
-// @ts-expect-error not type for Stack
 import { FormGroup, Stack, TextInput } from '@carbon/react';
 import {
   ADDITIONAL_PROPERTY_FLAG,

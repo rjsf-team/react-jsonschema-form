@@ -1,4 +1,3 @@
-// @ts-expect-error there's no type definition for Stack
 import { Stack } from '@carbon/react';
 // @ts-expect-error miss types for `@carbon/layout`
 import { spacing } from '@carbon/layout';

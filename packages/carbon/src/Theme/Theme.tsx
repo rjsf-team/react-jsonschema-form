@@ -1,6 +1,5 @@
 import { ThemeProps } from '@rjsf/core';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-// @ts-expect-error missing types for Stack
 import { Stack } from '@carbon/react';
 import { generateTemplates } from '../Templates';
 import { generateWidgets } from '../Widgets';

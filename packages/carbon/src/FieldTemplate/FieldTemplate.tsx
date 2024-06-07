@@ -1,4 +1,3 @@
-// @ts-expect-error miss types for `Stack`
 import { FormGroup, Stack } from '@carbon/react';
 import {
   FieldTemplateProps,

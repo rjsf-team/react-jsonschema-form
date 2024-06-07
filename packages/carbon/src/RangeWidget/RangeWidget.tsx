@@ -1,5 +1,4 @@
 import { FocusEvent } from 'react';
-// @ts-expect-error missing types for `Slider`
 import { Slider } from '@carbon/react';
 import {
   ariaDescribedByIds,
@@ -10,7 +9,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { LabelValue } from '../components/LabelValue';
 
 /** Implement `RangeWidget`
  */
@@ -21,8 +19,6 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     id,
     type,
     value,
-    label,
-    hideLabel,
     schema,
     onChange,
     onChangeOverride,
@@ -38,8 +34,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
 
-  const _onChange = ({ value }: { value: string | number }) => onChange(value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
+  const _onChange = (value: string | number) => onChange(value);
+  const _onBlur = (data: { value: string }) => onBlur(id, data.value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
 
   return (
@@ -59,10 +55,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         id={id}
         name={id}
         className='form-control'
-        value={typeof value === 'number' ? value : undefined}
-        hideLabel
-        label={<LabelValue label={label} required={required} hide={hideLabel || !label} />}
-        onChange={onChangeOverride || _onChange}
+        value={typeof value === 'number' ? value : Number(value)}
+        onChange={(data: { value: number }) => (onChangeOverride || _onChange)?.(data.value)}
         onBlur={_onBlur}
         onFocus={_onFocus}
         autoFocus={autofocus}
@@ -73,6 +67,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
+        min={inputProps.min ?? 0}
+        max={inputProps.max ?? 100}
         step={typeof inputProps.step === 'number' ? inputProps.step : undefined}
       />
       {Array.isArray(schema.examples) ? (

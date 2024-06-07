@@ -10,8 +10,7 @@ import {
   WidgetProps,
   getUiOptions,
 } from '@rjsf/utils';
-// @ts-expect-error missing types for `FilterableMultiSelect`
-import { Select, SelectItem, FilterableMultiSelect } from '@carbon/react';
+import { Select, SelectItem, MultiSelect } from '@carbon/react';
 import { LabelValue } from '../components/LabelValue';
 import getCarbonOptions, { maxLgSize } from '../utils';
 
@@ -91,15 +90,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   if (multiple) {
     return (
-      <FilterableMultiSelect
+      <MultiSelect
+        label={<LabelValue label={label} hide={hideLabel || !label} required={required} />}
         id={id}
         hideLabel
-        labelText={<LabelValue label={label} hide={hideLabel || !label} required={required} />}
-        placeholder={placeholder}
         onChange={_onMultipleChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        autoFocus={autofocus}
         selectedItems={
           typeof selectedIndexes === 'undefined'
             ? []
@@ -114,7 +109,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           environment,
         }}
         selectionFeedback='fixed'
-        size={carbonOptions.size}
+        size={carbonOptions.size === 'xl' ? 'lg' : carbonOptions.size}
       />
     );
   }
@@ -124,7 +119,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       id={id}
       hideLabel
       labelText={<LabelValue label={label} hide={hideLabel || !label} required={required} />}
-      placeholder={placeholder}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
@@ -136,7 +130,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       readOnly={readonly}
       size={maxLgSize(carbonOptions.size)}
     >
-      {!multiple && schema.default === undefined && <SelectItem value='' text={placeholder} />}
+      {!multiple && schema.default === undefined && <SelectItem value='' text={placeholder ?? ''} />}
       {displayEnumOptions.map((item) => (
         <SelectItem key={item.value} value={item.value} text={item.label} disabled={item.disabled} />
       ))}

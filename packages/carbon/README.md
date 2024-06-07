@@ -11,10 +11,10 @@
     <img src="./logo.png" alt="Logo" width="340">
   </a>
 
-  <h3 align="center">@rjsf/carbon</h3>
+  <h3 align="center">@rjsf/chakra-ui</h3>
 
   <p align="center">
-  Carbon Design System theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Chakra UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -38,6 +38,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+- [Optional Chakra UI Theme properties](#optional-chakra-ui-theme-properties)
+  - [Custom Chakra uiSchema Chakra Property](#custom-chakra-uischema-chakra-property)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -46,16 +48,14 @@
 
 ## About The Project
 
-TODO
+[![@rjsf/chakra-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/chakra-ui)
 
-[![@rjsf/carbon Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/carbon)
-
-Exports `carbon` theme, fields and widgets for `react-jsonschema-form`.
+Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [Carbon Design System](https://carbondesignsystem.com/)
+- [Chakra UI](https://chakra-ui.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -64,20 +64,24 @@ Exports `carbon` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@carbon/react >= 1.7.0`
+- `@chakra-ui/react >= 1.7.0`
+- `chakra-react-select >= 3.3.8`
+- `react >= 17.0.0`
+- `framer-motion >= 5.0.0`
+- `@rjsf/core >= 2.0.0`
 
-Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonschema-form/docs/#installation) and [Carbon Design System installation guide](https://carbondesignsystem.com/developing/frameworks/react/#install) and for more details.
+Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonschema-form/docs/#installation) and [chakra-ui installation guide](https://chakra-ui.com/docs/getting-started#installation) and for more details.
 
 ---
 
 ### Installation
 
 ```bash
-yarn add @carbon/react
+yarn add @chakra-ui/react@^1.7 @emotion/react@^11 @emotion/styled@^11 framer-motion@^5
 ```
 
 ```bash
-yarn add @rjsf/core
+yarn add @rjsf/chakra-ui @rjsf/core
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -85,65 +89,44 @@ yarn add @rjsf/core
 ## Usage
 
 ```js
-import Form from '@rjsf/carbon';
-// load style from carbon
-import '@carbon/styles/css/styles.min.css';
+import Form from '@rjsf/chakra-ui';
 ```
 
 or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as CarbonTheme } from '@rjsf/carbon';
-// load style from carbon
-import '@carbon/styles/css/styles.min.css';
+import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
-const Form = withTheme(CarbonTheme);
+const Form = withTheme(ChakraUITheme);
 ```
 
-## Optional Carbon Theme properties
+## Optional Chakra UI Theme properties
 
-Available carbon options are:
+- To pass additional properties to widgets, see this [guide](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/objects#additional-properties).
 
-```ts
-interface CarbonOptions {
-  /**Gap between each form item, default to `7` (2.5rem)
-   * @see https://carbondesignsystem.com/guidelines/spacing/overview/#spacing-scale
-   */
-  gap: number;
-  /** Size of form item.
-   *
-   * Note that some of the `@carbon/react` component doesn't support `xl` and will fallback to `lg`
-   */
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-}
-```
+You can use `ChakraProvider`, to customize the components at a theme level.\
+And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize the styling of the form widgets.
 
-### Custom Carbon through `formContext`
-
-```js
-const formContext = {
-  carbon: {
-    // carbon options here
-  },
-};
-```
-
-### Custom Carbon uiSchema Property
-
-`uiSchema` allows for the use of a `carbon` to customize the styling of the form widgets.
+#### Custom Chakra uiSchema Chakra Property
 
 ```json
 {
   "ui:options": {
-    "carbon": {
-      // carbon options here
+    "chakra": {
+      "p": "1rem",
+      "color": "blue.200",
+      "sx": {
+        "margin": "0 auto"
+      }
     }
   }
 }
 ```
+
+It accepts the theme accessible [style props](https://chakra-ui.com/docs/features/style-props) provided by [Chakra](https://chakra-ui.com/docs/getting-started) and [Emotion](https://emotion.sh/docs/introduction).
 
 <!-- ROADMAP -->
 
@@ -174,8 +157,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/carbon/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/carbon
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/carbon.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/carbon
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/chakra-ui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/chakra-ui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/chakra-ui
 [product-screenshot]: ./screenshot.png

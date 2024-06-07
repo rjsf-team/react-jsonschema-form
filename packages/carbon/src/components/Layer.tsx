@@ -1,4 +1,3 @@
-// @ts-expect-error there's no type definition
 import { Layer as CarbonLayer } from '@carbon/react';
 import { ReactNode } from 'react';
 import { NestDepth, useNestDepth } from '../contexts';
@@ -45,14 +44,14 @@ export function LayerBackground({
 function Background({ children, padding = 3 }: { children: ReactNode; padding?: number }) {
   const nestDepth = useNestDepth();
   return (
-    <CarbonLayer level={1 - (nestDepth % 2)}>
+    <CarbonLayer level={(1 - (nestDepth % 2)) as 0 | 1}>
       <div
         style={{
           padding: spacing[padding - 1],
           backgroundColor: 'var(--cds-layer)',
         }}
       >
-        <CarbonLayer level={nestDepth % 2}>{children}</CarbonLayer>
+        <CarbonLayer level={(nestDepth % 2) as 0 | 1}>{children}</CarbonLayer>
       </div>
     </CarbonLayer>
   );

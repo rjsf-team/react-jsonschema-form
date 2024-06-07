@@ -20,7 +20,14 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
           }
         `}
       </style>
-      <InlineNotification className='error-list' kind='error' role='alert' lowContrast hideCloseButton>
+      <InlineNotification
+        className='error-list'
+        kind='error'
+        role='alert'
+        lowContrast
+        hideCloseButton
+        onCloseButtonClick={() => {}}
+      >
         <div>
           <div className='cds--inline-notification__title'>{translateString(TranslatableString.ErrorsLabel)}</div>
           <UnorderedList>
