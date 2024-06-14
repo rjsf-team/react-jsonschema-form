@@ -71,7 +71,8 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     // Construct a regular expression that checks for a string that consists
     // of the formData value suffixed with zero or one '.' characters and zero
     // or more '0' characters
-    const re = new RegExp(`${value}`.replace('.', '\\.') + '\\.?0*$');
+    // const re = new RegExp(`${value}`.replace('.', '\\.') + '\\.?0*$');
+    const re = new RegExp(`^(${String(value).replace('.', '\\.')})?\\.?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI
