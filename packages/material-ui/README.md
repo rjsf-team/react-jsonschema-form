@@ -90,7 +90,7 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import Theme from '@rjsf/material-ui';
+import { Theme } from '@rjsf/material-ui';
 
 // Make modifications to the theme with your own fields and widgets
 
