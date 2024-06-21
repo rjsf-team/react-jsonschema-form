@@ -22,6 +22,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
 
+## @rjsf/validator-ajv6
+
+- Improved performance issues with large schema dependencies and oneOf conditions [#4203](https://github.com/rjsf-team/react-jsonschema-form/issues/4203).
+
+## @rjsf/validator-ajv8
+
+- Improved performance issues with large schema dependencies and oneOf conditions [#4203](https://github.com/rjsf-team/react-jsonschema-form/issues/4203).
+
 # 5.18.4
 
 ## Dev / docs / playground
