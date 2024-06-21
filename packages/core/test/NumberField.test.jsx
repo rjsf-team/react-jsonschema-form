@@ -340,6 +340,40 @@ describe('NumberField', () => {
         expect($input.value).eql('203');
       });
 
+      it('form reset should work for a default value', () => {
+        const onChangeSpy = sinon.spy();
+        const schema = {
+          type: 'number',
+          default: 1,
+        };
+
+        const ref = React.createRef();
+
+        const { node } = createFormComponent({
+          ref: ref,
+          schema,
+          uiSchema,
+          onChange: onChangeSpy,
+        });
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: '231' },
+          });
+        });
+
+        const $input = node.querySelector('input');
+        expect($input.value).eql('231');
+        sinon.assert.calledWithMatch(onChangeSpy.lastCall, { formData: 231 });
+
+        act(() => {
+          ref.current.reset();
+        });
+
+        expect($input.value).eql('1');
+        sinon.assert.calledWithMatch(onChangeSpy.lastCall, { formData: 1 });
+      });
+
       it('should render the widget with the expected id', () => {
         const { node } = createFormComponent({
           schema: {
