@@ -55,7 +55,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value);
 
   return (
     <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>

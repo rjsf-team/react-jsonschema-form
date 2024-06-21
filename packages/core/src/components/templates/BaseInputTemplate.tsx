@@ -65,9 +65,12 @@ export default function BaseInputTemplate<
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
     [onChange, options]
   );
-  const _onBlur = useCallback(({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value), [onBlur, id]);
+  const _onBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value),
+    [onBlur, id]
+  );
   const _onFocus = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value),
+    ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value),
     [onFocus, id]
   );
 

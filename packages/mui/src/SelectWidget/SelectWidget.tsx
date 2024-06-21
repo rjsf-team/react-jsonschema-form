@@ -55,10 +55,10 @@ export default function SelectWidget<
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
 

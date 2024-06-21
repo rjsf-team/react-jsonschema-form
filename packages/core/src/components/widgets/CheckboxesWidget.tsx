@@ -31,14 +31,14 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleBlur = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
     [onBlur, id]
   );
 
   const handleFocus = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue)),
+    ({ target }: FocusEvent<HTMLInputElement>) =>
+      onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
     [onFocus, id]
   );
   return (

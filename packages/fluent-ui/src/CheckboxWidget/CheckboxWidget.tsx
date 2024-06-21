@@ -72,8 +72,8 @@ export default function CheckboxWidget<
     [onChange]
   );
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) => onFocus(id, target && target.value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   const description = options.description ?? schema.description;
