@@ -169,7 +169,6 @@ export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     // if schema validator instance doesn't exist, add it.
     // else 'handleRootSchemaChange' should be called if the root schema changes so we don't have to remove and recompile the schema every run.
     if (this.ajv.getSchema(ROOT_SCHEMA_PREFIX) === undefined) {
-      // TODO restore the commented out `if` above when the TODO in the `finally` is completed
       this.ajv.addSchema(rootSchema, ROOT_SCHEMA_PREFIX);
     } else if (!deepEquals(rootSchema, this.ajv.getSchema(ROOT_SCHEMA_PREFIX)?.schema)) {
       this.ajv.removeSchema(rootSchemaId);
