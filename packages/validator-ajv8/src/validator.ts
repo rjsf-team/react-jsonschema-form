@@ -121,13 +121,20 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
   }
 
   /**
-   * This function is called when the root schema changes. It removes the old root schema from the ajv instance and adds the new one.
+   * This function checks if a schema needs to be added and if the root schemas don't match it removes the old root schema from the ajv instance and adds the new one.
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  handleRootSchemaChange(rootSchema: S): void {
+  handleSchemaUpdate(rootSchema: S): void {
     const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
-    this.ajv.removeSchema(rootSchemaId);
-    this.ajv.addSchema(rootSchema, rootSchemaId);
+    // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+    // if schema validator instance doesn't exist, add it.
+    // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
+    if (this.ajv.getSchema(rootSchemaId) === undefined) {
+      this.ajv.addSchema(rootSchema, rootSchemaId);
+    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+      this.ajv.removeSchema(rootSchemaId);
+      this.ajv.addSchema(rootSchema, rootSchemaId);
+    }
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
@@ -139,17 +146,8 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S) {
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
     try {
-      // add the rootSchema ROOT_SCHEMA_PREFIX as id.
-      // if schema validator instance doesn't exist, add it.
-      // else 'handleRootSchemaChange' should be called if the root schema changes so we don't have to remove and recompile the schema every run.
-      if (this.ajv.getSchema(rootSchemaId) === undefined) {
-        // TODO restore the commented out `if` above when the TODO in the `finally` is completed
-        this.ajv.addSchema(rootSchema, rootSchemaId);
-      } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
-        this.handleRootSchemaChange(rootSchema);
-      }
+      this.handleSchemaUpdate(rootSchema);
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
