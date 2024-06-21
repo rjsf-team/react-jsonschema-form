@@ -72,7 +72,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         };
       })
     : [];
-
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
   const formValue: any = isMultiple

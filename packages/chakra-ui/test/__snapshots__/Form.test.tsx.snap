@@ -4631,7 +4631,7 @@ exports[`single fields select field single choice formData 1`] = `
               <div
                 className=" emotion-7"
               >
-                bar
+                foo
               </div>
               <div
                 className=" emotion-8"

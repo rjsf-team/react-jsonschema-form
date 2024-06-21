@@ -310,7 +310,8 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field option')[0].value).eql('');
+      expect(node.querySelectorAll('.field option')[0].value).eql('0');
+      expect(node.querySelectorAll('.field option')[0].textContent).eql('');
     });
 
     it('should render empty option with placeholder text', () => {
@@ -354,7 +355,7 @@ describe('StringField', () => {
       });
       act(() => {
         fireEvent.change(node.querySelector('select'), {
-          target: { value: 0 }, // use index
+          target: { value: 1 }, // use index
         });
       });
       sinon.assert.calledWithMatch(
@@ -399,7 +400,7 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('select'), {
-          target: { value: 0 }, // use index
+          target: { value: 1 }, // use index
         });
       });
 
@@ -1110,22 +1111,22 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year'), {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: 2012 - 1900 + 1 }, // convert year to index
         });
         fireEvent.change(node.querySelector('#root_month'), {
-          target: { value: 9 }, // Month index
+          target: { value: 10 }, // Month index
         });
         fireEvent.change(node.querySelector('#root_day'), {
-          target: { value: 1 }, // Day index
+          target: { value: 2 }, // Day index
         });
         fireEvent.change(node.querySelector('#root_hour'), {
-          target: { value: 1 },
+          target: { value: 1 + 1 }, // time values start at '0', e.g. placeholder has index 0, hour 0 has index 1, so add 1
         });
         fireEvent.change(node.querySelector('#root_minute'), {
-          target: { value: 2 },
+          target: { value: 2 + 1 },
         });
         fireEvent.change(node.querySelector('#root_second'), {
-          target: { value: 3 },
+          target: { value: 3 + 1 },
         });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1184,7 +1185,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
-      expect(monthOptionsValues).eql(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+      expect(monthOptionsValues).eql(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
     });
 
     it("should render the widgets with the expected options' labels", () => {
@@ -1392,13 +1393,13 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year'), {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: 2012 - 1900 + 1 }, // convert year to index
         });
         fireEvent.change(node.querySelector('#root_month'), {
-          target: { value: 9 }, // Month index
+          target: { value: 10 }, // Month index
         });
         fireEvent.change(node.querySelector('#root_day'), {
-          target: { value: 1 }, // Day index
+          target: { value: 2 }, // Day index
         });
       });
       sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1417,10 +1418,10 @@ describe('StringField', () => {
 
       act(() => {
         fireEvent.change(node.querySelector('#root_year'), {
-          target: { value: 2012 - 1900 }, // convert year to index
+          target: { value: 2012 - 1900 + 1 }, // convert year to index
         });
         fireEvent.change(node.querySelector('#root_month'), {
-          target: { value: 9 }, // Month index
+          target: { value: 10 }, // Month index
         });
       });
       expect(getSelectedOptionValue(node.querySelector('#root_year'))).eql('2012');
@@ -1478,7 +1479,7 @@ describe('StringField', () => {
       ]);
       const monthOptions = node.querySelectorAll('select#root_month option');
       const monthOptionsValues = [].map.call(monthOptions, (o) => o.value);
-      expect(monthOptionsValues).eql(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
+      expect(monthOptionsValues).eql(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']);
     });
 
     it("should render the widgets with the expected options' labels", () => {

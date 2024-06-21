@@ -12,12 +12,12 @@ import {
   UIOptionsType,
 } from '@rjsf/utils';
 import map from 'lodash/map';
-import { Form, DropdownProps } from 'semantic-ui-react';
+import { Form, DropdownProps, DropdownItemProps } from 'semantic-ui-react';
 import { getSemanticProps } from '../util';
 
 /**
  * Returns and creates an array format required for semantic drop down
- * @param {array} enumOptions- array of items for the dropdown
+ * @param {array} enumOptions - array of items for the dropdown
  * @param {array} enumDisabled - array of enum option values to disable
  * @returns {*}
  */
@@ -26,7 +26,7 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   enumDisabled?: UIOptionsType['enumDisabled']
 ) {
   const disabledOptions = enumDisabled || [];
-  const options = map(enumOptions, ({ label, value }, index) => ({
+  const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
     disabled: disabledOptions.indexOf(value) !== -1,
     key: label,
     text: label,

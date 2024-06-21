@@ -930,15 +930,15 @@ exports[`single fields select field 1`] = `
       value=""
     >
       <option
-        value=""
+        value="0"
       />
       <option
-        value="0"
+        value="1"
       >
         foo
       </option>
       <option
-        value="1"
+        value="2"
       >
         bar
       </option>
@@ -1211,17 +1211,18 @@ exports[`single fields select field single choice enumDisabled 1`] = `
       value=""
     >
       <option
-        value=""
+        disabled={false}
+        value="0"
       />
       <option
         disabled={false}
-        value="0"
+        value="1"
       >
         foo
       </option>
       <option
         disabled={true}
-        value="1"
+        value="2"
       >
         bar
       </option>
@@ -1259,18 +1260,18 @@ exports[`single fields select field single choice formData 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      value="1"
+      value="2"
     >
       <option
-        value=""
+        value="0"
       />
       <option
-        value="0"
+        value="1"
       >
         foo
       </option>
       <option
-        value="1"
+        value="2"
       >
         bar
       </option>
