@@ -896,6 +896,50 @@ describe('ObjectField', () => {
       });
     });
 
+    it("should add a new default item if default is provided in the additionalProperties' schema", () => {
+      const customSchema = {
+        ...schema,
+        additionalProperties: {
+          type: 'string',
+          default: 'default value',
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      fireEvent.click(node.querySelector('.object-property-expand button'));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newKey: 'default value',
+        },
+      });
+    });
+
+    it('should add a new default item even if the schema of default value is invalid', () => {
+      const customSchema = {
+        ...schema,
+        additionalProperties: {
+          type: 'string',
+          default: 1,
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      fireEvent.click(node.querySelector('.object-property-expand button'));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newKey: 1,
+        },
+      });
+    });
+
     it('should not provide an expand button if length equals maxProperties', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },

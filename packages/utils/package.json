@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "5.18.3",
+  "version": "5.18.4",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -71,7 +71,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Heath Chiavettone <heath.chiavettone@freenome.com",
+  "author": "Heath Chiavettone <heath.chiavettone@freenome.com>",
   "contributors": [],
   "keywords": [
     "react-jsonschema-form",

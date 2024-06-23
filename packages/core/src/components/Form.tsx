@@ -20,7 +20,7 @@ import {
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
-  RJSF_ADDITONAL_PROPERTIES_FLAG,
+  RJSF_ADDITIONAL_PROPERTIES_FLAG,
   SchemaUtilsType,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -111,8 +111,12 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    */
   onFocus?: (id: string, data: any) => void;
   // <form /> HTML attributes
-  /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
+  /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form
+   * @deprecated replaced with `acceptCharset` which will supercede this value if both are specified
+   */
   acceptcharset?: string;
+  /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
+  acceptCharset?: string;
   /** The value of this prop will be passed to the `action` HTML attribute on the form
    *
    * NOTE: this just renders the `action` attribute in the HTML markup. There is no real network request being sent to
@@ -547,7 +551,7 @@ export default class Form<
         if (typeof _obj[key] === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
-          if (_obj[key][RJSF_ADDITONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
+          if (_obj[key][RJSF_ADDITIONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
             acc.push(_obj[key][NAME_KEY]);
           } else {
             getAllPaths(_obj[key], acc, newPaths);
@@ -884,6 +888,7 @@ export default class Form<
       autoComplete,
       enctype,
       acceptcharset,
+      acceptCharset,
       noHtml5Validate = false,
       disabled = false,
       readonly = false,
@@ -918,7 +923,7 @@ export default class Form<
         action={action}
         autoComplete={autoComplete}
         encType={enctype}
-        acceptCharset={acceptcharset}
+        acceptCharset={acceptCharset || acceptcharset}
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}
         as={as}
