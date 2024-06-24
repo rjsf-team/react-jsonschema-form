@@ -50,8 +50,8 @@ export default function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = (_: any, checked: boolean) => onChange(checked);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLButtonElement>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) => onFocus(id, target && target.value);
   const description = options.description ?? schema.description;
 
   return (

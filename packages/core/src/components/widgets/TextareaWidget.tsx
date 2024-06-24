@@ -24,12 +24,12 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const handleBlur = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, value),
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value),
     [onBlur, id]
   );
 
   const handleFocus = useCallback(
-    ({ target: { value } }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, value),
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value),
     [id, onFocus]
   );
 
