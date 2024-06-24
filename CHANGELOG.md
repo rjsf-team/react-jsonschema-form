@@ -56,6 +56,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
 
+## @rjsf/validator-ajv6
+
+- Improved performance issues with large schema dependencies and oneOf conditions [#4203](https://github.com/rjsf-team/react-jsonschema-form/issues/4203).
+
+## @rjsf/validator-ajv8
+
+- Improved performance issues with large schema dependencies and oneOf conditions [#4203](https://github.com/rjsf-team/react-jsonschema-form/issues/4203).
+
 # 5.18.4
 
 ## Dev / docs / playground
