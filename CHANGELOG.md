@@ -35,7 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 - Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
-- Fixed `omitExtraData` not working in `onSubmit` and `validateForm` ([#4228](https://github.com/rjsf-team/react-jsonschema-form/pull/4228))
+- Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
 
 ## @rfsf/fluent-ui
 
