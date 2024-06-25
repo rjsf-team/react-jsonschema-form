@@ -3291,7 +3291,7 @@ describe('Form omitExtraData and liveOmit', () => {
     sandbox.restore();
   });
 
-  it('should call getUsedFormData when the omitExtraData prop is true and liveOmit is true', () => {
+  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', () => {
     const schema = {
       type: 'object',
       properties: {
@@ -3316,7 +3316,7 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit,
     });
 
-    sandbox.stub(comp.ref.current, 'getUsedFormData').returns({
+    sandbox.stub(comp.ref.current, 'omitExtraData').returns({
       foo: '',
     });
 
@@ -3324,10 +3324,10 @@ describe('Form omitExtraData and liveOmit', () => {
       target: { value: 'new' },
     });
 
-    sinon.assert.calledOnce(comp.ref.current.getUsedFormData);
+    sinon.assert.calledOnce(comp.ref.current.omitExtraData);
   });
 
-  it('should not call getUsedFormData when the omitExtraData prop is true and liveOmit is unspecified', () => {
+  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', () => {
     const schema = {
       type: 'object',
       properties: {
@@ -3349,7 +3349,7 @@ describe('Form omitExtraData and liveOmit', () => {
       omitExtraData,
     });
 
-    sandbox.stub(comp.ref.current, 'getUsedFormData').returns({
+    sandbox.stub(comp.ref.current, 'omitExtraData').returns({
       foo: '',
     });
 
@@ -3357,11 +3357,11 @@ describe('Form omitExtraData and liveOmit', () => {
       target: { value: 'new' },
     });
 
-    sinon.assert.notCalled(comp.ref.current.getUsedFormData);
+    sinon.assert.notCalled(comp.ref.current.omitExtraData);
   });
 
-  describe('getUsedFormData', () => {
-    it('should call getUsedFormData when the omitExtraData prop is true', () => {
+  describe('omitExtraData on submit', () => {
+    it('should call omitExtraData when the omitExtraData prop is true', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -3385,14 +3385,65 @@ describe('Form omitExtraData and liveOmit', () => {
         omitExtraData,
       });
 
-      sandbox.stub(comp.ref.current, 'getUsedFormData').returns({
+      sandbox.stub(comp.ref.current, 'omitExtraData').returns({
         foo: '',
       });
 
       fireEvent.submit(node);
 
-      sinon.assert.calledOnce(comp.ref.current.getUsedFormData);
+      sinon.assert.calledOnce(comp.ref.current.omitExtraData);
     });
+
+    it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
+      const omitExtraData = false;
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const formData = { foo: 'bar', baz: 'baz' };
+      const formRef = React.createRef();
+      const props = {
+        ref: formRef,
+        schema,
+        formData,
+        omitExtraData: omitExtraData,
+      };
+      const { comp, node } = createFormComponent(props);
+      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+        foo: '',
+      });
+      fireEvent.submit(node);
+      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
+    });
+
+    it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
+      const omitExtraData = true;
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const formData = { foo: 'bar', baz: 'baz' };
+      const formRef = React.createRef();
+      const props = {
+        ref: formRef,
+        schema,
+        formData,
+        omitExtraData: omitExtraData,
+      };
+      const { comp, node } = createFormComponent(props);
+      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+        foo: '',
+      });
+      fireEvent.submit(node);
+      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
+    });
+  });
+
+  describe('getUsedFormData', () => {
     it('should just return the single input form value', () => {
       const schema = {
         title: 'A single-field form',
@@ -4352,6 +4403,58 @@ describe('Form omitExtraData and liveOmit', () => {
   });
 
   describe('validateForm()', () => {
+    it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
+      const omitExtraData = false;
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const formData = { foo: 'bar', baz: 'baz' };
+      const formRef = React.createRef();
+      const props = {
+        ref: formRef,
+        schema,
+        formData,
+        omitExtraData: omitExtraData,
+      };
+      const { comp } = createFormComponent(props);
+      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+        foo: '',
+      });
+      act(() => {
+        comp.ref.current.validateForm();
+      });
+      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
+    });
+
+    it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
+      const omitExtraData = true;
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const formData = { foo: 'bar', baz: 'baz' };
+      const formRef = React.createRef();
+      const props = {
+        ref: formRef,
+        schema,
+        formData,
+        omitExtraData: omitExtraData,
+      };
+      const { comp } = createFormComponent(props);
+      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+        foo: '',
+      });
+      act(() => {
+        comp.ref.current.validateForm();
+      });
+      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
+    });
+
     it('Should update state when data updated from invalid to valid', () => {
       const ref = createRef();
       const props = {
