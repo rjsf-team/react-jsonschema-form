@@ -572,7 +572,7 @@ export default class Form<
    * @param formData - The data for the `Form`
    * @returns The `formData` after omitting extra data
    */
-  omitExtraData = (formData: T | undefined): T | undefined => {
+  omitExtraData = (formData?: T): T | undefined => {
     const { schema, schemaUtils } = this.state;
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
     const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
@@ -813,7 +813,7 @@ export default class Form<
    * @param formData - The form data to validate
    * @returns - True if the form is valid, false otherwise.
    */
-  validateFormWithFormData = (formData: T | undefined): boolean => {
+  validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
