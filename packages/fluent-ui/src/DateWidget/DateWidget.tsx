@@ -104,8 +104,8 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       formatted && onChange(formatted);
     }
   };
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   const uiProps = _pick((options.props as object) || {}, allowedProps);
   return (

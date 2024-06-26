@@ -27,8 +27,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const chakraProps = getChakra({ uiSchema });
 
   const _onChange = (value: string | number) => onChange(value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   return (
     <FormControl

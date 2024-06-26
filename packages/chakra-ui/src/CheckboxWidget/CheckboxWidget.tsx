@@ -46,8 +46,8 @@ export default function CheckboxWidget<
   const description = options.description || schema.description;
 
   const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   return (
     <FormControl mb={1} {...chakraProps} isRequired={required}>

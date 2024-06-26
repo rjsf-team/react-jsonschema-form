@@ -25,9 +25,9 @@ export default function CheckboxWidget<
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors

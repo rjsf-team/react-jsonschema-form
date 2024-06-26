@@ -18,9 +18,43 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.18.5
 
+## @rjsf/antd
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/bootstrap4
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/chakra-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
 ## @rjsf/core
 
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+- Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
+
+## @rjsf/fluent-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/fluentui-rc
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/material-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/mui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/semantic-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
 ## @rjsf/validator-ajv6
 
@@ -61,6 +95,7 @@ should change the heading of the (upcoming) version to include a major version b
 # 5.18.0
 
 ## @rjsf/antd
+
 - Fix issue where the theme provided by the ConfigProvider under antd v5 wasn't respected thereby rendering the form items unusable under dark themes [#4129](https://github.com/rjsf-team/react-jsonschema-form/issues/4129)
 
 ## @rjsf/core
@@ -99,7 +134,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package. 
+- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package.
 - Added test configuration and script to the Playground.
 
 # 5.17.0
