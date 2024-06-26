@@ -1303,6 +1303,140 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 </form>
 `;
 
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <div
+        className="form-group"
+      >
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-0"
+            title=""
+          >
+            foo
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={true}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-1"
+            title=""
+          >
+            bar
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-2"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-2"
+            title=""
+          >
+            fuzz
+          </label>
+        </div>
+        <div
+          className="bg-transparent border-0 custom-control custom-checkbox"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="custom-control-input"
+            disabled={false}
+            id="root-3"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="root-3"
+            title=""
+          >
+            qux
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field multiple choice formData 1`] = `
 <form
   className="rjsf"
@@ -1493,6 +1627,88 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           bar
         </option>
       </select>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="form-label"
+        htmlFor="root"
+      />
+      <div
+        className="mb-0 form-group"
+      >
+        <div
+          className="form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root-0"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value="0"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-0"
+            title=""
+          >
+            foo
+          </label>
+        </div>
+        <div
+          className="form-check"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            checked={false}
+            className="form-check-input"
+            disabled={true}
+            id="root-1"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="radio"
+            value="1"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root-1"
+            title=""
+          >
+            bar
+          </label>
+        </div>
+      </div>
     </div>
   </div>
   <div>
