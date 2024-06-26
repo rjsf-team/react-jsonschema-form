@@ -18,15 +18,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.18.5
 
-## @rfsf/antd
+## @rjsf/antd
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/bootstrap4
+## @rjsf/bootstrap4
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/chakra-ui
+## @rjsf/chakra-ui
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
@@ -36,23 +36,23 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 - Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
 
-## @rfsf/fluent-ui
+## @rjsf/fluent-ui
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/fluentui-rc
+## @rjsf/fluentui-rc
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/material-ui
+## @rjsf/material-ui
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/mui
+## @rjsf/mui
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
-## @rfsf/semantic-ui
+## @rjsf/semantic-ui
 
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
