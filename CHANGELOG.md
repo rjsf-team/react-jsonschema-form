@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
-- Fix disabled property of options in CheckboxesWidget and RadioWidgep ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
+- Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
 
 # 5.18.5
 
