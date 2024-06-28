@@ -1074,6 +1074,129 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 </form>
 `;
 
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="checkboxes"
+      id="root"
+    >
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="0"
+            />
+            <span>
+              foo
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="1"
+            />
+            <span>
+              bar
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="2"
+            />
+            <span>
+              fuzz
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="checkbox "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-3"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="checkbox"
+              value="3"
+            />
+            <span>
+              qux
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field multiple choice formData 1`] = `
 <form
   className="rjsf"
@@ -1226,6 +1349,81 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         bar
       </option>
     </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="field-radio-group"
+      id="root"
+    >
+      <div
+        className="radio "
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="0"
+            />
+            <span>
+              foo
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="radio disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="1"
+            />
+            <span>
+              bar
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
   </div>
   <div>
     <button

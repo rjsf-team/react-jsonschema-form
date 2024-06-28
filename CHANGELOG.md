@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.6
+
+## @rjsf/antd
+
+- Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
+
 # 5.18.5
 
 ## @rjsf/antd
