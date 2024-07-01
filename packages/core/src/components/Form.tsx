@@ -421,7 +421,17 @@ export default class Form<
     if (mustValidate) {
       const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
-      errorSchema = schemaValidation.errorSchema;
+      // If the schema has changed, we do not merge state.errorSchema.
+      // Else in the case where it hasn't changed, we merge 'state.errorSchema' with 'schemaValidation.errorSchema.' This done to display the raised field error.
+      if (isSchemaChanged) {
+        errorSchema = schemaValidation.errorSchema;
+      } else {
+        errorSchema = mergeObjects(
+          this.state?.errorSchema,
+          schemaValidation.errorSchema,
+          'preventDuplicates'
+        ) as ErrorSchema<T>;
+      }
       schemaValidationErrors = errors;
       schemaValidationErrorSchema = errorSchema;
     } else {
@@ -623,6 +633,9 @@ export default class Form<
         const merged = validationDataMerge(schemaValidation, extraErrors);
         errorSchema = merged.errorSchema;
         errors = merged.errors;
+      }
+      if (newErrorSchema) {
+        errorSchema = mergeObjects(errorSchema, newErrorSchema) as ErrorSchema<T>;
       }
       state = {
         formData: newFormData,
