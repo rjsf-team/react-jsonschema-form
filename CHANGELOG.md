@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
 
+## @rjsf/core
+
+- Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
+
 # 5.18.5
 
 ## @rjsf/antd
