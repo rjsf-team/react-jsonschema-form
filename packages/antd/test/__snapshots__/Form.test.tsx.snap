@@ -2674,6 +2674,181 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 </form>
 `;
 
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-checkbox-group css-dev-only-do-not-override-1b0bdye"
+                id="root"
+                name="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-0"
+                        name="root"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value="0"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      foo
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye ant-checkbox-disabled"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={true}
+                        id="root-1"
+                        name="root"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      bar
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-2"
+                        name="root"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      fuzz
+                    </span>
+                  </label>
+                  <br />
+                </span>
+                <span>
+                  <label
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    style={{}}
+                  >
+                    <span
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                    >
+                      <input
+                        autoFocus={false}
+                        checked={false}
+                        className="ant-checkbox-input"
+                        disabled={false}
+                        id="root-3"
+                        name="root"
+                        onChange={[Function]}
+                        type="checkbox"
+                        value="3"
+                      />
+                      <span
+                        className="ant-checkbox-inner"
+                      />
+                    </span>
+                    <span>
+                      qux
+                    </span>
+                  </label>
+                  <br />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields select field multiple choice formData 1`] = `
 <form
   className="rjsf"
@@ -3248,6 +3423,116 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                     </svg>
                   </span>
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1b0bdye"
+                id="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={false}
+                      id="root-0"
+                      name="root"
+                      onChange={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span>
+                    foo
+                  </span>
+                </label>
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target ant-radio-disabled"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={true}
+                      id="root-1"
+                      name="root"
+                      onChange={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span>
+                    bar
+                  </span>
+                </label>
               </div>
             </div>
           </div>
