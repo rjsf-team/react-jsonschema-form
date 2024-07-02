@@ -15,7 +15,7 @@ import {
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
 } from '../constants';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import { FormContextType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import { FormContextType, GenericObjectType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import retrieveSchema from './retrieveSchema';
 
@@ -53,9 +53,9 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     }
   }
 
-  let pathSchema: PathSchema = {
+  let pathSchema: PathSchema<T> = {
     [NAME_KEY]: name.replace(/^\./, ''),
-  } as PathSchema;
+  } as PathSchema<T>;
 
   if (ONE_OF_KEY in schema || ANY_OF_KEY in schema) {
     const xxxOf: S[] = ONE_OF_KEY in schema ? (schema.oneOf as S[]) : (schema.anyOf as S[]);
@@ -78,7 +78,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     if (Array.isArray(schemaItems)) {
       formData.forEach((element, i: number) => {
         if (schemaItems[i]) {
-          pathSchema[i] = toPathSchemaInternal<T, S, F>(
+          (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
             validator,
             schemaItems[i] as S,
             `${name}.${i}`,
@@ -87,7 +87,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             _recurseList
           );
         } else if (schemaAdditionalItems) {
-          pathSchema[i] = toPathSchemaInternal<T, S, F>(
+          (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
             validator,
             schemaAdditionalItems as S,
             `${name}.${i}`,
@@ -101,7 +101,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       });
     } else {
       formData.forEach((element, i: number) => {
-        pathSchema[i] = toPathSchemaInternal<T, S, F>(
+        (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
           validator,
           schemaItems as S,
           `${name}.${i}`,
@@ -114,7 +114,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, property]);
-      pathSchema[property] = toPathSchemaInternal<T, S, F>(
+      (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(
         validator,
         field,
         `${name}.${property}`,
@@ -126,7 +126,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       );
     }
   }
-  return pathSchema as PathSchema<T>;
+  return pathSchema;
 }
 
 /** Generates an `PathSchema` object for the `schema`, recursively

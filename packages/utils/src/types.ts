@@ -131,10 +131,12 @@ export type FieldId = {
 };
 
 /** Type describing a recursive structure of `FieldId`s for an object with a non-empty set of keys */
-export type IdSchema<T = any> = FieldId & {
-  /** The set of ids for fields in the recursive object structure */
-  [key in keyof T]?: IdSchema<T[key]>;
-};
+export type IdSchema<T = any> = T extends GenericObjectType
+  ? FieldId & {
+      /** The set of ids for fields in the recursive object structure */
+      [key in keyof T]?: IdSchema<T[key]>;
+    }
+  : FieldId;
 
 /** Type describing a name used for a field in the `PathSchema` */
 export type FieldPath = {
@@ -143,10 +145,16 @@ export type FieldPath = {
 };
 
 /** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys */
-export type PathSchema<T = any> = FieldPath & {
-  /** The set of names for fields in the recursive object structure */
-  [key in keyof T]?: PathSchema<T[key]>;
-};
+export type PathSchema<T = any> = T extends Array<infer U>
+  ? FieldPath & {
+      [i: number]: PathSchema<U>;
+    }
+  : T extends GenericObjectType
+  ? FieldPath & {
+      /** The set of names for fields in the recursive object structure */
+      [key in keyof T]?: PathSchema<T[key]>;
+    }
+  : FieldPath;
 
 /** The type for error produced by RJSF schema validation */
 export type RJSFValidationError = {
