@@ -61,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
+            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
             key={i}
             value={String(i)}
           >
