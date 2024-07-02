@@ -847,4 +847,23 @@ describe('SchemaField', () => {
       expect(textContent).to.contains(descText);
     });
   });
+
+  describe('readOnly', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'boolean', readOnly: true },
+      },
+    };
+
+    it('should be readonly if prescribed by the schema', () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const { disabled } = node.querySelector('input');
+
+      expect(disabled).to.eq(true);
+    });
+  });
 });

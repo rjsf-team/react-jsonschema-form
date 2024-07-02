@@ -16,7 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.18.7
+# 5.18.6
+
+## @rjsf/antd
+
+- Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
+
+## @rjsf/core
+
+- Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
+- Fixed case where `readOnly` from a JSON Schema was not applied in SchemaField ([#4236](https://github.com/rjsf-team/react-jsonschema-form/issues/4236))
 
 ## @rjsf/utils
 
@@ -29,16 +38,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ajv8
 
 - Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
-
-# 5.18.6
-
-## @rjsf/antd
-
-- Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
-
-## @rjsf/core
-
-- Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
 
 # 5.18.5
 
