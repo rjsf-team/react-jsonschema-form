@@ -132,7 +132,6 @@ exports[`array fields array icons 1`] = `
                           className="form-label"
                           htmlFor="root_0"
                         >
-                          
                           *
                         </label>
                         <input
@@ -151,7 +150,6 @@ exports[`array fields array icons 1`] = `
                           type="text"
                           value="a"
                         />
-                        
                       </div>
                     </div>
                   </div>
@@ -340,7 +338,6 @@ exports[`array fields array icons 1`] = `
                           className="form-label"
                           htmlFor="root_1"
                         >
-                          
                           *
                         </label>
                         <input
@@ -359,7 +356,6 @@ exports[`array fields array icons 1`] = `
                           type="text"
                           value="b"
                         />
-                        
                       </div>
                     </div>
                   </div>
@@ -617,9 +613,7 @@ exports[`array fields checkboxes 1`] = `
       <label
         className="form-label"
         htmlFor="root"
-      >
-        
-      </label>
+      />
       <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
@@ -656,7 +650,6 @@ exports[`array fields checkboxes 1`] = `
           c
         </option>
       </select>
-      
     </div>
   </div>
   <div>
@@ -683,7 +676,6 @@ exports[`array fields empty errors array 1`] = `
     <div
       className="form-group"
     >
-      
       <div
         className="p-0 container-fluid"
       >
@@ -727,7 +719,6 @@ exports[`array fields empty errors array 1`] = `
                   type="text"
                   value=""
                 />
-                
               </div>
             </div>
           </div>
@@ -786,7 +777,6 @@ exports[`array fields fixed array 1`] = `
                           className="form-label"
                           htmlFor="root_0"
                         >
-                          
                           *
                         </label>
                         <input
@@ -805,7 +795,6 @@ exports[`array fields fixed array 1`] = `
                           type="text"
                           value=""
                         />
-                        
                       </div>
                     </div>
                   </div>
@@ -831,7 +820,6 @@ exports[`array fields fixed array 1`] = `
                           className="form-label"
                           htmlFor="root_1"
                         >
-                          
                           *
                         </label>
                         <input
@@ -851,7 +839,6 @@ exports[`array fields fixed array 1`] = `
                           type="number"
                           value=""
                         />
-                        
                       </div>
                     </div>
                   </div>
@@ -918,7 +905,6 @@ exports[`array fields has errors 1`] = `
     <div
       className="form-group"
     >
-      
       <div
         className="p-0 container-fluid"
       >
@@ -962,7 +948,6 @@ exports[`array fields has errors 1`] = `
                   type="text"
                   value=""
                 />
-                
                 <ul
                   className="list-group"
                   id="root_name__error"
@@ -1012,7 +997,6 @@ exports[`array fields no errors 1`] = `
     <div
       className="form-group"
     >
-      
       <div
         className="p-0 container-fluid"
       >
@@ -1056,7 +1040,6 @@ exports[`array fields no errors 1`] = `
                   type="text"
                   value=""
                 />
-                
               </div>
             </div>
           </div>

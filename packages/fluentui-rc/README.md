@@ -7,7 +7,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="./logo.png" alt="Logo" width="120" height="120">
+    <img src="https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/fluentui-rc/logo.png?raw=true" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">@rjsf/fluentui-rc</h3>
@@ -120,8 +120,8 @@ GitHub repository: [https://github.com/rjsf-team/react-jsonschema-form](https://
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-[npm-shield]: https://img.shields.io/npm/v/@rjsf/fluent-ui/latest.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
-[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluent-ui.svg?style=flat-square
-[npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluent-ui
-[product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/fluent-ui/screenshot.png
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/fluentui-rc/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/fluentui-rc
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/fluentui-rc.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/fluentui-rc
+[product-screenshot]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/fluentui-rc/screenshot.png?raw=true

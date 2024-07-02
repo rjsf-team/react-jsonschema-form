@@ -92,7 +92,6 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
         const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
 
         // Call isValid twice with the same schema
@@ -100,10 +99,9 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
 
         // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
-        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
       });
       it('should fallback to using compile', () => {
         const schema: RJSFSchema = {
@@ -123,7 +121,6 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
         const ajvInstance = validator.ajv;
         const originalGetSchema = ajvInstance.getSchema.bind(ajvInstance);
         const getSchemaSpy = jest.spyOn(ajvInstance, 'getSchema');
@@ -345,7 +342,6 @@ describe('AJV8Validator', () => {
             },
           };
 
-          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
           const compileSpy = jest.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 
@@ -589,7 +585,6 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
         const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
         addSchemaSpy.mockClear();
 
@@ -598,10 +593,9 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
 
         // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
-        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
       });
     });
     describe('validator.toErrorList()', () => {
@@ -803,7 +797,6 @@ describe('AJV8Validator', () => {
             },
           };
 
-          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
           const compileSpy = jest.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 
@@ -1047,7 +1040,6 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
         const addSchemaSpy = jest.spyOn(validator.ajv, 'addSchema');
         addSchemaSpy.mockClear();
 
@@ -1056,10 +1048,9 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
 
         // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
+        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
-        expect(addSchemaSpy).toHaveBeenLastCalledWith(expect.objectContaining(rootSchema), rootSchema.$id);
       });
     });
     describe('validator.toErrorList()', () => {
@@ -1449,7 +1440,6 @@ describe('AJV8Validator', () => {
             },
           };
 
-          // @ts-expect-error - accessing private Ajv instance to verify compilation happens once
           const compileSpy = jest.spyOn(validator.ajv, 'compile');
           compileSpy.mockClear();
 

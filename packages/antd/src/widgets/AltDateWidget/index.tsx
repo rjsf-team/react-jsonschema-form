@@ -1,9 +1,8 @@
 import { MouseEvent, useEffect, useState } from 'react';
-import Button from 'antd/lib/button';
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
+import { Row, Col, Button } from 'antd';
 import {
   ariaDescribedByIds,
+  getDateElementProps,
   pad,
   parseDateString,
   toDateString,
@@ -14,6 +13,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WidgetProps,
+  DateElementFormat,
 } from '@rjsf/utils';
 
 type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
@@ -36,31 +36,6 @@ const rangeOptions = (start: number, stop: number) => {
 const readyForChange = (state: DateObject) => {
   return Object.values(state).every((value) => value !== -1);
 };
-
-function dateElementProps(
-  state: DateObject,
-  time: boolean,
-  yearsRange: [number, number] = [1900, new Date().getFullYear() + 2]
-) {
-  const { year, month, day, hour, minute, second } = state;
-  const data = [
-    {
-      type: 'year',
-      range: yearsRange,
-      value: year,
-    },
-    { type: 'month', range: [1, 12], value: month },
-    { type: 'day', range: [1, 31], value: day },
-  ] as { type: string; range: [number, number]; value: number }[];
-  if (time) {
-    data.push(
-      { type: 'hour', range: [0, 23], value: hour || -1 },
-      { type: 'minute', range: [0, 59], value: minute || -1 },
-      { type: 'second', range: [0, 59], value: second || -1 }
-    );
-  }
-  return data;
-}
 
 export default function AltDateWidget<
   T = any,
@@ -146,7 +121,12 @@ export default function AltDateWidget<
 
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
-      {dateElementProps(state, showTime, options.yearsRange as [number, number] | undefined).map((elemProps, i) => {
+      {getDateElementProps(
+        state,
+        showTime,
+        options.yearsRange as [number, number] | undefined,
+        options.format as DateElementFormat | undefined
+      ).map((elemProps, i) => {
         const elemId = id + '_' + elemProps.type;
         return (
           <Col flex='88px' key={elemId}>
@@ -163,7 +143,7 @@ export default function AltDateWidget<
               select: handleChange,
               // NOTE: antd components accept -1 rather than issue a warning
               // like material-ui, so we need to convert -1 to undefined here.
-              value: elemProps.value < 0 ? undefined : elemProps.value,
+              value: elemProps.value || -1 < 0 ? undefined : elemProps.value,
             })}
           </Col>
         );

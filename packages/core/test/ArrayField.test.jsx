@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { Simulate, act } from 'react-dom/test-utils';
+import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
@@ -402,7 +403,9 @@ describe('ArrayField', () => {
     it('should add a new field when clicking the add button', () => {
       const { node } = createFormComponent({ schema });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
     });
@@ -413,7 +416,9 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.array-item').hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
@@ -424,7 +429,9 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: CustomOnAddClickTemplate },
       });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.array-item')).not.to.be.null;
     });
@@ -458,7 +465,9 @@ describe('ArrayField', () => {
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1] ? startRows[1].getAttribute(ArrayKeyDataAttr) : undefined;
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -524,8 +533,13 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(addBeforeButtons[0]);
-      Simulate.click(addAfterButtons[0]);
+      act(() => {
+        fireEvent.click(addBeforeButtons[0]);
+      });
+
+      act(() => {
+        fireEvent.click(addAfterButtons[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
@@ -574,7 +588,9 @@ describe('ArrayField', () => {
     it('should mark a non-null array item widget as required', () => {
       const { node } = createFormComponent({ schema });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.field-string input[type=text]').required).eql(true);
     });
@@ -615,7 +631,9 @@ describe('ArrayField', () => {
       });
       const moveDownBtns = node.querySelectorAll('.array-item-move-down');
 
-      Simulate.click(moveDownBtns[0]);
+      act(() => {
+        fireEvent.click(moveDownBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -631,7 +649,9 @@ describe('ArrayField', () => {
       });
       const moveUpBtns = node.querySelectorAll('.array-item-move-up');
 
-      Simulate.click(moveUpBtns[2]);
+      act(() => {
+        fireEvent.click(moveUpBtns[2]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -652,7 +672,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(moveDownBtns[0]);
+      act(() => {
+        fireEvent.click(moveDownBtns[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -680,7 +702,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(moveUpBtns[2]);
+      act(() => {
+        fireEvent.click(moveUpBtns[2]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -730,7 +754,9 @@ describe('ArrayField', () => {
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
       const button = node.querySelector('.item-0 .array-item-move-to-2');
-      Simulate.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs[0].value).eql('bar');
@@ -811,7 +837,9 @@ describe('ArrayField', () => {
       });
       const dropBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(1);
@@ -825,11 +853,16 @@ describe('ArrayField', () => {
       });
       const deleteBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(deleteBtns[0]);
+      act(() => {
+        fireEvent.click(deleteBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
 
-      Simulate.change(inputs[0], { target: { value: 'fuzz' } });
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'fuzz' } });
+      });
+
       expect(inputs).to.have.length.of(2);
       expect(inputs[0].value).eql('fuzz');
       expect(inputs[1].value).eql('baz');
@@ -846,7 +879,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
 
       const dropBtns = node.querySelectorAll('.array-item-remove');
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -899,7 +934,9 @@ describe('ArrayField', () => {
       });
 
       try {
-        Simulate.submit(node);
+        act(() => {
+          fireEvent.submit(node);
+        });
       } catch (e) {
         // Silencing error thrown as failure is expected here
       }
@@ -908,7 +945,9 @@ describe('ArrayField', () => {
 
       const dropBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       expect(node.querySelectorAll('.has-error .error-detail')).to.have.length.of(0);
     });
@@ -964,7 +1003,9 @@ describe('ArrayField', () => {
       });
       const copyBtns = node.querySelectorAll('.array-item-copy');
 
-      Simulate.click(copyBtns[0]);
+      act(() => {
+        fireEvent.click(copyBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -985,8 +1026,10 @@ describe('ArrayField', () => {
         formData,
       });
 
-      Simulate.change(node.querySelector('#root_1'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('#root_1'), {
+          target: { value: '' },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -1294,14 +1337,16 @@ describe('ArrayField', () => {
       it('should handle a change event', () => {
         const { node, onChange } = createFormComponent({ schema });
 
-        Simulate.change(node.querySelector('.field select'), {
-          target: {
-            options: [
-              { selected: true, value: 0 }, // use index
-              { selected: true, value: 1 }, // use index
-              { selected: false, value: 2 }, // use index
-            ],
-          },
+        act(() => {
+          Simulate.change(node.querySelector('.field select'), {
+            target: {
+              options: [
+                { selected: true, value: 0 }, // use index
+                { selected: true, value: 1 }, // use index
+                { selected: false, value: 2 }, // use index
+              ],
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1433,11 +1478,11 @@ describe('ArrayField', () => {
           uiSchema,
         });
 
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[0], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[0]);
         });
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[2], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1459,8 +1504,8 @@ describe('ArrayField', () => {
         let labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node) => node.checked);
         expect(labels).eql([true, false, false]);
 
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[2], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1594,13 +1639,17 @@ describe('ArrayField', () => {
 
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.change(node.querySelector('.field input[type=file]'), {
-        target: {
-          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
-        },
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
-      await new Promise(setImmediate);
+      await act(() => {
+        new Promise(setImmediate);
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -1610,13 +1659,17 @@ describe('ArrayField', () => {
         'root'
       );
 
-      Simulate.change(node.querySelector('.field input[type=file]'), {
-        target: {
-          files: [{ name: 'file2.txt', size: 2, type: 'type' }],
-        },
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [{ name: 'file2.txt', size: 2, type: 'type' }],
+          },
+        });
       });
 
-      await new Promise(setImmediate);
+      await act(() => {
+        new Promise(setImmediate);
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -1726,7 +1779,9 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       expect(node.querySelectorAll('fieldset fieldset')).to.be.empty;
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelectorAll('fieldset fieldset')).to.have.length.of(1);
     });
@@ -1850,8 +1905,13 @@ describe('ArrayField', () => {
       const strInput = node.querySelector('fieldset .field-string input[type=text]');
       const numInput = node.querySelector('fieldset .field-number input[type=number]');
 
-      Simulate.change(strInput, { target: { value: 'bar' } });
-      Simulate.change(numInput, { target: { value: '101' } });
+      act(() => {
+        fireEvent.change(strInput, { target: { value: 'bar' } });
+      });
+
+      act(() => {
+        fireEvent.change(numInput, { target: { value: '101' } });
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -2009,22 +2069,18 @@ describe('ArrayField', () => {
     });
 
     describe('operations for additional items', () => {
-      const { node, onChange } = createFormComponent({
-        schema: schemaAdditional,
-        formData: [1, 2, 'foo'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
-      });
-
-      const startRows = node.querySelectorAll('.array-item');
-      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
-      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
-      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
-      const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
-
       it('should add a field when clicking add button', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
         const addBtn = node.querySelector('.array-item-add button');
 
-        Simulate.click(addBtn);
+        act(() => {
+          fireEvent.click(addBtn);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.have.length.of(2);
 
@@ -2038,6 +2094,24 @@ describe('ArrayField', () => {
       });
 
       it('should retain existing row keys/ids when adding additional items', () => {
+        const { node } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const startRows = node.querySelectorAll('.array-item');
+        const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+        const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+        const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
+        const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         const endRows = node.querySelectorAll('.array-item');
         const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
         const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
@@ -2057,10 +2131,27 @@ describe('ArrayField', () => {
       });
 
       it('should change the state when changing input value', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         const inputs = node.querySelectorAll('.field-string input[type=text]');
 
-        Simulate.change(inputs[0], { target: { value: 'bar' } });
-        Simulate.change(inputs[1], { target: { value: 'baz' } });
+        act(() => {
+          fireEvent.change(inputs[0], { target: { value: 'bar' } });
+        });
+
+        act(() => {
+          fireEvent.change(inputs[1], { target: { value: 'baz' } });
+        });
 
         sinon.assert.calledWithMatch(
           onChange.lastCall,
@@ -2072,11 +2163,29 @@ describe('ArrayField', () => {
       });
 
       it('should remove array items when clicking remove buttons', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         let dropBtns = node.querySelectorAll('.array-item-remove');
 
-        Simulate.click(dropBtns[0]);
+        act(() => {
+          fireEvent.click(dropBtns[0]);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+        const inputs = node.querySelectorAll('.field-string input[type=text]');
+        act(() => {
+          fireEvent.change(inputs[0], { target: { value: 'baz' } });
+        });
 
         sinon.assert.calledWithMatch(
           onChange.lastCall,
@@ -2087,7 +2196,9 @@ describe('ArrayField', () => {
         );
 
         dropBtns = node.querySelectorAll('.array-item-remove');
-        Simulate.click(dropBtns[0]);
+        act(() => {
+          fireEvent.click(dropBtns[0]);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.be.empty;
         sinon.assert.calledWithMatch(
@@ -2115,14 +2226,16 @@ describe('ArrayField', () => {
     it("should convert array of strings to numbers if type of items is 'number'", () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.change(node.querySelector('.field select'), {
-        target: {
-          options: [
-            { selected: true, value: '0' }, // use index
-            { selected: true, value: '1' }, // use index
-            { selected: false, value: '2' }, // use index
-          ],
-        },
+      act(() => {
+        Simulate.change(node.querySelector('.field select'), {
+          target: {
+            options: [
+              { selected: true, value: '0' }, // use index
+              { selected: true, value: '1' }, // use index
+              { selected: false, value: '2' }, // use index
+            ],
+          },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -2273,6 +2386,433 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('Tests for item title', () => {
+    describe('Should show indexed title for widgets when necessary', () => {
+      const widgetTestData = [
+        {
+          widgetName: 'AltDateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-date',
+          },
+        },
+        {
+          widgetName: 'AltDateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'alt-datetime',
+          },
+        },
+        {
+          widgetName: 'CheckboxesWidget',
+          itemSchema: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['foo', 'bar', 'fuzz', 'qux'],
+            },
+            uniqueItems: true,
+          },
+        },
+        {
+          widgetName: 'ColorWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'color',
+          },
+        },
+        {
+          widgetName: 'DateWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'date',
+          },
+        },
+        {
+          widgetName: 'DateTimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+        {
+          widgetName: 'EmailWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'email',
+          },
+        },
+        {
+          widgetName: 'FileWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'file',
+          },
+        },
+        {
+          widgetName: 'PasswordWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'password',
+          },
+        },
+        {
+          widgetName: 'RadioWidget',
+          itemSchema: {
+            type: 'boolean',
+          },
+          itemUiSchema: {
+            'ui:widget': 'radio',
+          },
+        },
+        {
+          widgetName: 'RangeWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'range',
+          },
+        },
+        {
+          widgetName: 'SelectWidget',
+          itemSchema: {
+            type: 'string',
+            enum: ['A', 'B'],
+          },
+        },
+        {
+          widgetName: 'TextWidget',
+          itemSchema: {
+            type: 'string',
+          },
+        },
+        {
+          widgetName: 'TextareaWidget',
+          itemSchema: {
+            type: 'string',
+          },
+          itemUiSchema: {
+            'ui:widget': 'textarea',
+          },
+        },
+        {
+          widgetName: 'TimeWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'time',
+          },
+        },
+        {
+          widgetName: 'UpDownWidget',
+          itemSchema: {
+            type: 'number',
+          },
+          itemUiSchema: {
+            'ui:widget': 'updown',
+          },
+        },
+        {
+          widgetName: 'UrlWidget',
+          itemSchema: {
+            type: 'string',
+            format: 'url',
+          },
+        },
+      ];
+
+      it("Should show indexed title for the `CheckboxWidget` widget if no title is mentioned in it's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        act(() => {
+          fireEvent.click(node.querySelector('.array-item-add button'));
+        });
+
+        expect(node.querySelector('#title-Array-1')).to.not.be.null;
+      });
+
+      it("Should not show indexed title for the `CheckboxWidget` widget if title is mentioned in it's UI Schema", () => {
+        const CheckboxWidget = (props) => <div id={`title-${props.label}`} />;
+
+        const widgets = { CheckboxWidget };
+
+        const schema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            title: 'Boolean',
+            type: 'boolean',
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          widgets,
+        });
+
+        act(() => {
+          fireEvent.click(node.querySelector('.array-item-add button'));
+        });
+
+        expect(node.querySelector('#title-Boolean')).to.not.be.null;
+        expect(node.querySelector('#title-Array-1')).to.be.null;
+      });
+
+      it.each(widgetTestData)(
+        "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(widgetTestData)(
+        "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
+        ({ itemSchema, itemUiSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Title',
+            },
+          };
+
+          const uiSchema = {
+            items: itemUiSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+            uiSchema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          const widgetLabelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(widgetLabelTextContent).not.to.contain('Array-1');
+          expect(widgetLabelTextContent).to.contain('Item Title');
+        }
+      );
+    });
+
+    describe('Should show indexed title for fields when necessary', () => {
+      const fieldTestDataWithLegend = [
+        {
+          fieldName: 'ObjectField',
+          itemSchema: {
+            properties: {
+              string: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        {
+          fieldName: 'ArrayField',
+          itemSchema: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        },
+        {
+          fieldName: 'MultiSchemaField(AllOf)',
+          itemSchema: {
+            allOf: [
+              {
+                properties: {
+                  lorem: {
+                    type: ['string', 'boolean'],
+                    default: true,
+                  },
+                },
+              },
+              {
+                properties: {
+                  lorem: {
+                    type: 'boolean',
+                  },
+                  ipsum: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ];
+
+      const fieldTestDataWithLabel = [
+        {
+          fieldName: 'MultiSchemaField(OneOf)',
+          itemSchema: {
+            oneOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        },
+        {
+          fieldName: 'MultiSchemaField(AnyOf)',
+          itemSchema: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'number',
+              },
+            ],
+          },
+        },
+      ];
+
+      it.each(fieldTestDataWithLegend)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLegend)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          const legendTextContent = node.querySelector('legend#root_0__title').textContent;
+
+          expect(legendTextContent).to.contain('Item Field Title');
+          expect(legendTextContent).not.to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLabel)(
+        "Should show indexed title for the $fieldName field if no title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: itemSchema,
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
+        }
+      );
+
+      it.each(fieldTestDataWithLabel)(
+        "Should not show indexed title for the $fieldName field if title is mentioned in it's UI Schema",
+        ({ itemSchema }) => {
+          const schema = {
+            type: 'array',
+            title: 'Array',
+            items: {
+              ...itemSchema,
+              title: 'Item Field Title',
+            },
+          };
+
+          const { node } = createFormComponent({
+            schema,
+          });
+
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
+
+          const labelTextContent = node.querySelector('label[for="root_0"]').textContent;
+
+          expect(labelTextContent).to.contain('Item Field Title');
+          expect(labelTextContent).to.not.contain('Array-1');
+        }
+      );
+    });
+  });
+
   describe('should handle nested idPrefix and idSeparator parameter', () => {
     it('should render nested input widgets with the expected ids', () => {
       const complexSchema = {
@@ -2339,7 +2879,10 @@ describe('ArrayField', () => {
         },
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs[0].id).eql('root_foo_0_bar');
@@ -2357,7 +2900,7 @@ describe('ArrayField', () => {
         customValidate,
         showErrorList: false,
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       const inputsNoError = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputsNoError).to.have.length.of(0);

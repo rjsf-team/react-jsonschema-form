@@ -104,6 +104,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
+- `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
 - `registry`: The `registry` object.
 
@@ -480,7 +481,7 @@ function ErrorListTemplate(props: ErrorListProps) {
 }
 
 render(
-  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
+  <Form schema={schema} validator={validator} templates={{ ErrorListTemplate }} />,
   document.getElementById('app')
 );
 ```
@@ -633,7 +634,6 @@ The following props are passed to a custom field template component:
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
-- `hideError`: A boolean value stating if the field is hiding its errors.
 - `errors`: A component instance listing any encountered errors for this field.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.

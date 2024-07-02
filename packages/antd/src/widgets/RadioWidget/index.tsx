@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import Radio, { RadioChangeEvent } from 'antd/lib/radio';
+import { Radio, RadioChangeEvent } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -37,10 +37,10 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
@@ -61,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             id={optionId(id, i)}
             name={id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
+            disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
             key={i}
             value={String(i)}
           >

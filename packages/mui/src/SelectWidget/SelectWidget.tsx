@@ -38,6 +38,7 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
+  errorSchema,
   rawErrors = [],
   registry,
   uiSchema,
@@ -54,34 +55,36 @@ export default function SelectWidget<
 
   const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal));
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
 
   return (
     <TextField
       id={id}
       name={id}
-      label={labelValue(label || undefined, hideLabel, false)}
+      label={labelValue(label || undefined, hideLabel, undefined)}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
+      autoComplete={autocomplete}
       placeholder={placeholder}
       error={rawErrors.length > 0}
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      {...(textFieldProps as TextFieldProps)}
+      {...(textFieldRemainingProps as TextFieldProps)}
       select // Apply this and the following props after the potential overrides defined in textFieldProps
       InputLabelProps={{
-        ...textFieldProps.InputLabelProps,
+        ...InputLabelProps,
         shrink: !isEmpty,
       }}
       SelectProps={{
-        ...textFieldProps.SelectProps,
+        ...SelectProps,
         multiple,
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}

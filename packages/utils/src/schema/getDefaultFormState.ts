@@ -1,7 +1,15 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { ANY_OF_KEY, DEFAULT_KEY, DEPENDENCIES_KEY, PROPERTIES_KEY, ONE_OF_KEY, REF_KEY } from '../constants';
+import {
+  ANY_OF_KEY,
+  DEFAULT_KEY,
+  DEPENDENCIES_KEY,
+  PROPERTIES_KEY,
+  ONE_OF_KEY,
+  REF_KEY,
+  ALL_OF_KEY,
+} from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -102,10 +110,17 @@ function maybeAddDefaultToObject<T = any>(
       // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
       // the field key itself in the `requiredField` list
       const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
-      // Store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+
+      // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
+      if (emptyObjectFields === 'skipEmptyDefaults') {
+        if (!isEmpty(computedDefault)) {
+          obj[key] = computedDefault;
+        }
+      }
+      // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
-      if (
+      else if (
         (!isEmpty(computedDefault) || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
@@ -114,9 +129,11 @@ function maybeAddDefaultToObject<T = any>(
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
       // Condition 1: computedDefault is not undefined
-      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or if the key is a required field
+      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults) or if the key is a required field
       computedDefault !== undefined &&
-      (emptyObjectFields === 'populateAllDefaults' || requiredFields.includes(key))
+      (emptyObjectFields === 'populateAllDefaults' ||
+        emptyObjectFields === 'skipEmptyDefaults' ||
+        requiredFields.includes(key))
     ) {
       obj[key] = computedDefault;
     }
@@ -255,41 +272,53 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   switch (getSchemaType<S>(schema)) {
     // We need to recurse for object schema inner default values.
     case 'object': {
-      const objectDefaults = Object.keys(schema.properties || {}).reduce((acc: GenericObjectType, key: string) => {
-        // Compute the defaults for this node, with the parent defaults we might
-        // have from a previous run: defaults[key].
-        const computedDefault = computeDefaults<T, S, F>(validator, get(schema, [PROPERTIES_KEY, key]), {
-          rootSchema,
-          _recurseList,
-          experimental_defaultFormStateBehavior,
-          includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: get(defaults, [key]),
-          rawFormData: get(formData, [key]),
-          required: schema.required?.includes(key),
-        });
-        maybeAddDefaultToObject<T>(
-          acc,
-          key,
-          computedDefault,
-          includeUndefinedValues,
-          required,
-          schema.required,
-          experimental_defaultFormStateBehavior
-        );
-        return acc;
-      }, {}) as T;
-      if (schema.additionalProperties) {
+      // This is a custom addition that fixes this issue:
+      // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
+      const retrievedSchema =
+        experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
+          ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
+          : schema;
+      const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
+        (acc: GenericObjectType, key: string) => {
+          // Compute the defaults for this node, with the parent defaults we might
+          // have from a previous run: defaults[key].
+          const computedDefault = computeDefaults<T, S, F>(validator, get(retrievedSchema, [PROPERTIES_KEY, key]), {
+            rootSchema,
+            _recurseList,
+            experimental_defaultFormStateBehavior,
+            includeUndefinedValues: includeUndefinedValues === true,
+            parentDefaults: get(defaults, [key]),
+            rawFormData: get(formData, [key]),
+            required: retrievedSchema.required?.includes(key),
+          });
+          maybeAddDefaultToObject<T>(
+            acc,
+            key,
+            computedDefault,
+            includeUndefinedValues,
+            required,
+            retrievedSchema.required,
+            experimental_defaultFormStateBehavior
+          );
+          return acc;
+        },
+        {}
+      ) as T;
+      if (retrievedSchema.additionalProperties) {
         // as per spec additionalProperties may be either schema or boolean
-        const additionalPropertiesSchema = isObject(schema.additionalProperties) ? schema.additionalProperties : {};
+        const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)
+          ? retrievedSchema.additionalProperties
+          : {};
+
         const keys = new Set<string>();
         if (isObject(defaults)) {
           Object.keys(defaults as GenericObjectType)
-            .filter((key) => !schema.properties || !schema.properties[key])
+            .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
             .forEach((key) => keys.add(key));
         }
         const formDataRequired: string[] = [];
         Object.keys(formData as GenericObjectType)
-          .filter((key) => !schema.properties || !schema.properties[key])
+          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
           .forEach((key) => {
             keys.add(key);
             formDataRequired.push(key);
@@ -302,7 +331,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             includeUndefinedValues: includeUndefinedValues === true,
             parentDefaults: get(defaults, [key]),
             rawFormData: get(formData, [key]),
-            required: schema.required?.includes(key),
+            required: retrievedSchema.required?.includes(key),
           });
           // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
           maybeAddDefaultToObject<T>(
@@ -320,6 +349,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     case 'array': {
       const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
       const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+      const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
+      const computeSkipPopulate =
+        experimental_defaultFormStateBehavior?.arrayMinItems?.computeSkipPopulate ?? (() => false);
+
+      const emptyDefault = isSkipEmptyDefaults ? undefined : [];
 
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
@@ -355,7 +389,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       }
 
       if (neverPopulate) {
-        return defaults ?? [];
+        return defaults ?? emptyDefault;
       }
       if (ignoreMinItemsFlagSet && !required) {
         // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
@@ -367,9 +401,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       if (
         !schema.minItems ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
+        computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
         schema.minItems <= defaultsLength
       ) {
-        return defaults ? defaults : [];
+        return defaults ? defaults : emptyDefault;
       }
 
       const defaultEntries: T[] = (defaults || []) as T[];

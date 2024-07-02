@@ -1,4 +1,4 @@
-import Form from 'antd/lib/form';
+import { Form } from 'antd';
 import {
   FieldTemplateProps,
   FormContextType,

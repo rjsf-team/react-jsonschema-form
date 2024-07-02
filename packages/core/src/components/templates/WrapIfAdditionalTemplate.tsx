@@ -58,7 +58,7 @@ export default function WrapIfAdditionalTemplate<
               className='form-control'
               type='text'
               id={`${id}-key`}
-              onBlur={(event) => onKeyChange(event.target.value)}
+              onBlur={({ target }) => onKeyChange(target && target.value)}
               defaultValue={label}
             />
           </div>

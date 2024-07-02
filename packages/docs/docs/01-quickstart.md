@@ -8,6 +8,7 @@ NOTE: As of version 5, the `Form` now requires you to provide a `validator` impl
 First, specify a schema using the [JSON Schema specification](https://json-schema.org/). The below schema renders a single string field:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -22,6 +23,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 You can also render an object with multiple fields with the below schema:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -49,6 +51,7 @@ The uiSchema is used to add more customization to the form's look and feel. Use 
 attribute of the uiSchema to add a custom CSS class name to the form:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -69,6 +72,7 @@ uiSchema should be `{key: value}`, where `key` is the property key and `value` i
 object with the uiSchema configuration for that particular property. For example:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -94,7 +98,7 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ## Form initialization
@@ -102,6 +106,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 Often you'll want to prefill a form with existing data; this is done by passing a `formData` prop object matching the schema:
 
 ```tsx
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -139,6 +144,7 @@ By default, `<Form />` is an [uncontrolled component](https://reactjs.org/docs/u
 `onChange` and `formData` props as in the below example:
 
 ```tsx
+import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const App = () => {

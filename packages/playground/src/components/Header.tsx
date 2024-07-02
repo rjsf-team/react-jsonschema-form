@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
+import base64 from '../utils/base64';
 
 import CopyLink from './CopyLink';
 import ThemeSelector, { ThemesType } from './ThemeSelector';
@@ -110,6 +111,23 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           },
         },
+        allOf: {
+          type: 'string',
+          title: 'allOf defaults behaviour',
+          default: 'skipDefaults',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Populate defaults with allOf',
+              enum: ['populateDefaults'],
+            },
+            {
+              type: 'string',
+              title: 'Skip populating defaults with allOf',
+              enum: ['skipDefaults'],
+            },
+          ],
+        },
         emptyObjectFields: {
           type: 'string',
           title: 'Object fields default behavior',
@@ -126,6 +144,11 @@ const liveSettingsSelectSchema: RJSFSchema = {
               title:
                 'Assign value to formData when default is an object and parent is required, or default is primitive and is required',
               enum: ['populateRequiredDefaults'],
+            },
+            {
+              type: 'string',
+              title: 'Assign value to formData when only default is set',
+              enum: ['skipEmptyDefaults'],
             },
             {
               type: 'string',
@@ -228,7 +251,7 @@ export default function Header({
     } = document;
 
     try {
-      const hash = btoa(
+      const hash = base64.encode(
         JSON.stringify({
           formData,
           schema,

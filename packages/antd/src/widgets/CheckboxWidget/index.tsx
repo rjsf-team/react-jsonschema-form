@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { Checkbox, CheckboxProps } from 'antd';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -23,11 +23,11 @@ export default function CheckboxWidget<
   const { autofocus, disabled, formContext, id, label, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const handleChange = ({ target }: CheckboxChangeEvent) => onChange(target.checked);
+  const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.checked);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors

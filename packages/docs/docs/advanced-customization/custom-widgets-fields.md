@@ -7,7 +7,7 @@ The API allows to specify your own custom _widget_ and _field_ components:
 
 ## Customizing the default fields and widgets
 
-You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `ObjectField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
 
 ```tsx
 import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';

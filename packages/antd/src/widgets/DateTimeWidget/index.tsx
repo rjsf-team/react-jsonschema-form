@@ -8,7 +8,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 
-import DatePicker from 'antd/lib/date-picker';
+import { DatePicker } from 'antd';
 
 const DATE_PICKER_STYLE = {
   width: '100%',

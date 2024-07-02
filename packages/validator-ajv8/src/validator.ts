@@ -1,6 +1,7 @@
 import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
 import {
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -29,7 +30,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @private
    */
-  private ajv: Ajv;
+  ajv: Ajv;
 
   /** The Localizer function to use for localizing Ajv errors
    *
@@ -119,6 +120,23 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);
   }
 
+  /**
+   * This function checks if a schema needs to be added and if the root schemas don't match it removes the old root schema from the ajv instance and adds the new one.
+   * @param rootSchema - The root schema used to provide $ref resolutions
+   */
+  handleSchemaUpdate(rootSchema: S): void {
+    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+    // if schema validator instance doesn't exist, add it.
+    // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
+    if (this.ajv.getSchema(rootSchemaId) === undefined) {
+      this.ajv.addSchema(rootSchema, rootSchemaId);
+    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+      this.ajv.removeSchema(rootSchemaId);
+      this.ajv.addSchema(rootSchema, rootSchemaId);
+    }
+  }
+
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
@@ -128,16 +146,11 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S) {
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
     try {
-      // add the rootSchema ROOT_SCHEMA_PREFIX as id.
+      this.handleSchemaUpdate(rootSchema);
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      // if (this.ajv.getSchema(rootSchemaId) === undefined) {
-      // TODO restore the commented out `if` above when the TODO in the `finally` is completed
-      this.ajv.addSchema(rootSchema, rootSchemaId);
-      // }
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       const schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       let compiledValidator: ValidateFunction | undefined;
@@ -155,10 +168,6 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     } catch (e) {
       console.warn('Error encountered compiling schema:', e);
       return false;
-    } finally {
-      // TODO: A function should be called if the root schema changes so we don't have to remove and recompile the schema every run.
-      // make sure we remove the rootSchema from the global ajv instance
-      this.ajv.removeSchema(rootSchemaId);
     }
   }
 }

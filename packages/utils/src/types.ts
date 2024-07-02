@@ -41,6 +41,20 @@ export type Experimental_ArrayMinItems = {
    * - `never`: Ignore `minItems` on a field even the field is required.
    */
   populate?: 'all' | 'requiredOnly' | 'never';
+  /** A function that determines whether to skip populating the array with default values based on the provided validator,
+   * schema, and root schema.
+   * If the function returns true, the array will not be populated with default values.
+   * If the function returns false, the array will be populated with default values according to the `populate` option.
+   * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+   * @param schema - The schema for which resolving a condition is desired
+   * @param [rootSchema] - The root schema that will be forwarded to all the APIs
+   * @returns A boolean indicating whether to skip populating the array with default values.
+   */
+  computeSkipPopulate?: <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+    validator: ValidatorType<T, S, F>,
+    schema: S,
+    rootSchema?: S
+  ) => boolean;
   /** When `formData` is provided and does not contain `minItems` worth of data, this flag (`false` by default) controls
    * whether the extra data provided by the defaults is appended onto the existing `formData` items to ensure the
    * `minItems` condition is met. When false (legacy behavior), only the `formData` provided is merged into the default
@@ -65,8 +79,13 @@ export type Experimental_DefaultFormStateBehavior = {
    * - `populateRequiredDefaults`: Only sets default when a value is an object and its parent field is required, or it
    *        is a primitive value and it is required |
    * - `skipDefaults`: Does not set defaults                                                                                                      |
+   * - `skipEmptyDefaults`: Does not set an empty default. It will still apply the default value if a default property is defined in your schema.                                                                                                 |
    */
-  emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults';
+  emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults' | 'skipEmptyDefaults';
+  /**
+   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
+   */
+  allOf?: 'populateDefaults' | 'skipDefaults';
 };
 
 /** The interface representing a Date object that contains an optional time */
@@ -112,10 +131,12 @@ export type FieldId = {
 };
 
 /** Type describing a recursive structure of `FieldId`s for an object with a non-empty set of keys */
-export type IdSchema<T = any> = FieldId & {
-  /** The set of ids for fields in the recursive object structure */
-  [key in keyof T]?: IdSchema<T[key]>;
-};
+export type IdSchema<T = any> = T extends GenericObjectType
+  ? FieldId & {
+      /** The set of ids for fields in the recursive object structure */
+      [key in keyof T]?: IdSchema<T[key]>;
+    }
+  : FieldId;
 
 /** Type describing a name used for a field in the `PathSchema` */
 export type FieldPath = {
@@ -124,10 +145,16 @@ export type FieldPath = {
 };
 
 /** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys */
-export type PathSchema<T = any> = FieldPath & {
-  /** The set of names for fields in the recursive object structure */
-  [key in keyof T]?: PathSchema<T[key]>;
-};
+export type PathSchema<T = any> = T extends Array<infer U>
+  ? FieldPath & {
+      [i: number]: PathSchema<U>;
+    }
+  : T extends GenericObjectType
+  ? FieldPath & {
+      /** The set of names for fields in the recursive object structure */
+      [key in keyof T]?: PathSchema<T[key]>;
+    }
+  : FieldPath;
 
 /** The type for error produced by RJSF schema validation */
 export type RJSFValidationError = {
@@ -361,11 +388,11 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   /** A boolean value stating if the field should autofocus */
   autofocus?: boolean;
   /** A boolean value stating if the field is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** A boolean value stating if the field is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** The required status of this field */
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
@@ -526,7 +553,7 @@ export type ArrayFieldTemplateItemType<
   /** The className string */
   className: string;
   /** A boolean value stating if the array item is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating whether new items can be added to the array */
   canAdd: boolean;
   /** A boolean value stating whether the array item can be copied, assumed false if missing */
@@ -552,7 +579,7 @@ export type ArrayFieldTemplateItemType<
   /** Returns a function that swaps the items at `index` with `newIndex` */
   onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** A stable, unique key for the array item */
   key: string;
   /** The schema object for this array item */
@@ -597,6 +624,8 @@ export type ArrayFieldTemplateProps<
   formContext?: F;
   /** The formData for this array */
   formData?: T;
+  /** The tree of errors for this field and its children */
+  errorSchema?: ErrorSchema<T>;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
   /** The `registry` object */
@@ -610,9 +639,9 @@ export type ObjectFieldTemplatePropertyType = {
   /** A string representing the property name */
   name: string;
   /** A boolean value stating if the object property is disabled */
-  disabled: boolean;
+  disabled?: boolean;
   /** A boolean value stating if the property is read-only */
-  readonly: boolean;
+  readonly?: boolean;
   /** A boolean value stating if the property should be hidden */
   hidden: boolean;
 };

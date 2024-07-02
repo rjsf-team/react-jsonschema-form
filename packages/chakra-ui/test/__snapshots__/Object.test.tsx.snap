@@ -131,7 +131,6 @@ exports[`object fields additionalProperties 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -340,7 +339,6 @@ exports[`object fields object 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -575,7 +573,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -736,8 +733,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -884,12 +880,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a test description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -1050,8 +1046,7 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -1198,12 +1193,12 @@ exports[`object fields with title and description from both additionalProperties
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a fancier description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -1364,8 +1359,7 @@ exports[`object fields with title and description from both object 1`] = `
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -1446,12 +1440,12 @@ exports[`object fields with title and description from both object 1`] = `
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a fancier description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -1496,12 +1490,12 @@ exports[`object fields with title and description from both object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_a__description"
                 >
                   a fancier item A description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -1548,12 +1542,12 @@ exports[`object fields with title and description from both object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_b__description"
                 >
                   a fancier item B description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -1588,8 +1582,7 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -1736,12 +1729,12 @@ exports[`object fields with title and description from uiSchema additionalProper
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a fancier description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -1902,8 +1895,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -1984,12 +1976,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a fancier description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -2034,12 +2026,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_a__description"
                 >
                   a fancier item A description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -2086,12 +2078,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_b__description"
                 >
                   a fancier item B description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -2126,8 +2118,7 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -2274,12 +2265,12 @@ exports[`object fields with title and description from uiSchema show add button 
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a fancier description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -2440,8 +2431,7 @@ exports[`object fields with title and description object 1`] = `
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -2522,12 +2512,12 @@ exports[`object fields with title and description object 1`] = `
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a test description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -2572,12 +2562,12 @@ exports[`object fields with title and description object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_a__description"
                 >
                   A description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -2624,12 +2614,12 @@ exports[`object fields with title and description object 1`] = `
               <p
                 className="chakra-text emotion-11"
               >
-                <p
+                <sup
                   className="chakra-text emotion-4"
                   id="root_b__description"
                 >
                   B description
-                </p>
+                </sup>
               </p>
             </div>
           </div>
@@ -2664,8 +2654,7 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 .emotion-4 {
-  margin-top: 2px;
-  margin-bottom: 4px;
+  font-size: md;
 }
 
 .emotion-5 {
@@ -2812,12 +2801,12 @@ exports[`object fields with title and description show add button and fields if 
           className="chakra-divider emotion-3"
         />
       </div>
-      <p
+      <sup
         className="chakra-text emotion-4"
         id="root__description"
       >
         a test description
-      </p>
+      </sup>
       <div
         className="emotion-5"
       >
@@ -3096,7 +3085,6 @@ exports[`object fields with title and description with global label off addition
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -3293,7 +3281,6 @@ exports[`object fields with title and description with global label off object 1
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -3514,7 +3501,6 @@ exports[`object fields with title and description with global label off show add
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >

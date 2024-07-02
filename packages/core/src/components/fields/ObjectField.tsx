@@ -202,13 +202,16 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const newFormData = { ...formData } as T;
 
     let type: RJSFSchema['type'] = undefined;
+    let defaultValue: RJSFSchema['default'] = undefined;
     if (isObject(schema.additionalProperties)) {
       type = schema.additionalProperties.type;
+      defaultValue = schema.additionalProperties.default;
       let apSchema = schema.additionalProperties;
       if (REF_KEY in apSchema) {
         const { schemaUtils } = registry;
         apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
         type = apSchema.type;
+        defaultValue = apSchema.default;
       }
       if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
         type = 'object';
@@ -217,7 +220,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
     const newKey = this.getAvailableKey('newKey', newFormData);
     // Cast this to make the `set` work properly
-    set(newFormData as GenericObjectType, newKey, this.getDefaultValue(type));
+    set(newFormData as GenericObjectType, newKey, defaultValue ?? this.getDefaultValue(type));
 
     onChange(newFormData);
   };
@@ -233,14 +236,15 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       idSchema,
       name,
       required = false,
-      disabled = false,
-      readonly = false,
+      disabled,
+      readonly,
       hideError,
       idPrefix,
       idSeparator,
       onBlur,
       onFocus,
       registry,
+      title,
     } = this.props;
 
     const { fields, formContext, schemaUtils, translateString, globalUiOptions } = registry;
@@ -249,7 +253,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const { properties: schemaProperties = {} } = schema;
 
-    const title = uiOptions.title ?? schema.title ?? name;
+    const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
     const description = uiOptions.description ?? schema.description;
     let orderedProperties: string[];
     try {
@@ -272,7 +276,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
     const templateProps = {
       // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
-      title: uiOptions.label === false ? '' : title,
+      title: uiOptions.label === false ? '' : templateTitle,
       description: uiOptions.label === false ? undefined : description,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);

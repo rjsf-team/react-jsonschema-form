@@ -64,9 +64,7 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
                 aria-live="polite"
                 className="divider text"
                 role="alert"
-              >
-                
-              </div>
+              />
               <i
                 aria-hidden="true"
                 className="dropdown icon"
@@ -135,7 +133,6 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -190,9 +187,7 @@ exports[`single fields checkbox field 1`] = `
           />
           <label
             htmlFor="root"
-          >
-            
-          </label>
+          />
         </div>
       </div>
     </div>
@@ -416,7 +411,6 @@ exports[`single fields checkboxes field 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -441,7 +435,6 @@ exports[`single fields field with description 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -507,7 +500,6 @@ exports[`single fields field with description in uiSchema 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
       <div
         className="form-group field field-string"
       >
@@ -594,7 +586,6 @@ exports[`single fields format color 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -640,7 +631,6 @@ exports[`single fields format date 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -686,7 +676,6 @@ exports[`single fields format datetime 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -732,7 +721,6 @@ exports[`single fields format time 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -797,7 +785,6 @@ exports[`single fields help and error display 1`] = `
           />
         </div>
       </div>
-      
       <div
         className="ui mini info message"
         id="root__help"
@@ -852,7 +839,6 @@ exports[`single fields hidden field 1`] = `
     <div
       className="grouped equal width fields"
     >
-      
       <div
         style={
           {
@@ -935,9 +921,7 @@ exports[`single fields null field 1`] = `
   >
     <div
       className="grouped equal width fields"
-    >
-      
-    </div>
+    />
   </div>
   <button
     className="ui primary button"
@@ -983,7 +967,6 @@ exports[`single fields number field 0 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1030,7 +1013,6 @@ exports[`single fields number field 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1076,7 +1058,6 @@ exports[`single fields password field 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1171,7 +1152,6 @@ exports[`single fields radio field 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1237,7 +1217,6 @@ exports[`single fields schema examples 1`] = `
           value="Safari"
         />
       </datalist>
-      
     </div>
   </div>
   <button
@@ -1290,9 +1269,7 @@ exports[`single fields select field 1`] = `
             aria-live="polite"
             className="divider text"
             role="alert"
-          >
-            
-          </div>
+          />
           <i
             aria-hidden="true"
             className="dropdown icon"
@@ -1342,7 +1319,6 @@ exports[`single fields select field 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1478,7 +1454,6 @@ exports[`single fields select field multiple choice 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1614,7 +1589,164 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           </div>
         </div>
       </div>
-      
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="grouped fields"
+        id="root"
+        name="root"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              foo
+            </label>
+          </div>
+        </div>
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              bar
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-2"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-2"
+            >
+              fuzz
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="ui checkbox"
+            inverted="false"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-3"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="checkbox"
+            />
+            <label
+              htmlFor="root-3"
+            >
+              qux
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -1736,7 +1868,6 @@ exports[`single fields select field multiple choice formData 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1853,7 +1984,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -1906,9 +2036,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             aria-live="polite"
             className="divider text"
             role="alert"
-          >
-            
-          </div>
+          />
           <i
             aria-hidden="true"
             className="dropdown icon"
@@ -1958,7 +2086,100 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           </div>
         </div>
       </div>
-      
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="grouped fields"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="ui radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={false}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={0}
+              type="radio"
+              value="0"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              foo
+            </label>
+          </div>
+        </div>
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              bar
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -2063,7 +2284,6 @@ exports[`single fields select field single choice formData 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2108,7 +2328,6 @@ exports[`single fields slider field 1`] = `
       <span>
         75
       </span>
-      
     </div>
   </div>
   <button
@@ -2156,7 +2375,6 @@ exports[`single fields string field format data-url 1`] = `
           </div>
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2202,7 +2420,6 @@ exports[`single fields string field format email 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2248,7 +2465,6 @@ exports[`single fields string field format uri 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2294,7 +2510,6 @@ exports[`single fields string field regular 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2340,7 +2555,6 @@ exports[`single fields string field with placeholder 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2384,7 +2598,6 @@ exports[`single fields textarea field 1`] = `
           value=""
         />
       </div>
-      
     </div>
   </div>
   <button
@@ -2448,7 +2661,6 @@ exports[`single fields title field 1`] = `
               />
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -2495,7 +2707,6 @@ exports[`single fields unsupported field 1`] = `
           {}
         </pre>
       </div>
-      
     </div>
   </div>
   <button
@@ -2541,7 +2752,6 @@ exports[`single fields up/down field 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button
@@ -2587,7 +2797,6 @@ exports[`single fields using custom tagName 1`] = `
           />
         </div>
       </div>
-      
     </div>
   </div>
   <button

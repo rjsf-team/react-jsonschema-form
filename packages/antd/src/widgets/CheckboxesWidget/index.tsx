@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import Checkbox from 'antd/lib/checkbox';
+import { Checkbox } from 'antd';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -61,7 +61,7 @@ export default function CheckboxesWidget<
                 id={optionId(id, i)}
                 name={id}
                 autoFocus={i === 0 ? autofocus : false}
-                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1}
+                disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
                 value={String(i)}
               >
                 {option.label}

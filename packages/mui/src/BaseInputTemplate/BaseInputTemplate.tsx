@@ -45,6 +45,7 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     rawErrors = [],
+    errorSchema,
     formContext,
     registry,
     InputLabelProps,
@@ -64,8 +65,8 @@ export default function BaseInputTemplate<
   };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
   const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
     ? {
         ...InputLabelProps,
@@ -79,7 +80,7 @@ export default function BaseInputTemplate<
         id={id}
         name={id}
         placeholder={placeholder}
-        label={labelValue(label || undefined, hideLabel, false)}
+        label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
