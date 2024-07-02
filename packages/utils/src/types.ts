@@ -145,7 +145,11 @@ export type FieldPath = {
 };
 
 /** Type describing a recursive structure of `FieldPath`s for an object with a non-empty set of keys */
-export type PathSchema<T = any> = T extends GenericObjectType
+export type PathSchema<T = any> = T extends Array<infer U>
+  ? FieldPath & {
+      [i: number]: PathSchema<U>;
+    }
+  : T extends GenericObjectType
   ? FieldPath & {
       /** The set of names for fields in the recursive object structure */
       [key in keyof T]?: PathSchema<T[key]>;

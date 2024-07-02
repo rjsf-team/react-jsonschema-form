@@ -6,7 +6,7 @@ export interface TestValidatorParams<T = any> {
   errorList?: RJSFValidationError[][];
 }
 
-export interface TestValidatorType extends ValidatorType {
+export interface TestValidatorType<T = any> extends ValidatorType<T> {
   // eslint-disable-next-line no-unused-vars
-  setReturnValues(params?: TestValidatorParams): void;
+  setReturnValues(params?: TestValidatorParams<T>): void;
 }

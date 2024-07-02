@@ -16,14 +16,14 @@ import { customizeValidator, CustomValidatorOptionsType } from '../../src';
  *
  * @param options
  */
-export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType {
+export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType<T> {
   const validator = customizeValidator<T>(options);
   return {
     validateFormData(
       formData: T,
       schema: RJSFSchema,
-      customValidate?: CustomValidator,
-      transformErrors?: ErrorTransformer
+      customValidate?: CustomValidator<T>,
+      transformErrors?: ErrorTransformer<T>
     ): ValidationData<T> {
       return validator.validateFormData(formData, schema, customValidate, transformErrors);
     },

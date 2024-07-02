@@ -16,6 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.18.7
+
+## @rjsf/utils
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
+## @rjsf/validator-ajv6
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
+## @rjsf/validator-ajv8
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
 # 5.18.6
 
 ## @rjsf/antd
