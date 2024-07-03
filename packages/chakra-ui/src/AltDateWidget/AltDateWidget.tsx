@@ -1,11 +1,11 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import {
   ariaDescribedByIds,
+  dateRangeOptions,
   DateElementFormat,
   DateObject,
   FormContextType,
   getDateElementProps,
-  pad,
   parseDateString,
   RJSFSchema,
   StrictRJSFSchema,
@@ -14,14 +14,6 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Box, Button } from '@chakra-ui/react';
-
-const rangeOptions = (start: number, stop: number) => {
-  const options = [];
-  for (let i = start; i <= stop; i++) {
-    options.push({ value: i, label: pad(i, 2) });
-  }
-  return options;
-};
 
 function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
@@ -35,7 +27,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       className='form-control'
       onChange={(elemValue: WidgetProps<T, S, F>) => props.select(props.type, elemValue)}
       options={{
-        enumOptions: rangeOptions(props.range[0], props.range[1]),
+        enumOptions: dateRangeOptions<S>(props.range[0], props.range[1]),
       }}
       placeholder={props.type}
       schema={{ type: 'integer' } as S}

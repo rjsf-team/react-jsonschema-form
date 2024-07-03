@@ -16,6 +16,29 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.19.0
+
+##@rjsf/antd
+
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+##@rjsf/chakra-ui
+
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+## @rjsf/core
+
+- Fixed case where `readOnly` from a JSON Schema was not applied in SchemaField ([#4236](https://github.com/rjsf-team/react-jsonschema-form/issues/4236))
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+## @rjsf/utils
+
+- Added a new `dateRangeOptions()` function to implement relative Years in (via negative ranges) and reversing the order of the Year choices
+
+## Dev / docs / playground
+
+- Added documentation for the new `dateRangeOptions()` function as well as showing examples of using relative Years and reversed Year ordering
+
 # 5.18.6
 
 ## @rjsf/antd
@@ -25,7 +48,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
-- Fixed case where `readOnly` from a JSON Schema was not applied in SchemaField ([#4236](https://github.com/rjsf-team/react-jsonschema-form/issues/4236))
 
 ## @rjsf/utils
 

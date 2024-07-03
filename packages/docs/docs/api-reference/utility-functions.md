@@ -110,6 +110,25 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 
 - { blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
 
+### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a list of options for a date range between `start` and `stop`.
+If the start date is greater than the end date, then the date range is reversed.
+If `start` and `stop` are negative numbers (or zero), then they will be treated as relative to the current year.
+
+#### Parameters
+
+- start: number - The starting point of the date range
+- stop: number - The ending point of the date range
+
+#### Returns
+
+- EnumOptionsType&lt;S>[]: The list of EnumOptionsType for the date range between `start` and `stop`
+
+#### Throws
+
+- Error when `start` and `stop` aren't both <= 0 or > 0
+
 ### deepEquals()
 
 Implements a deep equals using the `lodash.isEqualWith` function, that provides a customized comparator that assumes all functions are equivalent.
