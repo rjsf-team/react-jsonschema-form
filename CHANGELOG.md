@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.19.1
+
+## Dev / docs / playground
+
+- Bumped the peer dependencies to `5.19.x` due to use of new API in `5.19.0`
+
 # 5.19.0
 
 ##@rjsf/antd

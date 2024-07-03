@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "@fluentui/react": ">= 7",
-    "@rjsf/core": "^5.18.x",
-    "@rjsf/utils": "^5.18.x",
+    "@rjsf/core": "^5.19.x",
+    "@rjsf/utils": "^5.19.x",
     "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
