@@ -1380,7 +1380,7 @@ describe('StringField', () => {
         const yearOptionsLabels = [].map.call(yearOptions, (o) => o.text);
         expect(yearOptionsLabels).eql(['year', `${thisYear}`, `${thisYear - 1}`, `${thisYear - 2}`, `${thisYear - 3}`]);
       });
-      it('should render a date field with years range from this year to 3 years ago', () => {
+      it('should render a date field with years range from 3 years ago to this year ', () => {
         const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [-3, 0] } };
         const { node } = createFormComponent({
           schema: {
