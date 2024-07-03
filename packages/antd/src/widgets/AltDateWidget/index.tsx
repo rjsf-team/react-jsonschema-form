@@ -2,8 +2,8 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { Row, Col, Button } from 'antd';
 import {
   ariaDescribedByIds,
+  dateRangeOptions,
   getDateElementProps,
-  pad,
   parseDateString,
   toDateString,
   DateObject,
@@ -23,14 +23,6 @@ type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   select: (property: keyof DateObject, value: any) => void;
   type: string;
   range: [number, number];
-};
-
-const rangeOptions = (start: number, stop: number) => {
-  const options = [];
-  for (let i = start; i <= stop; i++) {
-    options.push({ value: i, label: pad(i, 2) });
-  }
-  return options;
 };
 
 const readyForChange = (state: DateObject) => {
@@ -107,7 +99,7 @@ export default function AltDateWidget<
       onChange={(elemValue) => elemProps.select(elemProps.type as keyof DateObject, elemValue)}
       onFocus={elemProps.onFocus}
       options={{
-        enumOptions: rangeOptions(elemProps.range[0], elemProps.range[1]),
+        enumOptions: dateRangeOptions<S>(elemProps.range[0], elemProps.range[1]),
       }}
       placeholder={elemProps.type}
       readonly={elemProps.readonly}

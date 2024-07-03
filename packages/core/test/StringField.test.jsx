@@ -1335,6 +1335,67 @@ describe('StringField', () => {
         expect(ids).eql(['root_month', 'root_day', 'root_year', 'root_hour', 'root_minute', 'root_second']);
       });
     });
+
+    describe.only('AltDateTimeWidget with yearsRange option', () => {
+      it('should render a date field with years range from 1980-1985', () => {
+        const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [1980, 1985] } };
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptionsLabels = [].map.call(yearOptions, (o) => o.text);
+        expect(yearOptionsLabels).eql(['year', '1980', '1981', '1982', '1983', '1984', '1985']);
+      });
+      it('should render a date field with years range from 1985-1980', () => {
+        const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [1985, 1980] } };
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptionsLabels = [].map.call(yearOptions, (o) => o.text);
+        expect(yearOptionsLabels).eql(['year', '1985', '1984', '1983', '1982', '1981', '1980']);
+      });
+      it('should render a date field with years range from this year to 3 years ago', () => {
+        const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [0, -3] } };
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const thisYear = new Date().getFullYear();
+        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptionsLabels = [].map.call(yearOptions, (o) => o.text);
+        expect(yearOptionsLabels).eql(['year', `${thisYear}`, `${thisYear - 1}`, `${thisYear - 2}`, `${thisYear - 3}`]);
+      });
+      it('should render a date field with years range from this year to 3 years ago', () => {
+        const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [-3, 0] } };
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'date',
+          },
+          uiSchema,
+        });
+
+        const thisYear = new Date().getFullYear();
+        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptionsLabels = [].map.call(yearOptions, (o) => o.text);
+        expect(yearOptionsLabels).eql(['year', `${thisYear - 3}`, `${thisYear - 2}`, `${thisYear - 1}`, `${thisYear}`]);
+      });
+    });
   });
 
   describe('AltDateWidget', () => {
