@@ -53,7 +53,6 @@
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.14.202",
     "babel-jest": "^29.7.0",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

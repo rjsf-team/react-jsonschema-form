@@ -99,7 +99,6 @@
     "@types/react-frame-component": "^4.1.6",
     "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "gh-pages": "^5.0.0",
     "html": "^1.0.0",

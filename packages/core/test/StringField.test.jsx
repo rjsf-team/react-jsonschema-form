@@ -1336,7 +1336,7 @@ describe('StringField', () => {
       });
     });
 
-    describe.only('AltDateTimeWidget with yearsRange option', () => {
+    describe('AltDateTimeWidget with yearsRange option', () => {
       it('should render a date field with years range from 1980-1985', () => {
         const uiSchema = { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [1980, 1985] } };
         const { node } = createFormComponent({

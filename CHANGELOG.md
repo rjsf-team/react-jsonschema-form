@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.19.2
+
+## @rjsf/core
+
+- Removed `.only` on tests that was accidentally added in `5.19.0`
+
 # 5.19.1
 
 ## Dev / docs / playground
@@ -24,11 +30,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.19.0
 
-##@rjsf/antd
+## @rjsf/antd
 
 - Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
 
-##@rjsf/chakra-ui
+## @rjsf/chakra-ui
 
 - Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
 
