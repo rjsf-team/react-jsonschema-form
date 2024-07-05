@@ -70,7 +70,6 @@
     "atob": "^2.1.2",
     "babel-jest": "^29.7.0",
     "dayjs": "^1.11.10",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

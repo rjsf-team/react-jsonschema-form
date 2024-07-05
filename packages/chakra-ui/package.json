@@ -78,7 +78,6 @@
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
     "chakra-react-select": "^3.3.9",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "framer-motion": "^5.6.0",
     "jest": "^29.7.0",
