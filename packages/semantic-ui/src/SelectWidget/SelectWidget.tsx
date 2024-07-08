@@ -17,20 +17,21 @@ import { getSemanticProps } from '../util';
 
 /**
  * Returns and creates an array format required for semantic drop down
- * @param {array} enumOptions- array of items for the dropdown
+ * @param {array} enumOptions - array of items for the dropdown
  * @param {array} enumDisabled - array of enum option values to disable
+ * @param {boolean} showPlaceholderOption - whether to show a placeholder option
+ * @param {string} placeholder - placeholder option label
  * @returns {*}
  */
 function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
   enumOptions?: EnumOptionsType<S>[],
   enumDisabled?: UIOptionsType['enumDisabled'],
-  multiple?: boolean,
+  showPlaceholderOption?: boolean,
   placeholder?: string
 ) {
   const disabledOptions = enumDisabled || [];
   const options: DropdownItemProps[] = [];
-  if (!multiple && schema.default === undefined) {
+  if (showPlaceholderOption) {
     options.push({ value: '', text: placeholder || '' });
   }
   options.push(
@@ -86,11 +87,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   });
   const { enumDisabled, enumOptions, emptyValue: optEmptyVal } = options;
   const emptyValue = multiple ? [] : '';
+  const showPlaceholderOption = !multiple && schema.default === undefined;
   const dropdownOptions = createDefaultValueOptionsForDropDown<S>(
-    schema,
     enumOptions,
     enumDisabled,
-    multiple,
+    showPlaceholderOption,
     placeholder
   );
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>

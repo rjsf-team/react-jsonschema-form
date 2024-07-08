@@ -69,10 +69,12 @@ export default function SelectWidget<
     name: id,
   };
 
+  const showPlaceholderOption = !multiple && schema.default === undefined;
+
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
       const options = [...enumOptions];
-      if (!multiple && schema.default === undefined) {
+      if (showPlaceholderOption) {
         options.unshift({ value: '', label: placeholder || '' });
       }
       return options.map(({ value: optionValue, label: optionLabel }, index) => ({

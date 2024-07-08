@@ -62,6 +62,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     const newValue = getValue(data, multiple);
     return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
   };
+  const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
     <Field
@@ -83,7 +84,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         selectedOptions={selectedIndexesAsArray}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
-        {!multiple && schema.default === undefined && <Option value=''>{placeholder || ''}</Option>}
+        {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {Array.isArray(enumOptions) &&
           enumOptions.map(({ value, label }, i) => {
             const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;

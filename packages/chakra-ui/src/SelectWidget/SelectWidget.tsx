@@ -61,11 +61,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
+  const showPlaceholderOption = !multiple && schema.default === undefined;
   const _valueLabelMap: any = {};
   const displayEnumOptions: OptionsOrGroups<any, any> = useMemo(() => {
     if (Array.isArray(enumOptions)) {
       const options = [...enumOptions];
-      if (!multiple && schema.default === undefined) {
+      if (showPlaceholderOption) {
         options.unshift({ value: '', label: placeholder || '' });
       }
       return options.map((option: EnumOptionsType<S>, index: number) => {
