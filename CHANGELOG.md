@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.19.2
+# 5.19.3
 
 ## @rjsf/antd
 
