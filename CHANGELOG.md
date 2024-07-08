@@ -29,7 +29,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Removed `.only` on tests that was accidentally added in `5.19.0`
-- Added support for `default` values in `additionalProperties` in [#4199](https://github.com/rjsf-team/react-jsonschema-form/issues/4199), fixing [#3195](https://github.com/rjsf-team/react-jsonschema-form/issues/3915)
 
 ## @rjsf/fluentui-rc
 
@@ -117,6 +116,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 - Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
+- Added support for `default` values in `additionalProperties` in [#4199](https://github.com/rjsf-team/react-jsonschema-form/issues/4199), fixing [#3195](https://github.com/rjsf-team/react-jsonschema-form/issues/3915)
 
 ## @rjsf/fluent-ui
 
