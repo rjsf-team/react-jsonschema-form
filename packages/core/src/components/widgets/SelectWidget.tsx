@@ -47,7 +47,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onFocus, id, schema, multiple, options]
+    [onFocus, id, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const handleBlur = useCallback(
@@ -55,7 +55,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onBlur, id, schema, multiple, options]
+    [onBlur, id, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const handleChange = useCallback(
@@ -63,10 +63,11 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onChange, schema, multiple, options]
+    [onChange, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
     <select
@@ -83,7 +84,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       onChange={handleChange}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {!multiple && schema.default === undefined && <option value=''>{placeholder}</option>}
+      {showPlaceholderOption && <option value=''>{placeholder}</option>}
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ value, label }, i) => {
           const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;

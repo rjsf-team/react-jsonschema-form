@@ -16,11 +16,35 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.19.2
+# 5.19.3
+
+## @rjsf/antd
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/chakra-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
 
 ## @rjsf/core
 
 - Removed `.only` on tests that was accidentally added in `5.19.0`
+
+## @rjsf/fluentui-rc
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/material-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/mui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/semantic-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
 
 # 5.19.1
 
@@ -92,6 +116,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
 - Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 - Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
+- Added support for `default` values in `additionalProperties` in [#4199](https://github.com/rjsf-team/react-jsonschema-form/issues/4199), fixing [#3195](https://github.com/rjsf-team/react-jsonschema-form/issues/3915)
 
 ## @rjsf/fluent-ui
 

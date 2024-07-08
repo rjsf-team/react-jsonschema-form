@@ -74,10 +74,26 @@ exports[`semantic-ui specific tests field with special semantic options 1`] = `
                 className="menu transition"
               >
                 <div
+                  aria-checked={true}
+                  aria-selected={true}
+                  className="active selected item"
+                  onClick={[Function]}
+                  role="option"
+                  style={
+                    {
+                      "pointerEvents": "all",
+                    }
+                  }
+                >
+                  <span
+                    className="text"
+                  />
+                </div>
+                <div
                   aria-checked={false}
                   aria-disabled={false}
-                  aria-selected={true}
-                  className="selected item"
+                  aria-selected={false}
+                  className="item"
                   onClick={[Function]}
                   role="option"
                   style={
@@ -1279,10 +1295,26 @@ exports[`single fields select field 1`] = `
             className="menu transition"
           >
             <div
+              aria-checked={true}
+              aria-selected={true}
+              className="active selected item"
+              onClick={[Function]}
+              role="option"
+              style={
+                {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              />
+            </div>
+            <div
               aria-checked={false}
               aria-disabled={false}
-              aria-selected={true}
-              className="selected item"
+              aria-selected={false}
+              className="item"
               onClick={[Function]}
               role="option"
               style={
@@ -2046,10 +2078,26 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             className="menu transition"
           >
             <div
+              aria-checked={true}
+              aria-selected={true}
+              className="active selected item"
+              onClick={[Function]}
+              role="option"
+              style={
+                {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              />
+            </div>
+            <div
               aria-checked={false}
               aria-disabled={false}
-              aria-selected={true}
-              className="selected item"
+              aria-selected={false}
+              className="item"
               onClick={[Function]}
               role="option"
               style={
@@ -2243,6 +2291,22 @@ exports[`single fields select field single choice formData 1`] = `
           <div
             className="menu transition"
           >
+            <div
+              aria-checked={false}
+              aria-selected={false}
+              className="item"
+              onClick={[Function]}
+              role="option"
+              style={
+                {
+                  "pointerEvents": "all",
+                }
+              }
+            >
+              <span
+                className="text"
+              />
+            </div>
             <div
               aria-checked={false}
               aria-disabled={false}
