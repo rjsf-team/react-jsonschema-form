@@ -30,18 +30,15 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   placeholder?: string
 ) {
   const disabledOptions = enumDisabled || [];
-  const options: DropdownItemProps[] = [];
+  const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
+    disabled: disabledOptions.indexOf(value) !== -1,
+    key: label,
+    text: label,
+    value: String(index),
+  }));
   if (showPlaceholderOption) {
-    options.push({ value: '', text: placeholder || '' });
+    options.unshift({ value: '', text: placeholder || '' });
   }
-  options.push(
-    ...map(enumOptions, ({ label, value }, index) => ({
-      disabled: disabledOptions.indexOf(value) !== -1,
-      key: label,
-      text: label,
-      value: String(index),
-    }))
-  );
   return options;
 }
 

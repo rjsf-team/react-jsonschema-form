@@ -73,19 +73,20 @@ export default function SelectWidget<
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
-      const options = [...enumOptions];
-      if (showPlaceholderOption) {
-        options.unshift({ value: '', label: placeholder || '' });
-      }
-      return options.map(({ value: optionValue, label: optionLabel }, index) => ({
+      const options: DefaultOptionType[] = enumOptions.map(({ value: optionValue, label: optionLabel }, index) => ({
         disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(optionValue) !== -1,
         key: String(index),
         value: String(index),
         label: optionLabel,
       }));
+
+      if (showPlaceholderOption) {
+        options.unshift({ value: '', label: placeholder || '' });
+      }
+      return options;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, multiple, placeholder, schema.default]);
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
 
   return (
     <Select

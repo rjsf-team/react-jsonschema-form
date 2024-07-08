@@ -62,37 +62,40 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
-  const _valueLabelMap: any = {};
-  const displayEnumOptions: OptionsOrGroups<any, any> = useMemo(() => {
+  const { valueLabelMap, displayEnumOptions } = useMemo((): {
+    valueLabelMap: Record<string | number, string>;
+    displayEnumOptions: OptionsOrGroups<any, any>;
+  } => {
+    const valueLabelMap: Record<string | number, string> = {};
+    let displayEnumOptions: OptionsOrGroups<any, any> = [];
     if (Array.isArray(enumOptions)) {
-      const options = [...enumOptions];
-      if (showPlaceholderOption) {
-        options.unshift({ value: '', label: placeholder || '' });
-      }
-      return options.map((option: EnumOptionsType<S>, index: number) => {
+      displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
-        _valueLabelMap[index] = label || String(value);
+        valueLabelMap[index] = label || String(value);
         return {
           label,
           value: String(index),
           isDisabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
+      if (showPlaceholderOption) {
+        (displayEnumOptions as any[]).unshift({ value: '', label: placeholder || '' });
+      }
     }
-    return [];
-  }, [_valueLabelMap, enumDisabled, enumOptions, multiple, placeholder, schema.default]);
+    return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
   const formValue: any = isMultiple
     ? ((selectedIndex as string[]) || []).map((i: string) => {
         return {
-          label: _valueLabelMap[i],
+          label: valueLabelMap[i],
           value: i,
         };
       })
     : {
-        label: _valueLabelMap[selectedIndex as string] || '',
+        label: valueLabelMap[selectedIndex as string] || '',
         selectedIndex,
       };
 
