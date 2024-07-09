@@ -26,10 +26,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
 
-## @rjsf/core
-
-- Removed `.only` on tests that was accidentally added in `5.19.0`
-
 ## @rjsf/fluentui-rc
 
 - SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
@@ -45,6 +41,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/semantic-ui
 
 - SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+# 5.19.2
+
+## @rjsf/core
+
+- Removed `.only` on tests that was accidentally added in `5.19.0`
 
 # 5.19.1
 
