@@ -4,6 +4,7 @@ import canExpand from './canExpand';
 import createErrorHandler from './createErrorHandler';
 import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
+import dateRangeOptions from './dateRangeOptions';
 import deepEquals from './deepEquals';
 import englishStringTranslator from './englishStringTranslator';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue';
@@ -68,6 +69,7 @@ export {
   createSchemaUtils,
   DateElementFormat,
   dataURItoBlob,
+  dateRangeOptions,
   deepEquals,
   descriptionId,
   englishStringTranslator,

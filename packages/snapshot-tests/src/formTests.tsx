@@ -209,6 +209,18 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('select field single choice enumDisabled using radio widget', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar'],
+      };
+      const uiSchema = {
+        'ui:widget': 'radio',
+        'ui:enumDisabled': ['bar'],
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('select field multiple choice enumDisabled', () => {
       const schema: RJSFSchema = {
         type: 'array',
@@ -219,6 +231,24 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         uniqueItems: true,
       };
       const uiSchema = {
+        'ui:enumDisabled': ['bar'],
+      };
+      const tree = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('select field multiple choice enumDisabled using checkboxes', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'string',
+          enum: ['foo', 'bar', 'fuzz', 'qux'],
+        },
+        uniqueItems: true,
+      };
+      const uiSchema = {
+        'ui:widget': 'checkboxes',
         'ui:enumDisabled': ['bar'],
       };
       const tree = renderer

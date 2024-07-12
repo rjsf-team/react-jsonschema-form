@@ -90,7 +90,9 @@ Please note that, even though they are standardized, `datetime-local`, `date` an
 
 ![](https://i.imgur.com/VF5tY60.png)
 
-You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema. It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
+You can customize the list of years displayed in the `year` dropdown by providing a `yearsRange` property to `ui:options` in your uiSchema.
+The range can be descending by specifying the larger value first.
+It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButton` and `hideClearButton` options.
 
 You can also, customize the order in which date input fields are displayed by providing `format` property to `ui:options` in your uiSchema, available values are `YMD`(default), `MDY` and `DMY`.
 
@@ -115,6 +117,22 @@ const uiSchema: UiSchema = {
 
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
+
+You can also specify negative values which will be treated relative to the current year, so if it is 2020 and the range is set as follows.
+
+```
+   yearsRange: [-120, -18],
+```
+
+Years from 1900-2002 will be shown. You can also specify the dates with the higher date first to display dates in reverse order.
+
+```
+   yearsRange: [2030, 1980],
+   ...
+   yearsRange: [-18, -120],
+```
+
+Years from 2030-1980 and 2002-1900, respectively will be shown.
 
 ## For `number` and `integer` fields
 

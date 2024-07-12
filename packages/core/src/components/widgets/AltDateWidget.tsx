@@ -1,9 +1,9 @@
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import {
   ariaDescribedByIds,
+  dateRangeOptions,
   parseDateString,
   toDateString,
-  pad,
   DateObject,
   type DateElementFormat,
   FormContextType,
@@ -13,14 +13,6 @@ import {
   WidgetProps,
   getDateElementProps,
 } from '@rjsf/utils';
-
-function rangeOptions(start: number, stop: number) {
-  const options = [];
-  for (let i = start; i <= stop; i++) {
-    options.push({ value: i, label: pad(i, 2) });
-  }
-  return options;
-}
 
 function readyForChange(state: DateObject) {
   return Object.values(state).every((value) => value !== -1);
@@ -58,7 +50,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       id={id}
       name={name}
       className='form-control'
-      options={{ enumOptions: rangeOptions(range[0], range[1]) }}
+      options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
       placeholder={type}
       value={value}
       disabled={disabled}

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "5.18.4",
+  "version": "5.19.3",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -58,7 +58,6 @@
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
     "deep-freeze-es6": "^1.4.1",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

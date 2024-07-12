@@ -16,11 +16,129 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.19.3
+
+## @rjsf/antd
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/chakra-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/fluentui-rc
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/material-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/mui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+## @rjsf/semantic-ui
+
+- SelectWidget now displays an empty option when appropriate, fixing [#4197](https://github.com/rjsf-team/react-jsonschema-form/issues/4197)
+
+# 5.19.2
+
+## @rjsf/core
+
+- Removed `.only` on tests that was accidentally added in `5.19.0`
+
+# 5.19.1
+
+## Dev / docs / playground
+
+- Bumped the peer dependencies to `5.19.x` due to use of new API in `5.19.0`
+
+# 5.19.0
+
+## @rjsf/antd
+
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+## @rjsf/chakra-ui
+
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+## @rjsf/core
+
+- Fixed case where `readOnly` from a JSON Schema was not applied in SchemaField ([#4236](https://github.com/rjsf-team/react-jsonschema-form/issues/4236))
+- Updated `AltDateWidget` to use the new `dateRangeOptions()` function in `utils` to support relative Years and reversing the order of the Year choices
+
+## @rjsf/utils
+
+- Added a new `dateRangeOptions()` function to implement relative Years in (via negative ranges) and reversing the order of the Year choices
+
+## Dev / docs / playground
+
+- Added documentation for the new `dateRangeOptions()` function as well as showing examples of using relative Years and reversed Year ordering
+
+# 5.18.6
+
+## @rjsf/antd
+
+- Fix disabled property of options in CheckboxesWidget and RadioWidget ([#4216](https://github.com/rjsf-team/react-jsonschema-form/pull/4216))
+
+## @rjsf/core
+
+- Fixed `omitExtraData` not working in `onSubmit` and `validateForm`; fixing [#4187](https://github.com/rjsf-team/react-jsonschema-form/issues/4187), [#4165](https://github.com/rjsf-team/react-jsonschema-form/issues/4165) and [#4109](https://github.com/rjsf-team/react-jsonschema-form/issues/4109)
+
+## @rjsf/utils
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
+## @rjsf/validator-ajv6
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
+## @rjsf/validator-ajv8
+
+- Fix IdSchema and PathSchema types ([#4196](https://github.com/rjsf-team/react-jsonschema-form/pull/4196))
+
 # 5.18.5
+
+## @rjsf/antd
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/bootstrap4
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/chakra-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
 ## @rjsf/core
 
 - Fix case where NumberField would not properly reset the field when using programmatic form reset (#4202)[https://github.com/rjsf-team/react-jsonschema-form/issues/4202]
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+- Fix field disable or readonly property can't cover globalOptions corresponding property (#4212)[https://github.com/rjsf-team/react-jsonschema-form/pull/4212]
+- Added support for `default` values in `additionalProperties` in [#4199](https://github.com/rjsf-team/react-jsonschema-form/issues/4199), fixing [#3195](https://github.com/rjsf-team/react-jsonschema-form/issues/3915)
+
+## @rjsf/fluent-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/fluentui-rc
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/material-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/mui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
+
+## @rjsf/semantic-ui
+
+- Updated widgets to handle undefined `target` in `onFocus` and `onBlur` handlers
 
 ## @rjsf/validator-ajv6
 
@@ -61,6 +179,7 @@ should change the heading of the (upcoming) version to include a major version b
 # 5.18.0
 
 ## @rjsf/antd
+
 - Fix issue where the theme provided by the ConfigProvider under antd v5 wasn't respected thereby rendering the form items unusable under dark themes [#4129](https://github.com/rjsf-team/react-jsonschema-form/issues/4129)
 
 ## @rjsf/core
@@ -99,7 +218,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package. 
+- [#4080](https://github.com/rjsf-team/react-jsonschema-form/issues/4080) - Moved the `base64` encoder/decoder object to the Playground package.
 - Added test configuration and script to the Playground.
 
 # 5.17.0

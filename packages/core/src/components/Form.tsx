@@ -577,9 +577,23 @@ export default class Form<
     return getAllPaths(pathSchema);
   };
 
+  /** Returns the `formData` after filtering to remove any extra data not in a form field
+   *
+   * @param formData - The data for the `Form`
+   * @returns The `formData` after omitting extra data
+   */
+  omitExtraData = (formData?: T): T | undefined => {
+    const { schema, schemaUtils } = this.state;
+    const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
+    const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
+    const fieldNames = this.getFieldNames(pathSchema, formData);
+    const newFormData = this.getUsedFormData(formData, fieldNames);
+    return newFormData;
+  };
+
   /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
    * `formData` along with a new `ErrorSchema`. It will first update the `formData` with any missing default fields and
-   * then, if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filterer to remove any extra data not
+   * then, if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not
    * in a form field. Then, the resulting formData will be validated if required. The state will be updated with the new
    * updated (potentially filtered) `formData`, any errors that resulted from validation. Finally the `onChange`
    * callback will be called if specified with the updated state.
@@ -603,12 +617,7 @@ export default class Form<
 
     let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
-      _retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
-      const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
-
-      const fieldNames = this.getFieldNames(pathSchema, formData);
-
-      newFormData = this.getUsedFormData(formData, fieldNames);
+      newFormData = this.omitExtraData(formData);
       state = {
         formData: newFormData,
       };
@@ -715,18 +724,12 @@ export default class Form<
     event.persist();
     const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
-    const { schema, schemaUtils } = this.state;
 
     if (omitExtraData === true) {
-      const retrievedSchema = schemaUtils.retrieveSchema(schema, newFormData);
-      const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', newFormData);
-
-      const fieldNames = this.getFieldNames(pathSchema, newFormData);
-
-      newFormData = this.getUsedFormData(newFormData, fieldNames);
+      newFormData = this.omitExtraData(newFormData);
     }
 
-    if (noValidate || this.validateForm()) {
+    if (noValidate || this.validateFormWithFormData(newFormData)) {
       // There are no errors generated through schema validation.
       // Check for user provided errors and update state accordingly.
       const errorSchema = extraErrors || {};
@@ -817,14 +820,15 @@ export default class Form<
     }
   }
 
-  /** Programmatically validate the form. If `onError` is provided, then it will be called with the list of errors the
-   * same way as would happen on form submission.
+  /** Validates the form using the given `formData`. For use on form submission or on programmatic validation.
+   * If `onError` is provided, then it will be called with the list of errors.
    *
+   * @param formData - The form data to validate
    * @returns - True if the form is valid, false otherwise.
    */
-  validateForm() {
+  validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
-    const { formData, errors: prevErrors } = this.state;
+    const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
     let errors = schemaValidation.errors;
     let errorSchema = schemaValidation.errorSchema;
@@ -868,6 +872,21 @@ export default class Form<
       });
     }
     return !hasError;
+  };
+
+  /** Programmatically validate the form.  If `omitExtraData` is true, the `formData` will first be filtered to remove
+   * any extra data not in a form field. If `onError` is provided, then it will be called with the list of errors the
+   * same way as would happen on form submission.
+   *
+   * @returns - True if the form is valid, false otherwise.
+   */
+  validateForm() {
+    const { omitExtraData } = this.props;
+    let { formData: newFormData } = this.state;
+    if (omitExtraData === true) {
+      newFormData = this.omitExtraData(newFormData);
+    }
+    return this.validateFormWithFormData(newFormData);
   }
 
   /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
@@ -890,8 +909,8 @@ export default class Form<
       acceptcharset,
       acceptCharset,
       noHtml5Validate = false,
-      disabled = false,
-      readonly = false,
+      disabled,
+      readonly,
       formContext,
       showErrorList = 'top',
       _internalFormWrapper,

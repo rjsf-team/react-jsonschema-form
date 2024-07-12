@@ -2505,9 +2505,7 @@ describe('uiSchema', () => {
       });
 
       describe('ObjectField', () => {
-        let node;
-
-        beforeEach(() => {
+        it('should mark as readonly an ObjectField', () => {
           const schema = {
             type: 'object',
             properties: {
@@ -2523,12 +2521,40 @@ describe('uiSchema', () => {
           const uiSchema = {};
 
           let rendered = createFormComponent({ schema, uiSchema });
-          node = rendered.node;
-        });
+          const node = rendered.node;
 
-        it('should mark as readonly an ObjectField', () => {
           const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
+        });
+
+        it('should not mark as readonly even if globalOptions set readonly', () => {
+          const schema = {
+            type: 'object',
+            properties: {
+              foo: {
+                type: 'string',
+              },
+              bar: {
+                type: 'string',
+              },
+            },
+            readOnly: true,
+          };
+
+          const uiSchema = {
+            'ui:globalOptions': {
+              readonly: true,
+            },
+            foo: {
+              'ui:readonly': false,
+            },
+          };
+
+          let rendered = createFormComponent({ schema, uiSchema });
+          const node = rendered.node;
+
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
+          expect(disabled).eql([false, true]);
         });
       });
     });
