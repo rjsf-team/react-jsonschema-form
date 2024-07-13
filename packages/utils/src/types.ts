@@ -765,7 +765,6 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   rawErrors?: string[];
   /** The `registry` object */
   registry: Registry<T, S, F>;
-  raiseFieldErrors?: (fieldName: string, errors: FieldError[]) => void;
 }
 
 /** The definition of a React-based Widget component */
