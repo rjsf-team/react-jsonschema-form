@@ -600,12 +600,13 @@ export default class Form<
     const fieldNames = this.getFieldNames(pathSchema, formData);
     const filteredErrors: ErrorSchema<T> = _pick(schemaErrors, fieldNames as unknown as string[]);
     // Removing undefined and empty errors.
-    const filterUndefinedErrors = (errors: ErrorSchema<any>): ErrorSchema<T> => {
-      Object.keys(errors).forEach((key) => {
-        if (errors[key] === undefined) {
-          delete errors[key];
-        } else if (typeof errors[key] === 'object' && !Array.isArray(errors[key].__errors)) {
-          filterUndefinedErrors(errors[key]);
+    const filterUndefinedErrors = (errors: any): ErrorSchema<T> => {
+      Object.keys(errors).forEach((key: string) => {
+        const errorKey = key as keyof typeof errors;
+        if (errors[errorKey] === undefined) {
+          delete errors[errorKey];
+        } else if (typeof errors[errorKey] === 'object' && !Array.isArray(errors[errorKey].__errors)) {
+          filterUndefinedErrors(errors[errorKey]);
         }
       });
       return errors;
