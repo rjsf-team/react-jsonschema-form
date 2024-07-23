@@ -27,7 +27,9 @@ function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   return (
     <div className='unsupported-field'>
       <p>
-        <Markdown options={{ disableParsingRawHTML: true }}>{translateString(translateEnum, translateParams)}</Markdown>
+        <Markdown options={{ disableParsingRawHTML: true }}>
+          {translateString(translateEnum, translateParams)}
+        </Markdown>
       </p>
       {schema && <pre>{JSON.stringify(schema, null, 2)}</pre>}
     </div>
