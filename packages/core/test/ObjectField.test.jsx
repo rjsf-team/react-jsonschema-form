@@ -5,7 +5,24 @@ import sinon from 'sinon';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 
 import SchemaField from '../src/components/fields/SchemaField';
+import ObjectField from '../src/components/fields/ObjectField';
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
+
+const ObjectFieldTest = (props) => {
+  const onChangeTest = (newFormData, errorSchema, id) => {
+    const propertyValue = newFormData?.foo;
+    if (propertyValue !== 'test') {
+      const raiseError = {
+        ...errorSchema,
+        foo: {
+          __errors: ['Value must be "test"'],
+        },
+      };
+      props.onChange(newFormData, raiseError, id);
+    }
+  };
+  return <ObjectField {...props} onChange={onChangeTest} />;
+};
 
 describe('ObjectField', () => {
   let sandbox;
@@ -207,6 +224,42 @@ describe('ObjectField', () => {
       Object.keys(formContext).forEach((key) => {
         expect(node.querySelector(`code#${formContext[key]}`)).to.exist;
       });
+    });
+
+    it('raise an error and check if the error is displayed', () => {
+      const { node } = createFormComponent({
+        schema,
+        fields: {
+          ObjectField: ObjectFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'hello' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_foo__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_foo__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "test"');
+    });
+
+    it('should not raise an error if value is correct', () => {
+      const { node } = createFormComponent({
+        schema,
+        fields: {
+          ObjectField: ObjectFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_foo__error');
+      expect(errorMessages).to.have.length(0);
     });
   });
 

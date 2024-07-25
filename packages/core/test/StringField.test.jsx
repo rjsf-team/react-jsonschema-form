@@ -3,8 +3,24 @@ import { Simulate } from 'react-dom/test-utils';
 import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
+import StringField from '../src/components/fields/StringField';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
+
+const StringFieldTest = (props) => {
+  const onChangeTest = (newFormData, errorSchema, id) => {
+    const value = newFormData;
+    let raiseError = errorSchema;
+    if (value !== 'test') {
+      raiseError = {
+        ...raiseError,
+        __errors: ['Value must be "test"'],
+      };
+    }
+    props.onChange(newFormData, raiseError, id);
+  };
+  return <StringField {...props} onChange={onChangeTest} />;
+};
 
 describe('StringField', () => {
   let sandbox;
@@ -265,6 +281,42 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('input').getAttribute('autocomplete')).eql('family-name');
+    });
+
+    it('raise an error and check if the error is displayed', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        fields: {
+          StringField: StringFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'hello' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "test"');
+    });
+
+    it('should not raise an error if value is correct', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        fields: {
+          StringField: StringFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root__error');
+      expect(errorMessages).to.have.length(0);
     });
   });
 
