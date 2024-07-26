@@ -49,6 +49,12 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     this.localizer = localizer;
   }
 
+  /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
+   */
+  reset() {
+    this.ajv.removeSchema();
+  }
+
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
    * @param errorSchema - The `ErrorSchema` instance to convert

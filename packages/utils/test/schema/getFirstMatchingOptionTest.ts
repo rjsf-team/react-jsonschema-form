@@ -121,10 +121,6 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         },
         discriminator: {
           propertyName: 'code',
-          mapping: {
-            foo_coding: '#/definitions/Foo',
-            bar_coding: '#/definitions/Bar',
-          },
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
@@ -156,10 +152,6 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         },
         discriminator: {
           propertyName: 'code',
-          mapping: {
-            foo_coding: '#/definitions/Foo',
-            bar_coding: '#/definitions/Bar',
-          },
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
@@ -172,6 +164,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
 
     // simple in the sense of getOptionMatchingSimpleDiscriminator
     it('should return Bar when schema has non-simple discriminator for bar', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn');
       // Mock isValid to pass the second value
       testValidator.setReturnValues({ isValid: [false, true] });
       const schema: RJSFSchema = {
@@ -201,7 +194,22 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       // Use the schemaUtils to verify the discriminator prop gets passed
       const schemaUtils = createSchemaUtils(testValidator, schema);
-      expect(schemaUtils.getFirstMatchingOption(formData, options, 'code')).toEqual(1);
+      const result = schemaUtils.getFirstMatchingOption(formData, options, 'code');
+      const wasWarned = consoleWarnSpy.mock.calls.length > 0;
+      if (wasWarned) {
+        // According to the docs https://ajv.js.org/json-schema.html#discriminator, with ajv8 discrimator turned on the
+        // schema in this test will fail because of the limitations of AJV implementation
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          'Error encountered compiling schema:',
+          expect.objectContaining({
+            message: 'discriminator: "properties/code" must have "const" or "enum"',
+          })
+        );
+        expect(result).toEqual(0);
+      } else {
+        expect(result).toEqual(1);
+      }
+      consoleWarnSpy.mockRestore();
     });
   });
 }
