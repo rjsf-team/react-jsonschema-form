@@ -123,6 +123,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           propertyName: 'code',
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+        required: ['code'],
       };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       expect(getFirstMatchingOption(testValidator, null, options, schema, 'code')).toEqual(0);
@@ -154,6 +155,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           propertyName: 'code',
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+        required: ['code'],
       };
       const formData = { code: 'bar_coding' };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
@@ -189,6 +191,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           propertyName: 'code',
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
+        required: ['code'],
       };
       const formData = { code: ['bar_coding'] };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
