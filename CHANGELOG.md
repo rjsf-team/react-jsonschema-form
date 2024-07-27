@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `ValidatorType` interface to add an optional `reset?: () => void` prop that can be implemented to reset a validator back to initial constructed state
   - Updated the `ParserValidator` to provide a `reset()` function that clears the schema map
+- Also updated the default translatable string to use `Markdown` rather than HTML tags since we now render them with `Markdown` 
 
 ## @rjsf/validator-ajv8
 
@@ -29,7 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with it in them 
+- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them 
 
 # 5.19.3
 
