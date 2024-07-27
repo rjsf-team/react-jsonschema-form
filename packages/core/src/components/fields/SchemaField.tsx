@@ -206,7 +206,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   ) : (
     description
   );
-  
   const help = uiOptions.help;
   const hidden = uiOptions.widget === 'hidden';
 
