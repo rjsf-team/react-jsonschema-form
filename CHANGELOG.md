@@ -22,7 +22,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Support allowing raising errors from within a custom whatever [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
 
-
 # 5.19.4
 
 ## @rjsf/core 
