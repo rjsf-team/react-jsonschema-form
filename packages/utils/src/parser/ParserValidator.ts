@@ -48,6 +48,12 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     this.addSchema(rootSchema, hashForSchema<S>(rootSchema));
   }
 
+  /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
+   */
+  reset() {
+    this.schemaMap = {};
+  }
+
   /** Adds the given `schema` to the `schemaMap` keyed by the `hash` or `ID_KEY` if present on the `schema`. If the
    * schema does not have an `ID_KEY`, then the `hash` will be added as the `ID_KEY` to allow the schema to be
    * associated with it's `hash` for future use (by a schema compiler).

@@ -38,5 +38,8 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
     },
     // This is intentionally a no-op as we are using the real validator here
     setReturnValues() {},
+    reset() {
+      validator.reset?.();
+    },
   };
 }
