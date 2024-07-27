@@ -285,7 +285,7 @@ describe('ObjectField', () => {
     it('should not raise an error if value is correct using custom text widget', () => {
       const { node } = createFormComponent({
         schema,
-        fields: {
+        widgets: {
           TextWidget: TextWidgetTest,
         },
       });

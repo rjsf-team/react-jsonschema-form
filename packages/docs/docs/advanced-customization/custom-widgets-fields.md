@@ -97,7 +97,7 @@ The default widgets you can override are:
 You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -110,17 +110,18 @@ const uiSchema: UiSchema = {
 };
 
 const CustomTextWidget = function (props: WidgetProps) {
+  const { id, value } = props;
   const raiseErrorOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    let raiseError;
+    let raiseError: ErrorSchema | undefined;
     if (value !== 'test') {
       raiseError = {
         __errors: ['Value must be "test"'],
       };
     }
-    props.onChange(value, raiseError);
+    props.onChange(value, raiseError, id);
   };
 
-  return <input id='custom' onChange={raiseErrorOnChange} value={props.value || ''} />;
+  return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
 };
 
 const widgets: RegistryWidgetsType = {
