@@ -40,6 +40,7 @@ import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
 
 import getDefaultRegistry from '../getDefaultRegistry';
+import { forEach } from 'lodash';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
@@ -598,15 +599,13 @@ export default class Form<
     const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
     const fieldNames = this.getFieldNames(pathSchema, formData);
     const filteredErrors: ErrorSchema<T> = _pick(schemaErrors, fieldNames as unknown as string[]);
-    // If the schema is of a primitive type, do not filter out the __errors
+    // If the root schema is of a primitive type, do not filter out the __errors
     if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
       filteredErrors.__errors = schemaErrors.__errors;
     }
     // Removing undefined and empty errors.
     const filterUndefinedErrors = (errors: any): ErrorSchema<T> => {
-      Object.keys(errors).forEach((key: string) => {
-        const errorKey = key as keyof typeof errors;
-        const errorAtKey = errors[errorKey];
+      forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
         if (errorAtKey === undefined) {
           delete errors[errorKey];
         } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
