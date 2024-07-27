@@ -92,6 +92,49 @@ The default widgets you can override are:
 - `UpDownWidget`
 - `URLWidget`
 
+## Raising errors from within a custom widget or field
+
+You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
+
+```tsx
+import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'text',
+  default: 'hello',
+};
+
+const uiSchema: UiSchema = {
+  'ui:widget': 'text',
+};
+
+const CustomTextWidget = function (props: WidgetProps) {
+  const raiseErrorOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    let raiseError;
+    if (value !== 'test') {
+      raiseError = {
+        __errors: ['Value must be "test"'],
+      };
+    }
+    props.onChange(value, raiseError);
+  };
+
+  return <input id='custom' onChange={raiseErrorOnChange} value={props.value || ''} />;
+};
+
+const widgets: RegistryWidgetsType = {
+  TextWidget: CustomTextWidget,
+};
+
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
+  document.getElementById('app')
+);
+```
+
+This creates a custom text widget that raises an error if the input value does not match 'test'.
+
 ## Adding your own custom widgets
 
 You can provide your own custom widgets to a uiSchema for the following json data types:
