@@ -1004,6 +1004,10 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
    * @param formData - The form data to validate
    */
   rawValidation<Result = any>(schema: S, formData?: T): { errors?: Result[]; validationError?: Error };
+  /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
+   * instance for tests.
+   */
+  reset?: () => void;
 }
 
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`

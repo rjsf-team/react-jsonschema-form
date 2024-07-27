@@ -263,7 +263,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       return (
         <div>
           <p className='config-error' style={{ color: 'red' }}>
-            <Markdown>
+            <Markdown options={{ disableParsingRawHTML: true }}>
               {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
             </Markdown>
           </p>

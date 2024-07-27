@@ -33,6 +33,22 @@ sanitizeDataForNewSchemaTest(testValidator);
 toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);
 
+const testValidatorDiscriminated = getTestValidator({ ajvOptionsOverrides: { discriminator: true } });
+
+// NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
+getDefaultFormStateTest(testValidatorDiscriminated);
+getDisplayLabelTest(testValidatorDiscriminated);
+getClosestMatchingOptionTest(testValidatorDiscriminated);
+getFirstMatchingOptionTest(testValidatorDiscriminated);
+isFilesArrayTest(testValidatorDiscriminated);
+isMultiSelectTest(testValidatorDiscriminated);
+isSelectTest(testValidatorDiscriminated);
+mergeValidationDataTest(testValidatorDiscriminated);
+retrieveSchemaTest(testValidatorDiscriminated);
+sanitizeDataForNewSchemaTest(testValidatorDiscriminated);
+toIdSchemaTest(testValidatorDiscriminated);
+toPathSchemaTest(testValidatorDiscriminated);
+
 const testValidator2019 = getTestValidator({ AjvClass: Ajv2019 });
 
 // NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing

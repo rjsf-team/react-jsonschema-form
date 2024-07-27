@@ -22,6 +22,28 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Support allowing raising errors from within a custom whatever [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
 
+
+# 5.19.4
+
+## @rjsf/core 
+
+- Fix XSS when rendering schema validation errors [#4254](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
+  - NOTE: This will have potential consequences if you are using the [translateString](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props/#translatestring) feature and are trying to render HTML. Switching to [Markdown](https://www.markdownguide.org/) will solve your problems.
+
+## @rjsf/utils
+
+- Updated the `ValidatorType` interface to add an optional `reset?: () => void` prop that can be implemented to reset a validator back to initial constructed state
+  - Updated the `ParserValidator` to provide a `reset()` function that clears the schema map
+- Also updated the default translatable string to use `Markdown` rather than HTML tags since we now render them with `Markdown` 
+
+## @rjsf/validator-ajv8
+
+- Updated the `AJV8Validator` to implement the `reset()` function to remove cached schemas in the `ajv` instance
+
+## Dev / docs / playground
+
+- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them 
+
 # 5.19.3
 
 ## @rjsf/antd
