@@ -36,6 +36,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     afterEach(() => {
       consoleWarnSpy.mockClear();
+      testValidator.reset?.();
     });
     it('returns empty object when schema is not an object', () => {
       expect(retrieveSchema(testValidator, [] as RJSFSchema)).toEqual({});

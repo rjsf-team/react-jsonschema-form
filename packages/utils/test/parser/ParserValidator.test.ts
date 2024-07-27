@@ -97,4 +97,8 @@ describe('ParserValidator', () => {
       JSON.stringify({ ...DUPLICATE_SCHEMA, [ID_KEY]: DUPLICATE_HASH }, null, 2)
     );
   });
+  it('reset clears the map', () => {
+    validator.reset();
+    expect(validator.schemaMap).toEqual({});
+  });
 });

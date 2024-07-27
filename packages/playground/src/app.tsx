@@ -19,9 +19,11 @@ import Playground, { PlaygroundProps } from './components';
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
+const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
 
 const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
+  'AJV8 (discriminator)': AJV8_DISC,
   AJV8_es: esV8Validator,
   AJV8_2019,
   AJV8_2020,
