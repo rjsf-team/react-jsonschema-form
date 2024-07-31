@@ -38,9 +38,9 @@ import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
+import _forEach from 'lodash/forEach';
 
 import getDefaultRegistry from '../getDefaultRegistry';
-import { forEach } from 'lodash';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
@@ -605,7 +605,7 @@ export default class Form<
     }
     // Removing undefined and empty errors.
     const filterUndefinedErrors = (errors: any): ErrorSchema<T> => {
-      forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
+      _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
         if (errorAtKey === undefined) {
           delete errors[errorKey];
         } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
