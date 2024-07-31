@@ -35,10 +35,10 @@ import {
   Experimental_DefaultFormStateBehavior,
 } from '@rjsf/utils';
 import _get from 'lodash/get';
+import _forEach from 'lodash/forEach';
 import _isEmpty from 'lodash/isEmpty';
 import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
-import _forEach from 'lodash/forEach';
 
 import getDefaultRegistry from '../getDefaultRegistry';
 
