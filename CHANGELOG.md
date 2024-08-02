@@ -20,8 +20,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core 
 
-- Support allowing raising errors from within a custom whatever [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
+- Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
 
+## @rjsf/utils
+
+- Updated the `WidgetProps` type to add `es?: ErrorSchema<T>, id?: string` to the params of the `onChange` handler function
+
+## Dev / docs / playground
+
+-  Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
 # 5.19.4
 
 ## @rjsf/core 
