@@ -29,6 +29,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 -  Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
+
 # 5.19.4
 
 ## @rjsf/core 
