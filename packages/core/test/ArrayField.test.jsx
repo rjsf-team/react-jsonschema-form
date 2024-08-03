@@ -5,6 +5,8 @@ import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
 import SchemaField from '../src/components/fields/SchemaField';
+import ArrayField from '../src/components/fields/ArrayField';
+import { TextWidgetTest } from './StringField.test';
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
 const ExposedArrayKeyTemplate = function (props) {
@@ -155,6 +157,26 @@ const ArrayFieldTestItemTemplate = (props) => {
       )}
     </div>
   );
+};
+
+const ArrayFieldTest = (props) => {
+  const onChangeTest = (newFormData, errorSchema, id) => {
+    if (Array.isArray(newFormData) && newFormData.length === 1) {
+      const itemValue = newFormData[0]?.text;
+      if (itemValue !== 'Appie') {
+        const raiseError = {
+          ...errorSchema,
+          0: {
+            text: {
+              __errors: ['Value must be "Appie"'],
+            },
+          },
+        };
+        props.onChange(newFormData, raiseError, id);
+      }
+    }
+  };
+  return <ArrayField {...props} onChange={onChangeTest} />;
 };
 
 describe('ArrayField', () => {
@@ -3195,6 +3217,102 @@ describe('ArrayField', () => {
           },
         },
       });
+    });
+
+    it('raise an error and check if the error is displayed', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        fields: {
+          ArrayField: ArrayFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "Appie"');
+    });
+
+    it('should not raise an error if value is correct', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        fields: {
+          ArrayField: ArrayFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'Appie' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
+    });
+
+    it('raise an error and check if the error is displayed using custom text widget', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        widgets: {
+          TextWidget: TextWidgetTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'hello' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "test"');
+    });
+
+    it('should not raise an error if value is correct using custom text widget', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        widgets: {
+          TextWidget: TextWidgetTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
     });
   });
 });
