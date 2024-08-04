@@ -52,19 +52,22 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
   if (Array.isArray(schema.oneOf)) {
-    enumOptions = optionsList<S>({
-      oneOf: schema.oneOf
-        .map((option) => {
-          if (isObject(option)) {
-            return {
-              ...option,
-              title: option.title || (option.const === true ? yes : no),
-            };
-          }
-          return undefined;
-        })
-        .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
-    } as unknown as S);
+    enumOptions = optionsList<S, T, F>(
+      {
+        oneOf: schema.oneOf
+          .map((option) => {
+            if (isObject(option)) {
+              return {
+                ...option,
+                title: option.title || (option.const === true ? yes : no),
+              };
+            }
+            return undefined;
+          })
+          .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
+      } as unknown as S,
+      uiSchema
+    );
   } else {
     // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
     const schemaWithEnumNames = schema as S & { enumNames?: string[] };
@@ -81,11 +84,14 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         },
       ];
     } else {
-      enumOptions = optionsList<S>({
-        enum: enums,
-        // NOTE: enumNames is deprecated, but still supported for now.
-        enumNames: schemaWithEnumNames.enumNames,
-      } as unknown as S);
+      enumOptions = optionsList<S, T, F>(
+        {
+          enum: enums,
+          // NOTE: enumNames is deprecated, but still supported for now.
+          enumNames: schemaWithEnumNames.enumNames,
+        } as unknown as S,
+        uiSchema
+      );
     }
   }
 

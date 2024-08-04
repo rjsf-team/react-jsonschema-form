@@ -890,6 +890,8 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
     widget?: Widget<T, S, F> | string;
+    /** Allows a user to provide a list of labels for enum values in the schema */
+    enumNames?: string[];
   };
 
 /** The type that represents the Options potentially provided by `ui:options` */

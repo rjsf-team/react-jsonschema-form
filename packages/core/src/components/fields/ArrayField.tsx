@@ -612,7 +612,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
     const { widgets, schemaUtils, formContext, globalUiOptions } = registry;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
-    const enumOptions = optionsList(itemsSchema);
+    const enumOptions = optionsList<S, T[], F>(itemsSchema, uiSchema);
     const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
