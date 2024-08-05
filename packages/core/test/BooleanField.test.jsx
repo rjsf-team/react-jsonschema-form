@@ -387,7 +387,7 @@ describe('BooleanField', () => {
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
+    expect(console.warn.calledWithMatch(/The "enumNames" property in the schema is deprecated/)).to.be.true;
   });
 
   it('should support oneOf titles for radio widgets', () => {
@@ -411,6 +411,29 @@ describe('BooleanField', () => {
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
+  });
+
+  it('should support oneOf titles for radio widgets, overrides in uiSchema', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        oneOf: [
+          {
+            const: true,
+            title: 'Yes',
+          },
+          {
+            const: false,
+            title: 'No',
+          },
+        ],
+      },
+      formData: true,
+      uiSchema: { 'ui:widget': 'radio', oneOf: [{ 'ui:title': 'Si!' }, { 'ui:title': 'No!' }] },
+    });
+
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
+    expect(labels).eql(['Si!', 'No!']);
   });
 
   it('should preserve oneOf option ordering for radio widgets', () => {
@@ -495,19 +518,19 @@ describe('BooleanField', () => {
     expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
-  it('should support enumNames for select', () => {
+  it('should support enumNames for select, with overrides in uiSchema', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
         enumNames: ['Yes', 'No'],
       },
       formData: true,
-      uiSchema: { 'ui:widget': 'select' },
+      uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Si!', 'No!'] },
     });
 
     const labels = [].map.call(node.querySelectorAll('.field option'), (label) => label.textContent);
-    expect(labels).eql(['', 'Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
+    expect(labels).eql(['', 'Si!', 'No!']);
+    expect(console.warn.calledWithMatch(/TThe "enumNames" property in the schema is deprecated/)).to.be.false;
   });
 
   it('should handle a focus event with checkbox', () => {

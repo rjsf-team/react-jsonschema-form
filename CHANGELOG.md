@@ -21,10 +21,14 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core 
 
 - Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
+- Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
 
 ## @rjsf/utils
 
 - Updated the `WidgetProps` type to add `es?: ErrorSchema<T>, id?: string` to the params of the `onChange` handler function
+- Updated `UIOptionsBaseType` to add the new `enumNames` prop to support an alternate way to provide labels for `enum`s in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215)
+- Updated `optionsList()` to take an optional `uiSchema` that is used to extract alternate labels for `enum`s or `oneOf`/`anyOf` in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
+  - NOTE: The generics for `optionsList()` were expanded from `<S extends StrictRJSFSchema = RJSFSchema>` to `<S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>` to support the `UiSchema`.
 
 ## Dev / docs / playground
 
@@ -41,7 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `ValidatorType` interface to add an optional `reset?: () => void` prop that can be implemented to reset a validator back to initial constructed state
   - Updated the `ParserValidator` to provide a `reset()` function that clears the schema map
-- Also updated the default translatable string to use `Markdown` rather than HTML tags since we now render them with `Markdown` 
+- Also updated the default translatable string to use `Markdown` rather than HTML tags since we now render them with `Markdown`
 
 ## @rjsf/validator-ajv8
 
