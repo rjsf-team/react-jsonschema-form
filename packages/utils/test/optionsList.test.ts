@@ -64,7 +64,7 @@ describe('optionsList()', () => {
       );
       expect(console.warn).not.toHaveBeenCalled();
     });
-    it('generates options and doesn not emit a deprecation warning for a schema with enumNames in production', () => {
+    it('generates options and does not emit a deprecation warning for a schema with enumNames in production', () => {
       process.env.NODE_ENV = 'production';
       const enumSchema: RJSFSchema = {
         type: 'string',
