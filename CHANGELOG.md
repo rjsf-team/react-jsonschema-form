@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.20.1
+
+## Dev / docs / playground
+
+- Updated the peer dependencies to `5.20.x` due to types and API changes in `@rjsf/utils`
+
 # 5.20.0
 
 ## @rjsf/core 
