@@ -79,7 +79,7 @@
     "babel-jest": "^29.7.0",
     "chakra-react-select": "^3.3.9",
     "eslint": "^8.56.0",
-    "framer-motion": "^5.6.0",
+    "framer-motion": "^11.2.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-watch-typeahead": "^2.2.2",
