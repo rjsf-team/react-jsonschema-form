@@ -6,6 +6,7 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
+    "build:css": "cross-env NODE_ENV='production' postcss src/main.css -o build.css",
     "build:ts": "tsc -b",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
@@ -94,7 +95,12 @@
     "storybook": "^8.2.8",
     "storybook-react-rsbuild": "^0.0.11",
     "@rsbuild/core": "^1.0.1-beta.11",
-    "@rsbuild/plugin-react": "^1.0.1-beta.11"
+    "@rsbuild/plugin-react": "^1.0.1-beta.11",
+    "tailwindcss": "^3.4.9",
+    "postcss": "^8.4.41",
+    "autoprefixer": "^10.4.20",
+    "cssnano": "^7.0.5",
+    "postcss-cli": "^11.0.0"
   },
   "repository": {
     "type": "git",

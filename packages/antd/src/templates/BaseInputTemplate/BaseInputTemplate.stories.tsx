@@ -1,3 +1,4 @@
+import '../../main.css';
 import type { Meta, StoryObj } from '@storybook/react';
 import BaseInputTemplate from './index';
 

@@ -7,7 +7,10 @@
     "rootDir": "./",
     "outDir": "../lib",
     "baseUrl": "../",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // 主要是忽略 storybook 的类型报错, 原因是 rjsf 的 typescript 版本未升级到 5 和 storybook ts5 生成的 d.ts 冲突
+    "skipLibCheck": true,
+    "noUnusedLocals": false
   },
   "references": [
     {

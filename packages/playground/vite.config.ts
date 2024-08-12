@@ -15,6 +15,7 @@ export default defineConfig({
     preserveSymlinks: true, // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
     alias: {
       // mapping packages in monorepo to make vite use sources directly avoiding build step
+      '@rjsf/antd/build.css?inline': path.join(__dirname, '../antd/build.css?inline'),
       '@rjsf/antd': path.resolve(__dirname, '../antd/src'),
       '@rjsf/bootstrap-4': path.resolve(__dirname, '../bootstrap-4/src'),
       '@rjsf/chakra-ui': path.resolve(__dirname, '../chakra-ui/src'),

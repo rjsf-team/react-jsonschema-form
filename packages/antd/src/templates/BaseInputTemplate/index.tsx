@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 import { ChangeEvent, FocusEvent } from 'react';
-import { Input, InputNumber } from 'antd';
+import { InputNumber } from 'antd';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -73,9 +73,11 @@ export default function BaseInputTemplate<
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
     ) : (
-      <Input
+      <input
+        id='first_name'
+        className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+        required
         disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
         name={id}
         onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleTextChange : undefined}
@@ -103,4 +105,21 @@ export default function BaseInputTemplate<
       )}
     </>
   );
+}
+
+{
+  /* <Input
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        id={id}
+        name={id}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleTextChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={INPUT_STYLE}
+        list={schema.examples ? examplesId<T>(id) : undefined}
+        {...inputProps}
+        value={value}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+      /> */
 }

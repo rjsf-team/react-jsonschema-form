@@ -12,6 +12,7 @@ import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
 import { Sample } from '../samples/Sample';
+import otherStyles from '@rjsf/antd/build.css?inline'; // will not be injected
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -25,7 +26,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [formData, setFormData] = useState<any>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
-  const [theme, setTheme] = useState<string>('default');
+  const [theme, setTheme] = useState<string>('antd');
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
@@ -168,6 +169,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               head={
                 <>
                   <link rel='stylesheet' id='theme' href={stylesheet || ''} />
+                  {theme === 'antd' && <style>{otherStyles}</style>}
                 </>
               }
               style={{
