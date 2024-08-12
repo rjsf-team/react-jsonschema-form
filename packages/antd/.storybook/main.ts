@@ -1,4 +1,5 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+// import type { StorybookConfig } from "@storybook/react-webpack5";
+import { StorybookConfig } from 'storybook-react-rsbuild'
 
 const config: StorybookConfig = {
     stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -11,8 +12,12 @@ const config: StorybookConfig = {
       "@storybook/addon-interactions",
     ],
     framework: {
-      name: "@storybook/react-webpack5",
+      // name: "@storybook/react-webpack5",
+      name: "storybook-react-rsbuild",
       options: {},
     },
+    rsbuildFinal: (config) => {
+      return config;
+    }
   };
   export default config;

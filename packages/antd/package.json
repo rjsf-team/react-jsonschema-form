@@ -91,7 +91,10 @@
     "@storybook/react": "^8.2.8",
     "@storybook/react-webpack5": "^8.2.8",
     "@storybook/test": "^8.2.8",
-    "storybook": "^8.2.8"
+    "storybook": "^8.2.8",
+    "storybook-react-rsbuild": "^0.0.11",
+    "@rsbuild/core": "^1.0.1-beta.11",
+    "@rsbuild/plugin-react": "^1.0.1-beta.11"
   },
   "repository": {
     "type": "git",

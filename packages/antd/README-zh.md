@@ -1,1 +1,3 @@
-- 手动安装 storybook https://github.com/storybookjs/storybook/discussions/25475
+- [x] 手动安装 storybook https://github.com/storybookjs/storybook/discussions/25475
+    - [x] 配置 RSbuild https://rsbuild.dev/zh/guide/framework/react#%E4%BD%BF%E7%94%A8-emotion
+        - [ ] 配置 emotion
