@@ -33,10 +33,12 @@ import ifThenElse from './ifThenElse';
 import customField from './customField';
 import { Sample } from './Sample';
 import deepFreeze from 'deep-freeze-es6';
+import simple2 from './simple-2';
 
 const _samples: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
-  Simple: simple,
+  ['Original Simple']: simple,
+  Simple: simple2,
   'UI Options': options,
   Nested: nested,
   Arrays: arrays,

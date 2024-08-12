@@ -1,0 +1,1 @@
+- 手动安装 storybook https://github.com/storybookjs/storybook/discussions/25475

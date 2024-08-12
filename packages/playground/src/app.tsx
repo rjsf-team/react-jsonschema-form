@@ -1,11 +1,11 @@
-import { Theme as MuiV4Theme } from '@rjsf/material-ui';
-import { Theme as MuiV5Theme } from '@rjsf/mui';
-import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
-import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
-import { Theme as SuiTheme } from '@rjsf/semantic-ui';
+// import { Theme as MuiV4Theme } from '@rjsf/material-ui';
+// import { Theme as MuiV5Theme } from '@rjsf/mui';
+// import { Theme as FluentUITheme } from '@rjsf/fluent-ui';
+// import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
+// import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
-import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+// import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+// import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import v6Validator from '@rjsf/validator-ajv6';
 import localize_es from 'ajv-i18n/localize/es';
@@ -95,34 +95,34 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '//cdnjs.cloudflare.com/ajax/libs/antd/4.1.4/antd.min.css',
     theme: AntdTheme,
   },
-  'bootstrap-4': {
-    stylesheet: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css',
-    theme: Bootstrap4Theme,
-  },
-  'chakra-ui': {
-    stylesheet: '',
-    theme: ChakraUITheme,
-  },
-  'fluent-ui': {
-    stylesheet: '//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css',
-    theme: FluentUITheme,
-  },
-  'fluentui-rc': {
-    stylesheet: '',
-    theme: FluentUIRCTheme,
-  },
-  'material-ui-4': {
-    stylesheet: '',
-    theme: MuiV4Theme,
-  },
-  'material-ui-5': {
-    stylesheet: '',
-    theme: MuiV5Theme,
-  },
-  'semantic-ui': {
-    stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
-    theme: SuiTheme,
-  },
+  // 'bootstrap-4': {
+  //   stylesheet: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css',
+  //   theme: Bootstrap4Theme,
+  // },
+  // 'chakra-ui': {
+  //   stylesheet: '',
+  //   theme: ChakraUITheme,
+  // },
+  // 'fluent-ui': {
+  //   stylesheet: '//static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css',
+  //   theme: FluentUITheme,
+  // },
+  // 'fluentui-rc': {
+  //   stylesheet: '',
+  //   theme: FluentUIRCTheme,
+  // },
+  // 'material-ui-4': {
+  //   stylesheet: '',
+  //   theme: MuiV4Theme,
+  // },
+  // 'material-ui-5': {
+  //   stylesheet: '',
+  //   theme: MuiV5Theme,
+  // },
+  // 'semantic-ui': {
+  //   stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
+  //   theme: SuiTheme,
+  // },
 };
 
 export default function App() {

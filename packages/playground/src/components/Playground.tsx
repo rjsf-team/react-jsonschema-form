@@ -130,7 +130,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   return (
     <>
-      <Header
+      {/* <Header
         schema={schema}
         uiSchema={uiSchema}
         formData={formData}
@@ -149,7 +149,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setValidator={setValidator}
         setLiveSettings={setLiveSettings}
         setShareURL={setShareURL}
-      />
+      /> */}
       <Editors
         formData={formData}
         setFormData={setFormData}

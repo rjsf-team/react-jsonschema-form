@@ -16,7 +16,9 @@
     "lint": "eslint src test",
     "precommit": "lint-staged",
     "test": "jest",
-    "test:update": "jest --u"
+    "test:update": "jest --u",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -78,7 +80,18 @@
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "@chromatic-com/storybook": "^1.6.1",
+    "@storybook/addon-essentials": "^8.2.8",
+    "@storybook/addon-interactions": "^8.2.8",
+    "@storybook/addon-links": "^8.2.8",
+    "@storybook/addon-onboarding": "^8.2.8",
+    "@storybook/addon-webpack5-compiler-swc": "^1.0.5",
+    "@storybook/blocks": "^8.2.8",
+    "@storybook/react": "^8.2.8",
+    "@storybook/react-webpack5": "^8.2.8",
+    "@storybook/test": "^8.2.8",
+    "storybook": "^8.2.8"
   },
   "repository": {
     "type": "git",
