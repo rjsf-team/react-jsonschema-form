@@ -4,5 +4,5 @@ module.exports = {
   testEnvironmentOptions: {
     browsers: ['chrome', 'firefox', 'safari'],
   },
-  transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
+  transformIgnorePatterns: [`node_modules/(?!(?:.pnpm/)?(${['nanoid'].join('|')}))`],
 };

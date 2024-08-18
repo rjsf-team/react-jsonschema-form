@@ -3,36 +3,35 @@
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
   "engines": {
-    "node": ">=14"
+    "node": ">=14",
+    "pnpm": ">=9"
   },
   "scripts": {
-    "publish-repo": "lerna publish",
-    "changed": "lerna changed",
-    "test": "lerna run --concurrency 2 --stream test",
-    "test:update": "lerna run --concurrency 2 --stream test:update",
+    "publish-repo": "nx release",
+    "test": "nx run-many --target=test --parallel=2",
+    "test:update": "nx run-many --target=test:update --parallel=2",
     "lint": "eslint './packages/**/*.{ts,tsx}' --quiet",
-    "cs-check": "lerna run cs-check",
-    "cs-format": "lerna run cs-format",
-    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && npm run build",
-    "build": "lerna run --stream build",
-    "build-serial": "lerna run --concurrency 1 --stream build",
-    "start": "echo 'use \"npm run build\" from main directory and then \"npm start\" in the playground package'",
-    "pre-commit:husky": "lerna run --concurrency 1 --stream precommit",
+    "cs-check": "nx run-many --target=cs-check",
+    "cs-format": "nx run-many --target=cs-format",
+    "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && rimraf packages/*/dist && pnpm build",
+    "build": "nx run-many --target=build",
+    "build-serial": "nx run-many --target=build --parallel=1",
+    "start": "echo 'use \"pnpm build\" from main directory and then \"pnpm start\" in the playground package'",
+    "pre-commit:husky": "nx run-many --target=precommit --parallel=1",
     "prepare": "husky install",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && npm update --save && npm install && npm run lint && npm run build && npm run test",
+    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --save && pnpm install && pnpm lint && pnpm build && pnpm test",
     "bump-peer-deps": "node scripts/bump-peer-deps.js",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && npm install",
     "commit-package-changes": "git add package-lock.json packages/*/package*.json && cross-env CI=skipPrecommit git commit -m 'updated package*.json after versioning' && git push",
-    "post-versioning": "echo 'This will take a while...' && npm run bump-peer-deps && npm run refresh-node-modules && npm run commit-package-changes && npm run update-version-tags",
+    "post-versioning": "echo 'This will take a while...' && pnpm bump-peer-deps && pnpm refresh-node-modules && pnpm commit-package-changes && pnpm update-version-tags",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.js) && git push -f origin $(node scripts/get-version-tag.js)"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.10",
-    "@nrwl/nx-cloud": "^15.3.5",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/estree": "^1.0.5",
@@ -54,9 +53,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
     "jest-environment-jsdom": "^29.7.0",
-    "lerna": "^6.6.2",
     "lint-staged": "^13.3.0",
-    "nx": "^15.9.2",
+    "nx": "19.6.0",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
@@ -78,5 +76,8 @@
     "packages/validator-ajv6",
     "packages/validator-ajv8",
     "packages/snapshot-tests"
-  ]
+  ],
+  "dependencies": {
+    "@nx/js": "19.6.0"
+  }
 }

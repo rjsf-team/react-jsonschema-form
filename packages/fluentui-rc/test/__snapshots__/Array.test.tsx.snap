@@ -19,7 +19,7 @@ exports[`array fields array 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -102,12 +102,12 @@ exports[`array fields array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -132,7 +132,7 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move up"
@@ -158,7 +158,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move down"
@@ -184,7 +184,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -210,7 +210,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -261,12 +261,12 @@ exports[`array fields array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -291,7 +291,7 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move up"
@@ -317,7 +317,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move down"
@@ -343,7 +343,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -369,7 +369,7 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -400,7 +400,7 @@ exports[`array fields array icons 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -460,19 +460,19 @@ exports[`array fields checkboxes 1`] = `
         className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <label
-          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
           htmlFor="field-r5__control"
           id="field-r5__label"
         />
         <div
-          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___6qc34p0_1lpqpsw ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
             aria-expanded={false}
             aria-labelledby="field-r5__label"
             autoFocus={false}
-            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
             disabled={false}
             id="root"
             name="root"
@@ -480,7 +480,6 @@ exports[`array fields checkboxes 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            onMouseOver={[Function]}
             role="combobox"
             tabIndex={0}
             type="button"
@@ -560,12 +559,12 @@ exports[`array fields empty errors array 1`] = `
                 name
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -638,12 +637,12 @@ exports[`array fields fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -684,12 +683,12 @@ exports[`array fields fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -732,11 +731,11 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="fui-Card ___tvq26a0_10panks f1p9o1ba f1sil6mw fifeqxg f899z7z f4h3tyx f18ur2pz f1lplnzb f10m5gbb fhftqfp f1k04kkk fxsr4vj fcvsdzp f22iagw f10pi13n f1ewtqcl f19n0e5 f1mdlcz9 frwkxtg f1n6gb5g f15yvnhg fo72kxq f13zj6fq f1nwj1ja f8rth92 flthirb f1lh990p ftkbnf5 f6czdpx f13hvwk3 f1i1u9k0 f1en4csx f1qnomq5 f2fl922 f1anhtl f1n2zcl3 f16v3d5c f1vx9l62 fobhde4 fx5r7kn f19chtn8 fuvs6re fy4glsf frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f226i61 f13kzufm flujwa2 fsx75g8 f15bsgw9 f14e48fq f18yb2kv fd6o370 fh1cnn4 fy7oxxb fpukqih f184ne2d f99gebs f13b0oaq f1jvq617 f8t2bz6 f11unbnk fbd201q f12nqxso f1uguk4w f1dvezut fd0oaoj fjvm52t f1cwg4i8 f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
+    className="fui-Card rfxo2k2 ___1t82e47_1fqmtk2 f1vx9l62 f14k419y f1fgo9fz fvqmfsm f3am6yf f1r5wgso frsmuga fuldkky f1eon7jj f1couhl3 f1e4n9qa fmr10b5 f7ew8k6 f1prrymk ftqa4ok f2hkw1w f8hki3x f1d2448m f1bjia2o ffh67wi f226i61 f13kzufm flujwa2 fsx75g8 f15bsgw9 f14e48fq f18yb2kv fd6o370 fpqizxz fnd8nzh f15fr7a0 fwsq40z f34ld9f fy0y4wt fbxl46w"
     role="group"
   >
     <h6
-      className="fui-Text ___1j4m6ob_ffsath0 fk6fouc fod5ikn faaz57k figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649 f1hu3pq6 f19f4twv"
+      className="fui-Text ___1xx6xg1_itqd0o0 fk6fouc fod5ikn faaz57k figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649 f1hu3pq6 f19f4twv"
     >
       Errors
     </h6>
@@ -776,13 +775,13 @@ exports[`array fields has errors 1`] = `
                 name
               </label>
               <span
-                className="fui-Input r1jtohuq ___3k9dro0_uo2dlw0 fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm fs4k3qj fcee079 f1fgmyf4 fmyw78r"
+                className="fui-Input r1oeeo9n ___3k9dro0_uo2dlw0 fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm fs4k3qj fcee079 f1fgmyf4 fmyw78r"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   aria-invalid={true}
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -866,12 +865,12 @@ exports[`array fields no errors 1`] = `
                 name
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_name__error root_name__description root_name__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_name"
                   name="root_name"
@@ -922,7 +921,7 @@ exports[`with title and description array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -933,7 +932,7 @@ exports[`with title and description array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -945,7 +944,7 @@ exports[`with title and description array 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -1006,7 +1005,7 @@ exports[`with title and description array icons 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -1017,7 +1016,7 @@ exports[`with title and description array icons 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -1050,12 +1049,12 @@ exports[`with title and description array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -1069,7 +1068,7 @@ exports[`with title and description array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -1078,7 +1077,7 @@ exports[`with title and description array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a test item description
@@ -1096,7 +1095,7 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move up"
@@ -1122,7 +1121,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move down"
@@ -1148,7 +1147,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -1174,7 +1173,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -1226,12 +1225,12 @@ exports[`with title and description array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -1245,7 +1244,7 @@ exports[`with title and description array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -1254,7 +1253,7 @@ exports[`with title and description array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a test item description
@@ -1272,7 +1271,7 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move up"
@@ -1298,7 +1297,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move down"
@@ -1324,7 +1323,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -1350,7 +1349,7 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -1381,7 +1380,7 @@ exports[`with title and description array icons 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -1441,21 +1440,21 @@ exports[`with title and description checkboxes 1`] = `
         className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <label
-          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
           htmlFor="field-rn__control"
           id="field-rn__label"
         >
           Test field
         </label>
         <div
-          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___6qc34p0_1lpqpsw ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
             aria-expanded={false}
             aria-labelledby="field-rn__label"
             autoFocus={false}
-            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
             disabled={false}
             id="root"
             name="root"
@@ -1463,7 +1462,6 @@ exports[`with title and description checkboxes 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            onMouseOver={[Function]}
             role="combobox"
             tabIndex={0}
             type="button"
@@ -1491,7 +1489,7 @@ exports[`with title and description checkboxes 1`] = `
         </div>
       </div>
       <p
-        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
         style={
           {
             "marginBottom": 0,
@@ -1500,7 +1498,7 @@ exports[`with title and description checkboxes 1`] = `
         }
       >
         <span
-          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
           a test description
@@ -1540,7 +1538,7 @@ exports[`with title and description fixed array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -1551,7 +1549,7 @@ exports[`with title and description fixed array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -1584,12 +1582,12 @@ exports[`with title and description fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -1603,7 +1601,7 @@ exports[`with title and description fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -1612,7 +1610,7 @@ exports[`with title and description fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a test item description
@@ -1647,12 +1645,12 @@ exports[`with title and description fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -1667,7 +1665,7 @@ exports[`with title and description fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -1676,7 +1674,7 @@ exports[`with title and description fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a test item description
@@ -1721,7 +1719,7 @@ exports[`with title and description from both array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -1732,7 +1730,7 @@ exports[`with title and description from both array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -1744,7 +1742,7 @@ exports[`with title and description from both array 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -1805,7 +1803,7 @@ exports[`with title and description from both array icons 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -1816,7 +1814,7 @@ exports[`with title and description from both array icons 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -1849,12 +1847,12 @@ exports[`with title and description from both array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -1868,7 +1866,7 @@ exports[`with title and description from both array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -1877,7 +1875,7 @@ exports[`with title and description from both array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a fancier item description
@@ -1895,7 +1893,7 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move up"
@@ -1921,7 +1919,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move down"
@@ -1947,7 +1945,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -1973,7 +1971,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -2025,12 +2023,12 @@ exports[`with title and description from both array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -2044,7 +2042,7 @@ exports[`with title and description from both array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -2053,7 +2051,7 @@ exports[`with title and description from both array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a fancier item description
@@ -2071,7 +2069,7 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move up"
@@ -2097,7 +2095,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move down"
@@ -2123,7 +2121,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -2149,7 +2147,7 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -2180,7 +2178,7 @@ exports[`with title and description from both array icons 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -2240,21 +2238,21 @@ exports[`with title and description from both checkboxes 1`] = `
         className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <label
-          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
           htmlFor="field-r1h__control"
           id="field-r1h__label"
         >
           My Field
         </label>
         <div
-          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___6qc34p0_1lpqpsw ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
             aria-expanded={false}
             aria-labelledby="field-r1h__label"
             autoFocus={false}
-            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
             disabled={false}
             id="root"
             name="root"
@@ -2262,7 +2260,6 @@ exports[`with title and description from both checkboxes 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            onMouseOver={[Function]}
             role="combobox"
             tabIndex={0}
             type="button"
@@ -2290,7 +2287,7 @@ exports[`with title and description from both checkboxes 1`] = `
         </div>
       </div>
       <p
-        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
         style={
           {
             "marginBottom": 0,
@@ -2299,7 +2296,7 @@ exports[`with title and description from both checkboxes 1`] = `
         }
       >
         <span
-          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
           a fancier description
@@ -2339,7 +2336,7 @@ exports[`with title and description from both fixed array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -2350,7 +2347,7 @@ exports[`with title and description from both fixed array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -2383,12 +2380,12 @@ exports[`with title and description from both fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -2402,7 +2399,7 @@ exports[`with title and description from both fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -2411,7 +2408,7 @@ exports[`with title and description from both fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a fancier item description
@@ -2446,12 +2443,12 @@ exports[`with title and description from both fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -2466,7 +2463,7 @@ exports[`with title and description from both fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -2475,7 +2472,7 @@ exports[`with title and description from both fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a fancier item description
@@ -2520,7 +2517,7 @@ exports[`with title and description from uiSchema array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -2531,7 +2528,7 @@ exports[`with title and description from uiSchema array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -2543,7 +2540,7 @@ exports[`with title and description from uiSchema array 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -2604,7 +2601,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -2615,7 +2612,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -2648,12 +2645,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -2667,7 +2664,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -2676,7 +2673,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a fancier item description
@@ -2694,7 +2691,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move up"
@@ -2720,7 +2717,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move down"
@@ -2746,7 +2743,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -2772,7 +2769,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -2824,12 +2821,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -2843,7 +2840,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -2852,7 +2849,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a fancier item description
@@ -2870,7 +2867,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move up"
@@ -2896,7 +2893,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move down"
@@ -2922,7 +2919,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -2948,7 +2945,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -2979,7 +2976,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -3039,21 +3036,21 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <label
-          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
           htmlFor="field-r14__control"
           id="field-r14__label"
         >
           My Field
         </label>
         <div
-          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___6qc34p0_1lpqpsw ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
             aria-expanded={false}
             aria-labelledby="field-r14__label"
             autoFocus={false}
-            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
             disabled={false}
             id="root"
             name="root"
@@ -3061,7 +3058,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            onMouseOver={[Function]}
             role="combobox"
             tabIndex={0}
             type="button"
@@ -3089,7 +3085,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         </div>
       </div>
       <p
-        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
         style={
           {
             "marginBottom": 0,
@@ -3098,7 +3094,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         }
       >
         <span
-          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
           a fancier description
@@ -3138,7 +3134,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -3149,7 +3145,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -3182,12 +3178,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -3201,7 +3197,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -3210,7 +3206,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_0__description"
                   >
                     a fancier item description
@@ -3245,12 +3241,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   </span>
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -3265,7 +3261,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   />
                 </span>
                 <p
-                  className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                  className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                   style={
                     {
                       "marginBottom": 0,
@@ -3274,7 +3270,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   }
                 >
                   <span
-                    className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                    className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                     id="root_1__description"
                   >
                     a fancier item description
@@ -3321,7 +3317,7 @@ exports[`with title and description with global label off array 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -3393,12 +3389,12 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -3423,7 +3419,7 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move up"
@@ -3449,7 +3445,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move down"
@@ -3475,7 +3471,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -3501,7 +3497,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -3541,12 +3537,12 @@ exports[`with title and description with global label off array icons 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"
@@ -3571,7 +3567,7 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Move up"
@@ -3597,7 +3593,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___3xk2xj0_184e01s f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f18ktai2 fwbmr0d f44c6la"
               disabled={true}
               onClick={[Function]}
               title="Move down"
@@ -3623,7 +3619,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Copy"
@@ -3649,7 +3645,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
               disabled={false}
               onClick={[Function]}
               title="Remove"
@@ -3680,7 +3676,7 @@ exports[`with title and description with global label off array icons 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             onClick={[Function]}
             title="Add Item"
@@ -3740,21 +3736,21 @@ exports[`with title and description with global label off checkboxes 1`] = `
         className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <label
-          className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+          className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
           htmlFor="field-r1s__control"
           id="field-r1s__label"
         >
           Test field
         </label>
         <div
-          className="fui-Dropdown form-control ___1t74ezd_q04bao0 f1aa9q02 f16jpd5f f1jar5jt fyu767a f1ewtqcl ftuwxu6 f1exfvgq f10pi13n f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f14pi962 f1lh990p f1jc6hxc f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f192inf7 f5tn483 f1vxd6vx f1ojsxk5 fzkkow9 fcdblym fg706s2 fjik90z fj3muxo f1akhkt f1c1zstj f1lxtadh fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
+          className="fui-Dropdown form-control ___6qc34p0_1lpqpsw ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fv8e3ye ftb5wc6 fjw5xc1 f1xdyd5c fatpbeo fb7uyps f1cmft4k f1x58t8o f1ibeo51 f132nw8t f1htdosj fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t flmw63s f1m52nbi fvs00aa f1assf6x fqhmt4z f4ruux4"
         >
           <button
             aria-describedby="root__error root__description root__help"
             aria-expanded={false}
             aria-labelledby="field-r1s__label"
             autoFocus={false}
-            className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
+            className="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
             disabled={false}
             id="root"
             name="root"
@@ -3762,7 +3758,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            onMouseOver={[Function]}
             role="combobox"
             tabIndex={0}
             type="button"
@@ -3790,7 +3785,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         </div>
       </div>
       <p
-        className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+        className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
         style={
           {
             "marginBottom": 0,
@@ -3799,7 +3794,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         }
       >
         <span
-          className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+          className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
           id="root__description"
         >
           a test description
@@ -3850,12 +3845,12 @@ exports[`with title and description with global label off fixed array 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_0__error root_0__description root_0__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_0"
                     name="root_0"
@@ -3885,12 +3880,12 @@ exports[`with title and description with global label off fixed array 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_1__error root_1__description root_1__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_1"
                     name="root_1"

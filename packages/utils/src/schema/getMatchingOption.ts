@@ -46,7 +46,7 @@ export default function getMatchingOption<
     // If we have a discriminator field, then we will use this to make the determination
     if (discriminatorField && has(option, [PROPERTIES_KEY, discriminatorField])) {
       const value = get(formData, discriminatorField);
-      const discriminator = get(option, [PROPERTIES_KEY, discriminatorField], {});
+      const discriminator = get(option, [PROPERTIES_KEY, discriminatorField], {}) as S;
       if (validator.isValid(discriminator, value, rootSchema)) {
         return i;
       }

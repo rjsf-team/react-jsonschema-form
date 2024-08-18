@@ -15,7 +15,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/fluent-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/fluent-ui.esm.js --format=umd --file=dist/fluent-ui.umd.js --name=@rjsf/fluent-ui",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "@fluentui/react": ">= 7",
-    "@rjsf/core": "^5.20.x",
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "react": "^16.14.0 || >=17"
   },
   "devDependencies": {
@@ -46,12 +46,12 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@fluentui/react": "^8.115.3",
-    "@rjsf/core": "^5.20.1",
-    "@rjsf/snapshot-tests": "^5.20.1",
-    "@rjsf/utils": "^5.20.1",
-    "@rjsf/validator-ajv8": "^5.20.1",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
     "@types/react-test-renderer": "^18.0.7",
@@ -94,5 +94,6 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21"
-  }
+  },
+  "nx": {}
 }

@@ -66,7 +66,7 @@ export default function DemoFrame(props: DemoFrameProps) {
     setEmotionCache(
       createCache({
         key: 'css',
-        prepend: true,
+        insertionPoint: instanceRef.current.contentWindow['emotion-insertion-point'],
         container: instanceRef.current.contentWindow['demo-frame-jss'],
       })
     );

@@ -12723,7 +12723,7 @@ exports[`single fields slider field 1`] = `
                 "clip": "rect(0 0 0 0)",
                 "direction": "ltr",
                 "height": "100%",
-                "margin": -1,
+                "margin": "-1px",
                 "overflow": "hidden",
                 "padding": 0,
                 "position": "absolute",

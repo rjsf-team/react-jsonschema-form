@@ -11,8 +11,12 @@ export default defineConfig({
     open: process.env.NODE_ENV !== 'production',
   }, // maintain the old webpack behavior in dev
   plugins: [react()],
+  optimizeDeps: {
+    // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
+    exclude: ['@rjsf/validator-ajv8', '@rjsf/validator-ajv6'],
+  },
   resolve: {
-    preserveSymlinks: true, // Fixes https://github.com/rjsf-team/react-jsonschema-form/issues/3228
+    dedupe: ['@emotion/react'],
     alias: {
       // mapping packages in monorepo to make vite use sources directly avoiding build step
       '@rjsf/antd': path.resolve(__dirname, '../antd/src'),

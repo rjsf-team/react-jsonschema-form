@@ -19,7 +19,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv6.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv6.esm.js --format=umd --file=dist/validator-ajv6.umd.js --name=@rjsf/validator-ajv6",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -37,7 +37,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.20.x"
+    "@rjsf/utils": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -46,10 +46,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/utils": "^5.20.1",
+    "@rjsf/utils": "workspace:^",
     "@types/jest": "^29.5.12",
     "@types/json-schema": "^7.0.15",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.7",
     "babel-jest": "^29.7.0",
     "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
@@ -79,5 +79,6 @@
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "nx": {}
 }

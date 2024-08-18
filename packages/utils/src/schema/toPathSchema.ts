@@ -113,7 +113,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     }
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
-      const field = get(schema, [PROPERTIES_KEY, property]);
+      const field = get(schema, [PROPERTIES_KEY, property]) as unknown as S;
       (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(
         validator,
         field,
