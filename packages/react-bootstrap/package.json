@@ -19,7 +19,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/react-bootstrap.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/react-bootstrap.esm.js --format=umd --file=dist/react-bootstrap.umd.js --name=@rjsf/react-bootstrap",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -33,8 +33,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^5.20.x",
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "react": "^16.14.0 || >=17",
     "react-bootstrap": "^2.0.0"
   },
@@ -49,10 +49,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.20.1",
-    "@rjsf/snapshot-tests": "^5.20.1",
-    "@rjsf/utils": "^5.20.1",
-    "@rjsf/validator-ajv8": "^5.20.1",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
@@ -93,5 +93,6 @@
   "license": "MIT",
   "dependencies": {
     "@react-icons/all-files": "^4.1.0"
-  }
+  },
+  "nx": {}
 }

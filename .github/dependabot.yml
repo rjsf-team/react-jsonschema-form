@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: 'monthly'
 
-  - package-ecosystem: 'npm'
+  - package-ecosystem: 'pnpm'
     directory: '/'
     schedule:
       interval: 'monthly'

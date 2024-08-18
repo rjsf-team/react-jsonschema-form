@@ -140,3 +140,6 @@ out/
 
 # typescript tsbuildinfo
 *.tsbuildinfo
+
+.nx/cache
+.nx/workspace-data

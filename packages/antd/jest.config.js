@@ -7,5 +7,5 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
   },
-  transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
+  transformIgnorePatterns: [`node_modules/(?!(?:.pnpm/)?(${['nanoid'].join('|')}))`],
 };

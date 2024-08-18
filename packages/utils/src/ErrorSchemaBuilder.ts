@@ -39,7 +39,9 @@ export default class ErrorSchemaBuilder<T = any> {
    */
   private getOrCreateErrorBlock(pathOfError?: string | string[]) {
     const hasPath = (Array.isArray(pathOfError) && pathOfError.length > 0) || typeof pathOfError === 'string';
-    let errorBlock: ErrorSchema = hasPath ? get(this.errorSchema, pathOfError) : this.errorSchema;
+    let errorBlock: ErrorSchema = hasPath
+      ? get(this.errorSchema as Record<string, unknown>, pathOfError)
+      : this.errorSchema;
     if (!errorBlock && pathOfError) {
       errorBlock = {};
       set(this.errorSchema, pathOfError, errorBlock);

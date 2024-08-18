@@ -19,7 +19,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/utils.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/utils.esm.js --format=umd --file=dist/utils.umd.js --name=@rjsf/utils",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -52,7 +52,7 @@
     "@types/jest": "^29.5.12",
     "@types/json-schema": "^7.0.15",
     "@types/json-schema-merge-allof": "^0.6.5",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.2.58",
     "@types/react-is": "^18.2.4",
     "@types/react-test-renderer": "^18.0.7",
@@ -85,5 +85,6 @@
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "nx": {}
 }

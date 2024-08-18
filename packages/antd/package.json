@@ -10,7 +10,7 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/antd.esm.js --format=umd --file=dist/antd.umd.js --name=@rjsf/antd",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0 || ^5.0.0",
-    "@rjsf/core": "^5.20.x",
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
     "antd": "^4.24.0 || ^5.8.5",
     "dayjs": "^1.8.0",
     "react": "^16.14.0 || >=17"
@@ -43,8 +43,7 @@
   "dependencies": {
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
-    "rc-picker": "2.7.6"
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.8.1",
@@ -56,13 +55,13 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.20.1",
-    "@rjsf/snapshot-tests": "^5.20.1",
-    "@rjsf/utils": "^5.20.1",
-    "@rjsf/validator-ajv8": "^5.20.1",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@rollup/plugin-replace": "^5.0.5",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.14.202",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
     "@types/react-test-renderer": "^18.0.7",
@@ -106,5 +105,6 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "nx": {}
 }

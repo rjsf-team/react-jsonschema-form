@@ -66,7 +66,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       const fieldId = idSchema[ID_KEY] + idSeparator + name;
       (idSchema as IdSchema<GenericObjectType>)[name] = toIdSchemaInternal<T, S, F>(
         validator,
-        isObject(field) ? field : {},
+        (isObject(field) ? field : {}) as S,
         idPrefix,
         idSeparator,
         fieldId,

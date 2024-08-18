@@ -1,5 +1,5 @@
 module.exports = {
   verbose: true,
   testEnvironment: 'jsdom',
-  transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
+  transformIgnorePatterns: [`node_modules/(?!(?:.pnpm/)?(${['nanoid'].join('|')}))`],
 };

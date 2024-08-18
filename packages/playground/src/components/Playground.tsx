@@ -168,6 +168,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               head={
                 <>
                   <link rel='stylesheet' id='theme' href={stylesheet || ''} />
+                  <meta id={'emotion-insertion-point'} />
                 </>
               }
               style={{

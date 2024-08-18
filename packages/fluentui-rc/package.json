@@ -7,12 +7,12 @@
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "pnpm build:ts && pnpm build:cjs && pnpm build:esm && pnpm build:umd",
     "cs-check": "prettier -l \"{src,test,testSnap}/**/*.[jt]s?(x)\"",
     "cs-format": "prettier \"{src,test,testSnap}/**/*.[jt]s?(x)\" --write",
     "lint": "eslint src test",
     "precommit": "lint-staged",
-    "publish-to-npm": "npm run build && npm publish",
+    "publish-to-npm": "pnpm build && pnpm publish",
     "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest",
     "test:update": "jest --u",
@@ -37,7 +37,7 @@
     "node": ">=14"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/utils": "workspace:^",
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
@@ -52,10 +52,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.20.1",
-    "@rjsf/snapshot-tests": "^5.20.1",
-    "@rjsf/utils": "^5.20.1",
-    "@rjsf/validator-ajv8": "^5.20.1",
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
@@ -93,5 +93,6 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "nx": {}
 }

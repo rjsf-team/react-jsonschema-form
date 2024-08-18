@@ -278,11 +278,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
           ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
           : schema;
-      const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
-        (acc: GenericObjectType, key: string) => {
-          // Compute the defaults for this node, with the parent defaults we might
-          // have from a previous run: defaults[key].
-          const computedDefault = computeDefaults<T, S, F>(validator, get(retrievedSchema, [PROPERTIES_KEY, key]), {
+      const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce((acc, key) => {
+        // Compute the defaults for this node, with the parent defaults we might
+        // have from a previous run: defaults[key].
+        const computedDefault = computeDefaults<T, S, F>(
+          validator,
+          get(retrievedSchema, [PROPERTIES_KEY, key]) as unknown as S,
+          {
             rootSchema,
             _recurseList,
             experimental_defaultFormStateBehavior,
@@ -290,20 +292,19 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
             parentDefaults: get(defaults, [key]),
             rawFormData: get(formData, [key]),
             required: retrievedSchema.required?.includes(key),
-          });
-          maybeAddDefaultToObject<T>(
-            acc,
-            key,
-            computedDefault,
-            includeUndefinedValues,
-            required,
-            retrievedSchema.required,
-            experimental_defaultFormStateBehavior
-          );
-          return acc;
-        },
-        {}
-      ) as T;
+          }
+        );
+        maybeAddDefaultToObject<T>(
+          acc,
+          key,
+          computedDefault,
+          includeUndefinedValues,
+          required,
+          retrievedSchema.required,
+          experimental_defaultFormStateBehavior
+        );
+        return acc;
+      }, {}) as T;
       if (retrievedSchema.additionalProperties) {
         // as per spec additionalProperties may be either schema or boolean
         const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)

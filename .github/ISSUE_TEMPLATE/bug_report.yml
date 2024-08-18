@@ -71,13 +71,15 @@ body:
       label: Environment
       description: |
         examples:
-          - **OS**: Ubuntu 20.04
-          - **Node**: 13.14.0
-          - **npm**: 7.6.3
+          - **OS**: Ubuntu 24.04
+          - **Browser**: Chrome 127.0
+          - **Node**: 20.9.0
+          - **Package Manager**: npm 10.8.1
       value: |
         - OS:
+        - Browser:
         - Node:
-        - npm:
+        - Package Manager:
       render: markdown
     validations:
       required: false

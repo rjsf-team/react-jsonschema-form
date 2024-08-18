@@ -78,8 +78,8 @@ export default function sanitizeDataForNewSchema<
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
       const formValue = get(data, key);
-      let oldKeyedSchema: S = get(oldSchema, [PROPERTIES_KEY, key], {});
-      let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {});
+      let oldKeyedSchema: S = get(oldSchema, [PROPERTIES_KEY, key], {}) as S;
+      let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {}) as S;
       // Resolve the refs if they exist
       if (has(oldKeyedSchema, REF_KEY)) {
         oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue);
