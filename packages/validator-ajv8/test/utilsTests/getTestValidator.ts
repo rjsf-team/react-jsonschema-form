@@ -16,14 +16,14 @@ import { customizeValidator, CustomValidatorOptionsType } from '../../src';
  *
  * @param options
  */
-export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType {
+export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType<T> {
   const validator = customizeValidator<T>(options);
   return {
     validateFormData(
       formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
-      transformErrors?: ErrorTransformer
+      transformErrors?: ErrorTransformer<T>
     ): ValidationData<T> {
       return validator.validateFormData(formData, schema, customValidate, transformErrors);
     },
@@ -38,5 +38,8 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
     },
     // This is intentionally a no-op as we are using the real validator here
     setReturnValues() {},
+    reset() {
+      validator.reset?.();
+    },
   };
 }

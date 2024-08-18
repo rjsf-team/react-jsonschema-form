@@ -55,18 +55,25 @@ export enum TranslatableString {
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel = '%1 Key',
   // Strings with replaceable parameters AND/OR that support markdown and html
-  /** Invalid object field configuration as provided by the ObjectField */
-  InvalidObjectField = 'Invalid "%1" object field configuration: <em>%2</em>.',
+  /** Invalid object field configuration as provided by the ObjectField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  InvalidObjectField = 'Invalid "%1" object field configuration: _%2_.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField = 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField */
-  UnsupportedFieldWithId = 'Unsupported field schema for field <code>%1</code>.',
-  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField */
-  UnsupportedFieldWithReason = 'Unsupported field schema: <em>%1</em>.',
-  /** Unsupported field schema, where %1 and %2 will be replaced by the idSchema.$id and reason strings, respectively,
-   * as provided by UnsupportedField
+  /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field <code>%1</code>: <em>%2</em>.',
+  UnsupportedFieldWithId = 'Unsupported field schema for field `%1`.',
+  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  UnsupportedFieldWithReason = 'Unsupported field schema: _%1_.',
+  /** Unsupported field schema, where %1 and %2 will be replaced by the idSchema.$id and reason strings, respectively,
+   * as provided by UnsupportedField.
+   * NOTE: Use markdown notation rather than html tags.
+   */
+  UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field `%1`: _%2_.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */

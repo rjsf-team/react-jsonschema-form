@@ -38,10 +38,10 @@ export default function CheckboxesWidget<
   const chakraProps = getChakra({ uiSchema });
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement | any>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
   const row = options ? options.inline : false;
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];

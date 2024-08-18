@@ -251,68 +251,6 @@ render(
 );
 ```
 
-### `allOf`
-
-Optional enumerated flag controlling how empty defaults are populated when `allOf` schemas are provided, defaulting to `skipDefaults`:
-
-| Flag Value         | Description                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `skipDefaults`     | Skip parsing defaults from `allOf` schemas                                                   |
-| `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax |
-
-```tsx
-import { RJSFSchema } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
-
-const schema: RJSFSchema = {
-  title: 'Example',
-  type: 'object',
-  properties: {
-    animalInfo: {
-      properties: {
-        animal: {
-          type: 'string',
-          default: 'Cat',
-          enum: ['Cat', 'Fish'],
-        },
-      },
-      allOf: [
-        {
-          if: {
-            properties: {
-              animal: {
-                const: 'Cat',
-              },
-            },
-          },
-          then: {
-            properties: {
-              food: {
-                type: 'string',
-                default: 'meat',
-                enum: ['meat', 'grass', 'fish'],
-              },
-            },
-            required: ['food'],
-          },
-        },
-      ],
-    },
-  },
-};
-
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    experimental_defaultFormStateBehavior={{
-      allOf: 'populateDefaults',
-    }}
-  />,
-  document.getElementById('app')
-);
-```
-
 ## disabled
 
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.

@@ -58,6 +58,11 @@ export default function getTestValidator<T = any>({
           testValidator._errorList = errorList;
         }
       },
+      reset() {
+        testValidator._data = [];
+        testValidator._isValid = [];
+        testValidator._errorList = [];
+      },
     },
   };
   return testValidator.validator;

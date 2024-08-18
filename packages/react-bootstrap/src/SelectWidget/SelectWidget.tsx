@@ -45,6 +45,7 @@ export default function SelectWidget<
     }
   }
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const showPlaceholderOption = !multiple && schema.default === undefined;
 
   return (
     <FormSelect
@@ -76,7 +77,7 @@ export default function SelectWidget<
       }}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {!multiple && schema.default === undefined && <option value=''>{placeholder}</option>}
+      {showPlaceholderOption && <option value=''>{placeholder}</option>}
       {(enumOptions as any).map(({ value, label }: any, i: number) => {
         const disabled: any = Array.isArray(enumDisabled) && (enumDisabled as any).indexOf(value) != -1;
         return (

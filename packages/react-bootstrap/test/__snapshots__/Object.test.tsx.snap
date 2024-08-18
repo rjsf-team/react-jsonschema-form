@@ -10,7 +10,6 @@ exports[`object fields additionalProperties 1`] = `
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >
@@ -77,7 +76,6 @@ exports[`object fields additionalProperties 1`] = `
                     type="text"
                     value="foo"
                   />
-                  
                 </div>
               </div>
               <div
@@ -184,7 +182,6 @@ exports[`object fields object 1`] = `
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >
@@ -226,7 +223,6 @@ exports[`object fields object 1`] = `
                   type="text"
                   value=""
                 />
-                
               </div>
             </div>
           </div>
@@ -270,7 +266,6 @@ exports[`object fields object 1`] = `
                   type="number"
                   value=""
                 />
-                
               </div>
             </div>
           </div>
@@ -300,7 +295,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >
@@ -367,7 +361,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     type="text"
                     value="should appear"
                   />
-                  
                 </div>
               </div>
               <div
@@ -564,7 +557,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     type="text"
                     value="foo"
                   />
-                  
                 </div>
               </div>
               <div
@@ -761,7 +753,6 @@ exports[`object fields with title and description from both additionalProperties
                     type="text"
                     value="foo"
                   />
-                  
                 </div>
               </div>
               <div
@@ -1119,7 +1110,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                     type="text"
                     value="foo"
                   />
-                  
                 </div>
               </div>
               <div
@@ -1477,7 +1467,6 @@ exports[`object fields with title and description from uiSchema show add button 
                     type="text"
                     value="should appear"
                   />
-                  
                 </div>
               </div>
               <div
@@ -1835,7 +1824,6 @@ exports[`object fields with title and description show add button and fields if 
                     type="text"
                     value="should appear"
                   />
-                  
                 </div>
               </div>
               <div
@@ -1942,7 +1930,6 @@ exports[`object fields with title and description with global label off addition
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >
@@ -2109,7 +2096,6 @@ exports[`object fields with title and description with global label off object 1
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >
@@ -2211,7 +2197,6 @@ exports[`object fields with title and description with global label off show add
     className="form-group field field-object"
   >
     <div>
-      
       <div
         className="p-0 container-fluid"
       >

@@ -131,7 +131,6 @@ exports[`object fields additionalProperties 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -340,7 +339,6 @@ exports[`object fields object 1`] = `
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -575,7 +573,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -3088,7 +3085,6 @@ exports[`object fields with title and description with global label off addition
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -3285,7 +3281,6 @@ exports[`object fields with title and description with global label off object 1
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >
@@ -3506,7 +3501,6 @@ exports[`object fields with title and description with global label off show add
       className="chakra-form-control emotion-0"
       role="group"
     >
-      
       <div
         className="emotion-1"
       >

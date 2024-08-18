@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 
 import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import isObject from '../isObject';
-import { FormContextType, IdSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import { FormContextType, GenericObjectType, IdSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import retrieveSchema from './retrieveSchema';
 import getSchemaType from '../getSchemaType';
 
@@ -59,12 +59,12 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     );
   }
   const $id = id || idPrefix;
-  const idSchema: IdSchema = { $id } as IdSchema<T>;
+  const idSchema: IdSchema<T> = { $id } as IdSchema<T>;
   if (getSchemaType<S>(schema) === 'object' && PROPERTIES_KEY in schema) {
     for (const name in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, name]);
       const fieldId = idSchema[ID_KEY] + idSeparator + name;
-      idSchema[name] = toIdSchemaInternal<T, S, F>(
+      (idSchema as IdSchema<GenericObjectType>)[name] = toIdSchemaInternal<T, S, F>(
         validator,
         isObject(field) ? field : {},
         idPrefix,
@@ -78,7 +78,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       );
     }
   }
-  return idSchema as IdSchema<T>;
+  return idSchema;
 }
 
 /** Generates an `IdSchema` object for the `schema`, recursively

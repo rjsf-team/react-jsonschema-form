@@ -14,7 +14,6 @@ exports[`object fields additionalProperties 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -113,7 +112,6 @@ exports[`object fields additionalProperties 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -261,7 +259,6 @@ exports[`object fields object 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -315,7 +312,6 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
         <div
           className="ms-Grid-col ms-sm12  field field-number"
@@ -364,7 +360,6 @@ exports[`object fields object 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -420,7 +415,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -519,7 +513,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -777,7 +770,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1035,7 +1027,6 @@ exports[`object fields with title and description from both additionalProperties
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1481,7 +1472,6 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -1927,7 +1917,6 @@ exports[`object fields with title and description from uiSchema show add button 
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -2373,7 +2362,6 @@ exports[`object fields with title and description show add button and fields if 
                   </div>
                 </div>
               </div>
-              
             </div>
             <div
               className="ms-Grid-col ms-sm4 ms-md4 ms-lg2"
@@ -2521,7 +2509,6 @@ exports[`object fields with title and description with global label off addition
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -2759,7 +2746,6 @@ exports[`object fields with title and description with global label off object 1
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -2900,7 +2886,6 @@ exports[`object fields with title and description with global label off show add
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"

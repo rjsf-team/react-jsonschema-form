@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { render } from 'react-dom';
+import { render, fireEvent, act } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -587,7 +587,7 @@ describe('uiSchema', () => {
       const domNode = document.createElement('div');
       document.body.appendChild(domNode);
       render(<Form {...props} />, domNode);
-      expect(domNode.querySelector(selector)).eql(document.activeElement);
+      expect(document.querySelector(selector)).eql(document.activeElement);
       document.body.removeChild(domNode);
     };
 
@@ -914,10 +914,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('textarea'), {
-          target: {
-            value: 'b',
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('textarea'), {
+            target: {
+              value: 'b',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -967,10 +969,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=password]'), {
-          target: {
-            value: 'b',
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('[type=password]'), {
+            target: {
+              value: 'b',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1019,11 +1023,14 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=color]'), {
-          target: {
-            value: '#001122',
-          },
+        act(() => {
+          Simulate.change(node.querySelector('[type=color]'), {
+            target: {
+              value: '#001122',
+            },
+          });
         });
+
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: { foo: '#001122' },
         });
@@ -1118,10 +1125,8 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelectorAll('[type=radio]')[1], {
-          target: {
-            checked: true,
-          },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
         });
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
@@ -1178,10 +1183,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=number]'), {
-          target: {
-            value: '6.28',
-          },
+        act(() => {
+          Simulate.change(node.querySelector('[type=number]'), {
+            target: {
+              value: '6.28',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1265,10 +1272,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=range]'), {
-          target: {
-            value: '6.28',
-          },
+        act(() => {
+          Simulate.change(node.querySelector('[type=range]'), {
+            target: {
+              value: '6.28',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1362,10 +1371,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelectorAll('[type=radio]')[2], {
-          target: {
-            checked: true,
-          },
+        act(() => {
+          Simulate.change(node.querySelectorAll('[type=radio]')[2], {
+            target: {
+              checked: true,
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1465,10 +1476,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=number]'), {
-          target: {
-            value: '6',
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('[type=number]'), {
+            target: {
+              value: '6',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1515,10 +1528,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('[type=range]'), {
-          target: {
-            value: '6',
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('[type=range]'), {
+            target: {
+              value: '6',
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1575,10 +1590,8 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelectorAll('[type=radio]')[1], {
-          target: {
-            checked: true,
-          },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1687,10 +1700,8 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelectorAll('[type=radio]')[1], {
-          target: {
-            checked: true,
-          },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=radio]')[1]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1711,10 +1722,8 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelectorAll('[type=radio]')[0], {
-          target: {
-            checked: true,
-          },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=radio]')[0]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1756,11 +1765,13 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('select'), {
-          // DOM option change events always return strings
-          target: {
-            value: 0, // use index
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('select'), {
+            // DOM option change events always return strings
+            target: {
+              value: 0, // use index
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1781,10 +1792,12 @@ describe('uiSchema', () => {
           },
         });
 
-        Simulate.change(node.querySelector('select'), {
-          target: {
-            value: 1, // use index
-          },
+        act(() => {
+          fireEvent.change(node.querySelector('select'), {
+            target: {
+              value: 1, // use index
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -2492,9 +2505,7 @@ describe('uiSchema', () => {
       });
 
       describe('ObjectField', () => {
-        let node;
-
-        beforeEach(() => {
+        it('should mark as readonly an ObjectField', () => {
           const schema = {
             type: 'object',
             properties: {
@@ -2510,12 +2521,40 @@ describe('uiSchema', () => {
           const uiSchema = {};
 
           let rendered = createFormComponent({ schema, uiSchema });
-          node = rendered.node;
-        });
+          const node = rendered.node;
 
-        it('should mark as readonly an ObjectField', () => {
           const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
           expect(disabled).eql([true, true]);
+        });
+
+        it('should not mark as readonly even if globalOptions set readonly', () => {
+          const schema = {
+            type: 'object',
+            properties: {
+              foo: {
+                type: 'string',
+              },
+              bar: {
+                type: 'string',
+              },
+            },
+            readOnly: true,
+          };
+
+          const uiSchema = {
+            'ui:globalOptions': {
+              readonly: true,
+            },
+            foo: {
+              'ui:readonly': false,
+            },
+          };
+
+          let rendered = createFormComponent({ schema, uiSchema });
+          const node = rendered.node;
+
+          const disabled = [].map.call(node.querySelectorAll('[type=text]'), (node) => node.hasAttribute('readonly'));
+          expect(disabled).eql([false, true]);
         });
       });
     });

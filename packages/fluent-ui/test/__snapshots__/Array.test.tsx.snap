@@ -169,7 +169,6 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -353,7 +352,6 @@ exports[`array fields array icons 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -631,7 +629,6 @@ exports[`array fields checkboxes 1`] = `
         </span>
       </div>
     </div>
-    
   </div>
   <div>
     <br />
@@ -684,7 +681,6 @@ exports[`array fields empty errors array 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -738,7 +734,6 @@ exports[`array fields empty errors array 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -845,7 +840,6 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -903,7 +897,6 @@ exports[`array fields fixed array 1`] = `
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -991,7 +984,6 @@ exports[`array fields has errors 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -1052,7 +1044,6 @@ exports[`array fields has errors 1`] = `
               />
             </span>
           </div>
-          
           <div
             className="ms-List"
             id="root_name__error"
@@ -1072,9 +1063,7 @@ exports[`array fields has errors 1`] = `
                   data-automationid="ListCell"
                   data-list-index={0}
                   role="listitem"
-                >
-                  
-                </div>
+                />
               </div>
             </div>
           </div>
@@ -1133,7 +1122,6 @@ exports[`array fields no errors 1`] = `
       }
     }
   >
-    
     <div
       className="ms-Grid"
       dir="ltr"
@@ -1187,7 +1175,6 @@ exports[`array fields no errors 1`] = `
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>

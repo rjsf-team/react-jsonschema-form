@@ -150,12 +150,12 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, idSchema, registry);
-  const disabled = Boolean(props.disabled || uiOptions.disabled);
-  const readonly = Boolean(props.readonly || uiOptions.readonly || props.schema.readOnly || schema.readOnly);
+  const disabled = Boolean(uiOptions.disabled ?? props.disabled);
+  const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
   const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
-  const autofocus = Boolean(props.autofocus || uiOptions.autofocus);
+  const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
   }
@@ -201,8 +201,11 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
 
-  const richDescription = uiOptions.enableMarkdownInDescription ? <Markdown>{description}</Markdown> : description;
-
+  const richDescription = uiOptions.enableMarkdownInDescription ? (
+    <Markdown options={{ disableParsingRawHTML: true }}>{description}</Markdown>
+  ) : (
+    description
+  );
   const help = uiOptions.help;
   const hidden = uiOptions.widget === 'hidden';
 

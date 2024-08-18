@@ -1,9 +1,12 @@
 import { expect } from 'chai';
-import { Simulate, act } from 'react-dom/test-utils';
+import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
 import SchemaField from '../src/components/fields/SchemaField';
+import ArrayField from '../src/components/fields/ArrayField';
+import { TextWidgetTest } from './StringField.test';
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
 const ExposedArrayKeyTemplate = function (props) {
@@ -154,6 +157,26 @@ const ArrayFieldTestItemTemplate = (props) => {
       )}
     </div>
   );
+};
+
+const ArrayFieldTest = (props) => {
+  const onChangeTest = (newFormData, errorSchema, id) => {
+    if (Array.isArray(newFormData) && newFormData.length === 1) {
+      const itemValue = newFormData[0]?.text;
+      if (itemValue !== 'Appie') {
+        const raiseError = {
+          ...errorSchema,
+          0: {
+            text: {
+              __errors: ['Value must be "Appie"'],
+            },
+          },
+        };
+        props.onChange(newFormData, raiseError, id);
+      }
+    }
+  };
+  return <ArrayField {...props} onChange={onChangeTest} />;
 };
 
 describe('ArrayField', () => {
@@ -402,7 +425,9 @@ describe('ArrayField', () => {
     it('should add a new field when clicking the add button', () => {
       const { node } = createFormComponent({ schema });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
     });
@@ -413,7 +438,9 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.array-item').hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
@@ -424,7 +451,9 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: CustomOnAddClickTemplate },
       });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.array-item')).not.to.be.null;
     });
@@ -458,7 +487,9 @@ describe('ArrayField', () => {
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1] ? startRows[1].getAttribute(ArrayKeyDataAttr) : undefined;
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -524,8 +555,13 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(addBeforeButtons[0]);
-      Simulate.click(addAfterButtons[0]);
+      act(() => {
+        fireEvent.click(addBeforeButtons[0]);
+      });
+
+      act(() => {
+        fireEvent.click(addAfterButtons[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
@@ -574,7 +610,9 @@ describe('ArrayField', () => {
     it('should mark a non-null array item widget as required', () => {
       const { node } = createFormComponent({ schema });
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelector('.field-string input[type=text]').required).eql(true);
     });
@@ -615,7 +653,9 @@ describe('ArrayField', () => {
       });
       const moveDownBtns = node.querySelectorAll('.array-item-move-down');
 
-      Simulate.click(moveDownBtns[0]);
+      act(() => {
+        fireEvent.click(moveDownBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -631,7 +671,9 @@ describe('ArrayField', () => {
       });
       const moveUpBtns = node.querySelectorAll('.array-item-move-up');
 
-      Simulate.click(moveUpBtns[2]);
+      act(() => {
+        fireEvent.click(moveUpBtns[2]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -652,7 +694,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(moveDownBtns[0]);
+      act(() => {
+        fireEvent.click(moveDownBtns[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -680,7 +724,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
-      Simulate.click(moveUpBtns[2]);
+      act(() => {
+        fireEvent.click(moveUpBtns[2]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -730,7 +776,9 @@ describe('ArrayField', () => {
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
 
       const button = node.querySelector('.item-0 .array-item-move-to-2');
-      Simulate.click(button);
+      act(() => {
+        fireEvent.click(button);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs[0].value).eql('bar');
@@ -811,7 +859,9 @@ describe('ArrayField', () => {
       });
       const dropBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(1);
@@ -825,11 +875,16 @@ describe('ArrayField', () => {
       });
       const deleteBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(deleteBtns[0]);
+      act(() => {
+        fireEvent.click(deleteBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
 
-      Simulate.change(inputs[0], { target: { value: 'fuzz' } });
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'fuzz' } });
+      });
+
       expect(inputs).to.have.length.of(2);
       expect(inputs[0].value).eql('fuzz');
       expect(inputs[1].value).eql('baz');
@@ -846,7 +901,9 @@ describe('ArrayField', () => {
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
 
       const dropBtns = node.querySelectorAll('.array-item-remove');
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       const endRows = node.querySelectorAll('.array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -899,7 +956,9 @@ describe('ArrayField', () => {
       });
 
       try {
-        Simulate.submit(node);
+        act(() => {
+          fireEvent.submit(node);
+        });
       } catch (e) {
         // Silencing error thrown as failure is expected here
       }
@@ -908,7 +967,9 @@ describe('ArrayField', () => {
 
       const dropBtns = node.querySelectorAll('.array-item-remove');
 
-      Simulate.click(dropBtns[0]);
+      act(() => {
+        fireEvent.click(dropBtns[0]);
+      });
 
       expect(node.querySelectorAll('.has-error .error-detail')).to.have.length.of(0);
     });
@@ -964,7 +1025,9 @@ describe('ArrayField', () => {
       });
       const copyBtns = node.querySelectorAll('.array-item-copy');
 
-      Simulate.click(copyBtns[0]);
+      act(() => {
+        fireEvent.click(copyBtns[0]);
+      });
 
       const inputs = node.querySelectorAll('.field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
@@ -985,8 +1048,10 @@ describe('ArrayField', () => {
         formData,
       });
 
-      Simulate.change(node.querySelector('#root_1'), {
-        target: { value: '' },
+      act(() => {
+        fireEvent.change(node.querySelector('#root_1'), {
+          target: { value: '' },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -1294,14 +1359,16 @@ describe('ArrayField', () => {
       it('should handle a change event', () => {
         const { node, onChange } = createFormComponent({ schema });
 
-        Simulate.change(node.querySelector('.field select'), {
-          target: {
-            options: [
-              { selected: true, value: 0 }, // use index
-              { selected: true, value: 1 }, // use index
-              { selected: false, value: 2 }, // use index
-            ],
-          },
+        act(() => {
+          Simulate.change(node.querySelector('.field select'), {
+            target: {
+              options: [
+                { selected: true, value: 0 }, // use index
+                { selected: true, value: 1 }, // use index
+                { selected: false, value: 2 }, // use index
+              ],
+            },
+          });
         });
 
         sinon.assert.calledWithMatch(
@@ -1433,11 +1500,11 @@ describe('ArrayField', () => {
           uiSchema,
         });
 
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[0], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[0]);
         });
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[2], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1459,8 +1526,8 @@ describe('ArrayField', () => {
         let labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node) => node.checked);
         expect(labels).eql([true, false, false]);
 
-        Simulate.change(node.querySelectorAll('[type=checkbox]')[2], {
-          target: { checked: true },
+        act(() => {
+          fireEvent.click(node.querySelectorAll('[type=checkbox]')[2]);
         });
 
         sinon.assert.calledWithMatch(
@@ -1594,13 +1661,17 @@ describe('ArrayField', () => {
 
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.change(node.querySelector('.field input[type=file]'), {
-        target: {
-          files: [{ name: 'file1.txt', size: 1, type: 'type' }],
-        },
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [{ name: 'file1.txt', size: 1, type: 'type' }],
+          },
+        });
       });
 
-      await new Promise(setImmediate);
+      await act(() => {
+        new Promise(setImmediate);
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -1610,13 +1681,17 @@ describe('ArrayField', () => {
         'root'
       );
 
-      Simulate.change(node.querySelector('.field input[type=file]'), {
-        target: {
-          files: [{ name: 'file2.txt', size: 2, type: 'type' }],
-        },
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [{ name: 'file2.txt', size: 2, type: 'type' }],
+          },
+        });
       });
 
-      await new Promise(setImmediate);
+      await act(() => {
+        new Promise(setImmediate);
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -1726,7 +1801,9 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       expect(node.querySelectorAll('fieldset fieldset')).to.be.empty;
 
-      Simulate.click(node.querySelector('.array-item-add button'));
+      act(() => {
+        fireEvent.click(node.querySelector('.array-item-add button'));
+      });
 
       expect(node.querySelectorAll('fieldset fieldset')).to.have.length.of(1);
     });
@@ -1850,8 +1927,13 @@ describe('ArrayField', () => {
       const strInput = node.querySelector('fieldset .field-string input[type=text]');
       const numInput = node.querySelector('fieldset .field-number input[type=number]');
 
-      Simulate.change(strInput, { target: { value: 'bar' } });
-      Simulate.change(numInput, { target: { value: '101' } });
+      act(() => {
+        fireEvent.change(strInput, { target: { value: 'bar' } });
+      });
+
+      act(() => {
+        fireEvent.change(numInput, { target: { value: '101' } });
+      });
 
       sinon.assert.calledWithMatch(
         onChange.lastCall,
@@ -2009,22 +2091,18 @@ describe('ArrayField', () => {
     });
 
     describe('operations for additional items', () => {
-      const { node, onChange } = createFormComponent({
-        schema: schemaAdditional,
-        formData: [1, 2, 'foo'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
-      });
-
-      const startRows = node.querySelectorAll('.array-item');
-      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
-      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
-      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
-      const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
-
       it('should add a field when clicking add button', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
         const addBtn = node.querySelector('.array-item-add button');
 
-        Simulate.click(addBtn);
+        act(() => {
+          fireEvent.click(addBtn);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.have.length.of(2);
 
@@ -2038,6 +2116,24 @@ describe('ArrayField', () => {
       });
 
       it('should retain existing row keys/ids when adding additional items', () => {
+        const { node } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const startRows = node.querySelectorAll('.array-item');
+        const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
+        const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
+        const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
+        const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         const endRows = node.querySelectorAll('.array-item');
         const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
         const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
@@ -2057,10 +2153,27 @@ describe('ArrayField', () => {
       });
 
       it('should change the state when changing input value', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         const inputs = node.querySelectorAll('.field-string input[type=text]');
 
-        Simulate.change(inputs[0], { target: { value: 'bar' } });
-        Simulate.change(inputs[1], { target: { value: 'baz' } });
+        act(() => {
+          fireEvent.change(inputs[0], { target: { value: 'bar' } });
+        });
+
+        act(() => {
+          fireEvent.change(inputs[1], { target: { value: 'baz' } });
+        });
 
         sinon.assert.calledWithMatch(
           onChange.lastCall,
@@ -2072,11 +2185,29 @@ describe('ArrayField', () => {
       });
 
       it('should remove array items when clicking remove buttons', () => {
+        const { node, onChange } = createFormComponent({
+          schema: schemaAdditional,
+          formData: [1, 2, 'foo'],
+          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        });
+
+        const addBtn = node.querySelector('.array-item-add button');
+
+        act(() => {
+          fireEvent.click(addBtn);
+        });
+
         let dropBtns = node.querySelectorAll('.array-item-remove');
 
-        Simulate.click(dropBtns[0]);
+        act(() => {
+          fireEvent.click(dropBtns[0]);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+        const inputs = node.querySelectorAll('.field-string input[type=text]');
+        act(() => {
+          fireEvent.change(inputs[0], { target: { value: 'baz' } });
+        });
 
         sinon.assert.calledWithMatch(
           onChange.lastCall,
@@ -2087,7 +2218,9 @@ describe('ArrayField', () => {
         );
 
         dropBtns = node.querySelectorAll('.array-item-remove');
-        Simulate.click(dropBtns[0]);
+        act(() => {
+          fireEvent.click(dropBtns[0]);
+        });
 
         expect(node.querySelectorAll('.field-string')).to.be.empty;
         sinon.assert.calledWithMatch(
@@ -2115,14 +2248,16 @@ describe('ArrayField', () => {
     it("should convert array of strings to numbers if type of items is 'number'", () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      Simulate.change(node.querySelector('.field select'), {
-        target: {
-          options: [
-            { selected: true, value: '0' }, // use index
-            { selected: true, value: '1' }, // use index
-            { selected: false, value: '2' }, // use index
-          ],
-        },
+      act(() => {
+        Simulate.change(node.querySelector('.field select'), {
+          target: {
+            options: [
+              { selected: true, value: '0' }, // use index
+              { selected: true, value: '1' }, // use index
+              { selected: false, value: '2' }, // use index
+            ],
+          },
+        });
       });
 
       sinon.assert.calledWithMatch(
@@ -2432,7 +2567,9 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+        act(() => {
+          fireEvent.click(node.querySelector('.array-item-add button'));
+        });
 
         expect(node.querySelector('#title-Array-1')).to.not.be.null;
       });
@@ -2456,7 +2593,9 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        Simulate.click(node.querySelector('.array-item-add button'));
+        act(() => {
+          fireEvent.click(node.querySelector('.array-item-add button'));
+        });
 
         expect(node.querySelector('#title-Boolean')).to.not.be.null;
         expect(node.querySelector('#title-Array-1')).to.be.null;
@@ -2480,7 +2619,9 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
         }
@@ -2507,7 +2648,9 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           const widgetLabelTextContent = node.querySelector('label[for="root_0"]').textContent;
 
@@ -2607,7 +2750,9 @@ describe('ArrayField', () => {
             schema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
         }
@@ -2629,7 +2774,9 @@ describe('ArrayField', () => {
             schema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           const legendTextContent = node.querySelector('legend#root_0__title').textContent;
 
@@ -2651,7 +2798,9 @@ describe('ArrayField', () => {
             schema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
         }
@@ -2673,7 +2822,9 @@ describe('ArrayField', () => {
             schema,
           });
 
-          Simulate.click(node.querySelector('.array-item-add button'));
+          act(() => {
+            fireEvent.click(node.querySelector('.array-item-add button'));
+          });
 
           const labelTextContent = node.querySelector('label[for="root_0"]').textContent;
 
@@ -2750,7 +2901,10 @@ describe('ArrayField', () => {
         },
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputs[0].id).eql('root_foo_0_bar');
@@ -2768,7 +2922,7 @@ describe('ArrayField', () => {
         customValidate,
         showErrorList: false,
       });
-      Simulate.submit(node);
+      fireEvent.submit(node);
 
       const inputsNoError = node.querySelectorAll('.form-group.field-error input[type=text]');
       expect(inputsNoError).to.have.length.of(0);
@@ -3063,6 +3217,102 @@ describe('ArrayField', () => {
           },
         },
       });
+    });
+
+    it('raise an error and check if the error is displayed', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        fields: {
+          ArrayField: ArrayFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "Appie"');
+    });
+
+    it('should not raise an error if value is correct', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        fields: {
+          ArrayField: ArrayFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'Appie' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
+    });
+
+    it('raise an error and check if the error is displayed using custom text widget', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        widgets: {
+          TextWidget: TextWidgetTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'hello' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "test"');
+    });
+
+    it('should not raise an error if value is correct using custom text widget', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        widgets: {
+          TextWidget: TextWidgetTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
     });
   });
 });

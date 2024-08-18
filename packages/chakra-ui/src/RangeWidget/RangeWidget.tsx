@@ -30,8 +30,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const _onChange = (value: undefined | number) => onChange(value === undefined ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
     <FormControl mb={1} {...chakraProps}>
