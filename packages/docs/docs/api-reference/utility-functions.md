@@ -110,6 +110,25 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 
 - { blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
 
+### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a list of options for a date range between `start` and `stop`.
+If the start date is greater than the end date, then the date range is reversed.
+If `start` and `stop` are negative numbers (or zero), then they will be treated as relative to the current year.
+
+#### Parameters
+
+- start: number - The starting point of the date range
+- stop: number - The ending point of the date range
+
+#### Returns
+
+- EnumOptionsType&lt;S>[]: The list of EnumOptionsType for the date range between `start` and `stop`
+
+#### Throws
+
+- Error when `start` and `stop` aren't both <= 0 or > 0
+
 ### deepEquals()
 
 Implements a deep equals using the `lodash.isEqualWith` function, that provides a customized comparator that assumes all functions are equivalent.
@@ -602,17 +621,21 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 
 - string: An id for the option index based on the parent `id`
 
-### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>()
 
-Gets the list of options from the schema. If the schema has an enum list, then those enum values are returned.
-The labels for the options will be extracted from the non-standard `enumNames` if it exists otherwise will be the same as the `value`.
-If the schema has a `oneOf` or `anyOf`, then the value is the list of `const` values from the schema and the label is either the `schema.title` or the value.
+Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
+The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise
+the label will be the same as the `value`. If the schema has a `oneOf` or `anyOf`, then the value is the list of
+`const` values from the schema and the label is either the `schema.title` or the value. If a `uiSchema` is provided
+and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of objects
+containing `ui:title` then the UI schema values will replace the values from the schema.
 
-NOTE: `enumNames` is deprecated and may be removed in a future major version of RJSF.
+NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
 
 #### Parameters
 
 - schema: S - The schema from which to extract the options list
+- uiSchema: UiSchema<T, S, F> - The optional uiSchema from which to get alternate labels for the options
 
 #### Returns
 

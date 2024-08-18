@@ -43,7 +43,6 @@ exports[`object fields additionalProperties 1`] = `
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -399,7 +398,6 @@ exports[`object fields object 1`] = `
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -707,7 +705,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -4157,7 +4154,6 @@ exports[`object fields with title and description with global label off addition
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -4510,7 +4506,6 @@ exports[`object fields with title and description with global label off object 1
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={
@@ -4821,7 +4816,6 @@ exports[`object fields with title and description with global label off show add
                     }
                   }
                 >
-                  
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
                     style={

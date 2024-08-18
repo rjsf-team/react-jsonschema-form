@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "5.18.2",
+  "version": "5.20.1",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:ts": "tsc -b",
@@ -37,7 +37,7 @@
     "node": ">=14"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.18.x",
+    "@rjsf/utils": "^5.20.x",
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
@@ -54,15 +54,15 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/snapshot-tests": "^5.18.2",
-    "@rjsf/utils": "^5.18.2",
-    "@rjsf/validator-ajv6": "^5.18.2",
-    "@rjsf/validator-ajv8": "^5.18.2",
+    "@rjsf/snapshot-tests": "^5.20.1",
+    "@rjsf/utils": "^5.20.1",
+    "@rjsf/validator-ajv6": "^5.20.1",
+    "@rjsf/validator-ajv8": "^5.20.1",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
-    "@types/react": "^17.0.75",
-    "@types/react-dom": "^17.0.25",
-    "@types/react-test-renderer": "^17.0.9",
+    "@types/react": "^18.2.58",
+    "@types/react-dom": "^18.2.19",
+    "@types/react-test-renderer": "^18.0.7",
     "ajv": "^8.12.0",
     "atob": "^2.1.2",
     "babel-jest": "^29.7.0",
@@ -74,10 +74,10 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^20.0.3",
     "mocha": "^10.2.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-portal": "^4.2.2",
-    "react-test-renderer": "^17.0.2",
+    "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
     "sinon": "^9.2.4",

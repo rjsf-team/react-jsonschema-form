@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import sinon from 'sinon';
 
 import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
@@ -319,9 +319,10 @@ describe('BooleanField', () => {
       },
     });
 
-    Simulate.change(node.querySelector('input'), {
-      target: { checked: true },
+    act(() => {
+      fireEvent.click(node.querySelector('input'));
     });
+
     sinon.assert.calledWithMatch(onChange.lastCall, { formData: true }, 'root');
   });
 
@@ -386,7 +387,7 @@ describe('BooleanField', () => {
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
+    expect(console.warn.calledWithMatch(/The "enumNames" property in the schema is deprecated/)).to.be.true;
   });
 
   it('should support oneOf titles for radio widgets', () => {
@@ -410,6 +411,29 @@ describe('BooleanField', () => {
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
+  });
+
+  it('should support oneOf titles for radio widgets, overrides in uiSchema', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        oneOf: [
+          {
+            const: true,
+            title: 'Yes',
+          },
+          {
+            const: false,
+            title: 'No',
+          },
+        ],
+      },
+      formData: true,
+      uiSchema: { 'ui:widget': 'radio', oneOf: [{ 'ui:title': 'Si!' }, { 'ui:title': 'No!' }] },
+    });
+
+    const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
+    expect(labels).eql(['Si!', 'No!']);
   });
 
   it('should preserve oneOf option ordering for radio widgets', () => {
@@ -464,7 +488,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    Simulate.focus(node.querySelector('input'), {
+    fireEvent.focus(node.querySelector('input'), {
       target: {
         value: 1, // use index
       },
@@ -486,7 +510,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('.field-radio-group');
-    Simulate.blur(node.querySelector('input'), {
+    fireEvent.blur(node.querySelector('input'), {
       target: {
         value: 1, // use index
       },
@@ -494,19 +518,19 @@ describe('BooleanField', () => {
     expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
-  it('should support enumNames for select', () => {
+  it('should support enumNames for select, with overrides in uiSchema', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
         enumNames: ['Yes', 'No'],
       },
       formData: true,
-      uiSchema: { 'ui:widget': 'select' },
+      uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Si!', 'No!'] },
     });
 
     const labels = [].map.call(node.querySelectorAll('.field option'), (label) => label.textContent);
-    expect(labels).eql(['', 'Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The enumNames property is deprecated/)).to.be.true;
+    expect(labels).eql(['', 'Si!', 'No!']);
+    expect(console.warn.calledWithMatch(/TThe "enumNames" property in the schema is deprecated/)).to.be.false;
   });
 
   it('should handle a focus event with checkbox', () => {
@@ -523,7 +547,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    Simulate.focus(element, {
+    fireEvent.focus(element, {
       target: {
         value: 1, // use index
       },
@@ -545,7 +569,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('select');
-    Simulate.blur(element, {
+    fireEvent.blur(element, {
       target: {
         value: 1, // use index
       },
@@ -590,7 +614,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    Simulate.focus(element, {
+    fireEvent.focus(element, {
       target: {
         checked: false,
       },
@@ -612,7 +636,7 @@ describe('BooleanField', () => {
     });
 
     const element = node.querySelector('input');
-    Simulate.blur(element, {
+    fireEvent.blur(element, {
       target: {
         checked: false,
       },
@@ -694,8 +718,10 @@ describe('BooleanField', () => {
       const $select = node.querySelector('.field select');
       expect($select.value).eql('');
 
-      Simulate.change($select, {
-        target: { value: 0 }, // use index
+      act(() => {
+        fireEvent.change($select, {
+          target: { value: 0 }, // use index
+        });
       });
       expect(getSelectedOptionValue($select)).eql('true');
       expect(spy.lastCall.args[0].formData).eql(true);
@@ -732,8 +758,10 @@ describe('BooleanField', () => {
         },
       });
 
-      Simulate.change(node.querySelector('select'), {
-        target: { value: 1 }, // use index
+      act(() => {
+        fireEvent.change(node.querySelector('select'), {
+          target: { value: 1 }, // use index
+        });
       });
 
       sinon.assert.calledWithMatch(

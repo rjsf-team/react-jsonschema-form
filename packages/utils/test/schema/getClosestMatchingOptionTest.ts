@@ -236,10 +236,6 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         },
         discriminator: {
           propertyName: 'code',
-          mapping: {
-            foo_coding: '#/definitions/Foo',
-            bar_coding: '#/definitions/Bar',
-          },
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
@@ -269,10 +265,6 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         },
         discriminator: {
           propertyName: 'code',
-          mapping: {
-            foo_coding: '#/definitions/Foo',
-            bar_coding: '#/definitions/Bar',
-          },
         },
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };

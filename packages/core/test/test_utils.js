@@ -1,9 +1,10 @@
 /* Utils for tests. */
 
 import { createElement } from 'react';
+import { render, fireEvent, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import sinon from 'sinon';
-import { renderIntoDocument, act, Simulate } from 'react-dom/test-utils';
-import { findDOMNode, render } from 'react-dom';
+import { findDOMNode } from 'react-dom';
 import validator from '@rjsf/validator-ajv8';
 
 import Form from '../src';
@@ -12,8 +13,10 @@ export function createComponent(Component, props) {
   const onChange = sinon.spy();
   const onError = sinon.spy();
   const onSubmit = sinon.spy();
-  const comp = renderIntoDocument(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />);
-  const node = findDOMNode(comp);
+  const comp = <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />;
+  const { container } = render(comp);
+  const node = findDOMNode(container).firstElementChild;
+
   return { comp, node, onChange, onError, onSubmit };
 }
 
@@ -27,8 +30,9 @@ export function createSandbox() {
 }
 
 export function setProps(comp, newProps) {
-  const node = findDOMNode(comp);
-  render(createElement(comp.constructor, newProps), node.parentNode);
+  render(createElement(Form, newProps), {
+    container: comp.ref.current.formElement.current.parentNode,
+  });
 }
 
 /* Run a group of tests with different combinations of omitExtraData and liveOmit as form props.
@@ -47,7 +51,7 @@ export function describeRepeated(title, fn) {
 
 export function submitForm(node) {
   act(() => {
-    Simulate.submit(node);
+    fireEvent.submit(node);
   });
 }
 

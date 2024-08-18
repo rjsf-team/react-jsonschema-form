@@ -1,4 +1,4 @@
-import { FocusEvent } from 'react';
+import { FocusEvent, useMemo } from 'react';
 import { FormControl, FormLabel } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -34,6 +34,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus,
     rawErrors = [],
     uiSchema,
+    schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const chakraProps = getChakra({ uiSchema });
@@ -54,36 +55,47 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     return onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, emptyValue));
   };
 
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
 
-  const _valueLabelMap: any = {};
-  const displayEnumOptions: OptionsOrGroups<any, any> = Array.isArray(enumOptions)
-    ? enumOptions.map((option: EnumOptionsType<S>, index: number) => {
+  const showPlaceholderOption = !multiple && schema.default === undefined;
+  const { valueLabelMap, displayEnumOptions } = useMemo((): {
+    valueLabelMap: Record<string | number, string>;
+    displayEnumOptions: OptionsOrGroups<any, any>;
+  } => {
+    const valueLabelMap: Record<string | number, string> = {};
+    let displayEnumOptions: OptionsOrGroups<any, any> = [];
+    if (Array.isArray(enumOptions)) {
+      displayEnumOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
         const { value, label } = option;
-        _valueLabelMap[index] = label || String(value);
+        valueLabelMap[index] = label || String(value);
         return {
           label,
           value: String(index),
           isDisabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
-      })
-    : [];
+      });
+      if (showPlaceholderOption) {
+        (displayEnumOptions as any[]).unshift({ value: '', label: placeholder || '' });
+      }
+    }
+    return { valueLabelMap: valueLabelMap, displayEnumOptions: displayEnumOptions };
+  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
   const formValue: any = isMultiple
     ? ((selectedIndex as string[]) || []).map((i: string) => {
         return {
-          label: _valueLabelMap[i],
+          label: valueLabelMap[i],
           value: i,
         };
       })
     : {
-        label: _valueLabelMap[selectedIndex as string] || '',
+        label: valueLabelMap[selectedIndex as string] || '',
         selectedIndex,
       };
 

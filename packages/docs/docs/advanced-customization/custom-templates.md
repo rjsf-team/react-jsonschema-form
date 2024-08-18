@@ -634,7 +634,6 @@ The following props are passed to a custom field template component:
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
-- `hideError`: A boolean value stating if the field is hiding its errors.
 - `errors`: A component instance listing any encountered errors for this field.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { expect } from 'chai';
-import { Simulate } from 'react-dom/test-utils';
+import { fireEvent, act } from '@testing-library/react';
 import { createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -455,7 +455,10 @@ describe('SchemaField', () => {
         uiSchema,
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
       expect(matches).to.have.length.of(1);
@@ -468,7 +471,10 @@ describe('SchemaField', () => {
         uiSchema,
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(1);
@@ -499,7 +505,10 @@ describe('SchemaField', () => {
         uiSchema,
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(1);
@@ -535,7 +544,10 @@ describe('SchemaField', () => {
         uiSchema,
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(1);
@@ -552,7 +564,10 @@ describe('SchemaField', () => {
         customValidate,
         templates: { FieldErrorTemplate: customFieldError },
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(0);
@@ -577,7 +592,10 @@ describe('SchemaField', () => {
         uiSchema,
         customValidate,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
       expect(matches).to.have.length.of(0);
@@ -598,7 +616,10 @@ describe('SchemaField', () => {
           customValidate,
           templates: { BaseInputTemplate: customStringWidget },
         });
-        Simulate.submit(node);
+
+        act(() => {
+          fireEvent.submit(node);
+        });
 
         const matches = node.querySelectorAll('.custom-text-widget');
         expect(matches).to.have.length.of(1);
@@ -618,7 +639,10 @@ describe('SchemaField', () => {
           uiSchema: hideUiSchema,
           customValidate,
         });
-        Simulate.submit(node);
+
+        act(() => {
+          fireEvent.submit(node);
+        });
 
         const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).to.have.length.of(0);
@@ -630,7 +654,10 @@ describe('SchemaField', () => {
           uiSchema: hideUiSchema,
           customValidate,
         });
-        Simulate.submit(node);
+
+        act(() => {
+          fireEvent.submit(node);
+        });
 
         const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).to.have.length.of(0);
@@ -648,7 +675,10 @@ describe('SchemaField', () => {
             customValidate,
             templates: { BaseInputTemplate: customStringWidget },
           });
-          Simulate.submit(node);
+
+          act(() => {
+            fireEvent.submit(node);
+          });
 
           const matches = node.querySelectorAll('.custom-text-widget');
           expect(matches).to.have.length.of(1);
@@ -656,6 +686,7 @@ describe('SchemaField', () => {
         });
       });
     });
+
     describe('hideError flag false for child should show errors', () => {
       const hideUiSchema = {
         'ui:hideError': true,
@@ -672,7 +703,10 @@ describe('SchemaField', () => {
           uiSchema: hideUiSchema,
           customValidate,
         });
-        Simulate.submit(node);
+
+        act(() => {
+          fireEvent.submit(node);
+        });
 
         const matches = node.querySelectorAll('form > .form-group > div > .error-detail .text-danger');
         expect(matches).to.have.length.of(0);
@@ -684,7 +718,10 @@ describe('SchemaField', () => {
           uiSchema: hideUiSchema,
           customValidate,
         });
-        Simulate.submit(node);
+
+        act(() => {
+          fireEvent.submit(node);
+        });
 
         const matches = node.querySelectorAll('form .form-group .form-group .text-danger');
         expect(matches).to.have.length.of(1);
@@ -709,7 +746,10 @@ describe('SchemaField', () => {
         schema,
         uiSchema,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(1);
@@ -725,7 +765,10 @@ describe('SchemaField', () => {
         uiSchema,
         templates: { FieldHelpTemplate: customFieldHelp },
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(0);
@@ -746,7 +789,10 @@ describe('SchemaField', () => {
         schema,
         uiSchema,
       });
-      Simulate.submit(node);
+
+      act(() => {
+        fireEvent.submit(node);
+      });
 
       const matches = node.querySelectorAll('form .form-group .form-group .help-block');
       expect(matches).to.have.length.of(0);
@@ -799,6 +845,25 @@ describe('SchemaField', () => {
       expect(innerHTML).to.not.contains('<em>');
       expect(innerHTML).to.not.contains('<code>');
       expect(textContent).to.contains(descText);
+    });
+  });
+
+  describe('readOnly', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'boolean', readOnly: true },
+      },
+    };
+
+    it('should be readonly if prescribed by the schema', () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      const { disabled } = node.querySelector('input');
+
+      expect(disabled).to.eq(true);
     });
   });
 });

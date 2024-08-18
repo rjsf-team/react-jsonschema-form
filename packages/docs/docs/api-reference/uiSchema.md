@@ -228,6 +228,22 @@ const uiSchema: UiSchema = {
 };
 ```
 
+### enumNames
+
+Allows a user to provide a list of labels for enum values in the schema.
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'number',
+  enum: [1, 2, 3],
+};
+const uiSchema: UiSchema = {
+  'ui:enumNames': ['one', 'two', 'three'],
+};
+```
+
 ### filePreview
 
 The `FileWidget` can be configured to show a preview of an image or a download link for non-images using this flag.

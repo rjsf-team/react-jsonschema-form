@@ -97,7 +97,7 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import Theme from '@rjsf/mui';
+import { Theme } from '@rjsf/mui';
 
 // Make modifications to the theme with your own fields and widgets
 
