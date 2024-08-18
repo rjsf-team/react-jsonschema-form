@@ -53,7 +53,7 @@ Exports `react-bootstrap` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `react-bootstrap >= 1.0.1`
+- `react-bootstrap >= 2.0.0`
 - `@rjsf/core >= 2.2.0`
 
 ```bash
