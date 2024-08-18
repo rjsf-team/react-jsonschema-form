@@ -76,9 +76,9 @@ or
 
 ```js
 import { withTheme } from '@rjsf/core';
-import { Theme as Bootstrap4Theme } from 'packages/react-bootstrap';
+import { Theme as BootstrapTheme } from 'packages/react-bootstrap';
 
-const Form = withTheme(Bootstrap4Theme);
+const Form = withTheme(BootstrapTheme);
 ```
 
 <!-- CONTRIBUTING -->
