@@ -837,7 +837,7 @@ export default class Form<
     let field = this.formElement.current.elements[elementId];
     if (!field) {
       // if not an exact match, try finding an input starting with the element id (like radio buttons or checkboxes)
-      field = this.formElement.current.querySelector(`input[id^=${elementId}`);
+      field = this.formElement.current.querySelector(`input[id^="${elementId}"`);
     }
     if (field && field.length) {
       // If we got a list with length > 0
