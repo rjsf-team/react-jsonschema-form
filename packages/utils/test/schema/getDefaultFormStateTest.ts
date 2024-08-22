@@ -2660,6 +2660,93 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         });
       });
+      it('should populate defaults for properties to ensure the dependencies conditions are resolved based on it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['authentication'],
+          properties: {
+            authentication: {
+              title: 'Authentication',
+              type: 'object',
+              properties: {
+                credentialType: {
+                  title: 'Credential type',
+                  type: 'string',
+                  default: 'username',
+                  oneOf: [
+                    {
+                      const: 'username',
+                      title: 'Username and password',
+                    },
+                    {
+                      const: 'secret',
+                      title: 'SSO',
+                    },
+                  ],
+                },
+              },
+              dependencies: {
+                credentialType: {
+                  allOf: [
+                    {
+                      if: {
+                        properties: {
+                          credentialType: {
+                            const: 'username',
+                          },
+                        },
+                      },
+                      then: {
+                        properties: {
+                          usernameAndPassword: {
+                            type: 'object',
+                            properties: {
+                              username: {
+                                type: 'string',
+                                title: 'Username',
+                              },
+                              password: {
+                                type: 'string',
+                                title: 'Password',
+                              },
+                            },
+                            required: ['username', 'password'],
+                          },
+                        },
+                        required: ['usernameAndPassword'],
+                      },
+                    },
+                    {
+                      if: {
+                        properties: {
+                          credentialType: {
+                            const: 'secret',
+                          },
+                        },
+                      },
+                      then: {
+                        properties: {
+                          sso: {
+                            type: 'string',
+                            title: 'SSO',
+                          },
+                        },
+                        required: ['sso'],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema)).toEqual({
+          authentication: {
+            credentialType: 'username',
+            usernameAndPassword: {},
+          },
+        });
+      });
       it('should populate defaults for nested dependencies when formData passed to computeDefaults is undefined', () => {
         const schema: RJSFSchema = {
           type: 'object',
