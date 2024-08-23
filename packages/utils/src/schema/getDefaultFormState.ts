@@ -362,7 +362,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
   } else if (DEPENDENCIES_KEY in schema) {
-    // Get the default if set from properties to ensure the dependency conditions are resolved based on it
+    // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
     const defaultFormData: T = { ...formData, ...getDefaultBasedOnSchemaType() };
     const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], defaultFormData);
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies

@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the peer dependencies to `5.20.x` due to types and API changes in `@rjsf/utils`
 
+## @rjsf/utils
+
+- Fixes an issue with dependencies computeDefaults to ensure we can get the dependencies defaults [#4271](https://github.com/rjsf-team/react-jsonschema-form/issues/4271)
+
 # 5.20.0
 
 ## @rjsf/core 
