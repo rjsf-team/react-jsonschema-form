@@ -207,7 +207,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
     const defaultFormData: T = {
       ...formData,
-      ...getDefaultBasedOnSchemaType(validator, schema, defaults, computeDefaultsProps),
+      ...getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults),
     };
     const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], defaultFormData);
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
@@ -276,7 +276,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     defaults = schema.default as unknown as T;
   }
 
-  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, defaults, computeDefaultsProps);
+  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
 
   return defaultBasedOnSchemaType ?? defaults;
 }
@@ -285,25 +285,27 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param defaults - Optional props for this function
  * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
-function getDefaultBasedOnSchemaType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getDefaultBasedOnSchemaType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  defaults: T | T[] | undefined,
-  computeDefaultsProps: ComputeDefaultsProps<T, S> = {}
+  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
 ): T | T[] | void {
-  const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
-
-  switch (getSchemaType<S>(schema)) {
+  switch (getSchemaType<S>(rawSchema)) {
     // We need to recurse for object schema inner default values.
     case 'object': {
-      return getObjectDefaults(validator, schema, defaults, computeDefaultsProps);
+      return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);
     }
     case 'array': {
-      return getArrayDefaults(validator, schema, defaults, computeDefaultsProps);
+      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults);
     }
   }
 }
@@ -312,14 +314,13 @@ function getDefaultBasedOnSchemaType<T = any, S extends StrictRJSFSchema = RJSFS
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param defaults - Optional props for this function
  * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
-function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  defaults: T | T[] | undefined,
   {
     rawFormData,
     rootSchema = {} as S,
@@ -327,11 +328,12 @@ function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
     required,
-  }: ComputeDefaultsProps<T, S> = {}
+  }: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
 ): T {
   {
     const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
-    const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
+    const schema: S = rawSchema;
     // This is a custom addition that fixes this issue:
     // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
     const retrievedSchema =
@@ -412,23 +414,23 @@ function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param defaults - Optional props for this function
  * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
-function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  defaults: T | T[] | undefined,
   {
     rawFormData,
     rootSchema = {} as S,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
     required,
-  }: ComputeDefaultsProps<T, S> = {}
+  }: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
 ): T | T[] | undefined {
-  const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
+  const schema: S = rawSchema;
 
   const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
   const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
