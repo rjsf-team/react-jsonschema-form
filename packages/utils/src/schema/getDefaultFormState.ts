@@ -281,35 +281,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   return defaultBasedOnSchemaType ?? defaults;
 }
 
-/** Computes the default value based on the schema type.
- *
- * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
- * @param rawSchema - The schema for which the default state is desired
- * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
- * @param defaults - Optional props for this function
- * @returns - The default value based on the schema type if they are defined for object or array schemas.
- */
-export function getDefaultBasedOnSchemaType<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(
-  validator: ValidatorType<T, S, F>,
-  rawSchema: S,
-  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
-  defaults?: T | T[] | undefined
-): T | T[] | void {
-  switch (getSchemaType<S>(rawSchema)) {
-    // We need to recurse for object schema inner default values.
-    case 'object': {
-      return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);
-    }
-    case 'array': {
-      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults);
-    }
-  }
-}
-
 /** Computes the default value for objects.
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
@@ -508,6 +479,35 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   ) as T[];
   // then fill up the rest with either the item default or empty, up to minItems
   return defaultEntries.concat(fillerEntries);
+}
+
+/** Computes the default value based on the schema type.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param rawSchema - The schema for which the default state is desired
+ * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
+ * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ */
+export function getDefaultBasedOnSchemaType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
+  validator: ValidatorType<T, S, F>,
+  rawSchema: S,
+  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
+): T | T[] | void {
+  switch (getSchemaType<S>(rawSchema)) {
+    // We need to recurse for object schema inner default values.
+    case 'object': {
+      return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);
+    }
+    case 'array': {
+      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults);
+    }
+  }
 }
 
 /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have

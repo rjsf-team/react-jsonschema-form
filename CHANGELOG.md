@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.20.1
+# 5.20.2
 
 ## Dev / docs / playground
 
