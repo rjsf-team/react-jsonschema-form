@@ -21,11 +21,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Fixes an issue with dependencies computeDefaults to ensure we can get the dependencies defaults [#4271](https://github.com/rjsf-team/react-jsonschema-form/issues/4271)
-- use `fast-equals.createCustomEqual` instead of `lodash.isEqualWith`
+- Updated `deepEquals()` to use `fast-equals.createCustomEqual()` instead of `lodash.isEqualWith()`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
+  - Switched uses of `lodash.isEqual()` to `deepEquals()` in many of the utility functions as well
+
 
 ## @validator-ajv8
 
-- use `@rjsf/utils` deepEquals instead of `lodash.isEqual`
+- Use `@rjsf/utils` `deepEquals()` instead of `lodash.isEqual()` to improve performance, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
 
 # 5.20.1
 
