@@ -18,7 +18,7 @@ const customDeepEqual = createCustomEqual({
   },
 });
 
-/** Implements a deep equals using the `lodash.isEqualWith` function, that provides a customized comparator that
+/** Implements a deep equals using the `fast-equal.createCustomEqual` function, that provides a customized comparator that
  * assumes all functions are equivalent.
  *
  * @param a - The first element to compare

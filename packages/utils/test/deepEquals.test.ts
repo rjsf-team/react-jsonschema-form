@@ -1,7 +1,7 @@
 import { deepEquals } from '../src';
 
 describe('deepEquals()', () => {
-  // Note: deepEquals implementation uses isEqualWith, so we focus on the behavioral differences we introduced.
+  // Note: deepEquals implementation uses fast-equal.createCustomEqual, so we focus on the behavioral differences we introduced.
   it('should assume functions are always equivalent', () => {
     expect(
       deepEquals(
