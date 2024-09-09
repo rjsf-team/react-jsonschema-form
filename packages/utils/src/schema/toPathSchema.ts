@@ -1,5 +1,5 @@
-import get from "lodash/get";
-import set from "lodash/set";
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -12,19 +12,12 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
-} from "../constants";
-import getDiscriminatorFieldFromSchema from "../getDiscriminatorFieldFromSchema";
-import {
-  FormContextType,
-  GenericObjectType,
-  PathSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from "../types";
-import getClosestMatchingOption from "./getClosestMatchingOption";
-import retrieveSchema from "./retrieveSchema";
-import deepEquals from "../deepEquals";
+} from '../constants';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
+import { FormContextType, GenericObjectType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import getClosestMatchingOption from './getClosestMatchingOption';
+import retrieveSchema from './retrieveSchema';
+import deepEquals from '../deepEquals';
 
 /** An internal helper that generates an `PathSchema` object for the `schema`, recursively with protection against
  * infinite recursion
@@ -37,28 +30,17 @@ import deepEquals from "../deepEquals";
  * @param [_recurseList=[]] - The list of retrieved schemas currently being recursed, used to prevent infinite recursion
  * @returns - The `PathSchema` object for the `schema`
  */
-function toPathSchemaInternal<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(
+function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   name: string,
   rootSchema?: S,
   formData?: T,
-  _recurseList: S[] = [],
+  _recurseList: S[] = []
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(
-      validator,
-      schema,
-      rootSchema,
-      formData,
-    );
-    const sameSchemaIndex = _recurseList.findIndex((item) =>
-      deepEquals(item, _schema)
-    );
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
+    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
     if (sameSchemaIndex === -1) {
       return toPathSchemaInternal<T, S, F>(
         validator,
@@ -66,52 +48,32 @@ function toPathSchemaInternal<
         name,
         rootSchema,
         formData,
-        _recurseList.concat(_schema),
+        _recurseList.concat(_schema)
       );
     }
   }
 
   let pathSchema: PathSchema<T> = {
-    [NAME_KEY]: name.replace(/^\./, ""),
+    [NAME_KEY]: name.replace(/^\./, ''),
   } as PathSchema<T>;
 
   if (ONE_OF_KEY in schema || ANY_OF_KEY in schema) {
-    const xxxOf: S[] = ONE_OF_KEY in schema
-      ? (schema.oneOf as S[])
-      : (schema.anyOf as S[]);
+    const xxxOf: S[] = ONE_OF_KEY in schema ? (schema.oneOf as S[]) : (schema.anyOf as S[]);
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const index = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema!,
-      formData,
-      xxxOf,
-      0,
-      discriminator,
-    );
+    const index = getClosestMatchingOption<T, S, F>(validator, rootSchema!, formData, xxxOf, 0, discriminator);
     const _schema: S = xxxOf![index] as S;
     pathSchema = {
       ...pathSchema,
-      ...toPathSchemaInternal<T, S, F>(
-        validator,
-        _schema,
-        name,
-        rootSchema,
-        formData,
-        _recurseList,
-      ),
+      ...toPathSchemaInternal<T, S, F>(validator, _schema, name, rootSchema, formData, _recurseList),
     };
   }
 
-  if (
-    ADDITIONAL_PROPERTIES_KEY in schema &&
-    schema[ADDITIONAL_PROPERTIES_KEY] !== false
-  ) {
+  if (ADDITIONAL_PROPERTIES_KEY in schema && schema[ADDITIONAL_PROPERTIES_KEY] !== false) {
     set(pathSchema, RJSF_ADDITIONAL_PROPERTIES_FLAG, true);
   }
 
   if (ITEMS_KEY in schema && Array.isArray(formData)) {
-    const { items: schemaItems, additionalItems: schemaAdditionalItems } =
-      schema;
+    const { items: schemaItems, additionalItems: schemaAdditionalItems } = schema;
 
     if (Array.isArray(schemaItems)) {
       formData.forEach((element, i: number) => {
@@ -122,7 +84,7 @@ function toPathSchemaInternal<
             `${name}.${i}`,
             rootSchema,
             element,
-            _recurseList,
+            _recurseList
           );
         } else if (schemaAdditionalItems) {
           (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
@@ -131,12 +93,10 @@ function toPathSchemaInternal<
             `${name}.${i}`,
             rootSchema,
             element,
-            _recurseList,
+            _recurseList
           );
         } else {
-          console.warn(
-            `Unable to generate path schema for "${name}.${i}". No schema defined for it`,
-          );
+          console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
         }
       });
     } else {
@@ -147,24 +107,23 @@ function toPathSchemaInternal<
           `${name}.${i}`,
           rootSchema,
           element,
-          _recurseList,
+          _recurseList
         );
       });
     }
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field = get(schema, [PROPERTIES_KEY, property]);
-      (pathSchema as PathSchema<GenericObjectType>)[property] =
-        toPathSchemaInternal<T, S, F>(
-          validator,
-          field,
-          `${name}.${property}`,
-          rootSchema,
-          // It's possible that formData is not an object -- this can happen if an
-          // array item has just been added, but not populated with data yet
-          get(formData, [property]),
-          _recurseList,
-        );
+      (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(
+        validator,
+        field,
+        `${name}.${property}`,
+        rootSchema,
+        // It's possible that formData is not an object -- this can happen if an
+        // array item has just been added, but not populated with data yet
+        get(formData, [property]),
+        _recurseList
+      );
     }
   }
   return pathSchema;
@@ -179,16 +138,12 @@ function toPathSchemaInternal<
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The `PathSchema` object for the `schema`
  */
-export default function toPathSchema<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(
+export default function toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
-  name = "",
+  name = '',
   rootSchema?: S,
-  formData?: T,
+  formData?: T
 ): PathSchema<T> {
   return toPathSchemaInternal(validator, schema, name, rootSchema, formData);
 }
