@@ -1,12 +1,11 @@
-import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
-import set from 'lodash/set';
-import times from 'lodash/times';
-import transform from 'lodash/transform';
-import merge from 'lodash/merge';
-import flattenDeep from 'lodash/flattenDeep';
-import uniq from 'lodash/uniq';
-import mergeAllOf, { Options } from 'json-schema-merge-allof';
+import get from "lodash/get";
+import set from "lodash/set";
+import times from "lodash/times";
+import transform from "lodash/transform";
+import merge from "lodash/merge";
+import flattenDeep from "lodash/flattenDeep";
+import uniq from "lodash/uniq";
+import mergeAllOf, { Options } from "json-schema-merge-allof";
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -15,18 +14,27 @@ import {
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
   IF_KEY,
-  ONE_OF_KEY,
-  REF_KEY,
-  PROPERTIES_KEY,
   ITEMS_KEY,
-} from '../constants';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import guessType from '../guessType';
-import isObject from '../isObject';
-import mergeSchemas from '../mergeSchemas';
-import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
-import getFirstMatchingOption from './getFirstMatchingOption';
+  ONE_OF_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
+} from "../constants";
+import findSchemaDefinition, {
+  splitKeyElementFromObject,
+} from "../findSchemaDefinition";
+import getDiscriminatorFieldFromSchema from "../getDiscriminatorFieldFromSchema";
+import guessType from "../guessType";
+import isObject from "../isObject";
+import mergeSchemas from "../mergeSchemas";
+import {
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from "../types";
+import getFirstMatchingOption from "./getFirstMatchingOption";
+import deepEquals from "../deepEquals";
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -41,9 +49,19 @@ import getFirstMatchingOption from './getFirstMatchingOption';
 export default function retrieveSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S = {} as S, rawFormData?: T): S {
-  return retrieveSchemaInternal<T, S, F>(validator, schema, rootSchema, rawFormData)[0];
+  F extends FormContextType = any,
+>(
+  validator: ValidatorType<T, S, F>,
+  schema: S,
+  rootSchema: S = {} as S,
+  rawFormData?: T,
+): S {
+  return retrieveSchemaInternal<T, S, F>(
+    validator,
+    schema,
+    rootSchema,
+    rawFormData,
+  )[0];
 }
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
@@ -59,33 +77,60 @@ export default function retrieveSchema<
  * @param [formData] - The current formData to assist retrieving a schema
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
-export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveCondition<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
-  const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
+  const {
+    if: expression,
+    then,
+    else: otherwise,
+    ...resolvedSchemaLessConditional
+  } = schema;
 
-  const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
+  const conditionValue = validator.isValid(
+    expression as S,
+    formData || ({} as T),
+    rootSchema,
+  );
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
-    if (then && typeof then !== 'boolean') {
+    if (then && typeof then !== "boolean") {
       schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(validator, then as S, rootSchema, formData, expandAllBranches, recurseList)
+        retrieveSchemaInternal<T, S, F>(
+          validator,
+          then as S,
+          rootSchema,
+          formData,
+          expandAllBranches,
+          recurseList,
+        ),
       );
     }
-    if (otherwise && typeof otherwise !== 'boolean') {
+    if (otherwise && typeof otherwise !== "boolean") {
       schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(validator, otherwise as S, rootSchema, formData, expandAllBranches, recurseList)
+        retrieveSchemaInternal<T, S, F>(
+          validator,
+          otherwise as S,
+          rootSchema,
+          formData,
+          expandAllBranches,
+          recurseList,
+        ),
       );
     }
   } else {
     const conditionalSchema = conditionValue ? then : otherwise;
-    if (conditionalSchema && typeof conditionalSchema !== 'boolean') {
+    if (conditionalSchema && typeof conditionalSchema !== "boolean") {
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
           validator,
@@ -93,16 +138,25 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList
-        )
+          recurseList,
+        ),
       );
     }
   }
   if (schemas.length) {
-    resolvedSchemas = schemas.map((s) => mergeSchemas(resolvedSchemaLessConditional, s) as S);
+    resolvedSchemas = schemas.map((s) =>
+      mergeSchemas(resolvedSchemaLessConditional, s) as S
+    );
   }
   return resolvedSchemas.flatMap((s) =>
-    retrieveSchemaInternal<T, S, F>(validator, s, rootSchema, formData, expandAllBranches, recurseList)
+    retrieveSchemaInternal<T, S, F>(
+      validator,
+      s,
+      rootSchema,
+      formData,
+      expandAllBranches,
+      recurseList,
+    )
   );
 }
 
@@ -120,18 +174,25 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param listOfLists - The list of lists of elements that represent the allOf, anyOf or oneOf resolved values in order
  * @returns - The list of all permutations of schemas for a set of `xxxOf`s
  */
-export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchema>(listOfLists: S[][]) {
+export function getAllPermutationsOfXxxOf<
+  S extends StrictRJSFSchema = RJSFSchema,
+>(listOfLists: S[][]) {
   const allPermutations: S[][] = listOfLists.reduce<S[][]>(
     (permutations, list) => {
       // When there are more than one set of schemas for a row, duplicate the set of permutations and add in the values
       if (list.length > 1) {
-        return list.flatMap((element) => times(permutations.length, (i) => [...permutations[i]].concat(element)));
+        return list.flatMap((element) =>
+          times(
+            permutations.length,
+            (i) => [...permutations[i]].concat(element),
+          )
+        );
       }
       // Otherwise just push in the single value into the current set of permutations
       permutations.forEach((permutation) => permutation.push(list[0]));
       return permutations;
     },
-    [[]] as S[][] // Start with an empty list
+    [[]] as S[][], // Start with an empty list
   );
 
   return allPermutations;
@@ -150,13 +211,17 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
-export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
     validator,
@@ -164,7 +229,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     rootSchema,
     expandAllBranches,
     recurseList,
-    formData
+    formData,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
     // return the updatedSchemas array if it has either multiple schemas within it
@@ -178,10 +243,17 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       rootSchema,
       expandAllBranches,
       recurseList,
-      formData
+      formData,
     );
     return resolvedSchemas.flatMap((s) => {
-      return retrieveSchemaInternal<T, S, F>(validator, s, rootSchema, formData, expandAllBranches, recurseList);
+      return retrieveSchemaInternal<T, S, F>(
+        validator,
+        s,
+        rootSchema,
+        formData,
+        expandAllBranches,
+        recurseList,
+      );
     });
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema.allOf)) {
@@ -192,11 +264,14 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         formData,
         expandAllBranches,
-        recurseList
+        recurseList,
       )
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
-    return allPermutations.map((permutation) => ({ ...schema, allOf: permutation }));
+    return allPermutations.map((permutation) => ({
+      ...schema,
+      allOf: permutation,
+    }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
   return [schema];
@@ -215,15 +290,23 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list schemas retrieved after having all references resolved
  */
-export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveReference<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
-  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList);
+  const updatedSchema = resolveAllReferences<S>(
+    schema,
+    rootSchema,
+    recurseList,
+  );
   if (updatedSchema !== schema) {
     // Only call this if the schema was actually changed by the `resolveAllReferences()` function
     return retrieveSchemaInternal<T, S, F>(
@@ -232,7 +315,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList
+      recurseList,
     );
   }
   return [schema];
@@ -248,7 +331,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
-  recurseList: string[]
+  recurseList: string[],
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -276,7 +359,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         result[key] = resolveAllReferences(value as S, rootSchema, childList);
         childrenLists.push(childList);
       },
-      {} as RJSFSchema
+      {} as RJSFSchema,
     );
     merge(recurseList, uniq(flattenDeep(childrenLists)));
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -285,15 +368,19 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   if (
     ITEMS_KEY in resolvedSchema &&
     !Array.isArray(resolvedSchema.items) &&
-    typeof resolvedSchema.items !== 'boolean'
+    typeof resolvedSchema.items !== "boolean"
   ) {
     resolvedSchema = {
       ...resolvedSchema,
-      items: resolveAllReferences(resolvedSchema.items as S, rootSchema, recurseList),
+      items: resolveAllReferences(
+        resolvedSchema.items as S,
+        rootSchema,
+        recurseList,
+      ),
     };
   }
 
-  return isEqual(schema, resolvedSchema) ? schema : resolvedSchema;
+  return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
 /** Creates new 'properties' items for each key in the `formData`
@@ -307,8 +394,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
 export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema?: S, aFormData?: T): S {
+  F extends FormContextType = any,
+>(
+  validator: ValidatorType<T, S, F>,
+  theSchema: S,
+  rootSchema?: S,
+  aFormData?: T,
+): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -316,27 +408,32 @@ export function stubExistingAdditionalProperties<
   };
 
   // make sure formData is an object
-  const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
+  const formData: GenericObjectType = aFormData && isObject(aFormData)
+    ? aFormData
+    : {};
   Object.keys(formData).forEach((key) => {
     if (key in schema.properties) {
       // No need to stub, our schema already has the property
       return;
     }
 
-    let additionalProperties: S['additionalProperties'] = {};
-    if (typeof schema.additionalProperties !== 'boolean') {
+    let additionalProperties: S["additionalProperties"] = {};
+    if (typeof schema.additionalProperties !== "boolean") {
       if (REF_KEY in schema.additionalProperties!) {
         additionalProperties = retrieveSchema<T, S, F>(
           validator,
           { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
           rootSchema,
-          formData as T
+          formData as T,
         );
-      } else if ('type' in schema.additionalProperties!) {
+      } else if ("type" in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
-      } else if (ANY_OF_KEY in schema.additionalProperties! || ONE_OF_KEY in schema.additionalProperties!) {
+      } else if (
+        ANY_OF_KEY in schema.additionalProperties! ||
+        ONE_OF_KEY in schema.additionalProperties!
+      ) {
         additionalProperties = {
-          type: 'object',
+          type: "object",
           ...schema.additionalProperties,
         };
       } else {
@@ -373,14 +470,14 @@ export function stubExistingAdditionalProperties<
 export function retrieveSchemaInternal<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   rawFormData?: T,
   expandAllBranches = false,
-  recurseList: string[] = []
+  recurseList: string[] = [],
 ): S[] {
   if (!isObject(schema)) {
     return [{} as S];
@@ -391,7 +488,7 @@ export function retrieveSchemaInternal<
     rootSchema,
     expandAllBranches,
     recurseList,
-    rawFormData
+    rawFormData,
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -402,7 +499,7 @@ export function retrieveSchemaInternal<
         rootSchema,
         expandAllBranches,
         recurseList,
-        rawFormData as T
+        rawFormData as T,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
@@ -416,15 +513,21 @@ export function retrieveSchemaInternal<
           deep: false,
         } as Options) as S;
       } catch (e) {
-        console.warn('could not merge subschemas in allOf:\n', e);
+        console.warn("could not merge subschemas in allOf:\n", e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
         return resolvedSchemaWithoutAllOf as S;
       }
     }
     const hasAdditionalProperties =
-      ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false;
+      ADDITIONAL_PROPERTIES_KEY in resolvedSchema &&
+      resolvedSchema.additionalProperties !== false;
     if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(validator, resolvedSchema, rootSchema, rawFormData as T);
+      return stubExistingAdditionalProperties<T, S, F>(
+        validator,
+        resolvedSchema,
+        rootSchema,
+        rawFormData as T,
+      );
     }
 
     return resolvedSchema;
@@ -446,8 +549,14 @@ export function retrieveSchemaInternal<
 export function resolveAnyOrOneOfSchemas<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+  F extends FormContextType = any,
+>(
+  validator: ValidatorType<T, S, F>,
+  schema: S,
+  rootSchema: S,
+  expandAllBranches: boolean,
+  rawFormData?: T,
+) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
   if (Array.isArray(oneOf)) {
@@ -457,7 +566,9 @@ export function resolveAnyOrOneOfSchemas<
   }
   if (anyOrOneOf) {
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
-    const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
+    const formData = rawFormData === undefined && expandAllBranches
+      ? ({} as T)
+      : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     anyOrOneOf = anyOrOneOf.map((s) => {
       // Due to anyOf/oneOf possibly using the same $ref we always pass a fresh recurse list array so that each option
@@ -465,7 +576,13 @@ export function resolveAnyOrOneOfSchemas<
       return resolveAllReferences(s, rootSchema, []);
     });
     // Call this to trigger the set of isValid() calls that the schema parser will need
-    const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
+    const option = getFirstMatchingOption<T, S, F>(
+      validator,
+      formData,
+      anyOrOneOf,
+      rootSchema,
+      discriminator,
+    );
     if (expandAllBranches) {
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
@@ -486,13 +603,17 @@ export function resolveAnyOrOneOfSchemas<
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The list of schemas with their dependencies resolved
  */
-export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveDependencies<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
@@ -501,7 +622,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
     remainingSchema as S,
     rootSchema,
     expandAllBranches,
-    formData
+    formData,
   );
   return resolvedSchemas.flatMap((resolvedSchema) =>
     processDependencies<T, S, F>(
@@ -511,7 +632,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       rootSchema,
       expandAllBranches,
       recurseList,
-      formData
+      formData,
     )
   );
 }
@@ -529,14 +650,18 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @returns - The schema with the `dependencies` resolved into it
  */
-export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function processDependencies<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
-  dependencies: S['dependencies'],
+  dependencies: S["dependencies"],
   resolvedSchema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
@@ -546,12 +671,14 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       continue;
     }
     // Skip this dependency if it is not included in the schema (such as when dependencyKey is itself a hidden dependency.)
-    if (resolvedSchema.properties && !(dependencyKey in resolvedSchema.properties)) {
+    if (
+      resolvedSchema.properties && !(dependencyKey in resolvedSchema.properties)
+    ) {
       continue;
     }
     const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
       dependencyKey,
-      dependencies as GenericObjectType
+      dependencies as GenericObjectType,
     );
     if (Array.isArray(dependencyValue)) {
       schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
@@ -564,7 +691,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
         dependencyValue as S,
         expandAllBranches,
         recurseList,
-        formData
+        formData,
       );
     }
     return schemas.flatMap((schema) =>
@@ -575,7 +702,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
         rootSchema,
         expandAllBranches,
         recurseList,
-        formData
+        formData,
       )
     );
   }
@@ -588,9 +715,11 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param [additionallyRequired] - An optional array of additionally required names
  * @returns - The schema with the additional required values merged in
  */
-export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>(
+export function withDependentProperties<
+  S extends StrictRJSFSchema = RJSFSchema,
+>(
   schema: S,
-  additionallyRequired?: string[]
+  additionallyRequired?: string[],
 ) {
   if (!additionallyRequired) {
     return schema;
@@ -615,7 +744,11 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  * @param [formData]- The current formData to assist retrieving a schema
  * @returns - The list of schemas with the dependent schema resolved into them
  */
-export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function withDependentSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -623,7 +756,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   dependencyValue: S,
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     validator,
@@ -631,7 +764,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     rootSchema,
     formData,
     expandAllBranches,
-    recurseList
+    recurseList,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -642,10 +775,17 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     // Resolve $refs inside oneOf.
     const resolvedOneOfs = oneOf.map((subschema) => {
-      if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
+      if (typeof subschema === "boolean" || !(REF_KEY in subschema)) {
         return [subschema as S];
       }
-      return resolveReference<T, S, F>(validator, subschema as S, rootSchema, expandAllBranches, recurseList, formData);
+      return resolveReference<T, S, F>(
+        validator,
+        subschema as S,
+        rootSchema,
+        expandAllBranches,
+        recurseList,
+        formData,
+      );
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
@@ -657,7 +797,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         resolvedOneOf,
         expandAllBranches,
         recurseList,
-        formData
+        formData,
       )
     );
   });
@@ -681,41 +821,47 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
 export function withExactlyOneSubschema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,
-  oneOf: S['oneOf'],
+  oneOf: S["oneOf"],
   expandAllBranches: boolean,
   recurseList: string[],
-  formData?: T
+  formData?: T,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
-    if (typeof subschema === 'boolean' || !subschema || !subschema.properties) {
+    if (typeof subschema === "boolean" || !subschema || !subschema.properties) {
       return false;
     }
     const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
     if (conditionPropertySchema) {
       const conditionSchema: S = {
-        type: 'object',
+        type: "object",
         properties: {
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
+      return validator.isValid(conditionSchema, formData, rootSchema) ||
+        expandAllBranches;
     }
     return false;
   });
 
   if (!expandAllBranches && validSubschemas!.length !== 1) {
-    console.warn("ignoring oneOf in dependencies because there isn't exactly one subschema that is valid");
+    console.warn(
+      "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
+    );
     return [schema];
   }
   return validSubschemas.flatMap((s) => {
     const subschema: S = s as S;
-    const [dependentSubschema] = splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
+    const [dependentSubschema] = splitKeyElementFromObject(
+      dependencyKey,
+      subschema.properties as GenericObjectType,
+    );
     const dependentSchema = { ...subschema, properties: dependentSubschema };
     const schemas = retrieveSchemaInternal<T, S, F>(
       validator,
@@ -723,7 +869,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList
+      recurseList,
     );
     return schemas.map((s) => mergeSchemas(schema, s) as S);
   });

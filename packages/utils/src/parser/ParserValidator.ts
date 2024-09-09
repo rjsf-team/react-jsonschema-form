@@ -1,8 +1,7 @@
-import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
+import get from "lodash/get";
 
-import { ID_KEY } from '../constants';
-import hashForSchema from '../hashForSchema';
+import { ID_KEY } from "../constants";
+import hashForSchema from "../hashForSchema";
 import {
   CustomValidator,
   ErrorSchema,
@@ -14,7 +13,8 @@ import {
   UiSchema,
   ValidationData,
   ValidatorType,
-} from '../types';
+} from "../types";
+import deepEquals from "../deepEquals";
 
 /** The type of the map of schema hash to schema
  */
@@ -29,9 +29,11 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = {
  * the hashed value of the schema. NOTE: After hashing the schema, an $id with the hash value is added to the
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
-export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  implements ValidatorType<T, S, F>
-{
+export default class ParserValidator<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> implements ValidatorType<T, S, F> {
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;
 
@@ -67,11 +69,11 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     const existing = this.schemaMap[key];
     if (!existing) {
       this.schemaMap[key] = identifiedSchema;
-    } else if (!isEqual(existing, identifiedSchema)) {
-      console.error('existing schema:', JSON.stringify(existing, null, 2));
-      console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
+    } else if (!deepEquals(existing, identifiedSchema)) {
+      console.error("existing schema:", JSON.stringify(existing, null, 2));
+      console.error("new schema:", JSON.stringify(identifiedSchema, null, 2));
       throw new Error(
-        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`
+        `Two different schemas exist with the same key ${key}! What a bad coincidence. If possible, try adding an $id to one of the schemas`,
       );
     }
   }
@@ -91,8 +93,10 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
   isValid(schema: S, _formData: T, rootSchema: S): boolean {
-    if (!isEqual(rootSchema, this.rootSchema)) {
-      throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
+    if (!deepEquals(rootSchema, this.rootSchema)) {
+      throw new Error(
+        "Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema",
+      );
     }
     this.addSchema(schema, hashForSchema<S>(schema));
 
@@ -104,8 +108,13 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @param _schema - The schema parameter that is ignored
    * @param _formData - The formData parameter that is ignored
    */
-  rawValidation<Result = any>(_schema: S, _formData?: T): { errors?: Result[]; validationError?: Error } {
-    throw new Error('Unexpectedly calling the `rawValidation()` method during schema parsing');
+  rawValidation<Result = any>(
+    _schema: S,
+    _formData?: T,
+  ): { errors?: Result[]; validationError?: Error } {
+    throw new Error(
+      "Unexpectedly calling the `rawValidation()` method during schema parsing",
+    );
   }
 
   /** Implements the `ValidatorType` `toErrorList()` method to throw an error since it is never supposed to be called
@@ -113,8 +122,13 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @param _errorSchema - The error schema parameter that is ignored
    * @param _fieldPath - The field path parameter that is ignored
    */
-  toErrorList(_errorSchema?: ErrorSchema<T>, _fieldPath?: string[]): RJSFValidationError[] {
-    throw new Error('Unexpectedly calling the `toErrorList()` method during schema parsing');
+  toErrorList(
+    _errorSchema?: ErrorSchema<T>,
+    _fieldPath?: string[],
+  ): RJSFValidationError[] {
+    throw new Error(
+      "Unexpectedly calling the `toErrorList()` method during schema parsing",
+    );
   }
 
   /** Implements the `ValidatorType` `validateFormData()` method to throw an error since it is never supposed to be
@@ -131,8 +145,10 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     _schema: S,
     _customValidate?: CustomValidator<T, S, F>,
     _transformErrors?: ErrorTransformer<T, S, F>,
-    _uiSchema?: UiSchema<T, S, F>
+    _uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
-    throw new Error('Unexpectedly calling the `validateFormData()` method during schema parsing');
+    throw new Error(
+      "Unexpectedly calling the `validateFormData()` method during schema parsing",
+    );
   }
 }

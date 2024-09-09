@@ -1,25 +1,31 @@
-import { ErrorObject } from 'ajv';
-import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
+import { ErrorObject } from "ajv";
+import get from "lodash/get";
 import {
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
   hashForSchema,
   ID_KEY,
   JUNK_OPTION_ID,
+  retrieveSchema,
   RJSFSchema,
   StrictRJSFSchema,
   toErrorList,
   UiSchema,
   ValidationData,
   ValidatorType,
-  retrieveSchema,
-} from '@rjsf/utils';
+} from "@rjsf/utils";
 
-import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
-import processRawValidationErrors, { RawValidationErrorsType } from './processRawValidationErrors';
+import {
+  CompiledValidateFunction,
+  Localizer,
+  ValidatorFunctions,
+} from "./types";
+import processRawValidationErrors, {
+  RawValidationErrorsType,
+} from "./processRawValidationErrors";
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.
@@ -27,9 +33,8 @@ import processRawValidationErrors, { RawValidationErrorsType } from './processRa
 export default class AJV8PrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> implements ValidatorType<T, S, F>
-{
+  F extends FormContextType = any,
+> implements ValidatorType<T, S, F> {
   /** The root schema object used to construct this validator
    *
    * @private
@@ -61,7 +66,11 @@ export default class AJV8PrecompiledValidator<
    * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
    * @throws - Error when the base schema of the precompiled validator does not have a matching validator function
    */
-  constructor(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer) {
+  constructor(
+    validateFns: ValidatorFunctions,
+    rootSchema: S,
+    localizer?: Localizer,
+  ) {
     this.rootSchema = rootSchema;
     this.validateFns = validateFns;
     this.localizer = localizer;
@@ -78,7 +87,9 @@ export default class AJV8PrecompiledValidator<
     const key = get(schema, ID_KEY) || hashForSchema(schema);
     const validator = this.validateFns[key];
     if (!validator) {
-      throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
+      throw new Error(
+        `No precompiled validator function was found for the given schema for "${key}"`,
+      );
     }
     return validator;
   }
@@ -92,12 +103,17 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: T) {
-    if (!isEqual(schema, this.rootSchema)) {
+    if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
-      const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
-      if (!isEqual(schema, resolvedRootSchema)) {
+      const resolvedRootSchema = retrieveSchema(
+        this,
+        this.rootSchema,
+        this.rootSchema,
+        formData,
+      );
+      if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
-          'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
+          "The schema associated with the precompiled validator differs from the rootSchema provided for validation",
         );
       }
     }
@@ -122,11 +138,14 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: T,
+  ): RawValidationErrorsType<Result> {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
-    if (typeof this.localizer === 'function') {
+    if (typeof this.localizer === "function") {
       this.localizer(this.mainValidator.errors);
     }
     const errors = this.mainValidator.errors || undefined;
@@ -153,10 +172,18 @@ export default class AJV8PrecompiledValidator<
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
-    uiSchema?: UiSchema<T, S, F>
+    uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
-    return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);
+    return processRawValidationErrors(
+      this,
+      rawErrors,
+      formData,
+      schema,
+      customValidate,
+      transformErrors,
+      uiSchema,
+    );
   }
 
   /** Validates data against a schema, returning true if the data is valid, or false otherwise. If the schema is

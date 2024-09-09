@@ -1,4 +1,22 @@
-import isEqualWith from 'lodash/isEqualWith';
+import { createCustomEqual, State } from 'fast-equals';
+
+function isFunctions(a: any, b: any) {
+  return typeof a === 'function' && typeof b === 'function';
+}
+
+const customDeepEqual = createCustomEqual({
+  createInternalComparator: (comparator: (a: any, b: any, state: State<any>) => boolean) => {
+    return (a: any, b: any, _idxA: any, _idxB: any, _parentA: any, _parentB: any, state: State<any>) => {
+      if (isFunctions(a, b)) {
+        // Assume all functions are equivalent
+        // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
+        return true;
+      }
+
+      return comparator(a, b, state);
+    };
+  },
+});
 
 /** Implements a deep equals using the `lodash.isEqualWith` function, that provides a customized comparator that
  * assumes all functions are equivalent.
@@ -8,12 +26,8 @@ import isEqualWith from 'lodash/isEqualWith';
  * @returns - True if the `a` and `b` are deeply equal, false otherwise
  */
 export default function deepEquals(a: any, b: any): boolean {
-  return isEqualWith(a, b, (obj: any, other: any) => {
-    if (typeof obj === 'function' && typeof other === 'function') {
-      // Assume all functions are equivalent
-      // see https://github.com/rjsf-team/react-jsonschema-form/issues/255
-      return true;
-    }
-    return undefined; // fallback to default isEquals behavior
-  });
+  if (isFunctions(a, b)) {
+    return true;
+  }
+  return customDeepEqual(a, b);
 }
