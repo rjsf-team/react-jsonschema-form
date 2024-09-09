@@ -2,7 +2,10 @@ import { createSchemaUtils, getDefaultFormState, RJSFSchema } from '../../src';
 import {
   AdditionalItemsHandling,
   computeDefaults,
+  getArrayDefaults,
+  getDefaultBasedOnSchemaType,
   getInnerSchemaForArrayItem,
+  getObjectDefaults,
 } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
@@ -355,6 +358,744 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it('test computeDefaults returns undefined with simple schema and no optional args', () => {
         const schema: RJSFSchema = { type: 'string' };
         expect(computeDefaults(testValidator, schema)).toBe(undefined);
+      });
+    });
+    describe('getDefaultBasedOnSchemaType()', () => {
+      it('test an object with an optional property that has a nested required property', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'string',
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+
+        expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema })).toEqual({
+          requiredProperty: 'foo',
+        });
+      });
+      it('test an object with an optional property that has a nested required property with default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'string',
+                  default: '',
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema })).toEqual({
+          requiredProperty: 'foo',
+          optionalProperty: { nestedRequiredProperty: '' },
+        });
+      });
+      it('test an object with an optional property that has a nested required property and includeUndefinedValues', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'object',
+                  properties: {
+                    undefinedProperty: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues: true })
+        ).toEqual({
+          optionalProperty: {
+            nestedRequiredProperty: {
+              undefinedProperty: undefined,
+            },
+          },
+          requiredProperty: 'foo',
+        });
+      });
+      it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalNumberProperty: {
+              type: 'number',
+            },
+            optionalObjectProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'object',
+                  properties: {
+                    undefinedProperty: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({
+          optionalNumberProperty: undefined,
+          optionalObjectProperty: {
+            nestedRequiredProperty: {},
+          },
+          requiredProperty: 'foo',
+        });
+      });
+      it('test an object with an additionalProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          additionalProperties: true,
+          required: ['requiredProperty'],
+          default: {
+            foo: 'bar',
+          },
+        };
+        expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema }, { foo: 'bar' })).toEqual({
+          requiredProperty: 'foo',
+          foo: 'bar',
+        });
+      });
+      it('test an object with an additionalProperties and includeUndefinedValues', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          additionalProperties: {
+            type: 'string',
+          },
+          required: ['requiredProperty'],
+          default: {
+            foo: 'bar',
+          },
+        };
+        expect(
+          getDefaultBasedOnSchemaType(
+            testValidator,
+            schema,
+            { rootSchema: schema, includeUndefinedValues: true },
+            { foo: 'bar' }
+          )
+        ).toEqual({
+          requiredProperty: 'foo',
+          foo: 'bar',
+        });
+      });
+      it('test an object with additionalProperties type object with defaults and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                    default: 'localhost',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                    default: 389,
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
+          test: {
+            newKey: {
+              host: 'localhost',
+              port: 389,
+            },
+          },
+        });
+      });
+      it('test an object with additionalProperties type object with no defaults and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
+          test: {
+            newKey: {},
+          },
+        });
+      });
+      it('test an object with additionalProperties type object with no defaults and non-object formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: {},
+          })
+        ).toEqual({});
+      });
+      it('test an array with defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          default: ['Raphael', 'Michaelangelo'],
+          items: {
+            type: 'string',
+            default: 'Unknown',
+          },
+        };
+
+        expect(
+          getDefaultBasedOnSchemaType(
+            testValidator,
+            schema,
+            {
+              rootSchema: schema,
+              includeUndefinedValues: 'excludeObjectChildren',
+            },
+            ['Raphael', 'Michaelangelo']
+          )
+        ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+      });
+      it('test an array with no defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          items: {
+            type: 'string',
+          },
+        };
+
+        expect(
+          getArrayDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual([]);
+      });
+      it('test computeDefaults handles an invalid property schema', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            invalidProperty: 'not a valid property value',
+          },
+        } as RJSFSchema;
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({});
+      });
+      it('test with a recursive allof schema', () => {
+        expect(
+          getDefaultBasedOnSchemaType(testValidator, RECURSIVE_REF_ALLOF, { rootSchema: RECURSIVE_REF_ALLOF })
+        ).toEqual({
+          value: [undefined],
+        });
+      });
+      it('test computeDefaults returns undefined with simple schema and no optional args', () => {
+        const schema: RJSFSchema = { type: 'string' };
+        expect(getDefaultBasedOnSchemaType(testValidator, schema)).toBe(undefined);
+      });
+    });
+    describe('getObjectDefaults()', () => {
+      it('test an object with an optional property that has a nested required property', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'string',
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+
+        expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
+          requiredProperty: 'foo',
+        });
+      });
+      it('test an object with an optional property that has a nested required property with default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'string',
+                  default: '',
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
+          requiredProperty: 'foo',
+          optionalProperty: { nestedRequiredProperty: '' },
+        });
+      });
+      it('test an object with an optional property that has a nested required property and includeUndefinedValues', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'object',
+                  properties: {
+                    undefinedProperty: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(getObjectDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues: true })).toEqual({
+          optionalProperty: {
+            nestedRequiredProperty: {
+              undefinedProperty: undefined,
+            },
+          },
+          requiredProperty: 'foo',
+        });
+      });
+      it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            optionalNumberProperty: {
+              type: 'number',
+            },
+            optionalObjectProperty: {
+              type: 'object',
+              properties: {
+                nestedRequiredProperty: {
+                  type: 'object',
+                  properties: {
+                    undefinedProperty: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+              required: ['nestedRequiredProperty'],
+            },
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['requiredProperty'],
+        };
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({
+          optionalNumberProperty: undefined,
+          optionalObjectProperty: {
+            nestedRequiredProperty: {},
+          },
+          requiredProperty: 'foo',
+        });
+      });
+      it('test an object with an additionalProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          additionalProperties: true,
+          required: ['requiredProperty'],
+          default: {
+            foo: 'bar',
+          },
+        };
+        expect(getObjectDefaults(testValidator, schema, { rootSchema: schema }, { foo: 'bar' })).toEqual({
+          requiredProperty: 'foo',
+          foo: 'bar',
+        });
+      });
+      it('test an object with an additionalProperties and includeUndefinedValues', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            requiredProperty: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          additionalProperties: {
+            type: 'string',
+          },
+          required: ['requiredProperty'],
+          default: {
+            foo: 'bar',
+          },
+        };
+        expect(
+          getObjectDefaults(
+            testValidator,
+            schema,
+            {
+              rootSchema: schema,
+              includeUndefinedValues: true,
+            },
+            {
+              foo: 'bar',
+            }
+          )
+        ).toEqual({ requiredProperty: 'foo', foo: 'bar' });
+      });
+      it('test an object with additionalProperties type object with defaults and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                    default: 'localhost',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                    default: 389,
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
+          test: {
+            newKey: {
+              host: 'localhost',
+              port: 389,
+            },
+          },
+        });
+      });
+      it('test an object with additionalProperties type object with no defaults and formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: { test: { foo: 'x', newKey: {} } },
+          })
+        ).toEqual({
+          test: {
+            newKey: {},
+          },
+        });
+      });
+      it('test an object with additionalProperties type object with no defaults and non-object formdata', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              title: 'Test',
+              type: 'object',
+              properties: {
+                foo: {
+                  type: 'string',
+                },
+              },
+              additionalProperties: {
+                type: 'object',
+                properties: {
+                  host: {
+                    title: 'Host',
+                    type: 'string',
+                  },
+                  port: {
+                    title: 'Port',
+                    type: 'integer',
+                  },
+                },
+              },
+            },
+          },
+        };
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: {},
+          })
+        ).toEqual({});
+      });
+      it('test computeDefaults handles an invalid property schema', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            invalidProperty: 'not a valid property value',
+          },
+        } as RJSFSchema;
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual({});
+      });
+      it('test with a recursive allof schema', () => {
+        expect(getObjectDefaults(testValidator, RECURSIVE_REF_ALLOF, { rootSchema: RECURSIVE_REF_ALLOF })).toEqual({
+          value: [undefined],
+        });
+      });
+      it('test computeDefaults returns undefined with simple schema and no optional args', () => {
+        const schema: RJSFSchema = { type: 'object' };
+        expect(getObjectDefaults(testValidator, schema)).toStrictEqual({});
+      });
+    });
+    describe('getArrayDefaults()', () => {
+      it('test an array with defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          default: ['Raphael', 'Michaelangelo'],
+          items: {
+            type: 'string',
+            default: 'Unknown',
+          },
+        };
+
+        expect(
+          getArrayDefaults(
+            testValidator,
+            schema,
+            {
+              rootSchema: schema,
+              includeUndefinedValues: 'excludeObjectChildren',
+            },
+            ['Raphael', 'Michaelangelo']
+          )
+        ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+      });
+      it('test an array with no defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          items: {
+            type: 'string',
+          },
+        };
+
+        expect(
+          getArrayDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual([]);
+      });
+      it('test computeDefaults handles an invalid array schema', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: 'not a valid item value',
+        } as RJSFSchema;
+        expect(
+          getArrayDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual([]);
+      });
+      it('test computeDefaults returns undefined with simple schema and no optional args', () => {
+        const schema: RJSFSchema = { type: 'array' };
+        expect(getArrayDefaults(testValidator, schema)).toStrictEqual([]);
       });
     });
     describe('default form state behavior: ignore min items unless required', () => {
@@ -2657,6 +3398,93 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: {
             name: 'Name',
             grade: 'A',
+          },
+        });
+      });
+      it('should populate defaults for properties to ensure the dependencies conditions are resolved based on it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['authentication'],
+          properties: {
+            authentication: {
+              title: 'Authentication',
+              type: 'object',
+              properties: {
+                credentialType: {
+                  title: 'Credential type',
+                  type: 'string',
+                  default: 'username',
+                  oneOf: [
+                    {
+                      const: 'username',
+                      title: 'Username and password',
+                    },
+                    {
+                      const: 'secret',
+                      title: 'SSO',
+                    },
+                  ],
+                },
+              },
+              dependencies: {
+                credentialType: {
+                  allOf: [
+                    {
+                      if: {
+                        properties: {
+                          credentialType: {
+                            const: 'username',
+                          },
+                        },
+                      },
+                      then: {
+                        properties: {
+                          usernameAndPassword: {
+                            type: 'object',
+                            properties: {
+                              username: {
+                                type: 'string',
+                                title: 'Username',
+                              },
+                              password: {
+                                type: 'string',
+                                title: 'Password',
+                              },
+                            },
+                            required: ['username', 'password'],
+                          },
+                        },
+                        required: ['usernameAndPassword'],
+                      },
+                    },
+                    {
+                      if: {
+                        properties: {
+                          credentialType: {
+                            const: 'secret',
+                          },
+                        },
+                      },
+                      then: {
+                        properties: {
+                          sso: {
+                            type: 'string',
+                            title: 'SSO',
+                          },
+                        },
+                        required: ['sso'],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema)).toEqual({
+          authentication: {
+            credentialType: 'username',
+            usernameAndPassword: {},
           },
         });
       });
