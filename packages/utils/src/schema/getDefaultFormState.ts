@@ -141,12 +141,22 @@ function maybeAddDefaultToObject<T = any>(
 }
 
 interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema> {
+  /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
+  /** The options root schema, used to primarily to look up `$ref`s */
   rootSchema?: S;
+  /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
+  /** Optional flag, if true, cause undefined values to be added as defaults.
+   *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
+   *          false when computing defaults for any nested object properties.
+   */
   includeUndefinedValues?: boolean | 'excludeObjectChildren';
+  /** The list of ref names currently being recursed, used to prevent infinite recursion */
   _recurseList?: string[];
+  /** Optional configuration object, if provided, allows users to override default form state behavior */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
 }
 
@@ -155,22 +165,15 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param rawSchema - The schema for which the default state is desired
- * @param [props] - Optional props for this function
- * @param [props.parentDefaults] - Any defaults provided by the parent field in the schema
- * @param [props.rootSchema] - The options root schema, used to primarily to look up `$ref`s
- * @param [props.rawFormData] - The current formData, if any, onto which to provide any missing defaults
- * @param [props.includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
- *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
- *          false when computing defaults for any nested object properties.
- * @param [props._recurseList=[]] - The list of ref names currently being recursed, used to prevent infinite recursion
- * @param [props.experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
- * @param [props.required] - Optional flag, if true, indicates this schema was required in the parent schema.
+ * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
  */
 export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  {
+  computeDefaultsProps: ComputeDefaultsProps<T, S> = {}
+): T | T[] | undefined {
+  const {
     parentDefaults,
     rawFormData,
     rootSchema = {} as S,
@@ -178,8 +181,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
     required,
-  }: ComputeDefaultsProps<T, S> = {}
-): T | T[] | undefined {
+  } = computeDefaultsProps;
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes.
@@ -202,7 +204,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
   } else if (DEPENDENCIES_KEY in schema) {
-    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], formData);
+    // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
+    const defaultFormData: T = {
+      ...formData,
+      ...getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults),
+    };
+    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], defaultFormData);
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
@@ -269,164 +276,238 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     defaults = schema.default as unknown as T;
   }
 
-  switch (getSchemaType<S>(schema)) {
-    // We need to recurse for object schema inner default values.
-    case 'object': {
-      // This is a custom addition that fixes this issue:
-      // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
-      const retrievedSchema =
-        experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
-          ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
-          : schema;
-      const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
-        (acc: GenericObjectType, key: string) => {
-          // Compute the defaults for this node, with the parent defaults we might
-          // have from a previous run: defaults[key].
-          const computedDefault = computeDefaults<T, S, F>(validator, get(retrievedSchema, [PROPERTIES_KEY, key]), {
-            rootSchema,
-            _recurseList,
-            experimental_defaultFormStateBehavior,
-            includeUndefinedValues: includeUndefinedValues === true,
-            parentDefaults: get(defaults, [key]),
-            rawFormData: get(formData, [key]),
-            required: retrievedSchema.required?.includes(key),
-          });
-          maybeAddDefaultToObject<T>(
-            acc,
-            key,
-            computedDefault,
-            includeUndefinedValues,
-            required,
-            retrievedSchema.required,
-            experimental_defaultFormStateBehavior
-          );
-          return acc;
-        },
-        {}
-      ) as T;
-      if (retrievedSchema.additionalProperties) {
-        // as per spec additionalProperties may be either schema or boolean
-        const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)
-          ? retrievedSchema.additionalProperties
-          : {};
+  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
 
-        const keys = new Set<string>();
-        if (isObject(defaults)) {
-          Object.keys(defaults as GenericObjectType)
-            .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
-            .forEach((key) => keys.add(key));
-        }
-        const formDataRequired: string[] = [];
-        Object.keys(formData as GenericObjectType)
-          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
-          .forEach((key) => {
-            keys.add(key);
-            formDataRequired.push(key);
-          });
-        keys.forEach((key) => {
-          const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
-            rootSchema,
-            _recurseList,
-            experimental_defaultFormStateBehavior,
-            includeUndefinedValues: includeUndefinedValues === true,
-            parentDefaults: get(defaults, [key]),
-            rawFormData: get(formData, [key]),
-            required: retrievedSchema.required?.includes(key),
-          });
-          // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
-          maybeAddDefaultToObject<T>(
-            objectDefaults as GenericObjectType,
-            key,
-            computedDefault,
-            includeUndefinedValues,
-            required,
-            formDataRequired
-          );
-        });
-      }
-      return objectDefaults;
-    }
-    case 'array': {
-      const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
-      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
-      const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
-      const computeSkipPopulate =
-        experimental_defaultFormStateBehavior?.arrayMinItems?.computeSkipPopulate ?? (() => false);
+  return defaultBasedOnSchemaType ?? defaults;
+}
 
-      const emptyDefault = isSkipEmptyDefaults ? undefined : [];
-
-      // Inject defaults into existing array defaults
-      if (Array.isArray(defaults)) {
-        defaults = defaults.map((item, idx) => {
-          const schemaItem: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Fallback, idx);
-          return computeDefaults<T, S, F>(validator, schemaItem, {
-            rootSchema,
-            _recurseList,
-            experimental_defaultFormStateBehavior,
-            parentDefaults: item,
-            required,
-          });
-        }) as T[];
-      }
-
-      // Deeply inject defaults into already existing form data
-      if (Array.isArray(rawFormData)) {
-        const schemaItem: S = getInnerSchemaForArrayItem<S>(schema);
-        if (neverPopulate) {
-          defaults = rawFormData;
-        } else {
-          defaults = rawFormData.map((item: T, idx: number) => {
-            return computeDefaults<T, S, F>(validator, schemaItem, {
-              rootSchema,
-              _recurseList,
-              experimental_defaultFormStateBehavior,
-              rawFormData: item,
-              parentDefaults: get(defaults, [idx]),
-              required,
-            });
-          }) as T[];
-        }
-      }
-
-      if (neverPopulate) {
-        return defaults ?? emptyDefault;
-      }
-      if (ignoreMinItemsFlagSet && !required) {
-        // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
-        // return form data/defaults
-        return defaults ? defaults : undefined;
-      }
-
-      const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
-      if (
-        !schema.minItems ||
-        isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
-        computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
-        schema.minItems <= defaultsLength
-      ) {
-        return defaults ? defaults : emptyDefault;
-      }
-
-      const defaultEntries: T[] = (defaults || []) as T[];
-      const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
-      const fillerDefault = fillerSchema.default;
-
-      // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
-      const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
-        computeDefaults<any, S, F>(validator, fillerSchema, {
-          parentDefaults: fillerDefault,
+/** Computes the default value for objects.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param rawSchema - The schema for which the default state is desired
+ * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
+ * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ */
+export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  validator: ValidatorType<T, S, F>,
+  rawSchema: S,
+  {
+    rawFormData,
+    rootSchema = {} as S,
+    includeUndefinedValues = false,
+    _recurseList = [],
+    experimental_defaultFormStateBehavior = undefined,
+    required,
+  }: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
+): T {
+  {
+    const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
+    const schema: S = rawSchema;
+    // This is a custom addition that fixes this issue:
+    // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
+    const retrievedSchema =
+      experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
+        ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
+        : schema;
+    const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
+      (acc: GenericObjectType, key: string) => {
+        // Compute the defaults for this node, with the parent defaults we might
+        // have from a previous run: defaults[key].
+        const computedDefault = computeDefaults<T, S, F>(validator, get(retrievedSchema, [PROPERTIES_KEY, key]), {
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          includeUndefinedValues: includeUndefinedValues === true,
+          parentDefaults: get(defaults, [key]),
+          rawFormData: get(formData, [key]),
+          required: retrievedSchema.required?.includes(key),
+        });
+        maybeAddDefaultToObject<T>(
+          acc,
+          key,
+          computedDefault,
+          includeUndefinedValues,
           required,
-        })
-      ) as T[];
-      // then fill up the rest with either the item default or empty, up to minItems
-      return defaultEntries.concat(fillerEntries);
+          retrievedSchema.required,
+          experimental_defaultFormStateBehavior
+        );
+        return acc;
+      },
+      {}
+    ) as T;
+    if (retrievedSchema.additionalProperties) {
+      // as per spec additionalProperties may be either schema or boolean
+      const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)
+        ? retrievedSchema.additionalProperties
+        : {};
+
+      const keys = new Set<string>();
+      if (isObject(defaults)) {
+        Object.keys(defaults as GenericObjectType)
+          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
+          .forEach((key) => keys.add(key));
+      }
+      const formDataRequired: string[] = [];
+      Object.keys(formData as GenericObjectType)
+        .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
+        .forEach((key) => {
+          keys.add(key);
+          formDataRequired.push(key);
+        });
+      keys.forEach((key) => {
+        const computedDefault = computeDefaults(validator, additionalPropertiesSchema as S, {
+          rootSchema,
+          _recurseList,
+          experimental_defaultFormStateBehavior,
+          includeUndefinedValues: includeUndefinedValues === true,
+          parentDefaults: get(defaults, [key]),
+          rawFormData: get(formData, [key]),
+          required: retrievedSchema.required?.includes(key),
+        });
+        // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
+        maybeAddDefaultToObject<T>(
+          objectDefaults as GenericObjectType,
+          key,
+          computedDefault,
+          includeUndefinedValues,
+          required,
+          formDataRequired
+        );
+      });
+    }
+    return objectDefaults;
+  }
+}
+
+/** Computes the default value for arrays.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param rawSchema - The schema for which the default state is desired
+ * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
+ * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ */
+export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  validator: ValidatorType<T, S, F>,
+  rawSchema: S,
+  {
+    rawFormData,
+    rootSchema = {} as S,
+    _recurseList = [],
+    experimental_defaultFormStateBehavior = undefined,
+    required,
+  }: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
+): T | T[] | undefined {
+  const schema: S = rawSchema;
+
+  const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
+  const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+  const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
+  const computeSkipPopulate =
+    experimental_defaultFormStateBehavior?.arrayMinItems?.computeSkipPopulate ?? (() => false);
+
+  const emptyDefault = isSkipEmptyDefaults ? undefined : [];
+
+  // Inject defaults into existing array defaults
+  if (Array.isArray(defaults)) {
+    defaults = defaults.map((item, idx) => {
+      const schemaItem: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Fallback, idx);
+      return computeDefaults<T, S, F>(validator, schemaItem, {
+        rootSchema,
+        _recurseList,
+        experimental_defaultFormStateBehavior,
+        parentDefaults: item,
+        required,
+      });
+    }) as T[];
+  }
+
+  // Deeply inject defaults into already existing form data
+  if (Array.isArray(rawFormData)) {
+    const schemaItem: S = getInnerSchemaForArrayItem<S>(schema);
+    if (neverPopulate) {
+      defaults = rawFormData;
+    } else {
+      defaults = rawFormData.map((item: T, idx: number) => {
+        return computeDefaults<T, S, F>(validator, schemaItem, {
+          rootSchema,
+          _recurseList,
+          experimental_defaultFormStateBehavior,
+          rawFormData: item,
+          parentDefaults: get(defaults, [idx]),
+          required,
+        });
+      }) as T[];
     }
   }
 
-  return defaults;
+  if (neverPopulate) {
+    return defaults ?? emptyDefault;
+  }
+  if (ignoreMinItemsFlagSet && !required) {
+    // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
+    // return form data/defaults
+    return defaults ? defaults : undefined;
+  }
+
+  const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
+  if (
+    !schema.minItems ||
+    isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
+    computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
+    schema.minItems <= defaultsLength
+  ) {
+    return defaults ? defaults : emptyDefault;
+  }
+
+  const defaultEntries: T[] = (defaults || []) as T[];
+  const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
+  const fillerDefault = fillerSchema.default;
+
+  // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
+  const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
+    computeDefaults<any, S, F>(validator, fillerSchema, {
+      parentDefaults: fillerDefault,
+      rootSchema,
+      _recurseList,
+      experimental_defaultFormStateBehavior,
+      required,
+    })
+  ) as T[];
+  // then fill up the rest with either the item default or empty, up to minItems
+  return defaultEntries.concat(fillerEntries);
+}
+
+/** Computes the default value based on the schema type.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param rawSchema - The schema for which the default state is desired
+ * @param {ComputeDefaultsProps} computeDefaultsProps - Optional props for this function
+ * @param defaults - Optional props for this function
+ * @returns - The default value based on the schema type if they are defined for object or array schemas.
+ */
+export function getDefaultBasedOnSchemaType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
+  validator: ValidatorType<T, S, F>,
+  rawSchema: S,
+  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  defaults?: T | T[] | undefined
+): T | T[] | void {
+  switch (getSchemaType<S>(rawSchema)) {
+    // We need to recurse for object schema inner default values.
+    case 'object': {
+      return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);
+    }
+    case 'array': {
+      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults);
+    }
+  }
 }
 
 /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have

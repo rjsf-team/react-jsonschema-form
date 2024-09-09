@@ -36,6 +36,7 @@
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
+    "fast-equals": "^5.0.1",
     "json-schema-merge-allof": "^0.8.1",
     "jsonpointer": "^5.0.1",
     "lodash": "^4.17.21",
