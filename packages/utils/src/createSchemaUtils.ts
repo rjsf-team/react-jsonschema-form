@@ -14,9 +14,9 @@ import {
   ValidatorType,
 } from './types';
 import {
+  getClosestMatchingOption,
   getDefaultFormState,
   getDisplayLabel,
-  getClosestMatchingOption,
   getFirstMatchingOption,
   getMatchingOption,
   isFilesArray,

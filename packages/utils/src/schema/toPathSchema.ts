@@ -1,11 +1,10 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
-  ADDITIONAL_PROPERTIES_KEY,
   DEPENDENCIES_KEY,
   ITEMS_KEY,
   NAME_KEY,
@@ -18,6 +17,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema'
 import { FormContextType, GenericObjectType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import retrieveSchema from './retrieveSchema';
+import deepEquals from '../deepEquals';
 
 /** An internal helper that generates an `PathSchema` object for the `schema`, recursively with protection against
  * infinite recursion
@@ -40,7 +40,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
-    const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
+    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
     if (sameSchemaIndex === -1) {
       return toPathSchemaInternal<T, S, F>(
         validator,
