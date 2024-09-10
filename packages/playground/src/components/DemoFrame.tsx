@@ -95,7 +95,7 @@ export default function DemoFrame(props: DemoFrameProps) {
         })}
       </StylesProvider>
     ) : null;
-  } else if (theme === 'material-ui-5') {
+  } else if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssBaseline />

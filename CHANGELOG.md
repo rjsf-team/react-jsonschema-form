@@ -16,7 +16,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.20.2
+# 5.21.0
+
+## @rjsf/core
+
+- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279) 
+
+## @rjsf/mui
+
+- Updated the peer dependencies for `@mui/material` and `@mui/icon-material`, fixing [4283](https://github.com/rjsf-team/react-jsonschema-form/issues/4283)
 
 ## @rjsf/utils
 
@@ -24,10 +32,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `deepEquals()` to use `fast-equals.createCustomEqual()` instead of `lodash.isEqualWith()`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
   - Switched uses of `lodash.isEqual()` to `deepEquals()` in many of the utility functions as well
 
-
 ## @validator-ajv8
 
 - Use `@rjsf/utils` `deepEquals()` instead of `lodash.isEqual()` to improve performance, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
+
+## Dev / docs / playground
+
+- Updated the playground to use `@mui/*` version 6, changing the name of the dropdown from `material-ui-5` to `mui`
 
 # 5.20.1
 

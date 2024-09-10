@@ -7,9 +7,6 @@ exports[`single fields checkbox field 1`] = `
 
 .emotion-2 {
   cursor: pointer;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -20,9 +17,6 @@ exports[`single fields checkbox field 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -47,9 +41,6 @@ exports[`single fields checkbox field 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -159,9 +150,6 @@ exports[`single fields checkbox field with label 1`] = `
 
 .emotion-2 {
   cursor: pointer;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -172,9 +160,6 @@ exports[`single fields checkbox field with label 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -204,9 +189,6 @@ exports[`single fields checkbox field with label 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -331,9 +313,6 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -351,9 +330,6 @@ exports[`single fields checkboxes field 1`] = `
 
 .emotion-4 {
   cursor: pointer;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -364,9 +340,6 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -396,9 +369,6 @@ exports[`single fields checkboxes field 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -717,9 +687,6 @@ exports[`single fields field with description 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -857,9 +824,6 @@ exports[`single fields field with description in uiSchema 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -978,9 +942,6 @@ exports[`single fields format color 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1065,9 +1026,6 @@ exports[`single fields format date 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1152,9 +1110,6 @@ exports[`single fields format datetime 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1239,9 +1194,6 @@ exports[`single fields format time 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1319,9 +1271,6 @@ exports[`single fields format time 1`] = `
 exports[`single fields help and error display 1`] = `
 .emotion-0 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
@@ -1347,16 +1296,8 @@ exports[`single fields help and error display 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
   color: red.500;
+  vertical-align: middle;
 }
 
 .emotion-6 {
@@ -1364,9 +1305,6 @@ exports[`single fields help and error display 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1379,9 +1317,6 @@ exports[`single fields help and error display 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1522,9 +1457,6 @@ exports[`single fields hidden field 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1606,9 +1538,6 @@ exports[`single fields hidden label 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1689,9 +1618,6 @@ exports[`single fields null field 1`] = `
 }
 
 .emotion-2 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1754,9 +1680,6 @@ exports[`single fields number field 0 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1842,9 +1765,6 @@ exports[`single fields number field 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1930,9 +1850,6 @@ exports[`single fields password field 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2013,9 +1930,6 @@ exports[`single fields radio field 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2032,9 +1946,6 @@ exports[`single fields radio field 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2045,9 +1956,6 @@ exports[`single fields radio field 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2076,9 +1984,6 @@ exports[`single fields radio field 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2257,9 +2162,6 @@ exports[`single fields schema examples 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2376,9 +2278,6 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -2387,9 +2286,6 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2466,9 +2362,6 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2490,9 +2383,6 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2526,9 +2416,6 @@ exports[`single fields select field 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2690,9 +2577,6 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -2701,9 +2585,6 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2781,9 +2662,6 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2805,9 +2683,6 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2841,9 +2716,6 @@ exports[`single fields select field multiple choice 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3012,9 +2884,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -3023,9 +2892,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3103,9 +2969,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3127,9 +2990,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3163,9 +3023,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3318,9 +3175,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3338,9 +3192,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 
 .emotion-3 {
   cursor: pointer;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3351,9 +3202,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3383,9 +3231,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 }
 
 .emotion-20 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3693,9 +3538,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -3704,9 +3546,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3726,9 +3565,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: top;
   -webkit-align-items: center;
@@ -3740,9 +3576,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3807,9 +3640,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3828,9 +3658,6 @@ exports[`single fields select field multiple choice formData 1`] = `
   margin-inline-start: 1px;
   -webkit-margin-end: 1px;
   margin-inline-end: 1px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3866,9 +3693,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3890,9 +3714,6 @@ exports[`single fields select field multiple choice formData 1`] = `
 }
 
 .emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4135,9 +3956,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -4146,9 +3964,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4226,9 +4041,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4250,9 +4062,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4286,9 +4095,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4457,9 +4263,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -4468,9 +4271,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4547,9 +4347,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4571,9 +4368,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4607,9 +4401,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4755,9 +4546,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
 }
 
 .emotion-3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -4774,9 +4562,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4787,9 +4572,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
 }
 
 .emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -4818,9 +4600,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5011,9 +4790,6 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -5022,9 +4798,6 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5101,9 +4874,6 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5125,9 +4895,6 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5161,9 +4928,6 @@ exports[`single fields select field single choice formData 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5315,9 +5079,6 @@ exports[`single fields slider field 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5460,9 +5221,6 @@ exports[`single fields string field format data-url 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5549,9 +5307,6 @@ exports[`single fields string field format email 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5636,9 +5391,6 @@ exports[`single fields string field format uri 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5723,9 +5475,6 @@ exports[`single fields string field regular 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5810,9 +5559,6 @@ exports[`single fields string field with placeholder 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5897,9 +5643,6 @@ exports[`single fields textarea field 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6005,9 +5748,6 @@ exports[`single fields title field 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6126,9 +5866,6 @@ exports[`single fields unsupported field 1`] = `
 }
 
 .emotion-2 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6217,9 +5954,6 @@ exports[`single fields up/down field 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -6233,9 +5967,6 @@ exports[`single fields up/down field 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -6275,9 +6006,6 @@ exports[`single fields up/down field 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6420,9 +6148,6 @@ exports[`single fields using custom tagName 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
