@@ -72,7 +72,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         ...rest
       } = data;
 
-      onThemeSelected(dataTheme, themes[dataTheme]);
+      // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
+      const theTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+      onThemeSelected(theTheme, themes[theTheme]);
 
       // force resetting form component instance
       setShowForm(false);
@@ -80,7 +82,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setUiSchema(uiSchema);
       setFormData(formData);
       setExtraErrors(extraErrors);
-      setTheme(dataTheme);
+      setTheme(theTheme);
       setShowForm(true);
       setLiveSettings(liveSettings);
       setOtherFormProps({ fields, templates, ...rest });
