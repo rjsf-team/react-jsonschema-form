@@ -14,9 +14,6 @@ exports[`array fields array 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -43,9 +40,6 @@ exports[`array fields array 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -149,9 +143,6 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -182,9 +173,6 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   margin-bottom: 1px;
 }
@@ -204,9 +192,6 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -259,9 +244,6 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-36 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -288,9 +270,6 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-37 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -661,9 +640,6 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -672,9 +648,6 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -752,9 +725,6 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -776,9 +746,6 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -812,9 +779,6 @@ exports[`array fields checkboxes 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -982,9 +946,6 @@ exports[`array fields empty errors array 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1089,9 +1050,6 @@ exports[`array fields fixed array 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -1126,9 +1084,6 @@ exports[`array fields fixed array 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1276,9 +1231,6 @@ exports[`array fields fixed array 1`] = `
 exports[`array fields has errors 1`] = `
 .emotion-0 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
@@ -1304,16 +1256,8 @@ exports[`array fields has errors 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
   color: red.500;
+  vertical-align: middle;
 }
 
 .emotion-6 {
@@ -1332,9 +1276,6 @@ exports[`array fields has errors 1`] = `
 }
 
 .emotion-14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1347,9 +1288,6 @@ exports[`array fields has errors 1`] = `
 }
 
 .emotion-16 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1518,9 +1456,6 @@ exports[`array fields no errors 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1648,9 +1583,6 @@ exports[`with title and description array 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1677,9 +1609,6 @@ exports[`with title and description array 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -1818,9 +1747,6 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -1860,9 +1786,6 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   margin-bottom: 1px;
 }
@@ -1882,9 +1805,6 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1933,9 +1853,6 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-48 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1962,9 +1879,6 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -2408,9 +2322,6 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -2419,9 +2330,6 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2499,9 +2407,6 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2523,9 +2428,6 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -2567,9 +2469,6 @@ exports[`with title and description checkboxes 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2754,9 +2653,6 @@ exports[`with title and description fixed array 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -2800,9 +2696,6 @@ exports[`with title and description fixed array 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3044,9 +2937,6 @@ exports[`with title and description from both array 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3073,9 +2963,6 @@ exports[`with title and description from both array 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -3214,9 +3101,6 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -3256,9 +3140,6 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   margin-bottom: 1px;
 }
@@ -3278,9 +3159,6 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3329,9 +3207,6 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-48 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3358,9 +3233,6 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -3804,9 +3676,6 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -3815,9 +3684,6 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3895,9 +3761,6 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3919,9 +3782,6 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3963,9 +3823,6 @@ exports[`with title and description from both checkboxes 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4150,9 +4007,6 @@ exports[`with title and description from both fixed array 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -4196,9 +4050,6 @@ exports[`with title and description from both fixed array 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4440,9 +4291,6 @@ exports[`with title and description from uiSchema array 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4469,9 +4317,6 @@ exports[`with title and description from uiSchema array 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -4610,9 +4455,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -4652,9 +4494,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   margin-bottom: 1px;
 }
@@ -4674,9 +4513,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4725,9 +4561,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-48 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -4754,9 +4587,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-49 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -5200,9 +5030,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -5211,9 +5038,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5291,9 +5115,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5315,9 +5136,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5359,9 +5177,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5546,9 +5361,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -5592,9 +5404,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 }
 
 .emotion-27 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5821,9 +5630,6 @@ exports[`with title and description with global label off array 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5850,9 +5656,6 @@ exports[`with title and description with global label off array 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -5956,9 +5759,6 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -5989,9 +5789,6 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   margin-bottom: 1px;
 }
@@ -6011,9 +5808,6 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6066,9 +5860,6 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-36 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6095,9 +5886,6 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-37 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -6473,9 +6261,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0px;
   overflow: hidden;
@@ -6484,9 +6269,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -6564,9 +6346,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -6588,9 +6367,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -6632,9 +6408,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -6804,9 +6577,6 @@ exports[`with title and description with global label off fixed array 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -6841,9 +6611,6 @@ exports[`with title and description with global label off fixed array 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;

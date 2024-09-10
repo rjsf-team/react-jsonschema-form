@@ -115,7 +115,7 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '',
     theme: MuiV4Theme,
   },
-  'material-ui-5': {
+  mui: {
     stylesheet: '',
     theme: MuiV5Theme,
   },

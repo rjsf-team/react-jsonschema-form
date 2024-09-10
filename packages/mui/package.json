@@ -34,8 +34,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.2.0",
-    "@mui/material": "^5.2.2",
+    "@mui/icons-material": "^5.2.0 || ^6.0.0",
+    "@mui/material": "^5.2.2 || ^6.0.0",
     "@rjsf/core": "^5.20.x",
     "@rjsf/utils": "^5.20.x",
     "react": ">=17"
@@ -51,8 +51,8 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/base": "5.0.0-beta.28",
-    "@mui/icons-material": "5.15.2",
-    "@mui/material": "5.15.2",
+    "@mui/icons-material": "6.0.2",
+    "@mui/material": "6.0.2",
     "@rjsf/core": "^5.20.1",
     "@rjsf/snapshot-tests": "^5.20.1",
     "@rjsf/utils": "^5.20.1",

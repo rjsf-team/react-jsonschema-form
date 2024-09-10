@@ -1,10 +1,12 @@
+import { PropsWithChildren } from 'react';
+
 import Footer from './Footer';
 
-export const Layout: React.FC = ({ children }) => {
+export function Layout({ children }: PropsWithChildren) {
   return (
     <div className='container-fluid'>
       {children}
       <Footer />
     </div>
   );
-};
+}

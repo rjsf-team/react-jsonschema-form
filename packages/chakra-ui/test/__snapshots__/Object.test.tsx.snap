@@ -26,9 +26,6 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 .emotion-14 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -72,9 +69,6 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -101,9 +95,6 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -299,9 +290,6 @@ exports[`object fields object 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -468,9 +456,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 .emotion-14 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -514,9 +499,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -543,9 +525,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -761,9 +740,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -807,9 +783,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -836,9 +809,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -1074,9 +1044,6 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1120,9 +1087,6 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1149,9 +1113,6 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -1386,9 +1347,6 @@ exports[`object fields with title and description from both object 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1610,9 +1568,6 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1656,9 +1611,6 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1685,9 +1637,6 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -1922,9 +1871,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2146,9 +2092,6 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2192,9 +2135,6 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2221,9 +2161,6 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -2458,9 +2395,6 @@ exports[`object fields with title and description object 1`] = `
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2682,9 +2616,6 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2728,9 +2659,6 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 .emotion-21 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2757,9 +2685,6 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 .emotion-22 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -2980,9 +2905,6 @@ exports[`object fields with title and description with global label off addition
 }
 
 .emotion-13 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3026,9 +2948,6 @@ exports[`object fields with title and description with global label off addition
 }
 
 .emotion-16 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3055,9 +2974,6 @@ exports[`object fields with title and description with global label off addition
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -3241,9 +3157,6 @@ exports[`object fields with title and description with global label off object 1
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3396,9 +3309,6 @@ exports[`object fields with title and description with global label off show add
 }
 
 .emotion-13 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3442,9 +3352,6 @@ exports[`object fields with title and description with global label off show add
 }
 
 .emotion-16 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3471,9 +3378,6 @@ exports[`object fields with title and description with global label off show add
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
