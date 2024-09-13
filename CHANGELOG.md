@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.21.2
+
+## Dev / docs / playground
+
+- Updated the `custom-widgets-fields.md` to add examples of wrapping a widget/field
+
 # 5.21.1
 
 ## @rjsf/utils
