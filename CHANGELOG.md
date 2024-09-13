@@ -16,6 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.21.1
+
+## @rjsf/utils
+
+- Revert of updating `deepEquals()` from [#4292]
+
+## @validator-ajv8
+
+- Revert of using `deepEquals()` instead of `lodash.isEqual()` from [#4292]
+
 # 5.21.0
 
 ## @rjsf/core
