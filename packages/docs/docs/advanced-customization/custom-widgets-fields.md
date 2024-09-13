@@ -279,7 +279,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 All the widgets that render a text input use the `BaseInputTemplate` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInputTemplate` component in the `templates` property of `Form` (see [Custom Templates](./custom-templates.md#baseinputtemplate)).
 
-### Wrapping an exist widget to customize it
+### Wrapping an existing widget to customize it
 
 Sometimes you just need to customize the properties that are passed to an existing widget.
 The way to do this varies based upon whether you are using core or some other theme (such as mui).
@@ -504,7 +504,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
 
-### Wrapping an exist field to customize it
+### Wrapping an existing field to customize it
 
 Sometimes you just need to customize the properties that are passed to an existing field.
 
