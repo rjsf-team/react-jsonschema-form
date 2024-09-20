@@ -37,6 +37,7 @@ import {
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
+import _isNil from 'lodash/isNil';
 import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
 
@@ -606,7 +607,7 @@ export default class Form<
     // Removing undefined and empty errors.
     const filterUndefinedErrors = (errors: any): ErrorSchema<T> => {
       _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
-        if (errorAtKey === undefined) {
+        if (_isNil(errorAtKey)) {
           delete errors[errorKey];
         } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
           filterUndefinedErrors(errorAtKey);

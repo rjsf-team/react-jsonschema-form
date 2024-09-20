@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `SchemaField` to pass `required` flag to `_AnyOfField`/`_OneOfField`
+- Updated `Form` to deal with null objects in `filterErrorsBasedOnSchema()`, fixing [#4306](https://github.com/rjsf-team/react-jsonschema-form/issues/4306)
 
 ## Dev / docs / playground
 
