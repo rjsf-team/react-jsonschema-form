@@ -20,6 +20,7 @@ import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import mergeSchemas from '../mergeSchemas';
 import {
+  Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
@@ -156,6 +157,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   _recurseList?: string[];
   /** Optional configuration object, if provided, allows users to override default form state behavior */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
 }
@@ -180,6 +182,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     includeUndefinedValues = false,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
+    experimental_customMergeAllOf = undefined,
     required,
   } = computeDefaultsProps;
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -209,7 +212,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       ...formData,
       ...getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults),
     };
-    const resolvedSchema = resolveDependencies<T, S, F>(validator, schema, rootSchema, false, [], defaultFormData);
+    const resolvedSchema = resolveDependencies<T, S, F>(
+      validator,
+      schema,
+      rootSchema,
+      false,
+      [],
+      defaultFormData,
+      experimental_customMergeAllOf
+    );
     schemaToCompute = resolvedSchema[0]; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema)) {
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
@@ -298,6 +309,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     includeUndefinedValues = false,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
+    experimental_customMergeAllOf = undefined,
     required,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
@@ -309,7 +321,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     // https://github.com/rjsf-team/react-jsonschema-form/issues/3832
     const retrievedSchema =
       experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
-        ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
+        ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
         : schema;
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -319,6 +331,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
@@ -533,16 +546,18 @@ export default function getDefaultFormState<
   formData?: T,
   rootSchema?: S,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
-  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ) {
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);
   }
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData);
+  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
   const defaults = computeDefaults<T, S, F>(validator, schema, {
     rootSchema,
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
+    experimental_customMergeAllOf,
     rawFormData: formData,
   });
   if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {

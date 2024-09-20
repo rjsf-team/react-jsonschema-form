@@ -1,6 +1,7 @@
 import deepEquals from './deepEquals';
 import {
   ErrorSchema,
+  Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
   GlobalUISchemaOptions,
@@ -40,6 +41,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
   experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
@@ -50,11 +52,13 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   constructor(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior
+    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ) {
     this.rootSchema = rootSchema;
     this.validator = validator;
     this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
+    this.experimental_customMergeAllOf = experimental_customMergeAllOf;
   }
 
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
@@ -77,7 +81,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior = {}
+    experimental_defaultFormStateBehavior = {},
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ): boolean {
     if (!validator || !rootSchema) {
       return false;
@@ -85,7 +90,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     return (
       this.validator !== validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
-      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior)
+      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior) ||
+      this.experimental_customMergeAllOf !== experimental_customMergeAllOf
     );
   }
 
@@ -110,7 +116,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       this.rootSchema,
       includeUndefinedValues,
-      this.experimental_defaultFormStateBehavior
+      this.experimental_defaultFormStateBehavior,
+      this.experimental_customMergeAllOf
     );
   }
 
@@ -234,7 +241,13 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T) {
-    return retrieveSchema<T, S, F>(this.validator, schema, this.rootSchema, rawFormData);
+    return retrieveSchema<T, S, F>(
+      this.validator,
+      schema,
+      this.rootSchema,
+      rawFormData,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
@@ -262,7 +275,16 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The `IdSchema` object for the `schema`
    */
   toIdSchema(schema: S, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_'): IdSchema<T> {
-    return toIdSchema<T, S, F>(this.validator, schema, id, this.rootSchema, formData, idPrefix, idSeparator);
+    return toIdSchema<T, S, F>(
+      this.validator,
+      schema,
+      id,
+      this.rootSchema,
+      formData,
+      idPrefix,
+      idSeparator,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Generates an `PathSchema` object for the `schema`, recursively
@@ -292,7 +314,13 @@ export default function createSchemaUtils<
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
-  experimental_defaultFormStateBehavior = {}
+  experimental_defaultFormStateBehavior = {},
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(validator, rootSchema, experimental_defaultFormStateBehavior);
+  return new SchemaUtils<T, S, F>(
+    validator,
+    rootSchema,
+    experimental_defaultFormStateBehavior,
+    experimental_customMergeAllOf
+  );
 }
