@@ -317,6 +317,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
               schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)
             )}
             registry={registry}
+            required={required}
             schema={schema}
             uiSchema={uiSchema}
           />
@@ -340,6 +341,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
               schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)
             )}
             registry={registry}
+            required={required}
             schema={schema}
             uiSchema={uiSchema}
           />
