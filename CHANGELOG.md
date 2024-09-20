@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.21.2
 
+## @rjsf/core
+
+- Updated `SchemaField` to pass `required` flag to `_AnyOfField`/`_OneOfField`
+
 ## Dev / docs / playground
 
 - Updated the `custom-widgets-fields.md` to add examples of wrapping a widget/field
