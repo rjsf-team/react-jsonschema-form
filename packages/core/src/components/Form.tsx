@@ -33,6 +33,7 @@ import {
   validationDataMerge,
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
+  Experimental_CustomMergeAllOf,
 } from '@rjsf/utils';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
@@ -196,6 +197,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `emptyObjectFields`
    */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  /** Optional function that allows for custom merging of `allOf` schemas
+   */
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -390,12 +394,26 @@ export default class Form<
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
         : this.props.experimental_defaultFormStateBehavior;
+    const experimental_customMergeAllOf =
+      'experimental_customMergeAllOf' in props
+        ? props.experimental_customMergeAllOf
+        : this.props.experimental_customMergeAllOf;
     let schemaUtils: SchemaUtilsType<T, S, F> = state.schemaUtils;
     if (
       !schemaUtils ||
-      schemaUtils.doesSchemaUtilsDiffer(props.validator, rootSchema, experimental_defaultFormStateBehavior)
+      schemaUtils.doesSchemaUtilsDiffer(
+        props.validator,
+        rootSchema,
+        experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf
+      )
     ) {
-      schemaUtils = createSchemaUtils<T, S, F>(props.validator, rootSchema, experimental_defaultFormStateBehavior);
+      schemaUtils = createSchemaUtils<T, S, F>(
+        props.validator,
+        rootSchema,
+        experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf
+      );
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
     const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
