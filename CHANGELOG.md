@@ -23,6 +23,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `SchemaField` to pass `required` flag to `_AnyOfField`/`_OneOfField`
 - Updated `Form` to deal with null objects in `filterErrorsBasedOnSchema()`, fixing [#4306](https://github.com/rjsf-team/react-jsonschema-form/issues/4306)
 
+## @rjsf/utils
+
+- Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
+
 ## Dev / docs / playground
 
 - Updated the `custom-widgets-fields.md` to add examples of wrapping a widget/field
