@@ -31,9 +31,10 @@ import {
 } from './schema';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator`, `rootSchema`, or `experimental_defaultFormStateBehavior` to each method.
- * Since these generally do not change across a `Form`, this allows for providing a simplified set of APIs to the
- * `@rjsf/core` components and the various themes as well. This class implements the `SchemaUtilsType` interface.
+ * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or
+ * `experimental_customMergeAllOf` to each method. Since these generally do not change across a `Form`, this allows for
+ * providing a simplified set of APIs to the `@rjsf/core` components and the various themes as well. This class
+ * implements the `SchemaUtilsType` interface.
  */
 class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   implements SchemaUtilsType<T, S, F>
@@ -48,6 +49,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    * @param experimental_defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
+   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    */
   constructor(
     validator: ValidatorType<T, S, F>,
@@ -76,6 +78,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
    * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
@@ -305,6 +308,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<

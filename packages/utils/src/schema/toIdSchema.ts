@@ -26,6 +26,7 @@ import getSchemaType from '../getSchemaType';
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [_recurseList=[]] - The list of retrieved schemas currently being recursed, used to prevent infinite recursion
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `IdSchema` object for the `schema`
  */
 function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -102,6 +103,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [idPrefix='root'] - The prefix to use for the id
  * @param [idSeparator='_'] - The separator to use for the path segments in the id
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `IdSchema` object for the `schema`
  */
 export default function toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

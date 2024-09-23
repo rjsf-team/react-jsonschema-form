@@ -43,6 +43,7 @@ import getFirstMatchingOption from './getFirstMatchingOption';
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
 export default function retrieveSchema<
@@ -78,6 +79,7 @@ export default function retrieveSchema<
  *          dependencies as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
 export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -195,6 +197,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
 export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -270,6 +273,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list schemas retrieved after having all references resolved
  */
 export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -426,6 +430,7 @@ export function stubExistingAdditionalProperties<
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
  * @param [recurseList=[]] - The optional, list of recursive references already processed
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema(s) resulting from having its conditions, additional properties, references and dependencies
  *          resolved. Multiple schemas may be returned if `expandAllBranches` is true.
  */
@@ -547,6 +552,7 @@ export function resolveAnyOrOneOfSchemas<
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with their dependencies resolved
  */
 export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -592,6 +598,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema with the `dependencies` resolved into it
  */
 export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -681,6 +688,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData]- The current formData to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with the dependent schema resolved into them
  */
 export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -747,6 +755,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function withExactlyOneSubschema<

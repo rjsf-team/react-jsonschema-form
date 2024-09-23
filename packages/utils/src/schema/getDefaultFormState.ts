@@ -157,6 +157,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   _recurseList?: string[];
   /** Optional configuration object, if provided, allows users to override default form state behavior */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  /** Optional function that allows for custom merging of `allOf` schemas */
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
@@ -534,6 +535,7 @@ export function getDefaultBasedOnSchemaType<
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<

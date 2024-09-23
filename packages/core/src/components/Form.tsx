@@ -196,6 +196,8 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `emptyObjectFields`
    */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  /** Optional function that allows for custom merging of `allOf` schemas
+   */
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   // Private
   /**

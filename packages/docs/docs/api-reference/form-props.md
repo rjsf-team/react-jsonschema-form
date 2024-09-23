@@ -91,8 +91,8 @@ The signature and documentation for this property is as follow:
 ##### computeSkipPopulate <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
- If the function returns `true`, the array will not be populated with default values.
- If the function returns `false`, the array will be populated with default values according to the `populate` option.
+If the function returns `true`, the array will not be populated with default values.
+If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
 ###### Parameters
 
@@ -103,7 +103,6 @@ A function that determines whether to skip populating the array with default val
 ###### Returns
 
 - boolean: A boolean indicating whether to skip populating the array with default values.
-
 
 ##### Example
 
@@ -248,6 +247,30 @@ render(
       allOf: 'populateDefaults',
     }}
   />,
+  document.getElementById('app')
+);
+```
+
+## experimental_customMergeAllOf
+
+The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in scenarios where the default [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library becomes a performance bottleneck, especially with large and complex schemas or doesn't satisfy your needs.
+
+By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
+
+If you're looking for alternative `allOf` merging implementations, you might consider [allof-merge](https://github.com/udamir/allof-merge).
+
+**Warning:** This is an experimental feature. Only use this if you fully understand the implications of custom `allOf` merging and are prepared to handle potential edge cases. Incorrect implementations may lead to unexpected behavior or validation errors.
+
+```tsx
+import { Form } from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
+  // Your custom implementation here
+};
+
+render(
+  <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
   document.getElementById('app')
 );
 ```
