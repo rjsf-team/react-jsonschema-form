@@ -38,6 +38,7 @@ import {
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
+import _isNil from 'lodash/isNil';
 import _pick from 'lodash/pick';
 import _toPath from 'lodash/toPath';
 
@@ -621,18 +622,18 @@ export default class Form<
     if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
       filteredErrors.__errors = schemaErrors.__errors;
     }
-    // Removing undefined and empty errors.
-    const filterUndefinedErrors = (errors: any): ErrorSchema<T> => {
+    // Removing undefined, null and empty errors.
+    const filterNilOrEmptyErrors = (errors: any): ErrorSchema<T> => {
       _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
-        if (errorAtKey === undefined) {
+        if (_isNil(errorAtKey)) {
           delete errors[errorKey];
         } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
-          filterUndefinedErrors(errorAtKey);
+          filterNilOrEmptyErrors(errorAtKey);
         }
       });
       return errors;
     };
-    return filterUndefinedErrors(filteredErrors);
+    return filterNilOrEmptyErrors(filteredErrors);
   }
 
   /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
