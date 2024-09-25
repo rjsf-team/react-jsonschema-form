@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import set from 'lodash/set';
+import setWith from 'lodash/setWith';
 
 import { ErrorSchema } from './types';
 import { ERRORS_KEY } from './constants';
@@ -37,12 +38,12 @@ export default class ErrorSchemaBuilder<T = any> {
    * @returns - The error block for the given `pathOfError` or the root if not provided
    * @private
    */
-  private getOrCreateErrorBlock(pathOfError?: string | string[]) {
+  private getOrCreateErrorBlock(pathOfError?: string | (string | number)[]) {
     const hasPath = (Array.isArray(pathOfError) && pathOfError.length > 0) || typeof pathOfError === 'string';
     let errorBlock: ErrorSchema = hasPath ? get(this.errorSchema, pathOfError) : this.errorSchema;
     if (!errorBlock && pathOfError) {
       errorBlock = {};
-      set(this.errorSchema, pathOfError, errorBlock);
+      setWith(this.errorSchema, pathOfError, errorBlock, Object);
     }
     return errorBlock;
   }
@@ -65,7 +66,7 @@ export default class ErrorSchemaBuilder<T = any> {
    * @param [pathOfError] - The optional path into the `ErrorSchema` at which to add the error(s)
    * @returns - The `ErrorSchemaBuilder` object for chaining purposes
    */
-  addErrors(errorOrList: string | string[], pathOfError?: string | string[]) {
+  addErrors(errorOrList: string | string[], pathOfError?: string | (string | number)[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     let errorsList = get(errorBlock, ERRORS_KEY);
     if (!Array.isArray(errorsList)) {
@@ -89,7 +90,7 @@ export default class ErrorSchemaBuilder<T = any> {
    * @param [pathOfError] - The optional path into the `ErrorSchema` at which to set the error(s)
    * @returns - The `ErrorSchemaBuilder` object for chaining purposes
    */
-  setErrors(errorOrList: string | string[], pathOfError?: string | string[]) {
+  setErrors(errorOrList: string | string[], pathOfError?: string | (string | number)[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     // Effectively clone the array being given to prevent accidental outside manipulation of the given list
     const listToAdd = Array.isArray(errorOrList) ? [...errorOrList] : [errorOrList];
@@ -104,7 +105,7 @@ export default class ErrorSchemaBuilder<T = any> {
    * @param [pathOfError] - The optional path into the `ErrorSchema` at which to clear the error(s)
    * @returns - The `ErrorSchemaBuilder` object for chaining purposes
    */
-  clearErrors(pathOfError?: string | string[]) {
+  clearErrors(pathOfError?: string | (string | number)[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     set(errorBlock, ERRORS_KEY, []);
     return this;
