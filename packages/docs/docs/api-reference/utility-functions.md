@@ -1172,7 +1172,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 #### Parameters
 
 - errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
-- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | (string | number)[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 
@@ -1186,7 +1186,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 #### Parameters
 
 - errorOrList: string | string[] - The error or list of errors to add into the `ErrorSchema`
-- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | (string | number)[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 
@@ -1199,7 +1199,7 @@ For more information about how to specify the path see the [eslint lodash plugin
 
 #### Parameters
 
-- [pathOfError]: string | string[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
+- [pathOfError]: string | (string | number)[] | undefined - The optional path into the `ErrorSchema` at which to add the error(s)
 
 #### Returns
 
