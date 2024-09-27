@@ -23,6 +23,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `SchemaField` to pass `required` flag to `_AnyOfField`/`_OneOfField`
 - Updated `Form` to deal with null objects in `filterErrorsBasedOnSchema()`, fixing [#4306](https://github.com/rjsf-team/react-jsonschema-form/issues/4306)
 
+## @rjsf/utils
+
+- Updated `ErrorSchemaBuilder` to support adding, updating, and removing paths that are numbers, fixing [#4297](https://github.com/rjsf-team/react-jsonschema-form/issues/4297)
+- Updated `retrieveSchema` to not merge `contains` properties in `allOf` schema lists, fixing [#2923](https://github.com/rjsf-team/react-jsonschema-form/issues/2923#issuecomment-1946034240)
+
 ## Dev / docs / playground
 
 - Updated the `custom-widgets-fields.md` to add examples of wrapping a widget/field
