@@ -412,9 +412,24 @@ export function retrieveSchemaInternal<
         return [...(allOf as S[]), restOfSchema as S];
       }
       try {
+        const withContainsSchemas = [] as S[];
+        const withoutContainsSchemas = [] as S[];
+        resolvedSchema.allOf?.forEach((s) => {
+          if (typeof s === 'object' && s.contains) {
+            withContainsSchemas.push(s as S);
+          } else {
+            withoutContainsSchemas.push(s as S);
+          }
+        });
+        if (withContainsSchemas.length) {
+          resolvedSchema = { ...resolvedSchema, allOf: withoutContainsSchemas };
+        }
         resolvedSchema = mergeAllOf(resolvedSchema, {
           deep: false,
         } as Options) as S;
+        if (withContainsSchemas.length) {
+          resolvedSchema.allOf = withContainsSchemas;
+        }
       } catch (e) {
         console.warn('could not merge subschemas in allOf:\n', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
