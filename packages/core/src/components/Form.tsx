@@ -642,7 +642,6 @@ export default class Form<
     let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
-    let _retrievedSchema: S | undefined;
     if (omitExtraData === true && liveOmit === true) {
       newFormData = this.omitExtraData(formData);
       state = {
@@ -682,9 +681,6 @@ export default class Form<
         errorSchema: errorSchema,
         errors: toErrorList(errorSchema),
       };
-    }
-    if (_retrievedSchema) {
-      state.retrievedSchema = _retrievedSchema;
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
   };
