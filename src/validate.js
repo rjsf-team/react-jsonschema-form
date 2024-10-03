@@ -50,7 +50,9 @@ export function toErrorList(errorSchema, fieldName = "root") {
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(errorSchema.__errors.map(stack => {
       return {
-        stack: `${fieldName}: ${stack}`
+        stack: `${fieldName}: ${stack}`,
+        name: fieldName,
+        error: stack
       };
     }));
   }
