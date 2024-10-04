@@ -182,7 +182,6 @@ render((
 ```
 
 #### Form error event handler
-z
 To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encoutered errors:
 
 ```js
