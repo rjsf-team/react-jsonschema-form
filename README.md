@@ -182,7 +182,6 @@ render((
 ```
 
 #### Form error event handler
-
 To react to when submitted form data are invalid, pass an `onError` handler, which is passed the list of encoutered errors:
 
 ```js
@@ -1233,6 +1232,22 @@ To disable rendering of the error list at the top of the form, you can set the `
 render((
   <Form schema={schema}
         showErrorList={false}/>
+), document.getElementById("app"));
+```
+
+If `showErrorList` is `true`, you can pass in a custom error list component using the `CustomErrorList` property
+
+```js
+const CustomErrors = ({ errors }) => (
+  <va-alert status="error">
+    <h2 slot="headline">Errors!</h2>
+    <ul>{errors.map((error, i) => (<li key={i}>{error.stack}</li>))}</ul>
+  </va-alert>
+);
+
+render((
+  <Form schema={schema}
+        CustomErrorList={CustomErrors} />
 ), document.getElementById("app"));
 ```
 
