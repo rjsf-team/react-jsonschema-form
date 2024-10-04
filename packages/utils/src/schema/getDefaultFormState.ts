@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import {
   ANY_OF_KEY,
+  CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
   PROPERTIES_KEY,
@@ -29,6 +30,7 @@ import {
 } from '../types';
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
+import isConstant from '../isConstant';
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -92,6 +94,7 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
  * @param requiredFields - The list of fields that are required
  * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override
  *        default form state behavior
+ * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
  */
 function maybeAddDefaultToObject<T = any>(
   obj: GenericObjectType,
@@ -100,10 +103,13 @@ function maybeAddDefaultToObject<T = any>(
   includeUndefinedValues: boolean | 'excludeObjectChildren',
   isParentRequired?: boolean,
   requiredFields: string[] = [],
-  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {}
+  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {},
+  isConst = false
 ) {
   const { emptyObjectFields = 'populateAllDefaults' } = experimental_defaultFormStateBehavior;
-  if (includeUndefinedValues) {
+  if (includeUndefinedValues || isConst) {
+    // If includeUndefinedValues
+    // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     obj[key] = computedDefault;
   } else if (emptyObjectFields !== 'skipDefaults') {
     if (isObject(computedDefault)) {
@@ -190,7 +196,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let schemaToCompute: S | null = null;
   let updatedRecurseList = _recurseList;
 
-  if (isObject(defaults) && isObject(schema.default)) {
+  if (isConstant(schema)) {
+    defaults = schema.const as unknown as T;
+  } else if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
@@ -313,9 +321,11 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         : schema;
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
+        const propertySchema = get(retrievedSchema, [PROPERTIES_KEY, key]);
+        const hasConst = isObject(propertySchema) && CONST_KEY in propertySchema;
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
-        const computedDefault = computeDefaults<T, S, F>(validator, get(retrievedSchema, [PROPERTIES_KEY, key]), {
+        const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
@@ -331,7 +341,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           includeUndefinedValues,
           required,
           retrievedSchema.required,
-          experimental_defaultFormStateBehavior
+          experimental_defaultFormStateBehavior,
+          hasConst
         );
         return acc;
       },
@@ -545,7 +556,13 @@ export default function getDefaultFormState<
     experimental_defaultFormStateBehavior,
     rawFormData: formData,
   });
-  if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {
+
+  if (
+    formData === undefined ||
+    formData === null ||
+    typeof formData === 'string' ||
+    (typeof formData === 'number' && isNaN(formData))
+  ) {
     // No form data? Use schema defaults.
     return defaults;
   }
