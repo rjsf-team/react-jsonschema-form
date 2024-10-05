@@ -18,10 +18,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.22.0
 
+## @rjsf/core
+
+- Updated `MultiSchemaField` to call the `onChange` handler after setting the new option, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977)
+
 ## @rjsf/utils
 
 - Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
 - Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
+- Updated `mergeDefaultsWithFormData()` to not merge `undefined` when there is a proper default for it, fixing [#4322](https://github.com/rjsf-team/react-jsonschema-form/issues/4322)
+- Updated `getClosestMatchingOption()` to improve the scoring of sub-property objects that are provided over ones that aren't, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977)
 
 # 5.21.2
 

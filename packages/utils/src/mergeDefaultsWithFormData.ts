@@ -49,5 +49,5 @@ export default function mergeDefaultsWithFormData<T = any>(
       return acc;
     }, acc);
   }
-  return formData;
+  return formData === undefined ? defaults : formData;
 }
