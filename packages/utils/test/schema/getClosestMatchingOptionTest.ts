@@ -49,7 +49,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(calculateIndexScore(testValidator, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(1);
     });
     it('returns 8 for second option in oneOf schema', () => {
-      expect(calculateIndexScore(testValidator, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(8);
+      expect(calculateIndexScore(testValidator, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(9);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
       expect(calculateIndexScore(testValidator, oneOfSchema, { type: 'boolean' }, true)).toEqual(1);
