@@ -128,9 +128,10 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       // so that only the root objects themselves are created without adding undefined children properties
       newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
     }
-    onChange(newFormData, undefined, this.getFieldId());
 
-    this.setState({ selectedOption: intOption });
+    this.setState({ selectedOption: intOption }, () => {
+      onChange(newFormData, undefined, this.getFieldId());
+    });
   };
 
   getFieldId() {

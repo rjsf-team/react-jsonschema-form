@@ -51,7 +51,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema?: S,
-  formData: any = {}
+  formData?: any
 ): number {
   let totalScore = 0;
   if (schema) {
@@ -83,7 +83,11 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
             );
           }
           if (value.type === 'object') {
-            return score + calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue || {});
+            if (isObject(formValue)) {
+              // If the structure is matching then give it a little boost in score
+              score += 1;
+            }
+            return score + calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue);
           }
           if (value.type === guessType(formValue)) {
             // If the types match, then we bump the score by one
