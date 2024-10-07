@@ -48,6 +48,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
+      it('test computeDefaults that is passed a schema with a cont property', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: {
+              type: 'string',
+              const: 'test',
+            },
+          },
+        };
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({
+          test: 'test',
+        });
+      });
       it('test an object with an optional property that has a nested required property', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -848,6 +862,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           requiredProperty: 'foo',
         });
       });
+      it('test an object const value populate as field defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            localConst: {
+              type: 'string',
+              const: 'local',
+            },
+            RootConst: {
+              type: 'object',
+              properties: {
+                attr1: {
+                  type: 'number',
+                },
+                attr2: {
+                  type: 'boolean',
+                },
+              },
+              const: {
+                attr1: 1,
+                attr2: true,
+              },
+            },
+            RootAndLocalConst: {
+              type: 'string',
+              const: 'FromLocal',
+            },
+          },
+          const: {
+            RootAndLocalConst: 'FromRoot',
+          },
+        };
+        expect(
+          getObjectDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+          })
+        ).toEqual({
+          localConst: 'local',
+          RootConst: {
+            attr1: 1,
+            attr2: true,
+          },
+          RootAndLocalConst: 'FromLocal',
+        });
+      });
       it('test an object with an additionalProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -1064,6 +1124,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ['Raphael', 'Michaelangelo']
           )
         ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+      });
+      it('test an array const value populate as defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          const: ['ConstFromRoot', 'ConstFromRoot'],
+          items: {
+            type: 'string',
+            const: 'Constant',
+          },
+        };
+
+        expect(
+          getArrayDefaults(
+            testValidator,
+            schema,
+            {
+              rootSchema: schema,
+              includeUndefinedValues: 'excludeObjectChildren',
+            },
+            ['ConstFromRoot', 'ConstFromRoot']
+          )
+        ).toEqual(['ConstFromRoot', 'ConstFromRoot', 'Constant', 'Constant']);
       });
       it('test an array with no defaults', () => {
         const schema: RJSFSchema = {

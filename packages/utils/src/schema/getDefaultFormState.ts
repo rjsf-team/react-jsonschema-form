@@ -461,7 +461,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
 
   // Check if the schema has a const property defined,  then we should always return the computedDefault since it's coming from the const.
   const hasConst = isObject(schema) && CONST_KEY in schema;
-  if (hasConst) {
+  if (hasConst === false) {
     if (neverPopulate) {
       return defaults ?? emptyDefault;
     }
