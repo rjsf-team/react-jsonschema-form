@@ -153,6 +153,90 @@ describe('ErrorSchemaBuilder', () => {
         },
       });
     });
+    it('adding error string with a (string | number)[] path puts it at the path', () => {
+      expect(builder.addErrors(AN_ERROR, ['arr', 0, 'qux']).ErrorSchema).toEqual({
+        [ERRORS_KEY]: [],
+        [STRING_PATH]: {
+          [ERRORS_KEY]: [],
+        },
+        [ARRAY_PATH[0]]: {
+          [ARRAY_PATH[1]]: {
+            [ERRORS_KEY]: [],
+          },
+        },
+        another: {
+          path: {
+            [ERRORS_KEY]: [AN_ERROR],
+          },
+        },
+        newPath: {
+          [ERRORS_KEY]: [],
+        },
+        arr: {
+          '0': {
+            qux: {
+              [ERRORS_KEY]: [AN_ERROR],
+            },
+          },
+        },
+      });
+    });
+    it('setting error string with a new path with number set errors at the path', () => {
+      expect(builder.setErrors(SOME_ERRORS, ['arr', 0, 'qux']).ErrorSchema).toEqual({
+        [ERRORS_KEY]: [],
+        [STRING_PATH]: {
+          [ERRORS_KEY]: [],
+        },
+        [ARRAY_PATH[0]]: {
+          [ARRAY_PATH[1]]: {
+            [ERRORS_KEY]: [],
+          },
+        },
+        another: {
+          path: {
+            [ERRORS_KEY]: [AN_ERROR],
+          },
+        },
+        newPath: {
+          [ERRORS_KEY]: [],
+        },
+        arr: {
+          '0': {
+            qux: {
+              [ERRORS_KEY]: SOME_ERRORS,
+            },
+          },
+        },
+      });
+    });
+    it('clearing errors with a (string | number)[] path clears them the path', () => {
+      expect(builder.clearErrors(['arr', 0, 'qux']).ErrorSchema).toEqual({
+        [ERRORS_KEY]: [],
+        [STRING_PATH]: {
+          [ERRORS_KEY]: [],
+        },
+        [ARRAY_PATH[0]]: {
+          [ARRAY_PATH[1]]: {
+            [ERRORS_KEY]: [],
+          },
+        },
+        another: {
+          path: {
+            [ERRORS_KEY]: [AN_ERROR],
+          },
+        },
+        newPath: {
+          [ERRORS_KEY]: [],
+        },
+        arr: {
+          '0': {
+            qux: {
+              [ERRORS_KEY]: [],
+            },
+          },
+        },
+      });
+    });
     it('resetting error restores things back to an empty object', () => {
       expect(builder.resetAllErrors().ErrorSchema).toEqual({});
     });
