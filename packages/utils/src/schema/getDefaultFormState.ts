@@ -459,13 +459,17 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
-  if (neverPopulate) {
-    return defaults ?? emptyDefault;
-  }
-  if (ignoreMinItemsFlagSet && !required) {
-    // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
-    // return form data/defaults
-    return defaults ? defaults : undefined;
+  // Check if the schema has a const property defined,  then we should always return the computedDefault since it's coming from the const.
+  const hasConst = isObject(schema) && CONST_KEY in schema;
+  if (hasConst) {
+    if (neverPopulate) {
+      return defaults ?? emptyDefault;
+    }
+    if (ignoreMinItemsFlagSet && !required) {
+      // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
+      // return form data/defaults
+      return defaults ? defaults : undefined;
+    }
   }
 
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
