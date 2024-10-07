@@ -31,6 +31,7 @@ import {
 import isMultiSelect from './isMultiSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
+import { JSONSchema7Object } from 'json-schema';
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -319,10 +320,13 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
       experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema
         ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData)
         : schema;
+    const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
         const propertySchema = get(retrievedSchema, [PROPERTIES_KEY, key]);
-        const hasConst = isObject(propertySchema) && CONST_KEY in propertySchema;
+        // Check if the parent schema has a const property defined,  then we should always return the computedDefault since it's coming from the const.
+        const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
+        const hasConst = (isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst;
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {
