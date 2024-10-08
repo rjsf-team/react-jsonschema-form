@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Made fields with const pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
+- Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
 
 # 5.21.2
 
