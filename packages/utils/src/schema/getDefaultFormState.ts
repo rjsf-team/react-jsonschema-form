@@ -565,12 +565,7 @@ export default function getDefaultFormState<
     rawFormData: formData,
   });
 
-  if (
-    formData === undefined ||
-    formData === null ||
-    typeof formData === 'string' ||
-    (typeof formData === 'number' && isNaN(formData))
-  ) {
+  if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {
     // No form data? Use schema defaults.
     return defaults;
   }
